@@ -1,0 +1,23 @@
+import "../styles/globals.css";
+import "../index.css";
+import type { AppProps } from "next/app";
+import "remixicon/fonts/remixicon.css";
+import "react-phone-input-2/lib/style.css";
+import Toast from "../components/toast";
+import { AuthProvider } from "../contexts/authContext";
+import { DataProvider } from "../contexts/verificationContext";
+import { ReactQueryClientProvider } from "../contexts/reactQueryContext";
+
+
+export default function App({ Component, pageProps }: AppProps) {
+  return (
+    <ReactQueryClientProvider>
+      <DataProvider>
+        <AuthProvider>
+          <Component {...pageProps} />
+          <Toast />
+        </AuthProvider>
+      </DataProvider>
+    </ReactQueryClientProvider>
+  );
+}

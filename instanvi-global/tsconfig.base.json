@@ -1,0 +1,29 @@
+{
+  "compileOnSave": false,
+  "compilerOptions": {
+    "rootDir": ".",
+    "sourceMap": true,
+    "declaration": false,
+    "moduleResolution": "node",
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "importHelpers": true,
+    "target": "es2015",
+    "module": "esnext",
+    "lib": ["es2020", "dom"],
+    "skipLibCheck": true,
+    "skipDefaultLibCheck": true,
+    "baseUrl": ".",
+    "paths": {
+      "@instanvi-global/core": ["libs/core/src/index.ts"],
+      "@instanvi-global/core/server": ["libs/core/src/server.ts"],
+      "@instanvi-global/ui-components": ["libs/ui-components/src/index.ts"],
+      "@instanvi-global/ui-components/server": [
+        "libs/ui-components/src/server.ts"
+      ],
+      "@instanvi-global/utilities": ["libs/utilities/src/index.ts"],
+      "@instanvi-global/utilities/server": ["libs/utilities/src/server.ts"]
+    }
+  },
+  "exclude": ["node_modules", "tmp"]
+}
