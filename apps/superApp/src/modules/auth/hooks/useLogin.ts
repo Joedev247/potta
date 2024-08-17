@@ -1,7 +1,7 @@
 import CryptoJS from "crypto-js"
 import { useMutation } from "@tanstack/react-query"
 import { loginAPI } from "../utils/api"
-import { SECRET } from "../../../configs/env"
+import { SECRET } from "@instanvi/utilities"
 
 export const useLogin =()=>{
     const mutation = useMutation({

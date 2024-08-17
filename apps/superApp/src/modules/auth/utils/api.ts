@@ -1,6 +1,7 @@
+import axios from "@instanvi/utilities";
 import { ProfileData } from "./validations";
-import axios from "@instanvi-global/utilities";
 import { IChangePassword, ILogin, IOrganisation, IRegister } from "./types";
+
 
 export const registerAPI = async (inputs:IRegister):Promise<unknown> =>{
  const response = await axios.post("/auth/register", inputs)

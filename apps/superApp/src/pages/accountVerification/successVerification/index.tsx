@@ -1,10 +1,12 @@
 import React from "react";
 import { useRouter } from "next/router";
-import CustomButton from "../../../components/button/customButton";
 import SuccessIcon from "../../../components/icons/sucessIcon/verification";
+import { Button } from "@instanvi/ui-components";
 
 const SuccessVerification = () => {
   const router = useRouter()
+
+  //========== Component ==========
   return (
     <div className="h-screen w-full flex justify-center items-center ">
       <div className="mx-auto w-full flex max-w-4xl items-center justify-between p-6 lg:px-8">
@@ -25,7 +27,7 @@ const SuccessVerification = () => {
             </div>
           </div>
           <div className="w-full flex justify-end mt-5">
-            <CustomButton value={"Next"} onclick={() => { router.push('/') }} icon={"arrow-right"} />
+            <Button value={"Next"} onClick={() => { router.push('/') }} icon={"arrow-right"} />
           </div>
         </div>
       </div>

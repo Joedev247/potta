@@ -1,5 +1,5 @@
-import { Channel } from 'apps/home-app/src/Arrays/SocialChannels'
 import React from 'react'
+import { Channel } from 'apps/superApp/src/Arrays/SocialChannels'
 
 
 const Channels = () => {

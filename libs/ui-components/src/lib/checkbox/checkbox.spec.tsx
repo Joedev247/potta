@@ -1,10 +1,10 @@
 import { render } from '@testing-library/react';
 
-import Input from './input';
+import Checkbox from './checkbox';
 
-describe('Input', () => {
+describe('Checkbox', () => {
   it('should render successfully', () => {
-    // const { baseElement } = render(<Input />);
+    // const { baseElement } = render(<Checkbox />);
     // expect(baseElement).toBeTruthy();
   });
 });

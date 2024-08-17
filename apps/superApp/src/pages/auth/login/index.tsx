@@ -1,26 +1,25 @@
 import React from "react";
 import Link from "next/link";
-import { useRouter } from 'next/router'
+import { AxiosError } from "axios";
+import toast from "react-hot-toast";
+import { useRouter } from 'next/router';
 import { yupResolver } from "@hookform/resolvers/yup";
-import { useForm, SubmitHandler } from "react-hook-form"
+import { useForm, SubmitHandler } from "react-hook-form";
 
 import { IUser } from "../../../utils/types";
-import Email from "../../../components/inputs/email";
+import { Button, Input } from "@instanvi/ui-components";
 import { meAPI } from "../../../modules/auth/utils/api";
 import useAuth from "../../../modules/auth/hooks/useAuth";
-import Password from "../../../components/inputs/password";
-import Proceed from "../../../components/button/submitButton";
-import { useLogin } from "../../../modules/auth/hooks/useLogin";
 import Layout from "../../../modules/auth/components/layout";
+import { useLogin } from "../../../modules/auth/hooks/useLogin";
 import { LoginData, loginSchema } from "../../../modules/auth/utils/validations";
-import toast from "react-hot-toast";
-import { AxiosError } from "axios";
 
 
 const SignIn = () => {
   const router = useRouter()
   const { setUser, } = useAuth()
   const { isPending, mutate } = useLogin()
+
   const methods = useForm<LoginData>({
     mode: "onChange",
     resolver: yupResolver(loginSchema),
@@ -28,6 +27,12 @@ const SignIn = () => {
 
   const { register, handleSubmit } = methods
   const { errors } = methods.formState
+
+  const onError = (error: unknown) => {
+    const text = (error as AxiosError<{ message: string }>)?.response?.data
+    const message = text?.message
+    toast.error(message as string);
+  }
 
   const onSubmit: SubmitHandler<LoginData> = (inputs) => {
     mutate(inputs, {
@@ -38,17 +43,9 @@ const SignIn = () => {
             const userdata = user as IUser
             setUser && setUser(userdata)
           })
-          .catch((error: unknown) => {
-            const text = (error as AxiosError<{ message: string }>)?.response?.data
-            const message = text?.message
-            toast.error(message as string);
-          })
+          .catch(onError)
       },
-      onError: (error: unknown) => {
-        const text = (error as AxiosError<{ message: string }>)?.response?.data
-        const message = text?.message
-        toast.error(message as string);
-      },
+      onError,
     })
   }
 
@@ -61,12 +58,23 @@ const SignIn = () => {
               <h3 className="text-3xl">Sign in</h3>
             </div>
             <div className="mt-5 w-full">
-              <label htmlFor="">Email</label>
-              <Email register={register} errors={errors?.email} />
+              <Input
+                name="email"
+                type="email"
+                label="Email"
+                register={register}
+                errors={errors?.email}
+                placeholder="catherine.shaw@gmail.com"
+              />
             </div>
             <div className="mt-5 w-full">
-              <label htmlFor="">Password</label>
-              <Password id="password" register={register} errors={errors?.password} />
+              <Input
+                name="password"
+                label="Password"
+                register={register}
+                errors={errors?.password}
+                placeholder="Password@123"
+              />
             </div>
             <div className="mt-5 flex justify-between">
               <div className="relative   flex items-start">
@@ -83,7 +91,6 @@ const SignIn = () => {
                   <label htmlFor="comments" className="font-medium  cursor-pointer text-gray-900">
                     Remember me
                   </label>
-
                 </div>
               </div>
               <div>
@@ -91,10 +98,17 @@ const SignIn = () => {
               </div>
             </div>
             <div className="w-full mt-8">
-              <Proceed
+              <Button
+                fullWidth
                 type="submit"
                 value={isPending ? "Signing in.." : "Sign in"}
               />
+            </div>
+            <div className="mt-8 flex space-x-2">
+              <p className="font-thin ">Don&#39;t Have An Account? </p>
+              <Link className="text-blue-500" href={"/auth/register"}>
+                Register
+              </Link>
             </div>
           </div>
         </div>

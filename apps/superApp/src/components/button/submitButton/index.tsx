@@ -9,7 +9,7 @@ interface ProceedButton {
 
 const Proceed: FC<ProceedButton> = ({ value, onclick, type, disabled }) => {
     return (
-        <button disabled={disabled} type={type} className="text-white bg-[#237804] w-full   py-2.5 flex space-x-2 justify-center" onClick={onclick}>
+        <button disabled={disabled} type={type} className="text-white bg-[#237804] w-full py-2.5 flex space-x-2 justify-center" onClick={onclick}>
             {value}
         </button>
     );

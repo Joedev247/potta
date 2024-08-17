@@ -1,8 +1,7 @@
-import SWITCH from '../../switch'
+import { Delivery, Orders, Shipping } from 'apps/superApp/src/Arrays/notifications'
+import SWITCH from 'apps/superApp/src/components/switch'
 import React from 'react'
-import { Orders } from '../../../Arrays/notifications'
-import { Shipping } from '../../../Arrays/notifications'
-import { Delivery } from '../../../Arrays/notifications'
+
 
 const Notification = () => {
     return (
@@ -13,7 +12,7 @@ const Notification = () => {
             <div>
                 {Orders.map((item: any, id: any) => {
                     return (
-                        <div className='mt-4'>
+                        <div className='mt-4' key={id}>
                             <SWITCH
                                 key={id}
                                 label={item?.Label}
@@ -32,7 +31,7 @@ const Notification = () => {
             <div>
                 {Shipping.map((item: any, id: any) => {
                     return (
-                        <div className='mt-4'>
+                        <div className='mt-4' key={id}>
                             <SWITCH
                                 key={id}
                                 label={item?.Label}
@@ -50,7 +49,7 @@ const Notification = () => {
             <div>
                 {Delivery.map((item: any, id: any) => {
                     return (
-                        <div className='mt-4'>
+                        <div className='mt-4' key={id}>
                             <SWITCH
                                 key={id}
                                 label={item?.Label}

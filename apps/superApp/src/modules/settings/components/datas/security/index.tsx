@@ -1,7 +1,8 @@
 import React, { useState } from 'react'
-import UpdatePasword from './components/UpdatePassword'
+
 import FA from './components/2FA'
 import Restriction from './components/Restriction'
+import UpdatePasword from './components/UpdatePassword'
 
 const Security = () => {
   const [active, setActive] = useState("password")

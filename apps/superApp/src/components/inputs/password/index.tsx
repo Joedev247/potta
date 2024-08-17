@@ -1,24 +1,23 @@
-import { EnvelopeIcon } from '@heroicons/react/20/solid'
 import { FC, useState } from 'react'
 import { FieldError, UseFormRegister } from 'react-hook-form';
 
 interface Props {
   errors?: FieldError;
   register: UseFormRegister<any>;
-  id: string
+  name: string
 }
 
 const Password: FC<Props> = ({ errors,
-  register, id }) => {
+  register, name }) => {
   const [open, setOpen] = useState(false)
   return (
     <div>
       <div className="relative mt-2 rounded-md shadow-sm">
         <input
-          id={id}
+          id={name}
           autoComplete="none"
           type={open ? 'password' : 'text'}
-          {...register(id)}
+          {...register(name)}
           placeholder="Password@123"
           className="block w-full rounded-0 border py-2.5 outline-none  pr-10 text-gray-900 pl-3"
         />

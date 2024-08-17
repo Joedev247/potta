@@ -1,6 +1,6 @@
 "use client";
 import ProductTable from ".";
-import React, { FC, useState} from "react";
+import React, { FC, useState } from "react";
 
 
 export interface DataRow {
@@ -19,7 +19,7 @@ const data: DataRow[] = [
     },
 ];
 
-const Incomming_sms: FC = () => {
+const IncommingSms: FC = () => {
     const [records, setRecords] = useState<DataRow[]>([]);
     return (
         <div className="">
@@ -28,4 +28,4 @@ const Incomming_sms: FC = () => {
     );
 };
 
-export default Incomming_sms
+export default IncommingSms

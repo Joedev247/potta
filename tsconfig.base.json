@@ -15,14 +15,12 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
-      "@instanvi-global/core": ["libs/core/src/index.ts"],
-      "@instanvi-global/core/server": ["libs/core/src/server.ts"],
-      "@instanvi-global/ui-components": ["libs/ui-components/src/index.ts"],
-      "@instanvi-global/ui-components/server": [
-        "libs/ui-components/src/server.ts"
-      ],
-      "@instanvi-global/utilities": ["libs/utilities/src/index.ts"],
-      "@instanvi-global/utilities/server": ["libs/utilities/src/server.ts"]
+      "@instanvi/core": ["libs/core/src/index.ts"],
+      "@instanvi/core/server": ["libs/core/src/server.ts"],
+      "@instanvi/ui-components": ["libs/ui-components/src/index.ts"],
+      "@instanvi/ui-components/server": ["libs/ui-components/src/server.ts"],
+      "@instanvi/utilities": ["libs/utilities/src/index.ts"],
+      "@instanvi/utilities/server": ["libs/utilities/src/server.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]

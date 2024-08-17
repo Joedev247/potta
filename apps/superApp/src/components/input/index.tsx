@@ -9,6 +9,7 @@ type Props = {
   errors?: FieldError;
   isTextArea?: boolean;
   placeholder?: string;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   register: UseFormRegister<any>;
 };
 

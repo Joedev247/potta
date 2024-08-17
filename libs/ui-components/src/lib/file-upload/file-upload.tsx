@@ -7,7 +7,7 @@ interface Props {
   setFiles: (arg: File[]) => void
 }
 
-const MyDropzone: React.FC<Props> = ({ files, setFiles }) => {
+const FileUpload: React.FC<Props> = ({ files, setFiles }) => {
   const onDrop = useCallback((acceptedFiles: File[]) => {
     setFiles([...files, ...acceptedFiles]);
   }, [files]);
@@ -23,7 +23,10 @@ const MyDropzone: React.FC<Props> = ({ files, setFiles }) => {
         <input {...getInputProps()} />
         <div className="flex justify-center">
           <div className="text-center mt-14">
-            <center><Image src="/icons/dropzone.svg" height={16} width={16} alt="" /></center><br />
+            <center>
+              <Image src="/icons/dropzone.svg" height={16} width={16} alt="" />
+            </center>
+            <br />
             <p className="text-green-400 -mt-1">Max (50px 50px)</p>
             {isDragActive ? (
               <p>Drop the files here ...</p>
@@ -37,4 +40,4 @@ const MyDropzone: React.FC<Props> = ({ files, setFiles }) => {
   );
 };
 
-export default MyDropzone;
+export default FileUpload;

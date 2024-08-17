@@ -1,17 +1,16 @@
 /* eslint-disable react/no-unescaped-entities */
 import React from "react";
 import Link from "next/link";
+import { AxiosError } from "axios";
+import toast from "react-hot-toast";
 import { useRouter } from "next/router";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { SubmitHandler, useForm } from "react-hook-form";
 
-import Email from "../../../components/inputs/email";
-import Proceed from "../../../components/button/submitButton";
+import { Button, Input } from "@instanvi/ui-components";
 import Layout from "../../../modules/auth/components/layout";
 import { EmailData, emailSchema } from "../../../modules/auth/utils/validations";
 import { useForgotPassword } from "../../../modules/auth/hooks/useForgotPassword";
-import toast from "react-hot-toast";
-import { AxiosError } from "axios";
 
 const SignUp = () => {
   const router = useRouter()
@@ -48,18 +47,24 @@ const SignUp = () => {
               <h3 className="text-3xl">Forgot Password ? </h3>
               <p className="text-gray-400 my-2">Enter your email below, you will receive an email with instructions
                 on how to reset your password in a few minutes.  You can also
-                set a new password if you’ve never set one before.</p>
+                set a new password if you&#39;ve never set one before.</p>
             </div>
 
             <div className="mt-5 w-full">
-              <label htmlFor="">Email</label>
-              <Email register={register} errors={errors?.email} />
+              <Input
+                name="email"
+                type="email"
+                label="Email"
+                register={register}
+                errors={errors?.email}
+                placeholder="catherine.shaw@gmail.com"
+              />
             </div>
             <div className="w-full mt-8">
-              <Proceed value={isPending ? "Sending..." : "Start Recovery"} type="submit" />
+              <Button fullWidth value={isPending ? "Sending..." : "Start Recovery"} type="submit" />
             </div>
             <div className="mt-16 flex space-x-2">
-              <p className="font-thin ">You don't have an account ? </p>
+              <p className="font-thin ">You don&#39;t have an account ? </p>
               <Link className="text-blue-500" href={"/auth/register"}>Register</Link>
             </div>
           </div>

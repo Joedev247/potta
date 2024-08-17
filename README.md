@@ -18,6 +18,14 @@ Run `npx nx dev superApp` to start the development server. Happy coding!
 
 Run `npx nx build superApp` to build the application. The build artifacts are stored in the output directory (e.g. `dist/` or `build/`), ready to be deployed.
 
+## Generate a library in the project
+
+Run `nx g @nx/next:lib <name> --directory=libs` to generate library in the `/libs` directory with name being the name of the library you will want to generate
+
+## Generate a component in the project
+
+Run `nx g @nx/next:component <name> --directory libs/ui-components/src/lib/<name>` to generate component in the `/libs/ui-components` directory with name being the name of the component you will want to generate
+
 ## Running tasks
 
 To execute tasks with Nx use the following syntax:

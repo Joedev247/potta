@@ -1,11 +1,12 @@
 import React, { useState } from "react";
-import Layout from "../../../modules/auth/components/layout";
-import Proceed from "../../../components/button/submitButton";
-import Link from "next/link";
 import PhoneInput from 'react-phone-input-2'
 
+import { Button } from "@instanvi/ui-components";
+import Layout from "../../../modules/auth/components/layout";
+
 const PhoneNumber = () => {
-  const [phone, setPhone] = useState('')
+  const [phone, setPhone] = useState('');
+
   return (
     <Layout >
       <div className="h-screen w-full items-center flex justify-center">
@@ -26,7 +27,7 @@ const PhoneNumber = () => {
               />
             </div>
             <div className="w-full mt-8">
-              <Proceed value={"Proceed"} />
+              <Button value={"Proceed"} />
             </div>
           </div>
         </div>

@@ -1,11 +1,12 @@
-import Search from '../../../components/inputs/search/normalSearch'
-
+import React from 'react'
 import Link from 'next/link'
 import Select from 'react-select'
-import React from 'react'
-import { Industry } from '../../../Arrays/Business'
-import TableTransaction from '../../../components/tables/Transactions/data'
-import WalletModal from '../../../components/modals/walletModal'
+
+import { Search } from '@instanvi/ui-components'
+import { Industry } from 'apps/superApp/src/Arrays/Business'
+import WalletModal from 'apps/superApp/src/components/modals/walletModal'
+import TableTransaction from 'apps/superApp/src/components/tables/Transactions/data'
+
 
 const Wallet = () => {
     return (
@@ -40,7 +41,7 @@ const Wallet = () => {
                 <div className='flex justify-between'>
                     <div className='flex space-x-3 w-1/3'>
                         <div className='w-2/3'>
-                            <Search onchange={() => { }} text={''} value={''} placeholder={''} />
+                            <Search onChange={() => { console.log("first") }} value={''} placeholder={''} />
                         </div>
                         <div className='w-1/3'>
                             <Select options={Industry} />

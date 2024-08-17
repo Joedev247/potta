@@ -58,7 +58,7 @@ export const changePasswordSchema = yup.object({
 		/^(?=.*[A-Z])(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$/,
 		'Password must contain at least one uppercase letter and one special character'
 	).required(),
-	confirmPassword: yup.string()
+	confirm_password: yup.string()
 	.required('Confirm Password is required')
 	.oneOf([yup.ref('new_password')], 'Passwords must match')
 })

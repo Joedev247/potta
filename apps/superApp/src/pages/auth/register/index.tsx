@@ -1,29 +1,24 @@
 import React from "react";
 import Link from "next/link";
+import { AxiosError } from "axios";
 import Select, { SingleValue } from "react-select";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { SubmitHandler, useForm } from "react-hook-form";
 
-// Import the countryList from the correct path
-// Assuming the utils folder is at the same level as the current file
-import Email from "../../../components/inputs/email";
-import Password from "../../../components/inputs/password";
-import Proceed from "../../../components/button/submitButton";
-import Layout from "../../../modules/auth/components/layout";
-import { useRegister } from "../../../modules/auth/hooks/useRegister";
+import toast from "react-hot-toast/headless";
+import { countryList } from '../../../utils';
 import {
   RegisterFormData,
   registerSchema,
 } from "../../../modules/auth/utils/validations";
-import toast from "react-hot-toast/headless";
-import { AxiosError } from "axios";
-import { countryList } from '../../../utils';
+import { Button, Input } from "@instanvi/ui-components";
+import Layout from "../../../modules/auth/components/layout";
+import { useRegister } from "../../../modules/auth/hooks/useRegister";
 
 type SelectProp = SingleValue<{
   value: string;
   label: string;
 }>;
-
 
 const SignUp = () => {
   const { isPending, mutate } = useRegister();
@@ -73,7 +68,7 @@ const SignUp = () => {
     setValue("country", value?.value as string);
   };
 
-  //=========== component ================
+  //=========== Component ================
   return (
     <Layout>
       <form
@@ -97,12 +92,23 @@ const SignUp = () => {
               />
             </div>
             <div className="mt-5 w-full">
-              <label htmlFor="">Email</label>
-              <Email register={register} errors={errors?.email} />
+              <Input
+                name="email"
+                type="email"
+                label="Email"
+                register={register}
+                errors={errors?.email}
+                placeholder="catherine.shaw@gmail.com"
+              />
             </div>
             <div className="mt-5 w-full">
-              <label htmlFor="">Password</label>
-              <Password id="password" register={register} errors={errors?.password} />
+              <Input
+                name="password"
+                label="Password"
+                register={register}
+                errors={errors?.password}
+                placeholder="Password@123"
+              />
             </div>
             <div className="relative mt-5  flex items-start">
               <div className="flex h-6 items-center">
@@ -146,7 +152,7 @@ const SignUp = () => {
               {isPending ? (
                 <h3>Creating...</h3>
               ) : (
-                <Proceed value={"Create Account"} type="submit" />
+                <Button fullWidth type="submit" value={"Create Account"} />
               )}
             </div>
             <div className="mt-8 flex space-x-2">

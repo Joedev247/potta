@@ -1,10 +1,10 @@
 import { render } from '@testing-library/react';
 
-import Input from './input';
+import FileUpload from './file-upload';
 
-describe('Input', () => {
+describe('FileUpload', () => {
   it('should render successfully', () => {
-    // const { baseElement } = render(<Input />);
+    // const { baseElement } = render(<FileUpload />);
     // expect(baseElement).toBeTruthy();
   });
 });

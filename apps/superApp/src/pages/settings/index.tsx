@@ -4,11 +4,11 @@ import API from '../../modules/settings/components/datas/api'
 import Log from '../../modules/settings/components/datas/logs'
 import Team from '../../modules/settings/components/datas/team'
 import Apps from '../../modules/settings/components/datas/apps'
+import { ContextData } from '../../contexts/verificationContext'
 import Billing from '../../modules/settings/components/datas/billing'
 import General from '../../modules/settings/components/datas/general'
 import Security from '../../modules/settings/components/datas/security'
 import Notification from '../../modules/settings/components/datas/notification'
-import { ContextData } from '../../contexts/verificationContext'
 
 const Settings = () => {
 	const context = useContext(ContextData)

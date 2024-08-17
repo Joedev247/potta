@@ -1,17 +1,16 @@
 import Select from 'react-select'
+import { AxiosError } from 'axios'
+import toast from 'react-hot-toast'
 import PhoneInput from 'react-phone-input-2'
 import React, { useEffect, useState } from 'react'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { SubmitHandler, useForm } from 'react-hook-form'
 
-import Input from '../../input'
-import { SelectProp } from '../../../utils/types'
-import { countryList } from '../../../utils'
-import CustomButton from '../../button/customButton'
-import { useUpdateProfile } from '../../../modules/auth/hooks/useUpdateProfile'
-import { ProfileData, profileSchema } from '../../../modules/auth/utils/validations'
-import toast from 'react-hot-toast'
-import { AxiosError } from 'axios'
+import { countryList } from 'apps/superApp/src/utils'
+import { Button, Input } from '@instanvi/ui-components'
+import { SelectProp } from 'apps/superApp/src/utils/types'
+import { useUpdateProfile } from 'apps/superApp/src/modules/auth/hooks/useUpdateProfile'
+import { ProfileData, profileSchema } from 'apps/superApp/src/modules/auth/utils/validations'
 
 const languages = [
     { value: "english", label: "English" },
@@ -143,7 +142,7 @@ const General = () => {
                 </div>
             </div>
             <div className='mt-10 w-full flex justify-end'>
-                <CustomButton
+                <Button
                     type='submit'
                     value='Update'
                     icon='arrow-right'

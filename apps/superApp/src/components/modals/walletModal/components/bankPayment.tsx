@@ -1,6 +1,7 @@
-import { Countries } from 'apps/home-app/src/Arrays/countries';
 import React from 'react'
 import Select from 'react-select';
+
+import { Countries } from 'apps/superApp/src/Arrays/countries';
 import CustomInputSelect from '../../../inputs/customInput/selectInputText';
 
 const BankPayment = () => {

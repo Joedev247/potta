@@ -1,10 +1,10 @@
 import { render } from '@testing-library/react';
 
-import Input from './input';
+import Modal from './modal';
 
-describe('Input', () => {
+describe('Modal', () => {
   it('should render successfully', () => {
-    // const { baseElement } = render(<Input />);
+    // const { baseElement } = render(<Modal />);
     // expect(baseElement).toBeTruthy();
   });
 });

@@ -1,13 +1,11 @@
+import { FC } from "react";
 
-import React, { FC } from "react";
-
-interface ProceedCheckbox {
+interface Props {
   value: string;
   name: string;
-
 }
 
-const Checkbox: FC<ProceedCheckbox> = ({ value, name }) => {
+const Checkbox: FC<Props> = ({ value, name }) => {
   return (
     <fieldset>
       <div className="relative flex items-start">

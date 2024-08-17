@@ -22,7 +22,7 @@ const Search: React.FC<SearchProps> = ({ onchange, text, value, placeholder }) =
                     value={value}
                     placeholder={placeholder}
                     onChange={onchange}
-                    className="w-full py-1.5  rounded-full outline-none pl-1"
+                    className="w-full py-1.5 rounded-full outline-none pl-1"
                 />
             </div>
         </>

@@ -1,13 +1,12 @@
 import React, { ChangeEvent } from 'react';
 
 interface SearchProps {
-    onchange: (event: ChangeEvent<HTMLInputElement>) => void;
-    text: string;
     value: string;
     placeholder: string;
+    onchange: (event: ChangeEvent<HTMLInputElement>) => void;
 }
 
-const Search: React.FC<SearchProps> = ({ onchange, text, value, placeholder }) => {
+const Search: React.FC<SearchProps> = ({ onchange, value, placeholder }) => {
     return (
         <>
             <div

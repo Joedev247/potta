@@ -1,19 +1,19 @@
-import Airtime from '../../../components/tables/Airtime/data'
-import Conversations from '../../../components/tables/Converstions/data'
-import Email from '../../../components/tables/Email/data'
-import Incomming_sms from '../../../components/tables/Incomming_sms/data'
-import OutgoingSMS from '../../../components/tables/OutgoingSMS/data'
-import USSD from '../../../components/tables/USSD/data'
-import Voice from '../../../components/tables/Voice/data'
-import Whatsapp from '../../../components/tables/Whatsapp/data'
-import React from 'react'
+import Email from 'apps/superApp/src/components/inputs/email'
+import Airtime from 'apps/superApp/src/components/tables/Airtime/data'
+import Conversations from 'apps/superApp/src/components/tables/Converstions/data'
+import IncommingSms from 'apps/superApp/src/components/tables/Incomming_sms/data'
+import OutgoingSMS from 'apps/superApp/src/components/tables/OutgoingSMS/data'
+import USSD from 'apps/superApp/src/components/tables/USSD/data'
+import Voice from 'apps/superApp/src/components/tables/Voice/data'
+import Whatsapp from 'apps/superApp/src/components/tables/Whatsapp/data'
+import { FC } from 'react'
 
-const Talk = () => {
+const Talk: FC = () => {
     return (
         <div className=' '>
             <div className='mt-2'>
                 <h3 className='text-2xl mb-2'>Incoming SMS</h3>
-                <Incomming_sms />
+                <IncommingSms />
             </div>
             <div className='mt-16'>
                 <h3 className='text-2xl mb-2'>Outgoing SMS</h3>

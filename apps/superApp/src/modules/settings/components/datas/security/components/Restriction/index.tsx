@@ -1,20 +1,20 @@
-import TextInput from '../../../components/inputs/text'
 import React from 'react'
+import TextInput from 'apps/superApp/src/components/inputs/text'
 
 const Restriction = () => {
     return (
         <div className='w-[60%] relative'>
             <div className=''>
                 <label htmlFor="">Maximum weond Login Attemp</label>
-                <TextInput onchange={() => { }} text={'number'} value={''} placeholder={'4'} />
+                <TextInput onchange={() => { console.log("first") }} text={'number'} value={''} placeholder={'4'} />
             </div>
             <div className='mt-5'>
                 <label htmlFor="">Force Password Change after</label>
-                <TextInput onchange={() => { }} text={'text'} value={''} placeholder={'10 Days'} />
+                <TextInput onchange={() => { console.log("first") }} text={'text'} value={''} placeholder={'10 Days'} />
             </div>
             <div className='mt-5'>
                 <label htmlFor="">Force Password Change after</label>
-                <TextInput onchange={() => { }} text={'text'} value={''} placeholder={'127.01.25.36'} />
+                <TextInput onchange={() => { console.log("first") }} text={'text'} value={''} placeholder={'127.01.25.36'} />
             </div>
 
             <div className='mt-5'>

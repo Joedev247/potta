@@ -1,9 +1,9 @@
 "use client";
+import { Search } from "@instanvi/ui-components";
+import TeamUserModal from "apps/superApp/src/components/modals/teamModal";
+import TableTeam from "apps/superApp/src/components/tables/teamTable/data";
 import React, { useRef, useState } from "react";
 
-import Search from "../../inputs/search/normalSearch";
-import TableTeam from "../../tables/teamTable/data";
-import TeamUserModal from "../../modals/teamModal";
 
 
 
@@ -15,7 +15,7 @@ const Team: React.FC = () => {
         <div className='w-full md:px-16   '>
             <div className='flex justify-between mt-10'>
                 <div className='w-1/2'>
-                    <Search onchange={() => { }} text={''} value={''} placeholder={'Search for team'} />
+                    <Search onchange={() => { console.log("first") }} value={''} placeholder={'Search for team'} />
                 </div>
 
                 <TeamUserModal />
