@@ -10,7 +10,7 @@ const SuccessVerification = () => {
   return (
     <div className="h-screen w-full flex justify-center items-center ">
       <div className="mx-auto w-full flex max-w-4xl items-center justify-between p-6 lg:px-8">
-        <div className="w-full  ">
+        <div className="w-full">
           <div className="w-full mt-6  flex justify-center items-center h-full ">
             <div className="w-full">
               <div className="w-full flex justify-center items-center h-[40vh] border p-8 ">

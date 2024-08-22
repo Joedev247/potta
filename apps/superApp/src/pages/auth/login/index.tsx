@@ -10,7 +10,7 @@ import { IUser } from "../../../utils/types";
 import { Button, Input } from "@instanvi/ui-components";
 import { meAPI } from "../../../modules/auth/utils/api";
 import useAuth from "../../../modules/auth/hooks/useAuth";
-import Layout from "../../../modules/auth/components/layout";
+import Layout from "../../../modules/auth/layout";
 import { useLogin } from "../../../modules/auth/hooks/useLogin";
 import { LoginData, loginSchema } from "../../../modules/auth/utils/validations";
 

@@ -8,7 +8,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { SubmitHandler, useForm } from "react-hook-form";
 
 import { Button, Input } from "@instanvi/ui-components";
-import Layout from "../../../modules/auth/components/layout";
+import Layout from "../../../modules/auth/layout";
 import { EmailData, emailSchema } from "../../../modules/auth/utils/validations";
 import { useForgotPassword } from "../../../modules/auth/hooks/useForgotPassword";
 

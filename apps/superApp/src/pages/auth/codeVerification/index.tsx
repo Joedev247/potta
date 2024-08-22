@@ -6,7 +6,7 @@ import { useSearchParams } from "next/navigation";
 
 import Proceed from "../../../components/button/submitButton";
 import VerificationInput from "react-verification-input";
-import Layout from "../../../modules/auth/components/layout";
+import Layout from "../../../modules/auth/layout";
 import { useResetPasswordConfirm } from "../../../modules/auth/hooks/useResetPasswordConfirm";
 import { maskEmailAddress } from "../../../utils";
 

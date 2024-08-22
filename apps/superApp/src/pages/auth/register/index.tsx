@@ -12,7 +12,7 @@ import {
   registerSchema,
 } from "../../../modules/auth/utils/validations";
 import { Button, Input } from "@instanvi/ui-components";
-import Layout from "../../../modules/auth/components/layout";
+import Layout from "../../../modules/auth/layout";
 import { useRegister } from "../../../modules/auth/hooks/useRegister";
 
 type SelectProp = SingleValue<{

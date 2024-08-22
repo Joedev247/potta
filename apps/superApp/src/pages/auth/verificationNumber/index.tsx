@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import PhoneInput from 'react-phone-input-2'
 
 import { Button } from "@instanvi/ui-components";
-import Layout from "../../../modules/auth/components/layout";
+import Layout from "../../../modules/auth/layout";
 
 const PhoneNumber = () => {
   const [phone, setPhone] = useState('');
