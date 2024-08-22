@@ -1,27 +1,25 @@
-import React, { FC, ReactNode } from 'react'
+import React from 'react'
 import SideMenu from './components/sideMenu'
-interface Children {
-    children: ReactNode
-}
+
 export default function Layout({
-    children,
+  children,
 }: Readonly<{
-    children: React.ReactNode;
+  children: React.ReactNode;
 }>) {
-    return (
-        <div className='min-h-screen w-full md:flex '>
-            <div className='md:w-[50%] w-full'>
-                {children}
-            </div>
-            <div className='w-[50%] md:block hidden min-h-screen'
-                style={{
-                    background: `url('/icons/bg.svg')`,
-                    backgroundPosition: 'center center',
-                    backgroundRepeat: "no-repeat",
-                    backgroundSize: 'cover'
-                }}>
-                <SideMenu />
-            </div>
-        </div>
-    )
+  return (
+    <div className='min-h-screen w-full md:flex '>
+      <div className='md:w-[50%] w-full'>
+        {children}
+      </div>
+      <div className='w-[50%] md:block hidden min-h-screen'
+        style={{
+          background: `url('/icons/bg.svg')`,
+          backgroundPosition: 'center center',
+          backgroundRepeat: "no-repeat",
+          backgroundSize: 'cover'
+        }}>
+        <SideMenu />
+      </div>
+    </div>
+  )
 }
