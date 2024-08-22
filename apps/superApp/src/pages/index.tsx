@@ -6,7 +6,7 @@ const HomeApp = () => {
   return (
     <Layout>
       <div className='mx-auto flex max-w-7xl items-center justify-between p-8 lg:px-8'>
-        <div className='grid grid-cols-5  gap-5 w-full'>
+        <div className='grid grid-cols-1 md:grid-cols-5  gap-5 w-full'>
           <div className='w-full flex cursor-pointer mt-20 justify-center primary   p-5 '>
             <div className='w-full'>
               <div className='my-10 flex justify-center h-[7vh]'>
