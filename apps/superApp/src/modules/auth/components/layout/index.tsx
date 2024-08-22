@@ -1,17 +1,19 @@
 import React, { FC, ReactNode } from 'react'
-import SideMenu from '../sideMenu'
+import SideMenu from './components/sideMenu'
 interface Children {
     children: ReactNode
 }
 export default function Layout({
     children,
-}: Readonly<Children>) {
+}: Readonly<{
+    children: React.ReactNode;
+}>) {
     return (
-        <div className='h-screen w-full flex'>
-            <div className='w-[50%]'>
+        <div className='h-screen w-full md:flex '>
+            <div className='md:w-[50%] w-full'>
                 {children}
             </div>
-            <div className='w-[50%]'>
+            <div className='w-[50%] md:block hidden'>
                 <SideMenu />
             </div>
         </div>

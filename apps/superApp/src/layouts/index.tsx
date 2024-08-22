@@ -7,10 +7,10 @@ interface Children {
 const Layout: FC<Children> = ({ children }) => {
     return (
         <div className='w-full  flex'>
-            <div className='w-[3%] fixed'>
+            <div className='md:w-[3%] z-50 w-[10%] fixed'>
                 <SideBar />
             </div>
-            <div className='w-[97%] ml-[3%]'>
+            <div className='md:w-[97%] w-[90%] md:ml-[3%] ml-[10%]'>
                 <div className='w-full z-40 fixed '>
                     <Navbar />
                 </div>
