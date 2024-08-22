@@ -77,21 +77,24 @@ const SignUp = () => {
       >
         <div className="mx-auto max-w-5xl relative   px-4 sm:px-16 lg:px-32 w-full">
           <div className="w-full md:px-3">
-            <div className="w-full  text-left">
+            <div className="w-full mb-5 text-left">
               <h3 className="text-3xl">Sign Up</h3>
               <p className="text-gray-400 my-2">
                 Before we start, Please enter your current location
               </p>
             </div>
-            <div className="mt-8 w-full">
+            <div className="w-full">
               <label htmlFor="">Country / Area of resident</label>
               <Select
                 onChange={(val) => onChangeCountry(val)}
                 options={countryList}
                 className="rounded-0 outline-none mt-2"
               />
+              {errors?.country ? (
+                <small className="col-span-2 text-red-500">{errors?.country?.message}</small>
+              ) : null}
             </div>
-            <div className="mt-5 w-full">
+            <div className="w-full">
               <Input
                 name="email"
                 type="email"
@@ -101,7 +104,7 @@ const SignUp = () => {
                 placeholder="catherine.shaw@gmail.com"
               />
             </div>
-            <div className="mt-5 w-full">
+            <div className=" w-full">
               <Input
                 name="password"
                 label="Password"
@@ -110,7 +113,7 @@ const SignUp = () => {
                 placeholder="Password@123"
               />
             </div>
-            <div className="relative mt-5  flex items-start">
+            <div className="relative mt-5 flex items-start">
               <div className="flex h-6 items-center">
                 <input
                   id="agreements"
@@ -129,7 +132,7 @@ const SignUp = () => {
                 </label>
               </div>
             </div>
-            <div className="relative mt-5  flex items-start">
+            <div className="relative   flex items-start">
               <div className="flex h-6 items-center">
                 <input
                   id="Terms"
