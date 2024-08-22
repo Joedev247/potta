@@ -1,9 +1,11 @@
 import React, { FC, ReactNode } from 'react'
 import SideBar from './sidebar'
 import Navbar from './navbar'
+
 interface Children {
   children: ReactNode
 }
+
 const Layout: FC<Children> = ({ children }) => {
   return (
     <div className='w-full flex'>

@@ -1,5 +1,6 @@
 import "../styles/globals.css";
 import "../index.css";
+import Head from "next/head";
 import type { AppProps } from "next/app";
 import "remixicon/fonts/remixicon.css";
 import "react-phone-input-2/lib/style.css";
@@ -13,6 +14,10 @@ export default function App({ Component, pageProps }: AppProps) {
     <ReactQueryClientProvider>
       <DataProvider>
         <AuthProvider>
+          <Head>
+            <title>Instanvi - Super App</title>
+            <meta name="description" content="Your page description" />
+          </Head>
           <Component {...pageProps} />
           <Toast />
         </AuthProvider>

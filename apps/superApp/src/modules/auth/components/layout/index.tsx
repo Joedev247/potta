@@ -7,7 +7,7 @@ export default function Layout({
   children: React.ReactNode;
 }>) {
   return (
-    <div className='min-h-screen w-full md:flex '>
+    <div className='min-h-screen w-full md:flex'>
       <div className='md:w-[50%] w-full'>
         {children}
       </div>
