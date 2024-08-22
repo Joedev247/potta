@@ -42,7 +42,7 @@ const Input: React.FC<Props> = ({
         <div className="relative rounded-md shadow-sm mt-3">
           <input
             id={name}
-            type={type}
+            type={open && name?.includes("password") ? "password" : !open && name?.includes("password") ? "text" : type}
             value={value}
             placeholder={placeholder}
             className="w-full py-2.5 border outline-none pl-3"
