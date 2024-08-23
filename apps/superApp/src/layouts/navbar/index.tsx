@@ -29,7 +29,7 @@ export default function Navbar() {
                   <WalletIcon height={'10'} width={'20'} color={''} />
                 </div>
               </div>
-              <span className="px-5 py-1.5 flex font-medium border rounded-full border-blue-500  text-blue-500">XAF&nbsp;35000</span>
+              <span className="px-5 py-1 flex font-semibold rounded-full border-2 border-[#4563f985]  text-[#4564F9]">XAF&nbsp;35000</span>
               <Image src={"/icons/top-menu-bell.svg"} alt='notifiations' className='cursor-pointer' width={26} height={26} />
             </div>
           </div>

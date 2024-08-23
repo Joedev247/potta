@@ -17,7 +17,7 @@ const Settings = () => {
 			<div className='w-[10%] h-[95.7vh] fixed'>
 				<Tabs />
 			</div>
-			<div className='w-[90%] ml-[10%]'>
+			<div className='w-[90%] xl:w-[60%] xl:mx-auto ml-[10%]'>
 				{
 					context?.toggle == 'team' ?
 						<Team /> :

@@ -50,10 +50,10 @@ const HomeApp = () => {
           <div className='w-full flex cursor-pointer mt-20 justify-center primary   p-5 '>
             <div className='w-full'>
               <div className='my-10 flex justify-center h-[7vh]'>
-                <Image src="/icons/talk.svg" height={80} width={80} alt="" />
+                <Image src="/icons/flows.svg" height={80} width={80} alt="" />
               </div>
               <div className='w-full flex justify-center '>
-                <p className='text-lg'>Talk</p>
+                <p className='text-lg'>Flows</p>
               </div>
             </div>
           </div>
