@@ -18,6 +18,7 @@ const Email: FC<Props> = ({
           type="email"
           {...register("email")}
           placeholder="catherine.shaw@gmail.com"
+
           className="block w-full rounded-0 border py-2.5 pr-10 outline-none pl-3 text-gray-900  "
         />
         <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3  ">
