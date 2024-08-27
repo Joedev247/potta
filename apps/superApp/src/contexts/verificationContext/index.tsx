@@ -1,9 +1,6 @@
 import React, { createContext, ReactNode, useState } from "react";
-import {
-  AddressProp,
-  BusinessProp,
-  IndentityProp,
-} from "../../../modules/auth/utils/types";
+import { AddressProp, BusinessProp, IndentityProp } from "../../modules/auth/utils/types";
+
 
 interface ContextType {
   toggle: string;

@@ -8,7 +8,7 @@ const Log: FC = () => {
     <div className='w-full md:px-16   '>
       <div className='flex  justify-between mt-10'>
         <div className='w-1/2'>
-          <Search onChange={() => console.log("first")} value={''} placeholder={'Search for team'} />
+          <Search placeholder={'Search for team'} />
         </div>
         <TeamUserModal />
       </div>

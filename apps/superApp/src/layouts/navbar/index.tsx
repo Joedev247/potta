@@ -19,7 +19,7 @@ export default function Navbar() {
           <h1 className="font-semibold text-[22px] capitalize"></h1>
         </div>
         <div className='w-full'>
-          <Search onChange={() => { console.log("search") }} value={''} placeholder={'Search a text here'} />
+          <Search rounded placeholder={'Search a text here'} />
         </div>
         <div className='flex justify-end'>
           <div className='flex justify-end'>

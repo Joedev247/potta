@@ -41,7 +41,7 @@ const Wallet = () => {
                 <div className='flex justify-between'>
                     <div className='flex space-x-3 w-1/3'>
                         <div className='w-2/3'>
-                            <Search onChange={() => { console.log("first") }} value={''} placeholder={''} />
+                            <Search placeholder={''} />
                         </div>
                         <div className='w-1/3'>
                             <Select options={Industry} />

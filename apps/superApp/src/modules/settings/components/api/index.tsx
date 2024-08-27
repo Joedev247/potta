@@ -7,6 +7,7 @@ const API = () => {
             <div className='mt-5'>
                 <label htmlFor="">Base Url</label>
                 <Input
+                    name=''
                     value={''}
                     placeholder={'https://baseurl.com/9876'}
                     onChange={() => { console.log("first") }}
@@ -15,7 +16,12 @@ const API = () => {
             </div>
             <div className='mt-5'>
                 <label htmlFor="">API Keys</label>
-                <Input onChange={() => { console.log("first") }} value={''} placeholder={'djhghjdf55fklf457445555ffdf'} />
+                <Input
+                    name=''
+                    value={''}
+                    onChange={() => { console.log("first") }}
+                    placeholder={'djhghjdf55fklf457445555ffdf'}
+                />
             </div>
         </div>
     )

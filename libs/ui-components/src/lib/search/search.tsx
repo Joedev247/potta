@@ -1,26 +1,49 @@
-import React, { ChangeEvent } from 'react';
+'use client'
+import React, { ChangeEvent, useCallback, useState } from 'react';
+import "./search.css"
+import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 
 interface SearchProps {
-  value: string;
+  searchName?: string;
+  rounded?: boolean;
   placeholder: string;
-  onChange?: (event: ChangeEvent<HTMLInputElement>) => void;
 }
 
-const Search: React.FC<SearchProps> = ({ onChange, value, placeholder }) => {
+const Search: React.FC<SearchProps> = ({ searchName, rounded, placeholder }) => {
+  const router = useRouter()
+  const pathname = usePathname()
+  const searchParams = useSearchParams()
+
+  const [val, setVal] = useState("")
+
+  // Get a new searchParams string by merging the current
+  // searchParams with a provided key/value pair
+  const createQueryString = useCallback(
+    (name: string, value: string) => {
+      const params = new URLSearchParams(searchParams.toString())
+      params.set(name, value)
+      return params.toString()
+    },
+    [searchParams]
+  )
+
   return (
     <div
-      className={`flex items-center gap-x-3 rounded-full border px-4 w-full md:w-full `}
+      className={`search-parent flex items-center gap-x-3 ${rounded ? "rounded-full" : ""} border px-4 w-full md:w-full `}
     >
-      <i className="ri-search-line text-xl text-gray-400"></i>
+      <i className="ri-search-line text-xl text-gray-400" />
       <input
+        id="search"
+        value={val}
         type="search"
         name="search"
-        id="search"
-        autoComplete="off"
-        value={value}
         placeholder={placeholder}
-        onChange={onChange}
-        className="w-full py-2.5   outline-none pl-1"
+        onChange={(event: ChangeEvent<HTMLInputElement>) => {
+          const newSearch = event?.target?.value;
+          setVal(newSearch)
+          router.push(pathname + '?' + createQueryString(searchName ?? 'search', newSearch))
+        }}
+        className="w-full py-2 my-[1px] outline-none pl-1"
       />
     </div>
   )

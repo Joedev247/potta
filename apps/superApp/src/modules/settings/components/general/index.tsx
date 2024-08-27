@@ -78,7 +78,7 @@ const General = () => {
           <Input
             type="text"
             name="lastName"
-            label='Last Name'
+            label="Last Name"
             register={register}
             placeholder={'Paul'}
             errors={errors?.lastName}

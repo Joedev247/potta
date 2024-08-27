@@ -5,8 +5,6 @@ import TableTeam from "apps/superApp/src/components/tables/teamTable/data";
 import React, { useRef, useState } from "react";
 
 
-
-
 const Team: React.FC = () => {
 
     const [displays, setDisplays] = useState(false)
@@ -15,7 +13,7 @@ const Team: React.FC = () => {
         <div className='w-full md:px-16   '>
             <div className='flex justify-between mt-10'>
                 <div className='w-1/2'>
-                    <Search onchange={() => { console.log("first") }} value={''} placeholder={'Search for team'} />
+                    <Search placeholder={'Search for team'} />
                 </div>
 
                 <TeamUserModal />
