@@ -11,8 +11,8 @@ interface Props {
 
 const Button: FC<Props> = ({ value, onClick, icon, type, disabled, fullWidth }) => {
   return (
-    <button type={type} disabled={disabled} className={`text-white bg-[#237804] ${fullWidth ? "w-full" : ""} pl-4 pr-6 -pt-0.5 py-2.5 flex space-x-2 justify-center`} onClick={onClick}>
-      <i className={`ri-${icon}-line  mr-2`}></i>
+    <button type={type} disabled={disabled} className={`btn text-white bg-[#237804] hover:bg-[#3a9918] ${fullWidth ? "w-full" : ""} pl-4 pr-6 -pt-0.5 py-2.5 flex space-x-2 justify-center`} onClick={onClick}>
+      <i className={`ri-${icon}-line icon mr-2`} />
       {value}
     </button>
   );

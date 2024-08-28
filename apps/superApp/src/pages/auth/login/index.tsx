@@ -1,23 +1,25 @@
-import React from "react";
+import React, { useState } from "react";
 import Link from "next/link";
 import { AxiosError } from "axios";
 import toast from "react-hot-toast";
-import { useRouter } from 'next/router';
+// import { useRouter } from 'next/router';
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm, SubmitHandler } from "react-hook-form";
 
 import { IUser } from "../../../utils/types";
-import { Button, Input } from "@instanvi/ui-components";
+import Layout from "../../../modules/auth/layout";
 import { meAPI } from "../../../modules/auth/utils/api";
 import useAuth from "../../../modules/auth/hooks/useAuth";
-import Layout from "../../../modules/auth/layout";
 import { useLogin } from "../../../modules/auth/hooks/useLogin";
+import { Button, Checkbox, Input } from "@instanvi/ui-components";
 import { LoginData, loginSchema } from "../../../modules/auth/utils/validations";
 
 
 const SignIn = () => {
-  const router = useRouter()
+  // const router = useRouter()
   const { setUser, } = useAuth()
+  const [rememberChecked, setRememberChecked] = useState(false);
+
   const { isPending, mutate } = useLogin()
 
   const methods = useForm<LoginData>({
@@ -49,10 +51,14 @@ const SignIn = () => {
     })
   }
 
+  const onRememberCheckChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setRememberChecked(e.target.checked);
+  };
+
   return (
     <Layout >
       <form className="h-screen w-full items-center flex justify-center" onSubmit={handleSubmit(onSubmit)}>
-        <div className="mx-auto max-w-5xl relative   px-4 sm:px-16 lg:px-32 w-full">
+        <div className="mx-auto max-w-5xl relative px-4 sm:px-16 w-full 2xl:w-[35rem]">
           <div className="w-full md:px-3">
             <div className="w-full  text-left">
               <h3 className="text-3xl">Sign in</h3>
@@ -77,22 +83,12 @@ const SignIn = () => {
               />
             </div>
             <div className="mt-5 flex justify-between">
-              <div className="relative   flex items-start">
-                <div className="flex h-6 items-center">
-                  <input
-                    id="comments"
-                    name="comments"
-                    type="checkbox"
-                    aria-describedby="comments-description"
-                    className="h-5 w-5 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600"
-                  />
-                </div>
-                <div className="ml-3 text-sm leading-6">
-                  <label htmlFor="comments" className="font-medium  cursor-pointer text-gray-900">
-                    Remember me
-                  </label>
-                </div>
-              </div>
+              <Checkbox
+                name="remember"
+                text="Remember me"
+                value={rememberChecked}
+                onChange={onRememberCheckChange}
+              />
               <div>
                 <Link href="/auth/renewPassword"><h6 className="text-md">Forgotten Password</h6></Link>
               </div>

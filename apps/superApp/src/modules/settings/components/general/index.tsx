@@ -13,6 +13,7 @@ import { SelectProp } from 'apps/superApp/src/utils/types'
 import { useUpdateProfile } from 'apps/superApp/src/modules/auth/hooks/useUpdateProfile'
 import { ProfileData, profileSchema } from 'apps/superApp/src/modules/auth/utils/validations'
 
+
 const languages = [
   { value: "english", label: "English" },
   { value: "french", label: "French" }
@@ -62,7 +63,7 @@ const General = () => {
   }, [])
 
   return (
-    <form className='mt-5  md:px-16 relative xl:w-[60%] xl:mx-auto' onSubmit={handleSubmit(onSubmit)}>
+    <form className='mt-5  md:px-16 relative xl:w-[60%]' onSubmit={handleSubmit(onSubmit)}>
       <div className='grid grid-cols-2 gap-4'>
         <div className='mt-8'>
           <Input
@@ -86,40 +87,36 @@ const General = () => {
         </div>
       </div>
       <div className='mt-8 w-full'>
-        <div className='flex space-x-1'>
-          <label htmlFor="">Company Name</label>
-          <i className='ri-checkbox-circle-fill text-green-400'></i>
-        </div>
         <Input
+          verified
           type="text"
           name="name"
           register={register}
+          label="Company Name"
           errors={errors?.name}
           placeholder={'ABC Company'} />
       </div>
       <div className='grid grid-cols-2 gap-4'>
         <div className='mt-8'>
-          <div className='flex mb-3 space-x-1'>
-            <label htmlFor="">Phone Number</label>
-            <i className='ri-checkbox-circle-fill text-green-400'></i>
+          <div className='flex mb-1 gap-1 items-center'>
+            <label htmlFor="" className="capitalize font-semibold text-[0.75rem]">Phone Number</label>
+            <i className='ri-checkbox-circle-fill text-green-700 -mt-1' />
           </div>
           <PhoneInput
             country={'cm'}
             value={phone}
             inputClass=" "
-            containerClass=" "
+            containerClass="phone-input"
             countryCodeEditable
             onChange={val => setPhone(val)}
           />
         </div>
         <div className='mt-8'>
-          <div className='flex space-x-1'>
-            <label htmlFor="">Email</label>
-            <i className='ri-checkbox-circle-fill text-green-400'></i>
-          </div>
           <Input
+            verified
             type="email"
             name="email"
+            label="Email"
             register={register}
             errors={errors.email}
             placeholder={'Pauljean@gmail.com'}
@@ -128,14 +125,14 @@ const General = () => {
       </div>
       <div className='grid grid-cols-2 mt-3  gap-2'>
         <div className='mt-8'>
-          <p className='mb-2'>Country</p>
+          <label className="capitalize font-semibold text-[0.75rem]">Country</label>
           <Select
             options={countryList}
             onChange={(val) => onSelectChange("country", val)}
           />
         </div>
         <div className='mt-8'>
-          <p className='mb-2'>Language</p>
+          <label className="capitalize font-semibold text-[0.75rem]">Language</label>
           <Select
             options={languages}
             onChange={(val) => onSelectChange("language", val)}

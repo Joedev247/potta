@@ -1,22 +1,20 @@
 "use client"
 import React from 'react'
 import Image from 'next/image'
-import { useRouter } from 'next/router'
+import { usePathname } from 'next/navigation'
+
 import { Search } from '@instanvi/ui-components'
 import WalletIcon from '../../components/icons/walletIcon'
 
 
 export default function Navbar() {
-  const { asPath } = useRouter()
-  const string = asPath
-  const str = string.split("/")
+  const pathname = usePathname()
 
   return (
-
     <nav className="bg-blue border-b">
-      <div className="grid px-2 md:px-0 md:grid-cols-3 py-2 gap-2">
-        <div className="flex py-4 md:block hidden w-1/3 items-center">
-          <h1 className="font-semibold text-[22px] capitalize"></h1>
+      <div className="grid px-2 md:px-0 md:grid-cols-3 gap-2 items-center">
+        <div className="flex py-4 md:block hidden w-1/3 items-center pl-5">
+          <h1 className="font-semibold text-[22px] capitalize">{pathname === "/settings" ? "account settings" : null}</h1>
         </div>
         <div className='w-full'>
           <Search rounded placeholder={'Search a text here'} />

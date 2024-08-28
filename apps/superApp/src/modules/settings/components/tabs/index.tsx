@@ -5,8 +5,8 @@ const Tabs = () => {
   const context = useContext(ContextData)
   const [switched, setSwitched] = useState<string>('general')
   return (
-    <div className='flex w-full  h-full '>
-      <div className='w-full h-full border-r'>
+    <div className='flex w-full h-full '>
+      <div className='w-full h-full'>
         <div className={`${switched == 'general' ? ' border-r-2 border-[#237804] text-[#237804]' : ''} w-full mt-10`} >
           <p
             onClick={

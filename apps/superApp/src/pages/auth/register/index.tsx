@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import Link from "next/link";
 import { AxiosError } from "axios";
 import Select, { SingleValue } from "react-select";
@@ -11,7 +11,7 @@ import {
   RegisterFormData,
   registerSchema,
 } from "../../../modules/auth/utils/validations";
-import { Button, Input } from "@instanvi/ui-components";
+import { Button, Checkbox, Input } from "@instanvi/ui-components";
 import Layout from "../../../modules/auth/layout";
 import { useRegister } from "../../../modules/auth/hooks/useRegister";
 
@@ -21,6 +21,8 @@ type SelectProp = SingleValue<{
 }>;
 
 const SignUp = () => {
+  const [termsChecked, setTermsChecked] = useState(false);
+  const [emailChecked, setEmailChecked] = useState(false);
   const { isPending, mutate } = useRegister();
 
   const methods = useForm<RegisterFormData>({
@@ -68,6 +70,14 @@ const SignUp = () => {
     setValue("country", value?.value as string);
   };
 
+  const onTermsChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setTermsChecked(e.target.checked);
+  };
+
+  const onEmailCheckChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setEmailChecked(e.target.checked);
+  };
+
   //=========== Component ================
   return (
     <Layout>
@@ -75,93 +85,72 @@ const SignUp = () => {
         className="h-screen w-full items-center flex justify-center"
         onSubmit={handleSubmit(onSubmit)}
       >
-        <div className="mx-auto max-w-5xl relative   px-4 sm:px-16 lg:px-32 w-full">
+        <div className="mx-auto max-w-5xl relative px-4 sm:px-16 w-full 2xl:w-[35rem]">
           <div className="w-full md:px-3">
             <div className="w-full mb-5 text-left">
-              <h3 className="text-3xl">Sign Up</h3>
-              <p className="text-gray-400 my-2">
+              <h3 className="text-2xl">Sign Up</h3>
+              <p className="text-gray-400 my-2 text-[0.875rem]">
                 Before we start, Please enter your current location
               </p>
             </div>
-            <div className="w-full">
-              <label htmlFor="">Country / Area of resident</label>
-              <Select
-                onChange={(val) => onChangeCountry(val)}
-                options={countryList}
-                className="rounded-0 outline-none mt-2"
-              />
-              {errors?.country ? (
-                <small className="col-span-2 text-red-500">{errors?.country?.message}</small>
-              ) : null}
-            </div>
-            <div className="w-full">
-              <Input
-                name="email"
-                type="email"
-                label="Email"
-                register={register}
-                errors={errors?.email}
-                placeholder="catherine.shaw@gmail.com"
-              />
-            </div>
-            <div className=" w-full">
-              <Input
-                name="password"
-                label="Password"
-                register={register}
-                errors={errors?.password}
-                placeholder="Password@123"
-              />
-            </div>
-            <div className="relative mt-5 flex items-start">
-              <div className="flex h-6 items-center">
-                <input
-                  id="agreements"
+            <div className="grid gap-2">
+              <div className="w-full">
+                <label htmlFor="" className="font-semibold text-[0.75rem]">Country / Area of resident</label>
+                <Select
+                  onChange={(val) => onChangeCountry(val)}
+                  options={countryList}
+                  className="rounded-0 outline-none mt-2"
+                />
+                {errors?.country ? (
+                  <small className="col-span-2 text-red-500">{errors?.country?.message}</small>
+                ) : null}
+              </div>
+              <div className="w-full">
+                <Input
+                  name="email"
+                  type="email"
+                  label="Email"
+                  register={register}
+                  errors={errors?.email}
+                  placeholder="catherine.shaw@gmail.com"
+                />
+              </div>
+              <div className=" w-full">
+                <Input
+                  name="password"
+                  label="Password"
+                  register={register}
+                  errors={errors?.password}
+                  placeholder="Password@123"
+                />
+              </div>
+
+              <div className="my-3 grid gap-1">
+                <Checkbox
                   name="agreements"
-                  type="checkbox"
-                  aria-describedby="agreements-description"
-                  className="h-5 w-5 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600"
+                  value={emailChecked}
+                  onChange={onEmailCheckChange}
+                  text="I agree to receive email updates"
+                />
+                <Checkbox
+                  name="terms"
+                  value={termsChecked}
+                  onChange={onTermsChange}
+                  text="I have read and agree to terms of services"
                 />
               </div>
-              <div className="ml-3 text-sm leading-6">
-                <label
-                  htmlFor="agreements"
-                  className="font-medium  cursor-pointer text-gray-900"
-                >
-                  I agree to receive email updates
-                </label>
-              </div>
             </div>
-            <div className="relative   flex items-start">
-              <div className="flex h-6 items-center">
-                <input
-                  id="Terms"
-                  name="Terms"
-                  type="checkbox"
-                  aria-describedby="Terms-description"
-                  className="h-5 w-5 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600"
-                />
-              </div>
-              <div className="ml-3 text-sm leading-6">
-                <label
-                  htmlFor="Terms"
-                  className="font-medium  cursor-pointer text-gray-900"
-                >
-                  I have read ang agree to terms of services
-                </label>
-              </div>
-            </div>
-            <div className="w-full mt-8 text-center">
+            <div className="w-full mt-3 text-center">
               {isPending ? (
-                <h3>Creating...</h3>
+                <h3 className="text-green-600">Creating...</h3>
               ) : (
                 <Button fullWidth type="submit" value={"Create Account"} />
               )}
             </div>
-            <div className="mt-8 flex space-x-2">
-              <p className="font-thin ">Already Register ? </p>
-              <Link className="text-blue-500" href={"/auth/login"}>
-                Sign In
+            <div className="absolute -bottom-20 flex space-x-2">
+              <p className="font-thin ">Already registered ? </p>
+              <Link className="text-[#0052FF] font-bold" href={"/auth/login"}>
+                Sign in
               </Link>
             </div>
           </div>

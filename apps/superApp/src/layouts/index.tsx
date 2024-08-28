@@ -7,6 +7,7 @@ interface Children {
 }
 
 const Layout: FC<Children> = ({ children }) => {
+
   return (
     <div className='w-full flex'>
       <div className='w-[10%] md:w-[60px]'>
@@ -16,7 +17,7 @@ const Layout: FC<Children> = ({ children }) => {
         <div className='static'>
           <Navbar />
         </div>
-        <div className='mt-[4vh]'>
+        <div>
           {children}
         </div>
       </div>

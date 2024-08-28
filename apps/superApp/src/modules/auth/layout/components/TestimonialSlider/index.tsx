@@ -5,7 +5,7 @@ interface Testimonial {
 }
 const testimonials: Testimonial[] = [
   {
-    text: "The latest financial insights and analysis to keep you up to date and ahead of the curve.",
+    text: "Fintech is the technology and innovation that aims to compete with traditional financial methods.",
     author: "John Doe",
   },
   {
@@ -13,7 +13,7 @@ const testimonials: Testimonial[] = [
     author: "Jane Smith",
   },
   {
-    text: "The latest financial insights and analysis to keep you up to date and ahead of the curve.",
+    text: "The technology innovation in financial services is one such example, accelerating rapidly.",
     author: "Alice Johnson",
   },
 ];
@@ -37,7 +37,7 @@ const TestimonialSlider: React.FC = () => {
         >
           {testimonials.map((testimonial, index) => (
             <div key={index} className="flex-shrink-0 w-full h-full p-4 text-center">
-              <p className="text-xl font-medium text-white mb-2">{testimonial.text}</p>
+              <p className="text-2xl font-bold text-white mb-2">{testimonial.text}</p>
             </div>
           ))}
         </div>
@@ -54,9 +54,9 @@ const TestimonialSlider: React.FC = () => {
         </div>
       </div>
       <div className=" flex justify-center">
-        <div>
-          <p className='text-white text-center mt-10 text-2xl'>Waiapi Karaka</p>
-          <p className='text-lg text-center text-gray-200'>Financial Officer</p>
+        <div className='text-center mt-5 '>
+          <p className='text-white text-xl font-bold'>Waiapi Karaka</p>
+          <p className='text-md text-gray-200'>Financial Officer</p>
         </div>
       </div>
     </div>
