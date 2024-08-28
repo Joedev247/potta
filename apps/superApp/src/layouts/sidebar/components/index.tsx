@@ -15,7 +15,7 @@ const ButtonIcon: FC = () => {
             <PopoverTrigger>
                 <img src="/icons/plus.svg" className="cursor-pointer" onClick={() => { setIsOpen(!isOpen) }} height={30} width={30} alt="" />
             </PopoverTrigger>
-            <PopoverContent className="border  ml-7 w-full bg-white">
+            <PopoverContent className="border ml-7 w-full bg-white">
                 <ContentSidebar />
             </PopoverContent>
         </Popover>

@@ -6,7 +6,7 @@ const SideBar = () => {
     const router = useRouter()
     return (
         <div className='h-screen primary p-2 relative w-full'>
-            <div className=' mt-2 ml-1'>
+            <div className='mt-2 ml-1'>
                 <img src="/icons/dashboard-boxes.svg" alt="" />
             </div>
             <div className='mt-10 ml-0.5'>

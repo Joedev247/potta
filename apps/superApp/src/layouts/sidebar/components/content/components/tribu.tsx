@@ -1,26 +1,15 @@
-import Link from 'next/link'
 import React from 'react'
+import CustomLink from '../../custom-link'
 
 const TribuContent = () => {
     return (
-        <div className='px-3 space-y-4 mt-5 relative  flex-cols'>
-        <div>
-            <Link href={''}>Campaign</Link>
+        <div className='px-1 mt-5 relative grid'>
+            <CustomLink href='' label='Campaign' />
+            <CustomLink href='' label='Creative' />
+            <CustomLink href='' label='Media Plan' />
+            <CustomLink href='' label='Report' />
+            <CustomLink href='' label='Persona' />
         </div>
-        <div>
-            <Link href={''}>Creative</Link>
-        </div>
-        <div>
-            <Link href={''}>Media Plan</Link>
-        </div>
-        <div>
-            <Link href={''}>Report</Link>
-        </div>
-        <div>
-            <Link href={''}>Persona</Link>
-        </div>
-
-    </div>
     )
 }
 export default TribuContent

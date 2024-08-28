@@ -12,8 +12,8 @@ export default function Navbar() {
 
   return (
     <nav className="bg-blue border-b">
-      <div className="grid px-2 md:px-0 md:grid-cols-3 gap-2 items-center">
-        <div className="flex py-4 md:block hidden w-1/3 items-center pl-5">
+      <div className="grid px-2 py-1 md:py-0 md:px-0 md:grid-cols-3 gap-2 items-center">
+        <div className="flex py-4 md:block hidden w-1/3 items-center pl-5 min-w-fit">
           <h1 className="font-semibold text-[22px] capitalize">{pathname === "/settings" ? "account settings" : null}</h1>
         </div>
         <div className='w-full'>
@@ -27,7 +27,7 @@ export default function Navbar() {
                   <WalletIcon height={'10'} width={'20'} color={''} />
                 </div>
               </div>
-              <span className="px-5 py-1 flex font-semibold rounded-full border-2 border-[#4563f985]  text-[#4564F9]">XAF&nbsp;35000</span>
+              <span className="px-5 py-1 flex font-semibold rounded-full border-2 border-[#4563f985]  text-[#4564F9]">XAF 35000</span>
               <Image src={"/icons/top-menu-bell.svg"} alt='notifiations' className='cursor-pointer' width={26} height={26} />
             </div>
           </div>

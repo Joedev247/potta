@@ -1,60 +1,27 @@
-import Link from 'next/link'
 import React from 'react'
+import CustomLink from '../../custom-link'
 
 const PottaContent = () => {
     return (
-        <div className='px-3 mt-5 flex flex-wrap h-[20vh] flex-col'>
-            <div className='mt-3'>
-                <Link href={''}>Vouchers</Link>
-            </div>
-            <div className='mt-3'>
-                <Link href={''}>Coupons</Link>
-            </div>
-            <div className='mt-3'>
-                <Link href={''}>Gift Card</Link>
-            </div>
-            <div className='mt-3'>
-                <Link href={''}>Royal Point</Link>
-            </div>
-            <div className='mt-3'>
-                <Link href={''}>Cashback</Link>
-            </div>
-            <div className='mt-3'>
-                <Link href={''}>Budgets</Link>
-            </div>
-            <div className='mt-3'>
-                <Link href={''}>Policy</Link>
-            </div>
-            <div className='mt-3'>
-                <Link href={''}>Cards</Link>
-            </div>
-            <div className='mt-3'>
-                <Link href={''}>Terminals</Link>
-            </div>
-            <div className='mt-3'>
-                <Link href={''}>Product/services</Link>
-            </div>
-            <div className='mt-3'>
-                <Link href={''}>Customers</Link>
-            </div>
-            <div className='mt-3'>
-                <Link href={''}>Vendors</Link>
-            </div>
-            <div className='mt-3'>
-                <Link href={''}>Terminal</Link>
-            </div>
-            <div className='mt-3'>
-                <Link href={''}>Invoice</Link>
-            </div>
-            <div className='mt-3'>
-                <Link href={''}>Purchase Orders</Link>
-            </div>
-            <div className='mt-3'>
-                <Link href={''}>Sale Receipt</Link>
-            </div>
-            <div className='mt-3'>
-                <Link href={''}>Filling</Link>
-            </div>
+        <div className='px-1 mt-5 grid grid-cols-3'>
+            <CustomLink href='' label='Vouchers' />
+            <CustomLink href='' label='Coupons' />
+            <CustomLink href='' label='Gift Card' />
+            <CustomLink href='' label='Royal Point' />
+            <CustomLink href='' label='Cashback' />
+            <CustomLink href='' label='Budgets' />
+            <CustomLink href='' label='Policy' />
+            <CustomLink href='' label='Cards' />
+            <CustomLink href='' label='Terminals' />
+            <CustomLink href='' label='Product/services' />
+            <CustomLink href='' label='Customers' />
+            <CustomLink href='' label='Vendors' />
+            <CustomLink href='' label='Customers' />
+            <CustomLink href='' label='Terminal' />
+            <CustomLink href='' label='Invoice' />
+            <CustomLink href='' label='Purchase Orders' />
+            <CustomLink href='' label='Sale Receipt' />
+            <CustomLink href='' label='Filling' />
         </div>
     )
 }

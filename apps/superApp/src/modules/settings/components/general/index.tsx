@@ -63,9 +63,9 @@ const General = () => {
   }, [])
 
   return (
-    <form className='mt-5  md:px-16 relative xl:w-[60%]' onSubmit={handleSubmit(onSubmit)}>
-      <div className='grid grid-cols-2 gap-4'>
-        <div className='mt-8'>
+    <form className='mt-10 grid gap-4 md:px-16 relative xl:w-[60%]' onSubmit={handleSubmit(onSubmit)}>
+      <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
+        <div>
           <Input
             type="text"
             name="firstName"
@@ -75,7 +75,7 @@ const General = () => {
             errors={errors?.firstName}
           />
         </div>
-        <div className='mt-8'>
+        <div>
           <Input
             type="text"
             name="lastName"
@@ -86,7 +86,7 @@ const General = () => {
           />
         </div>
       </div>
-      <div className='mt-8 w-full'>
+      <div>
         <Input
           verified
           type="text"
@@ -96,8 +96,8 @@ const General = () => {
           errors={errors?.name}
           placeholder={'ABC Company'} />
       </div>
-      <div className='grid grid-cols-2 gap-4'>
-        <div className='mt-8'>
+      <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
+        <div>
           <div className='flex mb-1 gap-1 items-center'>
             <label htmlFor="" className="capitalize font-semibold text-[0.75rem]">Phone Number</label>
             <i className='ri-checkbox-circle-fill text-green-700 -mt-1' />
@@ -111,7 +111,7 @@ const General = () => {
             onChange={val => setPhone(val)}
           />
         </div>
-        <div className='mt-8'>
+        <div>
           <Input
             verified
             type="email"
@@ -123,15 +123,15 @@ const General = () => {
           />
         </div>
       </div>
-      <div className='grid grid-cols-2 mt-3  gap-2'>
-        <div className='mt-8'>
+      <div className='grid grid-cols-1 md:grid-cols-2 gap-2'>
+        <div>
           <label className="capitalize font-semibold text-[0.75rem]">Country</label>
           <Select
             options={countryList}
             onChange={(val) => onSelectChange("country", val)}
           />
         </div>
-        <div className='mt-8'>
+        <div>
           <label className="capitalize font-semibold text-[0.75rem]">Language</label>
           <Select
             options={languages}

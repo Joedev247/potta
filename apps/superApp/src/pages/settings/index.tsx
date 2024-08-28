@@ -17,10 +17,10 @@ const Settings = () => {
 	return (
 		<Layout>
 			<div className='flex w-full min-h-[93.5vh]'>
-				<div className='w-[10%] border-r'>
+				<div className='xs:w- sm:w-[10%] border-r-2'>
 					<Tabs />
 				</div>
-				<div className='w-[90%] ml-[10%]'>
+				<div className='w-[90%] md:ml-[10%] px-2 md:px-0'>
 					{
 						context?.toggle == 'team' ?
 							<Team /> :

@@ -4,45 +4,60 @@ import TribuContent from './components/tribu'
 import AdsContent from './components/ads'
 import TalkContent from './components/talk'
 
+
+type Props = {
+    src: string
+    text: string
+    name: string
+    onClick: () => void
+}
+
+const Tab: React.FC<Props> = ({ src, text, name, onClick }) => {
+    return (
+        <div onClick={onClick} className={`w-full h-12 cursor-pointer flex justify-center items-center hover:bg-gray-50 ${name == text.toLowerCase() ? 'primary' : ''}`}>
+            <div className='flex space-x-2 px-2' >
+                <img src={src} alt="" />
+                <div>
+                    <p className="capitalize">{text}</p>
+                </div>
+            </div>
+        </div>
+
+    )
+}
+
+
 const ContentSidebar = () => {
     const [name, setName] = useState('talk')
     return (
-        <div className='w-full min-w-[50vh]   my-5'>
-            <div className='w-full border-b flex'>
-                <div onClick={() => setName('talk')} className={`w-full h-14 cursor-pointer flex justify-center items-center ${name == 'talk' ? 'primary' : ''}`}>
-                    <div className='flex space-x-3'>
-                        <img src="/icons/talk.svg" alt="" />
-                        <div>
-                            <p>Talk</p>
-                        </div>
-                    </div>
-                </div>
-                <div onClick={() => setName('ads')} className={`w-full h-14 cursor-pointer flex justify-center items-center ${name == 'ads' ? 'primary' : ''}`}>
-                    <div className='flex space-x-3'>
-                        <img src="/icons/instanvi.svg" alt="" />
-                        <div>
-                            <p>Ads</p>
-                        </div>
-                    </div>
-                </div>
-                <div onClick={() => setName('potta')} className={`w-full h-14 cursor-pointer flex justify-center items-center ${name == 'potta' ? 'primary' : ''}`}>
-                    <div className='flex space-x-3'>
-                        <img src="/icons/potta.svg" alt="" />
-                        <div>
-                            <p>Potta</p>
-                        </div>
-                    </div>
-                </div>
-                <div onClick={() => setName('tribu')} className={`w-full h-14 cursor-pointer flex justify-center items-center ${name == 'tribu' ? 'primary' : ''}`}>
-                    <div className='flex space-x-3'>
-                        <img src="/icons/tribu.svg" alt="" />
-                        <div>
-                            <p>Tribu</p>
-                        </div>
-                    </div>
-                </div>
+        <div className='w-full h-full'>
+            <div className='w-full border-b flex gap-2 px-1'>
+
+                <Tab name={name}
+                    text='talk'
+                    src="/icons/talk.svg"
+                    onClick={() => setName('talk')}
+                />
+
+                <Tab name={name}
+                    text='ads'
+                    src="/icons/instanvi.svg"
+                    onClick={() => setName('ads')}
+                />
+
+                <Tab name={name}
+                    text='potta'
+                    src="/icons/Potta.svg"
+                    onClick={() => setName('potta')}
+                />
+
+                <Tab name={name}
+                    text='tribu'
+                    src="/icons/Tribu.svg"
+                    onClick={() => setName('tribu')}
+                />
             </div>
-            <div className='h-[20vh] relative'>
+            <div className='min-h-[20vh] relative'>
                 {
                     name == 'potta' ? <PottaContent /> :
                         name == 'tribu' ? <TribuContent /> :
