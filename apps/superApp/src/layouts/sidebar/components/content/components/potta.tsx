@@ -3,7 +3,7 @@ import CustomLink from '../../custom-link'
 
 const PottaContent = () => {
     return (
-        <div className='px-1 mt-5 grid grid-cols-3'>
+        <div className='grid grid-cols-4'>
             <CustomLink href='' label='Vouchers' />
             <CustomLink href='' label='Coupons' />
             <CustomLink href='' label='Gift Card' />

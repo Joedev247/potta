@@ -63,7 +63,7 @@ const General = () => {
   }, [])
 
   return (
-    <form className='mt-10 grid gap-4 md:px-16 relative xl:w-[60%]' onSubmit={handleSubmit(onSubmit)}>
+    <form className='mt-10 grid gap-4 md:mx-auto md:px-16 relative xl:w-[60%]' onSubmit={handleSubmit(onSubmit)}>
       <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
         <div>
           <Input

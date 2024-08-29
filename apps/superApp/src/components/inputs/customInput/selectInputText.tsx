@@ -11,14 +11,14 @@ interface TextInputProps {
 const CustomInputSelect: React.FC<TextInputProps> = ({ onchange, text, value, placeholder, icon }) => {
   return (
     <div>
-      <div className="relative mt-2 rounded-md shadow-sm">
+      <div className="relative rounded-md shadow-sm">
         <input
           id="price"
           name="price"
           value={value}
           placeholder={placeholder}
           onChange={onchange}
-          className="w-full py-2.5 mt-3 border outline-none pl-2"
+          className="w-full py-2.5 border outline-none pl-2"
         />
         <div className="absolute inset-y-0 right-0 flex items-center">
           <label htmlFor="currency" className="sr-only">
@@ -27,7 +27,7 @@ const CustomInputSelect: React.FC<TextInputProps> = ({ onchange, text, value, pl
           <select
             id="currency"
             name="currency"
-            className="relative h-[44px] -ml-px inline-flex items-center gap-x-1.5 mt-3 px-6 pr-2 border-x outline-none "
+            className="relative h-[44px] bg-white -ml-px inline-flex items-center gap-x-1.5 pl-2 border-x outline-none "
           >
             <option>USD</option>
             <option>CAD</option>

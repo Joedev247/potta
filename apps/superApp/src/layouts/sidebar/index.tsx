@@ -5,20 +5,29 @@ import { useRouter } from 'next/navigation'
 const SideBar = () => {
     const router = useRouter()
     return (
-        <div className='h-screen primary p-2 relative w-full'>
-            <div className='mt-2 ml-1'>
-                <img src="/icons/dashboard-boxes.svg" alt="" />
+        <div className='h-screen flex flex-col justify-between items-center primary p-2 w-full'>
+            <div className='mt-2'>
+                <div className="flex place-content-center rounded-md border-2 border-green-300 hover:bg-green-100 p-2">
+                    <img src="/icons/dashboard.svg" alt="" />
+                </div>
+                <div className='mt-10 flex place-content-center rounded-md hover:bg-green-100 p-2'>
+                    <ButtonIcon />
+                </div>
             </div>
-            <div className='mt-10 ml-0.5'>
-                <ButtonIcon />
-            </div>
-            <div className='absolute bottom-0 flex justify-center'>
+            <div className='flex justify-center'>
                 <div className='flex space-y-3 flex-col'>
-                    <div className='ml-0.5' onClick={() => router.push("/settings")}>
+                    <div className=' hover:bg-gray-200 rounded-full p-1.5' onClick={() => router.push("/settings")}>
                         <img src="/icons/settings-outline.svg" height={24} width={24} alt="" />
                     </div>
                     <div>
-                        <div className='h-7  w-7 bg-gray-600 mb-3 border rounded-full'>
+                        <div className='w-[30px] h-[30px] 
+                         mb-3 border rounded-full m-auto'
+                            style={{
+                                background: `url('/img/profile-pic.jpeg')`,
+                                backgroundPosition: 'center center',
+                                backgroundRepeat: "no-repeat",
+                                backgroundSize: 'cover'
+                            }}>
                         </div>
                     </div>
                 </div>

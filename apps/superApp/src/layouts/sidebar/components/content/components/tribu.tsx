@@ -3,7 +3,7 @@ import CustomLink from '../../custom-link'
 
 const TribuContent = () => {
     return (
-        <div className='px-1 mt-5 relative grid'>
+        <div className='relative grid'>
             <CustomLink href='' label='Campaign' />
             <CustomLink href='' label='Creative' />
             <CustomLink href='' label='Media Plan' />

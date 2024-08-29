@@ -6,9 +6,9 @@ import CustomLoader from "../Loader";
 
 
 interface Props {
-    data: DataRow[];
-    records: DataRow[];
-    setRecords: React.Dispatch<React.SetStateAction<DataRow[]>>;
+    data?: DataRow[];
+    records?: DataRow[];
+    setRecords?: React.Dispatch<React.SetStateAction<DataRow[]>>;
 }
 
 const columns: TableColumn<DataRow>[] = [
@@ -41,7 +41,7 @@ const EmailTable: FC<Props> = ({ data, records, setRecords }) => {
 
     useEffect(() => {
         const timeout = setTimeout(() => {
-            setRecords(data);
+            setRecords?.(data as DataRow[]);
             setPending(false);
         }, 2000);
         return () => clearTimeout(timeout);
@@ -62,7 +62,7 @@ const EmailTable: FC<Props> = ({ data, records, setRecords }) => {
                 className="border ">
                 <DataTable
                     columns={columns}
-                    data={records}
+                    data={records as DataRow[]}
                     className="relative md:overflow-x-hidden"
                     progressPending={pending}
                     progressComponent={<CustomLoader />}

@@ -12,9 +12,9 @@ export default function Navbar() {
 
   return (
     <nav className="bg-blue border-b">
-      <div className="grid px-2 py-1 md:py-0 md:px-0 md:grid-cols-3 gap-2 items-center">
-        <div className="flex py-4 md:block hidden w-1/3 items-center pl-5 min-w-fit">
-          <h1 className="font-semibold text-[22px] capitalize">{pathname === "/settings" ? "account settings" : null}</h1>
+      <div className="grid px-2 py-2 md:px-0 md:grid-cols-3 gap-2 items-center">
+        <div className="flex md:block hidden w-1/3 items-center pl-5 min-w-fit">
+          <h1 className="font-semibold text-2xl capitalize">{pathname === "/settings" ? "account settings" : null}</h1>
         </div>
         <div className='w-full'>
           <Search rounded placeholder={'Search a text here'} />

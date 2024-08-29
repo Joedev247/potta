@@ -1,43 +1,74 @@
-import React from 'react'
-import Select from 'react-select';
+import React, { ChangeEvent, ChangeEventHandler, useState } from 'react'
+import Select, { SingleValue } from 'react-select';
 
-import { Countries } from 'apps/superApp/src/Arrays/countries';
 import CustomInputSelect from '../../../inputs/customInput/selectInputText';
+import { Input } from '@instanvi/ui-components';
+
+const methods = [
+  { value: 'bank', label: 'Bank or Card' },
+  { value: 'mobile', label: 'Mobile Payment' },
+]
+
+const banks = [
+  { value: 'standard', label: 'Standard Bank' },
+  { value: 'albaraka', label: 'Albaraka Bank' },
+  { value: 'cib', label: 'CIB Bank' },
+]
 
 const BankPayment = () => {
-    return (
-        <div>
-            <div className='grid grid-cols-1 gap-3'>
-                <div className='mt-5'>
-                    <label htmlFor="">Select Payment Method</label>
-                    <Select options={Countries} />
-                </div>
-                <div className='mt-8'>
-                    <label htmlFor="">Recharge Amount</label>
-                    <CustomInputSelect onchange={() => { console.log("first") }} text={''} value={''} placeholder={'3000'} icon={''} />
-                </div>
-            </div>
-            <div className='mt-8'>
+  const [selectedMothod, setSeletedMethod] = useState("")
+
+  const onPaymentChange = (event: SingleValue<{ value: string; label: string; }>) => {
+    if (event?.value) setSeletedMethod(event?.value)
+  }
+
+  return (
+    <div className='px-10 grid gap-5 mt-5'>
+      <div>
+        <label htmlFor="" className="capitalize font-semibold text-[0.75rem] mb-1">Select Payment Method</label>
+        <Select options={methods} onChange={onPaymentChange} />
+      </div>
+      <div>
+        <label htmlFor="" className="capitalize font-semibold text-[0.75rem] mb-1">Recharge Amount</label>
+        <CustomInputSelect onchange={() => { console.log("first") }} text={''} value={''} placeholder={'3000'} icon={''} />
+      </div>
+
+      {
+        selectedMothod === "mobile" ?
+          <div>
+            <Input name='phone' label='Enter Telephone' placeholder='672345556' />
+          </div> : selectedMothod === "bank" ?
+            <>
+              <div>
                 <label htmlFor="">Select Bank</label>
-                <Select options={Countries} />
-            </div>
-            <div className='mt-8 w-full'>
-                <table className='w-full '>
-                    <tr className='w-full'>
-                        <td>Account Name</td>
-                        <td className='flex justify-end'>INSTANVI LTD</td>
-                    </tr>
-                    <tr>
-                        <td>Account Number</td>
-                        <td className='flex justify-end'>02141455647</td>
-                    </tr>
-                    <tr>
-                        <td>SWIFT Code</td>
-                        <td className='flex justify-end'>0254</td>
-                    </tr>
-                </table>
-            </div>
-        </div>
-    )
+                <Select options={banks} />
+              </div>
+            </> : null}
+      {selectedMothod !== "" && <div className=' w-full'>
+        <table className='w-full '>
+          <tr className='w-full'>
+            <td>Account Name</td>
+            <td className='flex justify-end'>
+              <h4>INSTANVI LTD</h4>
+            </td>
+          </tr>
+          <tr>
+            <td>Account Number</td>
+            <td className='flex justify-end'>
+              <h4>02141455647</h4>
+            </td>
+          </tr>
+          <tr>
+            <td>SWIFT Code</td>
+            <td className='flex justify-end'>
+              <h4>0254</h4>
+            </td>
+          </tr>
+        </table>
+      </div>
+      }
+    </div>
+
+  )
 }
 export default BankPayment

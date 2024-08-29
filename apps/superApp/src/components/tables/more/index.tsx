@@ -8,10 +8,10 @@ import {
 
 const MoreIcon: FC = () => {
     return (
-        <Popover placement="left-start" showArrow={true}>
+        <Popover placement="bottom-end" showArrow={true}>
             <PopoverTrigger>
-                <Button className="flex w-6 h-6 rounded-full items-center justify-evenly hover:bg-gray-100">
-                    <i className="ri-more-2-line text-lg cursor-pointer"></i>
+                <Button className="flex w-8 h-8 p-2 rounded-full items-center justify-center hover:bg-gray-200">
+                    <i className="ri-more-2-line text-2xl font-bold cursor-pointer"></i>
                 </Button>
             </PopoverTrigger>
             <PopoverContent>

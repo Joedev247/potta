@@ -37,7 +37,7 @@ const UpdatePasword = () => {
   };
 
   return (
-    <form className='w-[60%] relative' onSubmit={handleSubmit(onSubmit)}>
+    <form className='relative' onSubmit={handleSubmit(onSubmit)}>
       <div className='mt-5'>
         <Input
           name="password"

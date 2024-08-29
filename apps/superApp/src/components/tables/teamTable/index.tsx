@@ -3,6 +3,7 @@ import React, { FC, useState, useEffect } from "react";
 import DataTable, { TableColumn } from "react-data-table-component";
 import { DataRow } from "./data";
 import CustomLoader from "../Loader";
+import MoreIcon from "../more";
 // import MoreIcon from "../more";
 
 
@@ -29,7 +30,7 @@ const columns: TableColumn<DataRow>[] = [
         sortable: true,
     },
     {
-        name: <div className="w-full text-[17px]">email</div>,
+        name: <div className="w-full text-[17px]">Email</div>,
         cell: (row: any) => (
             <div className="font-medium text-[16px] text-gray-900 capitalize">{row.email}</div>
         ),
@@ -37,7 +38,7 @@ const columns: TableColumn<DataRow>[] = [
     },
     {
         name: <div className="w-full text-[17px]">Roles</div>,
-        cell: (row: any) => <div className="font-medium text-[16px] text-gray-900 capitalize">{row.roles}</div>,
+        cell: (row: any) => <div className="font-medium text-[16px] text-gray-900 capitalize pl-3">{row.roles}</div>,
         sortable: true,
     },
     {
@@ -46,7 +47,7 @@ const columns: TableColumn<DataRow>[] = [
             <div className="text-center w-full">
                 <span
                     className={`${row.status === "active"
-                        ? "bg-green-500"
+                        ? "bg-[#52C41A] text-black"
                         : row.status === "paused"
                             ? "bg-red-500 text-white"
                             : ""
@@ -58,16 +59,15 @@ const columns: TableColumn<DataRow>[] = [
         ),
         sortable: true,
     },
-
-    // {
-    //     name: <div className="w-1/2"></div>,
-    //     cell: (row: any) => (
-    //         <div className="font-medium w-full justify-center flex text-gray-900 w-fu">
-    //             <MoreIcon />
-    //         </div>
-    //     ),
-    //     sortable: true,
-    // },
+    {
+        name: <div className="w-1/2"></div>,
+        cell: (row: any) => (
+            <div className="font-medium w-full justify-center items-center flex w-fu">
+                <MoreIcon />
+            </div>
+        ),
+        sortable: false,
+    },
 ];
 
 const TeamTable: FC<Props> = ({ data, records, setRecords }) => {
@@ -85,18 +85,19 @@ const TeamTable: FC<Props> = ({ data, records, setRecords }) => {
     const customStyles = {
         headCells: {
             style: {
-                paddingLeft: "8px", // override the cell padding for head cells
-                paddingRight: "8px",
+                // paddingLeft: "4px", // override the cell padding for head cells
+                // paddingRight: "4px",
             },
         },
         headRow: {
             style: {
-                backgroundColor: "#f3fbfb",
+                backgroundColor: "#fff",
+                fontWeight: "700",
             },
         },
         rows: {
             style: {
-                minHeight: "72px", // override the row height
+                minHeight: "50px", // override the row height
             },
         },
 

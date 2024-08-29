@@ -1,16 +1,23 @@
 "use client";
-import React, { useState } from "react";
+import React from "react";
 import Link from "next/link";
+import Select from "react-select";
+
 import { Search } from "@instanvi/ui-components";
 import Active from "apps/superApp/src/components/tables/APPS/data";
 
 const Apps: React.FC = () => {
-    const [displays, setDisplays] = useState(false)
+
     return (
         <div className='w-full md:px-16   '>
             <div className='flex justify-between mt-10'>
-                <div className='w-1/2'>
-                    <Search placeholder={'Search for team'} />
+                <div className='w-1/2 grid grid-cols-1 md:grid-cols-3 gap-1'>
+                    <div className="col-span-2">
+                        <Search placeholder={'Search for team'} />
+                    </div>
+                    <div className="z-10">
+                        <Select options={[{ value: "active", label: "Active" }]} />
+                    </div>
                 </div>
 
                 <div className='w-1/2 flex justify-end'>

@@ -17,15 +17,15 @@ const Settings = () => {
 	return (
 		<Layout>
 			<div className='flex w-full min-h-[93.5vh]'>
-				<div className='xs:w- sm:w-[10%] border-r-2'>
+				<div className='w-[10rem] lg:w-[12%] 2xl:w-[10%] h-screen fixed pt-5 z-10 pl-2 border-r-2 bg-white'>
 					<Tabs />
 				</div>
-				<div className='w-[90%] md:ml-[10%] px-2 md:px-0'>
+				<div className='w-[90%] px-2 md:px-0 ml-44 md:ml-32 2xl:ml-44 pt-7'>
 					{
 						context?.toggle == 'team' ?
 							<Team /> :
 							context?.toggle == 'security' ? <Security />
-								: context?.toggle == 'API' ? <API />
+								: context?.toggle == 'api' ? <API />
 									: context?.toggle == 'notification' ? <Notification /> :
 										context?.toggle == 'logs' ? <Log /> :
 											context?.toggle == 'billing' ? <Billing /> :

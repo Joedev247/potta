@@ -1,13 +1,13 @@
-import { ContextData } from '../../../contexts/verificationContext';
-import React, { useContext, useState } from 'react'
-import Talk from './component/talk';
-import Polls from './component/polls';
+import React, { useState } from 'react'
 import Ads from './component/ads';
+import Talk from './component/talk';
 import Potta from './component/potta';
+import Polls from './component/polls';
 import Wallet from './component/wallet';
 
 const Billing = () => {
-    const [active, setActive] = useState("Wallet")
+    const [active, setActive] = useState("Wallet");
+
     return (
         <div className='w-full md:px-16 mt-10'>
             <div className='w-fit flex'>

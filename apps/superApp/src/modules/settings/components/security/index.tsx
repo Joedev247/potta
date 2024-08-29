@@ -6,8 +6,9 @@ import UpdatePasword from './components/UpdatePassword'
 
 const Security = () => {
   const [active, setActive] = useState("password")
+
   return (
-    <div className='w-full md:px-16  mt-5'>
+    <div className='w-full lg:w-[50%] md:px-16 mt-5'>
       <div className='w-fit flex'>
         <div onClick={() => { setActive('password') }} className={`py-4 primary px-16 cursor-pointer ${active == 'password' ? 'border-b-2 border-green-400 text-green-400' : ''}`}>
           <p>Update Password</p>

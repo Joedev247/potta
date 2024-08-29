@@ -4,7 +4,7 @@ import SWITCH from "apps/superApp/src/components/switch"
 const FA: FC = () => {
 
     return (
-        <div className='w-[60%] relative'>
+        <div className='relative'>
             <SWITCH label={'Enable 2FA'} description={'Enable two factor authentication'} name={''} value={''} />
         </div>
     )

@@ -1,16 +1,25 @@
 'use client'
 
 import React, { FC, useState } from 'react';
-import { Dialog, DialogPanel, DialogTitle, Transition, TransitionChild } from '@headlessui/react';
-import { CheckIcon } from '@heroicons/react/24/outline';
-import TextInput from '../../inputs/text';
+import { Dialog, DialogPanel, Transition, TransitionChild } from '@headlessui/react';
 import CustomButton from '../../button/customButton';
-import Checkbox from '../../checkbox';
-import TeamPermission from './components';
-import ContentSidebar from '../../../layouts/sidebar/components/content';
+import { Button, Checkbox, Input } from '@instanvi/ui-components';
 
 const TeamUserModal: FC = () => {
   const [open, setOpen] = useState<boolean>(false);
+  const [msgChecked, setMsgChecked] = useState(false);
+  const [ussdChecked, setUssdChecked] = useState(false);
+  const [appsChecked, setAppsChecked] = useState(false);
+  const [peopleChecked, setPeopleChecked] = useState(false);
+  const [airtimeChecked, setAirtimeChecked] = useState(false);
+  const [numbersChecked, setNumbersChecked] = useState(false);
+
+  const onChange = (e: React.ChangeEvent<HTMLInputElement>,
+    setState: (arg: boolean) => void) => {
+    setState(e.target.checked);
+  };
+
+
   return (
     <>
       <CustomButton value={'New ID'} onclick={() => setOpen(!open)} icon={'add'} />
@@ -38,42 +47,67 @@ const TeamUserModal: FC = () => {
                 leaveFrom="opacity-100 translate-y-0 sm:scale-100"
                 leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
               >
-                <DialogPanel className="relative transform overflow-hidden  rounded-0  bg-white   pb-4 pt-5 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-2xl  ">
+                <DialogPanel className="relative transform overflow-hidden rounded-0  bg-white pb-4 pt-5 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-xl  ">
                   <div>
-                    <div className="pb-2 px-6 flex justify-between  sm:mt-2 border-b">
-                      <div><h3 className='text-3xl'>Add New User</h3></div>
+                    <div className="pb-2 px-6 flex justify-between items-center border-b">
+                      <h3 className='text-2xl'>Add New User</h3>
                       <div className='cursor-pointer -mt-2' onClick={() => setOpen(false)} >
                         <i className="ri-close-line text-2xl -mt-2"></i>
                       </div>
                     </div>
-                    <div className='p-5'>
-                      <div className='grid grid-cols-2 gap-3'>
-                        <div className='mt-5'>
-                          <label htmlFor="">First Name</label>
-                          <TextInput onchange={function (event: React.ChangeEvent<HTMLInputElement>): void {
-                            throw new Error('Function not implemented.');
-                          }} text={''} value={''} placeholder={'2588458252'} />
+                    <div className='py-5 px-7'>
+                      <div className="grid gap-4">
+                        <div className='grid grid-cols-2 gap-3'>
+                          <Input name='first_name' label='First Name' placeholder={'John'} />
+                          <Input name='last_name' label='Last Name' placeholder={'Doe'} />
                         </div>
-                        <div className='mt-5'>
-                          <label htmlFor="">Last Name</label>
-                          <TextInput onchange={function (event: React.ChangeEvent<HTMLInputElement>): void {
-                            throw new Error('Function not implemented.');
-                          }} text={''} value={''} placeholder={'hello@example.com'} />
+                        <div className="">
+                          <Input name='email' label='Email' type='email' placeholder={'hello@example.com'} />
+                        </div>
+                        <div className='mt-3 mb-10 mx-auto '>
+                          <label htmlFor="" className="capitalize font-semibold text-[1rem]">Permissions</label>
+                          <div className="mt-3 grid grid-cols-3 md:grid-cols-6 space-x-2">
+                            <Checkbox
+                              name="messaging"
+                              text="Messaging"
+                              value={msgChecked}
+                              onChange={(e) => onChange(e, setMsgChecked)}
+                            />
+                            <Checkbox
+                              name="numbers"
+                              text="Numbers"
+                              value={numbersChecked}
+                              onChange={(e) => onChange(e, setNumbersChecked)}
+                            />
+                            <Checkbox
+                              name="ussd"
+                              text="USSD"
+                              value={ussdChecked}
+                              onChange={(e) => onChange(e, setUssdChecked)}
+                            />
+                            <Checkbox
+                              name="airtime"
+                              text="Airtime"
+                              value={airtimeChecked}
+                              onChange={(e) => onChange(e, setAirtimeChecked)}
+                            />
+                            <Checkbox
+                              name="apps"
+                              text="Apps"
+                              value={appsChecked}
+                              onChange={(e) => onChange(e, setAppsChecked)}
+                            />
+                            <Checkbox
+                              name="people"
+                              text="People"
+                              value={peopleChecked}
+                              onChange={(e) => onChange(e, setPeopleChecked)}
+                            />
+                          </div>
                         </div>
                       </div>
-                      <div className='mt-5'>
-                        <label htmlFor="">Email</label>
-                        <TextInput onchange={function (event: React.ChangeEvent<HTMLInputElement>): void {
-                          throw new Error('Function not implemented.');
-                        }} text={''} value={''} placeholder={'hello@example.com'} />
-                      </div>
-                      <div className='mt-5'>
-                        <label htmlFor="">Permissions</label>
-
-                        <ContentSidebar />
-                      </div>
-                      <div className='mt-16 pt-4 border-t w-full flex justify-end'>
-                        <CustomButton value={'Add User'} onclick={() => { console.log("clicked") }} icon={'arrow-right'} />
+                      <div className='mt-16 pr-4 pt-4 border-t w-full flex justify-end'>
+                        <Button value={'Add User'} onClick={() => { console.log("clicked") }} icon={'arrow-right'} />
                       </div>
                     </div>
                   </div>

@@ -3,7 +3,7 @@ import TextInput from 'apps/superApp/src/components/inputs/text'
 
 const Restriction = () => {
     return (
-        <div className='w-[60%] relative'>
+        <div className='relative'>
             <div className=''>
                 <label htmlFor="">Maximum weond Login Attemp</label>
                 <TextInput onchange={() => { console.log("first") }} text={'number'} value={''} placeholder={'4'} />

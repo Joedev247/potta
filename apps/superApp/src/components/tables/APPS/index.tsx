@@ -3,6 +3,7 @@ import React, { FC, useState, useEffect } from "react";
 import DataTable, { TableColumn } from "react-data-table-component";
 import { DataRow } from "./data";
 import CustomLoader from "../table/Loader";
+import MoreIcon from "../more";
 
 
 interface Props {
@@ -32,16 +33,18 @@ const columns: TableColumn<DataRow>[] = [
     {
         name: <div className="w-full text-[17px] text-right pr-6">Status</div>,
         cell: (row) => <div className="w-full flex justify-end">
-             <button type="button" className="rounded-full bg-[#0E9F6E] hover:bg-[#046C4E]/90 font-medium px-4 py-1">
-             succesful</button>
+            <button type="button" className="rounded-full bg-[#0E9F6E] hover:bg-[#046C4E]/90 font-medium px-4 py-1">
+                succesful</button>
         </div>,
         sortable: false,
     },
     {
-        name: <div></div>,
-        cell: (row) => <div className="text-left me-6">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M12 3C11.175 3 10.5 3.675 10.5 4.5C10.5 5.325 11.175 6 12 6C12.825 6 13.5 5.325 13.5 4.5C13.5 3.675 12.825 3 12 3ZM12 18C11.175 18 10.5 18.675 10.5 19.5C10.5 20.325 11.175 21 12 21C12.825 21 13.5 20.325 13.5 19.5C13.5 18.675 12.825 18 12 18ZM12 10.5C11.175 10.5 10.5 11.175 10.5 12C10.5 12.825 11.175 13.5 12 13.5C12.825 13.5 13.5 12.825 13.5 12C13.5 11.175 12.825 10.5 12 10.5Z"></path></svg>
-        </div>,
+        name: <div> </div>,
+        cell: (row) => (
+            <div className="pl-10">
+                <MoreIcon />
+            </div>
+        ),
         sortable: false,
     }
 ];
@@ -63,7 +66,7 @@ const ActiveTable: FC<Props> = ({ data, records, setRecords }) => {
             style: {
                 backgroundColor: "#f3fbfb",
             },
-         },
+        },
     };
 
     return (
