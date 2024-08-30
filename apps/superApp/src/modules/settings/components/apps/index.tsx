@@ -16,7 +16,7 @@ const Apps: React.FC = () => {
                         <Search placeholder={'Search for team'} />
                     </div>
                     <div className="z-10">
-                        <Select options={[{ value: "active", label: "Active" }]} />
+                        <Select className="select-input" options={[{ value: "active", label: "Active" }]} />
                     </div>
                 </div>
 

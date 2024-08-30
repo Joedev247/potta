@@ -1,4 +1,4 @@
-import React, { ChangeEvent, ChangeEventHandler, useState } from 'react'
+import React, { useState } from 'react'
 import Select, { SingleValue } from 'react-select';
 
 import CustomInputSelect from '../../../inputs/customInput/selectInputText';
@@ -26,13 +26,12 @@ const BankPayment = () => {
     <div className='px-10 grid gap-5 mt-5'>
       <div>
         <label htmlFor="" className="capitalize font-semibold text-[0.75rem] mb-1">Select Payment Method</label>
-        <Select options={methods} onChange={onPaymentChange} />
+        <Select className="select-input" options={methods} onChange={onPaymentChange} />
       </div>
       <div>
         <label htmlFor="" className="capitalize font-semibold text-[0.75rem] mb-1">Recharge Amount</label>
         <CustomInputSelect onchange={() => { console.log("first") }} text={''} value={''} placeholder={'3000'} icon={''} />
       </div>
-
       {
         selectedMothod === "mobile" ?
           <div>
@@ -41,7 +40,7 @@ const BankPayment = () => {
             <>
               <div>
                 <label htmlFor="">Select Bank</label>
-                <Select options={banks} />
+                <Select className="select-input" options={banks} />
               </div>
             </> : null}
       {selectedMothod !== "" && <div className=' w-full'>
@@ -68,7 +67,6 @@ const BankPayment = () => {
       </div>
       }
     </div>
-
   )
 }
 export default BankPayment

@@ -35,7 +35,7 @@ const IdentityInfo: FC<Props> = ({ errors, setValue, files, setFiles }) => {
           <div className="w-full border p-8 ">
             <div className="w-full mt-10">
               <label htmlFor="">Industry</label>
-              <Select options={BusinessType} onChange={(val) => onChangeType(val)} />
+              <Select className="select-input" options={BusinessType} onChange={(val) => onChangeType(val)} />
             </div>
             <div className="w-full mt-6">
               <label htmlFor="">Upload Incorporation Documents</label>

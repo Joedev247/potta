@@ -62,7 +62,7 @@ const BusinessInfo: FC<Props> = ({ register, errors, setValue }) => {
               </div>
               {/* <div className="w-full mt-6">
         <label htmlFor="">Industry</label>
-        <Select options={Industry} />
+        <Select className="select-input" options={Industry} />
       </div> */}
               {/* <Input
         type="url"

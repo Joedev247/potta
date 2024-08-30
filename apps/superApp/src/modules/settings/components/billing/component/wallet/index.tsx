@@ -1,16 +1,16 @@
 import React, { useState } from 'react'
 import Link from 'next/link'
 import Select from 'react-select'
+import { ChevronDownIcon } from '@heroicons/react/20/solid'
 
 import { Button, Input, Search } from '@instanvi/ui-components'
-import { Industry } from 'apps/superApp/src/Arrays/Business'
 import WalletModal from 'apps/superApp/src/components/modals/walletModal'
 import TableTransaction from 'apps/superApp/src/components/tables/Transactions/data'
-import { ChevronDownIcon } from '@heroicons/react/20/solid'
 
 
 const Wallet = () => {
   const [openFilter, setOpenFilter] = useState(false)
+
   return (
     <div className=''>
       <div className='w-full lg:w-[70%] flex flex-col md:flex-row '>
@@ -37,7 +37,7 @@ const Wallet = () => {
           </div>
         </div>
       </div>
-      <div className='mt-16'>
+      <div className='mt-16 mb-48'>
         <h2>Transaction</h2>
         <div className='flex justify-between'>
           <div className='w-1/2 grid grid-cols-1 md:grid-cols-3 gap-1'>
@@ -45,7 +45,7 @@ const Wallet = () => {
               <Search placeholder={'Search for team'} />
             </div>
             <div className='z-10 relative'>
-              <button className="border px-3 py-2 flex items-center justify-between hover:bg-gray-100 " onClick={() => setOpenFilter(!openFilter)}>
+              <button className={`border px-3 py-2 flex items-center justify-between hover:bg-gray-100 ${openFilter ? " text-green-500 font-semibold" : ""}`} onClick={() => setOpenFilter(!openFilter)}>
                 <p>Filter</p> <ChevronDownIcon color='#ccc' width={20} height={20} />
               </button>
               <div className={`bg-white shadow-md absolute w-72 p-3 ${!openFilter ? "hidden" : ""}`}>
@@ -59,19 +59,19 @@ const Wallet = () => {
                     <label htmlFor="" className="capitalize font-semibold text-[0.75rem]">
                       Transaction Type
                     </label>
-                    <Select options={[{ value: "payment", label: "Payment" }]} />
+                    <Select className="select-input" options={[{ value: "payment", label: "Payment" }]} />
                   </div>
                   <div>
                     <label htmlFor="" className="capitalize font-semibold text-[0.75rem]">
                       Service
                     </label>
-                    <Select options={[{ value: "billboard", label: "Billboard" }]} />
+                    <Select className="select-input" options={[{ value: "billboard", label: "Billboard" }]} />
                   </div>
                   <div>
                     <label htmlFor="" className="capitalize font-semibold text-[0.75rem]">
                       Currency
                     </label>
-                    <Select options={[{ value: "fcfa", label: "FCFA" }]} />
+                    <Select className="select-input" options={[{ value: "fcfa", label: "FCFA" }]} />
                   </div>
                   <Button value='Apply' />
                 </div>
