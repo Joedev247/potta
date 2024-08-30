@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import Link from 'next/link'
-import Select from 'react-select'
+import { Select } from "@instanvi/ui-components"
 import { ChevronDownIcon } from '@heroicons/react/20/solid'
 
 import { Button, Input, Search } from '@instanvi/ui-components'
@@ -59,19 +59,19 @@ const Wallet = () => {
                     <label htmlFor="" className="capitalize font-semibold text-[0.75rem]">
                       Transaction Type
                     </label>
-                    <Select className="select-input" options={[{ value: "payment", label: "Payment" }]} />
+                    <Select options={[{ value: "payment", label: "Payment" }]} />
                   </div>
                   <div>
                     <label htmlFor="" className="capitalize font-semibold text-[0.75rem]">
                       Service
                     </label>
-                    <Select className="select-input" options={[{ value: "billboard", label: "Billboard" }]} />
+                    <Select options={[{ value: "billboard", label: "Billboard" }]} />
                   </div>
                   <div>
                     <label htmlFor="" className="capitalize font-semibold text-[0.75rem]">
                       Currency
                     </label>
-                    <Select className="select-input" options={[{ value: "fcfa", label: "FCFA" }]} />
+                    <Select options={[{ value: "fcfa", label: "FCFA" }]} />
                   </div>
                   <Button value='Apply' />
                 </div>

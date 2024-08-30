@@ -1,5 +1,5 @@
 /* eslint-disable @nx/enforce-module-boundaries */
-import Select from 'react-select'
+import { Select } from "@instanvi/ui-components"
 import { AxiosError } from 'axios'
 import toast from 'react-hot-toast'
 import PhoneInput from 'react-phone-input-2'

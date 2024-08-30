@@ -1,5 +1,5 @@
 import React, { FC, Fragment } from "react";
-import Select from "react-select";
+import { Select } from "@instanvi/ui-components";;
 import { FieldErrors, UseFormRegister, UseFormSetValue } from "react-hook-form";
 import { OrganizationFormData } from "../../utils/validations";
 import useVerificaton from "../../hooks/useVerification";
@@ -62,7 +62,7 @@ const BusinessInfo: FC<Props> = ({ register, errors, setValue }) => {
               </div>
               {/* <div className="w-full mt-6">
         <label htmlFor="">Industry</label>
-        <Select className="select-input" options={Industry} />
+        <Select options={Industry} />
       </div> */}
               {/* <Input
         type="url"

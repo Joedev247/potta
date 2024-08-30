@@ -1,5 +1,5 @@
 import React, { FC, useState } from "react";
-import Select from "react-select";
+import { Select } from "@instanvi/ui-components";;
 import PhoneInput from "react-phone-input-2";
 import { FieldErrors, UseFormRegister, UseFormSetValue } from "react-hook-form";
 import { OrganizationFormData } from "../../utils/validations";

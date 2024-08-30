@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import { AxiosError } from "axios";
-import Select, { SingleValue } from "react-select";
+import { Select } from "@instanvi/ui-components";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { SubmitHandler, useForm } from "react-hook-form";
 

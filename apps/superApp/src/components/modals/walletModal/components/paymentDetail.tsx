@@ -1,5 +1,5 @@
 import React from 'react'
-import Select from 'react-select';
+import { Select } from "@instanvi/ui-components";
 import TextInput from '../../../inputs/text';
 import CustomInputSelect from '../../../inputs/customInput/selectInputText';
 import { Countries } from '../../../../Arrays/countries';
@@ -10,7 +10,7 @@ const PaymentDetail = () => {
             <div className='grid grid-cols-1 gap-3'>
                 <div className='mt-5'>
                     <label htmlFor="">Select Payment Method</label>
-                    <Select className="select-input" options={Countries} />
+                    <Select options={Countries} />
                 </div>
                 <div className='mt-8'>
                     <label htmlFor="">Recharge Amount</label>

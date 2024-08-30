@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import Select from 'react-select';
+import { Select } from "@instanvi/ui-components";
 import CountryList from 'country-list-with-dial-code-and-flag'
 import { CountryInterface } from 'country-list-with-dial-code-and-flag/dist/types';
 
@@ -39,26 +39,11 @@ const Billing = () => {
                     </div>
                 </div>
                 <div className='w-full max-w-44 '>
-                    <Select styles={{
-                        control: () => ({
-                            width: "100%",
-                            display: "flex",
-                            alignItems: "center",
-                            padding: "0.2rem .5rem",
-                            // border: "1px solid #E5E7EB",
-                            backgroundColor: "#F3FBFB",
-                            transition: "border 0.3s ease",
-                            "&:hover": {
-                                // border: "1px solid #237804"
-                            },
-                            "&:focus": {
-                                border: "1px solid #237804"
-                            },
-                        })
-                    }} options={[{
+                    <Select options={[{
                         value: "",
                         label: "Select Country"
-                    }, ...countryOption]} />
+                    }, ...countryOption]}
+                    />
                 </div>
             </div>
 

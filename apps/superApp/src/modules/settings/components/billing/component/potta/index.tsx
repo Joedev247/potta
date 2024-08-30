@@ -1,5 +1,4 @@
 import { FC } from 'react'
-import Wallet from '../wallet'
 import { Button } from '@instanvi/ui-components'
 
 const Potta: FC = () => {

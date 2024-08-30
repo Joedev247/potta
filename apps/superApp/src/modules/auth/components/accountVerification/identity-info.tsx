@@ -1,5 +1,5 @@
 import React, { FC } from "react";
-import Select from "react-select";
+import { Select } from "@instanvi/ui-components";;
 import { useRouter } from "next/router";
 import { OrganizationFormData } from "../../utils/validations";
 import { FieldErrors, UseFormSetValue } from "react-hook-form";
@@ -35,7 +35,7 @@ const IdentityInfo: FC<Props> = ({ errors, setValue, files, setFiles }) => {
           <div className="w-full border p-8 ">
             <div className="w-full mt-10">
               <label htmlFor="">Industry</label>
-              <Select className="select-input" options={BusinessType} onChange={(val) => onChangeType(val)} />
+              <Select options={BusinessType} onChange={(val) => onChangeType(val)} />
             </div>
             <div className="w-full mt-6">
               <label htmlFor="">Upload Incorporation Documents</label>

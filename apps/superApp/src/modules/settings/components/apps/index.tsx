@@ -1,9 +1,9 @@
 "use client";
 import React from "react";
 import Link from "next/link";
-import Select from "react-select";
 
 import { Search } from "@instanvi/ui-components";
+import { Select } from "@instanvi/ui-components";
 import Active from "apps/superApp/src/components/tables/APPS/data";
 
 const Apps: React.FC = () => {
@@ -16,7 +16,7 @@ const Apps: React.FC = () => {
                         <Search placeholder={'Search for team'} />
                     </div>
                     <div className="z-10">
-                        <Select className="select-input" options={[{ value: "active", label: "Active" }]} />
+                        <Select options={[{ value: "active", label: "Active" }]} />
                     </div>
                 </div>
 
