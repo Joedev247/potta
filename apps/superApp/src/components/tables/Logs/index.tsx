@@ -4,7 +4,6 @@ import DataTable, { TableColumn } from "react-data-table-component";
 import { DataRow } from "./data";
 import CustomLoader from "../Loader";
 
-
 interface Props {
     data: DataRow[];
     records: DataRow[];
@@ -62,13 +61,13 @@ const LogsTable: FC<Props> = ({ data, records, setRecords }) => {
             <div
                 className="border rounded-[2px]">
                 <DataTable
-                    columns={columns}
-                    data={records}
-                    className="relative md:overflow-x-hidden"
                     pagination
-                    customStyles={customStyles}
+                    data={records}
+                    columns={columns}
                     progressPending={pending}
+                    customStyles={customStyles}
                     progressComponent={<CustomLoader />}
+                    className="relative md:overflow-x-hidden"
                 />
             </div>
         </div>

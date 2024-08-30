@@ -20,25 +20,25 @@ const Billing = () => {
 
     return (
         <div className='w-full md:px-16 mt-10'>
-            <div className='w-full flex justify-between items-center'>
-                <div className='w-fit flex'>
-                    <div onClick={() => { setActive('Wallet') }} className={`py-4 primary px-16 cursor-pointer ${active == 'Wallet' ? 'border-b-2 border-green-400 text-green-400' : ''}`}>
+            <div className='w-full flex flex-col lg:flex-row justify-between items-center gap-2'>
+                <div className='w-full lg:w-1/2 grid grid-cols-5'>
+                    <div onClick={() => { setActive('Wallet') }} className={`py-4 primary flex justify-center items-center cursor-pointer ${active == 'Wallet' ? 'border-b-2 border-green-400 text-green-400' : ''}`}>
                         <p>Wallet</p>
                     </div>
-                    <div onClick={() => { setActive('Talk') }} className={`py-4 primary px-16 cursor-pointer ${active == 'Talk' ? 'border-b-2 border-green-400 text-green-400' : ''}`}>
+                    <div onClick={() => { setActive('Talk') }} className={`py-4 primary flex justify-center items-center cursor-pointer ${active == 'Talk' ? 'border-b-2 border-green-400 text-green-400' : ''}`}>
                         <p>Talk</p>
                     </div>
-                    <div onClick={() => { setActive('Polls') }} className={`py-4 primary px-16 cursor-pointer ${active == 'Polls' ? 'border-b-2 border-green-400 text-green-400' : ''}`}>
+                    <div onClick={() => { setActive('Polls') }} className={`py-4 primary flex justify-center items-center cursor-pointer ${active == 'Polls' ? 'border-b-2 border-green-400 text-green-400' : ''}`}>
                         <p>Polls</p>
                     </div>
-                    <div onClick={() => { setActive('Ads') }} className={`py-4 primary px-16 cursor-pointer ${active == 'Ads' ? 'border-b-2 border-green-400 text-green-400' : ''}`}>
+                    <div onClick={() => { setActive('Ads') }} className={`py-4 primary flex justify-center items-center cursor-pointer ${active == 'Ads' ? 'border-b-2 border-green-400 text-green-400' : ''}`}>
                         <p>Ads</p>
                     </div>
-                    <div onClick={() => { setActive('Potta') }} className={`py-4 primary px-16 cursor-pointer ${active == 'Potta' ? 'border-b-2 border-green-400 text-green-400' : ''}`}>
+                    <div onClick={() => { setActive('Potta') }} className={`py-4 primary flex justify-center items-center cursor-pointer ${active == 'Potta' ? 'border-b-2 border-green-400 text-green-400' : ''}`}>
                         <p>Potta</p>
                     </div>
                 </div>
-                <div className='w-full max-w-44 '>
+                <div className='w-full lg:max-w-44'>
                     <Select options={[{
                         value: "",
                         label: "Select Country"

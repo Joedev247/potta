@@ -9,9 +9,9 @@ import Active from "apps/superApp/src/components/tables/APPS/data";
 const Apps: React.FC = () => {
 
     return (
-        <div className='w-full md:px-16   '>
+        <div className='w-full md:px-16 '>
             <div className='flex justify-between mt-10'>
-                <div className='w-1/2 grid grid-cols-1 md:grid-cols-3 gap-1'>
+                <div className='w-2/3 sm:w-1/2 grid grid-cols-1 md:grid-cols-3 gap-1'>
                     <div className="col-span-2">
                         <Search placeholder={'Search for team'} />
                     </div>

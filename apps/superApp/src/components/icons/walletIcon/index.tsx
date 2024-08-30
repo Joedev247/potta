@@ -1,11 +1,9 @@
 import React, { FC } from "react";
 interface Icon {
-    height: string;
-    width: string;
     color: string;
 }
 
-const WalletIcon: FC<Icon> = ({ width, height, color }) => {
+const WalletIcon: FC<Icon> = ({ color }) => {
     return (
         <svg width="24" height="24" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
             <g clipPath="url(#clip0_99_1383)">

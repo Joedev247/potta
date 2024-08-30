@@ -12,7 +12,7 @@ const Tabs = () => {
 
   const MenuItem: React.FC<Props> = ({ name, uppercase }) => {
     return (
-      <div className={`${switched == name ? 'font-bold border-r-[3px] border-[#237804]  text-[#237804]' : ''} w-full mt-3 hover:text-[#237804]`}>
+      <div className={`${switched == name ? 'font-bold border-r-[3px] border-[#237804]  text-[#237804]' : ''} w-full flex items-center h-8 hover:text-[#237804]`}>
         <p
           onClick={
             () => {

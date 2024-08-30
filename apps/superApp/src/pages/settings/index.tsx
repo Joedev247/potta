@@ -17,7 +17,7 @@ const Settings = () => {
 	return (
 		<Layout>
 			<div className='flex w-full min-h-[93.5vh]'>
-				<div className='w-[10rem] lg:w-[12%] 2xl:w-[10%] h-screen fixed pt-5 z-10 pl-2 border-r-2 bg-white'>
+				<div className='w-[10rem] lg:w-[12%] 2xl:w-[10%] h-screen fixed pt-5 z-10 pl-[8%] md:pl-2 border-r-2 bg-white'>
 					<Tabs />
 				</div>
 				<div className='w-[90%] px-2 md:px-0 ml-44 md:ml-32 2xl:ml-44 pt-7'>

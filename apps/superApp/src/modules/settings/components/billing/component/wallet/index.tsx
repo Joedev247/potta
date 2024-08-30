@@ -44,7 +44,7 @@ const Wallet = () => {
             <div className="col-span-2">
               <Search placeholder={'Search for team'} />
             </div>
-            <div className='z-10 relative'>
+            <div className='relative'>
               <button className={`border px-3 py-2 flex items-center justify-between hover:bg-gray-100 ${openFilter ? " text-green-500 font-semibold" : ""}`} onClick={() => setOpenFilter(!openFilter)}>
                 <p>Filter</p> <ChevronDownIcon color='#ccc' width={20} height={20} />
               </button>
