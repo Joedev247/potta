@@ -6,12 +6,14 @@ export const Channel =
             id: 1,
             name: 'YouTube',
             img: 'youtubes.svg',
+            description: "youtube description",
             connect: false
         },
         {
             id: 1,
             name: 'Facebook',
             img: 'facebook.svg',
+            description: "facebook description",
             connect: false
         },
         {
@@ -23,7 +25,7 @@ export const Channel =
         {
             id: 1,
             name: 'Twitter',
-            img: 'twitters.svg',
+            img: 'twiters.svg',
             connect: false
         },
         {

@@ -1,15 +1,10 @@
 import React from 'react'
-import TextInput from '../../../../components/inputs/text';
+import { Input } from '@instanvi/ui-components';
 
 const BasicInformation = () => {
   return (
-    <div className='h-[80vh] w-full flex items-center'>
-      <div className='w-full md:px-20 '>
-        <div className='w-full'>
-          <label htmlFor="">Channel Name</label>
-          <TextInput onchange={() => { console.log("value") }} text={'text'} value={''} placeholder={'Instagram Account'} />
-        </div>
-      </div>
+    <div className='mt-[20%] flex items-center justify-center'>
+      <Input label='Channel Name' name='channel' placeholder={'Instagram Account'} />
     </div>
   )
 }

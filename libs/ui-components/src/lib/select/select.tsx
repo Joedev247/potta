@@ -19,14 +19,13 @@ const Select: React.FC<Props> = ({ options, styles, onChange }) => {
         display: "flex",
         alignItems: "center",
         padding: "0.2rem .5rem",
-        backgroundColor: "#F3FBFB",
         border: "1px solid #E5E7EB",
-        transition: "border 0.3s ease",
+        transition: "all 0.3s ease-in-out",
         "&:hover": {
           border: "1px solid #237804"
         },
         "&:focus": {
-          border: "1px solid #237804"
+          backgroundColor: "#E5E7EB"
         },
       })
     }} options={options}

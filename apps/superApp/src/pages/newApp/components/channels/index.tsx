@@ -1,18 +1,21 @@
 import React from 'react'
 import { Channel } from 'apps/superApp/src/Arrays/SocialChannels'
 
-
 const Channels = () => {
 
   return (
-    <div className='h-[80vh] w-full px-12  '>
+    <div className='h-full w-full pb-20'>
       <div className='w-full '>
         {Channel.map((item, id) => {
           return (
-            <div key={id} className='w-full flex py-2.5 px-12 justify-between p-2 border'>
-              <div className='flex space-x-3'>
-                <div className='h-16 w-16 rounded-full items-center flex justify-center bg-gray-100'>
+            <div key={id} className='hover:bg-green-50 w-full flex py-2.5 px-6 md:px-12 justify-between p-2 border'>
+              <div className='flex space-x-3 items-center'>
+                <div className='h-16 w-16 rounded-full items-center flex justify-center bg-gray-100 hover:bg-gray-200'>
                   <img src={`/icons/${item.img}`} height={40} width={40} alt="" />
+                </div>
+                <div>
+                  <h3>{item.name}</h3>
+                  <small className='text-gray-500'>{item?.description}</small>
                 </div>
               </div>
               <div className='flex space-x-3'>
