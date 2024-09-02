@@ -3,8 +3,7 @@
   "version": "0.0.0",
   "license": "MIT",
   "scripts": {
-    "build:auth": "nx build superApp",
-    "start:auth": "nx start superApp"
+    "build:auth": "nx build superApp"
   },
   "private": true,
   "dependencies": {
