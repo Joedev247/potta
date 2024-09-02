@@ -11,6 +11,7 @@ RUN rm -rf node_modules .npmrc package-lock.json # Add any other files/directori
 FROM node:20-alpine AS production
 WORKDIR /app
 COPY --from=builder /app/apps/superApp /app
+COPY --from=builder /app/apps/package.json /app
 RUN npm install --force --production
 ENV NODE_ENV=production
 CMD ["npm" ,"start"]
