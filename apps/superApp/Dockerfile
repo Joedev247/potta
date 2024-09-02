@@ -23,7 +23,7 @@ RUN npm install --force
 
 COPY . .
 # copy environment file
-COPY .env.build .env
+#COPY .env.build .env
 # Generate the build of the application
 RUN npm run build:superApp
 
