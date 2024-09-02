@@ -1,5 +1,5 @@
 # Build Stage
-FROM node:18-alpine AS builder
+FROM node:20-alpine AS builder
 WORKDIR /app
 COPY . .
 RUN npm install --force
@@ -8,9 +8,9 @@ RUN rm -rf node_modules .npmrc package-lock.json # Add any other files/directori
 
 
 # Production Stage
-FROM node:18-alpine AS production
+FROM node:20-alpine AS production
 WORKDIR /app
-COPY --from=builder /app/dist/apps/superApp /app
+COPY --from=builder /app/apps/superApp /app
 RUN npm install --force --production
 ENV NODE_ENV=production
 CMD ["npm" ,"start"]
