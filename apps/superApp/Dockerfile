@@ -25,13 +25,13 @@ COPY . .
 # copy environment file
 #COPY .env.build .env
 # Generate the build of the application
-RUN npm run build:superApp
+RUN npm run build:auth
 
 FROM node:20.11-alpine3.18  AS production
 WORKDIR /app
 COPY --from=builder /app ./
 #RUN npm install --force --production
 ENV NODE_ENV=production
-CMD ["npm" ,"start:superApp"]
+CMD ["npm" ,"start"]
 EXPOSE 3000
 
