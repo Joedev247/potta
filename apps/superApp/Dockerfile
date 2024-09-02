@@ -1,37 +1,17 @@
-FROM node:20.11-alpine3.18 AS development
-WORKDIR /usr/src/app
-
-ENV PATH /usr/src/app/node_modules/.bin:$PATH
-
-COPY package.json ./
-RUN npm install --force
-
-COPY . .
-
-CMD npm run dev
-
-# Use official node image as the base image
-FROM node:20.11-alpine3.18 AS builder
-
-# Set the working directory
+# Build Stage
+FROM node:18-alpine AS BUILD_IMAGE
 WORKDIR /app
-
-COPY package*.json ./
-
-# Install all the dependencies
-RUN npm install --force
-
 COPY . .
-# copy environment file
-#COPY .env.build .env
-# Generate the build of the application
+RUN npm install --force
 RUN npm run build:auth
+RUN rm -rf node_modules .npmrc package-lock.json # Add any other files/directories you want to remove
 
-FROM node:20.11-alpine3.18  AS production
+
+# Production Stage
+FROM node:18-alpine AS PRODUCTION_STAGE
 WORKDIR /app
-COPY --from=builder /app ./
-#RUN npm install --force --production
+COPY --from=BUILD_IMAGE /app/dist/apps/instanvi-auth /app
+RUN npm install --force --production
 ENV NODE_ENV=production
 CMD ["npm" ,"start"]
 EXPOSE 3000
-
