@@ -16,7 +16,7 @@ RUN npm run build:auth
 
 FROM node:20.11-alpine3.18  AS production
 WORKDIR /app
-COPY --from=builder /apps/superApp ./
+COPY --from=builder /app/apps/superApp ./
 #RUN npm install --force --production
 ENV NODE_ENV=production
 CMD ["npm" ,"start"]
