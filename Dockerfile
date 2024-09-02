@@ -10,7 +10,7 @@ RUN rm -rf node_modules .npmrc package-lock.json # Add any other files/directori
 # Production Stage
 FROM node:18-alpine AS production
 WORKDIR /app
-COPY --from=builder /app/dist/apps/instanvi-auth /app
+COPY --from=builder /app/dist/apps/superApp /app
 RUN npm install --force --production
 ENV NODE_ENV=production
 CMD ["npm" ,"start"]
