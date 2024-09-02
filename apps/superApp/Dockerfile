@@ -1,18 +1,24 @@
-# Build Stage
-FROM node:20-alpine AS builder
+FROM node:20.11-alpine3.18 AS builder
+
+# Set the working directory
 WORKDIR /app
-COPY . .
+
+COPY package*.json ./
+
+# Install all the dependencies
 RUN npm install --force
-RUN npm run build:auth
-RUN rm -rf node_modules .npmrc package-lock.json # Add any other files/directories you want to remove
 
+COPY ./apps/superApp .
+# copy environment file
+COPY ./apps/superApp/.env.build .env
+# Generate the build of the application
+RUN npm run build
 
-# Production Stage
-FROM node:20-alpine AS production
+FROM node:20.11-alpine3.18  AS production
 WORKDIR /app
-COPY --from=builder /app/apps/superApp /app
-COPY --from=builder /app/package.json /app
-RUN npm install --force --production
+COPY --from=builder /app ./
+#RUN npm install --force --production
 ENV NODE_ENV=production
 CMD ["npm" ,"start"]
 EXPOSE 3000
+
