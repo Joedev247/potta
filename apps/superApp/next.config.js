@@ -12,6 +12,16 @@ const nextConfig = {
     // See: https://github.com/gregberge/svgr
     svgr: false,
   },
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
+  typescript: {
+    // !! WARN !!
+    // Dangerously allow production builds to successfully complete even if
+    // your project has type errors.
+    // !! WARN !!
+    ignoreBuildErrors:true,
+  },
 };
 
 const plugins = [

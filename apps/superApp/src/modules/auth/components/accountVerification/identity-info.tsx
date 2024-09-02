@@ -3,10 +3,14 @@ import { Select } from "@instanvi/ui-components";;
 import { useRouter } from "next/router";
 import { OrganizationFormData } from "../../utils/validations";
 import { FieldErrors, UseFormSetValue } from "react-hook-form";
-import { SelectProp } from "apps/home-app/src/utils/types";
-import { BusinessType } from "apps/home-app/src/Arrays/Business";
-import MyDropzone from "apps/home-app/src/components/dropzone";
-import CustomButton from "apps/home-app/src/components/button/customButton";
+import {SelectProp} from "../../../../utils/types";
+import {BusinessType} from "../../../../Arrays/Business";
+import MyDropzone from "../../../../components/dropzone";
+import CustomButton from "../../../../components/button/customButton";
+// import { SelectProp } from "apps/home-app/src/utils/types";
+// import { BusinessType } from "apps/home-app/src/Arrays/Business";
+// import MyDropzone from "apps/home-app/src/components/dropzone";
+// import CustomButton from "apps/home-app/src/components/button/customButton";
 
 type Props = {
   files: File[]

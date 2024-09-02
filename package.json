@@ -2,7 +2,10 @@
   "name": "@instanvi-global/source",
   "version": "0.0.0",
   "license": "MIT",
-  "scripts": {},
+  "scripts": {
+    "build:superApp" : "nx run superApp:build",
+    "start:superApp" : "nx run superApp:start"
+  },
   "private": true,
   "dependencies": {
     "@headlessui/react": "^2.1.2",
