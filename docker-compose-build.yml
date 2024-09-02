@@ -6,5 +6,5 @@ services:
     image: ghcr.io/instanvi/app/auth
     build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: ./apps/superApp/Dockerfile
       target: production
