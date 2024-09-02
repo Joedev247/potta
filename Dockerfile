@@ -1,5 +1,5 @@
 # Build Stage
-FROM node:18-alpine AS BUILD_IMAGE
+FROM node:18-alpine AS builder
 WORKDIR /app
 COPY . .
 RUN npm install --force
@@ -8,9 +8,9 @@ RUN rm -rf node_modules .npmrc package-lock.json # Add any other files/directori
 
 
 # Production Stage
-FROM node:18-alpine AS PRODUCTION_STAGE
+FROM node:18-alpine AS production
 WORKDIR /app
-COPY --from=BUILD_IMAGE /app/dist/apps/instanvi-auth /app
+COPY --from=builder /app/dist/apps/instanvi-auth /app
 RUN npm install --force --production
 ENV NODE_ENV=production
 CMD ["npm" ,"start"]
