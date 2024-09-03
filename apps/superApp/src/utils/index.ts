@@ -1,10 +1,3 @@
-import { countries } from "country-data-list";
-
-export const countryList = countries.all
-?.map((c) => c?.name)
-?.map((c) => {
-  return { value: c, label: c };
-});
 
 export const maskEmailAddress = (email:string | null) =>{
   const count = 4

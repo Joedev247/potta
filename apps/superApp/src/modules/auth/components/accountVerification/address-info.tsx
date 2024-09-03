@@ -2,16 +2,14 @@ import React, { FC, useState } from "react";
 import { Select } from "@instanvi/ui-components";;
 import PhoneInput from "react-phone-input-2";
 import { FieldErrors, UseFormRegister, UseFormSetValue } from "react-hook-form";
-import { OrganizationFormData } from "../../utils/validations";
+
+import { countryList } from "@instanvi/utilities";
+import Input from "apps/home-app/src/components/input";
 import useVerificaton from "../../hooks/useVerification";
-import {SelectProp} from "../../../../utils/types";
-import {countryList} from "../../../../utils";
-import CustomButton from "../../../../components/button/customButton";
-import Input from "../../../../components/input";
-// import { SelectProp } from "apps/home-app/src/utils/types";
-// import { countryList } from "apps/home-app/src/utils";
-// import Input from "apps/home-app/src/components/input";
-// import CustomButton from "apps/home-app/src/components/button/customButton";
+import { SelectProp } from "apps/home-app/src/utils/types";
+import { OrganizationFormData } from "../../utils/validations";
+import CustomButton from "apps/home-app/src/components/button/customButton";
+
 
 type Props = {
   errors: FieldErrors<OrganizationFormData>;

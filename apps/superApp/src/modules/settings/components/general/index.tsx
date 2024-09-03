@@ -7,7 +7,7 @@ import React, { useEffect, useState } from 'react'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { SubmitHandler, useForm } from 'react-hook-form'
 
-import { countryList } from 'apps/superApp/src/utils'
+import { countryList } from "@instanvi/utilities";
 import { Button, Input } from '@instanvi/ui-components'
 import { SelectProp } from 'apps/superApp/src/utils/types'
 import { useUpdateProfile } from 'apps/superApp/src/modules/auth/hooks/useUpdateProfile'

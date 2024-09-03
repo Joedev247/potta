@@ -1,24 +1,20 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import { AxiosError } from "axios";
-import { Select } from "@instanvi/ui-components";
+import toast from "react-hot-toast/headless";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { SubmitHandler, useForm } from "react-hook-form";
-
-import toast from "react-hot-toast/headless";
-import { countryList } from '../../../utils';
 import {
   RegisterFormData,
   registerSchema,
 } from "../../../modules/auth/utils/validations";
-import { Button, Checkbox, Input } from "@instanvi/ui-components";
+import { countryList } from "@instanvi/utilities";
 import Layout from "../../../modules/auth/layout";
+import { SelectProp } from "apps/superApp/src/utils/types";
 import { useRegister } from "../../../modules/auth/hooks/useRegister";
+import { Select, Button, Checkbox, Input } from "@instanvi/ui-components";
 
-type SelectProp = SingleValue<{
-  value: string;
-  label: string;
-}>;
+
 
 const SignUp = () => {
   const [termsChecked, setTermsChecked] = useState(false);
@@ -67,7 +63,7 @@ const SignUp = () => {
 
   const onChangeCountry = (val: SelectProp) => {
     const value = val;
-    setValue("country", value?.value as string);
+    setValue?.("country", value?.value as string);
   };
 
   const onTermsChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -97,9 +93,8 @@ const SignUp = () => {
               <div className="w-full">
                 <label htmlFor="" className="font-semibold text-[0.75rem]">Country / Area of resident</label>
                 <Select
-                  onChange={(val) => onChangeCountry(val)}
                   options={countryList}
-                  className="rounded-0 outline-none mt-2"
+                  onChange={(val) => onChangeCountry(val)}
                 />
                 {errors?.country ? (
                   <small className="col-span-2 text-red-500">{errors?.country?.message}</small>
