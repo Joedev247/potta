@@ -3,10 +3,6 @@
   "version": "0.0.0",
   "license": "MIT",
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
-    "lint": "next lint",
     "build:auth" : "nx build superApp",
     "start:auth" : "nx start superApp"
   },
