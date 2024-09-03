@@ -20,7 +20,7 @@ const SideBar = () => {
       <div className='flex justify-center'>
         <div className='flex space-y-3 flex-col'>
           <div className=' hover:bg-gray-200 rounded-full p-1.5' onClick={() => router.push("/settings")}>
-            <img src="/icons/settings-outline.svg" height={24} width={24} alt="" />
+            <Image src="/icons/settings-outline.svg" height={24} width={24} alt="" />
           </div>
           <div>
             <div className='w-[30px] h-[30px] 
