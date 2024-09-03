@@ -22,7 +22,7 @@ export const registerSchema = yup.object({
       'Password must contain at least one uppercase letter and one special character'
     ),
 	country:yup.string().required(),
-	name:yup.string().required(),
+	// name:yup.string().required(),
 })
 
 export const profileSchema = yup.object({

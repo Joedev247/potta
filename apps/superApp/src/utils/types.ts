@@ -1,4 +1,5 @@
 import { SingleValue } from "react-select"
+import { IOrganisation } from "../modules/auth/utils/types"
 
 export interface IAuthContext {
 	user?: IUser
@@ -7,15 +8,22 @@ export interface IAuthContext {
 	setUser?: (arg?: IUser) => void
 	setIsAdmin?: (arg: boolean) => void
 }
+export type Role = {
+	id:string
+	name:string
+}
 
 export interface IUser {
-	created_at: Date
-	deleted_at: null | Date
 	name: string
+	roles: Role[]
 	email: string
+	country:string
+	enabled: boolean
 	lastName: string
 	firstName: string
-	country:string
+	access_token: string
+	refresh_token: string
+	organization: IOrganisation | null
 }
 
 export type SelectProp = SingleValue<{

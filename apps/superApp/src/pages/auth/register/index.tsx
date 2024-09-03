@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import Link from "next/link";
-import { AxiosError } from "axios";
 import toast from "react-hot-toast/headless";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { SubmitHandler, useForm } from "react-hook-form";
@@ -13,10 +12,11 @@ import Layout from "../../../modules/auth/layout";
 import { SelectProp } from "apps/superApp/src/utils/types";
 import { useRegister } from "../../../modules/auth/hooks/useRegister";
 import { Select, Button, Checkbox, Input } from "@instanvi/ui-components";
-
+import { useRouter } from "next/router";
 
 
 const SignUp = () => {
+  const router = useRouter();
   const [termsChecked, setTermsChecked] = useState(false);
   const [emailChecked, setEmailChecked] = useState(false);
   const { isPending, mutate } = useRegister();
@@ -26,10 +26,9 @@ const SignUp = () => {
     defaultValues: {
       firstName: "",
       lastName: "",
-      email: "",
       password: "",
       country: "",
-      name: "test name",
+      email: "",
     },
     resolver: yupResolver(registerSchema),
   });
@@ -38,24 +37,15 @@ const SignUp = () => {
   const { errors } = methods.formState;
 
   const onSubmit: SubmitHandler<RegisterFormData> = (inputs) => {
-    const data = {
-      ...inputs,
-      organization: {
-        name: inputs.name,
-        country: inputs.country,
-      },
-    };
 
-    const { name, country, firstName, lastName, ...payload } = data;
-    mutate(payload, {
-      onSuccess: (data: unknown) => {
-        console.log(data);
-        toast.success("Data Registered successfully");
+    mutate(inputs, {
+      onSuccess: (data) => {
+        toast.success(data?.message);
+        router.push(`/auth/confirm-register?email=${inputs?.email}`);
         reset();
       },
-      onError: (error: unknown) => {
-        const text = (error as AxiosError<{ message: string }>)?.response?.data
-        const message = text?.message
+      onError: (error) => {
+        const message = error?.message
         toast.error(message as string);
       },
     });

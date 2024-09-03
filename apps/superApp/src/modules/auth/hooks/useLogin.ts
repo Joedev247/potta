@@ -7,8 +7,8 @@ export const useLogin =()=>{
     const mutation = useMutation({
         mutationKey:["Login"],
         mutationFn:loginAPI,
-        onSuccess: async (data: any) => {
-			const usertoken = data?.token 
+        onSuccess: async (data) => {
+			const usertoken = data?.access_token 
 			const token = await CryptoJS.AES.encrypt(usertoken, SECRET)
 			await localStorage.setItem("token", token.toString())
 		},

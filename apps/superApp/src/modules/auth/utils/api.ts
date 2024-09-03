@@ -1,14 +1,15 @@
 import axios from "@instanvi/utilities";
 import { ProfileData } from "./validations";
-import { IChangePassword, ILogin, IOrganisation, IRegister } from "./types";
+import { IChangePassword, ILogin, IOrganisation, IRegister, IRegisterResponse } from "./types";
+import { IUser } from "apps/superApp/src/utils/types";
 
 
-export const registerAPI = async (inputs:IRegister):Promise<unknown> =>{
+export const registerAPI = async (inputs:IRegister):Promise<IRegisterResponse> =>{
  const response = await axios.post("/auth/register", inputs)
   return response?.data;
 }
 
-export const loginAPI = async (inputs:ILogin):Promise<unknown> =>{
+export const loginAPI = async (inputs:ILogin):Promise<IUser> =>{
  const response = await axios.post("/auth/login", inputs)
   return response?.data;
 }
@@ -28,8 +29,11 @@ export const refreshTokenAPI = async (refresh_token:string):Promise<unknown> =>{
    return response?.data;
 }
 
-export const registerConfirmAPI = async (token:string):Promise<unknown> =>{
-  const response = await axios.patch(`/auth/register/confirm/${token}`)
+export const registerConfirmAPI = async (inputs:{
+  email: string,
+  otp: string
+}):Promise<unknown> =>{
+  const response = await axios.patch(`/auth/register/confirm`, inputs)
    return response?.data;
 }
 
@@ -53,7 +57,7 @@ export const resetPasswordAPI = async (token:string):Promise<unknown> =>{
   return response?.data;
 }
 
-export const meAPI = async ():Promise<unknown> =>{
+export const meAPI = async ():Promise<IUser> =>{
  const response = await axios.get("/auth/me")
   return response?.data;
 }

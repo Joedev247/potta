@@ -28,7 +28,7 @@ export const AuthProvider: FC<Props> = ({ children }) => {
       if (!user && isToken) {
         await meAPI()
           .then((res) => {
-            // setUser(res)
+            setUser(res)
           })
           .catch((error) => {
             const text = (error as AxiosError<{ message: string }>)?.response

@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import Link from "next/link";
 import { AxiosError } from "axios";
 import toast from "react-hot-toast";
-// import { useRouter } from 'next/router';
+import { useRouter } from 'next/router';
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm, SubmitHandler } from "react-hook-form";
 
@@ -16,11 +16,11 @@ import { LoginData, loginSchema } from "../../../modules/auth/utils/validations"
 
 
 const SignIn = () => {
-  // const router = useRouter()
+  const router = useRouter()
   const { setUser, } = useAuth()
   const [rememberChecked, setRememberChecked] = useState(false);
 
-  const { isPending, mutate } = useLogin()
+  const login = useLogin()
 
   const methods = useForm<LoginData>({
     mode: "onChange",
@@ -37,13 +37,14 @@ const SignIn = () => {
   }
 
   const onSubmit: SubmitHandler<LoginData> = (inputs) => {
-    mutate(inputs, {
-      onSuccess: (data) => {
-        console.log(data)
+    login.mutate(inputs, {
+      onSuccess: () => {
         meAPI()
           .then((user) => {
             const userdata = user as IUser
-            setUser && setUser(userdata)
+            setUser?.(userdata)
+            toast.success("Logged in successfully will be rediret")
+            router.push('/')
           })
           .catch(onError)
       },
@@ -54,7 +55,6 @@ const SignIn = () => {
   const onRememberCheckChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setRememberChecked(e.target.checked);
   };
-
 
   return (
     <Layout >
@@ -98,7 +98,7 @@ const SignIn = () => {
               <Button
                 fullWidth
                 type="submit"
-                value={isPending ? "Signing in.." : "Sign in"}
+                value={login.isPending ? "Signing in.." : login.isSuccess ? "Redirecting, please wait..." : "Sign in"}
               />
             </div>
             <div className="mt-8 flex space-x-2">

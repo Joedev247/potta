@@ -13,3 +13,4 @@ export const maskEmailAddress = (email:string | null) =>{
   const maskedUsername = username.slice(0, 4) + "*".repeat(count) + username.slice(-4);
   return `${maskedUsername}@${domain}`;
 }
+

@@ -13,8 +13,16 @@ export interface IRegister {
  firstName?:string,
  lastName?:string,
  password:string,
- organization: Partial<IOrganisation>
+ country:string
+//  organization: Partial<IOrganisation>
 }
+
+export interface IRegisterResponse {
+    message:string,
+    data:{
+      code:string
+    }
+  }
 
 export interface IOrganisation {
   name:string,
