@@ -20,6 +20,6 @@ COPY --from=builder /app/apps/superApp ./
 COPY package*.json ./
 #RUN npm install --force --production
 ENV NODE_ENV=production
-CMD ["npm" ,"start"]
+CMD ["npm" ,"start:auth"]
 EXPOSE 3000
 

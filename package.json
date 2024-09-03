@@ -7,7 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "build:auth" : "nx build superApp"
+    "build:auth" : "nx build superApp",
+    "start:auth" : "nx start superApp"
   },
   "private": true,
   "dependencies": {
