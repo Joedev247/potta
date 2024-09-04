@@ -8,6 +8,7 @@ import VerificationInput from "react-verification-input";
 import { Button } from "@instanvi/ui-components";
 import { maskEmailAddress } from "../../../utils";
 import Layout from "../../../modules/auth/layout";
+import useAuth from "apps/superApp/src/modules/auth/hooks/useAuth";
 import { useConfirmRegister } from "../../../modules/auth/hooks/useConfirmRegister";
 
 type ComfirmData = {
@@ -16,6 +17,7 @@ type ComfirmData = {
 }
 
 const ComfirmRegister: FC = () => {
+  const { user } = useAuth()
   const router = useRouter()
   const [code, setCode] = useState("")
   const searchParams = useSearchParams()
@@ -25,7 +27,9 @@ const ComfirmRegister: FC = () => {
   const sendCode = (inputs: ComfirmData) => {
     mutate(inputs, {
       onSuccess: () => {
-        localStorage.removeItem("otp")
+        if (!user?.organization)
+          localStorage.removeItem("otp")
+        // encryptAndStore("token", )
         toast.success("Operation successful")
         router.push('/')
       },
@@ -59,6 +63,7 @@ const ComfirmRegister: FC = () => {
             </div>
             <div className="w-full mt-8">
               <Button
+                fullWidth
                 type="button"
                 disabled={code?.length !== 6}
                 onClick={() => { sendCode({ email: (email as string), otp: code }) }}

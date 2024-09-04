@@ -19,12 +19,11 @@ export const AuthProvider: FC<Props> = ({ children }) => {
   const [isAdmin, setIsAdmin] = useState(false);
   const [user, setUser] = useState<IUser | null>(null);
   const [isLoading, setIsLoading] = useState(false);
-  const isToken = (localStorage.getItem("token")) as string;
   // handle user state
   const checkIfLoggedIn = async () => {
     try {
       setIsLoading(true);
-      const isToken = (await localStorage.getItem("token")) as string;
+      const isToken = (await localStorage.getItem("token")) ?? "";
 
       if (!user && isToken) {
         await meAPI()
@@ -50,7 +49,7 @@ export const AuthProvider: FC<Props> = ({ children }) => {
 
   useEffect(() => {
     checkIfLoggedIn();
-  }, [isToken]);
+  }, []);
 
   // values to share in the context
   const values = {
