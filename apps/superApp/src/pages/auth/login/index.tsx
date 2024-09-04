@@ -43,7 +43,7 @@ const SignIn = () => {
           .then((user) => {
             const userdata = user as IUser
             setUser?.(userdata)
-            toast.success("Logged in successfully will be rediret")
+            toast.success("Logged in successfully and will be redirected")
             router.push('/')
           })
           .catch(onError)

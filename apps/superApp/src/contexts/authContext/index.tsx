@@ -8,7 +8,7 @@ interface Props {
 }
 
 const defaultState = {
-  user: undefined,
+  user: null,
   isAdmin: false,
   isLoading: true,
 };
@@ -17,8 +17,9 @@ const AuthContext = createContext<Partial<IAuthContext>>(defaultState);
 
 export const AuthProvider: FC<Props> = ({ children }) => {
   const [isAdmin, setIsAdmin] = useState(false);
-  const [user, setUser] = useState<IUser | undefined>(undefined);
+  const [user, setUser] = useState<IUser | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const isToken = (localStorage.getItem("token")) as string;
   // handle user state
   const checkIfLoggedIn = async () => {
     try {
@@ -49,7 +50,7 @@ export const AuthProvider: FC<Props> = ({ children }) => {
 
   useEffect(() => {
     checkIfLoggedIn();
-  }, []);
+  }, [isToken]);
 
   // values to share in the context
   const values = {

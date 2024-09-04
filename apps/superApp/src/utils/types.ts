@@ -2,10 +2,10 @@ import { SingleValue } from "react-select"
 import { IOrganisation } from "../modules/auth/utils/types"
 
 export interface IAuthContext {
-	user?: IUser
+	user: IUser | null
 	isAdmin: boolean
 	isLoading: boolean
-	setUser?: (arg?: IUser) => void
+	setUser: (arg: IUser) => void
 	setIsAdmin?: (arg: boolean) => void
 }
 export type Role = {
