@@ -27,8 +27,8 @@ const BusinessInfo: FC<Props> = ({ register, errors, setValue }) => {
   const onChangeEmployee = (val: SelectProp) => {
     const value = val?.value;
     const parts = value?.split("-");
-    if (parts) {
 
+    if (parts) {
       const firstNumber = parseInt(parts?.[0], 10);
       const lastNumber = parseInt(parts[1], 10);
       setValue("count_of_employees_min", firstNumber);

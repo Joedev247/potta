@@ -1,16 +1,17 @@
 import React, { useState } from "react";
+
 import { AxiosError } from "axios";
+import toast from "react-hot-toast";
 import { useRouter } from "next/router";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { useUpdateOrganization } from "../../modules/auth/hooks/useUpdateOrganization";
-import { OrganizationFormData, organizationSchema } from "../../modules/auth/utils/validations";
 
 import CustomButton from "../../components/button/customButton";
+import { useUpdateOrganization } from "../../modules/auth/hooks/useUpdateOrganization";
 import AddressInfo from "../../modules/auth/components/accountVerification/address-info";
 import BusinessInfo from "../../modules/auth/components/accountVerification/business-info";
 import IdentityInfo from "../../modules/auth/components/accountVerification/identity-info";
-import toast from "react-hot-toast";
+import { OrganizationFormData, organizationSchema } from "../../modules/auth/utils/validations";
 
 
 type Props = object;
@@ -70,25 +71,25 @@ const VerificationPage = (props: Props) => {
     else {
       const formdata = new FormData();
 
-      formdata.append("name", inputs?.name)
-      formdata.append("city", inputs?.city)
-      formdata.append("city", inputs?.city)
-      formdata.append("state", inputs?.state)
-      formdata.append("email", inputs?.email)
-      formdata.append("phone", inputs?.phone)
-      formdata.append("address", inputs?.address)
-      formdata.append("country", inputs?.country)
-      formdata.append("website", inputs?.website)
-      formdata.append("industry", inputs?.industry)
-      formdata.append("description", inputs?.description)
-      formdata.append("postcode", String(inputs?.postcode))
+      formdata.append("name", inputs?.name);
+      formdata.append("city", inputs?.city);
+      formdata.append("city", inputs?.city);
+      formdata.append("state", inputs?.state);
+      formdata.append("email", inputs?.email);
+      formdata.append("phone", inputs?.phone);
+      formdata.append("address", inputs?.address);
+      formdata.append("country", inputs?.country);
+      formdata.append("website", inputs?.website);
+      formdata.append("industry", inputs?.industry);
+      formdata.append("description", inputs?.description);
+      formdata.append("postcode", String(inputs?.postcode));
       formdata.append("activity_type", inputs?.activity_type)
-      formdata.append("count_of_employees_min", String(inputs?.count_of_employees_min))
-      formdata.append("count_of_employees_max", String(inputs?.count_of_employees_max))
+      formdata.append("count_of_employees_min", String(inputs?.count_of_employees_min));
+      formdata.append("count_of_employees_max", String(inputs?.count_of_employees_max));
 
       files?.forEach(file => {
-        formdata.append("documents", file)
-      })
+        formdata.append("documents", file);
+      });
 
       mutate(formdata, {
         onSuccess: () => {
@@ -104,9 +105,6 @@ const VerificationPage = (props: Props) => {
     }
 
   };
-
-  // useEffect(() => {
-  // }, [])
 
   return (
     <form className="mx-auto max-w-2xl p-6 lg:px-8">
