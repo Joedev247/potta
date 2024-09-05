@@ -39,6 +39,7 @@ export const profileSchema = yup.object({
 })
 
 export const organizationSchema = yup.object({
+
 	name:yup.string().required(),
 	city:yup.string().required(),
 	state:yup.string().required(),
@@ -48,8 +49,11 @@ export const organizationSchema = yup.object({
 	industry:yup.string().required(),
 	postcode:yup.number().required(),
 	description:yup.string().required(),
+	website:yup.string().url().required(),
 	activity_type:yup.string().required(),
 	email:yup.string().email().required(),
+	count_of_employees_max:yup.number().required(),
+	count_of_employees_min:yup.number().required("number of employees must be selected"),
 })
 
 export const changePasswordSchema = yup.object({

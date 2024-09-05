@@ -72,13 +72,13 @@ const Input: React.FC<Props> = ({
         </div>
       ) : (
         <textarea
-          rows={6}
+          rows={3}
           id={name}
           value={value}
           autoComplete="off"
-          {...(register && { ...register(name) })}
           placeholder={placeholder}
-          className="w-full p-3 mt-3 border outline-none"
+          {...(register && { ...register(name) })}
+          className={`w-full p-3 mt-3 border ui-input outline-none ${errors?.message ? "input-error" : ""}`}
         />
       )}
       {errors ? (

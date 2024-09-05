@@ -1,12 +1,15 @@
 import React, { FC, Fragment } from "react";
-import { Select } from "@instanvi/ui-components";;
+import { Select, Input } from "@instanvi/ui-components";;
 import { FieldErrors, UseFormRegister, UseFormSetValue } from "react-hook-form";
-import { OrganizationFormData } from "../../utils/validations";
-import useVerificaton from "../../hooks/useVerification";
-import Input from "../../../../components/input";
 import { SelectProp } from "../../../../utils/types";
 import { Industry } from "../../../../Arrays/Business";
-import CustomButton from "../../../../components/button/customButton";
+import { OrganizationFormData } from "../../utils/validations";
+
+const employeesList = [
+  { value: '1-10', label: '1 - 10' },
+  { value: '10-50', label: '10 - 50' },
+  { value: '50-100', label: '50 - 100' },
+]
 
 type Props = {
   errors: FieldErrors<OrganizationFormData>;
@@ -15,16 +18,27 @@ type Props = {
 };
 
 const BusinessInfo: FC<Props> = ({ register, errors, setValue }) => {
-  const { setActiveStep } = useVerificaton();
 
   const onChangeIndustry = (val: SelectProp) => {
     const value = val;
     setValue("industry", value?.value as string);
   };
 
+  const onChangeEmployee = (val: SelectProp) => {
+    const value = val?.value;
+    const parts = value?.split("-");
+    if (parts) {
+
+      const firstNumber = parseInt(parts?.[0], 10);
+      const lastNumber = parseInt(parts[1], 10);
+      setValue("count_of_employees_min", firstNumber);
+      setValue("count_of_employees_max", lastNumber);
+    }
+  };
+
   return (
     <Fragment>
-      <div className="mx-auto flex max-w-4xl items-center justify-between p-6 lg:px-8">
+      <section className="flex items-center justify-between">
         <div className="w-full">
           <div>
             <h3 className="text-3xl text-center">Business Information</h3>
@@ -42,49 +56,51 @@ const BusinessInfo: FC<Props> = ({ register, errors, setValue }) => {
                 label="Business Legal Name"
                 placeholder={"Bickdrim LLC"}
               />
-              <div className="w-full mt-5">
-                <label htmlFor="">Industry</label>
+
+              <div>
+                <label htmlFor="" className="capitalize font-semibold text-[0.75rem]">Industry</label>
                 <Select
                   options={Industry}
                   onChange={(val) => onChangeIndustry(val)}
                 />
+                {errors?.industry ? (
+                  <small className="col-span-2 text-red-500">{errors?.industry?.message}</small>
+                ) : null}
               </div>
-              <div className="w-full mt-5">
-                <Input
-                  isTextArea
-                  type="text"
-                  name="description"
-                  register={register}
-                  label="Description"
-                  errors={errors?.description}
-                  placeholder={"We are into ABC.."}
+
+              <Input
+                isTextArea
+                type="text"
+                name="description"
+                register={register}
+                label="Description"
+                errors={errors?.description}
+                placeholder={"We are into ABC.."}
+              />
+
+              <div>
+                <label htmlFor="" className="capitalize font-semibold text-[0.75rem]">Employees</label>
+                <Select
+                  options={employeesList}
+                  onChange={(val) => onChangeEmployee(val)}
                 />
+                {errors?.count_of_employees_min ? (
+                  <small className="col-span-2 text-red-500">{errors?.count_of_employees_min?.message}</small>
+                ) : null}
               </div>
-              {/* <div className="w-full mt-6">
-        <label htmlFor="">Industry</label>
-        <Select options={Industry} />
-      </div> */}
-              {/* <Input
-        type="url"
-        name="website"
-        register={register}
-        errors={errors?.}
-        label="Website URL"
-        placeholder={"bickdrim.com"}
-      /> */}
+
+              <Input
+                type="url"
+                name="website"
+                register={register}
+                errors={errors?.website}
+                label="Website URL"
+                placeholder={"bickdrim.com"}
+              />
             </div>
           </div>
-          <div className="w-full flex justify-end mt-5">
-            <CustomButton
-              value={"Proceed"}
-              onclick={() => {
-                setActiveStep?.(1);
-              }}
-              icon={"arrow-right"}
-            />
-          </div>
         </div>
-      </div>
+      </section>
     </Fragment>
   );
 };

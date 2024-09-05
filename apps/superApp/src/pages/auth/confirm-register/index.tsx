@@ -29,7 +29,6 @@ const ComfirmRegister: FC = () => {
       onSuccess: () => {
         if (!user?.organization)
           localStorage.removeItem("otp")
-        // encryptAndStore("token", )
         toast.success("Operation successful")
         router.push('/')
       },
