@@ -10,6 +10,7 @@ import CustomButton from "../../components/button/customButton";
 import AddressInfo from "../../modules/auth/components/accountVerification/address-info";
 import BusinessInfo from "../../modules/auth/components/accountVerification/business-info";
 import IdentityInfo from "../../modules/auth/components/accountVerification/identity-info";
+import toast from "react-hot-toast";
 
 
 type Props = object;
@@ -19,7 +20,6 @@ const VerificationPage = (props: Props) => {
   const [step, setStep] = useState(0);
   const [files, setFiles] = useState<File[]>([]);
 
-  console.log(files)
   const { mutate, isPending } = useUpdateOrganization()
 
   const methods = useForm<OrganizationFormData>({
@@ -63,23 +63,46 @@ const VerificationPage = (props: Props) => {
   };
 
   const onSubmit: SubmitHandler<OrganizationFormData> = (inputs) => {
-    // router.push("/auth/codeVerification");
-    const payload = {
-      ...inputs,
-      documents: files as any,
-      postcode: String(inputs?.postcode)
+    if (!files) {
+      toast.error("Please upload your documents");
+      return;
     }
-    mutate(payload, {
-      onSuccess: () => {
-        router.push("/organisation/success-verification");
-        reset();
-      },
-      onError: (error: unknown) => {
-        const text = (error as AxiosError<{ message: string }>)?.response?.data
-        const message = text?.message
-        // toast.error(message as string);
-      },
-    })
+    else {
+      const formdata = new FormData();
+
+      formdata.append("name", inputs?.name)
+      formdata.append("city", inputs?.city)
+      formdata.append("city", inputs?.city)
+      formdata.append("state", inputs?.state)
+      formdata.append("email", inputs?.email)
+      formdata.append("phone", inputs?.phone)
+      formdata.append("address", inputs?.address)
+      formdata.append("country", inputs?.country)
+      formdata.append("website", inputs?.website)
+      formdata.append("industry", inputs?.industry)
+      formdata.append("description", inputs?.description)
+      formdata.append("postcode", String(inputs?.postcode))
+      formdata.append("activity_type", inputs?.activity_type)
+      formdata.append("count_of_employees_min", String(inputs?.count_of_employees_min))
+      formdata.append("count_of_employees_max", String(inputs?.count_of_employees_max))
+
+      files?.forEach(file => {
+        formdata.append("documents", file)
+      })
+
+      mutate(formdata, {
+        onSuccess: () => {
+          reset();
+          router.push("/organisation/success-verification");
+        },
+        onError: (error: unknown) => {
+          const text = (error as AxiosError<{ message: string }>)?.response?.data
+          const message = text?.message
+          toast.error(message as string);
+        },
+      })
+    }
+
   };
 
   // useEffect(() => {
@@ -105,7 +128,7 @@ const VerificationPage = (props: Props) => {
         {step === 2 && (
           <CustomButton
             type="submit"
-            value={"Proceed"}
+            value={isPending ? "Loading..." : "Proceed"}
             icon={"arrow-right"}
             onclick={handleSubmit(onSubmit)}
           />

@@ -1,6 +1,6 @@
 import axios from "@instanvi/utilities";
 import { ProfileData } from "./validations";
-import { IChangePassword, ILogin, IOrganisation, IRegister, IRegisterResponse } from "./types";
+import { IChangePassword, ILogin, IRegister, IRegisterResponse } from "./types";
 import { IUser } from "apps/superApp/src/utils/types";
 
 
@@ -42,7 +42,7 @@ export const updateProfileAPI = async (inputs:ProfileData):Promise<unknown> =>{
    return response?.data;
 }
 
-export const updateOrganizationAPI = async (inputs:IOrganisation):Promise<unknown> =>{
+export const updateOrganizationAPI = async (inputs:FormData):Promise<unknown> =>{
   const response = await axios.put("/auth/update-organization", inputs)
    return response?.data;
 }
