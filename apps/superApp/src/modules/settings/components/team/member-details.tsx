@@ -1,6 +1,7 @@
 import { Button, Modal } from '@instanvi/ui-components'
 import React, { FC } from 'react'
 import { IMember } from '../../utils/team/types'
+import MemberChip from './member-chip'
 
 type Props = {
   isOpen: boolean
@@ -28,7 +29,7 @@ const MemberDetails: FC<Props> = ({ isOpen, onClose, data }) => {
           </div>
           <div>
             <h6 className="">Status</h6>
-            <p><strong>{data?.status}</strong></p>
+            <MemberChip status={data?.status} />
           </div>
           <div>
             <h6 className="">Role</h6>

@@ -12,7 +12,7 @@ export const getMembersAPI = async (): Promise<unknown> => {
 }
 
 export const getSingleMemberAPI = async (id:string): Promise<unknown> => {
-  const response = await axios.get(`/members/${id}`)
+  const response = await axios.get(`/members/detail/${id}`)
   return response?.data;
 }
 

@@ -11,9 +11,7 @@ const SideBar = () => {
   return (
     <div className='h-screen flex flex-col justify-between items-center primary p-2 w-full'>
       <div className='mt-2'>
-        <div className="flex place-content-center rounded-md border-2 border-green-300 hover:bg-green-100 p-2"
-          onClick={() => push("/")}
-        >
+        <div className="flex place-content-center rounded-md p-2">
           <Image src="/icons/dashboard.svg" width={20} height={20} alt="" />
         </div>
         <div className='mt-10 flex place-content-center rounded-md hover:bg-green-100 p-2'>

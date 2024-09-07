@@ -7,6 +7,7 @@ import {
 } from "@nextui-org/react";
 
 import { IMember } from "./types";
+import MemberChip from "../../components/team/member-chip";
 
 export const memberColumns = ({
   onDelete,
@@ -37,7 +38,7 @@ export const memberColumns = ({
     {
       name: <div className="w-full text-[17px]">Email</div>,
       cell: (row) => (
-        <div className="font-medium text-[16px] text-gray-900 capitalize">{row.email}</div>
+        <div className="font-medium text-[16px] text-gray-900">{row.email}</div>
       ),
       sortable: true,
     },
@@ -49,18 +50,7 @@ export const memberColumns = ({
     {
       name: <div className="w-full text-center text-[17px]">Status</div>,
       cell: (row) => (
-        <div className="text-center w-full">
-          <span
-            className={`${row.status === "active"
-              ? "bg-[#52C41A] text-black"
-              : row.status === "paused"
-                ? "bg-red-500 text-white"
-                : ""
-              } px-3 py-0.5 rounded-full capitalize`}
-          >
-            {row.status}
-          </span>
-        </div>
+        <MemberChip status={row?.status} />
       ),
       sortable: true,
     },

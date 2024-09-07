@@ -107,6 +107,7 @@ const TeamPage: React.FC = () => {
         isOpen={openDetail}
         data={selectedMember as IMember}
       />
+
       <AppDelete
         title="team"
         onClose={onCloseDelete}

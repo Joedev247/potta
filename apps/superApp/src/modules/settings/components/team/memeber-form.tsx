@@ -50,7 +50,7 @@ const MemberForm: FC<Prop> = ({ isOpen, data, onClose }) => {
     resolver: yupResolver(memberSchema),
   })
 
-  const { register, handleSubmit, reset, setValue } = methods
+  const { register, handleSubmit, reset } = methods
   const { errors } = methods.formState
 
   const onError = (error: unknown) => {
