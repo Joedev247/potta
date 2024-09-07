@@ -140,23 +140,23 @@ const TeamPage: React.FC = () => {
   return (
     <>
       <MemberDetails
-        onClose={onCloseDetail}
         isOpen={openDetail}
+        onClose={onCloseDetail}
         data={selectedMember as IMember}
       />
 
       <ResetMemberForm
-        onClose={onCloseReset}
         isOpen={openReset}
+        onClose={onCloseReset}
         data={selectedMember as IMember}
       />
 
       <AppDelete
         title="team"
-        loading={deleteMember.isPending}
         isOpen={openDelete}
         onClose={onCloseDelete}
         deleteAction={handleDelete}
+        loading={deleteMember.isPending}
       />
 
       <MemberForm
