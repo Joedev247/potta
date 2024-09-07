@@ -12,12 +12,17 @@ export const getMembersAPI = async (): Promise<unknown> => {
 }
 
 export const getSingleMemberAPI = async (id:string): Promise<unknown> => {
-  const response = await axios.get(`/members/detail/${id}`)
+  const response = await axios.get(`/members/details/${id}`)
   return response?.data;
 }
 
 export const updateMemberAPI = async (id:string, inputs: MemberFormData): Promise<unknown> => {
   const response = await axios.put(`/members/${id}`, inputs)
+  return response?.data;
+}
+
+export const resetMemberPasswordAPI = async (id:string, inputs: {password:string}): Promise<unknown> => {
+  const response = await axios.put(`/members/reset-password/${id}`, inputs)
   return response?.data;
 }
 

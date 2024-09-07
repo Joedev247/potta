@@ -1,6 +1,5 @@
 import * as yup from "yup"
 
-
 export const memberSchema = yup.object({
 	role:yup.string().required(),
 	lastName:yup.string().required(),
@@ -10,4 +9,9 @@ export const memberSchema = yup.object({
 
 })
 
+export const resetMemberSchema = yup.object({
+	password:yup.string().required()
+})
+
 export type MemberFormData = yup.InferType<typeof memberSchema>
+export type ResetMemberFormData = yup.InferType<typeof resetMemberSchema>

@@ -38,7 +38,7 @@ const MemberDetails: FC<Props> = ({ isOpen, onClose, data }) => {
         </section>
         <div className="flex justify-end">
           <div className="max-w-fit">
-            <Button value="Close" type="button" onClick={onClose} />
+            <Button value="Close" color="gray" type="button" onClick={onClose} />
           </div>
         </div>
       </div>

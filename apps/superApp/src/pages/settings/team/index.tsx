@@ -7,14 +7,16 @@ import CustomLoader from 'apps/superApp/src/components/tables/Loader'
 import { IMember } from 'apps/superApp/src/modules/settings/utils/team/types'
 import { memberColumns } from 'apps/superApp/src/modules/settings/utils/team/column'
 import SettingsLayout from 'apps/superApp/src/modules/settings/layout/setting-layout'
-import MemberForm from 'apps/superApp/src/modules/settings/components/team/memeber-form'
+import MemberForm from 'apps/superApp/src/modules/settings/components/team/member-form'
 import { useGetMembers } from 'apps/superApp/src/modules/settings/hooks/team/useGetMembers'
 import MemberDetails from 'apps/superApp/src/modules/settings/components/team/member-details'
 import AppDelete from 'apps/superApp/src/components/app-delete'
+import ResetMemberForm from 'apps/superApp/src/modules/settings/components/team/reset-member-form'
 
 const TeamPage: React.FC = () => {
   const [openForm, setOpenForm] = useState(false);
   const [openDetail, setOpenDetail] = useState(false);
+  const [openReset, setOpenReset] = useState(false);
   const [openDelete, setOpenDelete] = useState(false);
   const [selectedMember, setSelectedMember] = useState<IMember | undefined>(undefined);
   const { data: members, isPending } = useGetMembers()
@@ -26,9 +28,13 @@ const TeamPage: React.FC = () => {
     setOpenForm(true)
   };
 
-  const onEditMember = (member: IMember) => {
+  const onCloseForm = () => {
+    setOpenForm(false)
+  };
+
+  const onEditMember = (data: IMember) => {
     setOpenForm(true)
-    setSelectedMember(member)
+    setSelectedMember(data)
   };
 
   const onOpenDetail = (data: IMember) => {
@@ -36,18 +42,14 @@ const TeamPage: React.FC = () => {
     setOpenDetail(true)
   };
 
-  const onOpenDelete = (data: IMember) => {
-    setSelectedMember(data)
-    setOpenDelete(true)
-  };
-
-  const onCloseForm = () => {
-    setOpenForm(false)
-  };
-
   const onCloseDetail = () => {
     setOpenDetail(false)
     setSelectedMember(undefined)
+  };
+
+  const onOpenDelete = (data: IMember) => {
+    setSelectedMember(data)
+    setOpenDelete(true)
   };
 
   const onCloseDelete = () => {
@@ -55,7 +57,23 @@ const TeamPage: React.FC = () => {
     setSelectedMember(undefined)
   };
 
-  const columnProps = { onEdit: onEditMember, onDetail: onOpenDetail, onDelete: onOpenDelete }
+  const onResetMember = (data: IMember) => {
+    setOpenReset(true)
+    setSelectedMember(data)
+  };
+
+  const onCloseReset = () => {
+    setOpenReset(false)
+    setSelectedMember(undefined)
+  };
+
+
+  const columnProps = {
+    onEdit: onEditMember,
+    onReset: onResetMember,
+    onDetail: onOpenDetail,
+    onDelete: onOpenDelete,
+  }
 
   const data: IMember[] = [
     {
@@ -105,6 +123,12 @@ const TeamPage: React.FC = () => {
       <MemberDetails
         onClose={onCloseDetail}
         isOpen={openDetail}
+        data={selectedMember as IMember}
+      />
+
+      <ResetMemberForm
+        onClose={onCloseReset}
+        isOpen={openReset}
         data={selectedMember as IMember}
       />
 

@@ -9,15 +9,19 @@ import {
 import { IMember } from "./types";
 import MemberChip from "../../components/team/member-chip";
 
+type ColumnDataProp = (data: IMember) => void
+
 export const memberColumns = ({
-  onDelete,
-  onDetail,
   onEdit,
+  onReset,
+  onDetail,
+  onDelete,
 }
   : {
-    onEdit: (data: IMember) => void,
-    onDelete: (data: IMember) => void,
-    onDetail: (data: IMember) => void,
+    onEdit: ColumnDataProp,
+    onReset: ColumnDataProp,
+    onDelete: ColumnDataProp,
+    onDetail: ColumnDataProp,
   }
 ): TableColumn<IMember>[] => [
     {
@@ -65,12 +69,15 @@ export const memberColumns = ({
               </Button>
             </PopoverTrigger>
             <PopoverContent>
-              <div className="p-1 bg-white shadow-md flex flex-col gap-2">
+              <div className="py-1 px-2 bg-white shadow-md flex flex-col gap-2">
                 <div className="text-sm cursor-pointer hover:bg-gray-200 py-0.5 px-2 rounded-[2px]" onClick={() => onDetail(row)}>
                   <p>View</p>
                 </div>
                 <div className="text-sm cursor-pointer hover:bg-gray-200 py-0.5 px-2 rounded-[2px]" onClick={() => onEdit(row)}>
                   <p>Edit</p>
+                </div>
+                <div className="text-sm cursor-pointer hover:bg-gray-200 py-0.5 px-2 rounded-[2px]" onClick={() => onReset(row)}>
+                  <p>Reset Password</p>
                 </div>
                 <div className="text-sm cursor-pointer hover:bg-red-200 py-0.5 px-2 rounded-[2px] text-red-600" onClick={() => onDelete(row)}>
                   <p>Delete</p>

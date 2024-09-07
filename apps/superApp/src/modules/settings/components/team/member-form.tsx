@@ -44,6 +44,7 @@ const MemberForm: FC<Prop> = ({ isOpen, data, onClose }) => {
     role: 'member',
     password: "password"
   }
+
   const methods = useForm<MemberFormData>({
     mode: "onChange",
     defaultValues,
