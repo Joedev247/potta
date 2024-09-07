@@ -153,8 +153,9 @@ const TeamPage: React.FC = () => {
 
       <AppDelete
         title="team"
-        onClose={onCloseDelete}
+        loading={deleteMember.isPending}
         isOpen={openDelete}
+        onClose={onCloseDelete}
         deleteAction={handleDelete}
       />
 
