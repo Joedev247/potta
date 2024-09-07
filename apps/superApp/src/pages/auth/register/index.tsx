@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/router";
 import toast from "react-hot-toast/headless";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { SubmitHandler, useForm } from "react-hook-form";
@@ -12,8 +13,6 @@ import Layout from "../../../modules/auth/layout";
 import { SelectProp } from "apps/superApp/src/utils/types";
 import { useRegister } from "../../../modules/auth/hooks/useRegister";
 import { Select, Button, Checkbox, Input } from "@instanvi/ui-components";
-import { useRouter } from "next/router";
-
 
 const SignUp = () => {
   const router = useRouter();

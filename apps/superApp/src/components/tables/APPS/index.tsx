@@ -3,7 +3,7 @@ import React, { FC, useState, useEffect } from "react";
 import DataTable, { TableColumn } from "react-data-table-component";
 import { DataRow } from "./data";
 import CustomLoader from "../table/Loader";
-import MoreIcon from "../more";
+import MoreIcon from "../../more";
 
 
 interface Props {

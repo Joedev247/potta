@@ -12,7 +12,6 @@ import { countryList } from "@instanvi/utilities";
 const Billing = () => {
   const [active, setActive] = useState("Wallet");
 
-
   return (
     <div className='w-full md:px-16 mt-10'>
       <div className='w-full flex flex-col lg:flex-row justify-between items-center gap-2'>

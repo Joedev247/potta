@@ -12,7 +12,7 @@ import Layout from "../../../modules/auth/layout";
 import { EmailData, emailSchema } from "../../../modules/auth/utils/validations";
 import { useForgotPassword } from "../../../modules/auth/hooks/useForgotPassword";
 
-const SignUp = () => {
+const ForgotPasswordPage = () => {
   const router = useRouter()
   const { isPending, mutate } = useForgotPassword()
   const methods = useForm<EmailData>({
@@ -41,10 +41,10 @@ const SignUp = () => {
   return (
     <Layout >
       <form className="h-screen w-full items-center flex justify-center" onSubmit={handleSubmit(onSubmit)}>
-        <div className="mx-auto max-w-5xl relative   px-4 sm:px-16 lg:px-32 w-full">
+        <div className="mx-auto max-w-5xl relative px-4 sm:px-16 w-full 2xl:w-[35rem]">
           <div className="w-full md:px-3">
             <div className="w-full  text-left">
-              <h3 className="text-3xl">Forgot Password ? </h3>
+              <h3 className="text-3xl">Forgot Password ?</h3>
               <p className="text-gray-400 my-2">Enter your email below, you will receive an email with instructions
                 on how to reset your password in a few minutes.  You can also
                 set a new password if you&#39;ve never set one before.</p>
@@ -74,4 +74,4 @@ const SignUp = () => {
   )
 }
 
-export default SignUp
+export default ForgotPasswordPage

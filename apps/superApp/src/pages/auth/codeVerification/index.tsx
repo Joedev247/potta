@@ -14,8 +14,8 @@ const VerificationCode: FC = () => {
   const router = useRouter()
   const searchParams = useSearchParams()
   const email = searchParams.get("email")
-  const [code, setCode] = useState("")
   const { mutate, isPending } = useResetPasswordConfirm()
+  const [code, setCode] = useState("")
 
   const sendCode = (code: string) => {
     mutate(code, {
@@ -41,19 +41,17 @@ const VerificationCode: FC = () => {
               <h3 className="text-3xl">Enter The Verification Code</h3>
               <p className="text-gray-400 font-thin mt-3">We have just send the verification code to {maskEmailAddress(email)}</p>
             </div>
-            <div className="my-16 flex justify-center w-full">
+            <div className="my-8 flex justify-center w-full">
               <div>
-                <div>
-                  <VerificationInput value={code} onChange={(value) => setCode(value)} length={5} />
-                </div>
+                <VerificationInput value={code} onChange={(value) => setCode(value)} length={6} />
                 <div className="flex justify-between items-center mt-5">
                   <p className="text-[#34CAA5] font-medium">Send the code Again</p>
-                  <span className="cursor-default font-semibold" onClick={() => setCode("")}>Clear</span>
+                  <span className="cursor-default font-semibold hover:text-green-400" onClick={() => setCode("")}>Clear</span>
+                </div>
+                <div className="w-full mt-4">
+                  <Proceed disabled={code?.length !== 6} value={isPending ? "Loading..." : "Proceed"} type="button" onclick={() => { sendCode(code) }} />
                 </div>
               </div>
-            </div>
-            <div className="w-full mt-8">
-              <Proceed disabled={code?.length !== 5} value={isPending ? "Loading..." : "Proceed"} type="button" onclick={() => { sendCode(code) }} />
             </div>
           </div>
         </div>

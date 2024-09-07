@@ -67,9 +67,21 @@ export const changePasswordSchema = yup.object({
 	.oneOf([yup.ref('new_password')], 'Passwords must match')
 })
 
+
+export const resetPasswordSchema = yup.object({
+password:yup.string().matches(
+		/^(?=.*[A-Z])(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$/,
+		'Password must contain at least one uppercase letter and one special character'
+	).required(),
+	confirm_password: yup.string()
+	.required('Confirm Password is required')
+	.oneOf([yup.ref('password')], 'Passwords must match')
+})
+
 export type LoginData = yup.InferType<typeof loginSchema>
 export type EmailData = yup.InferType<typeof emailSchema>
 export type ProfileData = yup.InferType<typeof profileSchema>
 export type RegisterFormData = yup.InferType<typeof registerSchema>
 export type PasswordFormData = yup.InferType<typeof changePasswordSchema>
+export type ResetPasswordData = yup.InferType<typeof resetPasswordSchema>
 export type OrganizationFormData = yup.InferType<typeof organizationSchema>

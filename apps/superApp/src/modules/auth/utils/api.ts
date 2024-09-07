@@ -1,7 +1,7 @@
 import axios from "@instanvi/utilities";
 
-import { ProfileData } from "./validations";
 import { IUser } from "../../../../src/utils/types";
+import { OrganizationFormData, ProfileData } from "./validations";
 import { IChangePassword, ILogin, IRegister, IRegisterResponse } from "./types"; 
 
 export const registerAPI = async (inputs: IRegister): Promise<IRegisterResponse> => {
@@ -42,7 +42,7 @@ export const updateProfileAPI = async (inputs: ProfileData): Promise<unknown> =>
   return response?.data;
 }
 
-export const updateOrganizationAPI = async (inputs: FormData): Promise<unknown> => {
+export const updateOrganizationAPI = async (inputs: OrganizationFormData): Promise<unknown> => {
   const response = await axios.put("/auth/update-organization", inputs)
   return response?.data;
 }
@@ -52,8 +52,13 @@ export const resetPasswordConfirmAPI = async (code: string): Promise<unknown> =>
   return response?.data;
 }
 
-export const resetPasswordAPI = async (token: string): Promise<unknown> => {
-  const response = await axios.patch(`/auth/reset-password/reset/${token}`)
+export const changePasswordConfirmAPI = async (code: string): Promise<unknown> => {
+  const response = await axios.patch(`/auth/reset-password/confirm/${code}`)
+  return response?.data;
+}
+
+export const resetPasswordAPI = async (input:{token: string, password:string}): Promise<unknown> => {
+  const response = await axios.post(`/auth/forgot-password/reset/confirm`, input)
   return response?.data;
 }
 

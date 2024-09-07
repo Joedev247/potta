@@ -6,10 +6,11 @@ type SelectProp = { label: string, value: string }
 type Props = {
   styles?: object
   options: SelectProp[]
+  value?: SingleValue<SelectProp>
   onChange?: (arg: SingleValue<SelectProp>) => void
 }
 
-const Select: React.FC<Props> = ({ options, styles, onChange }) => {
+const Select: React.FC<Props> = ({ value, options, styles, onChange }) => {
 
   return (
     <ReactSelect styles={{
@@ -28,7 +29,9 @@ const Select: React.FC<Props> = ({ options, styles, onChange }) => {
           backgroundColor: "#E5E7EB"
         },
       })
-    }} options={options}
+    }}
+      value={value}
+      options={options}
       onChange={onChange} />
   );
 }

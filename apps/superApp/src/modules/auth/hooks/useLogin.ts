@@ -1,4 +1,4 @@
-// import CryptoJS from "crypto-js"
+import CryptoJS from "crypto-js"
 import { useMutation } from "@tanstack/react-query"
 import { loginAPI } from "../utils/api"
 import { SECRET } from "@instanvi/utilities"
@@ -6,13 +6,13 @@ import { SECRET } from "@instanvi/utilities"
 export const useLogin =()=>{
     const mutation = useMutation({
         mutationKey:["Login"],
-        mutationFn:loginAPI,
-        onSuccess: async (data) => {
+        mutationFn:loginAPI, 
+        onSuccess: (data) => {
 			const usertoken = data?.access_token 
-			const refreshtoken = data?.refresh_token 
-			const token = await CryptoJS.AES.encrypt(usertoken, SECRET)
-			await localStorage.setItem("token", token.toString())
-			await localStorage.setItem("refreshtoken", refreshtoken.toString())
+			// const refreshtoken = data?.refresh_token 
+			const token = CryptoJS.AES.encrypt(usertoken, SECRET)
+			localStorage.setItem("token", String(token))
+			// await localStorage.setItem("refreshtoken", refreshtoken.toString())
             // encryptAndStore("token",usertoken)
             // encryptAndStore("refresh",refreshtoken)
 		},

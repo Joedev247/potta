@@ -7,12 +7,12 @@ import React, { useEffect, useState } from 'react'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { SubmitHandler, useForm } from 'react-hook-form'
 
+import useAuth from "../../../auth/hooks/useAuth";
 import { countryList } from "@instanvi/utilities";
 import { Button, Input } from '@instanvi/ui-components'
-import { SelectProp } from 'apps/superApp/src/utils/types'
+import { IUser, SelectProp } from 'apps/superApp/src/utils/types'
 import { useUpdateProfile } from 'apps/superApp/src/modules/auth/hooks/useUpdateProfile'
 import { ProfileData, profileSchema } from 'apps/superApp/src/modules/auth/utils/validations'
-
 
 const languages = [
   { value: "english", label: "English" },
@@ -20,11 +20,24 @@ const languages = [
 ]
 
 const General = () => {
+  const { user } = useAuth()
   const [phone, setPhone] = useState('')
   const { mutate, isPending } = useUpdateProfile()
 
   const methods = useForm<ProfileData>({
     mode: "onChange",
+    defaultValues: {
+      name: "",
+      city: "",
+      email: "",
+      about: "",
+      address: "",
+      country: "",
+      lastName: "",
+      postcode: "",
+      firstName: "",
+      language: "",
+    },
     resolver: yupResolver(profileSchema),
   });
 
@@ -55,12 +68,23 @@ const General = () => {
     })
   };
 
+  const editable = (data: IUser) => {
+    return {
+      name: data?.name,
+      city: "",
+      email: data?.email,
+      about: "",
+      address: "",
+      country: data?.country,
+      lastName: data?.lastName,
+      firstName: data?.firstName,
+      language: "",
+    }
+  }
+
   useEffect(() => {
-    reset(({
-      country: "",
-      firstName: ""
-    }))
-  }, [])
+    if (user) reset(editable(user))
+  }, [user])
 
   return (
     <form className='mt-10 grid gap-4 md:mx-auto md:px-16 relative xl:w-[60%]' onSubmit={handleSubmit(onSubmit)}>
@@ -105,8 +129,8 @@ const General = () => {
           <PhoneInput
             country={'cm'}
             value={phone}
-            inputClass=" "
-            containerClass="phone-input"
+            inputClass=""
+            containerClass="phone-input border-red-500"
             countryCodeEditable
             onChange={val => setPhone(val)}
           />
@@ -130,6 +154,9 @@ const General = () => {
             options={countryList}
             onChange={(val) => onSelectChange("country", val)}
           />
+          {errors?.country ? (
+            <small className="col-span-2 text-red-500">{errors?.country?.message}</small>
+          ) : null}
         </div>
         <div>
           <label className="capitalize font-semibold text-[0.75rem]">Language</label>
@@ -137,6 +164,9 @@ const General = () => {
             options={languages}
             onChange={(val) => onSelectChange("language", val)}
           />
+          {errors?.language ? (
+            <small className="col-span-2 text-red-500">{errors?.language?.message}</small>
+          ) : null}
         </div>
       </div>
       <div className='mt-10 w-full flex justify-end'>

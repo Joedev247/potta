@@ -64,34 +64,14 @@ const VerificationPage = (props: Props) => {
   };
 
   const onSubmit: SubmitHandler<OrganizationFormData> = (inputs) => {
+
     if (!files) {
       toast.error("Please upload your documents");
       return;
     }
     else {
-      const formdata = new FormData();
 
-      formdata.append("name", inputs?.name);
-      formdata.append("city", inputs?.city);
-      formdata.append("city", inputs?.city);
-      formdata.append("state", inputs?.state);
-      formdata.append("email", inputs?.email);
-      formdata.append("phone", inputs?.phone);
-      formdata.append("address", inputs?.address);
-      formdata.append("country", inputs?.country);
-      formdata.append("website", inputs?.website);
-      formdata.append("industry", inputs?.industry);
-      formdata.append("description", inputs?.description);
-      formdata.append("postcode", String(inputs?.postcode));
-      formdata.append("activity_type", inputs?.activity_type)
-      formdata.append("count_of_employees_min", String(inputs?.count_of_employees_min));
-      formdata.append("count_of_employees_max", String(inputs?.count_of_employees_max));
-
-      files?.forEach(file => {
-        formdata.append("documents", file);
-      });
-
-      mutate(formdata, {
+      mutate(inputs, {
         onSuccess: () => {
           reset();
           router.push("/organisation/success-verification");
@@ -103,7 +83,6 @@ const VerificationPage = (props: Props) => {
         },
       })
     }
-
   };
 
   return (

@@ -16,11 +16,10 @@ import { LoginData, loginSchema } from "../../../modules/auth/utils/validations"
 
 
 const SignIn = () => {
-  const router = useRouter()
+  const login = useLogin()
+  const { push } = useRouter()
   const { setUser, } = useAuth()
   const [rememberChecked, setRememberChecked] = useState(false);
-
-  const login = useLogin()
 
   const methods = useForm<LoginData>({
     mode: "onChange",
@@ -41,10 +40,11 @@ const SignIn = () => {
       onSuccess: () => {
         meAPI()
           .then((user) => {
+            toast.success("Logged in successfully and will be redirected")
             const userdata = user as IUser
             setUser?.(userdata)
-            toast.success("Logged in successfully and will be redirected")
-            router.push('/')
+            if (userdata?.organization) push('/')
+            else push('/organisation')
           })
           .catch(onError)
       },

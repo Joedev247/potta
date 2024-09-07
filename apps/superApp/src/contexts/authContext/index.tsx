@@ -8,7 +8,7 @@ interface Props {
 }
 
 const defaultState = {
-  user: null,
+  user: undefined,
   isAdmin: false,
   isLoading: true,
 };
@@ -17,13 +17,17 @@ const AuthContext = createContext<Partial<IAuthContext>>(defaultState);
 
 export const AuthProvider: FC<Props> = ({ children }) => {
   const [isAdmin, setIsAdmin] = useState(false);
-  const [user, setUser] = useState<IUser | null>(null);
+  const [user, setUser] = useState<IUser | undefined>(undefined);
   const [isLoading, setIsLoading] = useState(false);
+
+
   // handle user state
   const checkIfLoggedIn = async () => {
+
+    const isToken = (await localStorage.getItem("token")) as string;
+
     try {
       setIsLoading(true);
-      const isToken = (await localStorage.getItem("token")) ?? "";
 
       if (!user && isToken) {
         await meAPI()
@@ -34,9 +38,10 @@ export const AuthProvider: FC<Props> = ({ children }) => {
             const text = (error as AxiosError<{ message: string }>)?.response
               ?.data;
             const message = text?.message as string;
+            console.log(message)
             // messange({ message: message, status: "error" })
           });
-        // setIsAdmin(isAdmin)
+        setIsAdmin(isAdmin)
       } else {
         throw new Error("token unavailable");
       }

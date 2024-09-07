@@ -1,24 +1,19 @@
-import React, { useContext, useState } from 'react'
-import { ContextData } from 'apps/superApp/src/contexts/verificationContext'
+import React from 'react'
+import { useRouter } from 'next/router'
+
+type Props = {
+  name: string
+  uppercase?: boolean
+}
 
 const Tabs = () => {
-  const context = useContext(ContextData)
-  const [switched, setSwitched] = useState('general')
-
-  type Props = {
-    name: string
-    uppercase?: boolean
-  }
+  const { push, pathname } = useRouter()
 
   const MenuItem: React.FC<Props> = ({ name, uppercase }) => {
     return (
-      <div className={`${switched == name ? 'font-bold border-r-[3px] border-[#237804]  text-[#237804]' : ''} w-full flex items-center h-8 hover:text-[#237804]`}>
+      <div className={`${pathname === `/settings/${name}` ? 'font-bold border-r-[3px] border-[#237804]  text-[#237804]' : ''} w-full flex items-center h-8 hover:text-[#237804]`}>
         <p
-          onClick={
-            () => {
-              setSwitched(name);
-              context.setToggle?.(name)
-            }}
+          onClick={() => push(`/settings/${name}`)}
           className={`text-left ml-1 md:ml-10 cursor-pointer ${uppercase ? "uppercase" : "capitalize"}`}>
           {name}
         </p>
