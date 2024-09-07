@@ -10,9 +10,9 @@ import { ResetMemberFormData, resetMemberSchema } from '../../utils/team/validat
 import { IMember } from '../../utils/team/types'
 
 type Props = {
+  data: IMember
   isOpen: boolean
   onClose: () => void
-  data: IMember
 }
 
 const ResetMemberForm: FC<Props> = ({ isOpen, onClose, data }) => {

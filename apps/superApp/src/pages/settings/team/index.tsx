@@ -12,8 +12,12 @@ import { useGetMembers } from 'apps/superApp/src/modules/settings/hooks/team/use
 import MemberDetails from 'apps/superApp/src/modules/settings/components/team/member-details'
 import AppDelete from 'apps/superApp/src/components/app-delete'
 import ResetMemberForm from 'apps/superApp/src/modules/settings/components/team/reset-member-form'
+import { useDelete } from 'apps/superApp/src/hooks/useDelete'
+import toast from 'react-hot-toast'
+import { AxiosError } from 'axios'
 
 const TeamPage: React.FC = () => {
+  const deleteMember = useDelete()
   const [openForm, setOpenForm] = useState(false);
   const [openDetail, setOpenDetail] = useState(false);
   const [openReset, setOpenReset] = useState(false);
@@ -22,6 +26,21 @@ const TeamPage: React.FC = () => {
   const { data: members, isPending } = useGetMembers()
 
   console.log(members)
+
+
+  const handleDelete = () => {
+
+    deleteMember.mutate(`/members/${selectedMember?.id}`, {
+      onSuccess: () => {
+        toast.success("User Deleted!")
+      },
+      onError: (error: unknown) => {
+        const text = (error as AxiosError<{ message: string }>)?.response?.data
+        const message = text?.message;
+        toast.error(message as string);
+      }
+    })
+  }
 
   const onOpenForm = () => {
     setSelectedMember(undefined)
@@ -136,7 +155,7 @@ const TeamPage: React.FC = () => {
         title="team"
         onClose={onCloseDelete}
         isOpen={openDelete}
-        deleteAction={() => { console.log("delete") }}
+        deleteAction={handleDelete}
       />
 
       <MemberForm
