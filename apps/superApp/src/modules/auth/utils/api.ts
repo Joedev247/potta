@@ -42,7 +42,8 @@ export const updateProfileAPI = async (inputs: ProfileData): Promise<unknown> =>
   return response?.data;
 }
 
-export const updateOrganizationAPI = async (inputs: OrganizationFormData): Promise<unknown> => {
+export const updateOrganizationAPI = async (
+  inputs: OrganizationFormData & {documents:string[]}) : Promise<unknown> => {
   const response = await axios.put("/auth/update-organization", inputs)
   return response?.data;
 }

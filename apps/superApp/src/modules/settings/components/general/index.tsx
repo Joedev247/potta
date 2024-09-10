@@ -2,6 +2,7 @@
 import { Select } from "@instanvi/ui-components"
 import { AxiosError } from 'axios'
 import toast from 'react-hot-toast'
+import timezones from 'timezones-list';
 import PhoneInput from 'react-phone-input-2'
 import React, { useEffect, useState } from 'react'
 import { yupResolver } from '@hookform/resolvers/yup'
@@ -19,24 +20,28 @@ const languages = [
   { value: "french", label: "French" }
 ]
 
+const timezoneOptions = timezones?.map(timezone => {
+  return {
+    label: timezone.label,
+    value: timezone.utc
+  }
+})
+
 const General = () => {
   const { user } = useAuth()
   const [phone, setPhone] = useState('')
+  const [timeZone, setTimeZone] = useState('')
   const { mutate, isPending } = useUpdateProfile()
 
   const methods = useForm<ProfileData>({
     mode: "onChange",
     defaultValues: {
-      name: "",
-      city: "",
-      email: "",
-      about: "",
-      address: "",
+      phone: "",
       country: "",
+      timezone: "",
       lastName: "",
-      postcode: "",
-      firstName: "",
       language: "",
+      firstName: "",
     },
     resolver: yupResolver(profileSchema),
   });
@@ -52,7 +57,6 @@ const General = () => {
   const onSubmit: SubmitHandler<ProfileData> = (inputs) => {
     const payload = {
       ...inputs,
-      postcode: String(inputs?.postcode)
     }
 
     mutate(payload, {
@@ -110,22 +114,9 @@ const General = () => {
           />
         </div>
       </div>
-      <div>
-        <Input
-          verified
-          type="text"
-          name="name"
-          register={register}
-          label="Company Name"
-          errors={errors?.name}
-          placeholder={'ABC Company'} />
-      </div>
       <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
         <div>
-          <div className='flex mb-1 gap-1 items-center'>
-            <label htmlFor="" className="capitalize font-semibold text-[0.75rem]">Phone Number</label>
-            <i className='ri-checkbox-circle-fill text-green-700 -mt-1' />
-          </div>
+          <label htmlFor="" className="capitalize font-semibold text-[0.75rem]">Phone Number</label>
           <PhoneInput
             country={'cm'}
             value={phone}
@@ -136,19 +127,6 @@ const General = () => {
           />
         </div>
         <div>
-          <Input
-            verified
-            type="email"
-            name="email"
-            label="Email"
-            register={register}
-            errors={errors.email}
-            placeholder={'Pauljean@gmail.com'}
-          />
-        </div>
-      </div>
-      <div className='grid grid-cols-1 md:grid-cols-2 gap-2'>
-        <div>
           <label className="capitalize font-semibold text-[0.75rem]">Country</label>
           <Select
             options={countryList}
@@ -156,6 +134,18 @@ const General = () => {
           />
           {errors?.country ? (
             <small className="col-span-2 text-red-500">{errors?.country?.message}</small>
+          ) : null}
+        </div>
+      </div>
+      <div className='grid grid-cols-1 md:grid-cols-2 gap-2'>
+        <div>
+          <label className="capitalize font-semibold text-[0.75rem]">Time Zone</label>
+          <Select
+            options={timezoneOptions}
+            onChange={(val) => onSelectChange("timezone", val)}
+          />
+          {errors?.language ? (
+            <small className="col-span-2 text-red-500">{errors?.language?.message}</small>
           ) : null}
         </div>
         <div>
@@ -172,7 +162,7 @@ const General = () => {
       <div className='mt-10 w-full flex justify-end'>
         <Button
           type='submit'
-          value='Update'
+          value={isPending ? 'Updating...' : 'Update'}
           icon='arrow-right'
         />
       </div>

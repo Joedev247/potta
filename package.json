@@ -3,8 +3,8 @@
   "version": "0.0.0",
   "license": "MIT",
   "scripts": {
-    "build:superApp" : "nx run superApp:build",
-    "start:superApp" : "nx run superApp:start"
+    "build:superApp": "nx run superApp:build",
+    "start:superApp": "nx run superApp:start"
   },
   "private": true,
   "dependencies": {
@@ -30,6 +30,7 @@
     "react-select": "^5.8.0",
     "react-verification-input": "^4.1.2",
     "remixicon": "^4.3.0",
+    "timezones-list": "^3.0.3",
     "tslib": "^2.3.0",
     "yup": "^1.4.0"
   },

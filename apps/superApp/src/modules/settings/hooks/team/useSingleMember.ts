@@ -1,10 +1,10 @@
-import { useMutation } from "@tanstack/react-query"
+import { useQuery } from "@tanstack/react-query"
 import { getSingleMemberAPI } from "../../utils/team/api"
 
 export const useSingleMember = (id:string) =>{
-    const mutation = useMutation({
-        mutationKey:["Members", id],
-        mutationFn:()=>getSingleMemberAPI(id),
+    const query = useQuery({
+        queryKey:["Members", id],
+        queryFn:()=>getSingleMemberAPI(id),
     })
-    return mutation
+    return query
 }

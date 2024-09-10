@@ -26,16 +26,12 @@ export const registerSchema = yup.object({
 })
 
 export const profileSchema = yup.object({
-	name:yup.string().required(),
-	city:yup.string().required(),
-	email:yup.string().email().required(),
-	about:yup.string().required(),
-	address:yup.string().required(),
+	phone:yup.string().required(),
 	country:yup.string().required(),
-	lastName:yup.string().required(),
-	postcode:yup.string().required(),
-	firstName:yup.string().required(),
 	language:yup.string().required(),
+	timezone:yup.string().required(),
+	lastName:yup.string().required(),
+	firstName:yup.string().required(),
 })
 
 export const organizationSchema = yup.object({

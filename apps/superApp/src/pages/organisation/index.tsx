@@ -6,13 +6,13 @@ import { useRouter } from "next/router";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { SubmitHandler, useForm } from "react-hook-form";
 
+import { useUploadFile } from "../../hooks/useUploadFile";
 import CustomButton from "../../components/button/customButton";
 import { useUpdateOrganization } from "../../modules/auth/hooks/useUpdateOrganization";
 import AddressInfo from "../../modules/auth/components/accountVerification/address-info";
 import BusinessInfo from "../../modules/auth/components/accountVerification/business-info";
 import IdentityInfo from "../../modules/auth/components/accountVerification/identity-info";
 import { OrganizationFormData, organizationSchema } from "../../modules/auth/utils/validations";
-
 
 type Props = object;
 
@@ -22,6 +22,7 @@ const VerificationPage = (props: Props) => {
   const [files, setFiles] = useState<File[]>([]);
 
   const { mutate, isPending } = useUpdateOrganization()
+  const uploadDoc = useUploadFile()
 
   const methods = useForm<OrganizationFormData>({
     mode: "onChange",
@@ -70,11 +71,26 @@ const VerificationPage = (props: Props) => {
       return;
     }
     else {
+      toast.loading("Submitting...")
 
-      mutate(inputs, {
+      const formData = new FormData();
+      files.forEach((file) => {
+        formData.append('file', file);
+      })
+
+      uploadDoc.mutate(formData, {
         onSuccess: () => {
-          reset();
-          router.push("/organisation/success-verification");
+          mutate({ ...inputs, documents: [] }, {
+            onSuccess: () => {
+              reset();
+              router.push("/organisation/success-verification");
+            },
+            onError: (error: unknown) => {
+              const text = (error as AxiosError<{ message: string }>)?.response?.data
+              const message = text?.message
+              toast.error(message as string);
+            },
+          })
         },
         onError: (error: unknown) => {
           const text = (error as AxiosError<{ message: string }>)?.response?.data
