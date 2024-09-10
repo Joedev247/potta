@@ -2,6 +2,7 @@ import { createContext, FC, ReactNode, useEffect, useState } from "react";
 import { AxiosError } from "axios";
 import { meAPI } from "../../modules/auth/utils/api";
 import { IAuthContext, IUser } from "../../utils/types";
+import toast from "react-hot-toast";
 
 interface Props {
   children: ReactNode;
@@ -38,8 +39,7 @@ export const AuthProvider: FC<Props> = ({ children }) => {
             const text = (error as AxiosError<{ message: string }>)?.response
               ?.data;
             const message = text?.message as string;
-            console.log(message)
-            // messange({ message: message, status: "error" })
+            toast.error(message)
           });
         setIsAdmin(isAdmin)
       } else {

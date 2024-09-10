@@ -30,7 +30,6 @@ const timezoneOptions = timezones?.map(timezone => {
 const General = () => {
   const { user } = useAuth()
   const [phone, setPhone] = useState('')
-  const [timeZone, setTimeZone] = useState('')
   const { mutate, isPending } = useUpdateProfile()
 
   const methods = useForm<ProfileData>({

@@ -1,14 +1,27 @@
-import React, { FC, ReactNode } from 'react'
+import React, { FC, ReactNode, useEffect, useState } from 'react'
 import Navbar from './navbar'
 import SideBar from './sidebar'
+import { useRouter } from 'next/router'
 
 interface Children {
   children: ReactNode
 }
 
 const Layout: FC<Children> = ({ children }) => {
+  const { push } = useRouter();
+  const [isLoggedIn, setIsLoggedIn] = useState<boolean | null>(null);
 
-  return (
+  useEffect(() => {
+    const _token = localStorage.getItem("token");
+    if (_token) {
+      setIsLoggedIn(true);
+    } else {
+      setIsLoggedIn(false);
+      push("/auth/login");
+    }
+  }, []);
+
+  if (typeof isLoggedIn === "boolean" && isLoggedIn) return (
     <div className='w-full flex'>
       <aside className='w-[10%] md:w-[60px] fixed z-40'>
         <SideBar />

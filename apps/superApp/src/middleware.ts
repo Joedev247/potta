@@ -1,8 +1,9 @@
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
+import { meAPI } from './modules/auth/utils/api'
  
 // This function can be marked `async` if using `await` inside
-export function middleware(request: NextRequest) {
+export async function middleware(request: NextRequest) {
   return NextResponse.redirect(new URL('/settings/general', request.url))
 }
  

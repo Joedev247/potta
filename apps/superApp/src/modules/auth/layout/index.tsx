@@ -1,12 +1,26 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import SideMenu from './components/sideMenu'
+import { useRouter } from 'next/router';
 
 export default function Layout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  return (
+  const { push } = useRouter();
+  const [isLoggedIn, setIsLoggedIn] = useState<boolean | null>(null);
+
+  useEffect(() => {
+    const _token = localStorage.getItem("token");
+    if (_token) {
+      setIsLoggedIn(true);
+      push("/");
+    } else {
+      setIsLoggedIn(false);
+    }
+  }, []);
+
+  if (typeof isLoggedIn === "boolean" && !isLoggedIn) return (
     <div className='min-h-screen w-full md:flex'>
       <div className='md:w-[50%] w-full'>
         {children}

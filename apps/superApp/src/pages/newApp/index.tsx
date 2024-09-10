@@ -1,11 +1,26 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Channels from './components/channels'
 import { Button } from '@instanvi/ui-components'
 import BasicInformation from './components/basicInformation'
+import { useRouter } from 'next/router'
 
 const NewApp = () => {
+  const { push } = useRouter()
   const [channel, setChannel] = useState(false)
-  return (
+  const [isLoggedIn, setIsLoggedIn] = useState<boolean | null>(null);
+
+
+  useEffect(() => {
+    const _token = localStorage.getItem("token");
+    if (_token) {
+      setIsLoggedIn(true);
+    } else {
+      setIsLoggedIn(false);
+      push("/auth/login");
+    }
+  }, []);
+
+  if (typeof isLoggedIn === "boolean" && isLoggedIn) return (
     <div className='w-full flex min-h-screen relative'>
       <div className='w-[45%] primary flex-1 hidden md:block' />
 

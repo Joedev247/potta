@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import { AxiosError } from "axios";
 import toast from "react-hot-toast";
@@ -17,9 +17,10 @@ import { OrganizationFormData, organizationSchema } from "../../modules/auth/uti
 type Props = object;
 
 const VerificationPage = (props: Props) => {
-  const router = useRouter();
+  const { push } = useRouter();
   const [step, setStep] = useState(0);
   const [files, setFiles] = useState<File[]>([]);
+  const [isLoggedIn, setIsLoggedIn] = useState<boolean | null>(null);
 
   const { mutate, isPending } = useUpdateOrganization()
   const uploadDoc = useUploadFile()
@@ -72,7 +73,6 @@ const VerificationPage = (props: Props) => {
     }
     else {
       toast.loading("Submitting...")
-
       const formData = new FormData();
       files.forEach((file) => {
         formData.append('file', file);
@@ -82,10 +82,12 @@ const VerificationPage = (props: Props) => {
         onSuccess: () => {
           mutate({ ...inputs, documents: [] }, {
             onSuccess: () => {
+              toast.dismiss()
               reset();
-              router.push("/organisation/success-verification");
+              push("/organisation/success-verification");
             },
             onError: (error: unknown) => {
+              toast.dismiss()
               const text = (error as AxiosError<{ message: string }>)?.response?.data
               const message = text?.message
               toast.error(message as string);
@@ -93,6 +95,7 @@ const VerificationPage = (props: Props) => {
           })
         },
         onError: (error: unknown) => {
+          toast.dismiss()
           const text = (error as AxiosError<{ message: string }>)?.response?.data
           const message = text?.message
           toast.error(message as string);
@@ -101,7 +104,17 @@ const VerificationPage = (props: Props) => {
     }
   };
 
-  return (
+  useEffect(() => {
+    const _token = localStorage.getItem("token");
+    if (_token) {
+      setIsLoggedIn(true);
+    } else {
+      setIsLoggedIn(false);
+      push("/auth/login");
+    }
+  }, []);
+
+  if (typeof isLoggedIn === "boolean" && isLoggedIn) return (
     <form className="mx-auto max-w-2xl p-6 lg:px-8">
       {step === 0 && (
         <BusinessInfo register={register} errors={errors} setValue={setValue} />
