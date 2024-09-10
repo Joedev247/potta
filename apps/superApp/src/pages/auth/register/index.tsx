@@ -70,7 +70,7 @@ const SignUp = () => {
         className="h-screen w-full items-center flex justify-center"
         onSubmit={handleSubmit(onSubmit)}
       >
-        <div className="mx-auto max-w-5xl relative px-4 sm:px-16 w-full 2xl:w-[35rem]">
+        <div className="mx-auto max-w-5xl relative px-4 sm:px-16 w-full xl:w-[35rem]">
           <div className="w-full md:px-3">
             <div className="w-full mb-5 text-left">
               <h3 className="text-2xl">Sign Up</h3>
@@ -124,14 +124,11 @@ const SignUp = () => {
                 />
               </div>
             </div>
-            <div className="w-full mt-3 text-center">
-              {isPending ? (
-                <h3 className="text-green-600">Creating...</h3>
-              ) : (
-                <Button fullWidth type="submit" value={"Create Account"} />
-              )}
+            <div className="mt-3">
+              <Button fullWidth type="submit" value={isPending ? "Creating..." : "Create Account"} />
+
             </div>
-            <div className="absolute -bottom-20 flex space-x-2">
+            <div className="flex space-x-2 mt-8">
               <p className="font-thin ">Already registered ? </p>
               <Link className="text-[#0052FF] font-bold" href={"/auth/login"}>
                 Sign in

@@ -59,30 +59,27 @@ const SignIn = () => {
   return (
     <Layout >
       <form className="h-screen w-full items-center flex justify-center" onSubmit={handleSubmit(onSubmit)}>
-        <div className="mx-auto max-w-5xl relative px-4 sm:px-16 w-full 2xl:w-[35rem]">
-          <div className="w-full md:px-3">
+        <div className="mx-auto max-w-5xl relative px-4 sm:px-16 w-full xl:w-[35rem]">
+          <div className="w-full grid gap-3 md:px-3">
             <div className="w-full  text-left">
               <h3 className="text-3xl">Sign in</h3>
             </div>
-            <div className="mt-5 w-full">
-              <Input
-                name="email"
-                type="email"
-                label="Email"
-                register={register}
-                errors={errors?.email}
-                placeholder="catherine.shaw@gmail.com"
-              />
-            </div>
-            <div className="mt-5 w-full">
-              <Input
-                name="password"
-                label="Password"
-                register={register}
-                errors={errors?.password}
-                placeholder="Password@123"
-              />
-            </div>
+            <Input
+              name="email"
+              type="email"
+              label="Email"
+              register={register}
+              errors={errors?.email}
+              placeholder="catherine.shaw@gmail.com"
+            />
+
+            <Input
+              name="password"
+              label="Password"
+              register={register}
+              errors={errors?.password}
+              placeholder="Password@123"
+            />
             <div className="mt-5 flex justify-between">
               <Checkbox
                 name="remember"
@@ -94,7 +91,7 @@ const SignIn = () => {
                 <Link href="/auth/renewPassword"><h6 className="text-md">Forgotten Password</h6></Link>
               </div>
             </div>
-            <div className="w-full mt-8">
+            <div className="w-full">
               <Button
                 fullWidth
                 type="submit"

@@ -27,10 +27,13 @@ const ComfirmRegister: FC = () => {
   const sendCode = (inputs: ComfirmData) => {
     mutate(inputs, {
       onSuccess: () => {
-        if (!user?.organization)
-          localStorage.removeItem("otp")
         toast.success("Operation successful")
-        router.push('/')
+        if (user?.organization === null) {
+          router.push('/organisation')
+        }
+        else {
+          router.push('/')
+        }
       },
       onError: (error: unknown) => {
         const text = (error as AxiosError<{ message: string }>)?.response?.data
