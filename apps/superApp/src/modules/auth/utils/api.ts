@@ -3,6 +3,7 @@ import axios from "@instanvi/utilities";
 import { IUser } from "../../../../src/utils/types";
 import { OrganizationFormData, ProfileData } from "./validations";
 import { IChangePassword, ILogin, IRegister, IRegisterResponse } from "./types"; 
+import authAxios from "./auth.axios";
 
 export const registerAPI = async (inputs: IRegister): Promise<IRegisterResponse> => {
   const response = await axios.post("/auth/register", inputs)
@@ -32,7 +33,7 @@ export const refreshTokenAPI = async (refresh_token: string): Promise<unknown> =
 export const registerConfirmAPI = async (inputs: {
   email: string,
   otp: string
-}): Promise<unknown> => {
+}): Promise<IUser> => {
   const response = await axios.patch(`/auth/register/confirm`, inputs)
   return response?.data;
 }
@@ -44,7 +45,7 @@ export const updateProfileAPI = async (inputs: ProfileData): Promise<unknown> =>
 
 export const updateOrganizationAPI = async (
   inputs: OrganizationFormData & {documents:string[]}) : Promise<unknown> => {
-  const response = await axios.put("/auth/update-organization", inputs)
+  const response = await authAxios.put("/auth/update-organization", inputs)
   return response?.data;
 }
 

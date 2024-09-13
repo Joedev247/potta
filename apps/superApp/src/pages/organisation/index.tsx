@@ -105,7 +105,7 @@ const VerificationPage = (props: Props) => {
   };
 
   useEffect(() => {
-    const _token = localStorage.getItem("token");
+    const _token = localStorage.getItem("authtoken");
     if (_token) {
       setIsLoggedIn(true);
     } else {

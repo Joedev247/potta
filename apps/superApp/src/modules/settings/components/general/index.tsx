@@ -73,15 +73,12 @@ const General = () => {
 
   const editable = (data: IUser) => {
     return {
-      name: data?.name,
-      city: "",
-      email: data?.email,
-      about: "",
-      address: "",
+      phone: "",
+      timezone: "",
+      language: "",
       country: data?.country,
       lastName: data?.lastName,
       firstName: data?.firstName,
-      language: "",
     }
   }
 

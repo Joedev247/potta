@@ -8,7 +8,6 @@ import VerificationInput from "react-verification-input";
 import { Button } from "@instanvi/ui-components";
 import { maskEmailAddress } from "../../../utils";
 import Layout from "../../../modules/auth/layout";
-import useAuth from "apps/superApp/src/modules/auth/hooks/useAuth";
 import { useConfirmRegister } from "../../../modules/auth/hooks/useConfirmRegister";
 
 type ComfirmData = {
@@ -17,7 +16,6 @@ type ComfirmData = {
 }
 
 const ComfirmRegister: FC = () => {
-  const { user } = useAuth()
   const router = useRouter()
   const [code, setCode] = useState("")
   const searchParams = useSearchParams()
@@ -26,9 +24,9 @@ const ComfirmRegister: FC = () => {
 
   const sendCode = (inputs: ComfirmData) => {
     mutate(inputs, {
-      onSuccess: () => {
+      onSuccess: (res) => {
         toast.success("Operation successful")
-        if (user?.organization === null) {
+        if (res?.organization === null) {
           router.push('/organisation')
         }
         else {
