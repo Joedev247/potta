@@ -30,8 +30,7 @@ RUN npm run build:superApp
 FROM node:20.11-alpine3.18  AS production
 WORKDIR /app
 COPY --from=builder /app ./
-#RUN npm install --force --production
 ENV NODE_ENV=production
-CMD ["npm" ,"start:superApp"]
+CMD ["npm" ,"start"]
 EXPOSE 3000
 
