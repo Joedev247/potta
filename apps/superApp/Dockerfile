@@ -14,21 +14,22 @@ CMD npm run dev
 FROM node:20.11-alpine3.18 AS builder
 
 # Set the working directory
-WORKDIR /app
 
+
+FROM node:20.11-alpine3.18  AS production
+# Set the working directory
+WORKDIR /app
+# Copy the package.json and package-lock.json
 COPY . .
 # Install all the dependencies
 RUN npm install --force
-
 # copy environment file
 #COPY .env.build .env
 # Generate the build of the application
 RUN npm run build:superApp
-
-FROM node:20.11-alpine3.18  AS production
-WORKDIR /app
-COPY --from=builder /app ./
+# Set the environment to production
 ENV NODE_ENV=production
+# Expose the port
 CMD ["npm" , "run" ,"start:superApp"]
 EXPOSE 3000
 
