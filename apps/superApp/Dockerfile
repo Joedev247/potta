@@ -29,6 +29,6 @@ FROM node:20.11-alpine3.18  AS production
 WORKDIR /app
 COPY --from=builder /app ./
 ENV NODE_ENV=production
-CMD ["npm" ,"start:superApp"]
+CMD ["npm" , "run" ,"start:superApp"]
 EXPOSE 3000
 
