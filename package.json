@@ -4,7 +4,8 @@
   "license": "MIT",
   "scripts": {
     "build:superApp": "nx run superApp:build",
-    "start:superApp": "nx run superApp:start"
+    "start:superApp": "nx run superApp:start",
+    "reset" : "nx reset"
   },
   "private": true,
   "dependencies": {

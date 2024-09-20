@@ -27,6 +27,8 @@ RUN npm install --force
 #COPY .env.build .env
 # Generate the build of the application
 RUN npm run build:superApp
+# Reset the environment file
+RUN npm run reset
 # Set the environment to production
 ENV NODE_ENV=production
 # Expose the port
