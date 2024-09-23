@@ -1,23 +1,19 @@
 import Image from "next/image";
-import React, { useCallback } from "react";
+import React from "react";
 import { useDropzone } from "react-dropzone";
 
 interface Props {
-  files: File[]
-  setFiles: (arg: File[]) => void
+  onDrop: (arg: File[]) => void
 }
 
-const MyDropzone: React.FC<Props> = ({ files, setFiles }) => {
-  const onDrop = useCallback((acceptedFiles: File[]) => {
-    setFiles([...files, ...acceptedFiles]);
-  }, [files]);
+const MyDropzone: React.FC<Props> = ({ onDrop }) => {
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
 
   return (
-    <div className="w-full drop border-dashed border-2 h-[20vh]">
+    <div className="w-full drop border-dashed border-2 max-h-[20vh]">
       <div
-        className=" w-full h-[8vh]  mt-3  flex justify-center items-center rounded"
+        className=" w-full h-[8vh] mt-3 flex justify-center items-center rounded"
         {...getRootProps()}
       >
         <input {...getInputProps()} />

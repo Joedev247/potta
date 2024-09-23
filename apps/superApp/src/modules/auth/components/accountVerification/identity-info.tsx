@@ -1,16 +1,10 @@
-import React, { FC } from "react";
-import { Select } from "@instanvi/ui-components";;
-import { useRouter } from "next/router";
-import { OrganizationFormData } from "../../utils/validations";
+import React, { FC, useCallback } from "react";
 import { FieldErrors, UseFormSetValue } from "react-hook-form";
+import { Select } from "@instanvi/ui-components";
 import { SelectProp } from "../../../../utils/types";
-import { BusinessType } from "../../../../Arrays/Business";
 import MyDropzone from "../../../../components/dropzone";
-import CustomButton from "../../../../components/button/customButton";
-// import { SelectProp } from "apps/home-app/src/utils/types";
-// import { BusinessType } from "apps/home-app/src/Arrays/Business";
-// import MyDropzone from "apps/home-app/src/components/dropzone";
-// import CustomButton from "apps/home-app/src/components/button/customButton";
+import { BusinessType } from "../../../../Arrays/Business";
+import { OrganizationFormData } from "../../utils/validations";
 
 type Props = {
   files: File[]
@@ -20,7 +14,10 @@ type Props = {
 };
 
 const IdentityInfo: FC<Props> = ({ errors, setValue, files, setFiles }) => {
-  const router = useRouter();
+  const onDrop = useCallback((acceptedFiles: File[]) => {
+    setFiles([...files, ...acceptedFiles]);
+  }, [files]);
+
   const onChangeType = (val: SelectProp) => {
     const value = val;
     setValue?.("activity_type", value?.value as string);
@@ -45,9 +42,8 @@ const IdentityInfo: FC<Props> = ({ errors, setValue, files, setFiles }) => {
               <div className="grid gap-4">
                 <label htmlFor="docs" className="capitalize font-semibold text-[0.75rem]">Upload Incorporation Documents</label>
                 <div className="p-2 border">
-                  <MyDropzone files={files} setFiles={setFiles} />
+                  <MyDropzone onDrop={onDrop} />
                 </div>
-
               </div>
               {files?.map((file, i) => <p key={i}>{file.name}</p>)}
             </div>
