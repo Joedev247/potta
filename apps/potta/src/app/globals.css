@@ -1,0 +1,102 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.side {
+  background: #f3fbfb;
+}
+
+.css-1097eso {
+  width: 0px !important;
+  height: 0px !important;
+  background-color: transparent !important;
+  border-radius: 0% !important;
+  display: inline-block !important;
+  margin-right: 5px !important;
+  margin-bottom: 10px !important;
+}
+.ps-active {
+  background: #edeeed !important;
+  color: white !important;
+}
+.arrow-left {
+  position: relative;
+  padding-left: 15px; /* Space for the arrow */
+}
+
+.css-1097eso::before {
+  content: "›" !important; /* Left-pointing arrow */
+  position: absolute !important; /* Positioning the arrow */
+  left: 0 !important; /* Align to the left */
+  top: 34% !important; /* Center vertically */
+  transform: translateY(-50%) !important; /* Adjust for vertical centering */
+  font-size: 30px !important; /* Adjust size as needed */
+}
+
+/* width */
+.scroll::-webkit-scrollbar,
+.css-dip3t8::-webkit-scrollbar {
+  width: 4px;
+}
+
+/* Track */
+.scroll::-webkit-scrollbar-track,
+.css-dip3t8::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 5px rgb(245, 244, 244);
+  border-radius: 10px;
+}
+
+/* Handle */
+.scroll::-webkit-scrollbar-thumb,
+.css-dip3t8::-webkit-scrollbar-thumb {
+  background: rgb(243, 241, 241);
+  border-radius: 10px;
+}
+
+/* Handle on hover */
+.scroll::-webkit-scrollbar-thumb:hover,
+.css-dip3t8::-webkit-scrollbar-thumb {
+  background: #575555;
+  cursor: pointer;
+}
+
+/* TableStyles.css */
+.data-table-header {
+  background-color: #f0f0f0; /* Change to your desired background color */
+  font-size: 18px; /* Change to your desired font size */
+}
+
+.data-table-header th {
+  border-top: 0.5px solid #ccc;
+  border-left: 0.5px solid #ccc;
+  border-right: 0.5px solid #ccc;
+}
+
+.data-table-body td {
+  border: 0.5px solid #ccc; /* Add border to each data cell */
+}
+
+.gPypsk {
+  border-bottom: 0px solid #ccc !important;
+  border-left: 0px solid #ccc !important;
+}
+.border-x {
+  border-left-width: 0px !important;
+  border-right-width: 0px !important;
+}
+
+.react-google-flight-datepicker .date-picker {
+  border-radius: 0px !important;
+  background: transparent !important;
+  padding: 0px !important;
+}
+.react-google-flight-datepicker .date-picker-input {
+  border: 0px !important;
+  height: auto !important;
+}
+.react-google-flight-datepicker .date {
+  background: transparent !important;
+}
+.is-focus {
+  border: 1px solid transparent !important;
+}
