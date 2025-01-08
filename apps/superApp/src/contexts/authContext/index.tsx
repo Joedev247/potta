@@ -21,7 +21,6 @@ export const AuthProvider: FC<Props> = ({ children }) => {
   const [user, setUser] = useState<IUser | undefined>(undefined);
   const [isLoading, setIsLoading] = useState(false);
 
-
   // handle user state
   const checkIfLoggedIn = async () => {
 

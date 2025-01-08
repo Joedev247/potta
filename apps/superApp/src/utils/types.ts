@@ -8,6 +8,7 @@ export interface IAuthContext {
 	setUser?: (arg: IUser) => void
 	setIsAdmin?: (arg: boolean) => void
 }
+
 export type Role = {
 	id:string
 	name:string
