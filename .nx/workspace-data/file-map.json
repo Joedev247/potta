@@ -132,7 +132,7 @@
       },
       {
         "file": ".gitignore",
-        "hash": "6285209529658469652"
+        "hash": "7456224741535900147"
       },
       {
         "file": ".prettierignore",
@@ -2050,6 +2050,101 @@
           "hash": "6922413205408300107"
         }
       ],
+      "utilities": [
+        {
+          "file": "libs/utilities/.eslintrc.json",
+          "hash": "11012487992710232822"
+        },
+        {
+          "file": "libs/utilities/README.md",
+          "hash": "13228732804139331838"
+        },
+        {
+          "file": "libs/utilities/project.json",
+          "hash": "699343638286385166"
+        },
+        {
+          "file": "libs/utilities/src/index.ts",
+          "hash": "4979336273987222930"
+        },
+        {
+          "file": "libs/utilities/src/lib/configs/axios.ts",
+          "hash": "9287401257227664183",
+          "deps": [
+            "npm:crypto-js",
+            "npm:axios"
+          ]
+        },
+        {
+          "file": "libs/utilities/src/lib/configs/env.ts",
+          "hash": "12101586654834214904"
+        },
+        {
+          "file": "libs/utilities/src/lib/helpers/index.ts",
+          "hash": "10922730425443113868",
+          "deps": [
+            "npm:crypto-js",
+            "npm:country-list-with-dial-code-and-flag"
+          ]
+        },
+        {
+          "file": "libs/utilities/src/server.ts",
+          "hash": "5519843671682787663"
+        },
+        {
+          "file": "libs/utilities/tsconfig.json",
+          "hash": "14088618039610991405"
+        },
+        {
+          "file": "libs/utilities/tsconfig.lib.json",
+          "hash": "1536859351713546153"
+        }
+      ],
+      "core": [
+        {
+          "file": "libs/core/.eslintrc.json",
+          "hash": "11012487992710232822"
+        },
+        {
+          "file": "libs/core/README.md",
+          "hash": "862743182427189852"
+        },
+        {
+          "file": "libs/core/project.json",
+          "hash": "8215491323991500792"
+        },
+        {
+          "file": "libs/core/src/index.ts",
+          "hash": "1391443467439822800"
+        },
+        {
+          "file": "libs/core/src/lib/core.spec.tsx",
+          "hash": "10083302775005561580",
+          "deps": [
+            "npm:@testing-library/react"
+          ]
+        },
+        {
+          "file": "libs/core/src/lib/core.tsx",
+          "hash": "12083220179364162819"
+        },
+        {
+          "file": "libs/core/src/lib/hello-server.tsx",
+          "hash": "2397568674684759047"
+        },
+        {
+          "file": "libs/core/src/server.ts",
+          "hash": "8912437808649717296"
+        },
+        {
+          "file": "libs/core/tsconfig.json",
+          "hash": "14088618039610991405"
+        },
+        {
+          "file": "libs/core/tsconfig.lib.json",
+          "hash": "1536859351713546153"
+        }
+      ],
       "ui-components": [
         {
           "file": "libs/ui-components/.eslintrc.json",
@@ -2207,101 +2302,6 @@
         },
         {
           "file": "libs/ui-components/tsconfig.lib.json",
-          "hash": "1536859351713546153"
-        }
-      ],
-      "core": [
-        {
-          "file": "libs/core/.eslintrc.json",
-          "hash": "11012487992710232822"
-        },
-        {
-          "file": "libs/core/README.md",
-          "hash": "862743182427189852"
-        },
-        {
-          "file": "libs/core/project.json",
-          "hash": "8215491323991500792"
-        },
-        {
-          "file": "libs/core/src/index.ts",
-          "hash": "1391443467439822800"
-        },
-        {
-          "file": "libs/core/src/lib/core.spec.tsx",
-          "hash": "10083302775005561580",
-          "deps": [
-            "npm:@testing-library/react"
-          ]
-        },
-        {
-          "file": "libs/core/src/lib/core.tsx",
-          "hash": "12083220179364162819"
-        },
-        {
-          "file": "libs/core/src/lib/hello-server.tsx",
-          "hash": "2397568674684759047"
-        },
-        {
-          "file": "libs/core/src/server.ts",
-          "hash": "8912437808649717296"
-        },
-        {
-          "file": "libs/core/tsconfig.json",
-          "hash": "14088618039610991405"
-        },
-        {
-          "file": "libs/core/tsconfig.lib.json",
-          "hash": "1536859351713546153"
-        }
-      ],
-      "utilities": [
-        {
-          "file": "libs/utilities/.eslintrc.json",
-          "hash": "11012487992710232822"
-        },
-        {
-          "file": "libs/utilities/README.md",
-          "hash": "13228732804139331838"
-        },
-        {
-          "file": "libs/utilities/project.json",
-          "hash": "699343638286385166"
-        },
-        {
-          "file": "libs/utilities/src/index.ts",
-          "hash": "4979336273987222930"
-        },
-        {
-          "file": "libs/utilities/src/lib/configs/axios.ts",
-          "hash": "9287401257227664183",
-          "deps": [
-            "npm:crypto-js",
-            "npm:axios"
-          ]
-        },
-        {
-          "file": "libs/utilities/src/lib/configs/env.ts",
-          "hash": "12101586654834214904"
-        },
-        {
-          "file": "libs/utilities/src/lib/helpers/index.ts",
-          "hash": "10922730425443113868",
-          "deps": [
-            "npm:crypto-js",
-            "npm:country-list-with-dial-code-and-flag"
-          ]
-        },
-        {
-          "file": "libs/utilities/src/server.ts",
-          "hash": "5519843671682787663"
-        },
-        {
-          "file": "libs/utilities/tsconfig.json",
-          "hash": "14088618039610991405"
-        },
-        {
-          "file": "libs/utilities/tsconfig.lib.json",
           "hash": "1536859351713546153"
         }
       ]
