@@ -16,7 +16,7 @@ const Modal: React.FC<Props> = ({ title, children, width, text, icon }) => {
         <div>
             <Button text={text} type={"submit"} icon={icon} onClick={() => setOpen(!open)} />
             <Transition.Root show={open} as={Fragment}>
-                <Dialog as="div" className="relative z-20" onClose={setOpen}>
+                <Dialog as="div" className="relative z-40" onClose={setOpen}>
                     <Transition.Child
                         as={Fragment}
                         enter="ease-out duration-300"

@@ -8,8 +8,10 @@ type Props = {
     name: string;
     errors?: FieldError;
     placeholder?: string;
-    onchange?: () => void;
-    value?: string;
+    register?: UseFormRegister<any>;
+    onchange?: any;
+    value?: any;
+    height?: boolean;
 };
 
 const Input: React.FC<Props> = ({
@@ -19,8 +21,10 @@ const Input: React.FC<Props> = ({
     name,
     placeholder,
     errors,
-    onchange,
+    register,
     value,
+    height,
+    onchange
 }) => {
     return (
         <div className={`w-full ${className}`}>
@@ -28,9 +32,10 @@ const Input: React.FC<Props> = ({
             <input
                 type={type}
                 onChange={onchange}
-                placeholder={placeholder}
                 value={value}
-                className="w-full py-2.5 px-4 border border-gray-200 outline-none mt-2"
+                // {...register(name)}
+                placeholder={placeholder}
+                className={`w-full ${height ? 'py-1.5' : 'py-2.5'} px-4 border border-gray-200 rounded-[2px] outline-none mt-2`}
             />
             {errors ? (
                 <small className="col-span-2 text-red-500">{errors?.message}</small>

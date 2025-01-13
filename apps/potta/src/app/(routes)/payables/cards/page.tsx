@@ -1,11 +1,11 @@
 'use client'
 import React, { FC, useEffect, useState } from "react";
 import Link from "next/link";
+import CustomPopover from "@/components/popover";
+import Search from "@/components/search";
 import RootLayout from "../../layout";
-import Search from "apps/potta/src/components/search";
-import CustomPopover from "apps/potta/src/components/popover";
 
-type CardProps = object
+interface CardProps { }
 
 const Card: FC<CardProps> = () => {
     const [heights, setHeights] = useState<string>("");
@@ -165,7 +165,7 @@ const Card: FC<CardProps> = () => {
                             <h1 className="text-gray-400 text-sm">{allCards ? ("All") : physicalCards ? ("Physical") : virtualCards ? ("Virtual") : debitCards ? ("Debit") : creditCards ? ("Credit") : ""} cards</h1>
                             <div className="flex flex-col gap-3 mt-3">
                                 {filteredCards2.map((card, index) => (
-                                    <Link href={`/sidebar/card/detail/${card.id}`} key={card.id}>
+                                    <Link href={`/sidebar/card/detail/${card.id}`}>
                                         <div key={index} className="flex justify-between border  px-7 py-3">
                                             <div className="flex items-center gap-6">
                                                 <div className="h-6 w-6 flex justify-evenly items-center rounded-full ">
@@ -209,7 +209,7 @@ const Card: FC<CardProps> = () => {
                 <div className={`block ${gridView ? "" : "block sm:hidden"} pb-5`}>
                     <div className="grid grid-cols-1 gap-6 mt-5 sm:grid-cols-2 xl:grid-cols-3">
                         {filteredCards2.map((card, index) => (
-                            <Link href={`/sidebar/card/detail/${card.id}`} key={card.id}>
+                            <Link href={`/sidebar/card/detail/${card.id}`}>
                                 <div key={index} className="flex flex-col justify-between border  px-4 py-6">
                                     <div className="flex justify-between items-center">
                                         <div className="flex flex-col gap-1">

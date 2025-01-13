@@ -2,6 +2,22 @@
 @tailwind components;
 @tailwind utilities;
 
+@font-face {
+  font-family: "OutfitBold";
+  src: url("/fonts/Outfit-Regular.ttf") format("truetype");
+}
+*,
+p,
+a,
+h1,
+h2,
+h3,
+h4,
+span,
+label {
+  font-family: OutfitBold !important;
+}
+
 .side {
   background: #f3fbfb;
 }
@@ -16,7 +32,7 @@
   margin-bottom: 10px !important;
 }
 .ps-active {
-  background: #edeeed !important;
+  background: #154406 !important;
   color: white !important;
 }
 .arrow-left {
@@ -99,4 +115,18 @@
 }
 .is-focus {
   border: 1px solid transparent !important;
+}
+
+.css-ewdv3l {
+  /* background: white !important; */
+  color: #575555 !important;
+}
+
+.accordion__button {
+  background-color: #fffefe !important;
+}
+.accordion {
+  border-left: 0px solid rgba(255, 255, 255, 1) !important;
+  border-right: 0px solid rgba(255, 255, 255, 1) !important;
+  border-radius: 0px !important;
 }

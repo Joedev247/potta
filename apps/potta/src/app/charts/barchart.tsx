@@ -8,7 +8,7 @@ type ApexSeries = {
     data: number[];
 };
 
-type ChartProps = object
+interface ChartProps { }
 
 const ApexChart = dynamic(() => import("react-apexcharts"), { ssr: false });
 

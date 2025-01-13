@@ -1,11 +1,10 @@
 'use client'
-import Button from "apps/potta/src/components/button";
-import { ContextData } from "apps/potta/src/components/context";
-import Input from "apps/potta/src/components/input";
-import Modal from "apps/potta/src/components/modal";
-import Select from "apps/potta/src/components/select";
-import React, { FC, useState, useContext } from "react";
-
+import React, { FC, useState, useContext, Fragment } from "react";
+import { ContextData } from "@/components/context";
+import Modal from "@/components/modal";
+import Button from "@/components/button";
+import Select from "@/components/select";
+import Input from "@/components/input";
 
 const NewBudget: FC = () => {
     const context = useContext(ContextData);
@@ -15,7 +14,7 @@ const NewBudget: FC = () => {
         return <div>Error: Context not available</div>;
     }
 
-    const [open, setOpen] = useState(false);
+    const [open, setOpen] = useState<boolean>(false);
 
     const [newBudget, setNewBudget] = useState<{
         budget_name: string;
@@ -74,7 +73,7 @@ const NewBudget: FC = () => {
                             <p className="mb-2 text-gray-900 font-medium">
                                 Budget Name
                             </p>
-                            <Input type={"text"} name={"budget_name"} onchange={() => { HandleNewBudgetChange() }}
+                            <Input type={"text"} name={"budget_name"} onchange={() => { HandleNewBudgetChange }}
                                 value={newBudget.budget_name} />
                         </div>
 

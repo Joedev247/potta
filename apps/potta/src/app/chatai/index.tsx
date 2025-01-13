@@ -1,6 +1,7 @@
 // import SearchMessage from "@/components/inputs/searchMessage";
 import React from "react";
 
+
 const ChatAI = () => {
     return (
         <div className="h-[99vh] p-3 relative">

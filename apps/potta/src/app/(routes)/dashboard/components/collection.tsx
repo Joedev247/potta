@@ -1,4 +1,5 @@
 "use client"
+import RootLayout from "@/app/(routes)/layout";
 import React, { useEffect, useState } from "react";
 import Chart from "./dashboardChart";
 import BalanceBox from "./balanceBoxes";

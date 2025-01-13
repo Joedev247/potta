@@ -1,10 +1,11 @@
 'use client'
-import React, { FC, ChangeEvent, useState, useContext } from "react";
+import React, { FC, ChangeEvent } from "react";
+import { useState, useContext } from "react";
+import { ContextData } from "@/components/context";
 import Link from "next/link";
 import NewBudget from "./component/modal";
 import FilterComponent from "./component/filterComponent";
 import RootLayout from "../../layout";
-import { ContextData } from "apps/potta/src/components/context";
 
 
 interface Payout {
@@ -46,9 +47,7 @@ const Budgets: FC = () => {
                         handleSearchChange={handleSearchPayoutChange}
                         includeSort={true}
                         activeSort={handleSortData}
-                        includeDatePicker={true} placeholder={""} includePopover={false}>
-                        {null}
-                    </FilterComponent>
+                        includeDatePicker={true} placeholder={""} includePopover={false} children={undefined} />
 
                     <NewBudget />
                 </div>
