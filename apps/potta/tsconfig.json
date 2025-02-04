@@ -1,6 +1,7 @@
 {
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
+    "baseUrl": ".",
     "jsx": "preserve",
     "allowJs": true,
     "esModuleInterop": true,
@@ -11,6 +12,10 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "incremental": true,
+    "paths":{
+"@potta/*":["./src/*"],
+
+    },
     "plugins": [
       {
         "name": "next"

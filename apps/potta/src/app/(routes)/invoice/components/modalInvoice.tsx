@@ -1,0 +1,126 @@
+'use client'
+import React, { FC, useState, useContext, Fragment } from "react";
+import { ContextData } from "@/components/context";
+import Modal from "@/components/modal";
+import Button from "@/components/button";
+import Select from "@/components/select";
+import Input from "@/components/input";
+
+const InvoiceModal: FC = () => {
+    const context = useContext(ContextData);
+
+    const [open, setOpen] = useState<boolean>(false);
+
+    return (
+        <Modal width="3/3" icon={<i className="ri-add-line"></i>} title="" text="Add New Budget" button="viewInvoiceUI">
+            <div className="w-full -mt-20 flex">
+                <div className="bg-[#EBF0F0]   w-[35%]">
+                    <div className="h-8 pl-5 mt-10 border-b w-full">
+                        <h3>Invoice for UI Design</h3>
+                    </div>
+                    <div className="mt-5 p-5">
+                        <p className="text-gray-600">Send to  </p>
+                        <h3 className="text-2xl mt-1 font-semibold">Apple Inc.</h3>
+                        <div className="mt-3 space-y-2 flex-col">
+                            <p>Department 98</p>
+                            <p>44-46 Morningside Road</p>
+                            <p>Edinburg</p>
+                            <p>Scodland</p>
+                            <p>EH10 4BF</p>
+                            <p>marketing@apple.com</p>
+                        </div>
+
+                        <div className="mt-10">
+                            <h3 className="text-gray-600">Invoice id</h3>
+                            <p>Inv 001</p>
+                        </div>
+
+                        <div className="mt-10">
+                            <h3 className="text-gray-600">Send On</h3>
+                            <p>22 May 2022, 2:15 AM</p>
+                        </div>
+
+                        <div className="mt-10">
+                            <h3 className="text-gray-600">Due On</h3>
+                            <p>20 Jul 2022, 1:00 AM</p>
+                        </div>
+                        <div className="mt-5 pt-5 border-t w-full  flex space-x-2">
+                            <i className="ri-printer-fill"></i>
+                            <p>Print</p>
+                        </div>
+                    </div>
+                </div>
+                <div className="w-[65%]">
+                    <div className="h-8 mt-10 border-b w-full">
+                        <h3></h3>
+                    </div>
+                    <div className="mt-2 p-4">
+                        <table className="w-full table-auto border-collapse">
+                            <thead>
+                                <tr className="border-b">
+                                    <th className="px-4 py-2 text-left">Description</th>
+                                    <th className="px-4 py-2 text-left">Rate</th>
+                                    <th className="px-4 py-2 text-left">Qty</th>
+                                    <th className="px-4 py-2 text-left">Total</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr className="border-b border-dashed">
+                                    <td className="px-4 py-2 font-bold">Marketing Materials</td>
+                                    <td className="px-4 py-2">$50</td>
+                                    <td className="px-4 py-2">150</td>
+                                    <td className="px-4 py-2">$7,500</td>
+                                </tr>
+                                <tr className="border-b border-dashed">
+                                    <td className="px-4 py-2 font-bold">Website Design</td>
+                                    <td className="px-4 py-2">$50</td>
+                                    <td className="px-4 py-2">150</td>
+                                    <td className="px-4 py-2">$7,500</td>
+                                </tr>
+                                <tr className="border-b border-dashed">
+                                    <td className="px-4 py-2 font-bold">Mobile App</td>
+                                    <td className="px-4 py-2">$50</td>
+                                    <td className="px-4 py-2">150</td>
+                                    <td className="px-4 py-2">$7,500</td>
+                                </tr>
+                                <tr className="border-b border-dashed">
+                                    <td className="px-4 py-2 font-bold">Printing Equipment</td>
+                                    <td className="px-4 py-2">$50</td>
+                                    <td className="px-4 py-2">150</td>
+                                    <td className="px-4 py-2">$7,500</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <div className="mt-[26vh]">
+                            <div className="flex justify-end">
+                                <div className="flex space-x-10">
+                                    <div className="flex-col space-y-5">
+                                        <p className="text-gray-600">Subtotal : </p>
+                                        <p className="text-gray-600">Tax 10% : </p>
+                                    </div>
+                                    <div className="flex-col space-y-5">
+                                        <p className="text-gray-600"> $10,450</p>
+                                        <p className="text-gray-600">$1,045 </p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="flex border-t mt-8 pt-2 justify-between">
+                                <div>
+                                    <button className="text-green-700 bg-green-200 rounded-full py-1.5 px-2 text-xs">Paid</button>
+                                </div>
+                                <div className="flex justify-end ">
+                                    <div className="flex space-x-10">
+                                        <p>Total : </p>
+                                        <h4 className="text-2xl font-semibold">$11,547</h4>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </Modal>
+    );
+};
+
+export default InvoiceModal;

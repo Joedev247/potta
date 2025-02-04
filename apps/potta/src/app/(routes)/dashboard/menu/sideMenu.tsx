@@ -1,12 +1,12 @@
 'use client';
 
-import React, { FC, Fragment, useContext, useEffect } from "react";
-import { usePathname } from "next/navigation"; // Updated import
-import { Dialog, Transition } from "@headlessui/react";
+import React, { FC, Fragment, useContext, useEffect } from 'react';
+import { usePathname } from 'next/navigation'; // Updated import
+import { Dialog, Transition } from '@headlessui/react';
 
-import { LargeSideMenuItem } from "./sideMenuItem";
-import SmallSideMenuItem from "./sideMenuItem";
-import { ContextData } from "@/components/useContext/page";
+import { LargeSideMenuItem } from './sideMenuItem';
+import SmallSideMenuItem from './sideMenuItem';
+import { ContextData } from '@potta/components/context';
 
 interface Link {
   text: string;
@@ -14,33 +14,53 @@ interface Link {
   href: string;
 }
 
-interface SideMenuProps { }
+interface SideMenuProps {}
 
 const SideMenu: FC<SideMenuProps> = () => {
   const context = useContext(ContextData);
   const pathname = usePathname(); // Use usePathname
 
   useEffect(() => {
-    const res: string[] = pathname.split("/");
-    const pageName: string = res[2] === undefined ? "dashboard" : res[2];
+    const res: string[] = pathname.split('/');
+    const pageName: string = res[2] === undefined ? 'dashboard' : res[2];
     context?.setLinks(pageName);
   }, [pathname, context]);
 
   const links: Link[] = [
-    { text: "dashboard", icon: "ri-contrast-fill", href: "/dashboard/" },
-    { text: "terminals", icon: "ri-user-6-fill", href: "/dashboard/terminals" },
-    { text: "collections", icon: "ri-funds-box-line", href: "/dashboard/payouts" },
-    { text: "payouts", icon: "ri-funds-box-line rotate-180 transform scale-x-[-1]", href: "/dashboard/payouts" },
-    { text: "accounts", icon: "ri-pass-valid-line", href: "/dashboard/accounts" },
-    { text: "invoicing", icon: "ri-file-list-2-line", href: "/dashboard/invoicing" },
-    { text: "cards", icon: "ri-bank-card-line", href: "/dashboard/cards" },
-    { text: "vouchers", icon: "ri-coupon-2-line", href: "/dashboard/vouchers" },
-    { text: "reports", icon: "ri-bar-chart-line", href: "/dashboard/reports" },
+    { text: 'dashboard', icon: 'ri-contrast-fill', href: '/dashboard/' },
+    { text: 'terminals', icon: 'ri-user-6-fill', href: '/dashboard/terminals' },
+    {
+      text: 'collections',
+      icon: 'ri-funds-box-line',
+      href: '/dashboard/payouts',
+    },
+    {
+      text: 'payouts',
+      icon: 'ri-funds-box-line rotate-180 transform scale-x-[-1]',
+      href: '/dashboard/payouts',
+    },
+    {
+      text: 'accounts',
+      icon: 'ri-pass-valid-line',
+      href: '/dashboard/accounts',
+    },
+    {
+      text: 'invoicing',
+      icon: 'ri-file-list-2-line',
+      href: '/dashboard/invoicing',
+    },
+    { text: 'cards', icon: 'ri-bank-card-line', href: '/dashboard/cards' },
+    { text: 'vouchers', icon: 'ri-coupon-2-line', href: '/dashboard/vouchers' },
+    { text: 'reports', icon: 'ri-bar-chart-line', href: '/dashboard/reports' },
   ];
 
   const adminLinks: Link[] = [
-    { text: "admin", icon: "ri-bar-chart-line", href: "/dashboard/admin" },
-    { text: "settings", icon: "ri-settings-3-line", href: "/dashboard/settings" },
+    { text: 'admin', icon: 'ri-bar-chart-line', href: '/dashboard/admin' },
+    {
+      text: 'settings',
+      icon: 'ri-settings-3-line',
+      href: '/dashboard/settings',
+    },
   ];
 
   return (
