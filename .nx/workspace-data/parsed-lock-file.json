@@ -12852,6 +12852,15 @@
         "hash": "sha512-o6jsNviL7d2/fk83JXycvMSX76KSQ5GuC+q8xi+3anL4KY8EZH4D1BfXdqL8SF+ppOigrq4epUhfnWX8U/gM7g=="
       }
     },
+    "npm:react-icons": {
+      "type": "npm",
+      "name": "npm:react-icons",
+      "data": {
+        "version": "5.4.0",
+        "packageName": "react-icons",
+        "hash": "sha512-7eltJxgVt7X64oHh6wSWNwwbKTCtMfK35hcjvJS0yxEAhPM8oUKdS3+kqaW1vicIltw+kR2unHaa12S9pPALoQ=="
+      }
+    },
     "npm:react-phone-input-2": {
       "type": "npm",
       "name": "npm:react-phone-input-2",
@@ -36091,6 +36100,11 @@
     },
     {
       "source": "npm:react-icomoon",
+      "target": "npm:react",
+      "type": "static"
+    },
+    {
+      "source": "npm:react-icons",
       "target": "npm:react",
       "type": "static"
     },
