@@ -5362,6 +5362,15 @@
         "hash": "sha512-vW5ggHpIO2Yjj44b4sB+Fd3cdnlMJppXRBJkEHvld6FXh3j5dwWJoQo7mGtKI2RbSFyiyu/PhGAy0+Vv5ev9Eg=="
       }
     },
+    "npm:@tanstack/react-table": {
+      "type": "npm",
+      "name": "npm:@tanstack/react-table",
+      "data": {
+        "version": "8.20.6",
+        "packageName": "@tanstack/react-table",
+        "hash": "sha512-w0jluT718MrOKthRcr2xsjqzx+oEM7B7s/XXyfs19ll++hlId3fjTm+B2zrR3ijpANpkzBAr15j1XGVOMxpggQ=="
+      }
+    },
     "npm:@tanstack/react-virtual": {
       "type": "npm",
       "name": "npm:@tanstack/react-virtual",
@@ -5369,6 +5378,15 @@
         "version": "3.11.2",
         "packageName": "@tanstack/react-virtual",
         "hash": "sha512-OuFzMXPF4+xZgx8UzJha0AieuMihhhaWG0tCqpp6tDzlFwOmNBPYMuLOtMJ1Tr4pXLHmgjcWhG6RlknY2oNTdQ=="
+      }
+    },
+    "npm:@tanstack/table-core": {
+      "type": "npm",
+      "name": "npm:@tanstack/table-core",
+      "data": {
+        "version": "8.20.5",
+        "packageName": "@tanstack/table-core",
+        "hash": "sha512-P9dF7XbibHph2PFRz8gfBKEXEY/HJPOhym8CHmjF8y3q5mWpKx9xtZapXQUWCgkqvsK0R46Azuz+VaxD4Xl+Tg=="
       }
     },
     "npm:@tanstack/virtual-core": {
@@ -27800,6 +27818,23 @@
       {
         "source": "npm:@tanstack/react-query",
         "target": "npm:@tanstack/query-core",
+        "type": "static"
+      }
+    ],
+    "npm:@tanstack/react-table": [
+      {
+        "source": "npm:@tanstack/react-table",
+        "target": "npm:react",
+        "type": "static"
+      },
+      {
+        "source": "npm:@tanstack/react-table",
+        "target": "npm:react-dom",
+        "type": "static"
+      },
+      {
+        "source": "npm:@tanstack/react-table",
+        "target": "npm:@tanstack/table-core",
         "type": "static"
       }
     ],
