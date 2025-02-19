@@ -15,7 +15,7 @@ const Slider: FC<props> = ({ children, edit, buttonText, title }) => {
     return (
         <div className=''>
             <div>
-                {buttonText == "inventory" && <button onClick={() => setOpen(!open)} className=''>Inventory</button>}
+                {buttonText == "inventory" && <button onClick={() => setOpen(!open)} className=''>Add New Product</button>}
                 {buttonText == "card" && <Button text={"New Card"} onClick={() => setOpen(!open)} type={'button'} icon={<i className='ri-file-add-line'></i>} />}
                 {buttonText == "ussd" && <Button text={"New USSD"} onClick={() => setOpen(!open)} type={'button'} icon={<i className='ri-file-add-line'></i>} />}
                 {buttonText == "agent" && <Button text={"New Agent"} onClick={() => setOpen(!open)} type={'button'} icon={<i className='ri-file-add-line'></i>} />}

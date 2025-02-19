@@ -1,5 +1,5 @@
 'use client'
-import Select from "@/components/select";
+import Select from "@potta/components/select";
 import React, { useState } from "react";
 
 

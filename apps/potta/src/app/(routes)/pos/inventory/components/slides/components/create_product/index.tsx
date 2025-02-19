@@ -1,14 +1,18 @@
-import MyDropzone from "@/components/dropzone";
-import Select from "@/components/select";
-import React, { useState } from "react";
+import MyDropzone from "@potta/components/dropzone";
+import Select from "@potta/components/select";
+import React, { useContext, useState } from "react";
 import Inventory from "./components/inventory";
 import Unit from "./components/units";
 import Notes from "./components/notes";
 import Attachments from "./components/attachments";
-import Button from "@/components/button";
-
+import Button from "@potta/components/button";
+import { ContextData } from '@potta/components/context';
 const CreateProduct = () => {
     const [data, setData] = useState("units")
+    const context = useContext(ContextData);
+
+    const [name, setDate] = useState('')
+    
     return (
         <div className="pr-8">
             <div className="w-full">

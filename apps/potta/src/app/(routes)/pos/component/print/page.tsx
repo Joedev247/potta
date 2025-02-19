@@ -1,9 +1,10 @@
 "use client"
 import React, { Fragment, useState, useContext, useEffect, useRef, FC } from "react";
-import { ContextData } from "@/components/context";
+import { ContextData } from '@potta/components/context'
 import Barcode from 'react-barcode';
 import moment from 'moment';
 // import '../../../../../../public/font.css';
+
 
 const Print: FC = () => {
     const Context = useContext(ContextData);
@@ -22,6 +23,7 @@ const Print: FC = () => {
             doc.write(printContent);
             doc.write('</body></html>');
             doc.close();
+            // eslint-disable-next-line @typescript-eslint/no-inferrable-types
             const logoUrl: string = `${window.location.origin}/icons/logo.svg`;
             const img: HTMLImageElement = new Image();
             img.src = logoUrl;
@@ -87,7 +89,7 @@ const Print: FC = () => {
                         </div>
                     </div>
                 </div>
-                <div className="w-full flex justify-center mx-5 w-full space-x-4">
+                <div className="w-full flex justify-center mx-5 space-x-4">
                     <div className="flex space-x-3">
                         <button className="bg-green-500 w-64 py-2 text-white" onClick={handlePrint} >Print</button>
                         <button className="bg-red-500 w-64 py-2 text-white" onClick={() => Context?.setToggle(true)}>Return</button>

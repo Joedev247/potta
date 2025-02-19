@@ -1,4 +1,4 @@
-import Button from '@/components/button'
+import Button from '@potta/components/button'
 import react from 'react'
 
 const PdfView = () => {

@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { ContextData } from "@/components/context";
+import { ContextData } from "@potta/components/context";
 
 const HoldOn = () => {
     const context = useContext(ContextData)

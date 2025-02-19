@@ -1,6 +1,6 @@
-import Button from "@/components/button";
+import Button from "@potta/components/button";
 import React, { useContext } from "react";
-import { ContextData } from "@/components/context";
+import { ContextData } from "@potta/components/context";
 
 const SaleInvoiceButons = () => {
     const context = useContext(ContextData)

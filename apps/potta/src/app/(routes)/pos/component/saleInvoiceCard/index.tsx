@@ -1,8 +1,8 @@
 'use client'
-import Input from "@/components/input";
+import Input from "@potta/components/input";
 import React, { useState, useContext, useEffect } from "react";
 
-import { ContextData } from "@/components/context";
+import { ContextData } from "@potta/components/context";
 // import { GetCatgerory } from "@/api/category/get";
 // import { GetProduct } from "@/api/food/get";
 // import { GetAddons } from "@/api/addons/get";
@@ -57,7 +57,7 @@ const SaleInvoiceCard = () => {
                 <div className="flex ">
                     {selected.map((item: any) => {
                         return (
-                            <button key={item.id} onClick={() => handleActive(item.name, item.id)} className={`${id == item.id ? 'bg-red-500' : 'bg-gray-500'} border py-1 text-sm  w-full rounded-2xl px-4  text-white mx-2 w-full`}>
+                            <button key={item.id} onClick={() => handleActive(item.name, item.id)} className={`${id == item.id ? 'bg-red-500' : 'bg-gray-500'} border py-1 text-sm  rounded-2xl px-4  text-white mx-2 w-full`}>
                                 <div className="w-full">{item.name}</div>
                             </button>
                         )

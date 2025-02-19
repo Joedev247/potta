@@ -1,5 +1,5 @@
-import Button from '@/components/button'
-import Input from '@/components/input'
+import Button from '@potta/components/button'
+import Input from '@potta/components/input'
 import React from 'react'
 
 const OtherMethod = () => {

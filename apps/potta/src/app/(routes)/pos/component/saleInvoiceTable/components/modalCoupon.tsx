@@ -1,6 +1,6 @@
-import Button from '@/components/button'
-import Input from '@/components/input'
-import Modal from '@/components/modal'
+import Button from '@potta/components/button'
+import Input from '@potta/components/input'
+import Modal from '@potta/components/modal'
 import react, { useState } from 'react'
 
 const ModalCoupon = () => {

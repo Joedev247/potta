@@ -1,80 +1,6 @@
 {
   "version": "6.0",
-  "nxVersion": "19.5.7",
-  "deps": {
-    "@headlessui/react": "^2.1.2",
-    "@heroicons/react": "^2.1.5",
-    "@hookform/resolvers": "^3.9.0",
-    "@nextui-org/react": "^2.4.6",
-    "@tanstack/react-query": "^5.51.23",
-    "@tanstack/react-table": "^8.20.6",
-    "@types/react-csv": "^1.1.10",
-    "apexcharts": "^3.53.0",
-    "axios": "^1.7.4",
-    "country-data-list": "^1.3.0",
-    "country-list-with-dial-code-and-flag": "^5.0.5",
-    "crypto-js": "^4.2.0",
-    "framer-motion": "^11.18.0",
-    "next": "14.2.3",
-    "nookies": "^2.5.2",
-    "react": "18.3.1",
-    "react-accessible-accordion": "^5.0.0",
-    "react-apexcharts": "^1.4.1",
-    "react-csv": "^2.2.2",
-    "react-data-table-component": "^7.6.2",
-    "react-dom": "18.3.1",
-    "react-dropzone": "^14.2.3",
-    "react-google-flight-datepicker": "^0.1.20",
-    "react-hook-form": "^7.52.2",
-    "react-hot-toast": "^2.4.1",
-    "react-icomoon": "^2.5.7",
-    "react-icons": "^5.4.0",
-    "react-phone-input-2": "^2.15.1",
-    "react-pro-sidebar": "^1.1.0",
-    "react-select": "^5.8.0",
-    "react-verification-input": "^4.1.2",
-    "remixicon": "^4.3.0",
-    "timezones-list": "^3.0.3",
-    "tslib": "^2.3.0",
-    "yup": "^1.4.0",
-    "@nx/eslint": "19.5.7",
-    "@nx/eslint-plugin": "19.5.7",
-    "@nx/jest": "19.5.7",
-    "@nx/js": "19.5.7",
-    "@nx/next": "19.5.7",
-    "@nx/react": "19.5.7",
-    "@nx/workspace": "19.5.7",
-    "@swc-node/register": "~1.9.1",
-    "@swc/cli": "~0.3.12",
-    "@swc/core": "~1.5.7",
-    "@swc/helpers": "~0.5.11",
-    "@testing-library/react": "^16.0.0",
-    "@types/crypto-js": "^4.2.2",
-    "@types/jest": "^29.4.0",
-    "@types/node": "18.16.9",
-    "@types/react": "18.3.1",
-    "@types/react-dom": "18.3.0",
-    "@typescript-eslint/eslint-plugin": "^7.16.0",
-    "@typescript-eslint/parser": "^7.16.0",
-    "autoprefixer": "10.4.13",
-    "babel-jest": "^29.4.1",
-    "eslint": "~8.57.0",
-    "eslint-config-next": "14.2.3",
-    "eslint-config-prettier": "^9.0.0",
-    "eslint-plugin-import": "2.27.5",
-    "eslint-plugin-jsx-a11y": "6.7.1",
-    "eslint-plugin-react": "7.32.2",
-    "eslint-plugin-react-hooks": "4.6.0",
-    "jest": "^29.4.1",
-    "jest-environment-jsdom": "^29.4.1",
-    "nx": "19.5.7",
-    "postcss": "8.4.38",
-    "prettier": "^2.6.2",
-    "tailwindcss": "3.4.3",
-    "ts-jest": "^29.1.0",
-    "ts-node": "10.9.1",
-    "typescript": "~5.5.2"
-  },
+  "nxVersion": "20.4.3",
   "pathMappings": {
     "@instanvi/core": [
       "libs/core/src/index.ts"
@@ -122,50 +48,2121 @@
     }
   ],
   "fileMap": {
+    "nonProjectFiles": [],
     "projectFileMap": {
-      "core": [
+      "potta": [
         {
-          "file": "libs/core/.eslintrc.json",
-          "hash": "11012487992710232822"
+          "file": "apps/potta/.eslintrc.json",
+          "hash": "4025500627653572356"
         },
         {
-          "file": "libs/core/README.md",
-          "hash": "862743182427189852"
-        },
-        {
-          "file": "libs/core/project.json",
-          "hash": "8215491323991500792"
-        },
-        {
-          "file": "libs/core/src/index.ts",
-          "hash": "1391443467439822800"
-        },
-        {
-          "file": "libs/core/src/lib/core.spec.tsx",
-          "hash": "10083302775005561580",
+          "file": "apps/potta/config/axios.config.ts",
+          "hash": "13982019025916423870",
           "deps": [
+            "npm:axios"
+          ]
+        },
+        {
+          "file": "apps/potta/index.d.ts",
+          "hash": "5498222895072842432"
+        },
+        {
+          "file": "apps/potta/jest.config.ts",
+          "hash": "7356263210757781480"
+        },
+        {
+          "file": "apps/potta/next-env.d.ts",
+          "hash": "5909181270615354023"
+        },
+        {
+          "file": "apps/potta/next.config.js",
+          "hash": "17252635002163063865",
+          "deps": [
+            "npm:@nx/next"
+          ]
+        },
+        {
+          "file": "apps/potta/postcss.config.js",
+          "hash": "2759402739052110475"
+        },
+        {
+          "file": "apps/potta/project.json",
+          "hash": "7723377140916975180"
+        },
+        {
+          "file": "apps/potta/public/fonts/Outfit-Regular.ttf",
+          "hash": "6785970714798272357"
+        },
+        {
+          "file": "apps/potta/public/fonts/RobotoCondensed-Light.ttf",
+          "hash": "4363714748593963170"
+        },
+        {
+          "file": "apps/potta/public/icons/File.svg",
+          "hash": "18419472168422543088"
+        },
+        {
+          "file": "apps/potta/public/icons/MasterCard.svg",
+          "hash": "12588817000613298418"
+        },
+        {
+          "file": "apps/potta/public/icons/POSRed.svg",
+          "hash": "1847028870229924927"
+        },
+        {
+          "file": "apps/potta/public/icons/Potta.svg",
+          "hash": "1479266405784448627"
+        },
+        {
+          "file": "apps/potta/public/icons/Tribu.svg",
+          "hash": "10128652146921475405"
+        },
+        {
+          "file": "apps/potta/public/icons/USSD-green.svg",
+          "hash": "15272548113717782971"
+        },
+        {
+          "file": "apps/potta/public/icons/agent-green.svg",
+          "hash": "5502518891739832822"
+        },
+        {
+          "file": "apps/potta/public/icons/agent.svg",
+          "hash": "5318478131567348587"
+        },
+        {
+          "file": "apps/potta/public/icons/bitcoin.svg",
+          "hash": "1673686826882648598"
+        },
+        {
+          "file": "apps/potta/public/icons/calculator.svg",
+          "hash": "14461372986182550180"
+        },
+        {
+          "file": "apps/potta/public/icons/card-nogreen.svg",
+          "hash": "9993614236638189007"
+        },
+        {
+          "file": "apps/potta/public/icons/card.svg",
+          "hash": "2505935654353733914"
+        },
+        {
+          "file": "apps/potta/public/icons/crypto.svg",
+          "hash": "4004862384726390636"
+        },
+        {
+          "file": "apps/potta/public/icons/cutlery.svg",
+          "hash": "10395206451256249864"
+        },
+        {
+          "file": "apps/potta/public/icons/dropzone.svg",
+          "hash": "2755683447910555638"
+        },
+        {
+          "file": "apps/potta/public/icons/expenseRed.svg",
+          "hash": "3721202974282359252"
+        },
+        {
+          "file": "apps/potta/public/icons/expenseWhite.svg",
+          "hash": "15635570741099420575"
+        },
+        {
+          "file": "apps/potta/public/icons/folder.svg",
+          "hash": "16129866087633078647"
+        },
+        {
+          "file": "apps/potta/public/icons/fragileBox.svg",
+          "hash": "5918781563424870759"
+        },
+        {
+          "file": "apps/potta/public/icons/fragileBox2.svg",
+          "hash": "342856660106973185"
+        },
+        {
+          "file": "apps/potta/public/icons/giftcard.svg",
+          "hash": "3255771787611491388"
+        },
+        {
+          "file": "apps/potta/public/icons/hamburger.svg",
+          "hash": "1911360593948070230"
+        },
+        {
+          "file": "apps/potta/public/icons/heart.svg",
+          "hash": "13415302018737037919"
+        },
+        {
+          "file": "apps/potta/public/icons/hold.svg",
+          "hash": "16692560648497802234"
+        },
+        {
+          "file": "apps/potta/public/icons/img1.svg",
+          "hash": "12241023690344885249"
+        },
+        {
+          "file": "apps/potta/public/icons/img2.svg",
+          "hash": "15399992108295770307"
+        },
+        {
+          "file": "apps/potta/public/icons/instanvi.svg",
+          "hash": "8206957637817645040"
+        },
+        {
+          "file": "apps/potta/public/icons/inventory.svg",
+          "hash": "4398465591296735025"
+        },
+        {
+          "file": "apps/potta/public/icons/inventoryRed.svg",
+          "hash": "13758137896923750499"
+        },
+        {
+          "file": "apps/potta/public/icons/inventoryWhite.svg",
+          "hash": "5167825115279025099"
+        },
+        {
+          "file": "apps/potta/public/icons/license.svg",
+          "hash": "6983343144421312151"
+        },
+        {
+          "file": "apps/potta/public/icons/logo.svg",
+          "hash": "11800992395494998889"
+        },
+        {
+          "file": "apps/potta/public/icons/master.svg",
+          "hash": "16220976239069485225"
+        },
+        {
+          "file": "apps/potta/public/icons/money-donation-thin.svg",
+          "hash": "7552608422339465895"
+        },
+        {
+          "file": "apps/potta/public/icons/mtn.svg",
+          "hash": "10352448624046179023"
+        },
+        {
+          "file": "apps/potta/public/icons/municipal.svg",
+          "hash": "9172355779948818976"
+        },
+        {
+          "file": "apps/potta/public/icons/om.svg",
+          "hash": "901408804822841066"
+        },
+        {
+          "file": "apps/potta/public/icons/pages-green.svg",
+          "hash": "16844408276495423663"
+        },
+        {
+          "file": "apps/potta/public/icons/pages.svg",
+          "hash": "17954037553143269682"
+        },
+        {
+          "file": "apps/potta/public/icons/penalities.svg",
+          "hash": "9547537828852215010"
+        },
+        {
+          "file": "apps/potta/public/icons/people.svg",
+          "hash": "8106063138258773161"
+        },
+        {
+          "file": "apps/potta/public/icons/pig.svg",
+          "hash": "6630314440309923472"
+        },
+        {
+          "file": "apps/potta/public/icons/posWhite.svg",
+          "hash": "4457385541100775969"
+        },
+        {
+          "file": "apps/potta/public/icons/settings.svg",
+          "hash": "5749360975753525567"
+        },
+        {
+          "file": "apps/potta/public/icons/shoes.svg",
+          "hash": "3537580702278569735"
+        },
+        {
+          "file": "apps/potta/public/icons/talk.svg",
+          "hash": "10127150127445808454"
+        },
+        {
+          "file": "apps/potta/public/icons/tax.svg",
+          "hash": "6357025860107194251"
+        },
+        {
+          "file": "apps/potta/public/icons/taxesh.svg",
+          "hash": "17724895416756624212"
+        },
+        {
+          "file": "apps/potta/public/icons/team-work.svg",
+          "hash": "11011941552523267772"
+        },
+        {
+          "file": "apps/potta/public/icons/tether.svg",
+          "hash": "2357089274419089505"
+        },
+        {
+          "file": "apps/potta/public/icons/user.svg",
+          "hash": "15699457791218935717"
+        },
+        {
+          "file": "apps/potta/public/icons/userfolder.svg",
+          "hash": "14169130886291750852"
+        },
+        {
+          "file": "apps/potta/public/icons/ussd.svg",
+          "hash": "9452942867029637500"
+        },
+        {
+          "file": "apps/potta/public/icons/vid1.svg",
+          "hash": "10661492905270523049"
+        },
+        {
+          "file": "apps/potta/public/icons/visa.svg",
+          "hash": "16220976239069485225"
+        },
+        {
+          "file": "apps/potta/public/icons/visas.svg",
+          "hash": "10531448591305264481"
+        },
+        {
+          "file": "apps/potta/public/images/American ExpressR.svg",
+          "hash": "14082769780000961966"
+        },
+        {
+          "file": "apps/potta/public/images/AmericanExpress.svg",
+          "hash": "14253104157784717378"
+        },
+        {
+          "file": "apps/potta/public/images/Mastercard.svg",
+          "hash": "11183979172802475422"
+        },
+        {
+          "file": "apps/potta/public/images/MastercardR.svg",
+          "hash": "11183979172802475422"
+        },
+        {
+          "file": "apps/potta/public/images/POS/Vector (16).svg",
+          "hash": "8962176343295851800"
+        },
+        {
+          "file": "apps/potta/public/images/POS/dollar.svg",
+          "hash": "9059415351308180427"
+        },
+        {
+          "file": "apps/potta/public/images/POS/dollars.svg",
+          "hash": "481379946001572861"
+        },
+        {
+          "file": "apps/potta/public/images/POS/gallery.svg",
+          "hash": "12904790501106308696"
+        },
+        {
+          "file": "apps/potta/public/images/POS/peoples.svg",
+          "hash": "8971989611476536051"
+        },
+        {
+          "file": "apps/potta/public/images/POS/services.svg",
+          "hash": "7065829250815454120"
+        },
+        {
+          "file": "apps/potta/public/images/POS/white/dollars.svg",
+          "hash": "10128651149767019003"
+        },
+        {
+          "file": "apps/potta/public/images/POS/white/gallery.svg",
+          "hash": "8401542415957909752"
+        },
+        {
+          "file": "apps/potta/public/images/POS/white/services.svg",
+          "hash": "8845706450870065078"
+        },
+        {
+          "file": "apps/potta/public/images/UnionPay.svg",
+          "hash": "3918390681623185811"
+        },
+        {
+          "file": "apps/potta/public/images/UnionPayR.svg",
+          "hash": "2641334848910074118"
+        },
+        {
+          "file": "apps/potta/public/images/Visa.svg",
+          "hash": "5317282840597140198"
+        },
+        {
+          "file": "apps/potta/public/images/VisaR.svg",
+          "hash": "11438591080199932346"
+        },
+        {
+          "file": "apps/potta/public/images/export.svg",
+          "hash": "4628223838989168365"
+        },
+        {
+          "file": "apps/potta/public/images/invoice/budget.svg",
+          "hash": "3669966120901502529"
+        },
+        {
+          "file": "apps/potta/public/images/invoice/credit note.svg",
+          "hash": "6142490726305558644"
+        },
+        {
+          "file": "apps/potta/public/images/invoice/invoice.svg",
+          "hash": "17468946657273834598"
+        },
+        {
+          "file": "apps/potta/public/images/invoice/prepayment.svg",
+          "hash": "1877123965895381869"
+        },
+        {
+          "file": "apps/potta/public/images/invoice/purchase.svg",
+          "hash": "1752975307243955014"
+        },
+        {
+          "file": "apps/potta/public/images/no invoice.svg",
+          "hash": "17370264268126582128"
+        },
+        {
+          "file": "apps/potta/public/images/pottaLogo.svg",
+          "hash": "11543684020214624355"
+        },
+        {
+          "file": "apps/potta/public/images/sideDashboardIcons/dahsboard.svg",
+          "hash": "16809419692540573129"
+        },
+        {
+          "file": "apps/potta/public/images/sideDashboardIcons/gift.svg",
+          "hash": "15438505836607357044"
+        },
+        {
+          "file": "apps/potta/public/images/sideDashboardIcons/params.svg",
+          "hash": "17529079170610799936"
+        },
+        {
+          "file": "apps/potta/public/images/sideDashboardIcons/schedule.svg",
+          "hash": "566626751631166869"
+        },
+        {
+          "file": "apps/potta/public/images/sideDashboardIcons/time.svg",
+          "hash": "5934575103496034454"
+        },
+        {
+          "file": "apps/potta/public/images/sideDashboardIcons/users.svg",
+          "hash": "12584603688244089917"
+        },
+        {
+          "file": "apps/potta/public/images/sideExpensesIcons/book.svg",
+          "hash": "17905164133273437539"
+        },
+        {
+          "file": "apps/potta/public/images/sideExpensesIcons/dash.svg",
+          "hash": "4210430175154011501"
+        },
+        {
+          "file": "apps/potta/public/images/sideExpensesIcons/flow.svg",
+          "hash": "9460480283280928451"
+        },
+        {
+          "file": "apps/potta/public/images/sideExpensesIcons/retunbook.svg",
+          "hash": "2085037316653270681"
+        },
+        {
+          "file": "apps/potta/public/images/sideExpensesIcons/shopping.svg",
+          "hash": "7568714422302010184"
+        },
+        {
+          "file": "apps/potta/public/images/sideExpensesIcons/transact.svg",
+          "hash": "14627727187874067373"
+        },
+        {
+          "file": "apps/potta/public/images/sideExpensesIcons/white/1.svg",
+          "hash": "2589510951709791276"
+        },
+        {
+          "file": "apps/potta/public/images/sideExpensesIcons/white/2.svg",
+          "hash": "16070263515678499760"
+        },
+        {
+          "file": "apps/potta/public/images/sideExpensesIcons/white/3.svg",
+          "hash": "2529865461363245253"
+        },
+        {
+          "file": "apps/potta/public/images/sideExpensesIcons/white/4.svg",
+          "hash": "4284122720766602047"
+        },
+        {
+          "file": "apps/potta/public/images/sideExpensesIcons/white/5.svg",
+          "hash": "6357507602309423818"
+        },
+        {
+          "file": "apps/potta/public/images/sideExpensesIcons/white/6.svg",
+          "hash": "14676908545843468443"
+        },
+        {
+          "file": "apps/potta/public/images/sideExpensesIcons/white/7.svg",
+          "hash": "10228956625373703642"
+        },
+        {
+          "file": "apps/potta/public/images/sideExpensesIcons/white/8.svg",
+          "hash": "5899442351371118034"
+        },
+        {
+          "file": "apps/potta/public/images/uploadFile.svg",
+          "hash": "14641509192291124679"
+        },
+        {
+          "file": "apps/potta/specs/index.spec.tsx",
+          "hash": "1288872939091782814",
+          "deps": [
+            "npm:react",
             "npm:@testing-library/react"
           ]
         },
         {
-          "file": "libs/core/src/lib/core.tsx",
-          "hash": "12083220179364162819"
+          "file": "apps/potta/src/app/(routes)/Account/components/sliderAccount.tsx",
+          "hash": "7241673429121810466",
+          "deps": [
+            "npm:react"
+          ]
         },
         {
-          "file": "libs/core/src/lib/hello-server.tsx",
-          "hash": "2397568674684759047"
+          "file": "apps/potta/src/app/(routes)/Account/components/table.tsx",
+          "hash": "1830905005637602455",
+          "deps": [
+            "npm:react"
+          ]
         },
         {
-          "file": "libs/core/src/server.ts",
-          "hash": "8912437808649717296"
+          "file": "apps/potta/src/app/(routes)/Account/layout.tsx",
+          "hash": "419048744277041288",
+          "deps": [
+            "npm:react"
+          ]
         },
         {
-          "file": "libs/core/tsconfig.json",
-          "hash": "14088618039610991405"
+          "file": "apps/potta/src/app/(routes)/Account/page.tsx",
+          "hash": "930773440515217169",
+          "deps": [
+            "npm:react"
+          ]
         },
         {
-          "file": "libs/core/tsconfig.lib.json",
-          "hash": "1536859351713546153"
+          "file": "apps/potta/src/app/(routes)/dashboard/components/balanceBoxes.tsx",
+          "hash": "14347687547647622806",
+          "deps": [
+            "npm:react"
+          ]
+        },
+        {
+          "file": "apps/potta/src/app/(routes)/dashboard/components/collection.tsx",
+          "hash": "8588187428222792956",
+          "deps": [
+            "npm:react"
+          ]
+        },
+        {
+          "file": "apps/potta/src/app/(routes)/dashboard/components/dashboardChart.tsx",
+          "hash": "11856177588616898441",
+          "deps": [
+            "npm:react",
+            "npm:next",
+            "npm:apexcharts",
+            [
+              "npm:react-apexcharts",
+              "dynamic"
+            ]
+          ]
+        },
+        {
+          "file": "apps/potta/src/app/(routes)/dashboard/components/expenses.tsx",
+          "hash": "9459694966405201704",
+          "deps": [
+            "npm:react"
+          ]
+        },
+        {
+          "file": "apps/potta/src/app/(routes)/dashboard/layout.tsx",
+          "hash": "16598961680591710999",
+          "deps": [
+            "npm:react"
+          ]
+        },
+        {
+          "file": "apps/potta/src/app/(routes)/dashboard/menu/detailMenu.tsx",
+          "hash": "16901819340790566935",
+          "deps": [
+            "npm:react",
+            "npm:@headlessui/react",
+            "npm:next"
+          ]
+        },
+        {
+          "file": "apps/potta/src/app/(routes)/dashboard/menu/mainMenu.tsx",
+          "hash": "16124729225657173493",
+          "deps": [
+            "npm:react",
+            "npm:@headlessui/react"
+          ]
+        },
+        {
+          "file": "apps/potta/src/app/(routes)/dashboard/menu/sideMenu.tsx",
+          "hash": "12812307548230119737",
+          "deps": [
+            "npm:react",
+            "npm:next",
+            "npm:@headlessui/react"
+          ]
+        },
+        {
+          "file": "apps/potta/src/app/(routes)/dashboard/menu/sideMenuItem.tsx",
+          "hash": "6621926280126095685",
+          "deps": [
+            "npm:react"
+          ]
+        },
+        {
+          "file": "apps/potta/src/app/(routes)/dashboard/page.tsx",
+          "hash": "6388897515762374847",
+          "deps": [
+            "npm:react",
+            "npm:react-google-flight-datepicker"
+          ]
+        },
+        {
+          "file": "apps/potta/src/app/(routes)/expenses/budgets/[id]/components/data.tsx",
+          "hash": "11952631433633886950",
+          "deps": [
+            "npm:react"
+          ]
+        },
+        {
+          "file": "apps/potta/src/app/(routes)/expenses/budgets/[id]/components/table.tsx",
+          "hash": "17955652124907073262",
+          "deps": [
+            "npm:react"
+          ]
+        },
+        {
+          "file": "apps/potta/src/app/(routes)/expenses/budgets/[id]/layout.tsx",
+          "hash": "3176776973231662017",
+          "deps": [
+            "npm:react"
+          ]
+        },
+        {
+          "file": "apps/potta/src/app/(routes)/expenses/budgets/[id]/page.tsx",
+          "hash": "16701271638259347091",
+          "deps": [
+            "npm:react",
+            "npm:next"
+          ]
+        },
+        {
+          "file": "apps/potta/src/app/(routes)/expenses/budgets/component/filterComponent.tsx",
+          "hash": "17539353283324382020",
+          "deps": [
+            "npm:react"
+          ]
+        },
+        {
+          "file": "apps/potta/src/app/(routes)/expenses/budgets/component/modal.tsx",
+          "hash": "8646048088545414227",
+          "deps": [
+            "npm:react"
+          ]
+        },
+        {
+          "file": "apps/potta/src/app/(routes)/expenses/budgets/details/layout.tsx",
+          "hash": "11483776093320888645",
+          "deps": [
+            "npm:react"
+          ]
+        },
+        {
+          "file": "apps/potta/src/app/(routes)/expenses/budgets/details/page.tsx",
+          "hash": "17088195967356891648",
+          "deps": [
+            "npm:react",
+            "npm:next"
+          ]
+        },
+        {
+          "file": "apps/potta/src/app/(routes)/expenses/budgets/layout.tsx",
+          "hash": "307135250983287214",
+          "deps": [
+            "npm:react"
+          ]
+        },
+        {
+          "file": "apps/potta/src/app/(routes)/expenses/budgets/page.tsx",
+          "hash": "16567668687686715328",
+          "deps": [
+            "npm:react",
+            "npm:next"
+          ]
+        },
+        {
+          "file": "apps/potta/src/app/(routes)/expenses/components/filters.tsx",
+          "hash": "3116037947049293053",
+          "deps": [
+            "npm:react"
+          ]
+        },
+        {
+          "file": "apps/potta/src/app/(routes)/expenses/layout.tsx",
+          "hash": "4128539399625564669",
+          "deps": [
+            "npm:react"
+          ]
+        },
+        {
+          "file": "apps/potta/src/app/(routes)/expenses/page.tsx",
+          "hash": "3172207536045534879",
+          "deps": [
+            "npm:react",
+            "npm:react-google-flight-datepicker"
+          ]
+        },
+        {
+          "file": "apps/potta/src/app/(routes)/inbox/components/billTable.tsx",
+          "hash": "16765435754090899883",
+          "deps": [
+            "npm:react"
+          ]
+        },
+        {
+          "file": "apps/potta/src/app/(routes)/inbox/components/reimburesmentTable.tsx",
+          "hash": "3131956597082156911",
+          "deps": [
+            "npm:react"
+          ]
+        },
+        {
+          "file": "apps/potta/src/app/(routes)/inbox/components/terminal.tsx",
+          "hash": "84638178929557851",
+          "deps": [
+            "npm:react"
+          ]
+        },
+        {
+          "file": "apps/potta/src/app/(routes)/inbox/components/terminalTable.tsx",
+          "hash": "5160184887480316983",
+          "deps": [
+            "npm:react"
+          ]
+        },
+        {
+          "file": "apps/potta/src/app/(routes)/inbox/layout.tsx",
+          "hash": "302411861648497384",
+          "deps": [
+            "npm:react"
+          ]
+        },
+        {
+          "file": "apps/potta/src/app/(routes)/inbox/page.tsx",
+          "hash": "14815766025053561230",
+          "deps": [
+            "npm:react"
+          ]
+        },
+        {
+          "file": "apps/potta/src/app/(routes)/invoice/_hooks/useAddInvoiceLineItem.ts",
+          "hash": "1259517002750040540",
+          "deps": [
+            "npm:@tanstack/react-query"
+          ]
+        },
+        {
+          "file": "apps/potta/src/app/(routes)/invoice/_hooks/useCreateInvoice.ts",
+          "hash": "4398901041854142366",
+          "deps": [
+            "npm:@tanstack/react-query"
+          ]
+        },
+        {
+          "file": "apps/potta/src/app/(routes)/invoice/_hooks/useDeleteInvoice.ts",
+          "hash": "7869836779162025304",
+          "deps": [
+            "npm:@tanstack/react-query"
+          ]
+        },
+        {
+          "file": "apps/potta/src/app/(routes)/invoice/_hooks/useGetAllCustomer.ts",
+          "hash": "4437670519017441277",
+          "deps": [
+            "npm:@tanstack/react-query"
+          ]
+        },
+        {
+          "file": "apps/potta/src/app/(routes)/invoice/_hooks/useGetAllInvoice.ts",
+          "hash": "10563598824267184064",
+          "deps": [
+            "npm:@tanstack/react-query"
+          ]
+        },
+        {
+          "file": "apps/potta/src/app/(routes)/invoice/_hooks/useGetOneInvoice.ts",
+          "hash": "17537241232734046306",
+          "deps": [
+            "npm:@tanstack/react-query"
+          ]
+        },
+        {
+          "file": "apps/potta/src/app/(routes)/invoice/_hooks/useUpdateInvoice.ts",
+          "hash": "11255901022402289353",
+          "deps": [
+            "npm:@tanstack/react-query"
+          ]
+        },
+        {
+          "file": "apps/potta/src/app/(routes)/invoice/_hooks/useremoveInvoiceLineItem.ts",
+          "hash": "2366829664108755468",
+          "deps": [
+            "npm:@tanstack/react-query"
+          ]
+        },
+        {
+          "file": "apps/potta/src/app/(routes)/invoice/_utils/api.ts",
+          "hash": "819404639298000624"
+        },
+        {
+          "file": "apps/potta/src/app/(routes)/invoice/_utils/column.ts",
+          "hash": "16044814641259153768",
+          "deps": [
+            "npm:@tanstack/react-table"
+          ]
+        },
+        {
+          "file": "apps/potta/src/app/(routes)/invoice/_utils/types.ts",
+          "hash": "15998958723963503882"
+        },
+        {
+          "file": "apps/potta/src/app/(routes)/invoice/_utils/utils.ts",
+          "hash": "9441533894932745273"
+        },
+        {
+          "file": "apps/potta/src/app/(routes)/invoice/_utils/valididation.ts",
+          "hash": "351768102848182076",
+          "deps": [
+            "npm:yup"
+          ]
+        },
+        {
+          "file": "apps/potta/src/app/(routes)/invoice/components/box.tsx",
+          "hash": "17216220639925212689",
+          "deps": [
+            "npm:react"
+          ]
+        },
+        {
+          "file": "apps/potta/src/app/(routes)/invoice/components/modal.tsx",
+          "hash": "3162186126480212170",
+          "deps": [
+            "npm:react"
+          ]
+        },
+        {
+          "file": "apps/potta/src/app/(routes)/invoice/components/modalInvoice.tsx",
+          "hash": "8358675382040193636",
+          "deps": [
+            "npm:react"
+          ]
+        },
+        {
+          "file": "apps/potta/src/app/(routes)/invoice/components/slideNewInvoice.tsx",
+          "hash": "8997818938844961787",
+          "deps": [
+            "npm:react"
+          ]
+        },
+        {
+          "file": "apps/potta/src/app/(routes)/invoice/components/table.tsx",
+          "hash": "5097131635187071185",
+          "deps": [
+            "npm:react",
+            "npm:@nextui-org/react"
+          ]
+        },
+        {
+          "file": "apps/potta/src/app/(routes)/invoice/layout.tsx",
+          "hash": "6895566963205254858",
+          "deps": [
+            "npm:react"
+          ]
+        },
+        {
+          "file": "apps/potta/src/app/(routes)/invoice/new_invoice/components/left.tsx",
+          "hash": "12805168899448078728",
+          "deps": [
+            "npm:react"
+          ]
+        },
+        {
+          "file": "apps/potta/src/app/(routes)/invoice/new_invoice/components/newtableInvoice.tsx",
+          "hash": "17826493889595519885",
+          "deps": [
+            "npm:react"
+          ]
+        },
+        {
+          "file": "apps/potta/src/app/(routes)/invoice/new_invoice/components/pdfview.tsx",
+          "hash": "13906652808853573555",
+          "deps": [
+            "npm:react"
+          ]
+        },
+        {
+          "file": "apps/potta/src/app/(routes)/invoice/new_invoice/layout.tsx",
+          "hash": "11458866933459810833",
+          "deps": [
+            "npm:react"
+          ]
+        },
+        {
+          "file": "apps/potta/src/app/(routes)/invoice/new_invoice/page.tsx",
+          "hash": "8248575119093229297",
+          "deps": [
+            "npm:react"
+          ]
+        },
+        {
+          "file": "apps/potta/src/app/(routes)/invoice/page.tsx",
+          "hash": "6856766918796180353",
+          "deps": [
+            "npm:next"
+          ]
+        },
+        {
+          "file": "apps/potta/src/app/(routes)/layout/index.tsx",
+          "hash": "4162366935693138504",
+          "deps": [
+            "npm:next",
+            "npm:react"
+          ]
+        },
+        {
+          "file": "apps/potta/src/app/(routes)/layout/navbar/index.tsx",
+          "hash": "1244672756282665499",
+          "deps": [
+            "npm:react",
+            "npm:next"
+          ]
+        },
+        {
+          "file": "apps/potta/src/app/(routes)/layout/sidebar/components/POS.tsx",
+          "hash": "5353088316204167270",
+          "deps": [
+            "npm:react",
+            "npm:react-pro-sidebar",
+            "npm:next"
+          ]
+        },
+        {
+          "file": "apps/potta/src/app/(routes)/layout/sidebar/components/expenses.tsx",
+          "hash": "14430010130986268360",
+          "deps": [
+            "npm:react",
+            "npm:react-pro-sidebar",
+            "npm:next"
+          ]
+        },
+        {
+          "file": "apps/potta/src/app/(routes)/layout/sidebar/components/invoicing.tsx",
+          "hash": "2417751606884793277",
+          "deps": [
+            "npm:react",
+            "npm:react-pro-sidebar",
+            "npm:next"
+          ]
+        },
+        {
+          "file": "apps/potta/src/app/(routes)/layout/sidebar/components/payments.tsx",
+          "hash": "13817059600565587838",
+          "deps": [
+            "npm:react",
+            "npm:react-pro-sidebar",
+            "npm:next"
+          ]
+        },
+        {
+          "file": "apps/potta/src/app/(routes)/layout/sidebar/components/payroll.tsx",
+          "hash": "12643616667494421807",
+          "deps": [
+            "npm:react",
+            "npm:react-pro-sidebar",
+            "npm:next"
+          ]
+        },
+        {
+          "file": "apps/potta/src/app/(routes)/layout/sidebar/components/taxation.tsx",
+          "hash": "9607656541181915675",
+          "deps": [
+            "npm:react",
+            "npm:react-pro-sidebar",
+            "npm:next"
+          ]
+        },
+        {
+          "file": "apps/potta/src/app/(routes)/layout/sidebar/components/voucher.tsx",
+          "hash": "16411868836041285824",
+          "deps": [
+            "npm:react",
+            "npm:react-pro-sidebar",
+            "npm:next"
+          ]
+        },
+        {
+          "file": "apps/potta/src/app/(routes)/layout/sidebar/index.tsx",
+          "hash": "10122423208221804610",
+          "deps": [
+            "npm:react",
+            "npm:react-pro-sidebar",
+            "npm:next"
+          ]
+        },
+        {
+          "file": "apps/potta/src/app/(routes)/payables/budgets/[id]/components/table.tsx",
+          "hash": "3244421341483603138"
+        },
+        {
+          "file": "apps/potta/src/app/(routes)/payables/budgets/[id]/layout.tsx",
+          "hash": "10264097873418669191",
+          "deps": [
+            "npm:react"
+          ]
+        },
+        {
+          "file": "apps/potta/src/app/(routes)/payables/budgets/[id]/page.tsx",
+          "hash": "3816253353516182912",
+          "deps": [
+            "npm:react",
+            "npm:next"
+          ]
+        },
+        {
+          "file": "apps/potta/src/app/(routes)/payables/budgets/component/filterComponent.tsx",
+          "hash": "17539353283324382020",
+          "deps": [
+            "npm:react"
+          ]
+        },
+        {
+          "file": "apps/potta/src/app/(routes)/payables/budgets/component/modal.tsx",
+          "hash": "12803126518426214415",
+          "deps": [
+            "npm:react"
+          ]
+        },
+        {
+          "file": "apps/potta/src/app/(routes)/payables/budgets/layout.tsx",
+          "hash": "307135250983287214",
+          "deps": [
+            "npm:react"
+          ]
+        },
+        {
+          "file": "apps/potta/src/app/(routes)/payables/budgets/page.tsx",
+          "hash": "5151779626636899755",
+          "deps": [
+            "npm:react",
+            "npm:next"
+          ]
+        },
+        {
+          "file": "apps/potta/src/app/(routes)/payables/cards/layout.tsx",
+          "hash": "18418064974767245436",
+          "deps": [
+            "npm:react"
+          ]
+        },
+        {
+          "file": "apps/potta/src/app/(routes)/payables/cards/page.tsx",
+          "hash": "18087724963391501488",
+          "deps": [
+            "npm:react",
+            "npm:next"
+          ]
+        },
+        {
+          "file": "apps/potta/src/app/(routes)/payments/layout.tsx",
+          "hash": "4563673845422557804",
+          "deps": [
+            "npm:react"
+          ]
+        },
+        {
+          "file": "apps/potta/src/app/(routes)/payments/page.tsx",
+          "hash": "17581202329864785042",
+          "deps": [
+            "npm:react"
+          ]
+        },
+        {
+          "file": "apps/potta/src/app/(routes)/payments/table/components/method.tsx",
+          "hash": "484917620574210856"
+        },
+        {
+          "file": "apps/potta/src/app/(routes)/payments/table/components/period.tsx",
+          "hash": "14902466001462977816"
+        },
+        {
+          "file": "apps/potta/src/app/(routes)/payments/table/components/status.tsx",
+          "hash": "11164943360809942621"
+        },
+        {
+          "file": "apps/potta/src/app/(routes)/payments/table/components/table.tsx",
+          "hash": "504232341321961283",
+          "deps": [
+            "npm:react"
+          ]
+        },
+        {
+          "file": "apps/potta/src/app/(routes)/payments/table/page.tsx",
+          "hash": "17348970524729019387",
+          "deps": [
+            "npm:react"
+          ]
+        },
+        {
+          "file": "apps/potta/src/app/(routes)/payments/taxation/Tax_Fillings/components/boxes.tsx",
+          "hash": "10107510817427667027",
+          "deps": [
+            "npm:react"
+          ]
+        },
+        {
+          "file": "apps/potta/src/app/(routes)/payments/taxation/Tax_Fillings/components/method.tsx",
+          "hash": "484917620574210856"
+        },
+        {
+          "file": "apps/potta/src/app/(routes)/payments/taxation/Tax_Fillings/components/period.tsx",
+          "hash": "14902466001462977816"
+        },
+        {
+          "file": "apps/potta/src/app/(routes)/payments/taxation/Tax_Fillings/components/table.tsx",
+          "hash": "11381934102381913187",
+          "deps": [
+            "npm:react"
+          ]
+        },
+        {
+          "file": "apps/potta/src/app/(routes)/payments/taxation/Tax_Fillings/components/type.tsx",
+          "hash": "16814611837591160112"
+        },
+        {
+          "file": "apps/potta/src/app/(routes)/payments/taxation/Tax_Fillings/page.tsx",
+          "hash": "2481672771303786653"
+        },
+        {
+          "file": "apps/potta/src/app/(routes)/payments/taxation/layout.tsx",
+          "hash": "13784324493131870077",
+          "deps": [
+            "npm:react"
+          ]
+        },
+        {
+          "file": "apps/potta/src/app/(routes)/payments/taxation/page.tsx",
+          "hash": "12182898893698213415",
+          "deps": [
+            "npm:react"
+          ]
+        },
+        {
+          "file": "apps/potta/src/app/(routes)/payments/terminals/components/USSD.tsx",
+          "hash": "1821271612888225145",
+          "deps": [
+            "npm:react"
+          ]
+        },
+        {
+          "file": "apps/potta/src/app/(routes)/payments/terminals/components/agent.tsx",
+          "hash": "15941321038298613359",
+          "deps": [
+            "npm:react"
+          ]
+        },
+        {
+          "file": "apps/potta/src/app/(routes)/payments/terminals/components/card.tsx",
+          "hash": "14068633143691281818",
+          "deps": [
+            "npm:react"
+          ]
+        },
+        {
+          "file": "apps/potta/src/app/(routes)/payments/terminals/components/pages.tsx",
+          "hash": "7956364170712681357",
+          "deps": [
+            "npm:react"
+          ]
+        },
+        {
+          "file": "apps/potta/src/app/(routes)/payments/terminals/components/sliders/agent/components/control.tsx",
+          "hash": "4689207554627781197",
+          "deps": [
+            "npm:react",
+            "npm:react-select"
+          ]
+        },
+        {
+          "file": "apps/potta/src/app/(routes)/payments/terminals/components/sliders/agent/components/info.tsx",
+          "hash": "4379131732579100536",
+          "deps": [
+            "npm:react",
+            "npm:@headlessui/react"
+          ]
+        },
+        {
+          "file": "apps/potta/src/app/(routes)/payments/terminals/components/sliders/agent/components/policies.tsx",
+          "hash": "4693519020170557387",
+          "deps": [
+            "npm:react"
+          ]
+        },
+        {
+          "file": "apps/potta/src/app/(routes)/payments/terminals/components/sliders/agent/page.tsx",
+          "hash": "16777094439377253628",
+          "deps": [
+            "npm:react",
+            "npm:react-select"
+          ]
+        },
+        {
+          "file": "apps/potta/src/app/(routes)/payments/terminals/components/sliders/card/components/controls.tsx",
+          "hash": "15986151174287515252",
+          "deps": [
+            "npm:react",
+            "npm:react-select"
+          ]
+        },
+        {
+          "file": "apps/potta/src/app/(routes)/payments/terminals/components/sliders/card/components/policies.tsx",
+          "hash": "4693519020170557387",
+          "deps": [
+            "npm:react"
+          ]
+        },
+        {
+          "file": "apps/potta/src/app/(routes)/payments/terminals/components/sliders/card/page.tsx",
+          "hash": "14359715436175035021",
+          "deps": [
+            "npm:react",
+            "npm:react-select"
+          ]
+        },
+        {
+          "file": "apps/potta/src/app/(routes)/payments/terminals/components/sliders/page/page.tsx",
+          "hash": "982262868914417419",
+          "deps": [
+            "npm:react",
+            "npm:react-select"
+          ]
+        },
+        {
+          "file": "apps/potta/src/app/(routes)/payments/terminals/components/sliders/ussd/page.tsx",
+          "hash": "15154334372983250239",
+          "deps": [
+            "npm:react",
+            "npm:react-select"
+          ]
+        },
+        {
+          "file": "apps/potta/src/app/(routes)/payments/terminals/page.tsx",
+          "hash": "12299476201511245213",
+          "deps": [
+            "npm:react"
+          ]
+        },
+        {
+          "file": "apps/potta/src/app/(routes)/payroll/benefit/components/sliderBenefit.tsx",
+          "hash": "9971844080744952003",
+          "deps": [
+            "npm:react"
+          ]
+        },
+        {
+          "file": "apps/potta/src/app/(routes)/payroll/benefit/components/table.tsx",
+          "hash": "232955574933275930",
+          "deps": [
+            "npm:react"
+          ]
+        },
+        {
+          "file": "apps/potta/src/app/(routes)/payroll/benefit/layout.tsx",
+          "hash": "12593722097439688594",
+          "deps": [
+            "npm:react"
+          ]
+        },
+        {
+          "file": "apps/potta/src/app/(routes)/payroll/benefit/page.tsx",
+          "hash": "3703500976123918828",
+          "deps": [
+            "npm:react"
+          ]
+        },
+        {
+          "file": "apps/potta/src/app/(routes)/payroll/layout.tsx",
+          "hash": "17319240061784345930",
+          "deps": [
+            "npm:react"
+          ]
+        },
+        {
+          "file": "apps/potta/src/app/(routes)/payroll/overview/components/boxes.tsx",
+          "hash": "15181544915186151972",
+          "deps": [
+            "npm:react"
+          ]
+        },
+        {
+          "file": "apps/potta/src/app/(routes)/payroll/overview/components/payBreakdown.tsx",
+          "hash": "7936093408113638830",
+          "deps": [
+            "npm:react"
+          ]
+        },
+        {
+          "file": "apps/potta/src/app/(routes)/payroll/overview/components/table.tsx",
+          "hash": "4092471896315308228",
+          "deps": [
+            "npm:react"
+          ]
+        },
+        {
+          "file": "apps/potta/src/app/(routes)/payroll/overview/page.tsx",
+          "hash": "15577646341911414785",
+          "deps": [
+            "npm:react"
+          ]
+        },
+        {
+          "file": "apps/potta/src/app/(routes)/payroll/page.tsx",
+          "hash": "17247969695896266233",
+          "deps": [
+            "npm:react"
+          ]
+        },
+        {
+          "file": "apps/potta/src/app/(routes)/payroll/people/components/address.tsx",
+          "hash": "8060966351663786042",
+          "deps": [
+            "npm:react"
+          ]
+        },
+        {
+          "file": "apps/potta/src/app/(routes)/payroll/people/components/baseInfo.tsx",
+          "hash": "3586646647291875713",
+          "deps": [
+            "npm:react",
+            "npm:@headlessui/react"
+          ]
+        },
+        {
+          "file": "apps/potta/src/app/(routes)/payroll/people/components/benefit/components/benefitTable.tsx",
+          "hash": "4228206993545898405",
+          "deps": [
+            "npm:react"
+          ]
+        },
+        {
+          "file": "apps/potta/src/app/(routes)/payroll/people/components/benefit/components/taxtable.tsx",
+          "hash": "17883233103243235589",
+          "deps": [
+            "npm:react"
+          ]
+        },
+        {
+          "file": "apps/potta/src/app/(routes)/payroll/people/components/benefit/page.tsx",
+          "hash": "18369028206742977943",
+          "deps": [
+            "npm:react"
+          ]
+        },
+        {
+          "file": "apps/potta/src/app/(routes)/payroll/people/components/compensation.tsx",
+          "hash": "17555603973288453550",
+          "deps": [
+            "npm:react"
+          ]
+        },
+        {
+          "file": "apps/potta/src/app/(routes)/payroll/people/components/depositeAccount/bankaccount.tsx",
+          "hash": "11943520275317366504",
+          "deps": [
+            "npm:react"
+          ]
+        },
+        {
+          "file": "apps/potta/src/app/(routes)/payroll/people/components/depositeAccount/page.tsx",
+          "hash": "9585579894939092392",
+          "deps": [
+            "npm:react"
+          ]
+        },
+        {
+          "file": "apps/potta/src/app/(routes)/payroll/people/components/depositeAccount/wallet.tsx",
+          "hash": "745366865212918787",
+          "deps": [
+            "npm:react"
+          ]
+        },
+        {
+          "file": "apps/potta/src/app/(routes)/payroll/people/components/employee_tax_information.tsx",
+          "hash": "10671231710541347079",
+          "deps": [
+            "npm:react"
+          ]
+        },
+        {
+          "file": "apps/potta/src/app/(routes)/payroll/people/components/schedule.tsx",
+          "hash": "15050975939082521904",
+          "deps": [
+            "npm:react"
+          ]
+        },
+        {
+          "file": "apps/potta/src/app/(routes)/payroll/people/page.tsx",
+          "hash": "13320009563592789896",
+          "deps": [
+            "npm:react"
+          ]
+        },
+        {
+          "file": "apps/potta/src/app/(routes)/payroll/reports/components/all_report.tsx",
+          "hash": "16690037066542371496",
+          "deps": [
+            "npm:react"
+          ]
+        },
+        {
+          "file": "apps/potta/src/app/(routes)/payroll/reports/components/frequent_report.tsx",
+          "hash": "9461219679078658735",
+          "deps": [
+            "npm:react"
+          ]
+        },
+        {
+          "file": "apps/potta/src/app/(routes)/payroll/reports/layout.tsx",
+          "hash": "17263189618524542643",
+          "deps": [
+            "npm:react"
+          ]
+        },
+        {
+          "file": "apps/potta/src/app/(routes)/payroll/reports/page.tsx",
+          "hash": "8860093343044261821",
+          "deps": [
+            "npm:react"
+          ]
+        },
+        {
+          "file": "apps/potta/src/app/(routes)/payroll/taxation/layout.tsx",
+          "hash": "708621738486876022",
+          "deps": [
+            "npm:react"
+          ]
+        },
+        {
+          "file": "apps/potta/src/app/(routes)/payroll/taxation/page.tsx",
+          "hash": "13036126511046318888",
+          "deps": [
+            "npm:react"
+          ]
+        },
+        {
+          "file": "apps/potta/src/app/(routes)/payroll/timesheet/components/boxes.tsx",
+          "hash": "8270700146087588414",
+          "deps": [
+            "npm:react"
+          ]
+        },
+        {
+          "file": "apps/potta/src/app/(routes)/payroll/timesheet/components/table.tsx",
+          "hash": "5418089858166394716",
+          "deps": [
+            "npm:react"
+          ]
+        },
+        {
+          "file": "apps/potta/src/app/(routes)/payroll/timesheet/layout.tsx",
+          "hash": "8879936558416038752",
+          "deps": [
+            "npm:react"
+          ]
+        },
+        {
+          "file": "apps/potta/src/app/(routes)/payroll/timesheet/page.tsx",
+          "hash": "2109550064196789449",
+          "deps": [
+            "npm:react"
+          ]
+        },
+        {
+          "file": "apps/potta/src/app/(routes)/pos/Calculate/page.tsx",
+          "hash": "15863037773796222783",
+          "deps": [
+            "npm:react"
+          ]
+        },
+        {
+          "file": "apps/potta/src/app/(routes)/pos/component/footer/index.tsx",
+          "hash": "8134038743931585168",
+          "deps": [
+            "npm:react"
+          ]
+        },
+        {
+          "file": "apps/potta/src/app/(routes)/pos/component/print/page.tsx",
+          "hash": "3288075113302867448",
+          "deps": [
+            "npm:react",
+            "npm:react-barcode",
+            "npm:moment"
+          ]
+        },
+        {
+          "file": "apps/potta/src/app/(routes)/pos/component/saleInvoiceCard/index.tsx",
+          "hash": "3002224224121786790",
+          "deps": [
+            "npm:react"
+          ]
+        },
+        {
+          "file": "apps/potta/src/app/(routes)/pos/component/saleInvoiceTable/components/buttonSales.tsx",
+          "hash": "7193446617605005095",
+          "deps": [
+            "npm:react"
+          ]
+        },
+        {
+          "file": "apps/potta/src/app/(routes)/pos/component/saleInvoiceTable/components/cashPayment/index.tsx",
+          "hash": "1378182765342077583",
+          "deps": [
+            "npm:react-accessible-accordion",
+            "npm:react"
+          ]
+        },
+        {
+          "file": "apps/potta/src/app/(routes)/pos/component/saleInvoiceTable/components/holdOn.tsx",
+          "hash": "9392889656312811273",
+          "deps": [
+            "npm:react"
+          ]
+        },
+        {
+          "file": "apps/potta/src/app/(routes)/pos/component/saleInvoiceTable/components/modalCoupon.tsx",
+          "hash": "4111406722932389856",
+          "deps": [
+            "npm:react"
+          ]
+        },
+        {
+          "file": "apps/potta/src/app/(routes)/pos/component/saleInvoiceTable/components/otherPayment/index.tsx",
+          "hash": "13039644561639139395",
+          "deps": [
+            "npm:react"
+          ]
+        },
+        {
+          "file": "apps/potta/src/app/(routes)/pos/component/saleInvoiceTable/components/table.tsx",
+          "hash": "12642581346551638324",
+          "deps": [
+            "npm:react"
+          ]
+        },
+        {
+          "file": "apps/potta/src/app/(routes)/pos/component/saleInvoiceTable/index.tsx",
+          "hash": "8576806798231978640",
+          "deps": [
+            "npm:react"
+          ]
+        },
+        {
+          "file": "apps/potta/src/app/(routes)/pos/files/components/cardFiles.tsx",
+          "hash": "9675774828299553776",
+          "deps": [
+            "npm:react"
+          ]
+        },
+        {
+          "file": "apps/potta/src/app/(routes)/pos/files/components/filter.tsx",
+          "hash": "11408078721343297114",
+          "deps": [
+            "npm:react"
+          ]
+        },
+        {
+          "file": "apps/potta/src/app/(routes)/pos/files/components/recentUpload.tsx",
+          "hash": "8529234923422926364",
+          "deps": [
+            "npm:react"
+          ]
+        },
+        {
+          "file": "apps/potta/src/app/(routes)/pos/files/layout.tsx",
+          "hash": "4437701472645100015",
+          "deps": [
+            "npm:react"
+          ]
+        },
+        {
+          "file": "apps/potta/src/app/(routes)/pos/files/page.tsx",
+          "hash": "894138260883987963",
+          "deps": [
+            "npm:react"
+          ]
+        },
+        {
+          "file": "apps/potta/src/app/(routes)/pos/inventory/_hooks/useCreateProduct.ts",
+          "hash": "2794143164882617356",
+          "deps": [
+            "npm:@tanstack/react-query"
+          ]
+        },
+        {
+          "file": "apps/potta/src/app/(routes)/pos/inventory/_hooks/useDeleteProduct.ts",
+          "hash": "2052841859721685299",
+          "deps": [
+            "npm:@tanstack/react-query"
+          ]
+        },
+        {
+          "file": "apps/potta/src/app/(routes)/pos/inventory/_hooks/useGetAllProducts.ts",
+          "hash": "10011274853800153597",
+          "deps": [
+            "npm:@tanstack/react-query"
+          ]
+        },
+        {
+          "file": "apps/potta/src/app/(routes)/pos/inventory/_hooks/useGetOneProduct.ts",
+          "hash": "3271752546618880625",
+          "deps": [
+            "npm:@tanstack/react-query"
+          ]
+        },
+        {
+          "file": "apps/potta/src/app/(routes)/pos/inventory/_hooks/useUpdateProduct.ts",
+          "hash": "2388857029667009791",
+          "deps": [
+            "npm:@tanstack/react-query"
+          ]
+        },
+        {
+          "file": "apps/potta/src/app/(routes)/pos/inventory/_utils/api.ts",
+          "hash": "1010869109650356621"
+        },
+        {
+          "file": "apps/potta/src/app/(routes)/pos/inventory/_utils/types.ts",
+          "hash": "1451757866010678510"
+        },
+        {
+          "file": "apps/potta/src/app/(routes)/pos/inventory/_utils/validation.ts",
+          "hash": "5875901009467419450",
+          "deps": [
+            "npm:yup"
+          ]
+        },
+        {
+          "file": "apps/potta/src/app/(routes)/pos/inventory/components/filters.tsx",
+          "hash": "3847367490932705055",
+          "deps": [
+            "npm:react"
+          ]
+        },
+        {
+          "file": "apps/potta/src/app/(routes)/pos/inventory/components/slides/components/create_product/components/attachments.tsx",
+          "hash": "10710476016677647964",
+          "deps": [
+            "npm:react"
+          ]
+        },
+        {
+          "file": "apps/potta/src/app/(routes)/pos/inventory/components/slides/components/create_product/components/inventory.tsx",
+          "hash": "9022411684052543390",
+          "deps": [
+            "npm:react"
+          ]
+        },
+        {
+          "file": "apps/potta/src/app/(routes)/pos/inventory/components/slides/components/create_product/components/notes.tsx",
+          "hash": "17711441041619301981",
+          "deps": [
+            "npm:react"
+          ]
+        },
+        {
+          "file": "apps/potta/src/app/(routes)/pos/inventory/components/slides/components/create_product/components/units.tsx",
+          "hash": "10151622354695726918",
+          "deps": [
+            "npm:react"
+          ]
+        },
+        {
+          "file": "apps/potta/src/app/(routes)/pos/inventory/components/slides/components/create_product/index.tsx",
+          "hash": "12730563279271176266",
+          "deps": [
+            "npm:react"
+          ]
+        },
+        {
+          "file": "apps/potta/src/app/(routes)/pos/inventory/components/slides/components/selectInventory.tsx",
+          "hash": "11044529541309084194",
+          "deps": [
+            "npm:react"
+          ]
+        },
+        {
+          "file": "apps/potta/src/app/(routes)/pos/inventory/components/slides/index.tsx",
+          "hash": "14527702663501425481",
+          "deps": [
+            "npm:react"
+          ]
+        },
+        {
+          "file": "apps/potta/src/app/(routes)/pos/inventory/components/tabelComponent.tsx",
+          "hash": "10761413163626842070",
+          "deps": [
+            "npm:react"
+          ]
+        },
+        {
+          "file": "apps/potta/src/app/(routes)/pos/inventory/components/table.tsx",
+          "hash": "5644537989345237282",
+          "deps": [
+            "npm:react",
+            "npm:@nextui-org/react"
+          ]
+        },
+        {
+          "file": "apps/potta/src/app/(routes)/pos/inventory/layout.tsx",
+          "hash": "4437701472645100015",
+          "deps": [
+            "npm:react"
+          ]
+        },
+        {
+          "file": "apps/potta/src/app/(routes)/pos/inventory/page.tsx",
+          "hash": "9900143491032086435",
+          "deps": [
+            "npm:react"
+          ]
+        },
+        {
+          "file": "apps/potta/src/app/(routes)/pos/layout.tsx",
+          "hash": "4563673845422557804",
+          "deps": [
+            "npm:react"
+          ]
+        },
+        {
+          "file": "apps/potta/src/app/(routes)/pos/page.tsx",
+          "hash": "4079308163641465724",
+          "deps": [
+            "npm:react"
+          ]
+        },
+        {
+          "file": "apps/potta/src/app/(routes)/pos/sales/components/boxes.tsx",
+          "hash": "14883061611209168760",
+          "deps": [
+            "npm:react"
+          ]
+        },
+        {
+          "file": "apps/potta/src/app/(routes)/pos/sales/components/filters.tsx",
+          "hash": "8807290357576256097",
+          "deps": [
+            "npm:react"
+          ]
+        },
+        {
+          "file": "apps/potta/src/app/(routes)/pos/sales/components/table.tsx",
+          "hash": "12491572907915574121",
+          "deps": [
+            "npm:react"
+          ]
+        },
+        {
+          "file": "apps/potta/src/app/(routes)/pos/sales/layout.tsx",
+          "hash": "4437701472645100015",
+          "deps": [
+            "npm:react"
+          ]
+        },
+        {
+          "file": "apps/potta/src/app/(routes)/pos/sales/page.tsx",
+          "hash": "8706811113501559800",
+          "deps": [
+            "npm:react"
+          ]
+        },
+        {
+          "file": "apps/potta/src/app/(routes)/receipt/component/pdf.tsx",
+          "hash": "5684127883647377678",
+          "deps": [
+            "npm:react"
+          ]
+        },
+        {
+          "file": "apps/potta/src/app/(routes)/receipt/component/table.tsx",
+          "hash": "17196740575312656802",
+          "deps": [
+            "npm:react"
+          ]
+        },
+        {
+          "file": "apps/potta/src/app/(routes)/receipt/page.tsx",
+          "hash": "17855378503862891125",
+          "deps": [
+            "npm:react"
+          ]
+        },
+        {
+          "file": "apps/potta/src/app/(routes)/receivables/invoices/components/newInvoice.tsx",
+          "hash": "310810252340264577",
+          "deps": [
+            "npm:react",
+            "npm:@headlessui/react"
+          ]
+        },
+        {
+          "file": "apps/potta/src/app/(routes)/receivables/invoices/components/table.tsx",
+          "hash": "7907720092637359550",
+          "deps": [
+            "npm:react"
+          ]
+        },
+        {
+          "file": "apps/potta/src/app/(routes)/receivables/invoices/layout.tsx",
+          "hash": "8164961370406166698",
+          "deps": [
+            "npm:react"
+          ]
+        },
+        {
+          "file": "apps/potta/src/app/(routes)/receivables/invoices/page.tsx",
+          "hash": "5388042422775153439",
+          "deps": [
+            "npm:react"
+          ]
+        },
+        {
+          "file": "apps/potta/src/app/(routes)/reports/components/all_report.tsx",
+          "hash": "16690037066542371496",
+          "deps": [
+            "npm:react"
+          ]
+        },
+        {
+          "file": "apps/potta/src/app/(routes)/reports/components/frequent_report.tsx",
+          "hash": "9461219679078658735",
+          "deps": [
+            "npm:react"
+          ]
+        },
+        {
+          "file": "apps/potta/src/app/(routes)/reports/page.tsx",
+          "hash": "17396682832813675685",
+          "deps": [
+            "npm:react"
+          ]
+        },
+        {
+          "file": "apps/potta/src/app/(routes)/vendors/components/address.tsx",
+          "hash": "66241590520129530",
+          "deps": [
+            "npm:react"
+          ]
+        },
+        {
+          "file": "apps/potta/src/app/(routes)/vendors/components/attachment.tsx",
+          "hash": "3244421341483603138"
+        },
+        {
+          "file": "apps/potta/src/app/(routes)/vendors/components/boxes.tsx",
+          "hash": "2614074599238602550",
+          "deps": [
+            "npm:react"
+          ]
+        },
+        {
+          "file": "apps/potta/src/app/(routes)/vendors/components/note.tsx",
+          "hash": "3244421341483603138"
+        },
+        {
+          "file": "apps/potta/src/app/(routes)/vendors/components/table.tsx",
+          "hash": "12686116888236022879",
+          "deps": [
+            "npm:react"
+          ]
+        },
+        {
+          "file": "apps/potta/src/app/(routes)/vendors/components/tax.tsx",
+          "hash": "3244421341483603138"
+        },
+        {
+          "file": "apps/potta/src/app/(routes)/vendors/components/vendorSlider.tsx",
+          "hash": "12965077975304306705",
+          "deps": [
+            "npm:react",
+            "npm:react-select"
+          ]
+        },
+        {
+          "file": "apps/potta/src/app/(routes)/vendors/layout.tsx",
+          "hash": "1748728594507267884",
+          "deps": [
+            "npm:react"
+          ]
+        },
+        {
+          "file": "apps/potta/src/app/(routes)/vendors/page.tsx",
+          "hash": "14112685029783057854",
+          "deps": [
+            "npm:react"
+          ]
+        },
+        {
+          "file": "apps/potta/src/app/arrays/usecontextData.ts",
+          "hash": "16532996961423049665"
+        },
+        {
+          "file": "apps/potta/src/app/charts/barchart.tsx",
+          "hash": "11856177588616898441",
+          "deps": [
+            "npm:react",
+            "npm:next",
+            "npm:apexcharts",
+            [
+              "npm:react-apexcharts",
+              "dynamic"
+            ]
+          ]
+        },
+        {
+          "file": "apps/potta/src/app/charts/piechart.tsx",
+          "hash": "10316470175227157507",
+          "deps": [
+            "npm:next",
+            "npm:apexcharts",
+            "npm:react",
+            [
+              "npm:react-apexcharts",
+              "dynamic"
+            ]
+          ]
+        },
+        {
+          "file": "apps/potta/src/app/chatai/index.tsx",
+          "hash": "2815725591906770280",
+          "deps": [
+            "npm:react"
+          ]
+        },
+        {
+          "file": "apps/potta/src/app/favicon.ico",
+          "hash": "9157999678830540297"
+        },
+        {
+          "file": "apps/potta/src/app/fonts/GeistMonoVF.woff",
+          "hash": "17799230542345324615"
+        },
+        {
+          "file": "apps/potta/src/app/fonts/GeistVF.woff",
+          "hash": "6578897518916770501"
+        },
+        {
+          "file": "apps/potta/src/app/globals.css",
+          "hash": "7831147634329919652"
+        },
+        {
+          "file": "apps/potta/src/app/layout.tsx",
+          "hash": "5791934923396249129",
+          "deps": [
+            "npm:next",
+            "npm:remixicon",
+            "npm:react-accessible-accordion"
+          ]
+        },
+        {
+          "file": "apps/potta/src/app/page.tsx",
+          "hash": "12758127712219192693",
+          "deps": [
+            "npm:react"
+          ]
+        },
+        {
+          "file": "apps/potta/src/components/button.tsx",
+          "hash": "9322293623197263667",
+          "deps": [
+            "npm:react"
+          ]
+        },
+        {
+          "file": "apps/potta/src/components/context.tsx",
+          "hash": "473788837558789281",
+          "deps": [
+            "npm:react"
+          ]
+        },
+        {
+          "file": "apps/potta/src/components/daterangePicker.tsx",
+          "hash": "4791606939355879050",
+          "deps": [
+            "npm:react"
+          ]
+        },
+        {
+          "file": "apps/potta/src/components/dropzone.tsx",
+          "hash": "7084488975616997021",
+          "deps": [
+            "npm:react",
+            "npm:react-dropzone"
+          ]
+        },
+        {
+          "file": "apps/potta/src/components/filter.tsx",
+          "hash": "12685432976258105352",
+          "deps": [
+            "npm:react"
+          ]
+        },
+        {
+          "file": "apps/potta/src/components/icon_fonts/Read Me.txt",
+          "hash": "16926644038414715480"
+        },
+        {
+          "file": "apps/potta/src/components/icon_fonts/demo-files/demo.css",
+          "hash": "12981042748849678127"
+        },
+        {
+          "file": "apps/potta/src/components/icon_fonts/demo-files/demo.js",
+          "hash": "18291803720405162545"
+        },
+        {
+          "file": "apps/potta/src/components/icon_fonts/demo.html",
+          "hash": "4716006396131665815"
+        },
+        {
+          "file": "apps/potta/src/components/icon_fonts/fonts/icomoon.eot",
+          "hash": "10236634508581848443"
+        },
+        {
+          "file": "apps/potta/src/components/icon_fonts/fonts/icomoon.svg",
+          "hash": "15397748776990725325"
+        },
+        {
+          "file": "apps/potta/src/components/icon_fonts/fonts/icomoon.ttf",
+          "hash": "3543899944570758336"
+        },
+        {
+          "file": "apps/potta/src/components/icon_fonts/fonts/icomoon.woff",
+          "hash": "7917809942667213296"
+        },
+        {
+          "file": "apps/potta/src/components/icon_fonts/icon.tsx",
+          "hash": "12950661951587670444",
+          "deps": [
+            "npm:react-icomoon"
+          ]
+        },
+        {
+          "file": "apps/potta/src/components/icon_fonts/selection.json",
+          "hash": "6103283382345798640"
+        },
+        {
+          "file": "apps/potta/src/components/icon_fonts/selections.json",
+          "hash": "11561878225840006432"
+        },
+        {
+          "file": "apps/potta/src/components/icon_fonts/style.css",
+          "hash": "794287973350735886"
+        },
+        {
+          "file": "apps/potta/src/components/input.tsx",
+          "hash": "7041613290235009161",
+          "deps": [
+            "npm:react",
+            "npm:react-hook-form"
+          ]
+        },
+        {
+          "file": "apps/potta/src/components/loader.tsx",
+          "hash": "10484164875391356637",
+          "deps": [
+            "npm:react"
+          ]
+        },
+        {
+          "file": "apps/potta/src/components/modal.tsx",
+          "hash": "3830064980083671160",
+          "deps": [
+            "npm:react",
+            "npm:@headlessui/react"
+          ]
+        },
+        {
+          "file": "apps/potta/src/components/popover.tsx",
+          "hash": "6629036707166797703",
+          "deps": [
+            "npm:react",
+            "npm:@headlessui/react"
+          ]
+        },
+        {
+          "file": "apps/potta/src/components/react-select.tsx",
+          "hash": "13532526499010278292",
+          "deps": [
+            "npm:react",
+            "npm:react-select"
+          ]
+        },
+        {
+          "file": "apps/potta/src/components/search.tsx",
+          "hash": "604912056263055812",
+          "deps": [
+            "npm:react",
+            "npm:react-icons"
+          ]
+        },
+        {
+          "file": "apps/potta/src/components/select.tsx",
+          "hash": "14338560334647305827",
+          "deps": [
+            "npm:react"
+          ]
+        },
+        {
+          "file": "apps/potta/src/components/slideover.tsx",
+          "hash": "3629340110926938672",
+          "deps": [
+            "npm:react",
+            "npm:@headlessui/react",
+            "npm:@heroicons/react"
+          ]
+        },
+        {
+          "file": "apps/potta/src/components/table.tsx",
+          "hash": "6989815766136625962",
+          "deps": [
+            "npm:next",
+            "npm:react",
+            "npm:react-data-table-component"
+          ]
+        },
+        {
+          "file": "apps/potta/tailwind.config.js",
+          "hash": "13090734457927965885",
+          "deps": [
+            "npm:@nx/react"
+          ]
+        },
+        {
+          "file": "apps/potta/tsconfig.json",
+          "hash": "15289578615076523892"
+        },
+        {
+          "file": "apps/potta/tsconfig.spec.json",
+          "hash": "6922413205408300107"
+        },
+        {
+          "file": "apps/potta/type/index.d.ts",
+          "hash": "9950754265127537988"
         }
       ],
       "superApp": [
@@ -1629,2026 +3626,207 @@
           "hash": "6922413205408300107"
         }
       ],
-      "potta": [
+      "utilities": [
         {
-          "file": "apps/potta/.eslintrc.json",
-          "hash": "4025500627653572356"
+          "file": "libs/utilities/.eslintrc.json",
+          "hash": "11012487992710232822"
         },
         {
-          "file": "apps/potta/config/axios.config.ts",
-          "hash": "13982019025916423870",
+          "file": "libs/utilities/README.md",
+          "hash": "13228732804139331838"
+        },
+        {
+          "file": "libs/utilities/project.json",
+          "hash": "699343638286385166"
+        },
+        {
+          "file": "libs/utilities/src/index.ts",
+          "hash": "4979336273987222930"
+        },
+        {
+          "file": "libs/utilities/src/lib/configs/axios.ts",
+          "hash": "9287401257227664183",
           "deps": [
+            "npm:crypto-js",
             "npm:axios"
           ]
         },
         {
-          "file": "apps/potta/index.d.ts",
-          "hash": "5498222895072842432"
+          "file": "libs/utilities/src/lib/configs/env.ts",
+          "hash": "12101586654834214904"
         },
         {
-          "file": "apps/potta/jest.config.ts",
-          "hash": "7356263210757781480"
-        },
-        {
-          "file": "apps/potta/next-env.d.ts",
-          "hash": "5909181270615354023"
-        },
-        {
-          "file": "apps/potta/next.config.js",
-          "hash": "17252635002163063865",
+          "file": "libs/utilities/src/lib/helpers/index.ts",
+          "hash": "10922730425443113868",
           "deps": [
-            "npm:@nx/next"
+            "npm:crypto-js",
+            "npm:country-list-with-dial-code-and-flag"
           ]
         },
         {
-          "file": "apps/potta/postcss.config.js",
-          "hash": "2759402739052110475"
+          "file": "libs/utilities/src/server.ts",
+          "hash": "5519843671682787663"
         },
         {
-          "file": "apps/potta/project.json",
-          "hash": "7723377140916975180"
+          "file": "libs/utilities/tsconfig.json",
+          "hash": "14088618039610991405"
         },
         {
-          "file": "apps/potta/public/fonts/Outfit-Regular.ttf",
-          "hash": "6785970714798272357"
-        },
-        {
-          "file": "apps/potta/public/fonts/RobotoCondensed-Light.ttf",
-          "hash": "4363714748593963170"
-        },
-        {
-          "file": "apps/potta/public/icons/File.svg",
-          "hash": "18419472168422543088"
-        },
-        {
-          "file": "apps/potta/public/icons/MasterCard.svg",
-          "hash": "12588817000613298418"
-        },
-        {
-          "file": "apps/potta/public/icons/POSRed.svg",
-          "hash": "1847028870229924927"
-        },
-        {
-          "file": "apps/potta/public/icons/Potta.svg",
-          "hash": "1479266405784448627"
-        },
-        {
-          "file": "apps/potta/public/icons/Tribu.svg",
-          "hash": "10128652146921475405"
-        },
-        {
-          "file": "apps/potta/public/icons/USSD-green.svg",
-          "hash": "15272548113717782971"
-        },
-        {
-          "file": "apps/potta/public/icons/agent-green.svg",
-          "hash": "5502518891739832822"
-        },
-        {
-          "file": "apps/potta/public/icons/agent.svg",
-          "hash": "5318478131567348587"
-        },
-        {
-          "file": "apps/potta/public/icons/bitcoin.svg",
-          "hash": "1673686826882648598"
-        },
-        {
-          "file": "apps/potta/public/icons/calculator.svg",
-          "hash": "14461372986182550180"
-        },
-        {
-          "file": "apps/potta/public/icons/card-nogreen.svg",
-          "hash": "9993614236638189007"
-        },
-        {
-          "file": "apps/potta/public/icons/card.svg",
-          "hash": "2505935654353733914"
-        },
-        {
-          "file": "apps/potta/public/icons/crypto.svg",
-          "hash": "4004862384726390636"
-        },
-        {
-          "file": "apps/potta/public/icons/cutlery.svg",
-          "hash": "10395206451256249864"
-        },
-        {
-          "file": "apps/potta/public/icons/dropzone.svg",
-          "hash": "2755683447910555638"
-        },
-        {
-          "file": "apps/potta/public/icons/expenseRed.svg",
-          "hash": "3721202974282359252"
-        },
-        {
-          "file": "apps/potta/public/icons/expenseWhite.svg",
-          "hash": "15635570741099420575"
-        },
-        {
-          "file": "apps/potta/public/icons/folder.svg",
-          "hash": "16129866087633078647"
-        },
-        {
-          "file": "apps/potta/public/icons/fragileBox.svg",
-          "hash": "5918781563424870759"
-        },
-        {
-          "file": "apps/potta/public/icons/fragileBox2.svg",
-          "hash": "342856660106973185"
-        },
-        {
-          "file": "apps/potta/public/icons/giftcard.svg",
-          "hash": "3255771787611491388"
-        },
-        {
-          "file": "apps/potta/public/icons/hamburger.svg",
-          "hash": "1911360593948070230"
-        },
-        {
-          "file": "apps/potta/public/icons/heart.svg",
-          "hash": "13415302018737037919"
-        },
-        {
-          "file": "apps/potta/public/icons/hold.svg",
-          "hash": "16692560648497802234"
-        },
-        {
-          "file": "apps/potta/public/icons/img1.svg",
-          "hash": "12241023690344885249"
-        },
-        {
-          "file": "apps/potta/public/icons/img2.svg",
-          "hash": "15399992108295770307"
-        },
-        {
-          "file": "apps/potta/public/icons/instanvi.svg",
-          "hash": "8206957637817645040"
-        },
-        {
-          "file": "apps/potta/public/icons/inventory.svg",
-          "hash": "4398465591296735025"
-        },
-        {
-          "file": "apps/potta/public/icons/inventoryRed.svg",
-          "hash": "13758137896923750499"
-        },
-        {
-          "file": "apps/potta/public/icons/inventoryWhite.svg",
-          "hash": "5167825115279025099"
-        },
-        {
-          "file": "apps/potta/public/icons/license.svg",
-          "hash": "6983343144421312151"
-        },
-        {
-          "file": "apps/potta/public/icons/logo.svg",
-          "hash": "11800992395494998889"
-        },
-        {
-          "file": "apps/potta/public/icons/master.svg",
-          "hash": "16220976239069485225"
-        },
-        {
-          "file": "apps/potta/public/icons/money-donation-thin.svg",
-          "hash": "7552608422339465895"
-        },
-        {
-          "file": "apps/potta/public/icons/mtn.svg",
-          "hash": "10352448624046179023"
-        },
-        {
-          "file": "apps/potta/public/icons/municipal.svg",
-          "hash": "9172355779948818976"
-        },
-        {
-          "file": "apps/potta/public/icons/om.svg",
-          "hash": "901408804822841066"
-        },
-        {
-          "file": "apps/potta/public/icons/pages-green.svg",
-          "hash": "16844408276495423663"
-        },
-        {
-          "file": "apps/potta/public/icons/pages.svg",
-          "hash": "17954037553143269682"
-        },
-        {
-          "file": "apps/potta/public/icons/penalities.svg",
-          "hash": "9547537828852215010"
-        },
-        {
-          "file": "apps/potta/public/icons/people.svg",
-          "hash": "8106063138258773161"
-        },
-        {
-          "file": "apps/potta/public/icons/pig.svg",
-          "hash": "6630314440309923472"
-        },
-        {
-          "file": "apps/potta/public/icons/posWhite.svg",
-          "hash": "4457385541100775969"
-        },
-        {
-          "file": "apps/potta/public/icons/settings.svg",
-          "hash": "5749360975753525567"
-        },
-        {
-          "file": "apps/potta/public/icons/shoes.svg",
-          "hash": "3537580702278569735"
-        },
-        {
-          "file": "apps/potta/public/icons/talk.svg",
-          "hash": "10127150127445808454"
-        },
-        {
-          "file": "apps/potta/public/icons/tax.svg",
-          "hash": "6357025860107194251"
-        },
-        {
-          "file": "apps/potta/public/icons/taxesh.svg",
-          "hash": "17724895416756624212"
-        },
-        {
-          "file": "apps/potta/public/icons/team-work.svg",
-          "hash": "11011941552523267772"
-        },
-        {
-          "file": "apps/potta/public/icons/tether.svg",
-          "hash": "2357089274419089505"
-        },
-        {
-          "file": "apps/potta/public/icons/user.svg",
-          "hash": "15699457791218935717"
-        },
-        {
-          "file": "apps/potta/public/icons/userfolder.svg",
-          "hash": "14169130886291750852"
-        },
-        {
-          "file": "apps/potta/public/icons/ussd.svg",
-          "hash": "9452942867029637500"
-        },
-        {
-          "file": "apps/potta/public/icons/vid1.svg",
-          "hash": "10661492905270523049"
-        },
-        {
-          "file": "apps/potta/public/icons/visa.svg",
-          "hash": "16220976239069485225"
-        },
-        {
-          "file": "apps/potta/public/icons/visas.svg",
-          "hash": "10531448591305264481"
-        },
-        {
-          "file": "apps/potta/public/images/American ExpressR.svg",
-          "hash": "14082769780000961966"
-        },
-        {
-          "file": "apps/potta/public/images/AmericanExpress.svg",
-          "hash": "14253104157784717378"
-        },
-        {
-          "file": "apps/potta/public/images/Mastercard.svg",
-          "hash": "11183979172802475422"
-        },
-        {
-          "file": "apps/potta/public/images/MastercardR.svg",
-          "hash": "11183979172802475422"
-        },
-        {
-          "file": "apps/potta/public/images/POS/Vector (16).svg",
-          "hash": "8962176343295851800"
-        },
-        {
-          "file": "apps/potta/public/images/POS/dollar.svg",
-          "hash": "9059415351308180427"
-        },
-        {
-          "file": "apps/potta/public/images/POS/dollars.svg",
-          "hash": "481379946001572861"
-        },
-        {
-          "file": "apps/potta/public/images/POS/gallery.svg",
-          "hash": "12904790501106308696"
-        },
-        {
-          "file": "apps/potta/public/images/POS/peoples.svg",
-          "hash": "8971989611476536051"
-        },
-        {
-          "file": "apps/potta/public/images/POS/services.svg",
-          "hash": "7065829250815454120"
-        },
-        {
-          "file": "apps/potta/public/images/POS/white/dollars.svg",
-          "hash": "10128651149767019003"
-        },
-        {
-          "file": "apps/potta/public/images/POS/white/gallery.svg",
-          "hash": "8401542415957909752"
-        },
-        {
-          "file": "apps/potta/public/images/POS/white/services.svg",
-          "hash": "8845706450870065078"
-        },
-        {
-          "file": "apps/potta/public/images/UnionPay.svg",
-          "hash": "3918390681623185811"
-        },
-        {
-          "file": "apps/potta/public/images/UnionPayR.svg",
-          "hash": "2641334848910074118"
-        },
-        {
-          "file": "apps/potta/public/images/Visa.svg",
-          "hash": "5317282840597140198"
-        },
-        {
-          "file": "apps/potta/public/images/VisaR.svg",
-          "hash": "11438591080199932346"
-        },
-        {
-          "file": "apps/potta/public/images/export.svg",
-          "hash": "4628223838989168365"
-        },
-        {
-          "file": "apps/potta/public/images/invoice/budget.svg",
-          "hash": "3669966120901502529"
-        },
-        {
-          "file": "apps/potta/public/images/invoice/credit note.svg",
-          "hash": "6142490726305558644"
-        },
-        {
-          "file": "apps/potta/public/images/invoice/invoice.svg",
-          "hash": "17468946657273834598"
-        },
-        {
-          "file": "apps/potta/public/images/invoice/prepayment.svg",
-          "hash": "1877123965895381869"
-        },
-        {
-          "file": "apps/potta/public/images/invoice/purchase.svg",
-          "hash": "1752975307243955014"
-        },
-        {
-          "file": "apps/potta/public/images/no invoice.svg",
-          "hash": "17370264268126582128"
-        },
-        {
-          "file": "apps/potta/public/images/pottaLogo.svg",
-          "hash": "11543684020214624355"
-        },
-        {
-          "file": "apps/potta/public/images/sideDashboardIcons/dahsboard.svg",
-          "hash": "16809419692540573129"
-        },
-        {
-          "file": "apps/potta/public/images/sideDashboardIcons/gift.svg",
-          "hash": "15438505836607357044"
-        },
-        {
-          "file": "apps/potta/public/images/sideDashboardIcons/params.svg",
-          "hash": "17529079170610799936"
-        },
-        {
-          "file": "apps/potta/public/images/sideDashboardIcons/schedule.svg",
-          "hash": "566626751631166869"
-        },
-        {
-          "file": "apps/potta/public/images/sideDashboardIcons/time.svg",
-          "hash": "5934575103496034454"
-        },
-        {
-          "file": "apps/potta/public/images/sideDashboardIcons/users.svg",
-          "hash": "12584603688244089917"
-        },
-        {
-          "file": "apps/potta/public/images/sideExpensesIcons/book.svg",
-          "hash": "17905164133273437539"
-        },
-        {
-          "file": "apps/potta/public/images/sideExpensesIcons/dash.svg",
-          "hash": "4210430175154011501"
-        },
-        {
-          "file": "apps/potta/public/images/sideExpensesIcons/flow.svg",
-          "hash": "9460480283280928451"
-        },
-        {
-          "file": "apps/potta/public/images/sideExpensesIcons/retunbook.svg",
-          "hash": "2085037316653270681"
-        },
+          "file": "libs/utilities/tsconfig.lib.json",
+          "hash": "1536859351713546153"
+        }
+      ],
+      "@instanvi-global/source": [
         {
-          "file": "apps/potta/public/images/sideExpensesIcons/shopping.svg",
-          "hash": "7568714422302010184"
+          "file": ".editorconfig",
+          "hash": "5443105041930014821"
         },
         {
-          "file": "apps/potta/public/images/sideExpensesIcons/transact.svg",
-          "hash": "14627727187874067373"
+          "file": ".eslintignore",
+          "hash": "7663861978715868291"
         },
         {
-          "file": "apps/potta/public/images/sideExpensesIcons/white/1.svg",
-          "hash": "2589510951709791276"
+          "file": ".eslintrc.json",
+          "hash": "18315524891129148814"
         },
         {
-          "file": "apps/potta/public/images/sideExpensesIcons/white/2.svg",
-          "hash": "16070263515678499760"
+          "file": ".github/workflows/staging.yaml",
+          "hash": "6745584629413967094"
         },
         {
-          "file": "apps/potta/public/images/sideExpensesIcons/white/3.svg",
-          "hash": "2529865461363245253"
+          "file": ".gitignore",
+          "hash": "7456224741535900147"
         },
         {
-          "file": "apps/potta/public/images/sideExpensesIcons/white/4.svg",
-          "hash": "4284122720766602047"
+          "file": ".prettierignore",
+          "hash": "14688272390704683536"
         },
         {
-          "file": "apps/potta/public/images/sideExpensesIcons/white/5.svg",
-          "hash": "6357507602309423818"
+          "file": ".prettierrc",
+          "hash": "16267754514737964994"
         },
         {
-          "file": "apps/potta/public/images/sideExpensesIcons/white/6.svg",
-          "hash": "14676908545843468443"
+          "file": "Dockerfile",
+          "hash": "659189421521947874"
         },
         {
-          "file": "apps/potta/public/images/sideExpensesIcons/white/7.svg",
-          "hash": "10228956625373703642"
+          "file": "README.md",
+          "hash": "6840628470554381479"
         },
         {
-          "file": "apps/potta/public/images/sideExpensesIcons/white/8.svg",
-          "hash": "5899442351371118034"
+          "file": "docker-compose-build.yml",
+          "hash": "17454110849002822681"
         },
         {
-          "file": "apps/potta/public/images/uploadFile.svg",
-          "hash": "14641509192291124679"
+          "file": "docker-compose.yml",
+          "hash": "6344911347125248550"
         },
         {
-          "file": "apps/potta/specs/index.spec.tsx",
-          "hash": "1288872939091782814",
+          "file": "jest.config.ts",
+          "hash": "3494843969422251966",
           "deps": [
-            "npm:react",
-            "npm:@testing-library/react"
+            "npm:@nx/jest"
           ]
         },
         {
-          "file": "apps/potta/src/app/(routes)/Account/components/sliderAccount.tsx",
-          "hash": "7241673429121810466",
+          "file": "jest.preset.js",
+          "hash": "9430166341120122740",
           "deps": [
-            "npm:react"
+            "npm:@nx/jest"
           ]
         },
         {
-          "file": "apps/potta/src/app/(routes)/Account/components/table.tsx",
-          "hash": "1830905005637602455",
-          "deps": [
-            "npm:react"
-          ]
+          "file": "nx.json",
+          "hash": "12021904216625248971"
         },
         {
-          "file": "apps/potta/src/app/(routes)/Account/layout.tsx",
-          "hash": "419048744277041288",
-          "deps": [
-            "npm:react"
-          ]
+          "file": "package-lock.json",
+          "hash": "3269650321521787038"
         },
         {
-          "file": "apps/potta/src/app/(routes)/Account/page.tsx",
-          "hash": "930773440515217169",
+          "file": "package.json",
+          "hash": "9769018995163540316",
           "deps": [
-            "npm:react"
-          ]
-        },
-        {
-          "file": "apps/potta/src/app/(routes)/dashboard/components/balanceBoxes.tsx",
-          "hash": "14347687547647622806",
-          "deps": [
-            "npm:react"
-          ]
-        },
-        {
-          "file": "apps/potta/src/app/(routes)/dashboard/components/collection.tsx",
-          "hash": "8588187428222792956",
-          "deps": [
-            "npm:react"
-          ]
-        },
-        {
-          "file": "apps/potta/src/app/(routes)/dashboard/components/dashboardChart.tsx",
-          "hash": "11856177588616898441",
-          "deps": [
-            "npm:react",
-            "npm:next",
-            "npm:apexcharts",
-            [
-              "npm:react-apexcharts",
-              "dynamic"
-            ]
-          ]
-        },
-        {
-          "file": "apps/potta/src/app/(routes)/dashboard/components/expenses.tsx",
-          "hash": "9459694966405201704",
-          "deps": [
-            "npm:react"
-          ]
-        },
-        {
-          "file": "apps/potta/src/app/(routes)/dashboard/layout.tsx",
-          "hash": "16598961680591710999",
-          "deps": [
-            "npm:react"
-          ]
-        },
-        {
-          "file": "apps/potta/src/app/(routes)/dashboard/menu/detailMenu.tsx",
-          "hash": "16901819340790566935",
-          "deps": [
-            "npm:react",
+            "npm:@nx/eslint",
+            "npm:@nx/eslint-plugin",
+            "npm:@nx/jest",
+            "npm:@nx/js",
+            "npm:@nx/next",
+            "npm:@nx/react",
+            "npm:@nx/workspace",
+            "npm:@swc-node/register",
+            "npm:@swc/cli",
+            "npm:@swc/core",
+            "npm:@swc/helpers",
+            "npm:@testing-library/react",
+            "npm:@types/crypto-js",
+            "npm:@types/jest",
+            "npm:@types/node",
+            "npm:@types/react",
+            "npm:@types/react-dom",
+            "npm:@typescript-eslint/eslint-plugin",
+            "npm:@typescript-eslint/parser",
+            "npm:autoprefixer",
+            "npm:babel-jest",
+            "npm:eslint",
+            "npm:eslint-config-next",
+            "npm:eslint-config-prettier",
+            "npm:eslint-plugin-import",
+            "npm:eslint-plugin-jsx-a11y",
+            "npm:eslint-plugin-react",
+            "npm:eslint-plugin-react-hooks",
+            "npm:jest",
+            "npm:jest-environment-jsdom",
+            "npm:nx",
+            "npm:postcss",
+            "npm:prettier",
+            "npm:tailwindcss",
+            "npm:ts-jest",
+            "npm:ts-node",
+            "npm:typescript",
             "npm:@headlessui/react",
-            "npm:next"
-          ]
-        },
-        {
-          "file": "apps/potta/src/app/(routes)/dashboard/menu/mainMenu.tsx",
-          "hash": "16124729225657173493",
-          "deps": [
-            "npm:react",
-            "npm:@headlessui/react"
-          ]
-        },
-        {
-          "file": "apps/potta/src/app/(routes)/dashboard/menu/sideMenu.tsx",
-          "hash": "12812307548230119737",
-          "deps": [
-            "npm:react",
-            "npm:next",
-            "npm:@headlessui/react"
-          ]
-        },
-        {
-          "file": "apps/potta/src/app/(routes)/dashboard/menu/sideMenuItem.tsx",
-          "hash": "6621926280126095685",
-          "deps": [
-            "npm:react"
-          ]
-        },
-        {
-          "file": "apps/potta/src/app/(routes)/dashboard/page.tsx",
-          "hash": "6388897515762374847",
-          "deps": [
-            "npm:react",
-            "npm:react-google-flight-datepicker"
-          ]
-        },
-        {
-          "file": "apps/potta/src/app/(routes)/expenses/budgets/[id]/components/data.tsx",
-          "hash": "11952631433633886950",
-          "deps": [
-            "npm:react"
-          ]
-        },
-        {
-          "file": "apps/potta/src/app/(routes)/expenses/budgets/[id]/components/table.tsx",
-          "hash": "17955652124907073262",
-          "deps": [
-            "npm:react"
-          ]
-        },
-        {
-          "file": "apps/potta/src/app/(routes)/expenses/budgets/[id]/layout.tsx",
-          "hash": "3176776973231662017",
-          "deps": [
-            "npm:react"
-          ]
-        },
-        {
-          "file": "apps/potta/src/app/(routes)/expenses/budgets/[id]/page.tsx",
-          "hash": "16701271638259347091",
-          "deps": [
-            "npm:react",
-            "npm:next"
-          ]
-        },
-        {
-          "file": "apps/potta/src/app/(routes)/expenses/budgets/component/filterComponent.tsx",
-          "hash": "17539353283324382020",
-          "deps": [
-            "npm:react"
-          ]
-        },
-        {
-          "file": "apps/potta/src/app/(routes)/expenses/budgets/component/modal.tsx",
-          "hash": "8646048088545414227",
-          "deps": [
-            "npm:react"
-          ]
-        },
-        {
-          "file": "apps/potta/src/app/(routes)/expenses/budgets/details/layout.tsx",
-          "hash": "11483776093320888645",
-          "deps": [
-            "npm:react"
-          ]
-        },
-        {
-          "file": "apps/potta/src/app/(routes)/expenses/budgets/details/page.tsx",
-          "hash": "17088195967356891648",
-          "deps": [
-            "npm:react",
-            "npm:next"
-          ]
-        },
-        {
-          "file": "apps/potta/src/app/(routes)/expenses/budgets/layout.tsx",
-          "hash": "307135250983287214",
-          "deps": [
-            "npm:react"
-          ]
-        },
-        {
-          "file": "apps/potta/src/app/(routes)/expenses/budgets/page.tsx",
-          "hash": "16567668687686715328",
-          "deps": [
-            "npm:react",
-            "npm:next"
-          ]
-        },
-        {
-          "file": "apps/potta/src/app/(routes)/expenses/components/filters.tsx",
-          "hash": "3116037947049293053",
-          "deps": [
-            "npm:react"
-          ]
-        },
-        {
-          "file": "apps/potta/src/app/(routes)/expenses/layout.tsx",
-          "hash": "4128539399625564669",
-          "deps": [
-            "npm:react"
-          ]
-        },
-        {
-          "file": "apps/potta/src/app/(routes)/expenses/page.tsx",
-          "hash": "3172207536045534879",
-          "deps": [
-            "npm:react",
-            "npm:react-google-flight-datepicker"
-          ]
-        },
-        {
-          "file": "apps/potta/src/app/(routes)/inbox/components/billTable.tsx",
-          "hash": "16765435754090899883",
-          "deps": [
-            "npm:react"
-          ]
-        },
-        {
-          "file": "apps/potta/src/app/(routes)/inbox/components/reimburesmentTable.tsx",
-          "hash": "3131956597082156911",
-          "deps": [
-            "npm:react"
-          ]
-        },
-        {
-          "file": "apps/potta/src/app/(routes)/inbox/components/terminal.tsx",
-          "hash": "84638178929557851",
-          "deps": [
-            "npm:react"
-          ]
-        },
-        {
-          "file": "apps/potta/src/app/(routes)/inbox/components/terminalTable.tsx",
-          "hash": "5160184887480316983",
-          "deps": [
-            "npm:react"
-          ]
-        },
-        {
-          "file": "apps/potta/src/app/(routes)/inbox/layout.tsx",
-          "hash": "302411861648497384",
-          "deps": [
-            "npm:react"
-          ]
-        },
-        {
-          "file": "apps/potta/src/app/(routes)/inbox/page.tsx",
-          "hash": "14815766025053561230",
-          "deps": [
-            "npm:react"
-          ]
-        },
-        {
-          "file": "apps/potta/src/app/(routes)/invoice/_hooks/useAddInvoiceLineItem.ts",
-          "hash": "4854560198864745253",
-          "deps": [
+            "npm:@heroicons/react",
+            "npm:@hookform/resolvers",
+            "npm:@nextui-org/react",
             "npm:@tanstack/react-query",
-            "npm:react"
-          ]
-        },
-        {
-          "file": "apps/potta/src/app/(routes)/invoice/_hooks/useCreateInvoice.ts",
-          "hash": "3244421341483603138"
-        },
-        {
-          "file": "apps/potta/src/app/(routes)/invoice/_hooks/useDeleteInvoice.ts",
-          "hash": "3244421341483603138"
-        },
-        {
-          "file": "apps/potta/src/app/(routes)/invoice/_hooks/useGetAllCustomer.ts",
-          "hash": "3244421341483603138"
-        },
-        {
-          "file": "apps/potta/src/app/(routes)/invoice/_hooks/useGetAllInvoice.ts",
-          "hash": "3244421341483603138"
-        },
-        {
-          "file": "apps/potta/src/app/(routes)/invoice/_hooks/useGetOneInvoice.ts",
-          "hash": "3244421341483603138"
-        },
-        {
-          "file": "apps/potta/src/app/(routes)/invoice/_hooks/useUpdateInvoice.ts",
-          "hash": "3244421341483603138"
-        },
-        {
-          "file": "apps/potta/src/app/(routes)/invoice/_hooks/useremoveInvoiceLineItem.ts",
-          "hash": "3244421341483603138"
-        },
-        {
-          "file": "apps/potta/src/app/(routes)/invoice/_utils/api.ts",
-          "hash": "10028169015296919462"
-        },
-        {
-          "file": "apps/potta/src/app/(routes)/invoice/_utils/column.ts",
-          "hash": "3244421341483603138"
-        },
-        {
-          "file": "apps/potta/src/app/(routes)/invoice/_utils/types.ts",
-          "hash": "15998958723963503882"
-        },
-        {
-          "file": "apps/potta/src/app/(routes)/invoice/_utils/utils.ts",
-          "hash": "3244421341483603138"
-        },
-        {
-          "file": "apps/potta/src/app/(routes)/invoice/_utils/valididation.ts",
-          "hash": "3244421341483603138"
-        },
-        {
-          "file": "apps/potta/src/app/(routes)/invoice/components/box.tsx",
-          "hash": "17216220639925212689",
-          "deps": [
-            "npm:react"
-          ]
-        },
-        {
-          "file": "apps/potta/src/app/(routes)/invoice/components/modal.tsx",
-          "hash": "3162186126480212170",
-          "deps": [
-            "npm:react"
-          ]
-        },
-        {
-          "file": "apps/potta/src/app/(routes)/invoice/components/modalInvoice.tsx",
-          "hash": "8358675382040193636",
-          "deps": [
-            "npm:react"
-          ]
-        },
-        {
-          "file": "apps/potta/src/app/(routes)/invoice/components/slideNewInvoice.tsx",
-          "hash": "8997818938844961787",
-          "deps": [
-            "npm:react"
-          ]
-        },
-        {
-          "file": "apps/potta/src/app/(routes)/invoice/components/table.tsx",
-          "hash": "5097131635187071185",
-          "deps": [
-            "npm:react",
-            "npm:@nextui-org/react"
-          ]
-        },
-        {
-          "file": "apps/potta/src/app/(routes)/invoice/layout.tsx",
-          "hash": "6895566963205254858",
-          "deps": [
-            "npm:react"
-          ]
-        },
-        {
-          "file": "apps/potta/src/app/(routes)/invoice/new_invoice/components/left.tsx",
-          "hash": "11235135462374510204",
-          "deps": [
-            "npm:react"
-          ]
-        },
-        {
-          "file": "apps/potta/src/app/(routes)/invoice/new_invoice/components/newtableInvoice.tsx",
-          "hash": "11020417134853604910",
-          "deps": [
-            "npm:react"
-          ]
-        },
-        {
-          "file": "apps/potta/src/app/(routes)/invoice/new_invoice/components/pdfview.tsx",
-          "hash": "3741462409501378252",
-          "deps": [
-            "npm:react"
-          ]
-        },
-        {
-          "file": "apps/potta/src/app/(routes)/invoice/new_invoice/layout.tsx",
-          "hash": "11458866933459810833",
-          "deps": [
-            "npm:react"
-          ]
-        },
-        {
-          "file": "apps/potta/src/app/(routes)/invoice/new_invoice/page.tsx",
-          "hash": "8248575119093229297",
-          "deps": [
-            "npm:react"
-          ]
-        },
-        {
-          "file": "apps/potta/src/app/(routes)/invoice/page.tsx",
-          "hash": "6856766918796180353",
-          "deps": [
-            "npm:next"
-          ]
-        },
-        {
-          "file": "apps/potta/src/app/(routes)/layout/index.tsx",
-          "hash": "4162366935693138504",
-          "deps": [
+            "npm:@tanstack/react-table",
+            "npm:@types/react-csv",
+            "npm:apexcharts",
+            "npm:axios",
+            "npm:country-data-list",
+            "npm:country-list-with-dial-code-and-flag",
+            "npm:crypto-js",
+            "npm:framer-motion",
+            "npm:moment",
             "npm:next",
-            "npm:react"
-          ]
-        },
-        {
-          "file": "apps/potta/src/app/(routes)/layout/navbar/index.tsx",
-          "hash": "1244672756282665499",
-          "deps": [
+            "npm:nookies",
             "npm:react",
-            "npm:next"
-          ]
-        },
-        {
-          "file": "apps/potta/src/app/(routes)/layout/sidebar/components/POS.tsx",
-          "hash": "5353088316204167270",
-          "deps": [
-            "npm:react",
-            "npm:react-pro-sidebar",
-            "npm:next"
-          ]
-        },
-        {
-          "file": "apps/potta/src/app/(routes)/layout/sidebar/components/expenses.tsx",
-          "hash": "14430010130986268360",
-          "deps": [
-            "npm:react",
-            "npm:react-pro-sidebar",
-            "npm:next"
-          ]
-        },
-        {
-          "file": "apps/potta/src/app/(routes)/layout/sidebar/components/invoicing.tsx",
-          "hash": "2417751606884793277",
-          "deps": [
-            "npm:react",
-            "npm:react-pro-sidebar",
-            "npm:next"
-          ]
-        },
-        {
-          "file": "apps/potta/src/app/(routes)/layout/sidebar/components/payments.tsx",
-          "hash": "13817059600565587838",
-          "deps": [
-            "npm:react",
-            "npm:react-pro-sidebar",
-            "npm:next"
-          ]
-        },
-        {
-          "file": "apps/potta/src/app/(routes)/layout/sidebar/components/payroll.tsx",
-          "hash": "12643616667494421807",
-          "deps": [
-            "npm:react",
-            "npm:react-pro-sidebar",
-            "npm:next"
-          ]
-        },
-        {
-          "file": "apps/potta/src/app/(routes)/layout/sidebar/components/taxation.tsx",
-          "hash": "9607656541181915675",
-          "deps": [
-            "npm:react",
-            "npm:react-pro-sidebar",
-            "npm:next"
-          ]
-        },
-        {
-          "file": "apps/potta/src/app/(routes)/layout/sidebar/components/voucher.tsx",
-          "hash": "16411868836041285824",
-          "deps": [
-            "npm:react",
-            "npm:react-pro-sidebar",
-            "npm:next"
-          ]
-        },
-        {
-          "file": "apps/potta/src/app/(routes)/layout/sidebar/index.tsx",
-          "hash": "10122423208221804610",
-          "deps": [
-            "npm:react",
-            "npm:react-pro-sidebar",
-            "npm:next"
-          ]
-        },
-        {
-          "file": "apps/potta/src/app/(routes)/payables/budgets/[id]/components/table.tsx",
-          "hash": "3244421341483603138"
-        },
-        {
-          "file": "apps/potta/src/app/(routes)/payables/budgets/[id]/layout.tsx",
-          "hash": "10264097873418669191",
-          "deps": [
-            "npm:react"
-          ]
-        },
-        {
-          "file": "apps/potta/src/app/(routes)/payables/budgets/[id]/page.tsx",
-          "hash": "3816253353516182912",
-          "deps": [
-            "npm:react",
-            "npm:next"
-          ]
-        },
-        {
-          "file": "apps/potta/src/app/(routes)/payables/budgets/component/filterComponent.tsx",
-          "hash": "17539353283324382020",
-          "deps": [
-            "npm:react"
-          ]
-        },
-        {
-          "file": "apps/potta/src/app/(routes)/payables/budgets/component/modal.tsx",
-          "hash": "12803126518426214415",
-          "deps": [
-            "npm:react"
-          ]
-        },
-        {
-          "file": "apps/potta/src/app/(routes)/payables/budgets/layout.tsx",
-          "hash": "307135250983287214",
-          "deps": [
-            "npm:react"
-          ]
-        },
-        {
-          "file": "apps/potta/src/app/(routes)/payables/budgets/page.tsx",
-          "hash": "5151779626636899755",
-          "deps": [
-            "npm:react",
-            "npm:next"
-          ]
-        },
-        {
-          "file": "apps/potta/src/app/(routes)/payables/cards/layout.tsx",
-          "hash": "18418064974767245436",
-          "deps": [
-            "npm:react"
-          ]
-        },
-        {
-          "file": "apps/potta/src/app/(routes)/payables/cards/page.tsx",
-          "hash": "18087724963391501488",
-          "deps": [
-            "npm:react",
-            "npm:next"
-          ]
-        },
-        {
-          "file": "apps/potta/src/app/(routes)/payments/layout.tsx",
-          "hash": "4563673845422557804",
-          "deps": [
-            "npm:react"
-          ]
-        },
-        {
-          "file": "apps/potta/src/app/(routes)/payments/page.tsx",
-          "hash": "17581202329864785042",
-          "deps": [
-            "npm:react"
-          ]
-        },
-        {
-          "file": "apps/potta/src/app/(routes)/payments/table/components/method.tsx",
-          "hash": "484917620574210856"
-        },
-        {
-          "file": "apps/potta/src/app/(routes)/payments/table/components/period.tsx",
-          "hash": "14902466001462977816"
-        },
-        {
-          "file": "apps/potta/src/app/(routes)/payments/table/components/status.tsx",
-          "hash": "11164943360809942621"
-        },
-        {
-          "file": "apps/potta/src/app/(routes)/payments/table/components/table.tsx",
-          "hash": "504232341321961283",
-          "deps": [
-            "npm:react"
-          ]
-        },
-        {
-          "file": "apps/potta/src/app/(routes)/payments/table/page.tsx",
-          "hash": "17348970524729019387",
-          "deps": [
-            "npm:react"
-          ]
-        },
-        {
-          "file": "apps/potta/src/app/(routes)/payments/taxation/Tax_Fillings/components/boxes.tsx",
-          "hash": "10107510817427667027",
-          "deps": [
-            "npm:react"
-          ]
-        },
-        {
-          "file": "apps/potta/src/app/(routes)/payments/taxation/Tax_Fillings/components/method.tsx",
-          "hash": "484917620574210856"
-        },
-        {
-          "file": "apps/potta/src/app/(routes)/payments/taxation/Tax_Fillings/components/period.tsx",
-          "hash": "14902466001462977816"
-        },
-        {
-          "file": "apps/potta/src/app/(routes)/payments/taxation/Tax_Fillings/components/table.tsx",
-          "hash": "11381934102381913187",
-          "deps": [
-            "npm:react"
-          ]
-        },
-        {
-          "file": "apps/potta/src/app/(routes)/payments/taxation/Tax_Fillings/components/type.tsx",
-          "hash": "16814611837591160112"
-        },
-        {
-          "file": "apps/potta/src/app/(routes)/payments/taxation/Tax_Fillings/page.tsx",
-          "hash": "2481672771303786653"
-        },
-        {
-          "file": "apps/potta/src/app/(routes)/payments/taxation/layout.tsx",
-          "hash": "13784324493131870077",
-          "deps": [
-            "npm:react"
-          ]
-        },
-        {
-          "file": "apps/potta/src/app/(routes)/payments/taxation/page.tsx",
-          "hash": "12182898893698213415",
-          "deps": [
-            "npm:react"
-          ]
-        },
-        {
-          "file": "apps/potta/src/app/(routes)/payments/terminals/components/USSD.tsx",
-          "hash": "1821271612888225145",
-          "deps": [
-            "npm:react"
-          ]
-        },
-        {
-          "file": "apps/potta/src/app/(routes)/payments/terminals/components/agent.tsx",
-          "hash": "15941321038298613359",
-          "deps": [
-            "npm:react"
-          ]
-        },
-        {
-          "file": "apps/potta/src/app/(routes)/payments/terminals/components/card.tsx",
-          "hash": "14068633143691281818",
-          "deps": [
-            "npm:react"
-          ]
-        },
-        {
-          "file": "apps/potta/src/app/(routes)/payments/terminals/components/pages.tsx",
-          "hash": "7956364170712681357",
-          "deps": [
-            "npm:react"
-          ]
-        },
-        {
-          "file": "apps/potta/src/app/(routes)/payments/terminals/components/sliders/agent/components/control.tsx",
-          "hash": "4689207554627781197",
-          "deps": [
-            "npm:react",
-            "npm:react-select"
-          ]
-        },
-        {
-          "file": "apps/potta/src/app/(routes)/payments/terminals/components/sliders/agent/components/info.tsx",
-          "hash": "4379131732579100536",
-          "deps": [
-            "npm:react",
-            "npm:@headlessui/react"
-          ]
-        },
-        {
-          "file": "apps/potta/src/app/(routes)/payments/terminals/components/sliders/agent/components/policies.tsx",
-          "hash": "4693519020170557387",
-          "deps": [
-            "npm:react"
-          ]
-        },
-        {
-          "file": "apps/potta/src/app/(routes)/payments/terminals/components/sliders/agent/page.tsx",
-          "hash": "16777094439377253628",
-          "deps": [
-            "npm:react",
-            "npm:react-select"
-          ]
-        },
-        {
-          "file": "apps/potta/src/app/(routes)/payments/terminals/components/sliders/card/components/controls.tsx",
-          "hash": "15986151174287515252",
-          "deps": [
-            "npm:react",
-            "npm:react-select"
-          ]
-        },
-        {
-          "file": "apps/potta/src/app/(routes)/payments/terminals/components/sliders/card/components/policies.tsx",
-          "hash": "4693519020170557387",
-          "deps": [
-            "npm:react"
-          ]
-        },
-        {
-          "file": "apps/potta/src/app/(routes)/payments/terminals/components/sliders/card/page.tsx",
-          "hash": "14359715436175035021",
-          "deps": [
-            "npm:react",
-            "npm:react-select"
-          ]
-        },
-        {
-          "file": "apps/potta/src/app/(routes)/payments/terminals/components/sliders/page/page.tsx",
-          "hash": "982262868914417419",
-          "deps": [
-            "npm:react",
-            "npm:react-select"
-          ]
-        },
-        {
-          "file": "apps/potta/src/app/(routes)/payments/terminals/components/sliders/ussd/page.tsx",
-          "hash": "15154334372983250239",
-          "deps": [
-            "npm:react",
-            "npm:react-select"
-          ]
-        },
-        {
-          "file": "apps/potta/src/app/(routes)/payments/terminals/page.tsx",
-          "hash": "12299476201511245213",
-          "deps": [
-            "npm:react"
-          ]
-        },
-        {
-          "file": "apps/potta/src/app/(routes)/payroll/benefit/components/sliderBenefit.tsx",
-          "hash": "9971844080744952003",
-          "deps": [
-            "npm:react"
-          ]
-        },
-        {
-          "file": "apps/potta/src/app/(routes)/payroll/benefit/components/table.tsx",
-          "hash": "232955574933275930",
-          "deps": [
-            "npm:react"
-          ]
-        },
-        {
-          "file": "apps/potta/src/app/(routes)/payroll/benefit/layout.tsx",
-          "hash": "12593722097439688594",
-          "deps": [
-            "npm:react"
-          ]
-        },
-        {
-          "file": "apps/potta/src/app/(routes)/payroll/benefit/page.tsx",
-          "hash": "3703500976123918828",
-          "deps": [
-            "npm:react"
-          ]
-        },
-        {
-          "file": "apps/potta/src/app/(routes)/payroll/layout.tsx",
-          "hash": "17319240061784345930",
-          "deps": [
-            "npm:react"
-          ]
-        },
-        {
-          "file": "apps/potta/src/app/(routes)/payroll/overview/components/boxes.tsx",
-          "hash": "15181544915186151972",
-          "deps": [
-            "npm:react"
-          ]
-        },
-        {
-          "file": "apps/potta/src/app/(routes)/payroll/overview/components/payBreakdown.tsx",
-          "hash": "7936093408113638830",
-          "deps": [
-            "npm:react"
-          ]
-        },
-        {
-          "file": "apps/potta/src/app/(routes)/payroll/overview/components/table.tsx",
-          "hash": "4092471896315308228",
-          "deps": [
-            "npm:react"
-          ]
-        },
-        {
-          "file": "apps/potta/src/app/(routes)/payroll/overview/page.tsx",
-          "hash": "15577646341911414785",
-          "deps": [
-            "npm:react"
-          ]
-        },
-        {
-          "file": "apps/potta/src/app/(routes)/payroll/page.tsx",
-          "hash": "17247969695896266233",
-          "deps": [
-            "npm:react"
-          ]
-        },
-        {
-          "file": "apps/potta/src/app/(routes)/payroll/people/components/address.tsx",
-          "hash": "8060966351663786042",
-          "deps": [
-            "npm:react"
-          ]
-        },
-        {
-          "file": "apps/potta/src/app/(routes)/payroll/people/components/baseInfo.tsx",
-          "hash": "3586646647291875713",
-          "deps": [
-            "npm:react",
-            "npm:@headlessui/react"
-          ]
-        },
-        {
-          "file": "apps/potta/src/app/(routes)/payroll/people/components/benefit/components/benefitTable.tsx",
-          "hash": "4228206993545898405",
-          "deps": [
-            "npm:react"
-          ]
-        },
-        {
-          "file": "apps/potta/src/app/(routes)/payroll/people/components/benefit/components/taxtable.tsx",
-          "hash": "17883233103243235589",
-          "deps": [
-            "npm:react"
-          ]
-        },
-        {
-          "file": "apps/potta/src/app/(routes)/payroll/people/components/benefit/page.tsx",
-          "hash": "18369028206742977943",
-          "deps": [
-            "npm:react"
-          ]
-        },
-        {
-          "file": "apps/potta/src/app/(routes)/payroll/people/components/compensation.tsx",
-          "hash": "17555603973288453550",
-          "deps": [
-            "npm:react"
-          ]
-        },
-        {
-          "file": "apps/potta/src/app/(routes)/payroll/people/components/depositeAccount/bankaccount.tsx",
-          "hash": "11943520275317366504",
-          "deps": [
-            "npm:react"
-          ]
-        },
-        {
-          "file": "apps/potta/src/app/(routes)/payroll/people/components/depositeAccount/page.tsx",
-          "hash": "9585579894939092392",
-          "deps": [
-            "npm:react"
-          ]
-        },
-        {
-          "file": "apps/potta/src/app/(routes)/payroll/people/components/depositeAccount/wallet.tsx",
-          "hash": "745366865212918787",
-          "deps": [
-            "npm:react"
-          ]
-        },
-        {
-          "file": "apps/potta/src/app/(routes)/payroll/people/components/employee_tax_information.tsx",
-          "hash": "10671231710541347079",
-          "deps": [
-            "npm:react"
-          ]
-        },
-        {
-          "file": "apps/potta/src/app/(routes)/payroll/people/components/schedule.tsx",
-          "hash": "15050975939082521904",
-          "deps": [
-            "npm:react"
-          ]
-        },
-        {
-          "file": "apps/potta/src/app/(routes)/payroll/people/page.tsx",
-          "hash": "13320009563592789896",
-          "deps": [
-            "npm:react"
-          ]
-        },
-        {
-          "file": "apps/potta/src/app/(routes)/payroll/reports/components/all_report.tsx",
-          "hash": "16690037066542371496",
-          "deps": [
-            "npm:react"
-          ]
-        },
-        {
-          "file": "apps/potta/src/app/(routes)/payroll/reports/components/frequent_report.tsx",
-          "hash": "9461219679078658735",
-          "deps": [
-            "npm:react"
-          ]
-        },
-        {
-          "file": "apps/potta/src/app/(routes)/payroll/reports/layout.tsx",
-          "hash": "17263189618524542643",
-          "deps": [
-            "npm:react"
-          ]
-        },
-        {
-          "file": "apps/potta/src/app/(routes)/payroll/reports/page.tsx",
-          "hash": "8860093343044261821",
-          "deps": [
-            "npm:react"
-          ]
-        },
-        {
-          "file": "apps/potta/src/app/(routes)/payroll/taxation/layout.tsx",
-          "hash": "708621738486876022",
-          "deps": [
-            "npm:react"
-          ]
-        },
-        {
-          "file": "apps/potta/src/app/(routes)/payroll/taxation/page.tsx",
-          "hash": "13036126511046318888",
-          "deps": [
-            "npm:react"
-          ]
-        },
-        {
-          "file": "apps/potta/src/app/(routes)/payroll/timesheet/components/boxes.tsx",
-          "hash": "8270700146087588414",
-          "deps": [
-            "npm:react"
-          ]
-        },
-        {
-          "file": "apps/potta/src/app/(routes)/payroll/timesheet/components/table.tsx",
-          "hash": "5418089858166394716",
-          "deps": [
-            "npm:react"
-          ]
-        },
-        {
-          "file": "apps/potta/src/app/(routes)/payroll/timesheet/layout.tsx",
-          "hash": "8879936558416038752",
-          "deps": [
-            "npm:react"
-          ]
-        },
-        {
-          "file": "apps/potta/src/app/(routes)/payroll/timesheet/page.tsx",
-          "hash": "2109550064196789449",
-          "deps": [
-            "npm:react"
-          ]
-        },
-        {
-          "file": "apps/potta/src/app/(routes)/pos/Calculate/page.tsx",
-          "hash": "15863037773796222783",
-          "deps": [
-            "npm:react"
-          ]
-        },
-        {
-          "file": "apps/potta/src/app/(routes)/pos/component/footer/index.tsx",
-          "hash": "13436700802672587544",
-          "deps": [
-            "npm:react"
-          ]
-        },
-        {
-          "file": "apps/potta/src/app/(routes)/pos/component/print/page.tsx",
-          "hash": "8720370260392418480",
-          "deps": [
-            "npm:react"
-          ]
-        },
-        {
-          "file": "apps/potta/src/app/(routes)/pos/component/saleInvoiceCard/index.tsx",
-          "hash": "7266862905414320711",
-          "deps": [
-            "npm:react"
-          ]
-        },
-        {
-          "file": "apps/potta/src/app/(routes)/pos/component/saleInvoiceTable/components/buttonSales.tsx",
-          "hash": "8550066544609507797",
-          "deps": [
-            "npm:react"
-          ]
-        },
-        {
-          "file": "apps/potta/src/app/(routes)/pos/component/saleInvoiceTable/components/cashPayment/index.tsx",
-          "hash": "1378182765342077583",
-          "deps": [
             "npm:react-accessible-accordion",
-            "npm:react"
-          ]
-        },
-        {
-          "file": "apps/potta/src/app/(routes)/pos/component/saleInvoiceTable/components/holdOn.tsx",
-          "hash": "8719976270107299012",
-          "deps": [
-            "npm:react"
-          ]
-        },
-        {
-          "file": "apps/potta/src/app/(routes)/pos/component/saleInvoiceTable/components/modalCoupon.tsx",
-          "hash": "8598574006217450245",
-          "deps": [
-            "npm:react"
-          ]
-        },
-        {
-          "file": "apps/potta/src/app/(routes)/pos/component/saleInvoiceTable/components/otherPayment/index.tsx",
-          "hash": "1421923805073987335",
-          "deps": [
-            "npm:react"
-          ]
-        },
-        {
-          "file": "apps/potta/src/app/(routes)/pos/component/saleInvoiceTable/components/table.tsx",
-          "hash": "11116113733995709989",
-          "deps": [
-            "npm:react"
-          ]
-        },
-        {
-          "file": "apps/potta/src/app/(routes)/pos/component/saleInvoiceTable/index.tsx",
-          "hash": "1943084526178879668",
-          "deps": [
-            "npm:react"
-          ]
-        },
-        {
-          "file": "apps/potta/src/app/(routes)/pos/files/components/cardFiles.tsx",
-          "hash": "9675774828299553776",
-          "deps": [
-            "npm:react"
-          ]
-        },
-        {
-          "file": "apps/potta/src/app/(routes)/pos/files/components/filter.tsx",
-          "hash": "8478775884706823653",
-          "deps": [
-            "npm:react"
-          ]
-        },
-        {
-          "file": "apps/potta/src/app/(routes)/pos/files/components/recentUpload.tsx",
-          "hash": "8529234923422926364",
-          "deps": [
-            "npm:react"
-          ]
-        },
-        {
-          "file": "apps/potta/src/app/(routes)/pos/files/layout.tsx",
-          "hash": "4437701472645100015",
-          "deps": [
-            "npm:react"
-          ]
-        },
-        {
-          "file": "apps/potta/src/app/(routes)/pos/files/page.tsx",
-          "hash": "894138260883987963",
-          "deps": [
-            "npm:react"
-          ]
-        },
-        {
-          "file": "apps/potta/src/app/(routes)/pos/inventory/components/slides/components/create_product/components/attachments.tsx",
-          "hash": "6068811585033702883",
-          "deps": [
-            "npm:react"
-          ]
-        },
-        {
-          "file": "apps/potta/src/app/(routes)/pos/inventory/components/slides/components/create_product/components/inventory.tsx",
-          "hash": "4305323021249711835",
-          "deps": [
-            "npm:react"
-          ]
-        },
-        {
-          "file": "apps/potta/src/app/(routes)/pos/inventory/components/slides/components/create_product/components/notes.tsx",
-          "hash": "17711441041619301981",
-          "deps": [
-            "npm:react"
-          ]
-        },
-        {
-          "file": "apps/potta/src/app/(routes)/pos/inventory/components/slides/components/create_product/components/units.tsx",
-          "hash": "4703653835315296899",
-          "deps": [
-            "npm:react"
-          ]
-        },
-        {
-          "file": "apps/potta/src/app/(routes)/pos/inventory/components/slides/components/create_product/index.tsx",
-          "hash": "772379492749480620",
-          "deps": [
-            "npm:react"
-          ]
-        },
-        {
-          "file": "apps/potta/src/app/(routes)/pos/inventory/components/slides/components/selectInventory.tsx",
-          "hash": "11044529541309084194",
-          "deps": [
-            "npm:react"
-          ]
-        },
-        {
-          "file": "apps/potta/src/app/(routes)/pos/inventory/components/slides/index.tsx",
-          "hash": "8393305115104592135",
-          "deps": [
-            "npm:react"
-          ]
-        },
-        {
-          "file": "apps/potta/src/app/(routes)/pos/inventory/components/tabelComponent.tsx",
-          "hash": "10761413163626842070",
-          "deps": [
-            "npm:react"
-          ]
-        },
-        {
-          "file": "apps/potta/src/app/(routes)/pos/inventory/components/table.tsx",
-          "hash": "1212117149011685774",
-          "deps": [
-            "npm:react"
-          ]
-        },
-        {
-          "file": "apps/potta/src/app/(routes)/pos/inventory/layout.tsx",
-          "hash": "4437701472645100015",
-          "deps": [
-            "npm:react"
-          ]
-        },
-        {
-          "file": "apps/potta/src/app/(routes)/pos/inventory/page.tsx",
-          "hash": "5907859060399947146",
-          "deps": [
-            "npm:react"
-          ]
-        },
-        {
-          "file": "apps/potta/src/app/(routes)/pos/layout.tsx",
-          "hash": "4563673845422557804",
-          "deps": [
-            "npm:react"
-          ]
-        },
-        {
-          "file": "apps/potta/src/app/(routes)/pos/page.tsx",
-          "hash": "2357271435671513122",
-          "deps": [
-            "npm:react"
-          ]
-        },
-        {
-          "file": "apps/potta/src/app/(routes)/pos/sales/components/boxes.tsx",
-          "hash": "14883061611209168760",
-          "deps": [
-            "npm:react"
-          ]
-        },
-        {
-          "file": "apps/potta/src/app/(routes)/pos/sales/components/table.tsx",
-          "hash": "9327124999965655431",
-          "deps": [
-            "npm:react"
-          ]
-        },
-        {
-          "file": "apps/potta/src/app/(routes)/pos/sales/layout.tsx",
-          "hash": "4437701472645100015",
-          "deps": [
-            "npm:react"
-          ]
-        },
-        {
-          "file": "apps/potta/src/app/(routes)/pos/sales/page.tsx",
-          "hash": "14814889524880769034",
-          "deps": [
-            "npm:react"
-          ]
-        },
-        {
-          "file": "apps/potta/src/app/(routes)/receipt/component/pdf.tsx",
-          "hash": "5684127883647377678",
-          "deps": [
-            "npm:react"
-          ]
-        },
-        {
-          "file": "apps/potta/src/app/(routes)/receipt/component/table.tsx",
-          "hash": "17196740575312656802",
-          "deps": [
-            "npm:react"
-          ]
-        },
-        {
-          "file": "apps/potta/src/app/(routes)/receipt/page.tsx",
-          "hash": "17855378503862891125",
-          "deps": [
-            "npm:react"
-          ]
-        },
-        {
-          "file": "apps/potta/src/app/(routes)/receivables/invoices/components/newInvoice.tsx",
-          "hash": "310810252340264577",
-          "deps": [
-            "npm:react",
-            "npm:@headlessui/react"
-          ]
-        },
-        {
-          "file": "apps/potta/src/app/(routes)/receivables/invoices/components/table.tsx",
-          "hash": "7907720092637359550",
-          "deps": [
-            "npm:react"
-          ]
-        },
-        {
-          "file": "apps/potta/src/app/(routes)/receivables/invoices/layout.tsx",
-          "hash": "8164961370406166698",
-          "deps": [
-            "npm:react"
-          ]
-        },
-        {
-          "file": "apps/potta/src/app/(routes)/receivables/invoices/page.tsx",
-          "hash": "5388042422775153439",
-          "deps": [
-            "npm:react"
-          ]
-        },
-        {
-          "file": "apps/potta/src/app/(routes)/reports/components/all_report.tsx",
-          "hash": "16690037066542371496",
-          "deps": [
-            "npm:react"
-          ]
-        },
-        {
-          "file": "apps/potta/src/app/(routes)/reports/components/frequent_report.tsx",
-          "hash": "9461219679078658735",
-          "deps": [
-            "npm:react"
-          ]
-        },
-        {
-          "file": "apps/potta/src/app/(routes)/reports/page.tsx",
-          "hash": "17396682832813675685",
-          "deps": [
-            "npm:react"
-          ]
-        },
-        {
-          "file": "apps/potta/src/app/(routes)/vendors/components/address.tsx",
-          "hash": "4761899561115242187",
-          "deps": [
-            "npm:react"
-          ]
-        },
-        {
-          "file": "apps/potta/src/app/(routes)/vendors/components/attachment.tsx",
-          "hash": "3244421341483603138"
-        },
-        {
-          "file": "apps/potta/src/app/(routes)/vendors/components/boxes.tsx",
-          "hash": "2614074599238602550",
-          "deps": [
-            "npm:react"
-          ]
-        },
-        {
-          "file": "apps/potta/src/app/(routes)/vendors/components/note.tsx",
-          "hash": "3244421341483603138"
-        },
-        {
-          "file": "apps/potta/src/app/(routes)/vendors/components/table.tsx",
-          "hash": "5362946752154201555",
-          "deps": [
-            "npm:react"
-          ]
-        },
-        {
-          "file": "apps/potta/src/app/(routes)/vendors/components/tax.tsx",
-          "hash": "3244421341483603138"
-        },
-        {
-          "file": "apps/potta/src/app/(routes)/vendors/components/vendorSlider.tsx",
-          "hash": "17053075691291004482",
-          "deps": [
-            "npm:react",
-            "npm:react-select"
-          ]
-        },
-        {
-          "file": "apps/potta/src/app/(routes)/vendors/layout.tsx",
-          "hash": "1748728594507267884",
-          "deps": [
-            "npm:react"
-          ]
-        },
-        {
-          "file": "apps/potta/src/app/(routes)/vendors/page.tsx",
-          "hash": "14112685029783057854",
-          "deps": [
-            "npm:react"
-          ]
-        },
-        {
-          "file": "apps/potta/src/app/arrays/usecontextData.ts",
-          "hash": "16532996961423049665"
-        },
-        {
-          "file": "apps/potta/src/app/charts/barchart.tsx",
-          "hash": "11856177588616898441",
-          "deps": [
-            "npm:react",
-            "npm:next",
-            "npm:apexcharts",
-            [
-              "npm:react-apexcharts",
-              "dynamic"
-            ]
-          ]
-        },
-        {
-          "file": "apps/potta/src/app/charts/piechart.tsx",
-          "hash": "10316470175227157507",
-          "deps": [
-            "npm:next",
-            "npm:apexcharts",
-            "npm:react",
-            [
-              "npm:react-apexcharts",
-              "dynamic"
-            ]
-          ]
-        },
-        {
-          "file": "apps/potta/src/app/chatai/index.tsx",
-          "hash": "2815725591906770280",
-          "deps": [
-            "npm:react"
-          ]
-        },
-        {
-          "file": "apps/potta/src/app/favicon.ico",
-          "hash": "9157999678830540297"
-        },
-        {
-          "file": "apps/potta/src/app/fonts/GeistMonoVF.woff",
-          "hash": "17799230542345324615"
-        },
-        {
-          "file": "apps/potta/src/app/fonts/GeistVF.woff",
-          "hash": "6578897518916770501"
-        },
-        {
-          "file": "apps/potta/src/app/globals.css",
-          "hash": "7831147634329919652"
-        },
-        {
-          "file": "apps/potta/src/app/layout.tsx",
-          "hash": "5791934923396249129",
-          "deps": [
-            "npm:next",
+            "npm:react-apexcharts",
+            "npm:react-barcode",
+            "npm:react-csv",
+            "npm:react-data-table-component",
+            "npm:react-dom",
+            "npm:react-dropzone",
+            "npm:react-google-flight-datepicker",
+            "npm:react-hook-form",
+            "npm:react-hot-toast",
+            "npm:react-icomoon",
+            "npm:react-icons",
+            "npm:react-moment",
+            "npm:react-phone-input-2",
+            "npm:react-pro-sidebar",
+            "npm:react-select",
+            "npm:react-verification-input",
             "npm:remixicon",
-            "npm:react-accessible-accordion"
+            "npm:timezones-list",
+            "npm:tslib",
+            "npm:yup"
           ]
         },
         {
-          "file": "apps/potta/src/app/page.tsx",
-          "hash": "12758127712219192693",
-          "deps": [
-            "npm:react"
-          ]
-        },
-        {
-          "file": "apps/potta/src/components/button.tsx",
-          "hash": "9322293623197263667",
-          "deps": [
-            "npm:react"
-          ]
-        },
-        {
-          "file": "apps/potta/src/components/context.tsx",
-          "hash": "473788837558789281",
-          "deps": [
-            "npm:react"
-          ]
-        },
-        {
-          "file": "apps/potta/src/components/daterangePicker.tsx",
-          "hash": "4791606939355879050",
-          "deps": [
-            "npm:react"
-          ]
-        },
-        {
-          "file": "apps/potta/src/components/dropzone.tsx",
-          "hash": "7084488975616997021",
-          "deps": [
-            "npm:react",
-            "npm:react-dropzone"
-          ]
-        },
-        {
-          "file": "apps/potta/src/components/filter.tsx",
-          "hash": "12685432976258105352",
-          "deps": [
-            "npm:react"
-          ]
-        },
-        {
-          "file": "apps/potta/src/components/icon_fonts/Read Me.txt",
-          "hash": "16926644038414715480"
-        },
-        {
-          "file": "apps/potta/src/components/icon_fonts/demo-files/demo.css",
-          "hash": "12981042748849678127"
-        },
-        {
-          "file": "apps/potta/src/components/icon_fonts/demo-files/demo.js",
-          "hash": "18291803720405162545"
-        },
-        {
-          "file": "apps/potta/src/components/icon_fonts/demo.html",
-          "hash": "4716006396131665815"
-        },
-        {
-          "file": "apps/potta/src/components/icon_fonts/fonts/icomoon.eot",
-          "hash": "10236634508581848443"
-        },
-        {
-          "file": "apps/potta/src/components/icon_fonts/fonts/icomoon.svg",
-          "hash": "15397748776990725325"
-        },
-        {
-          "file": "apps/potta/src/components/icon_fonts/fonts/icomoon.ttf",
-          "hash": "3543899944570758336"
-        },
-        {
-          "file": "apps/potta/src/components/icon_fonts/fonts/icomoon.woff",
-          "hash": "7917809942667213296"
-        },
-        {
-          "file": "apps/potta/src/components/icon_fonts/icon.tsx",
-          "hash": "12950661951587670444",
-          "deps": [
-            "npm:react-icomoon"
-          ]
-        },
-        {
-          "file": "apps/potta/src/components/icon_fonts/selection.json",
-          "hash": "6103283382345798640"
-        },
-        {
-          "file": "apps/potta/src/components/icon_fonts/selections.json",
-          "hash": "11561878225840006432"
-        },
-        {
-          "file": "apps/potta/src/components/icon_fonts/style.css",
-          "hash": "794287973350735886"
-        },
-        {
-          "file": "apps/potta/src/components/input.tsx",
-          "hash": "7041613290235009161",
-          "deps": [
-            "npm:react",
-            "npm:react-hook-form"
-          ]
-        },
-        {
-          "file": "apps/potta/src/components/loader.tsx",
-          "hash": "10484164875391356637",
-          "deps": [
-            "npm:react"
-          ]
-        },
-        {
-          "file": "apps/potta/src/components/modal.tsx",
-          "hash": "3830064980083671160",
-          "deps": [
-            "npm:react",
-            "npm:@headlessui/react"
-          ]
-        },
-        {
-          "file": "apps/potta/src/components/popover.tsx",
-          "hash": "6629036707166797703",
-          "deps": [
-            "npm:react",
-            "npm:@headlessui/react"
-          ]
-        },
-        {
-          "file": "apps/potta/src/components/react-select.tsx",
-          "hash": "13532526499010278292",
-          "deps": [
-            "npm:react",
-            "npm:react-select"
-          ]
-        },
-        {
-          "file": "apps/potta/src/components/search.tsx",
-          "hash": "604912056263055812",
-          "deps": [
-            "npm:react",
-            "npm:react-icons"
-          ]
-        },
-        {
-          "file": "apps/potta/src/components/select.tsx",
-          "hash": "14338560334647305827",
-          "deps": [
-            "npm:react"
-          ]
-        },
-        {
-          "file": "apps/potta/src/components/slideover.tsx",
-          "hash": "1114841848703677992",
-          "deps": [
-            "npm:react",
-            "npm:@headlessui/react",
-            "npm:@heroicons/react"
-          ]
-        },
-        {
-          "file": "apps/potta/src/components/table.tsx",
-          "hash": "6989815766136625962",
-          "deps": [
-            "npm:next",
-            "npm:react",
-            "npm:react-data-table-component"
-          ]
-        },
-        {
-          "file": "apps/potta/tailwind.config.js",
-          "hash": "13090734457927965885",
-          "deps": [
-            "npm:@nx/react"
-          ]
-        },
-        {
-          "file": "apps/potta/tsconfig.json",
-          "hash": "15289578615076523892"
-        },
-        {
-          "file": "apps/potta/tsconfig.spec.json",
-          "hash": "6922413205408300107"
-        },
-        {
-          "file": "apps/potta/type/index.d.ts",
-          "hash": "9950754265127537988"
+          "file": "tsconfig.base.json",
+          "hash": "16257537213835165230"
         }
       ],
       "ui-components": [
@@ -3811,126 +3989,51 @@
           "hash": "1536859351713546153"
         }
       ],
-      "utilities": [
+      "core": [
         {
-          "file": "libs/utilities/.eslintrc.json",
+          "file": "libs/core/.eslintrc.json",
           "hash": "11012487992710232822"
         },
         {
-          "file": "libs/utilities/README.md",
-          "hash": "13228732804139331838"
+          "file": "libs/core/README.md",
+          "hash": "862743182427189852"
         },
         {
-          "file": "libs/utilities/project.json",
-          "hash": "699343638286385166"
+          "file": "libs/core/project.json",
+          "hash": "8215491323991500792"
         },
         {
-          "file": "libs/utilities/src/index.ts",
-          "hash": "4979336273987222930"
+          "file": "libs/core/src/index.ts",
+          "hash": "1391443467439822800"
         },
         {
-          "file": "libs/utilities/src/lib/configs/axios.ts",
-          "hash": "9287401257227664183",
+          "file": "libs/core/src/lib/core.spec.tsx",
+          "hash": "10083302775005561580",
           "deps": [
-            "npm:crypto-js",
-            "npm:axios"
+            "npm:@testing-library/react"
           ]
         },
         {
-          "file": "libs/utilities/src/lib/configs/env.ts",
-          "hash": "12101586654834214904"
+          "file": "libs/core/src/lib/core.tsx",
+          "hash": "12083220179364162819"
         },
         {
-          "file": "libs/utilities/src/lib/helpers/index.ts",
-          "hash": "10922730425443113868",
-          "deps": [
-            "npm:crypto-js",
-            "npm:country-list-with-dial-code-and-flag"
-          ]
+          "file": "libs/core/src/lib/hello-server.tsx",
+          "hash": "2397568674684759047"
         },
         {
-          "file": "libs/utilities/src/server.ts",
-          "hash": "5519843671682787663"
+          "file": "libs/core/src/server.ts",
+          "hash": "8912437808649717296"
         },
         {
-          "file": "libs/utilities/tsconfig.json",
+          "file": "libs/core/tsconfig.json",
           "hash": "14088618039610991405"
         },
         {
-          "file": "libs/utilities/tsconfig.lib.json",
+          "file": "libs/core/tsconfig.lib.json",
           "hash": "1536859351713546153"
         }
       ]
-    },
-    "nonProjectFiles": [
-      {
-        "file": ".editorconfig",
-        "hash": "5443105041930014821"
-      },
-      {
-        "file": ".eslintignore",
-        "hash": "7663861978715868291"
-      },
-      {
-        "file": ".eslintrc.json",
-        "hash": "18315524891129148814"
-      },
-      {
-        "file": ".github/workflows/staging.yaml",
-        "hash": "6745584629413967094"
-      },
-      {
-        "file": ".gitignore",
-        "hash": "7456224741535900147"
-      },
-      {
-        "file": ".prettierignore",
-        "hash": "14688272390704683536"
-      },
-      {
-        "file": ".prettierrc",
-        "hash": "16267754514737964994"
-      },
-      {
-        "file": "Dockerfile",
-        "hash": "659189421521947874"
-      },
-      {
-        "file": "README.md",
-        "hash": "6840628470554381479"
-      },
-      {
-        "file": "docker-compose-build.yml",
-        "hash": "17454110849002822681"
-      },
-      {
-        "file": "docker-compose.yml",
-        "hash": "6344911347125248550"
-      },
-      {
-        "file": "jest.config.ts",
-        "hash": "3494843969422251966"
-      },
-      {
-        "file": "jest.preset.js",
-        "hash": "9430166341120122740"
-      },
-      {
-        "file": "nx.json",
-        "hash": "15762878439579370496"
-      },
-      {
-        "file": "package-lock.json",
-        "hash": "263190872232805670"
-      },
-      {
-        "file": "package.json",
-        "hash": "12480095847594765097"
-      },
-      {
-        "file": "tsconfig.base.json",
-        "hash": "16257537213835165230"
-      }
-    ]
+    }
   }
 }

@@ -1,11 +1,11 @@
 'use client';
 import React, { useState, useEffect, useContext } from 'react';
-import MyTable from "@/components/table";
-import { ContextData } from "@/components/context";
+import MyTable from "@potta/components/table";
+import { ContextData } from "@potta/components/context";
 import ModalCoupon from './modalCoupon';
 import HoldOn from './holdOn';
 import ModalPrint from '../../print/page';
-import Button from '@/components/button';
+import Button from '@potta/components/button';
 
 
 const TableOPS = () => {

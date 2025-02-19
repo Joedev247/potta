@@ -1,5 +1,5 @@
-import Input from '@/components/input'
-import Select from '@/components/select'
+import Input from '@potta/components/input'
+import Select from '@potta/components/select'
 import react from 'react'
 
 const Address = () => {

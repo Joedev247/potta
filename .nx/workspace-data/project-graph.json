@@ -463,6 +463,70 @@
         "tags": [],
         "implicitDependencies": []
       }
+    },
+    "@instanvi-global/source": {
+      "name": "@instanvi-global/source",
+      "type": "lib",
+      "data": {
+        "root": ".",
+        "sourceRoot": ".",
+        "name": "@instanvi-global/source",
+        "tags": [
+          "npm:private"
+        ],
+        "metadata": {
+          "targetGroups": {
+            "NPM Scripts": [
+              "build:superApp",
+              "start:superApp",
+              "reset"
+            ]
+          },
+          "js": {
+            "packageName": "@instanvi-global/source",
+            "isInPackageManagerWorkspaces": true
+          }
+        },
+        "targets": {
+          "build:superApp": {
+            "executor": "nx:run-script",
+            "options": {
+              "script": "build:superApp"
+            },
+            "metadata": {
+              "scriptContent": "nx run superApp:build",
+              "runCommand": "npm run build:superApp"
+            },
+            "configurations": {},
+            "parallelism": true
+          },
+          "start:superApp": {
+            "executor": "nx:run-script",
+            "options": {
+              "script": "start:superApp"
+            },
+            "metadata": {
+              "scriptContent": "nx run superApp:start",
+              "runCommand": "npm run start:superApp"
+            },
+            "configurations": {},
+            "parallelism": true
+          },
+          "reset": {
+            "executor": "nx:run-script",
+            "options": {
+              "script": "reset"
+            },
+            "metadata": {
+              "scriptContent": "nx reset",
+              "runCommand": "npm run reset"
+            },
+            "configurations": {},
+            "parallelism": true
+          }
+        },
+        "implicitDependencies": []
+      }
     }
   },
   "externalNodes": {
@@ -3814,6 +3878,258 @@
         "hash": "sha512-c1rN6HY97+cEwoM5Q9412399Ac1rw7pI/3IS5iJSYkeI5TTGOobIpdCavJPZVcfqo4+wegXPA3F/OmulgbOUJA=="
       }
     },
+    "npm:@nx/nx-darwin-arm64@19.5.7": {
+      "type": "npm",
+      "name": "npm:@nx/nx-darwin-arm64@19.5.7",
+      "data": {
+        "version": "19.5.7",
+        "packageName": "@nx/nx-darwin-arm64",
+        "hash": "sha512-5jFAZSfV8QVNoxOXayZw4/jNJbxMMctNOYZW8Qj4eU8Ti+OmhsLgouxz/9enCh5SDITriOMZ7IHZ9rhrlGQoig=="
+      }
+    },
+    "npm:@nx/nx-darwin-arm64": {
+      "type": "npm",
+      "name": "npm:@nx/nx-darwin-arm64",
+      "data": {
+        "version": "20.4.3",
+        "packageName": "@nx/nx-darwin-arm64",
+        "hash": "sha512-DZmqsczBxHGux//y6bwFC1mSq2AS0iyf6v1nFwxA+S2WW+fhxOKpLWo35jB4399YIxpf1NQWKtfz7p+kh4Dx/Q=="
+      }
+    },
+    "npm:@nx/nx-darwin-x64@19.5.7": {
+      "type": "npm",
+      "name": "npm:@nx/nx-darwin-x64@19.5.7",
+      "data": {
+        "version": "19.5.7",
+        "packageName": "@nx/nx-darwin-x64",
+        "hash": "sha512-Ss+rF2+MQxyKrNnSYAeEGhtdE9hUHiTqyjJo4n1lvIWJ++TairOCtk5QRHrYLgAxE1XTf0OabcsDzegxv7yk3Q=="
+      }
+    },
+    "npm:@nx/nx-darwin-x64": {
+      "type": "npm",
+      "name": "npm:@nx/nx-darwin-x64",
+      "data": {
+        "version": "20.4.3",
+        "packageName": "@nx/nx-darwin-x64",
+        "hash": "sha512-5CBNZNjRfu8WMFLpvc3n+jbx8U5bmIw04USyRwsspFgxsOjh0z+5UCkGnMMDE1KdxMG5Fk1RURJ5y0KA3zQpMQ=="
+      }
+    },
+    "npm:@nx/nx-freebsd-x64@19.5.7": {
+      "type": "npm",
+      "name": "npm:@nx/nx-freebsd-x64@19.5.7",
+      "data": {
+        "version": "19.5.7",
+        "packageName": "@nx/nx-freebsd-x64",
+        "hash": "sha512-FMLXcUr3mw/v4LvmNqHMAXy2k+T/hp2YpdBUq9ExteMfRywFsnKNlm39n/quniFsgKthEMdvvzxSQppRKaVwIw=="
+      }
+    },
+    "npm:@nx/nx-freebsd-x64": {
+      "type": "npm",
+      "name": "npm:@nx/nx-freebsd-x64",
+      "data": {
+        "version": "20.4.3",
+        "packageName": "@nx/nx-freebsd-x64",
+        "hash": "sha512-aWi5G8yA/gDySmPUoERP2Ehi+69HtsRhRguWbW2Cf0c0LdEWtj62JNoTJ8Se2EJQ+95GtVny1MaxW1mOlJ5ITg=="
+      }
+    },
+    "npm:@nx/nx-linux-arm-gnueabihf@19.5.7": {
+      "type": "npm",
+      "name": "npm:@nx/nx-linux-arm-gnueabihf@19.5.7",
+      "data": {
+        "version": "19.5.7",
+        "packageName": "@nx/nx-linux-arm-gnueabihf",
+        "hash": "sha512-LhJ342HutpR258lBLVTkXd6x2Uj4ZPJ6xKdfEm+FYQvG1byPr2L0TlNXcfSBkYtd7wRn0qg9eQZoCV/5+w415Q=="
+      }
+    },
+    "npm:@nx/nx-linux-arm-gnueabihf": {
+      "type": "npm",
+      "name": "npm:@nx/nx-linux-arm-gnueabihf",
+      "data": {
+        "version": "20.4.3",
+        "packageName": "@nx/nx-linux-arm-gnueabihf",
+        "hash": "sha512-E3LQyHWX/IEJmwfxjbU2o1OiMpYcZ1KJa0qL+dfzNA4WL9QhXNfN3AxGwjv910ctmBj97yzFpT4JqrNr5zf5xg=="
+      }
+    },
+    "npm:@nx/nx-linux-arm64-gnu@19.5.7": {
+      "type": "npm",
+      "name": "npm:@nx/nx-linux-arm64-gnu@19.5.7",
+      "data": {
+        "version": "19.5.7",
+        "packageName": "@nx/nx-linux-arm64-gnu",
+        "hash": "sha512-Q6gN+VNLisg7mYPTXC5JuGCP/s9tLjJFclKdH6FoP5K1Hgy88KK1uUoivDIfI8xaEgyLqphD1AAqokiFWZNWsg=="
+      }
+    },
+    "npm:@nx/nx-linux-arm64-gnu": {
+      "type": "npm",
+      "name": "npm:@nx/nx-linux-arm64-gnu",
+      "data": {
+        "version": "20.4.3",
+        "packageName": "@nx/nx-linux-arm64-gnu",
+        "hash": "sha512-PzGwgBvAhNUpdA2dThYdWuGdM6vrMWChTBimAVbkpOtlkzNglbnmCPQ81fAXQ1Yfn4Fbrrjnn7zbN3FmMQtadA=="
+      }
+    },
+    "npm:@nx/nx-linux-arm64-musl@19.5.7": {
+      "type": "npm",
+      "name": "npm:@nx/nx-linux-arm64-musl@19.5.7",
+      "data": {
+        "version": "19.5.7",
+        "packageName": "@nx/nx-linux-arm64-musl",
+        "hash": "sha512-BsYNcYujNKb+uE7PrJp4PrX8a3G9oy+THaUr0t5+L435HjuZDBiK+tK9JzYGvM0bR5FOYm5K99I1DVD/Hv0snw=="
+      }
+    },
+    "npm:@nx/nx-linux-arm64-musl": {
+      "type": "npm",
+      "name": "npm:@nx/nx-linux-arm64-musl",
+      "data": {
+        "version": "20.4.3",
+        "packageName": "@nx/nx-linux-arm64-musl",
+        "hash": "sha512-S0YNGr+YDDDueVqqVNH4iXYlsBgP7wSGf5dwO+Jf5/Mubjp7AjfpHXkNDQodRBoAs88QMgWAxpzMJjlStjP+lA=="
+      }
+    },
+    "npm:@nx/nx-linux-x64-gnu@19.5.7": {
+      "type": "npm",
+      "name": "npm:@nx/nx-linux-x64-gnu@19.5.7",
+      "data": {
+        "version": "19.5.7",
+        "packageName": "@nx/nx-linux-x64-gnu",
+        "hash": "sha512-ILaLU8b5lUokYVF3vxAVj62qFok1hexiNzBdLGJPI1OkPGELtLyb8RymI3939iJoNMk1DS3/6dqK7NHXvHX8Mw=="
+      }
+    },
+    "npm:@nx/nx-linux-x64-gnu": {
+      "type": "npm",
+      "name": "npm:@nx/nx-linux-x64-gnu",
+      "data": {
+        "version": "20.4.3",
+        "packageName": "@nx/nx-linux-x64-gnu",
+        "hash": "sha512-aWjmda5etks80e5jheu0qeHtpdWiLxB6h9tqmV+kPxUTavZEoAIwjHxGBkG57JrB47H8NtrU0VCH66Rcxay+BQ=="
+      }
+    },
+    "npm:@nx/nx-linux-x64-musl@19.5.7": {
+      "type": "npm",
+      "name": "npm:@nx/nx-linux-x64-musl@19.5.7",
+      "data": {
+        "version": "19.5.7",
+        "packageName": "@nx/nx-linux-x64-musl",
+        "hash": "sha512-LfTnO4JZebLugioMk+GTptv3N38Wj2i2Pko0bdRZaKba+INGSlUgFqoRuO0KqZEmVIUGrxfkfqIN3HghVQ4D/Q=="
+      }
+    },
+    "npm:@nx/nx-linux-x64-musl": {
+      "type": "npm",
+      "name": "npm:@nx/nx-linux-x64-musl",
+      "data": {
+        "version": "20.4.3",
+        "packageName": "@nx/nx-linux-x64-musl",
+        "hash": "sha512-kGi8D3HcgUSIBcnew1sEz/77La1GtMKnVvLCMHJJE/cLKwb7vjUHoZSXdFrWBWA9KFQD/4iJcc0G+eiR1aNOtQ=="
+      }
+    },
+    "npm:@nx/nx-win32-arm64-msvc@19.5.7": {
+      "type": "npm",
+      "name": "npm:@nx/nx-win32-arm64-msvc@19.5.7",
+      "data": {
+        "version": "19.5.7",
+        "packageName": "@nx/nx-win32-arm64-msvc",
+        "hash": "sha512-cCTttdbf1AKuDU8j108SpIMWs53A/0mOVDPOPpa+oKkvBaI8ruZkxOceMjWZjWULd2gi1nS+5nJePpbrdQ8mkg=="
+      }
+    },
+    "npm:@nx/nx-win32-arm64-msvc": {
+      "type": "npm",
+      "name": "npm:@nx/nx-win32-arm64-msvc",
+      "data": {
+        "version": "20.4.3",
+        "packageName": "@nx/nx-win32-arm64-msvc",
+        "hash": "sha512-OEb8VpmxGbrBk4r80DJowF/EwxG3qHd0v6F1qtunFZGwOtVnoQACfabPv26Se4+uvCv54/Zk2ia+aaXWvtYSpg=="
+      }
+    },
+    "npm:@nx/nx-win32-x64-msvc@19.5.7": {
+      "type": "npm",
+      "name": "npm:@nx/nx-win32-x64-msvc@19.5.7",
+      "data": {
+        "version": "19.5.7",
+        "packageName": "@nx/nx-win32-x64-msvc",
+        "hash": "sha512-EqSnjpq1PNR/C8/YkL+Gn79dDfQ+HwJM8VJOt4qoCOQ9gQZqNJphjW2hg0H8WxLYezMScx3fbL99mvJO7ab2Cw=="
+      }
+    },
+    "npm:@nx/nx-win32-x64-msvc": {
+      "type": "npm",
+      "name": "npm:@nx/nx-win32-x64-msvc",
+      "data": {
+        "version": "20.4.3",
+        "packageName": "@nx/nx-win32-x64-msvc",
+        "hash": "sha512-a9NenZp1IgLjH/Z17eb93LWdwww6A1gFwBAABc+bYgyRJybanqpAAwepcfRJKdBA7nzeBbG3JPR8zg9gerPAyg=="
+      }
+    },
+    "npm:@yarnpkg/parsers@3.0.0-rc.46": {
+      "type": "npm",
+      "name": "npm:@yarnpkg/parsers@3.0.0-rc.46",
+      "data": {
+        "version": "3.0.0-rc.46",
+        "packageName": "@yarnpkg/parsers",
+        "hash": "sha512-aiATs7pSutzda/rq8fnuPwTglyVwjM22bNnK2ZgjrpAjQHSSl3lztd2f9evst1W/qnC58DRz7T7QndUDumAR4Q=="
+      }
+    },
+    "npm:@yarnpkg/parsers": {
+      "type": "npm",
+      "name": "npm:@yarnpkg/parsers",
+      "data": {
+        "version": "3.0.2",
+        "packageName": "@yarnpkg/parsers",
+        "hash": "sha512-/HcYgtUSiJiot/XWGLOlGxPYUG65+/31V8oqk17vZLW1xlCoR4PampyePljOxY2n8/3jz9+tIFzICsyGujJZoA=="
+      }
+    },
+    "npm:nx@19.5.7": {
+      "type": "npm",
+      "name": "npm:nx@19.5.7",
+      "data": {
+        "version": "19.5.7",
+        "packageName": "nx",
+        "hash": "sha512-AUmGgE19NB4m/7oHYQVdzZHtclVevD8w0/nNzzjDJE823T8oeoNhmc9MfCLz+/2l2KOp+Wqm+8LiG9/xWpXk0g=="
+      }
+    },
+    "npm:nx": {
+      "type": "npm",
+      "name": "npm:nx",
+      "data": {
+        "version": "20.4.3",
+        "packageName": "nx",
+        "hash": "sha512-Fynfb7doPYMlFRwtNtKhtcam6/EyFK6E6ElgQCSKpUf7xQAE24Ffc3uy8Bje9wMccV+y1OqnXE7dd32CG+SR8A=="
+      }
+    },
+    "npm:semver@7.7.1": {
+      "type": "npm",
+      "name": "npm:semver@7.7.1",
+      "data": {
+        "version": "7.7.1",
+        "packageName": "semver",
+        "hash": "sha512-hlq8tAfn0m/61p4BVRcPzIGr6LKiMwo4VM6dGi6pt4qcRkmNzTcWq6eCEjEh+qXjkMDvPlOFFSGwQjoEa6gyMA=="
+      }
+    },
+    "npm:semver@7.6.3": {
+      "type": "npm",
+      "name": "npm:semver@7.6.3",
+      "data": {
+        "version": "7.6.3",
+        "packageName": "semver",
+        "hash": "sha512-oVekP1cKtI+CTDvHWYFUcMtsK/00wmAEfyqKfNdARm8u1wNVhSgaX7A8d4UuIlUI5e84iEwOhs7ZPYRmzU9U6A=="
+      }
+    },
+    "npm:semver@5.7.2": {
+      "type": "npm",
+      "name": "npm:semver@5.7.2",
+      "data": {
+        "version": "5.7.2",
+        "packageName": "semver",
+        "hash": "sha512-cBznnQ9KjJqU67B52RMC65CMarK2600WFnbkcaiwWq3xy/5haFJlshgnpjovMVJ+Hff49d8GEn0b87C5pDQ10g=="
+      }
+    },
+    "npm:semver": {
+      "type": "npm",
+      "name": "npm:semver",
+      "data": {
+        "version": "6.3.1",
+        "packageName": "semver",
+        "hash": "sha512-BR7VvDCVHO+q2xBEWskxS6DJE1qRnb7DxzUrogb71CWoSficBxYsiAGd+Kl0mmq/MprG9yArRkyrQxTO6XjMzA=="
+      }
+    },
     "npm:@nrwl/web": {
       "type": "npm",
       "name": "npm:@nrwl/web",
@@ -3848,33 +4164,6 @@
         "version": "19.5.7",
         "packageName": "@nx/devkit",
         "hash": "sha512-mUtZQcdqbF0Q9HfyG14jmpPCtZ1GnVaLNIADZv5SLpFyfh4ZjaBw6wdjPj7Sp3imLoyqMrcd9nCRNO2hlem8bw=="
-      }
-    },
-    "npm:semver@7.6.3": {
-      "type": "npm",
-      "name": "npm:semver@7.6.3",
-      "data": {
-        "version": "7.6.3",
-        "packageName": "semver",
-        "hash": "sha512-oVekP1cKtI+CTDvHWYFUcMtsK/00wmAEfyqKfNdARm8u1wNVhSgaX7A8d4UuIlUI5e84iEwOhs7ZPYRmzU9U6A=="
-      }
-    },
-    "npm:semver@5.7.2": {
-      "type": "npm",
-      "name": "npm:semver@5.7.2",
-      "data": {
-        "version": "5.7.2",
-        "packageName": "semver",
-        "hash": "sha512-cBznnQ9KjJqU67B52RMC65CMarK2600WFnbkcaiwWq3xy/5haFJlshgnpjovMVJ+Hff49d8GEn0b87C5pDQ10g=="
-      }
-    },
-    "npm:semver": {
-      "type": "npm",
-      "name": "npm:semver",
-      "data": {
-        "version": "6.3.1",
-        "packageName": "semver",
-        "hash": "sha512-BR7VvDCVHO+q2xBEWskxS6DJE1qRnb7DxzUrogb71CWoSficBxYsiAGd+Kl0mmq/MprG9yArRkyrQxTO6XjMzA=="
       }
     },
     "npm:@nx/eslint": {
@@ -3947,96 +4236,6 @@
         "version": "19.5.7",
         "packageName": "@nx/next",
         "hash": "sha512-BmWYhguAJNWBAxxOPyp/RxFu788s+fu+ndlRGISyUrohasyh7Qz2cs8kXA/kUPfgcqpAsnQHGM8nB1S1O3Jl0Q=="
-      }
-    },
-    "npm:@nx/nx-darwin-arm64": {
-      "type": "npm",
-      "name": "npm:@nx/nx-darwin-arm64",
-      "data": {
-        "version": "19.5.7",
-        "packageName": "@nx/nx-darwin-arm64",
-        "hash": "sha512-5jFAZSfV8QVNoxOXayZw4/jNJbxMMctNOYZW8Qj4eU8Ti+OmhsLgouxz/9enCh5SDITriOMZ7IHZ9rhrlGQoig=="
-      }
-    },
-    "npm:@nx/nx-darwin-x64": {
-      "type": "npm",
-      "name": "npm:@nx/nx-darwin-x64",
-      "data": {
-        "version": "19.5.7",
-        "packageName": "@nx/nx-darwin-x64",
-        "hash": "sha512-Ss+rF2+MQxyKrNnSYAeEGhtdE9hUHiTqyjJo4n1lvIWJ++TairOCtk5QRHrYLgAxE1XTf0OabcsDzegxv7yk3Q=="
-      }
-    },
-    "npm:@nx/nx-freebsd-x64": {
-      "type": "npm",
-      "name": "npm:@nx/nx-freebsd-x64",
-      "data": {
-        "version": "19.5.7",
-        "packageName": "@nx/nx-freebsd-x64",
-        "hash": "sha512-FMLXcUr3mw/v4LvmNqHMAXy2k+T/hp2YpdBUq9ExteMfRywFsnKNlm39n/quniFsgKthEMdvvzxSQppRKaVwIw=="
-      }
-    },
-    "npm:@nx/nx-linux-arm-gnueabihf": {
-      "type": "npm",
-      "name": "npm:@nx/nx-linux-arm-gnueabihf",
-      "data": {
-        "version": "19.5.7",
-        "packageName": "@nx/nx-linux-arm-gnueabihf",
-        "hash": "sha512-LhJ342HutpR258lBLVTkXd6x2Uj4ZPJ6xKdfEm+FYQvG1byPr2L0TlNXcfSBkYtd7wRn0qg9eQZoCV/5+w415Q=="
-      }
-    },
-    "npm:@nx/nx-linux-arm64-gnu": {
-      "type": "npm",
-      "name": "npm:@nx/nx-linux-arm64-gnu",
-      "data": {
-        "version": "19.5.7",
-        "packageName": "@nx/nx-linux-arm64-gnu",
-        "hash": "sha512-Q6gN+VNLisg7mYPTXC5JuGCP/s9tLjJFclKdH6FoP5K1Hgy88KK1uUoivDIfI8xaEgyLqphD1AAqokiFWZNWsg=="
-      }
-    },
-    "npm:@nx/nx-linux-arm64-musl": {
-      "type": "npm",
-      "name": "npm:@nx/nx-linux-arm64-musl",
-      "data": {
-        "version": "19.5.7",
-        "packageName": "@nx/nx-linux-arm64-musl",
-        "hash": "sha512-BsYNcYujNKb+uE7PrJp4PrX8a3G9oy+THaUr0t5+L435HjuZDBiK+tK9JzYGvM0bR5FOYm5K99I1DVD/Hv0snw=="
-      }
-    },
-    "npm:@nx/nx-linux-x64-gnu": {
-      "type": "npm",
-      "name": "npm:@nx/nx-linux-x64-gnu",
-      "data": {
-        "version": "19.5.7",
-        "packageName": "@nx/nx-linux-x64-gnu",
-        "hash": "sha512-ILaLU8b5lUokYVF3vxAVj62qFok1hexiNzBdLGJPI1OkPGELtLyb8RymI3939iJoNMk1DS3/6dqK7NHXvHX8Mw=="
-      }
-    },
-    "npm:@nx/nx-linux-x64-musl": {
-      "type": "npm",
-      "name": "npm:@nx/nx-linux-x64-musl",
-      "data": {
-        "version": "19.5.7",
-        "packageName": "@nx/nx-linux-x64-musl",
-        "hash": "sha512-LfTnO4JZebLugioMk+GTptv3N38Wj2i2Pko0bdRZaKba+INGSlUgFqoRuO0KqZEmVIUGrxfkfqIN3HghVQ4D/Q=="
-      }
-    },
-    "npm:@nx/nx-win32-arm64-msvc": {
-      "type": "npm",
-      "name": "npm:@nx/nx-win32-arm64-msvc",
-      "data": {
-        "version": "19.5.7",
-        "packageName": "@nx/nx-win32-arm64-msvc",
-        "hash": "sha512-cCTttdbf1AKuDU8j108SpIMWs53A/0mOVDPOPpa+oKkvBaI8ruZkxOceMjWZjWULd2gi1nS+5nJePpbrdQ8mkg=="
-      }
-    },
-    "npm:@nx/nx-win32-x64-msvc": {
-      "type": "npm",
-      "name": "npm:@nx/nx-win32-x64-msvc",
-      "data": {
-        "version": "19.5.7",
-        "packageName": "@nx/nx-win32-x64-msvc",
-        "hash": "sha512-EqSnjpq1PNR/C8/YkL+Gn79dDfQ+HwJM8VJOt4qoCOQ9gQZqNJphjW2hg0H8WxLYezMScx3fbL99mvJO7ab2Cw=="
       }
     },
     "npm:@nx/react": {
@@ -6278,15 +6477,6 @@
         "version": "1.1.0",
         "packageName": "@yarnpkg/lockfile",
         "hash": "sha512-GpSwvyXOcOOlV70vbnzjj4fW5xW/FdUF6nQEt1ENy7m4ZCczi1+/buVUPAqmGfqznsORNFzUMjctTIp8a9tuCQ=="
-      }
-    },
-    "npm:@yarnpkg/parsers": {
-      "type": "npm",
-      "name": "npm:@yarnpkg/parsers",
-      "data": {
-        "version": "3.0.0-rc.46",
-        "packageName": "@yarnpkg/parsers",
-        "hash": "sha512-aiATs7pSutzda/rq8fnuPwTglyVwjM22bNnK2ZgjrpAjQHSSl3lztd2f9evst1W/qnC58DRz7T7QndUDumAR4Q=="
       }
     },
     "npm:@yr/monotone-cubic-spline": {
@@ -11284,6 +11474,15 @@
         "hash": "sha512-RdJUflcE3cUzKiMqQgsCu06FPu9UdIJO0beYbPhHN4k6apgJtifcoCtT9bcxOpYBtpD2kCM6Sbzg4CausW/PKQ=="
       }
     },
+    "npm:jsbarcode": {
+      "type": "npm",
+      "name": "npm:jsbarcode",
+      "data": {
+        "version": "3.11.6",
+        "packageName": "jsbarcode",
+        "hash": "sha512-G5TKGyKY1zJo0ZQKFM1IIMfy0nF2rs92BLlCz+cU4/TazIc4ZH+X1GYeDRt7TKjrYqmPfTjwTBkU/QnQlsYiuA=="
+      }
+    },
     "npm:jsdom": {
       "type": "npm",
       "name": "npm:jsdom",
@@ -11594,9 +11793,9 @@
       "type": "npm",
       "name": "npm:lines-and-columns",
       "data": {
-        "version": "2.0.4",
+        "version": "2.0.3",
         "packageName": "lines-and-columns",
-        "hash": "sha512-wM1+Z03eypVAVUCE7QdSqpVIvelbOakn1M0bPDoA4SGWPx3sNDVUiMo3L6To6WWGClB7VyXnhQ4Sn7gxiJbE6A=="
+        "hash": "sha512-cNOjgCnLB+FnvWWtyRTzmB3POJ+cXxTA81LoW7u8JdmhfXzriropYwpjShnz1QLLWsQwY7nIxoDmcPTwphDK9w=="
       }
     },
     "npm:lines-and-columns@1.2.4": {
@@ -11968,6 +12167,15 @@
         "hash": "sha512-FP+p8RB8OWpF3YZBCrP5gtADmtXApB5AMLn+vdyA+PyxCjrCs00mjyUozssO33cwDeT3wNGdLxJ5M//YqtHAJw=="
       }
     },
+    "npm:moment": {
+      "type": "npm",
+      "name": "npm:moment",
+      "data": {
+        "version": "2.30.1",
+        "packageName": "moment",
+        "hash": "sha512-uEmtNhbDOrWPFS+hdjFCBfy9f2YoyzRpwcl+DqpC6taX21FzsTLQVbMV/W7PzNSX6x/bhC1zA3c2UQ5NzH6how=="
+      }
+    },
     "npm:motion-dom": {
       "type": "npm",
       "name": "npm:motion-dom",
@@ -12065,6 +12273,15 @@
         "version": "8.4.38",
         "packageName": "postcss",
         "hash": "sha512-Wglpdk03BSfXkHoQa3b/oulrotAkwrlLDRSOb9D0bN86FdRyE9lppSp33aHNPgBa0JKCoB+drFLZkQoRRYae5A=="
+      }
+    },
+    "npm:postcss@8.4.49": {
+      "type": "npm",
+      "name": "npm:postcss@8.4.49",
+      "data": {
+        "version": "8.4.49",
+        "packageName": "postcss",
+        "hash": "sha512-OCVPnIObs4N29kxTjzLfUryOkvZEq+pf8jTF0lg8E7uETuWHA+v7j3c/xJmiqpX450191LlmZfUKkXxkTry7nA=="
       }
     },
     "npm:no-case": {
@@ -12200,15 +12417,6 @@
         "version": "2.2.16",
         "packageName": "nwsapi",
         "hash": "sha512-F1I/bimDpj3ncaNDhfyMWuFqmQDBwDB0Fogc2qpL3BWvkQteFD/8BzWuIRl83rq0DXfm8SGt/HFhLXZyljTXcQ=="
-      }
-    },
-    "npm:nx": {
-      "type": "npm",
-      "name": "npm:nx",
-      "data": {
-        "version": "19.5.7",
-        "packageName": "nx",
-        "hash": "sha512-AUmGgE19NB4m/7oHYQVdzZHtclVevD8w0/nNzzjDJE823T8oeoNhmc9MfCLz+/2l2KOp+Wqm+8LiG9/xWpXk0g=="
       }
     },
     "npm:object-assign": {
@@ -13264,6 +13472,15 @@
         "hash": "sha512-03oScKJyNLRf0Oe+ihJxFZliBQM9vW3UWwomVn4YVRTN1jsIR58dLWt0v1sb8RwJVHDMbeHiKQueM0KGpn7nOA=="
       }
     },
+    "npm:react-barcode": {
+      "type": "npm",
+      "name": "npm:react-barcode",
+      "data": {
+        "version": "1.5.3",
+        "packageName": "react-barcode",
+        "hash": "sha512-EJPUwuERKpApcQ9qXzdVZzddFYRT7+3R/jJ3OrTfW6m2iq+WT+CBaVB7DsQazhPRXDfMcx9+dmMmzjsmveOViQ=="
+      }
+    },
     "npm:react-csv": {
       "type": "npm",
       "name": "npm:react-csv",
@@ -13343,6 +13560,15 @@
         "version": "5.4.0",
         "packageName": "react-icons",
         "hash": "sha512-7eltJxgVt7X64oHh6wSWNwwbKTCtMfK35hcjvJS0yxEAhPM8oUKdS3+kqaW1vicIltw+kR2unHaa12S9pPALoQ=="
+      }
+    },
+    "npm:react-moment": {
+      "type": "npm",
+      "name": "npm:react-moment",
+      "data": {
+        "version": "1.1.3",
+        "packageName": "react-moment",
+        "hash": "sha512-8EPvlUL8u6EknPp1ISF5MQ3wx2OHJVXIP/iZc4wRh3iV3XozftZERDv9ANZeAtMlhNNQHdFoqcZHFUkBSTONfA=="
       }
     },
     "npm:react-phone-input-2": {
@@ -14285,9 +14511,9 @@
       "type": "npm",
       "name": "npm:styled-components",
       "data": {
-        "version": "6.1.14",
+        "version": "6.1.15",
         "packageName": "styled-components",
-        "hash": "sha512-KtfwhU5jw7UoxdM0g6XU9VZQFV4do+KrM8idiVCH5h4v49W+3p3yMe0icYwJgZQZepa5DbH04Qv8P0/RdcLcgg=="
+        "hash": "sha512-PpOTEztW87Ua2xbmLa7yssjNyUF9vE7wdldRfn1I2E6RTkqknkBYpj771OxM/xrvRGinLy2oysa7GOd7NcZZIA=="
       }
     },
     "npm:stylis@4.3.2": {
@@ -15616,6 +15842,16 @@
       },
       {
         "source": "potta",
+        "target": "npm:@tanstack/react-table",
+        "type": "static"
+      },
+      {
+        "source": "potta",
+        "target": "npm:yup",
+        "type": "static"
+      },
+      {
+        "source": "potta",
         "target": "npm:@nextui-org/react",
         "type": "static"
       },
@@ -15627,6 +15863,16 @@
       {
         "source": "potta",
         "target": "npm:react-select",
+        "type": "static"
+      },
+      {
+        "source": "potta",
+        "target": "npm:react-barcode",
+        "type": "static"
+      },
+      {
+        "source": "potta",
+        "target": "npm:moment",
         "type": "static"
       },
       {
@@ -15679,6 +15925,383 @@
       {
         "source": "core",
         "target": "npm:@testing-library/react",
+        "type": "static"
+      }
+    ],
+    "@instanvi-global/source": [
+      {
+        "source": "@instanvi-global/source",
+        "target": "npm:@nx/jest",
+        "type": "static"
+      },
+      {
+        "source": "@instanvi-global/source",
+        "target": "npm:@nx/eslint",
+        "type": "static"
+      },
+      {
+        "source": "@instanvi-global/source",
+        "target": "npm:@nx/eslint-plugin",
+        "type": "static"
+      },
+      {
+        "source": "@instanvi-global/source",
+        "target": "npm:@nx/js",
+        "type": "static"
+      },
+      {
+        "source": "@instanvi-global/source",
+        "target": "npm:@nx/next",
+        "type": "static"
+      },
+      {
+        "source": "@instanvi-global/source",
+        "target": "npm:@nx/react",
+        "type": "static"
+      },
+      {
+        "source": "@instanvi-global/source",
+        "target": "npm:@nx/workspace",
+        "type": "static"
+      },
+      {
+        "source": "@instanvi-global/source",
+        "target": "npm:@swc-node/register",
+        "type": "static"
+      },
+      {
+        "source": "@instanvi-global/source",
+        "target": "npm:@swc/cli",
+        "type": "static"
+      },
+      {
+        "source": "@instanvi-global/source",
+        "target": "npm:@swc/core",
+        "type": "static"
+      },
+      {
+        "source": "@instanvi-global/source",
+        "target": "npm:@swc/helpers",
+        "type": "static"
+      },
+      {
+        "source": "@instanvi-global/source",
+        "target": "npm:@testing-library/react",
+        "type": "static"
+      },
+      {
+        "source": "@instanvi-global/source",
+        "target": "npm:@types/crypto-js",
+        "type": "static"
+      },
+      {
+        "source": "@instanvi-global/source",
+        "target": "npm:@types/jest",
+        "type": "static"
+      },
+      {
+        "source": "@instanvi-global/source",
+        "target": "npm:@types/node",
+        "type": "static"
+      },
+      {
+        "source": "@instanvi-global/source",
+        "target": "npm:@types/react",
+        "type": "static"
+      },
+      {
+        "source": "@instanvi-global/source",
+        "target": "npm:@types/react-dom",
+        "type": "static"
+      },
+      {
+        "source": "@instanvi-global/source",
+        "target": "npm:@typescript-eslint/eslint-plugin",
+        "type": "static"
+      },
+      {
+        "source": "@instanvi-global/source",
+        "target": "npm:@typescript-eslint/parser",
+        "type": "static"
+      },
+      {
+        "source": "@instanvi-global/source",
+        "target": "npm:autoprefixer",
+        "type": "static"
+      },
+      {
+        "source": "@instanvi-global/source",
+        "target": "npm:babel-jest",
+        "type": "static"
+      },
+      {
+        "source": "@instanvi-global/source",
+        "target": "npm:eslint",
+        "type": "static"
+      },
+      {
+        "source": "@instanvi-global/source",
+        "target": "npm:eslint-config-next",
+        "type": "static"
+      },
+      {
+        "source": "@instanvi-global/source",
+        "target": "npm:eslint-config-prettier",
+        "type": "static"
+      },
+      {
+        "source": "@instanvi-global/source",
+        "target": "npm:eslint-plugin-import",
+        "type": "static"
+      },
+      {
+        "source": "@instanvi-global/source",
+        "target": "npm:eslint-plugin-jsx-a11y",
+        "type": "static"
+      },
+      {
+        "source": "@instanvi-global/source",
+        "target": "npm:eslint-plugin-react",
+        "type": "static"
+      },
+      {
+        "source": "@instanvi-global/source",
+        "target": "npm:eslint-plugin-react-hooks",
+        "type": "static"
+      },
+      {
+        "source": "@instanvi-global/source",
+        "target": "npm:jest",
+        "type": "static"
+      },
+      {
+        "source": "@instanvi-global/source",
+        "target": "npm:jest-environment-jsdom",
+        "type": "static"
+      },
+      {
+        "source": "@instanvi-global/source",
+        "target": "npm:nx",
+        "type": "static"
+      },
+      {
+        "source": "@instanvi-global/source",
+        "target": "npm:postcss",
+        "type": "static"
+      },
+      {
+        "source": "@instanvi-global/source",
+        "target": "npm:prettier",
+        "type": "static"
+      },
+      {
+        "source": "@instanvi-global/source",
+        "target": "npm:tailwindcss",
+        "type": "static"
+      },
+      {
+        "source": "@instanvi-global/source",
+        "target": "npm:ts-jest",
+        "type": "static"
+      },
+      {
+        "source": "@instanvi-global/source",
+        "target": "npm:ts-node",
+        "type": "static"
+      },
+      {
+        "source": "@instanvi-global/source",
+        "target": "npm:typescript",
+        "type": "static"
+      },
+      {
+        "source": "@instanvi-global/source",
+        "target": "npm:@headlessui/react",
+        "type": "static"
+      },
+      {
+        "source": "@instanvi-global/source",
+        "target": "npm:@heroicons/react",
+        "type": "static"
+      },
+      {
+        "source": "@instanvi-global/source",
+        "target": "npm:@hookform/resolvers",
+        "type": "static"
+      },
+      {
+        "source": "@instanvi-global/source",
+        "target": "npm:@nextui-org/react",
+        "type": "static"
+      },
+      {
+        "source": "@instanvi-global/source",
+        "target": "npm:@tanstack/react-query",
+        "type": "static"
+      },
+      {
+        "source": "@instanvi-global/source",
+        "target": "npm:@tanstack/react-table",
+        "type": "static"
+      },
+      {
+        "source": "@instanvi-global/source",
+        "target": "npm:@types/react-csv",
+        "type": "static"
+      },
+      {
+        "source": "@instanvi-global/source",
+        "target": "npm:apexcharts",
+        "type": "static"
+      },
+      {
+        "source": "@instanvi-global/source",
+        "target": "npm:axios",
+        "type": "static"
+      },
+      {
+        "source": "@instanvi-global/source",
+        "target": "npm:country-data-list",
+        "type": "static"
+      },
+      {
+        "source": "@instanvi-global/source",
+        "target": "npm:country-list-with-dial-code-and-flag",
+        "type": "static"
+      },
+      {
+        "source": "@instanvi-global/source",
+        "target": "npm:crypto-js",
+        "type": "static"
+      },
+      {
+        "source": "@instanvi-global/source",
+        "target": "npm:framer-motion",
+        "type": "static"
+      },
+      {
+        "source": "@instanvi-global/source",
+        "target": "npm:moment",
+        "type": "static"
+      },
+      {
+        "source": "@instanvi-global/source",
+        "target": "npm:next",
+        "type": "static"
+      },
+      {
+        "source": "@instanvi-global/source",
+        "target": "npm:nookies",
+        "type": "static"
+      },
+      {
+        "source": "@instanvi-global/source",
+        "target": "npm:react",
+        "type": "static"
+      },
+      {
+        "source": "@instanvi-global/source",
+        "target": "npm:react-accessible-accordion",
+        "type": "static"
+      },
+      {
+        "source": "@instanvi-global/source",
+        "target": "npm:react-apexcharts",
+        "type": "static"
+      },
+      {
+        "source": "@instanvi-global/source",
+        "target": "npm:react-barcode",
+        "type": "static"
+      },
+      {
+        "source": "@instanvi-global/source",
+        "target": "npm:react-csv",
+        "type": "static"
+      },
+      {
+        "source": "@instanvi-global/source",
+        "target": "npm:react-data-table-component",
+        "type": "static"
+      },
+      {
+        "source": "@instanvi-global/source",
+        "target": "npm:react-dom",
+        "type": "static"
+      },
+      {
+        "source": "@instanvi-global/source",
+        "target": "npm:react-dropzone",
+        "type": "static"
+      },
+      {
+        "source": "@instanvi-global/source",
+        "target": "npm:react-google-flight-datepicker",
+        "type": "static"
+      },
+      {
+        "source": "@instanvi-global/source",
+        "target": "npm:react-hook-form",
+        "type": "static"
+      },
+      {
+        "source": "@instanvi-global/source",
+        "target": "npm:react-hot-toast",
+        "type": "static"
+      },
+      {
+        "source": "@instanvi-global/source",
+        "target": "npm:react-icomoon",
+        "type": "static"
+      },
+      {
+        "source": "@instanvi-global/source",
+        "target": "npm:react-icons",
+        "type": "static"
+      },
+      {
+        "source": "@instanvi-global/source",
+        "target": "npm:react-moment",
+        "type": "static"
+      },
+      {
+        "source": "@instanvi-global/source",
+        "target": "npm:react-phone-input-2",
+        "type": "static"
+      },
+      {
+        "source": "@instanvi-global/source",
+        "target": "npm:react-pro-sidebar",
+        "type": "static"
+      },
+      {
+        "source": "@instanvi-global/source",
+        "target": "npm:react-select",
+        "type": "static"
+      },
+      {
+        "source": "@instanvi-global/source",
+        "target": "npm:react-verification-input",
+        "type": "static"
+      },
+      {
+        "source": "@instanvi-global/source",
+        "target": "npm:remixicon",
+        "type": "static"
+      },
+      {
+        "source": "@instanvi-global/source",
+        "target": "npm:timezones-list",
+        "type": "static"
+      },
+      {
+        "source": "@instanvi-global/source",
+        "target": "npm:tslib",
+        "type": "static"
+      },
+      {
+        "source": "@instanvi-global/source",
+        "target": "npm:yup",
         "type": "static"
       }
     ],
@@ -23840,12 +24463,261 @@
     "npm:@nrwl/tao": [
       {
         "source": "npm:@nrwl/tao",
-        "target": "npm:nx",
+        "target": "npm:nx@19.5.7",
         "type": "static"
       },
       {
         "source": "npm:@nrwl/tao",
         "target": "npm:tslib",
+        "type": "static"
+      }
+    ],
+    "npm:@yarnpkg/parsers@3.0.0-rc.46": [
+      {
+        "source": "npm:@yarnpkg/parsers@3.0.0-rc.46",
+        "target": "npm:js-yaml",
+        "type": "static"
+      },
+      {
+        "source": "npm:@yarnpkg/parsers@3.0.0-rc.46",
+        "target": "npm:tslib",
+        "type": "static"
+      }
+    ],
+    "npm:nx@19.5.7": [
+      {
+        "source": "npm:nx@19.5.7",
+        "target": "npm:@swc-node/register",
+        "type": "static"
+      },
+      {
+        "source": "npm:nx@19.5.7",
+        "target": "npm:@swc/core",
+        "type": "static"
+      },
+      {
+        "source": "npm:nx@19.5.7",
+        "target": "npm:@napi-rs/wasm-runtime",
+        "type": "static"
+      },
+      {
+        "source": "npm:nx@19.5.7",
+        "target": "npm:@nrwl/tao",
+        "type": "static"
+      },
+      {
+        "source": "npm:nx@19.5.7",
+        "target": "npm:@yarnpkg/lockfile",
+        "type": "static"
+      },
+      {
+        "source": "npm:nx@19.5.7",
+        "target": "npm:@yarnpkg/parsers@3.0.0-rc.46",
+        "type": "static"
+      },
+      {
+        "source": "npm:nx@19.5.7",
+        "target": "npm:@zkochan/js-yaml",
+        "type": "static"
+      },
+      {
+        "source": "npm:nx@19.5.7",
+        "target": "npm:axios",
+        "type": "static"
+      },
+      {
+        "source": "npm:nx@19.5.7",
+        "target": "npm:chalk",
+        "type": "static"
+      },
+      {
+        "source": "npm:nx@19.5.7",
+        "target": "npm:cli-cursor",
+        "type": "static"
+      },
+      {
+        "source": "npm:nx@19.5.7",
+        "target": "npm:cli-spinners",
+        "type": "static"
+      },
+      {
+        "source": "npm:nx@19.5.7",
+        "target": "npm:cliui",
+        "type": "static"
+      },
+      {
+        "source": "npm:nx@19.5.7",
+        "target": "npm:dotenv",
+        "type": "static"
+      },
+      {
+        "source": "npm:nx@19.5.7",
+        "target": "npm:dotenv-expand",
+        "type": "static"
+      },
+      {
+        "source": "npm:nx@19.5.7",
+        "target": "npm:enquirer",
+        "type": "static"
+      },
+      {
+        "source": "npm:nx@19.5.7",
+        "target": "npm:figures",
+        "type": "static"
+      },
+      {
+        "source": "npm:nx@19.5.7",
+        "target": "npm:flat",
+        "type": "static"
+      },
+      {
+        "source": "npm:nx@19.5.7",
+        "target": "npm:front-matter",
+        "type": "static"
+      },
+      {
+        "source": "npm:nx@19.5.7",
+        "target": "npm:fs-extra",
+        "type": "static"
+      },
+      {
+        "source": "npm:nx@19.5.7",
+        "target": "npm:ignore",
+        "type": "static"
+      },
+      {
+        "source": "npm:nx@19.5.7",
+        "target": "npm:jest-diff",
+        "type": "static"
+      },
+      {
+        "source": "npm:nx@19.5.7",
+        "target": "npm:jsonc-parser",
+        "type": "static"
+      },
+      {
+        "source": "npm:nx@19.5.7",
+        "target": "npm:lines-and-columns",
+        "type": "static"
+      },
+      {
+        "source": "npm:nx@19.5.7",
+        "target": "npm:minimatch",
+        "type": "static"
+      },
+      {
+        "source": "npm:nx@19.5.7",
+        "target": "npm:node-machine-id",
+        "type": "static"
+      },
+      {
+        "source": "npm:nx@19.5.7",
+        "target": "npm:npm-run-path",
+        "type": "static"
+      },
+      {
+        "source": "npm:nx@19.5.7",
+        "target": "npm:open",
+        "type": "static"
+      },
+      {
+        "source": "npm:nx@19.5.7",
+        "target": "npm:ora",
+        "type": "static"
+      },
+      {
+        "source": "npm:nx@19.5.7",
+        "target": "npm:semver@7.7.1",
+        "type": "static"
+      },
+      {
+        "source": "npm:nx@19.5.7",
+        "target": "npm:string-width",
+        "type": "static"
+      },
+      {
+        "source": "npm:nx@19.5.7",
+        "target": "npm:strong-log-transformer",
+        "type": "static"
+      },
+      {
+        "source": "npm:nx@19.5.7",
+        "target": "npm:tar-stream",
+        "type": "static"
+      },
+      {
+        "source": "npm:nx@19.5.7",
+        "target": "npm:tmp",
+        "type": "static"
+      },
+      {
+        "source": "npm:nx@19.5.7",
+        "target": "npm:tsconfig-paths",
+        "type": "static"
+      },
+      {
+        "source": "npm:nx@19.5.7",
+        "target": "npm:tslib",
+        "type": "static"
+      },
+      {
+        "source": "npm:nx@19.5.7",
+        "target": "npm:yargs",
+        "type": "static"
+      },
+      {
+        "source": "npm:nx@19.5.7",
+        "target": "npm:yargs-parser",
+        "type": "static"
+      },
+      {
+        "source": "npm:nx@19.5.7",
+        "target": "npm:@nx/nx-darwin-arm64@19.5.7",
+        "type": "static"
+      },
+      {
+        "source": "npm:nx@19.5.7",
+        "target": "npm:@nx/nx-darwin-x64@19.5.7",
+        "type": "static"
+      },
+      {
+        "source": "npm:nx@19.5.7",
+        "target": "npm:@nx/nx-freebsd-x64@19.5.7",
+        "type": "static"
+      },
+      {
+        "source": "npm:nx@19.5.7",
+        "target": "npm:@nx/nx-linux-arm-gnueabihf@19.5.7",
+        "type": "static"
+      },
+      {
+        "source": "npm:nx@19.5.7",
+        "target": "npm:@nx/nx-linux-arm64-gnu@19.5.7",
+        "type": "static"
+      },
+      {
+        "source": "npm:nx@19.5.7",
+        "target": "npm:@nx/nx-linux-arm64-musl@19.5.7",
+        "type": "static"
+      },
+      {
+        "source": "npm:nx@19.5.7",
+        "target": "npm:@nx/nx-linux-x64-gnu@19.5.7",
+        "type": "static"
+      },
+      {
+        "source": "npm:nx@19.5.7",
+        "target": "npm:@nx/nx-linux-x64-musl@19.5.7",
+        "type": "static"
+      },
+      {
+        "source": "npm:nx@19.5.7",
+        "target": "npm:@nx/nx-win32-arm64-msvc@19.5.7",
+        "type": "static"
+      },
+      {
+        "source": "npm:nx@19.5.7",
+        "target": "npm:@nx/nx-win32-x64-msvc@19.5.7",
         "type": "static"
       }
     ],
@@ -24693,7 +25565,7 @@
       },
       {
         "source": "npm:@nx/workspace",
-        "target": "npm:nx",
+        "target": "npm:nx@19.5.7",
         "type": "static"
       },
       {
@@ -36440,11 +37312,6 @@
       },
       {
         "source": "npm:nx",
-        "target": "npm:@nrwl/tao",
-        "type": "static"
-      },
-      {
-        "source": "npm:nx",
         "target": "npm:@yarnpkg/lockfile",
         "type": "static"
       },
@@ -36515,11 +37382,6 @@
       },
       {
         "source": "npm:nx",
-        "target": "npm:fs-extra",
-        "type": "static"
-      },
-      {
-        "source": "npm:nx",
         "target": "npm:ignore",
         "type": "static"
       },
@@ -36565,17 +37427,17 @@
       },
       {
         "source": "npm:nx",
+        "target": "npm:resolve.exports@2.0.3",
+        "type": "static"
+      },
+      {
+        "source": "npm:nx",
         "target": "npm:semver@7.6.3",
         "type": "static"
       },
       {
         "source": "npm:nx",
         "target": "npm:string-width",
-        "type": "static"
-      },
-      {
-        "source": "npm:nx",
-        "target": "npm:strong-log-transformer",
         "type": "static"
       },
       {
@@ -36596,6 +37458,11 @@
       {
         "source": "npm:nx",
         "target": "npm:tslib",
+        "type": "static"
+      },
+      {
+        "source": "npm:nx",
+        "target": "npm:yaml",
         "type": "static"
       },
       {
@@ -37784,6 +38651,23 @@
         "type": "static"
       }
     ],
+    "npm:react-barcode": [
+      {
+        "source": "npm:react-barcode",
+        "target": "npm:react",
+        "type": "static"
+      },
+      {
+        "source": "npm:react-barcode",
+        "target": "npm:jsbarcode",
+        "type": "static"
+      },
+      {
+        "source": "npm:react-barcode",
+        "target": "npm:prop-types",
+        "type": "static"
+      }
+    ],
     "npm:react-data-table-component": [
       {
         "source": "npm:react-data-table-component",
@@ -37901,6 +38785,23 @@
     "npm:react-icons": [
       {
         "source": "npm:react-icons",
+        "target": "npm:react",
+        "type": "static"
+      }
+    ],
+    "npm:react-moment": [
+      {
+        "source": "npm:react-moment",
+        "target": "npm:moment",
+        "type": "static"
+      },
+      {
+        "source": "npm:react-moment",
+        "target": "npm:prop-types",
+        "type": "static"
+      },
+      {
+        "source": "npm:react-moment",
         "target": "npm:react",
         "type": "static"
       }
@@ -39356,7 +40257,7 @@
       },
       {
         "source": "npm:styled-components",
-        "target": "npm:postcss",
+        "target": "npm:postcss@8.4.49",
         "type": "static"
       },
       {
@@ -39379,6 +40280,23 @@
       {
         "source": "npm:@emotion/is-prop-valid@1.2.2",
         "target": "npm:@emotion/memoize@0.8.1",
+        "type": "static"
+      }
+    ],
+    "npm:postcss@8.4.49": [
+      {
+        "source": "npm:postcss@8.4.49",
+        "target": "npm:nanoid",
+        "type": "static"
+      },
+      {
+        "source": "npm:postcss@8.4.49",
+        "target": "npm:picocolors",
+        "type": "static"
+      },
+      {
+        "source": "npm:postcss@8.4.49",
+        "target": "npm:source-map-js",
         "type": "static"
       }
     ],
@@ -41174,5 +42092,7 @@
       }
     ]
   },
-  "version": "6.0"
+  "version": "6.0",
+  "errors": [],
+  "computedAt": 1739957935511
 }
