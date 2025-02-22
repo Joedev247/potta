@@ -50,6 +50,254 @@
   "fileMap": {
     "nonProjectFiles": [],
     "projectFileMap": {
+      "core": [
+        {
+          "file": "libs/core/.eslintrc.json",
+          "hash": "11012487992710232822"
+        },
+        {
+          "file": "libs/core/README.md",
+          "hash": "862743182427189852"
+        },
+        {
+          "file": "libs/core/project.json",
+          "hash": "8215491323991500792"
+        },
+        {
+          "file": "libs/core/src/index.ts",
+          "hash": "1391443467439822800"
+        },
+        {
+          "file": "libs/core/src/lib/core.spec.tsx",
+          "hash": "10083302775005561580",
+          "deps": [
+            "npm:@testing-library/react"
+          ]
+        },
+        {
+          "file": "libs/core/src/lib/core.tsx",
+          "hash": "12083220179364162819"
+        },
+        {
+          "file": "libs/core/src/lib/hello-server.tsx",
+          "hash": "2397568674684759047"
+        },
+        {
+          "file": "libs/core/src/server.ts",
+          "hash": "8912437808649717296"
+        },
+        {
+          "file": "libs/core/tsconfig.json",
+          "hash": "14088618039610991405"
+        },
+        {
+          "file": "libs/core/tsconfig.lib.json",
+          "hash": "1536859351713546153"
+        }
+      ],
+      "utilities": [
+        {
+          "file": "libs/utilities/.eslintrc.json",
+          "hash": "11012487992710232822"
+        },
+        {
+          "file": "libs/utilities/README.md",
+          "hash": "13228732804139331838"
+        },
+        {
+          "file": "libs/utilities/project.json",
+          "hash": "699343638286385166"
+        },
+        {
+          "file": "libs/utilities/src/index.ts",
+          "hash": "4979336273987222930"
+        },
+        {
+          "file": "libs/utilities/src/lib/configs/axios.ts",
+          "hash": "3794232511606065549",
+          "deps": [
+            "npm:crypto-js",
+            "npm:axios"
+          ]
+        },
+        {
+          "file": "libs/utilities/src/lib/configs/env.ts",
+          "hash": "12101586654834214904"
+        },
+        {
+          "file": "libs/utilities/src/lib/helpers/index.ts",
+          "hash": "10922730425443113868",
+          "deps": [
+            "npm:crypto-js",
+            "npm:country-list-with-dial-code-and-flag"
+          ]
+        },
+        {
+          "file": "libs/utilities/src/server.ts",
+          "hash": "5519843671682787663"
+        },
+        {
+          "file": "libs/utilities/tsconfig.json",
+          "hash": "14088618039610991405"
+        },
+        {
+          "file": "libs/utilities/tsconfig.lib.json",
+          "hash": "1536859351713546153"
+        }
+      ],
+      "@instanvi-global/source": [
+        {
+          "file": ".editorconfig",
+          "hash": "5443105041930014821"
+        },
+        {
+          "file": ".eslintignore",
+          "hash": "7663861978715868291"
+        },
+        {
+          "file": ".eslintrc.json",
+          "hash": "18315524891129148814"
+        },
+        {
+          "file": ".github/workflows/staging.yaml",
+          "hash": "6745584629413967094"
+        },
+        {
+          "file": ".gitignore",
+          "hash": "7456224741535900147"
+        },
+        {
+          "file": ".prettierignore",
+          "hash": "14688272390704683536"
+        },
+        {
+          "file": ".prettierrc",
+          "hash": "16267754514737964994"
+        },
+        {
+          "file": "Dockerfile",
+          "hash": "659189421521947874"
+        },
+        {
+          "file": "README.md",
+          "hash": "6840628470554381479"
+        },
+        {
+          "file": "docker-compose-build.yml",
+          "hash": "17454110849002822681"
+        },
+        {
+          "file": "docker-compose.yml",
+          "hash": "6344911347125248550"
+        },
+        {
+          "file": "jest.config.ts",
+          "hash": "3494843969422251966",
+          "deps": [
+            "npm:@nx/jest"
+          ]
+        },
+        {
+          "file": "jest.preset.js",
+          "hash": "9430166341120122740",
+          "deps": [
+            "npm:@nx/jest"
+          ]
+        },
+        {
+          "file": "nx.json",
+          "hash": "12021904216625248971"
+        },
+        {
+          "file": "package-lock.json",
+          "hash": "3269650321521787038"
+        },
+        {
+          "file": "package.json",
+          "hash": "9769018995163540316",
+          "deps": [
+            "npm:@nx/eslint",
+            "npm:@nx/eslint-plugin",
+            "npm:@nx/jest",
+            "npm:@nx/js",
+            "npm:@nx/next",
+            "npm:@nx/react",
+            "npm:@nx/workspace",
+            "npm:@swc-node/register",
+            "npm:@swc/cli",
+            "npm:@swc/core",
+            "npm:@swc/helpers",
+            "npm:@testing-library/react",
+            "npm:@types/crypto-js",
+            "npm:@types/jest",
+            "npm:@types/node",
+            "npm:@types/react",
+            "npm:@types/react-dom",
+            "npm:@typescript-eslint/eslint-plugin",
+            "npm:@typescript-eslint/parser",
+            "npm:autoprefixer",
+            "npm:babel-jest",
+            "npm:eslint",
+            "npm:eslint-config-next",
+            "npm:eslint-config-prettier",
+            "npm:eslint-plugin-import",
+            "npm:eslint-plugin-jsx-a11y",
+            "npm:eslint-plugin-react",
+            "npm:eslint-plugin-react-hooks",
+            "npm:jest",
+            "npm:jest-environment-jsdom",
+            "npm:nx",
+            "npm:postcss",
+            "npm:prettier",
+            "npm:tailwindcss",
+            "npm:ts-jest",
+            "npm:ts-node",
+            "npm:typescript",
+            "npm:@headlessui/react",
+            "npm:@heroicons/react",
+            "npm:@hookform/resolvers",
+            "npm:@nextui-org/react",
+            "npm:@tanstack/react-query",
+            "npm:@tanstack/react-table",
+            "npm:@types/react-csv",
+            "npm:apexcharts",
+            "npm:axios",
+            "npm:country-data-list",
+            "npm:country-list-with-dial-code-and-flag",
+            "npm:crypto-js",
+            "npm:framer-motion",
+            "npm:moment",
+            "npm:next",
+            "npm:nookies",
+            "npm:react",
+            "npm:react-accessible-accordion",
+            "npm:react-apexcharts",
+            "npm:react-barcode",
+            "npm:react-csv",
+            "npm:react-data-table-component",
+            "npm:react-dom",
+            "npm:react-dropzone",
+            "npm:react-google-flight-datepicker",
+            "npm:react-hook-form",
+            "npm:react-hot-toast",
+            "npm:react-icomoon",
+            "npm:react-icons",
+            "npm:react-moment",
+            "npm:react-phone-input-2",
+            "npm:react-pro-sidebar",
+            "npm:react-select",
+            "npm:react-verification-input",
+            "npm:remixicon",
+            "npm:timezones-list",
+            "npm:tslib",
+            "npm:yup"
+          ]
+        },
+        {
+          "file": "tsconfig.base.json",
+          "hash": "16257537213835165230"
+        }
+      ],
       "potta": [
         {
           "file": "apps/potta/.eslintrc.json",
@@ -59,6 +307,14 @@
           "file": "apps/potta/config/axios.config.ts",
           "hash": "13982019025916423870",
           "deps": [
+            "npm:axios"
+          ]
+        },
+        {
+          "file": "apps/potta/config/posconfig.ts",
+          "hash": "18367911836121511754",
+          "deps": [
+            "npm:crypto-js",
             "npm:axios"
           ]
         },
@@ -1493,6 +1749,10 @@
           ]
         },
         {
+          "file": "apps/potta/src/app/(routes)/pos/@types/user.ts",
+          "hash": "3244421341483603138"
+        },
+        {
           "file": "apps/potta/src/app/(routes)/pos/Calculate/page.tsx",
           "hash": "15863037773796222783",
           "deps": [
@@ -1609,7 +1869,7 @@
         },
         {
           "file": "apps/potta/src/app/(routes)/pos/inventory/_hooks/useCreateProduct.ts",
-          "hash": "2794143164882617356",
+          "hash": "3616067678100181991",
           "deps": [
             "npm:@tanstack/react-query"
           ]
@@ -1644,7 +1904,7 @@
         },
         {
           "file": "apps/potta/src/app/(routes)/pos/inventory/_utils/api.ts",
-          "hash": "1010869109650356621"
+          "hash": "15188868005582752854"
         },
         {
           "file": "apps/potta/src/app/(routes)/pos/inventory/_utils/types.ts",
@@ -1652,7 +1912,7 @@
         },
         {
           "file": "apps/potta/src/app/(routes)/pos/inventory/_utils/validation.ts",
-          "hash": "5875901009467419450",
+          "hash": "14843281263388856245",
           "deps": [
             "npm:yup"
           ]
@@ -1687,14 +1947,14 @@
         },
         {
           "file": "apps/potta/src/app/(routes)/pos/inventory/components/slides/components/create_product/components/units.tsx",
-          "hash": "10151622354695726918",
+          "hash": "15260422516453485261",
           "deps": [
             "npm:react"
           ]
         },
         {
           "file": "apps/potta/src/app/(routes)/pos/inventory/components/slides/components/create_product/index.tsx",
-          "hash": "12730563279271176266",
+          "hash": "9763564504549828850",
           "deps": [
             "npm:react"
           ]
@@ -1991,6 +2251,14 @@
           "hash": "9322293623197263667",
           "deps": [
             "npm:react"
+          ]
+        },
+        {
+          "file": "apps/potta/src/components/checkbox.tsx",
+          "hash": "2731097810961103330",
+          "deps": [
+            "npm:react",
+            "npm:react-hook-form"
           ]
         },
         {
@@ -3626,209 +3894,6 @@
           "hash": "6922413205408300107"
         }
       ],
-      "utilities": [
-        {
-          "file": "libs/utilities/.eslintrc.json",
-          "hash": "11012487992710232822"
-        },
-        {
-          "file": "libs/utilities/README.md",
-          "hash": "13228732804139331838"
-        },
-        {
-          "file": "libs/utilities/project.json",
-          "hash": "699343638286385166"
-        },
-        {
-          "file": "libs/utilities/src/index.ts",
-          "hash": "4979336273987222930"
-        },
-        {
-          "file": "libs/utilities/src/lib/configs/axios.ts",
-          "hash": "9287401257227664183",
-          "deps": [
-            "npm:crypto-js",
-            "npm:axios"
-          ]
-        },
-        {
-          "file": "libs/utilities/src/lib/configs/env.ts",
-          "hash": "12101586654834214904"
-        },
-        {
-          "file": "libs/utilities/src/lib/helpers/index.ts",
-          "hash": "10922730425443113868",
-          "deps": [
-            "npm:crypto-js",
-            "npm:country-list-with-dial-code-and-flag"
-          ]
-        },
-        {
-          "file": "libs/utilities/src/server.ts",
-          "hash": "5519843671682787663"
-        },
-        {
-          "file": "libs/utilities/tsconfig.json",
-          "hash": "14088618039610991405"
-        },
-        {
-          "file": "libs/utilities/tsconfig.lib.json",
-          "hash": "1536859351713546153"
-        }
-      ],
-      "@instanvi-global/source": [
-        {
-          "file": ".editorconfig",
-          "hash": "5443105041930014821"
-        },
-        {
-          "file": ".eslintignore",
-          "hash": "7663861978715868291"
-        },
-        {
-          "file": ".eslintrc.json",
-          "hash": "18315524891129148814"
-        },
-        {
-          "file": ".github/workflows/staging.yaml",
-          "hash": "6745584629413967094"
-        },
-        {
-          "file": ".gitignore",
-          "hash": "7456224741535900147"
-        },
-        {
-          "file": ".prettierignore",
-          "hash": "14688272390704683536"
-        },
-        {
-          "file": ".prettierrc",
-          "hash": "16267754514737964994"
-        },
-        {
-          "file": "Dockerfile",
-          "hash": "659189421521947874"
-        },
-        {
-          "file": "README.md",
-          "hash": "6840628470554381479"
-        },
-        {
-          "file": "docker-compose-build.yml",
-          "hash": "17454110849002822681"
-        },
-        {
-          "file": "docker-compose.yml",
-          "hash": "6344911347125248550"
-        },
-        {
-          "file": "jest.config.ts",
-          "hash": "3494843969422251966",
-          "deps": [
-            "npm:@nx/jest"
-          ]
-        },
-        {
-          "file": "jest.preset.js",
-          "hash": "9430166341120122740",
-          "deps": [
-            "npm:@nx/jest"
-          ]
-        },
-        {
-          "file": "nx.json",
-          "hash": "12021904216625248971"
-        },
-        {
-          "file": "package-lock.json",
-          "hash": "3269650321521787038"
-        },
-        {
-          "file": "package.json",
-          "hash": "9769018995163540316",
-          "deps": [
-            "npm:@nx/eslint",
-            "npm:@nx/eslint-plugin",
-            "npm:@nx/jest",
-            "npm:@nx/js",
-            "npm:@nx/next",
-            "npm:@nx/react",
-            "npm:@nx/workspace",
-            "npm:@swc-node/register",
-            "npm:@swc/cli",
-            "npm:@swc/core",
-            "npm:@swc/helpers",
-            "npm:@testing-library/react",
-            "npm:@types/crypto-js",
-            "npm:@types/jest",
-            "npm:@types/node",
-            "npm:@types/react",
-            "npm:@types/react-dom",
-            "npm:@typescript-eslint/eslint-plugin",
-            "npm:@typescript-eslint/parser",
-            "npm:autoprefixer",
-            "npm:babel-jest",
-            "npm:eslint",
-            "npm:eslint-config-next",
-            "npm:eslint-config-prettier",
-            "npm:eslint-plugin-import",
-            "npm:eslint-plugin-jsx-a11y",
-            "npm:eslint-plugin-react",
-            "npm:eslint-plugin-react-hooks",
-            "npm:jest",
-            "npm:jest-environment-jsdom",
-            "npm:nx",
-            "npm:postcss",
-            "npm:prettier",
-            "npm:tailwindcss",
-            "npm:ts-jest",
-            "npm:ts-node",
-            "npm:typescript",
-            "npm:@headlessui/react",
-            "npm:@heroicons/react",
-            "npm:@hookform/resolvers",
-            "npm:@nextui-org/react",
-            "npm:@tanstack/react-query",
-            "npm:@tanstack/react-table",
-            "npm:@types/react-csv",
-            "npm:apexcharts",
-            "npm:axios",
-            "npm:country-data-list",
-            "npm:country-list-with-dial-code-and-flag",
-            "npm:crypto-js",
-            "npm:framer-motion",
-            "npm:moment",
-            "npm:next",
-            "npm:nookies",
-            "npm:react",
-            "npm:react-accessible-accordion",
-            "npm:react-apexcharts",
-            "npm:react-barcode",
-            "npm:react-csv",
-            "npm:react-data-table-component",
-            "npm:react-dom",
-            "npm:react-dropzone",
-            "npm:react-google-flight-datepicker",
-            "npm:react-hook-form",
-            "npm:react-hot-toast",
-            "npm:react-icomoon",
-            "npm:react-icons",
-            "npm:react-moment",
-            "npm:react-phone-input-2",
-            "npm:react-pro-sidebar",
-            "npm:react-select",
-            "npm:react-verification-input",
-            "npm:remixicon",
-            "npm:timezones-list",
-            "npm:tslib",
-            "npm:yup"
-          ]
-        },
-        {
-          "file": "tsconfig.base.json",
-          "hash": "16257537213835165230"
-        }
-      ],
       "ui-components": [
         {
           "file": "libs/ui-components/.eslintrc.json",
@@ -3986,51 +4051,6 @@
         },
         {
           "file": "libs/ui-components/tsconfig.lib.json",
-          "hash": "1536859351713546153"
-        }
-      ],
-      "core": [
-        {
-          "file": "libs/core/.eslintrc.json",
-          "hash": "11012487992710232822"
-        },
-        {
-          "file": "libs/core/README.md",
-          "hash": "862743182427189852"
-        },
-        {
-          "file": "libs/core/project.json",
-          "hash": "8215491323991500792"
-        },
-        {
-          "file": "libs/core/src/index.ts",
-          "hash": "1391443467439822800"
-        },
-        {
-          "file": "libs/core/src/lib/core.spec.tsx",
-          "hash": "10083302775005561580",
-          "deps": [
-            "npm:@testing-library/react"
-          ]
-        },
-        {
-          "file": "libs/core/src/lib/core.tsx",
-          "hash": "12083220179364162819"
-        },
-        {
-          "file": "libs/core/src/lib/hello-server.tsx",
-          "hash": "2397568674684759047"
-        },
-        {
-          "file": "libs/core/src/server.ts",
-          "hash": "8912437808649717296"
-        },
-        {
-          "file": "libs/core/tsconfig.json",
-          "hash": "14088618039610991405"
-        },
-        {
-          "file": "libs/core/tsconfig.lib.json",
           "hash": "1536859351713546153"
         }
       ]

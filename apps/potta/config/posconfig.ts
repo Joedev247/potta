@@ -1,9 +1,9 @@
 import CryptoJS from "crypto-js"
 import Axios, { AxiosRequestConfig } from "axios";
 
-import { API_URL, SECRET } from "./env";
+// import { API_URL, SECRET } from "./env";
 
-const axios = Axios.create({ baseURL: API_URL })
+const axios = Axios.create({ baseURL: 'https://staging.instanvi.com/api/potta/' })
 
 export const refreshTokenAPI = async (refresh_token:string):Promise<{access_token:string,refresh_token:string}> =>{
   const response = await axios.post(`/auth/refresh_token/`, {refresh_token})
@@ -17,7 +17,7 @@ const authRequestInterceptor = async (
 	config.headers = { ...config.headers }
 
 	if (storage) {
-		const decrypt = CryptoJS.AES.decrypt(storage, SECRET)
+		const decrypt = CryptoJS.AES.decrypt(storage, '0946323')
 		const token = decrypt.toString(CryptoJS.enc.Utf8)
 		config.headers.authorization = `Bearer ${token}`
 	}

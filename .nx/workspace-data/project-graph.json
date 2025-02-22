@@ -15797,6 +15797,11 @@
       },
       {
         "source": "potta",
+        "target": "npm:crypto-js",
+        "type": "static"
+      },
+      {
+        "source": "potta",
         "target": "npm:@nx/next",
         "type": "static"
       },
@@ -15887,17 +15892,17 @@
       },
       {
         "source": "potta",
+        "target": "npm:react-hook-form",
+        "type": "static"
+      },
+      {
+        "source": "potta",
         "target": "npm:react-dropzone",
         "type": "static"
       },
       {
         "source": "potta",
         "target": "npm:react-icomoon",
-        "type": "static"
-      },
-      {
-        "source": "potta",
-        "target": "npm:react-hook-form",
         "type": "static"
       },
       {
@@ -42094,5 +42099,5 @@
   },
   "version": "6.0",
   "errors": [],
-  "computedAt": 1739957935511
+  "computedAt": 1740204282049
 }

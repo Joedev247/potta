@@ -1,12 +1,11 @@
-import axios from 'config/axios.config';
+// import axios from 'config/axios.config';
+import axios from 'config/posconfig';
 import { IFilter } from './types';
 import { IProductPayload } from './validation';
 
 export const productApi = {
-  create: async (data: IProductPayload, user_Id: string, vendor_id: string) => {
-    const result = await axios.post(`/vendor/${vendor_id }/product`, data, {
-      params: { user_Id },
-    });
+  create: async (data: IProductPayload,vendor_id: string) => {
+    const result = await axios.post(`/vendor/${vendor_id }/product`, data);
     return result?.data;
   },
   getAll: async (filter: IFilter, vendor_id: string) => {
