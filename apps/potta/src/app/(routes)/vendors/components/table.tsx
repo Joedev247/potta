@@ -1,5 +1,5 @@
 import React from 'react';
-import MyTable from '@/components/table';
+import MyTable from '@potta/components/table';
 import SliderVendor from './vendorSlider';
 
 const TableComponents = () => {

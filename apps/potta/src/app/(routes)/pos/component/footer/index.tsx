@@ -1,6 +1,6 @@
 'use client'
 import React, { useContext } from 'react'
-import { ContextData } from '@/components/context'
+import { ContextData } from '@potta/components/context'
 
 const POSFooter = () => {
     const context = useContext(ContextData)

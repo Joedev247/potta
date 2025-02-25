@@ -33,13 +33,17 @@ export const invoiceApi = {
     });
     return result?.data;
   },
+  testApi:async()=>{
+    const result = await axios.get('/invoice/test');
+    return result?.data;
+  },
   removeLineItem: async (invoiceId: string, lineItemId: string) => {
     const result = await axios.delete(
       `/invoice/${invoiceId}/lineItem/${lineItemId}`
     );
     return result?.data;
   },
-  getAllCustomers: async (invoice_id: string) => {
+  getAllCustomers: async (invoice_id: string): Promise<unknown> => {
     const result = await axios.get('/invoice/customer/' + invoice_id);
     return result?.data;
   },

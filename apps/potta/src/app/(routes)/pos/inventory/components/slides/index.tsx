@@ -1,5 +1,5 @@
 'use client'
-import Slider from "@/components/slideover";
+import Slider from "@potta/components/slideover";
 import React, { useState } from "react";
 import SelectInventory from "./components/selectInventory";
 import CreateProduct from "./components/create_product";

@@ -1,6 +1,6 @@
 import React from "react";
 import RootLayout from "../../layout";
-import Filter from "../../expenses/components/filters";
+import Filter from "./components/filters";
 import SaleBoxes from "./components/boxes";
 import SaleTable from "./components/table";
 

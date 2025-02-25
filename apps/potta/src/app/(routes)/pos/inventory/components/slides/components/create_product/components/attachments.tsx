@@ -1,6 +1,6 @@
 
 
-import MyDropzone from '@/components/dropzone'
+import MyDropzone from '@potta/components/dropzone'
 import React from 'react'
 
 const Attachments = () => {

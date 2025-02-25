@@ -1,5 +1,5 @@
 import { useContext, useState } from "react";
-import { ContextData } from '@/components/context';
+import { ContextData } from '@potta/components/context';
 
 export default function DynamicTable() {
     const context = useContext(ContextData);

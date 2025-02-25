@@ -1,7 +1,10 @@
 {
   "$schema": "./node_modules/nx/schemas/nx-schema.json",
   "namedInputs": {
-    "default": ["{projectRoot}/**/*", "sharedGlobals"],
+    "default": [
+      "{projectRoot}/**/*",
+      "sharedGlobals"
+    ],
     "production": [
       "default",
       "!{projectRoot}/**/?(*.)+(spec|test).[jt]s?(x)?(.snap)",
@@ -12,7 +15,9 @@
       "!{projectRoot}/.eslintrc.json",
       "!{projectRoot}/eslint.config.js"
     ],
-    "sharedGlobals": ["{workspaceRoot}/.github/workflows/ci.yml"]
+    "sharedGlobals": [
+      "{workspaceRoot}/.github/workflows/ci.yml"
+    ]
   },
   "useNxCloud": false,
   "nxCloudAccessToken": "YzgwMzMzNWEtYjM4Ni00ZGQxLTgxNmUtOTkwMTAwZDljMGU3fHJlYWQtd3JpdGU=",
@@ -49,5 +54,6 @@
     "@nx/react": {
       "library": {}
     }
-  }
+  },
+  "nxCloudId": "67ad7a63943a4b3553e34114"
 }

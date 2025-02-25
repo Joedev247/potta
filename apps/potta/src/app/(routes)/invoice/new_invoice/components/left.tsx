@@ -1,10 +1,10 @@
 'use client'; // For Next.js 13+ App Directory
-import Input from '@/components/input';
-import Select from '@/components/select';
+import Input from '@potta/components/input';
+import Select from '@potta/components/select';
 import { useContext, useState, useEffect } from 'react';
 import DynamicTable from './newtableInvoice';
-import Button from '@/components/button';
-import { ContextData } from '@/components/context';
+import Button from '@potta/components/button';
+import { ContextData } from '@potta/components/context';
 
 const Left = () => {
     const context = useContext(ContextData);

@@ -3,7 +3,7 @@ import React, { useContext } from "react";
 import SaleInvoiceTable from "./component/saleInvoiceTable";
 import SaleInvoiceCard from "./component/saleInvoiceCard";
 import POSFooter from "./component/footer";
-import { ContextData } from '@/components/context'
+import { ContextData } from "@potta/components/context";
 import Print from "./component/print/page";
 import RootLayout from "../layout";
 
@@ -35,4 +35,4 @@ const POS = () => {
         </RootLayout>
     )
 }
-export default POS 
+export default POS
