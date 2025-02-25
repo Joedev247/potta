@@ -122,6 +122,72 @@
     }
   ],
   "fileMap": {
+    "nonProjectFiles": [
+      {
+        "file": ".editorconfig",
+        "hash": "5443105041930014821"
+      },
+      {
+        "file": ".eslintignore",
+        "hash": "7663861978715868291"
+      },
+      {
+        "file": ".eslintrc.json",
+        "hash": "18315524891129148814"
+      },
+      {
+        "file": ".gitignore",
+        "hash": "7456224741535900147"
+      },
+      {
+        "file": ".prettierignore",
+        "hash": "14688272390704683536"
+      },
+      {
+        "file": ".prettierrc",
+        "hash": "16267754514737964994"
+      },
+      {
+        "file": "Dockerfile",
+        "hash": "659189421521947874"
+      },
+      {
+        "file": "README.md",
+        "hash": "6840628470554381479"
+      },
+      {
+        "file": "docker-compose-build.yml",
+        "hash": "17454110849002822681"
+      },
+      {
+        "file": "docker-compose.yml",
+        "hash": "6344911347125248550"
+      },
+      {
+        "file": "jest.config.ts",
+        "hash": "3494843969422251966"
+      },
+      {
+        "file": "jest.preset.js",
+        "hash": "9430166341120122740"
+      },
+      {
+        "file": "nx.json",
+        "hash": "1676051164121822638"
+      },
+      {
+        "file": "package-lock.json",
+        "hash": "5962445520946097898"
+      },
+      {
+        "file": "package.json",
+        "hash": "4987140904488876352"
+      },
+      {
+        "file": "tsconfig.base.json",
+        "hash": "16257537213835165230"
+      }
+    ],
     "projectFileMap": {
       "core": [
         {
@@ -165,6 +231,166 @@
         },
         {
           "file": "libs/core/tsconfig.lib.json",
+          "hash": "1536859351713546153"
+        }
+      ],
+      "ui-components": [
+        {
+          "file": "libs/ui-components/.eslintrc.json",
+          "hash": "11012487992710232822"
+        },
+        {
+          "file": "libs/ui-components/README.md",
+          "hash": "9995608240359739017"
+        },
+        {
+          "file": "libs/ui-components/project.json",
+          "hash": "14073386014989480526"
+        },
+        {
+          "file": "libs/ui-components/src/index.ts",
+          "hash": "3890638239984739746"
+        },
+        {
+          "file": "libs/ui-components/src/lib/button/button.css",
+          "hash": "3244421341483603138"
+        },
+        {
+          "file": "libs/ui-components/src/lib/button/button.spec.tsx",
+          "hash": "6024628988384396619",
+          "deps": [
+            "npm:@testing-library/react",
+            "npm:react"
+          ]
+        },
+        {
+          "file": "libs/ui-components/src/lib/button/button.tsx",
+          "hash": "14294175664207578953",
+          "deps": [
+            "npm:react"
+          ]
+        },
+        {
+          "file": "libs/ui-components/src/lib/checkbox/checkbox.spec.tsx",
+          "hash": "16773171947338653164",
+          "deps": [
+            "npm:@testing-library/react"
+          ]
+        },
+        {
+          "file": "libs/ui-components/src/lib/checkbox/checkbox.tsx",
+          "hash": "9330927587529167350",
+          "deps": [
+            "npm:react"
+          ]
+        },
+        {
+          "file": "libs/ui-components/src/lib/file-upload/file-upload.spec.tsx",
+          "hash": "13729243159011131943",
+          "deps": [
+            "npm:@testing-library/react"
+          ]
+        },
+        {
+          "file": "libs/ui-components/src/lib/file-upload/file-upload.tsx",
+          "hash": "15745855549206970964",
+          "deps": [
+            "npm:next",
+            "npm:react",
+            "npm:react-dropzone"
+          ]
+        },
+        {
+          "file": "libs/ui-components/src/lib/input/input.css",
+          "hash": "10999915296015192048"
+        },
+        {
+          "file": "libs/ui-components/src/lib/input/input.spec.tsx",
+          "hash": "1956756580387732921",
+          "deps": [
+            "npm:@testing-library/react"
+          ]
+        },
+        {
+          "file": "libs/ui-components/src/lib/input/input.tsx",
+          "hash": "4109157862373855892",
+          "deps": [
+            "npm:@heroicons/react",
+            "npm:react-hook-form",
+            "npm:react"
+          ]
+        },
+        {
+          "file": "libs/ui-components/src/lib/modal/modal.spec.tsx",
+          "hash": "6472563329112809072",
+          "deps": [
+            "npm:@testing-library/react"
+          ]
+        },
+        {
+          "file": "libs/ui-components/src/lib/modal/modal.tsx",
+          "hash": "14108573289638167965",
+          "deps": [
+            "npm:react",
+            "npm:@headlessui/react"
+          ]
+        },
+        {
+          "file": "libs/ui-components/src/lib/search/search.css",
+          "hash": "10172889319337957757"
+        },
+        {
+          "file": "libs/ui-components/src/lib/search/search.spec.tsx",
+          "hash": "1172712103285773831",
+          "deps": [
+            "npm:@testing-library/react"
+          ]
+        },
+        {
+          "file": "libs/ui-components/src/lib/search/search.tsx",
+          "hash": "16498275226319806576",
+          "deps": [
+            "npm:react",
+            "npm:next"
+          ]
+        },
+        {
+          "file": "libs/ui-components/src/lib/select/select.spec.tsx",
+          "hash": "16176134918512818464"
+        },
+        {
+          "file": "libs/ui-components/src/lib/select/select.tsx",
+          "hash": "15616048433895510667",
+          "deps": [
+            "npm:react",
+            "npm:react-select"
+          ]
+        },
+        {
+          "file": "libs/ui-components/src/lib/toast/toast.spec.tsx",
+          "hash": "17609396385370758005",
+          "deps": [
+            "npm:@testing-library/react"
+          ]
+        },
+        {
+          "file": "libs/ui-components/src/lib/toast/toast.tsx",
+          "hash": "9392764110185592652",
+          "deps": [
+            "npm:react",
+            "npm:react-hot-toast"
+          ]
+        },
+        {
+          "file": "libs/ui-components/src/server.ts",
+          "hash": "5519843671682787663"
+        },
+        {
+          "file": "libs/ui-components/tsconfig.json",
+          "hash": "14088618039610991405"
+        },
+        {
+          "file": "libs/ui-components/tsconfig.lib.json",
           "hash": "1536859351713546153"
         }
       ],
@@ -2341,47 +2567,70 @@
         },
         {
           "file": "apps/potta/src/app/(routes)/invoice/_hooks/useAddInvoiceLineItem.ts",
-          "hash": "4854560198864745253",
+          "hash": "1259517002750040540",
           "deps": [
-            "npm:@tanstack/react-query",
-            "npm:react"
+            "npm:@tanstack/react-query"
           ]
         },
         {
           "file": "apps/potta/src/app/(routes)/invoice/_hooks/useCreateInvoice.ts",
-          "hash": "3244421341483603138"
+          "hash": "4398901041854142366",
+          "deps": [
+            "npm:@tanstack/react-query"
+          ]
         },
         {
           "file": "apps/potta/src/app/(routes)/invoice/_hooks/useDeleteInvoice.ts",
-          "hash": "3244421341483603138"
+          "hash": "7869836779162025304",
+          "deps": [
+            "npm:@tanstack/react-query"
+          ]
         },
         {
           "file": "apps/potta/src/app/(routes)/invoice/_hooks/useGetAllCustomer.ts",
-          "hash": "3244421341483603138"
+          "hash": "4437670519017441277",
+          "deps": [
+            "npm:@tanstack/react-query"
+          ]
         },
         {
           "file": "apps/potta/src/app/(routes)/invoice/_hooks/useGetAllInvoice.ts",
-          "hash": "3244421341483603138"
+          "hash": "10563598824267184064",
+          "deps": [
+            "npm:@tanstack/react-query"
+          ]
         },
         {
           "file": "apps/potta/src/app/(routes)/invoice/_hooks/useGetOneInvoice.ts",
-          "hash": "3244421341483603138"
+          "hash": "17537241232734046306",
+          "deps": [
+            "npm:@tanstack/react-query"
+          ]
         },
         {
           "file": "apps/potta/src/app/(routes)/invoice/_hooks/useUpdateInvoice.ts",
-          "hash": "3244421341483603138"
+          "hash": "11255901022402289353",
+          "deps": [
+            "npm:@tanstack/react-query"
+          ]
         },
         {
           "file": "apps/potta/src/app/(routes)/invoice/_hooks/useremoveInvoiceLineItem.ts",
-          "hash": "3244421341483603138"
+          "hash": "2366829664108755468",
+          "deps": [
+            "npm:@tanstack/react-query"
+          ]
         },
         {
           "file": "apps/potta/src/app/(routes)/invoice/_utils/api.ts",
-          "hash": "10028169015296919462"
+          "hash": "819404639298000624"
         },
         {
           "file": "apps/potta/src/app/(routes)/invoice/_utils/column.ts",
-          "hash": "3244421341483603138"
+          "hash": "16044814641259153768",
+          "deps": [
+            "npm:@tanstack/react-table"
+          ]
         },
         {
           "file": "apps/potta/src/app/(routes)/invoice/_utils/types.ts",
@@ -2389,11 +2638,14 @@
         },
         {
           "file": "apps/potta/src/app/(routes)/invoice/_utils/utils.ts",
-          "hash": "3244421341483603138"
+          "hash": "9441533894932745273"
         },
         {
           "file": "apps/potta/src/app/(routes)/invoice/_utils/valididation.ts",
-          "hash": "3244421341483603138"
+          "hash": "351768102848182076",
+          "deps": [
+            "npm:yup"
+          ]
         },
         {
           "file": "apps/potta/src/app/(routes)/invoice/components/box.tsx",
@@ -3651,166 +3903,6 @@
           "hash": "9950754265127537988"
         }
       ],
-      "ui-components": [
-        {
-          "file": "libs/ui-components/.eslintrc.json",
-          "hash": "11012487992710232822"
-        },
-        {
-          "file": "libs/ui-components/README.md",
-          "hash": "9995608240359739017"
-        },
-        {
-          "file": "libs/ui-components/project.json",
-          "hash": "14073386014989480526"
-        },
-        {
-          "file": "libs/ui-components/src/index.ts",
-          "hash": "3890638239984739746"
-        },
-        {
-          "file": "libs/ui-components/src/lib/button/button.css",
-          "hash": "3244421341483603138"
-        },
-        {
-          "file": "libs/ui-components/src/lib/button/button.spec.tsx",
-          "hash": "6024628988384396619",
-          "deps": [
-            "npm:@testing-library/react",
-            "npm:react"
-          ]
-        },
-        {
-          "file": "libs/ui-components/src/lib/button/button.tsx",
-          "hash": "14294175664207578953",
-          "deps": [
-            "npm:react"
-          ]
-        },
-        {
-          "file": "libs/ui-components/src/lib/checkbox/checkbox.spec.tsx",
-          "hash": "16773171947338653164",
-          "deps": [
-            "npm:@testing-library/react"
-          ]
-        },
-        {
-          "file": "libs/ui-components/src/lib/checkbox/checkbox.tsx",
-          "hash": "9330927587529167350",
-          "deps": [
-            "npm:react"
-          ]
-        },
-        {
-          "file": "libs/ui-components/src/lib/file-upload/file-upload.spec.tsx",
-          "hash": "13729243159011131943",
-          "deps": [
-            "npm:@testing-library/react"
-          ]
-        },
-        {
-          "file": "libs/ui-components/src/lib/file-upload/file-upload.tsx",
-          "hash": "15745855549206970964",
-          "deps": [
-            "npm:next",
-            "npm:react",
-            "npm:react-dropzone"
-          ]
-        },
-        {
-          "file": "libs/ui-components/src/lib/input/input.css",
-          "hash": "10999915296015192048"
-        },
-        {
-          "file": "libs/ui-components/src/lib/input/input.spec.tsx",
-          "hash": "1956756580387732921",
-          "deps": [
-            "npm:@testing-library/react"
-          ]
-        },
-        {
-          "file": "libs/ui-components/src/lib/input/input.tsx",
-          "hash": "4109157862373855892",
-          "deps": [
-            "npm:@heroicons/react",
-            "npm:react-hook-form",
-            "npm:react"
-          ]
-        },
-        {
-          "file": "libs/ui-components/src/lib/modal/modal.spec.tsx",
-          "hash": "6472563329112809072",
-          "deps": [
-            "npm:@testing-library/react"
-          ]
-        },
-        {
-          "file": "libs/ui-components/src/lib/modal/modal.tsx",
-          "hash": "14108573289638167965",
-          "deps": [
-            "npm:react",
-            "npm:@headlessui/react"
-          ]
-        },
-        {
-          "file": "libs/ui-components/src/lib/search/search.css",
-          "hash": "10172889319337957757"
-        },
-        {
-          "file": "libs/ui-components/src/lib/search/search.spec.tsx",
-          "hash": "1172712103285773831",
-          "deps": [
-            "npm:@testing-library/react"
-          ]
-        },
-        {
-          "file": "libs/ui-components/src/lib/search/search.tsx",
-          "hash": "16498275226319806576",
-          "deps": [
-            "npm:react",
-            "npm:next"
-          ]
-        },
-        {
-          "file": "libs/ui-components/src/lib/select/select.spec.tsx",
-          "hash": "16176134918512818464"
-        },
-        {
-          "file": "libs/ui-components/src/lib/select/select.tsx",
-          "hash": "15616048433895510667",
-          "deps": [
-            "npm:react",
-            "npm:react-select"
-          ]
-        },
-        {
-          "file": "libs/ui-components/src/lib/toast/toast.spec.tsx",
-          "hash": "17609396385370758005",
-          "deps": [
-            "npm:@testing-library/react"
-          ]
-        },
-        {
-          "file": "libs/ui-components/src/lib/toast/toast.tsx",
-          "hash": "9392764110185592652",
-          "deps": [
-            "npm:react",
-            "npm:react-hot-toast"
-          ]
-        },
-        {
-          "file": "libs/ui-components/src/server.ts",
-          "hash": "5519843671682787663"
-        },
-        {
-          "file": "libs/ui-components/tsconfig.json",
-          "hash": "14088618039610991405"
-        },
-        {
-          "file": "libs/ui-components/tsconfig.lib.json",
-          "hash": "1536859351713546153"
-        }
-      ],
       "utilities": [
         {
           "file": "libs/utilities/.eslintrc.json",
@@ -3861,76 +3953,6 @@
           "hash": "1536859351713546153"
         }
       ]
-    },
-    "nonProjectFiles": [
-      {
-        "file": ".editorconfig",
-        "hash": "5443105041930014821"
-      },
-      {
-        "file": ".eslintignore",
-        "hash": "7663861978715868291"
-      },
-      {
-        "file": ".eslintrc.json",
-        "hash": "18315524891129148814"
-      },
-      {
-        "file": ".github/workflows/staging.yaml",
-        "hash": "6745584629413967094"
-      },
-      {
-        "file": ".gitignore",
-        "hash": "7456224741535900147"
-      },
-      {
-        "file": ".prettierignore",
-        "hash": "14688272390704683536"
-      },
-      {
-        "file": ".prettierrc",
-        "hash": "16267754514737964994"
-      },
-      {
-        "file": "Dockerfile",
-        "hash": "659189421521947874"
-      },
-      {
-        "file": "README.md",
-        "hash": "6840628470554381479"
-      },
-      {
-        "file": "docker-compose-build.yml",
-        "hash": "17454110849002822681"
-      },
-      {
-        "file": "docker-compose.yml",
-        "hash": "6344911347125248550"
-      },
-      {
-        "file": "jest.config.ts",
-        "hash": "3494843969422251966"
-      },
-      {
-        "file": "jest.preset.js",
-        "hash": "9430166341120122740"
-      },
-      {
-        "file": "nx.json",
-        "hash": "15762878439579370496"
-      },
-      {
-        "file": "package-lock.json",
-        "hash": "263190872232805670"
-      },
-      {
-        "file": "package.json",
-        "hash": "12480095847594765097"
-      },
-      {
-        "file": "tsconfig.base.json",
-        "hash": "16257537213835165230"
-      }
-    ]
+    }
   }
 }
