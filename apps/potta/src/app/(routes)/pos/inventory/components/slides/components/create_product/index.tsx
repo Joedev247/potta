@@ -16,7 +16,7 @@ import { ProductPayload, productSchema } from '../../../../_utils/validation';
 import useCreateProduct from '../../../../_hooks/useCreateProduct';
 import toast from 'react-hot-toast';
 const CreateProduct = () => {
-  const [data, setData] = useState('units');
+  const [data, setData] = useState('inventory');
   const context = useContext(ContextData);
   const {
       register,
@@ -157,14 +157,14 @@ const CreateProduct = () => {
       </div>
       <div className="mt-12">
         <div className="flex ">
-          <div
+          {/* <div
             onClick={() => setData('units')}
             className={`px-4 py-2 bg-green-50 cursor-pointer ${
               data == 'units' && 'border-b-2 border-green-500 text-green-500'
             }`}
           >
             <p>Units</p>
-          </div>
+          </div> */}
           <div
             onClick={() => setData('inventory')}
             className={`px-4 py-2 bg-green-50 cursor-pointer ${

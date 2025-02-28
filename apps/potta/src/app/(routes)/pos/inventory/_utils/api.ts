@@ -1,6 +1,6 @@
 // import axios from 'config/axios.config';
 import axios from 'config/posconfig';
-import { Filter } from './types';
+import { Filter, ProductResponse } from './types';
 import { ProductPayload } from './validation';
 
 export const productApi = {
@@ -9,7 +9,7 @@ export const productApi = {
     return result?.data;
   },
   getAll: async (filter: Filter) => {
-    const result = await axios.get(`/vendor/8f79d19a-5319-4783-8ddc-c863d98ecc16/products`, {
+    const result:ProductResponse = await axios.get(`/vendor/8f79d19a-5319-4783-8ddc-c863d98ecc16/products`, {
       params: { ...filter },
     });
     return result
@@ -22,8 +22,8 @@ export const productApi = {
     const result = await axios.put(`/vendor/${vendor_id}/product/${product_id}`, data);
     return result?.data;
   },
-  delete: async (vendor_id: string,product_id: string) => {
-    const result = await axios.delete(`/vendor/${vendor_id}/product/${product_id}`);
+  delete: async (product_id: string) => {
+    const result = await axios.delete(`/vendor/8f79d19a-5319-4783-8ddc-c863d98ecc16/product/${product_id}`);
     return result?.data;
   },
 }

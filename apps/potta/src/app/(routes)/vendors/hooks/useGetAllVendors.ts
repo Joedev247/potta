@@ -1,10 +1,11 @@
 import { useQuery } from '@tanstack/react-query';
 import {  Vendor, VendorFilter, VendorResponse } from '../utils/types';
 import { vendorApi } from '../utils/api';
+import { AxiosResponse } from 'axios';
 
 
 const useGetAllVendors = (filter: VendorFilter) => {
-  return useQuery({
+  return useQuery<VendorResponse> ({
     queryKey: ['get-all-vendors', filter.page, filter.limit], // Dynamic queryKey based on page and limit
     queryFn: () => vendorApi.getAll(filter),
   

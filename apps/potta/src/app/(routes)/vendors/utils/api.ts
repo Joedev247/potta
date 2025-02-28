@@ -2,6 +2,7 @@ import { VendorPayload } from './validations';
 // import axios from 'config/axios.config';
 import axios from 'config/posconfig';
 import { VendorFilter, Vendor, VendorResponse } from './types';
+import { AxiosResponse } from 'axios';
 
 
 export const vendorApi = {
@@ -19,11 +20,10 @@ export const vendorApi = {
   getAll: async (filter: Record<string, any> = {}) => {
     const queryParams = new URLSearchParams(filter).toString();
 
-    const response = await axios.post(
+    const result:VendorResponse = await axios.post(
       `vendor/filter?${queryParams}`
     );
-    console.log(response)
-   return response// Assuming backend returns { vendors: [], total: number }
+   return result
   },
   getOne: async (vendor_id: string) => {
     const result = await axios.get<Vendor>(`/vendor/details/${vendor_id}`);

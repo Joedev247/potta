@@ -92,7 +92,7 @@ const TableComponents = () => {
   const [limit, setLimit] = useState(10);
 
   const filter: VendorFilter = { page, limit, };
-  const { data: vendor, isLoading, error, refetch } = useGetAllVendors(filter);
+  const { data: vendor, isLoading, error} = useGetAllVendors(filter);
   const handlePageChange = (newPage: number) => {
     setPage(newPage);
     

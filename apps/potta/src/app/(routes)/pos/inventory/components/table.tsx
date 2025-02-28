@@ -7,8 +7,10 @@ import {
   PopoverContent,
   Button,
 } from '@nextui-org/react';
-import { IFilter } from '../_utils/types';
+import { Filter } from '../_utils/types';
 import useGetAllProducts from '../_hooks/useGetAllProducts';
+import DeleteModal from './deleteModal';
+import CustomPopover from '@potta/components/popover';
 const InventoryTable = () => {
   const columns = [
     {
@@ -46,7 +48,20 @@ const InventoryTable = () => {
     },
     {
       name: 'Actions',
-      selector: (row: { reference: any; id: string }) => <MoreIcon />,
+      selector: (row: any) =>   <CustomPopover>
+      <div className="p-1 bg-white shadow-md flex  gap-2">
+        <div className="text-xs cursor-pointer hover:bg-gray-200 py-0.5 px-2 rounded-[2px]">
+          {/* <ViewVendorSlider vendorId={row.uuid} /> */}
+        </div>
+        <div className="text-xs cursor-pointer hover:bg-gray-200 py-0.5 px-2 rounded-[2px]">
+          {/* <EditVendor vendor={row} vendorId={row.uuid} /> */}
+        </div>
+
+        <div className="text-xs cursor-pointer hover:bg-red-200 py text-red-600 py-0.5 px-2 rounded-[2px]">
+          <DeleteModal productID={row.uuid} />
+        </div>
+      </div>
+    </CustomPopover>,
     },
   ];
   const data = [
@@ -65,7 +80,7 @@ const InventoryTable = () => {
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(10);
 
-  const filter: IFilter = { page, limit };
+  const filter: Filter = { page, limit };
   const {
     data: products,
     isLoading,
@@ -98,30 +113,6 @@ const InventoryTable = () => {
     </div>
   );
 };
-const MoreIcon: FC = () => {
-  return (
-    <Popover placement="left-start" showArrow={true}>
-      <PopoverTrigger>
-        <Button className="flex h-6 rounded-full items-center justify-evenly hover:bg-gray-100">
-          <i className="ri-more-line text-lg cursor-pointer"></i>
-        </Button>
-      </PopoverTrigger>
-      <PopoverContent>
-        <div className="p-1 bg-white shadow-md flex flex-col gap-2">
-          <div className="text-xs cursor-pointer hover:bg-gray-200 py-0.5 px-2 rounded-[2px]">
-            <h1>View </h1>
-          </div>
-          <div className="text-xs cursor-pointer hover:bg-gray-200 py-0.5 px-2 rounded-[2px]">
-            <h1>Edit</h1>
-          </div>
 
-          <div className="text-xs cursor-pointer hover:bg-red-200 py-0.5 px-2 rounded-[2px] text-red-600">
-            <h1>Delete</h1>
-          </div>
-        </div>
-      </PopoverContent>
-    </Popover>
-  );
-};
 
 export default InventoryTable;

@@ -21,7 +21,7 @@ const Slider: FC<props> = ({ children, edit, buttonText, title , onOpen}) => {
     return (
         <div className=''>
             <div>
-                {buttonText == "inventory" && <button onClick={(e) => { e.stopPropagation(); setOpen(!open); }} className=''>Add New Product</button>}
+                {buttonText == "add new product" && <button onClick={(e) => { e.stopPropagation(); setOpen(!open); }} className=''>Add New Product</button>}
                 {buttonText == "card" && <Button text={"New Card"} onClick={(e) => { e.stopPropagation(); setOpen(!open); }} type={'button'} icon={<i className='ri-file-add-line'></i>} />}
                 {buttonText == "ussd" && <Button text={"New USSD"} onClick={(e) => { e.stopPropagation(); setOpen(!open); }} type={'button'} icon={<i className='ri-file-add-line'></i>} />}
                 {buttonText == "agent" && <Button text={"New Agent"} onClick={(e) => { e.stopPropagation(); setOpen(!open); }} type={'button'} icon={<i className='ri-file-add-line'></i>} />}
