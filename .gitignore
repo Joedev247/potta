@@ -39,8 +39,7 @@ testem.log
 
 # System Files
 .DS_Store
-Thumbs.db
-
+daemon.log
 .nx/cache
 .nx/workspace-data
 
@@ -49,3 +48,4 @@ Thumbs.db
 out
 .vscode
 .idea
+.nx/workspace-data/d/daemon.log

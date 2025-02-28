@@ -3,136 +3,105 @@ import Select from '@potta/components/select';
 import React, { useContext, useState } from 'react';
 import Inventory from './components/inventory';
 import Unit from './components/units';
+import { yupResolver } from '@hookform/resolvers/yup';
+
 import Notes from './components/notes';
 import Attachments from './components/attachments';
 import Button from '@potta/components/button';
 import { ContextData } from '@potta/components/context';
 import Input from '@potta/components/input';
 import Checkbox from '@potta/components/checkbox';
+import { useForm } from 'react-hook-form';
+import { ProductPayload, productSchema } from '../../../../_utils/validation';
+import useCreateProduct from '../../../../_hooks/useCreateProduct';
+import toast from 'react-hot-toast';
 const CreateProduct = () => {
   const [data, setData] = useState('units');
   const context = useContext(ContextData);
+  const {
+      register,
+      handleSubmit,
+      control,
+      formState: { errors }, reset
+    } = useForm<ProductPayload>({
+      resolver: yupResolver(productSchema),
+      defaultValues: {
+        name: '',
+        description: '',
+        unitOfMeasure: undefined,
+        cost: 0,
+        sku: '',
+        inventoryLevel: 0,
+        salesPrice: 0,
+        taxable: false,
+        taxRate: 0,
+        category: '',
+        image: '',
+      },
+    })
 
-  const [name, setName] = useState('');
-  const [description, setDescription] = useState('');
-  const [unitOfMeasure, setUnitOfMeasure] = useState('');
-  const [cost, setCost] = useState('');
-  const [sku, setSku] = useState('');
-  const [inventoryLevel, setInventoryLevel] = useState('');
-  const [salesPrice, setSalesPrice] = useState('');
-  const [taxable, setTaxable] = useState(false);
-  const [taxRate, setTaxRate] = useState('');
-  const [category, setCategory] = useState('');
-  const [image, setImage] = useState('');
+ const mutation = useCreateProduct()
+ const onSubmit = (data: ProductPayload) => {
+   console.log('Submitted Data:', data);
+   mutation.mutate(data,{
+     onSuccess: () => {
+       toast.success('Product created successfully!');
+       reset(); // Reset the form after success
+     },
+     onError: (error) => {
+       toast.error('Failed to create product');
+     },
+   });
+ }
 
-  const handleInputChange = (key: string, value: any) => {
-    switch (key) {
-      case 'name':
-        setName(value);
-        break;
-      case 'description':
-        setDescription(value);
-        break;
-      case 'unitOfMeasure':
-        setUnitOfMeasure(value);
-        break;
-      case 'cost':
-        setCost(value);
-        break;
-      case 'sku':
-        setSku(value);
-        break;
-      case 'inventoryLevel':
-        setInventoryLevel(value);
-        break;
-      case 'salesPrice':
-        setSalesPrice(value);
-        break;
-      case 'taxable':
-        setTaxable(value);
-        break;
-      case 'taxRate':
-        setTaxRate(value);
-        break;
-      case 'category':
-        setCategory(value);
-        break;
-      case 'image':
-        setImage(value);
-        break;
-      default:
-        break;
-    }
-    // Update context data
-    context?.setData((prevData: any) => ({
-      ...prevData,
-      [key]: value,
-    }));
-  };
-
-  const handleSaveproduct = () => {
-    const formData = {
-      name,
-      description,
-      unitOfMeasure,
-      cost,
-      sku,
-      inventoryLevel,
-      salesPrice,
-      taxable,
-      taxRate,
-      category,
-      image,
-    };
-    // Save to context
-    context?.setData((prevData: any) => ({
-      ...prevData,
-      ...formData,
-    }));
-
-    // Log context data
-    console.log('Context Data:', context?.data);
-  };
 
   return (
-    <div className="pr-8">
+    <form
+    onSubmit={handleSubmit(onSubmit)}
+    className="relative h-[97%] w-full"
+  >
       <div className="w-full">
-        <label htmlFor="name">Product/Service Name</label>
+        
         <Input
-          name="name"
-          type={'text'}
-          value={name}
-          onchange={(e: any) => handleInputChange('name', e.target.value)}
-        />
+              label="Product Name"
+              type="text"
+              name="name"
+              placeholder="Enter Product name"
+              register={register}
+              errors={errors.name}
+            />
       </div>
       <div className="w-full grid mt-5 grid-cols-2 gap-2">
         <div className="w-full">
-          <label htmlFor="category">Category</label>
-          <Input
-          name="category"
-          type={'text'}
-          value={category}
-          onchange={(e: any) => handleInputChange('category', e.target.value)}
+        <Input
+              label="Category"
+              type="text"
+              name="category"
+              placeholder="Enter Category"
+              register={register}
+              errors={errors.category}
+            
         />
         </div>
         <div className="w-full">
-          <label htmlFor="cost">Cost</label>
-          <Input
-          name="cost"
-          type={'number'}
-          value={cost}
-          onchange={(e: any) => handleInputChange('cost', e.target.value)}
-        />
+        <Input
+              label="Cost"
+              type="number"
+              name="cost"
+              placeholder="Enter Product Cost"
+              register={register}
+              errors={errors.cost}
+            />
         </div>
       </div>
       <div className="w-full mt-5">
-        <label htmlFor="description">Description</label>
-        <textarea
-          name="description"
-          value={description}
-          className="border outline-none w-full mt-2 p-2"
-          onChange={(e: any) => handleInputChange('description', e.target.value)}
-        ></textarea>
+      <p className="mb-2">Description</p>
+            <textarea
+               {...register("description")}
+                className="w-full border outline-none p-2 h-36"
+                placeholder="Enter any additional notes..."
+            />
+            {errors.description && <small className="text-red-500">{errors.description.message}</small>}
       </div>
 
       <div className="mt-5 grid grid-cols-2 gap-5">
@@ -142,44 +111,48 @@ const CreateProduct = () => {
             <MyDropzone />
           </div>
           <div className="mt-4">
-            <label htmlFor="sku">SKU</label>
-            <Input
-              value={sku}
-              name="sku"
-              type='text'
-              onchange={(e: any) => handleInputChange('sku', e.target.value)}
-            />
+          <Input
+                type={'text'}
+                label={'SKU'}
+                placeholder="Enter SKU"
+                name={'sku'}
+                register={register}
+                errors={errors.sku}
+              />
           </div>
         </div>
         <div className="w-full">
           <div className="mt-6">
-          <label htmlFor="salesPrice">Sales Price</label>
-            <Input
-              value={salesPrice}
-              name="salesPrice"
-              type='number'
-              onchange={(e: any) => handleInputChange('salesPrice', e.target.value)}
-            />
+          <Input
+                type={'number'}
+                label={'Sales Price'}
+                placeholder="760"
+                name={'salesPrice'}
+                register={register}
+                errors={errors.salesPrice}
+              />
           </div>
           <div className="mt-6 flex flex-col items-start ">
           <label htmlFor="taxable">Taxable</label>
             <Checkbox
-              value={taxable}
               name="taxable"
               type='checkbox'
-              onchange={(e: any) => setTaxable(!taxable) }
+              register={register}
+              errors={errors.taxable}
 
             />
           </div>
-          {taxable && <div className="mt-6">
-          <label htmlFor="taxRate">Tax Rate</label>
-            <Input
-              value={taxRate}
-              name="taxRate"
-              type='number'
-              onchange={(e: any) => handleInputChange('taxRate', e.target.value)}
-            />
-          </div>}
+           <div className="mt-6">
+          
+          <Input
+                type={'number'}
+                label={'Tax Rate'}
+                placeholder="Enter tax rate"
+                name={'taxRate'}
+                register={register}
+                errors={errors.taxRate}
+              />
+          </div>
         </div>
       </div>
       <div className="mt-12">
@@ -201,7 +174,7 @@ const CreateProduct = () => {
           >
             <p>Inventory</p>
           </div>
-          <div
+          {/* <div
             onClick={() => setData('notes')}
             className={`px-4 py-2 bg-green-50 cursor-pointer ${
               data == 'notes' && 'border-b-2 border-green-500 text-green-500'
@@ -217,13 +190,13 @@ const CreateProduct = () => {
             }`}
           >
             <p>Attachements</p>
-          </div>
+          </div> */}
         </div>
         <div className="mt-8">
-          {data == 'inventory' && <Inventory />}
-          {data == 'units' && <Unit />}
-          {data == 'notes' && <Notes />}
-          {data == 'attachement' && <Attachments />}
+          {data == 'inventory' && <Inventory control={control} register={register} errors={errors}/>}
+          {/* {data == 'units' && <Unit />} */}
+          {/* {data == 'notes' && <Notes />} */}
+          {/* {data == 'attachement' && <Attachments />} */}
         </div>
       </div>
       <div className="w-full mt-16 flex justify-end">
@@ -236,7 +209,7 @@ const CreateProduct = () => {
           </div>
         </div>
       </div>
-    </div>
+    </form>
   );
 };
 export default CreateProduct;

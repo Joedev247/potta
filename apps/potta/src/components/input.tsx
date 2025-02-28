@@ -9,8 +9,8 @@ type Props = {
     errors?: FieldError;
     placeholder?: string;
     register?: UseFormRegister<any>;
-    onchange?: any;
-    value?: any;
+    onchange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
+    value?: string | number;
     height?: boolean;
 };
 
@@ -28,12 +28,12 @@ const Input: React.FC<Props> = ({
 }) => {
     return (
         <div className={`w-full ${className}`}>
-            {label && <span className="mb-3 text-gray-900 font-medium">{label}</span>}
+            {label && <span className="mb-3 text-gray-900 font-bold">{label}</span>}
             <input
                 type={type}
-                onChange={onchange}
+                // onChange={onchange}
                 value={value}
-                // {...register(name)}
+                {...(register ? register(name) : {})}
                 placeholder={placeholder}
                 className={`w-full ${height ? 'py-1.5' : 'py-2.5'} px-4 border border-gray-200 rounded-[2px] outline-none mt-2`}
             />

@@ -3,7 +3,7 @@ import Axios, { AxiosRequestConfig } from "axios";
 
 // import { API_URL, SECRET } from "./env";
 
-const axios = Axios.create({ baseURL: 'https://staging.instanvi.com/api/potta/' })
+const axios = Axios.create({ baseURL: 'https://staging.instanvi.com/api/potta' })
 
 export const refreshTokenAPI = async (refresh_token:string):Promise<{access_token:string,refresh_token:string}> =>{
   const response = await axios.post(`/auth/refresh_token/`, {refresh_token})
@@ -15,14 +15,17 @@ const authRequestInterceptor = async (
 ): Promise<any> => {
 	const storage = await localStorage.getItem("token")
 	config.headers = { ...config.headers }
-
+  
 	if (storage) {
-		const decrypt = CryptoJS.AES.decrypt(storage, '0946323')
+    const decrypt = CryptoJS.AES.decrypt(storage, '0946323')
 		const token = decrypt.toString(CryptoJS.enc.Utf8)
 		config.headers.authorization = `Bearer ${token}`
 	}
-
-	config.headers.Accept = "application/json"
+  
+  config.headers['orgId'] = '8f79d19a-5319-4783-8ddc-c863d98ecc16';
+  config.headers['userId']='8f79d19a-5319-4783-8ddc-c863d98ecc16'
+	config.headers.Accept = "/"
+  config.headers["Content-Type"]="application/json"
 	return config
 }
 

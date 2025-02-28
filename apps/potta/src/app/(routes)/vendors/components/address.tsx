@@ -1,33 +1,70 @@
-import Input from '@potta/components/input'
-import Select from '@potta/components/select'
-import react from 'react'
+import Input from '@potta/components/input';
 
-const Address = () => {
-    return (
-        <div>
-            <div className='w-full'>
-                <Input type={'text'} label='Address' name={''} />
-            </div>
-            <div className='w-full mt-5 grid grid-cols-2 gap-2'>
-                <div>
-                    <Input type={'text'} label='City' name={''} />
-                </div>
-                <div>
-                    <p>State</p>
-                    <Select options={[{ label: "Littoral", value: "Littoral" }]} selectedValue={'Littoral'} onChange={() => { }} bg={''} />
-                </div>
-            </div>
-            <div className='w-full mt-5 grid grid-cols-2 gap-2'>
-                <div>
-                    <Input type={'text'} label='Postal Code' name={''} />
-                </div>
-                <div>
-                    <p>Country</p>
-                    <Select options={[{ label: "Cameroon", value: "Cameroon" }]} selectedValue={'Cameroon'} onChange={() => { }} bg={''} />
-                </div>
-            </div>
-        </div>
+import { FieldErrors, UseFormRegister } from 'react-hook-form';
 
-    )
+interface AddressFormProps {
+  register: UseFormRegister<any>;
+  errors: FieldErrors<{
+    postalCode: string;
+    latitude: number;
+    longitude: number;
+    address: string;
+    city: string;
+    state: string;
+    country: string;
+  }>;
 }
-export default Address
+const Address: React.FC<AddressFormProps> = ({ register, errors }) => {
+  return (
+    <div>
+      <Input
+        label="Address"
+        type="text"
+        name="address.address"
+        placeholder="Enter address"
+        register={register}
+        errors={errors?.address}
+      />
+      <div className="w-full grid mt-4 grid-cols-2 gap-3">
+
+      <Input
+        label="Country"
+        type="text"
+        name="address.country"
+        placeholder="Enter country"
+        register={register}
+        errors={errors?.country}
+      />
+      <Input
+        label="City"
+        type="text"
+        name="address.city"
+        placeholder="Enter city"
+        register={register}
+        errors={errors?.city}
+      />
+      </div>
+<div className="w-full grid mt-4 grid-cols-2 gap-3">
+
+      <Input
+        label="State"
+        type="text"
+        name="address.state"
+        placeholder="Enter state"
+        register={register}
+        errors={errors?.state}
+      />
+
+      <Input
+        label="Postal Code"
+        type="text"
+        name="address.postalCode"
+        placeholder="Enter postal code"
+        register={register}
+        errors={errors?.postalCode}
+      />
+</div>
+    </div>
+  );
+};
+export default Address;

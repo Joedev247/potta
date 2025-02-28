@@ -1,5 +1,5 @@
 'use client'
-import { ReactNode, useState, FC } from 'react'
+import { ReactNode, useState, FC, useEffect } from 'react'
 import { Dialog, DialogPanel, DialogTitle } from '@headlessui/react'
 import { XMarkIcon } from '@heroicons/react/24/outline'
 import Button from './button'
@@ -9,33 +9,41 @@ interface props {
     edit: boolean;
     buttonText?: string;
     title: string;
+    onOpen?: () => void;
 }
-const Slider: FC<props> = ({ children, edit, buttonText, title }) => {
+const Slider: FC<props> = ({ children, edit, buttonText, title , onOpen}) => {
     const [open, setOpen] = useState(false)
+    useEffect(() => {
+      if (open && onOpen) {
+        onOpen(); // Call the onOpen callback when slider opens
+    }
+   }, [open, onOpen]);
     return (
         <div className=''>
             <div>
-                {buttonText == "inventory" && <button onClick={() => setOpen(!open)} className=''>Add New Product</button>}
-                {buttonText == "card" && <Button text={"New Card"} onClick={() => setOpen(!open)} type={'button'} icon={<i className='ri-file-add-line'></i>} />}
-                {buttonText == "ussd" && <Button text={"New USSD"} onClick={() => setOpen(!open)} type={'button'} icon={<i className='ri-file-add-line'></i>} />}
-                {buttonText == "agent" && <Button text={"New Agent"} onClick={() => setOpen(!open)} type={'button'} icon={<i className='ri-file-add-line'></i>} />}
-                {buttonText == "page" && <Button text={"New Page"} onClick={() => setOpen(!open)} type={'button'} icon={<i className='ri-file-add-line'></i>} />}
-                {buttonText == "vendor" && <Button text={"New Vendor"} onClick={() => setOpen(!open)} type={'button'} icon={<i className='ri-file-add-line'></i>} />}
+                {buttonText == "inventory" && <button onClick={(e) => { e.stopPropagation(); setOpen(!open); }} className=''>Add New Product</button>}
+                {buttonText == "card" && <Button text={"New Card"} onClick={(e) => { e.stopPropagation(); setOpen(!open); }} type={'button'} icon={<i className='ri-file-add-line'></i>} />}
+                {buttonText == "ussd" && <Button text={"New USSD"} onClick={(e) => { e.stopPropagation(); setOpen(!open); }} type={'button'} icon={<i className='ri-file-add-line'></i>} />}
+                {buttonText == "agent" && <Button text={"New Agent"} onClick={(e) => { e.stopPropagation(); setOpen(!open); }} type={'button'} icon={<i className='ri-file-add-line'></i>} />}
+                {buttonText == "page" && <Button text={"New Page"} onClick={(e) => { e.stopPropagation(); setOpen(!open); }} type={'button'} icon={<i className='ri-file-add-line'></i>} />}
+                {buttonText == "vendor" && <Button text={"New Vendor"} onClick={(e) => { e.stopPropagation(); setOpen(!open); }} type={'button'} icon={<i className='ri-file-add-line'></i>} />}
+                {buttonText == "view vendor" && <button  onClick={(e) => { e.stopPropagation(); setOpen(!open); }} type={'button'}> View </button>}
+                {buttonText == "update vendor" && <button  onClick={(e) => { e.stopPropagation(); setOpen(!open); }} type={'button'}> Edit </button>}
 
             </div>
-            <Dialog open={open} onClose={setOpen} className="relative z-50 overflow-x-hidden ">
+            <Dialog open={open} onClose={() => setOpen(false)} className="relative z-50 overflow-x-hidden ">
                 <div className="fixed inset-0 " />
                 <div className="fixed inset-0 overflow-hidden">
                     <div className="absolute inset-0 overflow-hidden">
-                        <div className="pointer-events-none fixed inset-y-0 right-0 flex max-w-full pl-10">
+                        <div className="pointer-events-none fixed inset-y-0 right-0 flex max-w-full">
                             <DialogPanel
                                 transition
-                                className="pointer-events-auto   border-l w-screen overflow-y-hidden max-w-5xl transform transition duration-500 ease-in-out data-[closed]:translate-x-full sm:duration-700"
+                                className="pointer-events-auto   border-l w-screen overflow-y-hidden max-w-4xl transform transition duration-500 ease-in-out data-[closed]:translate-x-full sm:duration-700"
                             >
                                 <div className="flex h-full flex-col  overflow-hidden bg-gray-50 py-6 shadow-xl">
                                     <div className=" ">
                                         <div className="flex items-start py-2 w-full border-b justify-between">
-                                            <DialogTitle className="text-base font-semibold leading-6 px-4 text-gray-900">{title}</DialogTitle>
+                                            <DialogTitle className="text-xl  leading-6 px-4 text-gray-900">{title}</DialogTitle>
                                             <div className="ml-3 px-5 flex h-7 items-center">
                                                 <button
                                                     type="button"
