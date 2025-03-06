@@ -5,6 +5,7 @@ import "./globals.css";
 import "remixicon/fonts/remixicon.css";
 import 'react-accessible-accordion/dist/fancy-example.css';
 import { DataProvider } from "../components/context";
+import TanstackQueryClientProvider from "./_components/queryClientProvider";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -34,7 +35,9 @@ export default function RootLayout({
         <body
           className={`${geistSans.variable} ${geistMono.variable} antialiased`}
         >
+          <TanstackQueryClientProvider>
           {children}
+          </TanstackQueryClientProvider>
         </body>
       </html>
     </DataProvider>

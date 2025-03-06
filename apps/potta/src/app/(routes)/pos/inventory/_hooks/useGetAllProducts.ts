@@ -4,7 +4,7 @@ import { IFilter } from '../_utils/types';
 
 const useGetAllProducts = (filter: IFilter, vendor_id: string) => {
   return useQuery({
-    queryKey: ['get-all-invoice'],
+    queryKey: ['get-all-invoicing'],
     queryFn: () => productApi.getAll( filter, vendor_id),
   });
 };

@@ -10,7 +10,8 @@ export const invoiceApi = {
     return result?.data;
   },
   getAll: async (filter: IFilter) => {
-    const result = await axios.get('/invoice/filter', {
+    const data = {}
+    const result = await axios.post('/invoice/filter',data, {
       params: { ...filter },
     });
     return result?.data;
@@ -19,6 +20,7 @@ export const invoiceApi = {
     const result = await axios.get(`/invoice/details/${invoice_id}`);
     return result?.data;
   },
+
   update: async (invoice_id: string, data: unknown) => {
     const result = await axios.put(`/invoice/${invoice_id}`, data);
     return result?.data;

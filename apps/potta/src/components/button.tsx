@@ -6,7 +6,7 @@ type Props = {
     onClick?: () => void;
     text: any;
     icon?: ReactNode;
-    theme?: string;
+    theme?: keyof typeof  themes;
     type: "submit" | "button" | "reset";
     isLoading?: boolean;
     disabled?: boolean;
@@ -15,7 +15,7 @@ type Props = {
     color?: boolean
 };
 
-const themes: { [key: string]: string } = {
+const themes = {
     default: "bg-[#005D1F]",
     lightBlue: "bg-[#A0E86F]",
     light: "bg-green-500",

@@ -14,32 +14,32 @@ const NewInvoice: React.FC = () => {
     {
       value: "Invoice",
       description: "A document issued by the seller to a buyer which indicates the quantity and cost of the product purchased",
-      icon: "/images/invoice/invoice.svg",
+      icon: "/images/invoicing/invoicing.svg",
     },
     {
       value: "Proforma Invoice",
       description: "A preliminary bill of sale sent in advance of shipment or delivery of goods",
-      icon: "/images/invoice/invoice.svg",
+      icon: "/images/invoicing/invoicing.svg",
     },
     {
       value: "Prepayment Invoice",
       description: "Record advanced payment",
-      icon: "/images/invoice/prepayment.svg",
+      icon: "/images/invoicing/prepayment.svg",
     },
     {
       value: "Purchase Order",
       description: "Create a purchase order for a seller indicating proposed goods and services, price and quantity",
-      icon: "/images/invoice/purchase.svg",
+      icon: "/images/invoicing/purchase.svg",
     },
     {
       value: "Budget",
       description: "Plan and allocate finances for future expenses",
-      icon: "/images/invoice/budget.svg",
+      icon: "/images/invoicing/budget.svg",
     },
     {
       value: "Credit Note",
       description: "Issue credit against future purchases",
-      icon: "/images/invoice/credit note.svg",
+      icon: "/images/invoicing/credit note.svg",
     },
   ];
 

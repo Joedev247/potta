@@ -52,7 +52,7 @@ const Select: React.FC<SelectProps> = ({ options, selectedValue, onChange, bg, n
                     <li
                         key={option.value}
                         onClick={() => handleOptionClick(option.value)}
-                        className="px-3 py-2 text-gray-700 hover:bg-gray-100 cursor-pointer"
+                        className="px-3 py-2 text-gray-700 cursor-pointer hover:bg-gray-100"
                     >
                         {option.label}
                     </li>

@@ -7,7 +7,7 @@ export const invoiceSchema = yup.object().shape({
   notes: yup.string().required(),
   paymentTerms: yup.string().required(),
   paymentMethod: yup.string().oneOf(['ACH Transfer']).required(),
-  issuedDate: yup.date().required(),
+  issuedDate: yup.date().required("issued date is required"),
   dueDate: yup.date().required(),
   invoiceTotal: yup.number().required(),
   invoiceNumber: yup.string().required(),

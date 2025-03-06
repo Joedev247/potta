@@ -481,6 +481,10 @@
               "start:superApp",
               "reset"
             ]
+          },
+          "js": {
+            "packageName": "@instanvi-global/source",
+            "isInPackageManagerWorkspaces": true
           }
         },
         "targets": {
@@ -2272,6 +2276,24 @@
         "hash": "sha512-93zYdMES/c1D69yZiKDBj0V24vqNzB/koF26KPaagAfd3P/4gUlh3Dys5ogAK+Exi9QyzlD8x/08Zt7wIKcDcA=="
       }
     },
+    "npm:@iconify/react": {
+      "type": "npm",
+      "name": "npm:@iconify/react",
+      "data": {
+        "version": "5.2.0",
+        "packageName": "@iconify/react",
+        "hash": "sha512-7Sdjrqq3fkkQNks9SY3adGC37NQTHsBJL2PRKlQd455PoDi9s+Es9AUTY+vGLFOYs5yO9w9yCE42pmxCwG26WA=="
+      }
+    },
+    "npm:@iconify/types": {
+      "type": "npm",
+      "name": "npm:@iconify/types",
+      "data": {
+        "version": "2.0.0",
+        "packageName": "@iconify/types",
+        "hash": "sha512-+wluvCrRhXrhyOmRDJ3q8mux9JkKy5SJ/v8ol2tu4FVjyYvtEzkc/3pK15ET6RKg4b4w4BmTk1+gsCUhf21Ykg=="
+      }
+    },
     "npm:@internationalized/date": {
       "type": "npm",
       "name": "npm:@internationalized/date",
@@ -3181,24 +3203,6 @@
         "hash": "sha512-0qR1atBIWrb7FzQ+Tmr3s8uH5mQdyRH78n0krYaG8tng9+u1JlSi8DGRSaC9ezKyNB84m7vHT207xnHXGeJ3Fg=="
       }
     },
-    "npm:clsx@2.1.1": {
-      "type": "npm",
-      "name": "npm:clsx@2.1.1",
-      "data": {
-        "version": "2.1.1",
-        "packageName": "clsx",
-        "hash": "sha512-eYm0QWBtUrBWZWG0d386OGAw16Z995PiOVo2B7bjWSbHedGl5e0ZWaq65kOGgUSNesEIDkB9ISbTg/JK9dhCZA=="
-      }
-    },
-    "npm:clsx": {
-      "type": "npm",
-      "name": "npm:clsx",
-      "data": {
-        "version": "1.2.1",
-        "packageName": "clsx",
-        "hash": "sha512-EcR6r5a8bj6pu3ycsa/E/cKVGuTgZJZdsyUYHOksG/UHIiKfjxzRxYJpyVBwYaQeOvghal9fcc4PidlgzugAQg=="
-      }
-    },
     "npm:@nextui-org/alert": {
       "type": "npm",
       "name": "npm:@nextui-org/alert",
@@ -3676,6 +3680,24 @@
         "hash": "sha512-DpVLNV9LkeP1yDULFCXm2mxA9m4ygS7XYy3lwgcF9M1A8QAWB+ut+FcP+8a6va50oSHOqwvUwPDUslgXTPMBfQ=="
       }
     },
+    "npm:clsx@1.2.1": {
+      "type": "npm",
+      "name": "npm:clsx@1.2.1",
+      "data": {
+        "version": "1.2.1",
+        "packageName": "clsx",
+        "hash": "sha512-EcR6r5a8bj6pu3ycsa/E/cKVGuTgZJZdsyUYHOksG/UHIiKfjxzRxYJpyVBwYaQeOvghal9fcc4PidlgzugAQg=="
+      }
+    },
+    "npm:clsx": {
+      "type": "npm",
+      "name": "npm:clsx",
+      "data": {
+        "version": "2.1.1",
+        "packageName": "clsx",
+        "hash": "sha512-eYm0QWBtUrBWZWG0d386OGAw16Z995PiOVo2B7bjWSbHedGl5e0ZWaq65kOGgUSNesEIDkB9ISbTg/JK9dhCZA=="
+      }
+    },
     "npm:@nextui-org/table": {
       "type": "npm",
       "name": "npm:@nextui-org/table",
@@ -3701,6 +3723,33 @@
         "version": "2.4.5",
         "packageName": "@nextui-org/theme",
         "hash": "sha512-c7Y17n+hBGiFedxMKfg7Qyv93iY5MteamLXV4Po4c1VF1qZJI6I+IKULFh3FxPWzAoz96r6NdYT7OLFjrAJdWg=="
+      }
+    },
+    "npm:tailwind-merge@2.6.0": {
+      "type": "npm",
+      "name": "npm:tailwind-merge@2.6.0",
+      "data": {
+        "version": "2.6.0",
+        "packageName": "tailwind-merge",
+        "hash": "sha512-P+Vu1qXfzediirmHOC3xKGAYeZtPcV9g76X+xg2FD4tYgR71ewMA35Y3sCz3zhiN/dwefRpJX0yBcgwi1fXNQA=="
+      }
+    },
+    "npm:tailwind-merge": {
+      "type": "npm",
+      "name": "npm:tailwind-merge",
+      "data": {
+        "version": "3.0.2",
+        "packageName": "tailwind-merge",
+        "hash": "sha512-l7z+OYZ7mu3DTqrL88RiKrKIqO3NcpEO8V/Od04bNpvk0kiIFndGEoqfuzvj4yuhRkHKjRkII2z+KS2HfPcSxw=="
+      }
+    },
+    "npm:tailwind-merge@1.14.0": {
+      "type": "npm",
+      "name": "npm:tailwind-merge@1.14.0",
+      "data": {
+        "version": "1.14.0",
+        "packageName": "tailwind-merge",
+        "hash": "sha512-3mFKyCo/MBcgyOTlrY8T7odzZFx+w+qKSMAmdFzRvqBfLlSigU6TZnlFHK0lkMwj9Bj8OYU+9yW9lmGuS0QEnQ=="
       }
     },
     "npm:@nextui-org/tooltip": {
@@ -14458,6 +14507,24 @@
         "hash": "sha512-GJgLTZ7vYb/JtPSSZ10hsOYIvEYsjbNU+zPdIHcUaWVNUEPivzxku31865sSSud0Da0W4lEeOPlmw93zLQchuQ=="
       }
     },
+    "npm:uuid@8.3.2": {
+      "type": "npm",
+      "name": "npm:uuid@8.3.2",
+      "data": {
+        "version": "8.3.2",
+        "packageName": "uuid",
+        "hash": "sha512-+NYs2QeMWy+GWFOEm9xnn6HCDp0l7QBD7ml8zLUmJ+93Q5NF0NocErnwkTkXVFNiX3/fpC6afS8Dhb/gz7R7eg=="
+      }
+    },
+    "npm:uuid": {
+      "type": "npm",
+      "name": "npm:uuid",
+      "data": {
+        "version": "11.1.0",
+        "packageName": "uuid",
+        "hash": "sha512-0/A9rDy9P7cJ+8w1c9WD9V//9Wj15Ce2MPz8Ri6032usz+NfePxx5AcN3bN+r6ZL6jEo066/yNYB3tn4pQEx+A=="
+      }
+    },
     "npm:sort-keys": {
       "type": "npm",
       "name": "npm:sort-keys",
@@ -14933,24 +15000,6 @@
         "version": "6.2.0",
         "packageName": "tabbable",
         "hash": "sha512-Cat63mxsVJlzYvN51JmVXIgNoUokrIaT2zLclCXjRd8boZ0004U4KCs/sToJ75C6sdlByWxpYnb5Boif1VSFew=="
-      }
-    },
-    "npm:tailwind-merge": {
-      "type": "npm",
-      "name": "npm:tailwind-merge",
-      "data": {
-        "version": "2.6.0",
-        "packageName": "tailwind-merge",
-        "hash": "sha512-P+Vu1qXfzediirmHOC3xKGAYeZtPcV9g76X+xg2FD4tYgR71ewMA35Y3sCz3zhiN/dwefRpJX0yBcgwi1fXNQA=="
-      }
-    },
-    "npm:tailwind-merge@1.14.0": {
-      "type": "npm",
-      "name": "npm:tailwind-merge@1.14.0",
-      "data": {
-        "version": "1.14.0",
-        "packageName": "tailwind-merge",
-        "hash": "sha512-3mFKyCo/MBcgyOTlrY8T7odzZFx+w+qKSMAmdFzRvqBfLlSigU6TZnlFHK0lkMwj9Bj8OYU+9yW9lmGuS0QEnQ=="
       }
     },
     "npm:tailwind-variants": {
@@ -15464,15 +15513,6 @@
         "version": "1.0.1",
         "packageName": "utils-merge",
         "hash": "sha512-pMZTvIkT1d+TFGvDOqodOclx0QWkkgi6Tdoa8gC8ffGAAqz9pzPTZWAybbsHHoED/ztMtkv/VoYTYyShUn81hA=="
-      }
-    },
-    "npm:uuid": {
-      "type": "npm",
-      "name": "npm:uuid",
-      "data": {
-        "version": "8.3.2",
-        "packageName": "uuid",
-        "hash": "sha512-+NYs2QeMWy+GWFOEm9xnn6HCDp0l7QBD7ml8zLUmJ+93Q5NF0NocErnwkTkXVFNiX3/fpC6afS8Dhb/gz7R7eg=="
       }
     },
     "npm:v8-compile-cache-lib": {
@@ -16101,6 +16141,11 @@
       },
       {
         "source": "potta",
+        "target": "npm:uuid",
+        "type": "static"
+      },
+      {
+        "source": "potta",
         "target": "npm:react-pro-sidebar",
         "type": "static"
       },
@@ -16325,7 +16370,7 @@
       },
       {
         "source": "@instanvi-global/source",
-        "target": "npm:nx@19.5.7",
+        "target": "npm:nx",
         "type": "static"
       },
       {
@@ -16401,6 +16446,11 @@
       {
         "source": "@instanvi-global/source",
         "target": "npm:axios",
+        "type": "static"
+      },
+      {
+        "source": "@instanvi-global/source",
+        "target": "npm:clsx",
         "type": "static"
       },
       {
@@ -16535,12 +16585,22 @@
       },
       {
         "source": "@instanvi-global/source",
+        "target": "npm:tailwind-merge",
+        "type": "static"
+      },
+      {
+        "source": "@instanvi-global/source",
         "target": "npm:timezones-list",
         "type": "static"
       },
       {
         "source": "@instanvi-global/source",
         "target": "npm:tslib",
+        "type": "static"
+      },
+      {
+        "source": "@instanvi-global/source",
+        "target": "npm:uuid",
         "type": "static"
       },
       {
@@ -19391,6 +19451,18 @@
         "type": "static"
       }
     ],
+    "npm:@iconify/react": [
+      {
+        "source": "npm:@iconify/react",
+        "target": "npm:react",
+        "type": "static"
+      },
+      {
+        "source": "npm:@iconify/react",
+        "target": "npm:@iconify/types",
+        "type": "static"
+      }
+    ],
     "npm:@internationalized/date": [
       {
         "source": "npm:@internationalized/date",
@@ -20764,7 +20836,7 @@
       },
       {
         "source": "npm:@react-aria/focus@3.19.0",
-        "target": "npm:clsx@2.1.1",
+        "target": "npm:clsx",
         "type": "static"
       },
       {
@@ -23954,7 +24026,7 @@
       },
       {
         "source": "npm:@nextui-org/system-rsc",
-        "target": "npm:clsx",
+        "target": "npm:clsx@1.2.1",
         "type": "static"
       }
     ],
@@ -24160,7 +24232,7 @@
       },
       {
         "source": "npm:@nextui-org/theme",
-        "target": "npm:clsx",
+        "target": "npm:clsx@1.2.1",
         "type": "static"
       },
       {
@@ -24185,7 +24257,7 @@
       },
       {
         "source": "npm:@nextui-org/theme",
-        "target": "npm:tailwind-merge",
+        "target": "npm:tailwind-merge@2.6.0",
         "type": "static"
       },
       {
@@ -26308,7 +26380,7 @@
       },
       {
         "source": "npm:@react-aria/utils@3.27.0",
-        "target": "npm:clsx@2.1.1",
+        "target": "npm:clsx",
         "type": "static"
       }
     ],
@@ -26622,7 +26694,7 @@
       },
       {
         "source": "npm:@react-aria/focus",
-        "target": "npm:clsx@2.1.1",
+        "target": "npm:clsx",
         "type": "static"
       }
     ],
@@ -27805,7 +27877,7 @@
       },
       {
         "source": "npm:@react-aria/utils",
-        "target": "npm:clsx@2.1.1",
+        "target": "npm:clsx",
         "type": "static"
       }
     ],
@@ -40528,7 +40600,7 @@
       },
       {
         "source": "npm:sockjs",
-        "target": "npm:uuid",
+        "target": "npm:uuid@8.3.2",
         "type": "static"
       },
       {
@@ -42837,5 +42909,7 @@
       }
     ]
   },
-  "version": "6.0"
+  "version": "6.0",
+  "errors": [],
+  "computedAt": 1741299290240
 }
