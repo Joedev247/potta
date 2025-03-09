@@ -14,12 +14,12 @@ export const productApi = {
     });
     return result
   },
-  getOne: async (vendor_id: string, product_id: string) => {
+  getOne: async ( product_id: string) => {
     const result = await axios.get(`/vendor/8f79d19a-5319-4783-8ddc-c863d98ecc16/product/${product_id}`);
-    return result?.data;
+    return result;
   },
-  update: async (vendor_id: string,product_id: string,data: unknown) => {
-    const result = await axios.put(`/vendor/${vendor_id}/product/${product_id}`, data);
+  update: async (product_id: string,data: unknown) => {
+    const result = await axios.put(`/vendor/8f79d19a-5319-4783-8ddc-c863d98ecc16/product/${product_id}`, data);
     return result?.data;
   },
   delete: async (product_id: string) => {

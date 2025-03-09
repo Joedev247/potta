@@ -615,9 +615,9 @@
       "type": "npm",
       "name": "npm:@babel/helper-create-class-features-plugin",
       "data": {
-        "version": "7.26.9",
+        "version": "7.25.9",
         "packageName": "@babel/helper-create-class-features-plugin",
-        "hash": "sha512-ubbUqCofvxPRurw5L8WTsCLSkQiVpov4Qx0WMA+jUN+nXBK8ADPlJO1grkFw5CWKC5+sZSOfuGMdX1aI1iT9Sg=="
+        "hash": "sha512-UTZQMvt0d/rSz6KI+qdu7GQze5TIajwTS++GUozlw8VBJDEOAqSXwm1WvmYEZwqdqSGQshRocPDqrt4HBZB3fQ=="
       }
     },
     "npm:@babel/helper-create-regexp-features-plugin": {
@@ -16121,16 +16121,6 @@
       },
       {
         "source": "potta",
-        "target": "npm:clsx",
-        "type": "static"
-      },
-      {
-        "source": "potta",
-        "target": "npm:tailwind-merge",
-        "type": "static"
-      },
-      {
-        "source": "potta",
         "target": "npm:@nx/next",
         "type": "static"
       },
@@ -16142,11 +16132,6 @@
       {
         "source": "potta",
         "target": "npm:@testing-library/react",
-        "type": "static"
-      },
-      {
-        "source": "potta",
-        "target": "npm:@tanstack/react-query",
         "type": "static"
       },
       {
@@ -16176,6 +16161,11 @@
       },
       {
         "source": "potta",
+        "target": "npm:@tanstack/react-query",
+        "type": "static"
+      },
+      {
+        "source": "potta",
         "target": "npm:@tanstack/react-table",
         "type": "static"
       },
@@ -16186,27 +16176,7 @@
       },
       {
         "source": "potta",
-        "target": "npm:react-hook-form",
-        "type": "static"
-      },
-      {
-        "source": "potta",
-        "target": "npm:@iconify/react",
-        "type": "static"
-      },
-      {
-        "source": "potta",
         "target": "npm:@nextui-org/react",
-        "type": "static"
-      },
-      {
-        "source": "potta",
-        "target": "npm:@hookform/resolvers",
-        "type": "static"
-      },
-      {
-        "source": "potta",
-        "target": "npm:uuid",
         "type": "static"
       },
       {
@@ -16237,6 +16207,16 @@
       {
         "source": "potta",
         "target": "npm:react-hot-toast",
+        "type": "static"
+      },
+      {
+        "source": "potta",
+        "target": "npm:react-hook-form",
+        "type": "static"
+      },
+      {
+        "source": "potta",
+        "target": "npm:@hookform/resolvers",
         "type": "static"
       },
       {
@@ -16695,7 +16675,7 @@
       },
       {
         "source": "@instanvi-global/source",
-        "target": "npm:uuid",
+        "target": "npm:uuid@8.3.2",
         "type": "static"
       },
       {
@@ -43047,5 +43027,5 @@
   },
   "version": "6.0",
   "errors": [],
-  "computedAt": 1742163227211
+  "computedAt": 1742220991095
 }

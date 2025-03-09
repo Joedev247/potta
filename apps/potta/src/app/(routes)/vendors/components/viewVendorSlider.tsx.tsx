@@ -20,6 +20,7 @@ import useGetOneVendor from '../hooks/useGetOneVendor';
 import { PhoneFlag } from './table';
 interface VendorDetailsProps {
   vendorId: string;
+<<<<<<< HEAD
 }
 const ViewVendorSlider: React.FC<VendorDetailsProps> = ({ vendorId }) => {
   const context = useContext(ContextData);
@@ -34,12 +35,47 @@ const ViewVendorSlider: React.FC<VendorDetailsProps> = ({ vendorId }) => {
   return (
     <Slider
       onOpen={() => setOpen(true)}
+=======
+  open?: boolean; // Optional controlled open state
+  setOpen?: (open: boolean) => void; // Optional setter from parent
+}
+const ViewVendorSlider: React.FC<VendorDetailsProps> = ({
+  vendorId,
+  open: controlledOpen, // Renamed to avoid naming conflict
+  setOpen: setControlledOpen,
+}) => {
+  const context = useContext(ContextData);
+  const { data, isLoading, error, refetch } = useGetOneVendor(vendorId);
+
+  // Local state as fallback if no controlled state is provided
+  const [localOpen, setLocalOpen] = useState(false);
+
+  // Determine which open state to use
+  const isOpen = controlledOpen ?? localOpen;
+  const setIsOpen = setControlledOpen ?? setLocalOpen;
+
+  useEffect(() => {
+    if (isOpen && vendorId) {
+      refetch();
+    }
+  }, [vendorId, refetch, isOpen]);
+  return (
+    <Slider
+      open={isOpen} // Use controlled or local state
+      setOpen={setIsOpen} // Use controlled or local setter
+>>>>>>> d703d00 ( inventory and vendor ui fixes customer)
       edit={false}
       title={'Vendor Details'}
       buttonText="view vendor"
     >
       {isLoading && (
+<<<<<<< HEAD
         <div className="flex justify-center items-center py-10">Loading</div>
+=======
+        <div className="flex justify-center items-center py-10 h-screen">
+          Loading
+        </div>
+>>>>>>> d703d00 ( inventory and vendor ui fixes customer)
       )}
 
       {error && (
@@ -54,7 +90,11 @@ const ViewVendorSlider: React.FC<VendorDetailsProps> = ({ vendorId }) => {
         ))}
 
       {data && (
+<<<<<<< HEAD
         <div className="max-w-4xl mx-auto p-6 ">
+=======
+        <div className="relative h-screen w-full max-w-4xl">
+>>>>>>> d703d00 ( inventory and vendor ui fixes customer)
           {/* Header */}
           <div className="w-full grid grid-cols-2 gap-3">
             <Text name="Name" value={data.name} height />
@@ -111,6 +151,19 @@ const ViewVendorSlider: React.FC<VendorDetailsProps> = ({ vendorId }) => {
             <Text name="Latitude" value={data.address.latitude} height />
             <Text name="Longitude" value={data.address.longitude} height />
           </div>
+<<<<<<< HEAD
+=======
+
+          {/* <div className="text-center md:text-right mt-4 md:flex md:justify-end space-x-4">
+            <Button
+              text="Cancel"
+              type="button"
+              theme="gray"
+              color={true}
+              onClick={() => setIsSliderOpen(false)}
+            />
+          </div> */}
+>>>>>>> d703d00 ( inventory and vendor ui fixes customer)
         </div>
       )}
     </Slider>

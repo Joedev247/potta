@@ -18,8 +18,8 @@ const Filter = () => {
 
   return (
     <div className="w-full flex justify-between ">
-      <div className="flex space-x-2 w-[60%]">
-        <div className="w-full w-[50%]">
+      <div className="flex space-x-2 w-[50%]">
+        <div className="w-1/2">
           <Search />
         </div>
         {/* <div className="flex mt-4 w-[40%] space-x-2">
@@ -56,9 +56,9 @@ const Filter = () => {
           </div>
         </div> */}
       </div>
-      <div className=" w-[30%] mt-4 ">
-        <div className="flex w-full space-x-3">
-          <div className="w-full  flex justify-end ">
+      <div className=" w-1/2 flex items-center">
+
+          <div className="w-full  flex justify-end  space-x-3">
             <Button
               type={'button'}
               color
@@ -66,13 +66,9 @@ const Filter = () => {
               icon={<img src="/images/export.svg" />}
               theme="lightGreen"
             />
+            <SliderVendor />
           </div>
-          <div className="w-full">
 
-              <SliderVendor />
-
-          </div>
-        </div>
       </div>
     </div>
   );

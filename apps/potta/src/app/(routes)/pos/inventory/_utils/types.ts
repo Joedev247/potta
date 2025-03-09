@@ -62,7 +62,7 @@ export type Product = {
   unitOfMeasure: string,
   cost: number,
   sku: string,
-  inventoryLevels: number,
+  inventoryLevel: number,
   salesPrice: number,
   taxable: boolean,
   taxRate: number,

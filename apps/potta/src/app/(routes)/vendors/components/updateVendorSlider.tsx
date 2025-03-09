@@ -8,19 +8,35 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import Button from '@potta/components/button';
 import Address from './address';
 import { ContextData } from '@potta/components/context';
-import { UpdateVendorPayload, updateVendorSchema, vendorSchema } from '../utils/validations';
+import {
+  UpdateVendorPayload,
+  updateVendorSchema,
+  vendorSchema,
+} from '../utils/validations';
 import Notes from './note';
 import Tax from './tax';
 import useUpdateVendor from '../hooks/useUpdateVendor';
 import toast from 'react-hot-toast';
 
-
 interface EditVendorProps {
   vendor: UpdateVendorPayload | null; // Existing vendor data
   vendorId: string; // ID of the vendor to be edited
+  open?: boolean; // Optional controlled open state
+  setOpen?: (open: boolean) => void; // Optional setter from parent
 }
 
-const EditVendor: React.FC<EditVendorProps> = ({ vendor, vendorId }) => {
+const EditVendor: React.FC<EditVendorProps> = ({
+  vendor,
+  vendorId,
+  open: controlledOpen, // Renamed to avoid naming conflict
+  setOpen: setControlledOpen,
+}) => {
+  // Local state as fallback if no controlled state is provided
+  const [localOpen, setLocalOpen] = useState(false);
+
+  // Determine which open state to use
+  const isOpen = controlledOpen ?? localOpen;
+  const setIsOpen = setControlledOpen ?? setLocalOpen;
   const [tabs, setTabs] = useState<string>('Address');
   const context = useContext(ContextData);
 
@@ -83,16 +99,16 @@ const EditVendor: React.FC<EditVendorProps> = ({ vendor, vendorId }) => {
     { value: 'XAF', label: 'XAF' },
   ];
 
-  const VendorStatusEnum =[
-    { value: 'pending', label:'Pending'},
-    { value:'schedule', label:'Schedule'},
-    { value:'complete', label:'Complete'},
-    { value:'enabled', label:'Enabled'},
-    { value:'disabled', label:'Disabled'},
-    { value:'available', label:'Available'},
-    { value:'expired', label:'Expired'},
-    { value:'taken', label:'Taken'},
-  ]
+  const VendorStatusEnum = [
+    { value: 'pending', label: 'Pending' },
+    { value: 'schedule', label: 'Schedule' },
+    { value: 'complete', label: 'Complete' },
+    { value: 'enabled', label: 'Enabled' },
+    { value: 'disabled', label: 'Disabled' },
+    { value: 'available', label: 'Available' },
+    { value: 'expired', label: 'Expired' },
+    { value: 'taken', label: 'Taken' },
+  ];
 
   const mutation = useUpdateVendor(vendorId); // Hook for updating vendor
   const onSubmit = (data: UpdateVendorPayload) => {
@@ -101,6 +117,7 @@ const EditVendor: React.FC<EditVendorProps> = ({ vendor, vendorId }) => {
       onSuccess: () => {
         toast.success('Vendor updated successfully!');
         reset(); // Reset the form after success
+        setIsOpen(false);
       },
       onError: () => {
         toast.error('Failed to update vendor');
@@ -109,10 +126,17 @@ const EditVendor: React.FC<EditVendorProps> = ({ vendor, vendorId }) => {
   };
 
   return (
-    <Slider edit={true} title={'Edit Vendor'} buttonText="update vendor">
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
+    <Slider
+      open={isOpen}
+      setOpen={setIsOpen}
+      edit={true}
+      title={'Edit Vendor'}
+      buttonText="update vendor"
+    >
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className="relative h-[97%] w-full"
+        className="relative h-[97%] w-full max-w-4xl "
       >
         <div className="w-full grid grid-cols-2 gap-3">
           <Input
@@ -124,24 +148,22 @@ const EditVendor: React.FC<EditVendorProps> = ({ vendor, vendorId }) => {
             errors={errors.name}
           />
           <div>
-
-          <Controller
-            name="type"
-            control={control}
-            render={({ field }) => (
-              <Select
-                options={VendorTypeEnum}
-                selectedValue={field.value}
-                onChange={field.onChange}
-                bg="bg-white"
-                name="Select Vendor Type"
-                label="Type"
-              />
-            )}
-          />
+            <Controller
+              name="type"
+              control={control}
+              render={({ field }) => (
+                <Select
+                  options={VendorTypeEnum}
+                  selectedValue={field.value}
+                  onChange={field.onChange}
+                  bg="bg-white"
+                  name="Select Vendor Type"
+                  label="Type"
+                />
+              )}
+            />
           </div>
         </div>
-
         <div className="w-full grid my-5 grid-cols-2 gap-3">
           <Input
             label="Contact Name"
@@ -153,41 +175,38 @@ const EditVendor: React.FC<EditVendorProps> = ({ vendor, vendorId }) => {
           />
 
           <div>
-
-          <Controller
-            name="classification"
-            control={control}
-            render={({ field }) => (
-              <Select
-                options={VendorClassificationEnum}
-                selectedValue={field.value}
-                onChange={field.onChange}
-                bg="bg-white"
-                name="Select Classification"
-                label="Classification "
-              />
-            )}
-          />
-
+            <Controller
+              name="classification"
+              control={control}
+              render={({ field }) => (
+                <Select
+                  options={VendorClassificationEnum}
+                  selectedValue={field.value}
+                  onChange={field.onChange}
+                  bg="bg-white"
+                  name="Select Classification"
+                  label="Classification "
+                />
+              )}
+            />
           </div>
           <div>
-          <Controller
-            name="status"
-            control={control}
-            render={({ field }) => (
-              <Select
-                options={VendorStatusEnum}
-                selectedValue={field.value}
-                onChange={field.onChange}
-                bg="bg-white"
-                name="Select Status"
-                label="Status"
-              />
-            )}
-          />
+            <Controller
+              name="status"
+              control={control}
+              render={({ field }) => (
+                <Select
+                  options={VendorStatusEnum}
+                  selectedValue={field.value}
+                  onChange={field.onChange}
+                  bg="bg-white"
+                  name="Select Status"
+                  label="Status"
+                />
+              )}
+            />
           </div>
         </div>
-
         <hr />
         <h1 className="text-xl mt-2">Contact Information</h1>
         <div className="w-full grid mt-7 grid-cols-2 gap-3">
@@ -208,7 +227,6 @@ const EditVendor: React.FC<EditVendorProps> = ({ vendor, vendorId }) => {
             errors={errors.email}
           />
         </div>
-
         <div className="w-full grid mt-4 grid-cols-1 space-y-4">
           <Input
             type="text"
@@ -219,7 +237,6 @@ const EditVendor: React.FC<EditVendorProps> = ({ vendor, vendorId }) => {
             errors={errors.website}
           />
         </div>
-
         <div className="w-full grid mt-4 grid-cols-2 gap-3">
           <Input
             type="number"
@@ -230,25 +247,22 @@ const EditVendor: React.FC<EditVendorProps> = ({ vendor, vendorId }) => {
             errors={errors.openingBalance}
           />
           <div>
-
-
-          <Controller
-            name="currency"
-            control={control}
-            render={({ field }) => (
-              <Select
-                options={VendorCurrencyEnum}
-                selectedValue={field.value}
-                onChange={field.onChange}
-                bg="bg-white"
-                name="Select Currency"
-                label="Currency "
-              />
-            )}
-          />
+            <Controller
+              name="currency"
+              control={control}
+              render={({ field }) => (
+                <Select
+                  options={VendorCurrencyEnum}
+                  selectedValue={field.value}
+                  onChange={field.onChange}
+                  bg="bg-white"
+                  name="Select Currency"
+                  label="Currency "
+                />
+              )}
+            />
           </div>
         </div>
-
         <div className="w-full grid mt-4 grid-cols-1 space-y-4">
           <Input
             label="Account Details"
@@ -259,7 +273,6 @@ const EditVendor: React.FC<EditVendorProps> = ({ vendor, vendorId }) => {
             errors={errors?.accountDetails}
           />
         </div>
-
         <div className="w-full grid mt-4 grid-cols-2 gap-3">
           <Input
             label="Payment Terms"
@@ -278,7 +291,6 @@ const EditVendor: React.FC<EditVendorProps> = ({ vendor, vendorId }) => {
             errors={errors?.paymentMethod}
           />
         </div>
-
         <div className="mt-5">
           <div className="flex w-fit bg-green-100 mt-7">
             {['Address', 'Notes', 'Tax'].map((tab) => (
@@ -294,19 +306,32 @@ const EditVendor: React.FC<EditVendorProps> = ({ vendor, vendorId }) => {
             ))}
           </div>
 
-          <div className="mt-5">
+          <div className="mt-5 pb-20">
             {tabs === 'Address' && (
               <Address register={register} errors={errors?.address ?? {}} />
             )}
             {tabs === 'Notes' && (
               <Notes register={register} errors={errors.notes} />
             )}
-            {tabs === 'Tax' && <Tax register={register} errors={errors.taxID} />}
+            {tabs === 'Tax' && (
+              <Tax register={register} errors={errors.taxID} />
+            )}
           </div>
         </div>
-
-        <div className="absolute right-0 m-5">
-          <Button isLoading={mutation.isPending} text="Update Vendor" type="submit" />
+        <div className="flex-grow" /> {/* This div takes up remaining space */}
+        <div className="text-center md:text-right md:flex md:justify-end space-x-4 fixed bottom-0 left-0 right-0 bg-white p-4">
+          <Button
+            isLoading={mutation.isPending}
+            text="Update Vendor"
+            type="submit"
+          />
+          <Button
+            text="Cancel"
+            type="button"
+            theme="gray"
+            color={true}
+            onClick={() => setIsOpen(false)}
+          />
         </div>
       </form>
     </Slider>

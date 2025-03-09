@@ -9,7 +9,7 @@ type Props = {
   text?: string;
   icon?: any;
   open: boolean;
-  setOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  setOpen: (value: boolean) => void;
   button?: boolean;
 };
 
@@ -25,7 +25,7 @@ const Modal: React.FC<Props> = ({
 }) => {
   return (
     <div>
-      {button ? (
+      {button &&
         <Button
           theme="red"
           height={true}
@@ -33,22 +33,12 @@ const Modal: React.FC<Props> = ({
           text={text}
           type={'submit'}
           icon={icon}
-          onClick={() => setOpen(!open)}
+          onClick={() => setOpen(false)}
         />
-      ) : (
-        <button
-          onClick={() => {
-            setOpen(!open);
-          }}
-          type={'button'}
-        >
-          {' '}
-          Delete{' '}
-        </button>
-      )}
+}
 
       <Transition.Root show={open} as={Fragment}>
-        <Dialog as="div" className="relative z-40" onClose={setOpen}>
+        <Dialog as="div" className="relative z-40" onClose={() => setOpen(false)} open={open}>
           <Transition.Child
             as={Fragment}
             enter="ease-out duration-300"
@@ -86,14 +76,6 @@ const Modal: React.FC<Props> = ({
                       {title && (
                         <h1 className="text-xl font-medium ">{title}</h1>
                       )}
-                      <div
-                        className="text-3xl cursor-pointer flex justify-end"
-                        onClick={() => {
-                          setOpen(false);
-                        }}
-                      >
-                        <i className="ri-close-line text-gray-700 text-2xl"></i>
-                      </div>
                     </div>
                     {children}
                   </div>

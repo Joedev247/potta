@@ -8,7 +8,7 @@ interface Option {
 
 interface SelectProps {
     options: Option[];
-    border?: boolean,
+    border?: boolean;
     selectedValue: string;
     onChange: any;
     bg: string;
@@ -16,7 +16,7 @@ interface SelectProps {
     label?: string;
 }
 
-const Select: React.FC<SelectProps> = ({ options, selectedValue, onChange, bg, name, border , label}) => {
+const Select: React.FC<SelectProps> = ({ options, selectedValue, onChange, bg, name, border, label }) => {
     const [isOpen, setIsOpen] = useState(false);
 
     const toggleDropdown = () => {
@@ -30,10 +30,11 @@ const Select: React.FC<SelectProps> = ({ options, selectedValue, onChange, bg, n
 
     return (
       <>
-        {label && <span className=" text-gray-900 font-bold">{label}</span>}
-      <div className={`relative inline-block mt-2 ${border ? '' : 'border'} w-full md:w-full`}>
+        {label && <span className="text-gray-900 font-medium">{label}</span>}
+        <div className={`relative inline-block mt-2 ${border ? '' : 'border'} w-full md:w-full`}>
             <div
                 onClick={toggleDropdown}
+                tabIndex={0}  // Added to make it focusable
                 className={`${bg} relative cursor-pointer px-3 py-2.5 pr-8 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 w-full`}
             >
                 <span className="block truncate">{options.find(option => option.value === selectedValue)?.label || name}</span>
@@ -55,7 +56,7 @@ const Select: React.FC<SelectProps> = ({ options, selectedValue, onChange, bg, n
                     <li
                         key={option.value}
                         onClick={() => handleOptionClick(option.value)}
-                        className="px-3 py-2 text-gray-700 cursor-pointer hover:bg-gray-100"
+                        className="px-3 py-2 text-gray-700 hover:bg-gray-100 cursor-pointer"
                     >
                         {option.label}
                     </li>

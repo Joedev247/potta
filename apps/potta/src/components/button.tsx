@@ -24,7 +24,7 @@ const themes = {
     lightGreen: "bg-[#A0E86F]",
     gray: "bg-gray-300",
     dark: "bg-gray-900",
-    
+
 };
 
 const Button = ({ onClick, text, icon, theme, color, type, isLoading, width, height, }: Props) => {

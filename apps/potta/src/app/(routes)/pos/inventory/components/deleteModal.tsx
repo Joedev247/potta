@@ -6,30 +6,39 @@ import toast from 'react-hot-toast';
 import useDeleteProduct from '../_hooks/useDeleteProduct';
 interface DeleteProps{
   productID: string;
+  open?: boolean;  // Optional controlled open state
+  setOpen?: (open: boolean) => void;  // Optional setter from parent
 }
 
-const DeleteModal: React.FC<DeleteProps> = ({ productID}) => {
+const DeleteModal: React.FC<DeleteProps> = ({ productID, open: controlledOpen,
+  setOpen: setControlledOpen}) => {
   const mutation = useDeleteProduct()
+
+  // Local state as fallback if no controlled state is provided
+  const [localOpen, setLocalOpen] = useState(false);
+
+  // Determine which open state to use
+  const isOpen = controlledOpen ?? localOpen;
+  const setIsOpen = setControlledOpen ?? setLocalOpen;
   const handleDelete = () => {
     mutation.mutate(productID,{
       onSuccess: () => {
-        setIsModalOpen(false);
+        setIsOpen(false);
         toast.success('Vendor deleted successfully!');
       },
       onError: (error) => {
         console.log(error);
-        setIsModalOpen(false);
+        setIsOpen(false);
         toast.error('Failed to delete vendor please try again later');
       },
     });
 
   }
-  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+
 
   return (
 
-      <Modal button={false} text="Delete" title="Delete Product" width="full" open={isModalOpen}
-      setOpen={setIsModalOpen}>
+    <Modal button={false} title="Delete Vendor" width="full" open={isOpen} setOpen={setIsOpen}>
         <div className="p-4">
 
         <div>
@@ -37,7 +46,7 @@ const DeleteModal: React.FC<DeleteProps> = ({ productID}) => {
         </div>
         <div className="text-center md:text-right mt-4 md:flex md:justify-end space-x-4">
                <Button onClick={() =>{handleDelete()}} isLoading={mutation.isPending} type="button" text={"Delete"} theme="red"/>
-                <Button text={'Cancel'} type="button" theme="gray" color={true} onClick={() => setIsModalOpen(!isModalOpen)}/>
+               <Button text="Cancel" type="button" theme="gray" color={true} onClick={() => setIsOpen(false)} />
             </div>
         </div>
       </Modal>

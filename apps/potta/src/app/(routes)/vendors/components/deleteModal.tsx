@@ -2,45 +2,50 @@ import Button from "@potta/components/button";
 import Modal from "@potta/components/modal";
 import { useState } from "react";
 import useDeleteVendor from "../hooks/useDeleteVendor";
-import toast from 'react-hot-toast';
-interface DeleteProps{
+import toast from "react-hot-toast";
+
+interface DeleteProps {
   vendorID: string;
+  open?: boolean;  // Optional controlled open state
+  setOpen?: (open: boolean) => void;  // Optional setter from parent
 }
 
-const DeleteModal: React.FC<DeleteProps> = ({ vendorID}) => {
-  const mutation = useDeleteVendor()
+const DeleteModal: React.FC<DeleteProps> = ({ vendorID,  open: controlledOpen,
+  setOpen: setControlledOpen }) => {
+  const mutation = useDeleteVendor();
+// Local state as fallback if no controlled state is provided
+  const [localOpen, setLocalOpen] = useState(false);
+
+  // Determine which open state to use
+  const isOpen = controlledOpen ?? localOpen;
+  const setIsOpen = setControlledOpen ?? setLocalOpen;
   const handleDelete = () => {
-    mutation.mutate(vendorID,{
+    mutation.mutate(vendorID, {
       onSuccess: () => {
-        setIsModalOpen(false);
-        toast.success('Vendor deleted successfully!');
-      },
+        setIsOpen(false)
+        toast.success("Vendor deleted successfully!");
+      }, // Renamed to avoid naming conflict
       onError: (error) => {
         console.log(error);
-        setIsModalOpen(false);
-        toast.error('Failed to delete vendor please try again later');
+        setIsOpen(false)
+        toast.error("Failed to delete vendor, please try again later.");
       },
     });
-
-  }
-  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  };
 
   return (
-
-      <Modal button={false} text="Delete" title="Delete Vendor" width="full" open={isModalOpen}
-      setOpen={setIsModalOpen}>
-        <div className="p-4">
-
-        <div>
-          <p>Are you sure you want to delete this Vendor?</p>
-        </div>
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
+    <Modal button={false} title="Delete Vendor" width="full" open={isOpen} setOpen={setIsOpen}>
+      <div className="p-4">
+        <p>Are you sure you want to delete this Vendor?</p>
         <div className="text-center md:text-right mt-4 md:flex md:justify-end space-x-4">
-               <Button onClick={() =>{handleDelete()}} isLoading={mutation.isPending} type="button" text={"Delete"} theme="red"/>
-                <Button text={'Cancel'} type="button" theme="gray" color={true} onClick={() => setIsModalOpen(!isModalOpen)}/>
-            </div>
+          <Button onClick={handleDelete} isLoading={mutation.isPending} type="button" text="Delete" theme="red" />
+          <Button text="Cancel" type="button" theme="gray" color={true} onClick={() => setIsOpen(false)} />
         </div>
-      </Modal>
-
+      </div>
+    </Modal>
   );
-}
+};
+
+
 export default DeleteModal;

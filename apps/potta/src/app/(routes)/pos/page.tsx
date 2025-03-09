@@ -6,12 +6,14 @@ import POSFooter from "./component/footer";
 import { ContextData } from "@potta/components/context";
 import Print from "./component/print/page";
 import RootLayout from "../layout";
+import { Toaster } from "sonner";
 
 const POS = () => {
 
     const context = useContext(ContextData);
     return (
         <RootLayout>
+        <Toaster />
             <div className='pl-16 pr-5 mt-10'>
                 <div className="h-[92vh] flex border space-x-2 p-4 w-full">
                     <div className="w-[45%]">
