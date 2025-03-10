@@ -14,9 +14,10 @@ interface SelectProps {
     bg: string;
     name?: string;
     label?: string;
+    required?: boolean;
 }
 
-const Select: React.FC<SelectProps> = ({ options, selectedValue, onChange, bg, name, border, label }) => {
+const Select: React.FC<SelectProps> = ({ options, selectedValue, onChange, bg, name, border, label, required }) => {
     const [isOpen, setIsOpen] = useState(false);
 
     const toggleDropdown = () => {
@@ -30,7 +31,7 @@ const Select: React.FC<SelectProps> = ({ options, selectedValue, onChange, bg, n
 
     return (
       <>
-        {label && <span className="text-gray-900 font-medium">{label}</span>}
+        {label && <span className="text-gray-900 font-medium">{label}{ required && <span className=" text-red-500">*</span>}</span>}
         <div className={`relative inline-block mt-2 ${border ? '' : 'border'} w-full md:w-full`}>
             <div
                 onClick={toggleDropdown}

@@ -24,6 +24,7 @@ const Address: React.FC<AddressFormProps> = ({ register, errors }) => {
         placeholder="Enter address"
         register={register}
         errors={errors?.address}
+        required
       />
       <div className="w-full grid mt-4 grid-cols-2 gap-3">
 
@@ -34,6 +35,7 @@ const Address: React.FC<AddressFormProps> = ({ register, errors }) => {
         placeholder="Enter country"
         register={register}
         errors={errors?.country}
+        required
       />
       <Input
         label="City"
@@ -42,6 +44,7 @@ const Address: React.FC<AddressFormProps> = ({ register, errors }) => {
         placeholder="Enter city"
         register={register}
         errors={errors?.city}
+        required
       />
       </div>
 <div className="w-full grid mt-4 grid-cols-2 gap-3">

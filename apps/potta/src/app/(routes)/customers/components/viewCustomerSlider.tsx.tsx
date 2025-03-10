@@ -10,26 +10,26 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import Button from '@potta/components/button';
 import Address from './address';
 import { ContextData } from '@potta/components/context';
-import { VendorPayload, vendorSchema } from '../utils/validations';
+import { CustomerPayload, customerSchema } from '../utils/validations';
 import Notes from './note';
 import Tax from './tax';
-import useCreateVendor from '../hooks/useCreateCustomer';
+import useCreateCustomer from '../hooks/useCreateCustomer';
 import toast from 'react-hot-toast';
 import Text from '@potta/components/textDisplay';
-import useGetOneVendor from '../hooks/useGetOneCustomer';
+import useGetOneCustomer from '../hooks/useGetOneCustomer';
 import { PhoneFlag } from './table';
-interface VendorDetailsProps {
-  vendorId: string;
+interface CustomerDetailsProps {
+  customerId: string;
   open?: boolean; // Optional controlled open state
   setOpen?: (open: boolean) => void; // Optional setter from parent
 }
-const ViewVendorSlider: React.FC<VendorDetailsProps> = ({
-  vendorId,
+const ViewCustomerSlider: React.FC<CustomerDetailsProps> = ({
+  customerId,
   open: controlledOpen, // Renamed to avoid naming conflict
   setOpen: setControlledOpen,
 }) => {
   const context = useContext(ContextData);
-  const { data, isLoading, error, refetch } = useGetOneVendor(vendorId);
+  const { data, isLoading, error, refetch } = useGetOneCustomer(customerId);
 
   // Local state as fallback if no controlled state is provided
   const [localOpen, setLocalOpen] = useState(false);
@@ -39,10 +39,10 @@ const ViewVendorSlider: React.FC<VendorDetailsProps> = ({
   const setIsOpen = setControlledOpen ?? setLocalOpen;
 
   useEffect(() => {
-    if (isOpen && vendorId) {
+    if (isOpen && customerId) {
       refetch();
     }
-  }, [vendorId, refetch, isOpen]);
+  }, [customerId, refetch, isOpen]);
   return (
     <Slider
       open={isOpen} // Use controlled or local state
@@ -59,20 +59,20 @@ const ViewVendorSlider: React.FC<VendorDetailsProps> = ({
 
       {error && (
         <p className="text-red-600 text-center">
-          Error fetching vendor details: {error.message}
+          Error fetching customer details: {error.message}
         </p>
       )}
 
       {!data ||
         (Object.keys(data).length === 0 && (
-          <p className="text-gray-500 text-center">No vendor data available.</p>
+          <p className="text-gray-500 text-center">No customer data available.</p>
         ))}
 
       {data && (
         <div className="relative h-screen w-full max-w-4xl">
           {/* Header */}
           <div className="w-full grid grid-cols-2 gap-3">
-            <Text name="Name" value={data.name} height />
+            <Text name="Name" value={`${data.firstName} ${data.lastName}`} height />
             <Text name="Type" value={data.type} height />
           </div>
           <div className="w-full grid grid-cols-2 gap-3">
@@ -86,31 +86,18 @@ const ViewVendorSlider: React.FC<VendorDetailsProps> = ({
           </div>
           <div className="w-full grid grid-cols-2 gap-3">
             <Text name="Contact Person" value={data.contactPerson} height />
-            <Text name="Website" value={data.website} height />
+            <Text name="Credit Limit" value={data.creditLimit} height />
           </div>
           <div className="w-full grid grid-cols-2 gap-3">
             <Text name="Status" value={data.status} height />
-            <Text name="Classification" value={data.classification} height />
+            <Text name="TaxId" value={data.taxId} height />
           </div>
-          <div className="w-full grid grid-cols-2 gap-3">
-            <Text name="Payment Terms" value={data.paymentTerms} height />
 
-            <Text name="Payment Method" value={data.paymentMethod} height />
-          </div>
           <div className="w-full grid grid-cols-2 gap-3">
-            <Text name="Tax ID" value={data.taxId} height />
-            <Text name="Account Details" value={data.accountDetails} height />
-          </div>
-          <div className="w-full grid grid-cols-2 gap-3">
-            <Text name="Opening Balance" value={data.openingBalance} height />
-            <Text name="Currency" value={data.currency} height />
-          </div>
-          <div className="w-full grid grid-cols-2 gap-3">
-            <Text name="Notes" value={data.notes} height />
             <Text name="Created At" value={data.createdAt} height />
           </div>
-          <hr />
-          <h1 className="text-2xl my-2">Address</h1>
+          <hr className='my-8'/>
+
           <div className="w-full grid grid-cols-2 gap-3">
             <Text name="Address" value={data.address.address} height />
           </div>
@@ -142,4 +129,4 @@ const ViewVendorSlider: React.FC<VendorDetailsProps> = ({
   );
 };
 
-export default ViewVendorSlider;
+export default ViewCustomerSlider;

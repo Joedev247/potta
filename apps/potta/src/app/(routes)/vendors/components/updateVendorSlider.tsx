@@ -146,6 +146,7 @@ const EditVendor: React.FC<EditVendorProps> = ({
             placeholder="Enter vendor name"
             register={register}
             errors={errors.name}
+            required
           />
           <div>
             <Controller
@@ -159,6 +160,7 @@ const EditVendor: React.FC<EditVendorProps> = ({
                   bg="bg-white"
                   name="Select Vendor Type"
                   label="Type"
+                  required
                 />
               )}
             />
@@ -186,6 +188,7 @@ const EditVendor: React.FC<EditVendorProps> = ({
                   bg="bg-white"
                   name="Select Classification"
                   label="Classification "
+                  required
                 />
               )}
             />
@@ -202,6 +205,7 @@ const EditVendor: React.FC<EditVendorProps> = ({
                   bg="bg-white"
                   name="Select Status"
                   label="Status"
+                  required
                 />
               )}
             />
@@ -217,6 +221,7 @@ const EditVendor: React.FC<EditVendorProps> = ({
             placeholder="(555) 123-4567"
             register={register}
             errors={errors.phone}
+            required
           />
           <Input
             type="text"
@@ -225,6 +230,7 @@ const EditVendor: React.FC<EditVendorProps> = ({
             placeholder="abcdfg@abc.com"
             register={register}
             errors={errors.email}
+            required
           />
         </div>
         <div className="w-full grid mt-4 grid-cols-1 space-y-4">
@@ -258,6 +264,7 @@ const EditVendor: React.FC<EditVendorProps> = ({
                   bg="bg-white"
                   name="Select Currency"
                   label="Currency "
+                  required
                 />
               )}
             />
@@ -319,7 +326,8 @@ const EditVendor: React.FC<EditVendorProps> = ({
           </div>
         </div>
         <div className="flex-grow" /> {/* This div takes up remaining space */}
-        <div className="text-center md:text-right md:flex md:justify-end space-x-4 fixed bottom-0 left-0 right-0 bg-white p-4">
+        <div className="text-center md:text-right  md:flex  space-x-4 fixed bottom-0 left-0 right-0 justify-center bg-white p-4">
+        <div className="flex gap-2 w-full max-w-4xl justify-end">
           <Button
             isLoading={mutation.isPending}
             text="Update Vendor"
@@ -332,6 +340,7 @@ const EditVendor: React.FC<EditVendorProps> = ({
             color={true}
             onClick={() => setIsOpen(false)}
           />
+        </div>
         </div>
       </form>
     </Slider>

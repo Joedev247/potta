@@ -4,6 +4,8 @@ import Search from '@potta/components/search';
 import Select from '@potta/components/select';
 import React, { useState } from 'react';
 import SliderVendor from './customerSlider';
+import { PopoverAction } from '@potta/components/tableActionsPopover';
+import { NextPopover } from '@potta/components/popover';
 
 const Filter = () => {
   const [selectedValue, setSelectedValue] = useState('All Time'); // Set your default value here
@@ -15,6 +17,27 @@ const Filter = () => {
   const handleChange2 = (value: string) => {
     setSelectedValue2(value);
   };
+  const [isCreateOpen, setIsCreateOpen] = useState(false);
+  const [isImportOpen, setIsImportOpen] = useState(false);
+  const [openPopover, setOpenPopover] = useState<string | null>(null);
+  const actions: PopoverAction[] = [
+    {
+      label: 'Single Customer',
+      onClick: () => {
+        setIsCreateOpen(true);
+      },
+      className: 'hover:bg-gray-200',
+
+    },
+    {
+      label: 'Import Customers',
+      onClick: () => {
+        setIsImportOpen(true);
+      },
+      className: 'hover:bg-gray-200',
+
+    },
+  ];
 
   return (
     <div className="w-full flex justify-between ">
@@ -57,18 +80,31 @@ const Filter = () => {
         </div> */}
       </div>
       <div className=" w-1/2 flex items-center">
+        <div className="w-full  flex justify-end  space-x-3">
+          <Button
+            type={'button'}
+            color
+            text="Export"
+            icon={<img src="/images/export.svg" />}
+            theme="lightGreen"
+          />
 
-          <div className="w-full  flex justify-end  space-x-3">
-            <Button
-              type={'button'}
-              color
-              text="Export"
-              icon={<img src="/images/export.svg" />}
-              theme="lightGreen"
-            />
-            <SliderVendor />
-          </div>
+          <NextPopover
+            rowUuid={'1'}
+            actions={actions}
+            openPopover={openPopover}
+            setOpenPopover={setOpenPopover}
+            triggerButton={
+              <Button
+                text={'New Customer'}
+                type={'button'}
+                icon={<i className="ri-file-add-line"></i>}
+              />
+            }
+          />
 
+          <SliderVendor  open={isCreateOpen} setOpen={setIsCreateOpen}/>
+        </div>
       </div>
     </div>
   );

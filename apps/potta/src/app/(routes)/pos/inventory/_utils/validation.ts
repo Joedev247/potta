@@ -3,7 +3,7 @@ import * as yup from 'yup';
 export const productSchema=yup.object().shape({
   name: yup.string().required('name is required'),
   description: yup.string(),
-  unitOfMeasure: yup.string().required('unit of measurement is required'),
+  unitOfMeasure: yup.string(),
   cost: yup.number().required('cost is required').typeError("Must be a number"),
   sku: yup.string().required('sku is required'),
   inventoryLevel: yup.number(),
@@ -17,7 +17,7 @@ export const productSchema=yup.object().shape({
 export const UpdateProductSchema=yup.object().shape({
   name: yup.string().required('name is required'),
   description: yup.string(),
-  unitOfMeasure: yup.string().required('unit of measurement is required'),
+  unitOfMeasure: yup.string(),
   cost: yup.number().required('cost is required').typeError("Must be a number"),
   sku: yup.string().required('sku is required'),
   inventoryLevel: yup.number(),

@@ -17,9 +17,18 @@ import useCreateProduct from '../../../../_hooks/useCreateProduct';
 import toast from 'react-hot-toast';
 import Slider from '@potta/components/slideover';
 import TextArea from '@potta/components/textArea';
+interface CreateProductProps {
+  open?: boolean; // Optional controlled open state
+  setOpen?: (open: boolean) => void; // Optional setter from parent
+}
+const CreateNonInventoryProduct:React.FC<CreateProductProps> = ({ open: controlledOpen,
+  setOpen: setControlledOpen}) => {
+    // Local state as fallback if no controlled state is provided
+    const [localOpen, setLocalOpen] = useState(false);
 
-const CreateProduct = () => {
-  const [isSliderOpen, setIsSliderOpen] = useState(false);
+    // Determine which open state to use
+    const isOpen = controlledOpen ?? localOpen;
+    const setIsOpen = setControlledOpen ?? setLocalOpen;
   const [data, setData] = useState('inventory');
   const context = useContext(ContextData);
   const {
@@ -52,7 +61,7 @@ const CreateProduct = () => {
       onSuccess: () => {
         toast.success('Product created successfully!');
         reset(); // Reset the form after success
-        setIsSliderOpen(false);
+        setIsOpen(false);
       },
       onError: (error) => {
         toast.error('Failed to create product');
@@ -62,15 +71,15 @@ const CreateProduct = () => {
 
   return (
     <Slider
-      open={isSliderOpen}
-      setOpen={setIsSliderOpen}
+    open={isOpen}
+    setOpen={setIsOpen}
       edit={true}
       buttonText={'Create Product'}
       title={'Create Product'}
     >
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className="relative h-[97%] w-full max-w-4xl"
+        className="relative h-screen w-full max-w-4xl"
       >
         <div className="w-full">
           <Input
@@ -80,6 +89,7 @@ const CreateProduct = () => {
             placeholder="Enter Product name"
             register={register}
             errors={errors.name}
+            required
           />
         </div>
         <div className="w-full grid mt-5 grid-cols-2 gap-2">
@@ -101,24 +111,26 @@ const CreateProduct = () => {
               placeholder="Enter Product Cost"
               register={register}
               errors={errors.cost}
+              required
             />
           </div>
         </div>
         <div className="w-full mt-5">
-        <TextArea
-                label="Description"
-                name="description"
-                placeholder="Product Description.."
-                register={register}
-                errors={errors.description}
-                height={true}
-            />
+          <TextArea
+            label="Description"
+            name="description"
+            placeholder="Product Description.."
+            register={register}
+            errors={errors.description}
+            height={true}
+          />
         </div>
-
         <div className="mt-5 grid grid-cols-2 gap-5">
           <div>
             <div>
-              <label htmlFor="" className='mb-3 text-gray-900 font-medium'>Image</label>
+              <label htmlFor="" className="mb-3 text-gray-900 font-medium">
+                Image
+              </label>
               <MyDropzone />
             </div>
             <div className="mt-4">
@@ -129,6 +141,7 @@ const CreateProduct = () => {
                 name={'sku'}
                 register={register}
                 errors={errors.sku}
+                required
               />
             </div>
           </div>
@@ -141,16 +154,16 @@ const CreateProduct = () => {
                 name={'salesPrice'}
                 register={register}
                 errors={errors.salesPrice}
+                required
               />
             </div>
             <div className="mt-6 flex flex-col items-start ">
-
               <Checkbox
                 label="Taxable"
                 name="taxable"
                 control={control}
                 errors={errors.taxable}
-
+                required
               />
             </div>
             <div className="mt-6">
@@ -166,78 +179,29 @@ const CreateProduct = () => {
           </div>
         </div>
         <div className="mt-12 pb-20">
-          <div className="flex ">
-            {/* <div
-            onClick={() => setData('units')}
-            className={`px-4 py-2 bg-green-50 cursor-pointer ${
-              data == 'units' && 'border-b-2 border-green-500 text-green-500'
-            }`}
-          >
-            <p>Units</p>
-          </div> */}
-            <div
-              onClick={() => setData('inventory')}
-              className={`px-4 py-2 bg-green-50 cursor-pointer ${
-                data == 'inventory' &&
-                'border-b-2 border-green-500 text-green-500'
-              }`}
-            >
-              <p>Inventory</p>
-            </div>
-            {/* <div
-            onClick={() => setData('notes')}
-            className={`px-4 py-2 bg-green-50 cursor-pointer ${
-              data == 'notes' && 'border-b-2 border-green-500 text-green-500'
-            }`}
-          >
-            <p>Notes</p>
-          </div>
-          <div
-            onClick={() => setData('attachment')}
-            className={`px-4 py-2 bg-green-50 cursor-pointer ${
-              data == 'attachement' &&
-              'border-b-2 border-green-500 text-green-500'
-            }`}
-          >
-            <p>Attachements</p>
-          </div> */}
-          </div>
-          <div className="mt-8">
-            {data == 'inventory' && (
-              <Inventory
-                control={control}
-                register={register}
-                errors={errors}
-              />
-            )}
-            {/* {data == 'units' && <Unit />} */}
-            {/* {data == 'notes' && <Notes />} */}
-            {/* {data == 'attachement' && <Attachments />} */}
-          </div>
+
         </div>
         <div className="flex-grow" /> {/* This div takes up remaining space */}
-
-<div className="text-center md:text-right  md:flex md:justify-end space-x-4 fixed bottom-0 left-0 right-0 bg-white p-4">
-          <div className="flex space-x-2">
-            {/* <div>
-              <Button
-                text={'Save and New'}
-                theme="lightBlue"
-                type={'submit'}
-                isLoading={mutation.isPending}
-              />
-            </div> */}
+        <div className="text-center md:text-right  md:flex  space-x-4 fixed bottom-0 left-0 right-0 justify-center bg-white p-4">
+          <div className="flex gap-2 w-full max-w-4xl justify-end">
             <div>
               <Button
-                text={'Save '}
+                text={'Create Product'}
                 type={'submit'}
                 isLoading={mutation.isPending}
               />
             </div>
+            <Button
+              text="Cancel"
+              type="button"
+              theme="gray"
+              color={true}
+              onClick={() => setIsOpen(false)}
+            />
           </div>
         </div>
       </form>
     </Slider>
   );
 };
-export default CreateProduct;
+export default CreateNonInventoryProduct;

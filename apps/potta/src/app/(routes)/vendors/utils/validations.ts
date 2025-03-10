@@ -3,7 +3,7 @@ import * as yup from "yup";
 const addressSchema = yup.object().shape({
   address: yup.string().required("Address is required"),
   city: yup.string().required("City is required"),
-  state: yup.string().required("State is required"),
+  state: yup.string(),
   country: yup.string().required("Country is required"),
   postalCode: yup.string(),
   latitude: yup.number().typeError("Must be a number"),
@@ -21,7 +21,7 @@ const phoneNumberRegex = /^\+\d{1,4}\s?\d{6,14}$/
 export const vendorSchema = yup.object().shape({
   name: yup.string().required("Vendor name is required"),
   type: yup.string().oneOf([...VendorTypeEnum], "Invalid type").required("Type is required"),
-  contactPerson: yup.string().required("Contact person is required"),
+  contactPerson: yup.string(),
   email: yup.string().email("Invalid email").required("Email is required"),
   phone: yup.string().required("Phone number is required").matches(phoneNumberRegex, "Invalid phone number. Example: +237689393939"),
   address: addressSchema,

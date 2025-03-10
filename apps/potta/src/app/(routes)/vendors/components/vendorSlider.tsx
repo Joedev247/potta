@@ -91,7 +91,7 @@ const SliderVendor = () => {
     setOpen={setIsSliderOpen} edit={false} title={'Create New Vendor'} buttonText="vendor">
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className="relative h-[97%] w-full max-w-4xl"
+        className="relative h-screen w-full max-w-4xl"
       >
         <div className="w-full grid grid-cols-2 gap-3">
           <div>
@@ -102,6 +102,7 @@ const SliderVendor = () => {
               placeholder="Enter vendor name"
               register={register}
               errors={errors.name}
+              required
             />
           </div>
           <div>
@@ -116,6 +117,7 @@ const SliderVendor = () => {
                   bg="bg-white"
                   name="Select Vendor Type"
                   label="Type"
+                  required
                 />
               )}
             />
@@ -147,6 +149,7 @@ const SliderVendor = () => {
                   bg="bg-white"
                   name="Select Classification"
                   label="Classification "
+                  required
                 />
               )}
             />
@@ -169,6 +172,7 @@ const SliderVendor = () => {
                 placeholder="(555) 123-4567"
                 register={register}
                 errors={errors.phone}
+                required
               />
             </div>
             <div>
@@ -179,6 +183,7 @@ const SliderVendor = () => {
                 placeholder="abcdfg@abc.com"
                 register={register}
                 errors={errors.email}
+                required
               />
             </div>
           </div>
@@ -218,6 +223,7 @@ const SliderVendor = () => {
                     bg="bg-white"
                     name="Select Currency"
                     label="Currency "
+                    required
                   />
                 )}
               />
@@ -299,12 +305,21 @@ const SliderVendor = () => {
           </div>
         </div>
         <div className="flex-grow" /> {/* This div takes up remaining space */}
-        <div className="text-center md:text-right md:flex md:justify-end space-x-4 fixed bottom-0 left-0 right-0 bg-white p-4">
+        <div className="text-center md:text-right  md:flex  space-x-4 fixed bottom-0 left-0 right-0 justify-center bg-white p-4">
+        <div className="flex gap-2 w-full max-w-4xl justify-end">
           <Button
             isLoading={mutation.isPending}
             text={'Save Vendor'}
             type={'submit'}
           />
+        <Button
+            text="Cancel"
+            type="button"
+            theme="gray"
+            color={true}
+            onClick={() => setIsSliderOpen(false)}
+          />
+        </div>
         </div>
       </form>
     </Slider>

@@ -9,25 +9,25 @@ import Button from '@potta/components/button';
 import Address from './address';
 import { ContextData } from '@potta/components/context';
 import {
-  UpdateVendorPayload,
-  updateVendorSchema,
-  vendorSchema,
+  UpdateCustomerPayload,
+  updateCustomerSchema,
+  customerSchema,
 } from '../utils/validations';
 import Notes from './note';
 import Tax from './tax';
-import useUpdateVendor from '../hooks/useUpdateCustomer';
+import useUpdateCustomer from '../hooks/useUpdateCustomer';
 import toast from 'react-hot-toast';
 
-interface EditVendorProps {
-  vendor: UpdateVendorPayload | null; // Existing vendor data
-  vendorId: string; // ID of the vendor to be edited
+interface EditCustomerProps {
+  customer: UpdateCustomerPayload | null; // Existing vendor data
+  customerId: string; // ID of the vendor to be edited
   open?: boolean; // Optional controlled open state
   setOpen?: (open: boolean) => void; // Optional setter from parent
 }
 
-const EditVendor: React.FC<EditVendorProps> = ({
-  vendor,
-  vendorId,
+const EditVendor: React.FC<EditCustomerProps> = ({
+  customer,
+  customerId,
   open: controlledOpen, // Renamed to avoid naming conflict
   setOpen: setControlledOpen,
 }) => {
@@ -46,10 +46,11 @@ const EditVendor: React.FC<EditVendorProps> = ({
     control,
     formState: { errors },
     reset,
-  } = useForm<UpdateVendorPayload>({
-    resolver: yupResolver(updateVendorSchema),
-    defaultValues: vendor || {
-      name: '',
+  } = useForm<UpdateCustomerPayload>({
+    resolver: yupResolver(updateCustomerSchema),
+    defaultValues: customer || {
+      firstName: '',
+      lastName: '',
       type: undefined,
       contactPerson: '',
       email: '',
@@ -63,43 +64,31 @@ const EditVendor: React.FC<EditVendorProps> = ({
         latitude: 0,
         longitude: 0,
       },
-      taxID: '',
-      paymentTerms: '',
-      paymentMethod: '',
-      website: '',
-      accountDetails: '',
-      currency: undefined,
-      openingBalance: 0,
-      classification: undefined,
-      notes: '',
+      taxId: '',
+      gender: undefined,
       status: undefined,
+      creditLimit: 0
     },
   });
 
-  // Reset form when vendor data changes
+  // Reset form when customer data changes
   useEffect(() => {
-    if (vendor) {
-      reset(vendor);
+    if (customer) {
+      reset(customer);
     }
-  }, [vendor, reset]);
+  }, [customer, reset]);
 
-  const VendorTypeEnum = [
+  const CustomerTypeEnum = [
     { value: 'individual', label: 'Individual' },
     { value: 'company', label: 'Company' },
   ];
-
-  const VendorClassificationEnum = [
-    { value: 'Supplier', label: 'Supplier' },
-    { value: 'Service Provider', label: 'Service Provider' },
+  const CustomerGenderEnum = [
+    { value: 'male', label: 'Male' },
+    { value: 'female', label: 'Female' },
+    { value: 'other', label: 'Other' },
   ];
 
-  const VendorCurrencyEnum = [
-    { value: 'EUR', label: 'EUR' },
-    { value: 'USD', label: 'USD' },
-    { value: 'XAF', label: 'XAF' },
-  ];
-
-  const VendorStatusEnum = [
+  const CustomerStatusEnum = [
     { value: 'pending', label: 'Pending' },
     { value: 'schedule', label: 'Schedule' },
     { value: 'complete', label: 'Complete' },
@@ -110,17 +99,17 @@ const EditVendor: React.FC<EditVendorProps> = ({
     { value: 'taken', label: 'Taken' },
   ];
 
-  const mutation = useUpdateVendor(vendorId); // Hook for updating vendor
-  const onSubmit = (data: UpdateVendorPayload) => {
+  const mutation = useUpdateCustomer(customerId); // Hook for updating vendor
+  const onSubmit = (data: UpdateCustomerPayload) => {
     console.log('Updated Data:', data);
     mutation.mutate(data, {
       onSuccess: () => {
-        toast.success('Vendor updated successfully!');
+        toast.success('Customer updated successfully!');
         reset(); // Reset the form after success
         setIsOpen(false);
       },
       onError: () => {
-        toast.error('Failed to update vendor');
+        toast.error('Failed to update Customer');
       },
     });
   };
@@ -136,59 +125,94 @@ const EditVendor: React.FC<EditVendorProps> = ({
     >
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className="relative h-[97%] w-full max-w-4xl "
+        className="relative h-screen w-full max-w-4xl"
       >
         <div className="w-full grid grid-cols-2 gap-3">
-          <Input
-            label="Vendor Name"
-            type="text"
-            name="name"
-            placeholder="Enter vendor name"
-            register={register}
-            errors={errors.name}
-          />
+          <div>
+            <Input
+              label="First Name"
+              type="text"
+              name="firstName"
+              placeholder="Enter customer First Name"
+              register={register}
+              errors={errors.firstName}
+              required
+            />
+          </div>
+          <div>
+            <Input
+              label="Last Name"
+              type="text"
+              name="lastName"
+              placeholder="Enter customer Last Name"
+              register={register}
+              errors={errors.lastName}
+              required
+            />
+          </div>
+        </div>
+        <div className="w-full grid my-5 grid-cols-2 gap-3">
+          <div>
+            <Input
+              label="Contact Name"
+              type="text"
+              name="contactPerson"
+              placeholder="Enter Contact Name"
+              register={register}
+              errors={errors.contactPerson}
+            />
+          </div>
           <div>
             <Controller
               name="type"
               control={control}
               render={({ field }) => (
                 <Select
-                  options={VendorTypeEnum}
+                  options={CustomerTypeEnum}
                   selectedValue={field.value}
                   onChange={field.onChange}
                   bg="bg-white"
-                  name="Select Vendor Type"
+                  name="Select Customer Type"
                   label="Type"
+                  required
                 />
               )}
             />
+            {errors.type && (
+              <small className="text-red-500">{errors.type.message}</small>
+            )}
           </div>
         </div>
         <div className="w-full grid my-5 grid-cols-2 gap-3">
-          <Input
-            label="Contact Name"
-            type="text"
-            name="contactPerson"
-            placeholder="Enter Contact Name"
-            register={register}
-            errors={errors.contactPerson}
-          />
-
+          <div>
+            <Input
+              label="Credit Limit"
+              type="number"
+              name="creditLimit"
+              placeholder="Enter Credit limit"
+              register={register}
+              errors={errors.creditLimit}
+            />
+          </div>
           <div>
             <Controller
-              name="classification"
+              name="gender"
               control={control}
               render={({ field }) => (
                 <Select
-                  options={VendorClassificationEnum}
+                  options={CustomerGenderEnum}
                   selectedValue={field.value}
                   onChange={field.onChange}
                   bg="bg-white"
-                  name="Select Classification"
-                  label="Classification "
+                  name="Select Customer Gender"
+                  label="Gender"
+                  required
                 />
               )}
             />
+            {errors.type && (
+              <small className="text-red-500">{errors.type.message}</small>
+            )}
           </div>
           <div>
             <Controller
@@ -196,133 +220,80 @@ const EditVendor: React.FC<EditVendorProps> = ({
               control={control}
               render={({ field }) => (
                 <Select
-                  options={VendorStatusEnum}
+                  options={CustomerStatusEnum}
                   selectedValue={field.value}
                   onChange={field.onChange}
                   bg="bg-white"
                   name="Select Status"
                   label="Status"
+                  required
                 />
               )}
             />
           </div>
         </div>
         <hr />
-        <h1 className="text-xl mt-2">Contact Information</h1>
-        <div className="w-full grid mt-7 grid-cols-2 gap-3">
-          <Input
-            type="tel"
-            label="Phone Number"
-            name="phone"
-            placeholder="(555) 123-4567"
-            register={register}
-            errors={errors.phone}
-          />
-          <Input
-            type="text"
-            label="Email"
-            name="email"
-            placeholder="abcdfg@abc.com"
-            register={register}
-            errors={errors.email}
-          />
-        </div>
-        <div className="w-full grid mt-4 grid-cols-1 space-y-4">
-          <Input
-            type="text"
-            label="Website"
-            name="website"
-            placeholder="www.example.com"
-            register={register}
-            errors={errors.website}
-          />
-        </div>
-        <div className="w-full grid mt-4 grid-cols-2 gap-3">
-          <Input
-            type="number"
-            label="Opening Balance"
-            placeholder="00"
-            name="openingBalance"
-            register={register}
-            errors={errors.openingBalance}
-          />
-          <div>
-            <Controller
-              name="currency"
-              control={control}
-              render={({ field }) => (
-                <Select
-                  options={VendorCurrencyEnum}
-                  selectedValue={field.value}
-                  onChange={field.onChange}
-                  bg="bg-white"
-                  name="Select Currency"
-                  label="Currency "
-                />
-              )}
-            />
+        <div className="mt-2">
+          <h1 className="text-xl">Contact Information </h1>
+          <div className="w-full grid mt-7 grid-cols-2 gap-3">
+            <div>
+              <Input
+                type="tel"
+                label={'Phone Number'}
+                name={'phone'}
+                placeholder="(555) 123-4567"
+                register={register}
+                errors={errors.phone}
+                required
+              />
+            </div>
+            <div>
+              <Input
+                type={'text'}
+                label={'Email'}
+                name={'email'}
+                placeholder="abcdfg@abc.com"
+                register={register}
+                errors={errors.email}
+              />
+            </div>
           </div>
-        </div>
-        <div className="w-full grid mt-4 grid-cols-1 space-y-4">
-          <Input
-            label="Account Details"
-            type="text"
-            name="accountDetails"
-            placeholder="Enter account Details"
-            register={register}
-            errors={errors?.accountDetails}
-          />
-        </div>
-        <div className="w-full grid mt-4 grid-cols-2 gap-3">
-          <Input
-            label="Payment Terms"
-            type="text"
-            name="paymentTerms"
-            placeholder="Enter your payment terms"
-            register={register}
-            errors={errors?.paymentTerms}
-          />
-          <Input
-            label="Payment Method"
-            type="text"
-            name="paymentMethod"
-            placeholder="Enter your payment method"
-            register={register}
-            errors={errors?.paymentMethod}
-          />
         </div>
         <div className="mt-5">
-          <div className="flex w-fit bg-green-100 mt-7">
-            {['Address', 'Notes', 'Tax'].map((tab) => (
-              <div
-                key={tab}
-                onClick={() => setTabs(tab)}
-                className={`px-4 py-2.5 cursor-pointer ${
-                  tabs === tab ? 'border-b border-green-500 text-green-500' : ''
-                }`}
-              >
-                <p>{tab}</p>
-              </div>
-            ))}
-          </div>
+          <div className="flex w-fit bg-green-100  mt-7">
+            <div
+              onClick={() => setTabs('Address')}
+              className={`px-4 py-2.5 duration-500 ease-in-out ${
+                tabs == 'Address' &&
+                'border-b  border-green-500 text-green-500 font-thin '
+              } cursor-pointer `}
+            >
+              <p>Address</p>
+            </div>
 
-          <div className="mt-5 pb-20">
-            {tabs === 'Address' && (
+            <div
+              onClick={() => setTabs('Tax')}
+              className={`px-4 py-2.5 duration-500 ease-in-out ${
+                tabs == 'Tax' &&
+                'border-b border-green-500 text-green-500 font-thin '
+              } cursor-pointer `}
+            >
+              <p>Tax ID</p>
+            </div>
+          </div>
+          <div className="mt-5 pb-20 duration-500 ease-in-out">
+            {tabs == 'Address' && (
               <Address register={register} errors={errors?.address ?? {}} />
             )}
-            {tabs === 'Notes' && (
-              <Notes register={register} errors={errors.notes} />
-            )}
-            {tabs === 'Tax' && (
-              <Tax register={register} errors={errors.taxID} />
-            )}
+            {tabs == 'Tax' && <Tax register={register} errors={errors.taxId} />}
           </div>
         </div>
         <div className="flex-grow" /> {/* This div takes up remaining space */}
-        <div className="text-center md:text-right md:flex md:justify-end space-x-4 fixed bottom-0 left-0 right-0 bg-white p-4">
+        <div className="text-center md:text-right  md:flex  space-x-4 fixed bottom-0 left-0 right-0 justify-center bg-white p-4">
+        <div className="flex gap-2 w-full max-w-4xl justify-end">
           <Button
             isLoading={mutation.isPending}
-            text="Update Vendor"
+            text="Update Customer"
             type="submit"
           />
           <Button
@@ -332,6 +303,7 @@ const EditVendor: React.FC<EditVendorProps> = ({
             color={true}
             onClick={() => setIsOpen(false)}
           />
+        </div>
         </div>
       </form>
     </Slider>

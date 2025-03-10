@@ -92,7 +92,7 @@ const TableComponents = () => {
             label: 'Edit',
             onClick: () => {
               setOpenUpdateModal(row.uuid);
-              setVendorDetails(row);
+              setCustomerDetails(row);
               setIsEditOpen(true);
             },
             className: 'hover:bg-gray-200',

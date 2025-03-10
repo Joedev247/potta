@@ -11,37 +11,25 @@ import Button from '@potta/components/button';
 import { ContextData } from '@potta/components/context';
 import Input from '@potta/components/input';
 import Checkbox from '@potta/components/checkbox';
-import { Controller, useForm } from 'react-hook-form';
-import {
-  ProductPayload,
-  productSchema,
-  UpdateProductPayload,
-  UpdateProductSchema,
-} from '../../../../_utils/validation';
+import { useForm } from 'react-hook-form';
+import { ProductPayload, productSchema } from '../../../../_utils/validation';
 import useCreateProduct from '../../../../_hooks/useCreateProduct';
 import toast from 'react-hot-toast';
-import useUpdateProduct from '../../../../_hooks/useUpdateProduct';
 import Slider from '@potta/components/slideover';
 import TextArea from '@potta/components/textArea';
 
-interface EditProductProps {
-  product: ProductPayload | null; // Existing product data
-  productId: string; // ID of the product to be edited
+interface CreateProductProps {
   open?: boolean; // Optional controlled open state
   setOpen?: (open: boolean) => void; // Optional setter from parent
 }
-const EditProduct: React.FC<EditProductProps> = ({
-  product,
-  productId,
-  open: controlledOpen,
-  setOpen: setControlledOpen,
-}) => {
-  // Local state as fallback if no controlled state is provided
-  const [localOpen, setLocalOpen] = useState(false);
+const CreateProduct:React.FC<CreateProductProps> = ({ open: controlledOpen,
+  setOpen: setControlledOpen}) => {
+    // Local state as fallback if no controlled state is provided
+    const [localOpen, setLocalOpen] = useState(false);
 
-  // Determine which open state to use
-  const isOpen = controlledOpen ?? localOpen;
-  const setIsOpen = setControlledOpen ?? setLocalOpen;
+    // Determine which open state to use
+    const isOpen = controlledOpen ?? localOpen;
+    const setIsOpen = setControlledOpen ?? setLocalOpen;
   const [data, setData] = useState('inventory');
   const context = useContext(ContextData);
   const {
@@ -50,9 +38,9 @@ const EditProduct: React.FC<EditProductProps> = ({
     control,
     formState: { errors },
     reset,
-  } = useForm<UpdateProductPayload>({
-    resolver: yupResolver(UpdateProductSchema),
-    defaultValues: product || {
+  } = useForm<ProductPayload>({
+    resolver: yupResolver(productSchema),
+    defaultValues: {
       name: '',
       description: '',
       unitOfMeasure: undefined,
@@ -64,46 +52,35 @@ const EditProduct: React.FC<EditProductProps> = ({
       taxRate: 0,
       category: '',
       image: '',
-      status: undefined,
     },
   });
-  const ProductStatusEnum = [
-    { value: 'pending', label: 'Pending' },
-    { value: 'schedule', label: 'Schedule' },
-    { value: 'complete', label: 'Complete' },
-    { value: 'enabled', label: 'Enabled' },
-    { value: 'disabled', label: 'Disabled' },
-    { value: 'available', label: 'Available' },
-    { value: 'expired', label: 'Expired' },
-    { value: 'taken', label: 'Taken' },
-  ];
 
-  const mutation = useUpdateProduct(productId);
-  const onSubmit = (data: UpdateProductPayload) => {
+  const mutation = useCreateProduct();
+  const onSubmit = (data: ProductPayload) => {
     console.log('Submitted Data:', data);
     mutation.mutate(data, {
       onSuccess: () => {
-        toast.success('Product Updated successfully!');
+        toast.success('Product created successfully!');
         reset(); // Reset the form after success
         setIsOpen(false);
       },
       onError: (error) => {
-        toast.error('Failed to Update product');
+        toast.error('Failed to create product');
       },
     });
   };
 
   return (
     <Slider
-      open={isOpen}
-      setOpen={setIsOpen}
-      edit={false}
-      buttonText={'update product'}
-      title={'Edit Product'}
+    open={isOpen}
+    setOpen={setIsOpen}
+      edit={true}
+      buttonText={'Create Product'}
+      title={'Create Product'}
     >
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className="relative h-[97%] w-full max-w-4xl"
+        className="relative h-screen w-full max-w-4xl"
       >
         <div className="w-full">
           <Input
@@ -200,26 +177,9 @@ const EditProduct: React.FC<EditProductProps> = ({
                 errors={errors.taxRate}
               />
             </div>
-            <div className="mt-6">
-              <Controller
-                name="status"
-                control={control}
-                render={({ field }) => (
-                  <Select
-                    options={ProductStatusEnum}
-                    selectedValue={field.value}
-                    onChange={field.onChange}
-                    bg="bg-white"
-                    name="Select Status"
-                    label="Status"
-                    required
-                  />
-                )}
-              />
-            </div>
           </div>
         </div>
-        <div className="mt-12">
+        <div className="mt-12 pb-20">
           <div className="flex ">
             {/* <div
             onClick={() => setData('units')}
@@ -247,7 +207,7 @@ const EditProduct: React.FC<EditProductProps> = ({
             <p>Notes</p>
           </div>
           <div
-            onClick={() => setData('attachement')}
+            onClick={() => setData('attachment')}
             className={`px-4 py-2 bg-green-50 cursor-pointer ${
               data == 'attachement' &&
               'border-b-2 border-green-500 text-green-500'
@@ -256,7 +216,7 @@ const EditProduct: React.FC<EditProductProps> = ({
             <p>Attachements</p>
           </div> */}
           </div>
-          <div className="mt-8 pb-20">
+          <div className="mt-8">
             {data == 'inventory' && (
               <Inventory
                 control={control}
@@ -271,24 +231,25 @@ const EditProduct: React.FC<EditProductProps> = ({
         </div>
         <div className="flex-grow" /> {/* This div takes up remaining space */}
         <div className="text-center md:text-right  md:flex  space-x-4 fixed bottom-0 left-0 right-0 justify-center bg-white p-4">
-        <div className="flex gap-2 w-full max-w-4xl justify-end">
-          <Button
-            text={'Update Product'}
-
-            type={'submit'}
-            isLoading={mutation.isPending}
-          />
-          <Button
-            text="Cancel"
-            type="button"
-            theme="gray"
-            color={true}
-            onClick={() => setIsOpen(false)}
-          />
-        </div>
+          <div className="flex gap-2 w-full max-w-4xl justify-end">
+            <div>
+              <Button
+                text={'Create Product'}
+                type={'submit'}
+                isLoading={mutation.isPending}
+              />
+            </div>
+            <Button
+              text="Cancel"
+              type="button"
+              theme="gray"
+              color={true}
+              onClick={() => setIsOpen(false)}
+            />
+          </div>
         </div>
       </form>
     </Slider>
   );
 };
-export default EditProduct;
+export default CreateProduct;

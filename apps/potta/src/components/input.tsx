@@ -12,6 +12,7 @@ type Props = {
     onchange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
     value?: string | number;
     height?: boolean;
+    required?: boolean;
 };
 
 const Input: React.FC<Props> = ({
@@ -20,6 +21,7 @@ const Input: React.FC<Props> = ({
     className,
     name,
     placeholder,
+    required,
     errors,
     register,
     value,
@@ -28,7 +30,7 @@ const Input: React.FC<Props> = ({
 }) => {
     return (
         <div className={`w-full ${className}`}>
-            {label && <span className="mb-3 text-gray-900 font-medium">{label}</span>}
+            {label && <span className="mb-3 text-gray-900 font-medium">{label}{ required && <span className=" text-red-500">*</span>}</span>}
             <input
                 type={type}
                 // onChange={onchange}

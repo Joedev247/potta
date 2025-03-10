@@ -7,6 +7,7 @@ type Props = {
   className?: string;
   errors?: FieldError;
   control?: Control<any>;
+  required?: boolean;
 };
 
 const Checkbox: React.FC<Props> = ({
@@ -15,10 +16,11 @@ const Checkbox: React.FC<Props> = ({
   className,
   errors,
   control,
+  required
 }) => {
   return (
     <div className={`w-full ${className}`}>
-       {label && <span className="mb-5 text-gray-900 font-medium">{label}</span>}
+       {label && <span className="mb-5 text-gray-900 font-medium">{label}{ required && <span className=" text-red-500">*</span>}</span>}
       <div className="flex items-center space-x-3 mt-4">
         {control ? (
           <Controller

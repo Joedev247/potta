@@ -30,6 +30,7 @@ const Inventory: React.FC<Props> = ({ register, control, errors }) => {
               bg="bg-white"
               name="Unit Of Measurement"
               label="Unit of Measurement"
+              
             />
           )}
         />

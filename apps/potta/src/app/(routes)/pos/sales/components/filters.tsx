@@ -3,6 +3,7 @@ import Button from '@potta/components/button';
 import Search from '@potta/components/search';
 import Select from '@potta/components/select';
 import React, { useState } from 'react';
+import NewSalesReciept from './newSalesReceipt/newSalesSlide';
 
 const Filter = () => {
   const [selectedValue, setSelectedValue] = useState('All Time'); // Set your default value here
@@ -67,16 +68,7 @@ const Filter = () => {
             />
           </div>
           <div className="w-full">
-
-
-              <Button
-              type={'button'}
-              text="New Sale Reciept"
-              icon={<i className="ri-file-add-line text-white text-xl -mt-1"></i>}
-
-              width='full'
-            />
-
+            <NewSalesReciept />
           </div>
         </div>
       </div>

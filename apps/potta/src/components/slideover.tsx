@@ -32,17 +32,7 @@ const Slider: FC<props> = ({
   return (
     <div className="">
       <div>
-        {buttonText == 'Create Product' && (
-          <Button
-            onClick={(e) => {
-              e.stopPropagation();
-              setOpen(!open);
-            }}
-            type={'button'}
-            text={'Add Product'}
-            icon={<i className="ri-file-add-line"></i>}
-          />
-        )}
+        
         {buttonText == 'card' && (
           <Button
             text={'New Card'}
@@ -98,6 +88,18 @@ const Slider: FC<props> = ({
             icon={<i className="ri-file-add-line"></i>}
           />
         )}
+        {buttonText == 'New Sales Receipt' && (
+          <Button
+            text={'New Sales Receipt'}
+            onClick={(e) => {
+              e.stopPropagation();
+              setOpen(!open);
+            }}
+            type={'button'}
+            icon={<i className="ri-file-add-line"></i>}
+          />
+        )}
+
 
       </div>
       <Dialog
@@ -115,11 +117,11 @@ const Slider: FC<props> = ({
               >
                 <div className="flex h-full flex-col overflow-hidden bg-gray-50 py-6 shadow-xl">
                   <div className="flex justify-center ">
-                    <div className="flex items-start py-2 w-full border-b justify-between">
-                      <DialogTitle className="text-xl leading-6 px-4 font-bold text-gray-900">
+                    <div className="flex items-start py-2 max-w-4xl w-full border-b justify-between">
+                      <DialogTitle className="text-xl leading-6  font-semibold text-gray-900">
                         {title}
                       </DialogTitle>
-                      <div className="ml-3 px-5 flex h-7 items-center">
+                      <div className="ml-3  flex h-7 items-center">
                         {!closeButton && (
                           <button
                             type="button"

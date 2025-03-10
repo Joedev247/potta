@@ -16,9 +16,21 @@ import Tax from './tax';
 import useCreateCustomer from '../hooks/useCreateCustomer';
 import toast from 'react-hot-toast';
 
-const SliderCustomer = () => {
+interface CustomerCreateProps {
+  open?: boolean; // Optional controlled open state
+  setOpen?: (open: boolean) => void; // Optional setter from parent
+}
+const SliderCustomer: React.FC<CustomerCreateProps> = ({
+  open: controlledOpen, // Renamed to avoid naming conflict
+  setOpen: setControlledOpen,
+}) => {
   const [tabs, setTabs] = useState<string>('Address');
-  const [isSliderOpen, setIsSliderOpen] = useState(false);
+   // Local state as fallback if no controlled state is provided
+    const [localOpen, setLocalOpen] = useState(false);
+
+    // Determine which open state to use
+    const isOpen = controlledOpen ?? localOpen;
+    const setIsOpen = setControlledOpen ?? setLocalOpen;
   const context = useContext(ContextData);
   const {
     register,
@@ -30,7 +42,7 @@ const SliderCustomer = () => {
     resolver: yupResolver(customerSchema),
     defaultValues: {
       firstName: '',
-      lastName:'',
+      lastName: '',
       type: undefined,
       contactPerson: '',
       email: '',
@@ -44,9 +56,9 @@ const SliderCustomer = () => {
         latitude: 0,
         longitude: 0,
       },
-      taxID: '',
-      creditLimit:'',
-      gender: undefined
+      taxId: '',
+      creditLimit: 0,
+      gender: undefined,
     },
   });
 
@@ -56,9 +68,9 @@ const SliderCustomer = () => {
   ];
 
   const CustomerGenderEnum = [
-    { value:'male', label: 'Male' },
-    { value:'female', label: 'Female' },
-    { value:'other', label: 'Other' },
+    { value: 'male', label: 'Male' },
+    { value: 'female', label: 'Female' },
+    { value: 'other', label: 'Other' },
   ];
 
   const mutation = useCreateCustomer();
@@ -68,7 +80,7 @@ const SliderCustomer = () => {
       onSuccess: () => {
         toast.success('Customer created successfully!');
         reset();
-        setIsSliderOpen(false);
+        setIsOpen(false);
       },
       onError: (error) => {
         toast.error('Failed to create Customer');
@@ -77,15 +89,15 @@ const SliderCustomer = () => {
   };
   return (
     <Slider
-      open={isSliderOpen}
-      setOpen={setIsSliderOpen}
+    open={isOpen} // Use controlled or local state
+    setOpen={setIsOpen} // Use controlled or local setter
       edit={false}
       title={'Create Customer'}
       buttonText="customer"
     >
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className="relative h-[97%] w-full max-w-4xl"
+        className="relative h-screen w-full max-w-4xl "
       >
         <div className="w-full grid grid-cols-2 gap-3">
           <div>
@@ -96,6 +108,7 @@ const SliderCustomer = () => {
               placeholder="Enter customer First Name"
               register={register}
               errors={errors.firstName}
+              required
             />
           </div>
           <div>
@@ -106,6 +119,7 @@ const SliderCustomer = () => {
               placeholder="Enter customer Last Name"
               register={register}
               errors={errors.lastName}
+              required
             />
           </div>
         </div>
@@ -132,6 +146,7 @@ const SliderCustomer = () => {
                   bg="bg-white"
                   name="Select Customer Type"
                   label="Type"
+                  required
                 />
               )}
             />
@@ -163,6 +178,7 @@ const SliderCustomer = () => {
                   bg="bg-white"
                   name="Select Customer Gender"
                   label="Gender"
+                  required
                 />
               )}
             />
@@ -183,6 +199,7 @@ const SliderCustomer = () => {
                 placeholder="(555) 123-4567"
                 register={register}
                 errors={errors.phone}
+                required
               />
             </div>
             <div>
@@ -193,11 +210,10 @@ const SliderCustomer = () => {
                 placeholder="abcdfg@abc.com"
                 register={register}
                 errors={errors.email}
+
               />
             </div>
           </div>
-
-
         </div>
         <div className="mt-5">
           <div className="flex w-fit bg-green-100  mt-7">
@@ -225,16 +241,26 @@ const SliderCustomer = () => {
             {tabs == 'Address' && (
               <Address register={register} errors={errors?.address ?? {}} />
             )}
-            {tabs == 'Tax' && <Tax register={register} errors={errors.taxID} />}
+            {tabs == 'Tax' && <Tax register={register} errors={errors.taxId} />}
           </div>
         </div>
         <div className="flex-grow" /> {/* This div takes up remaining space */}
-        <div className="text-center md:text-right md:flex md:justify-end space-x-4 fixed bottom-0 left-0 right-0 bg-white p-4">
+        <div className="text-center md:text-right  md:flex  space-x-4 fixed bottom-0 left-0 right-0 justify-center bg-white p-4">
+        <div className="flex gap-2 w-full max-w-4xl justify-end">
           <Button
-            isLoading={mutation.isPending}
-            text={'Save Vendor'}
+            text={'Add Customer'}
+
             type={'submit'}
+            isLoading={mutation.isPending}
           />
+          <Button
+            text="Cancel"
+            type="button"
+            theme="gray"
+            color={true}
+            onClick={() => setIsOpen(false)}
+          />
+        </div>
         </div>
       </form>
     </Slider>

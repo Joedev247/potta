@@ -11,7 +11,7 @@ const Tax: React.FC<TaxIDProps> = ({ register, errors }) => {
     <div className="mt-4 w-full">
       <p className="mb-2">Tax ID</p>
       <input
-        {...register('taxID')} // Register the input with React Hook Form
+        {...register('taxId')} // Register the input with React Hook Form
         type="text"
         className="w-full border outline-none p-2"
         placeholder="Enter Tax ID"
