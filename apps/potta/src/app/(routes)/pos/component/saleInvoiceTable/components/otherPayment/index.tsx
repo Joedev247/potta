@@ -1,28 +1,161 @@
-import Button from '@potta/components/button'
-import Input from '@potta/components/input'
-import React from 'react'
+import {
+  Accordion,
+  AccordionItem,
+  AccordionItemHeading,
+  AccordionItemButton,
+  AccordionItemPanel,
+} from 'react-accessible-accordion';
+import React, { useContext } from 'react';
+import { ContextData } from '@potta/components/context';
+import OrderSummary from '../orderSummary';
 
-const OtherMethod = () => {
-    return (
-        <div className='p-10'>
-            <h3>Other Payment Methods</h3>
-            <div className='h-[50vh] w-full flex items-center'>
-                <div className='w-full'>
-                    <Input label='Enter Reference' placeholder='514723541' type={'text'} name={''} />
-                    <div className='w-full flex justify-end my-10'>
-                        <div className='w-96 flex-col'>
-                            <div className='w-full flex justify-between'>
-                                <span className='font-thin'>Total</span>
-                                <p className='font-semibold text-lg'>1200 XAF</p>
-                            </div>
-                            <div className='w-full mt-5'>
-                                <Button width='full' text={'Complete'} type={'button'} />
-                            </div>
-                        </div>
-                    </div>
+const OtherPayment = () => {
+  const context = useContext(ContextData);
+  return (
+    <div className=" space-y-16">
+      <h3 className='text-xl'>Other Payment Methods</h3>
+      <div className="    w-full overflow-auto">
+        <Accordion>
+          <AccordionItem>
+            <AccordionItemHeading>
+              <AccordionItemButton>
+                <div className="flex ml-10 -mt-5 space-x-2">
+                  <img src="/icons/mtn.svg" alt="" />
+                  <p>MTN Mobile Money</p>
                 </div>
-            </div>
-        </div>
-    )
-}
-export default OtherMethod
+              </AccordionItemButton>
+            </AccordionItemHeading>
+            <AccordionItemPanel>
+              <p>Dial *126# to buy your items</p>
+              <input
+                type="text"
+                className="border mt-1.5 outline-none pl-2 py-1 w-96"
+              />
+              <div className="w-96 mt-2 flex justify-end">
+                <button className="border px-2 -py-1 bg-green-500 text-white ">
+                  Save
+                </button>
+              </div>
+            </AccordionItemPanel>
+          </AccordionItem>
+          <AccordionItem>
+            <AccordionItemHeading>
+              <AccordionItemButton>
+                <div className="flex ml-10 -mt-5 space-x-2">
+                  <img src="/icons/om.svg" alt="" />
+                  <p>Orange Money</p>
+                </div>
+              </AccordionItemButton>
+            </AccordionItemHeading>
+            <AccordionItemPanel>
+              <p>Dial #150*62# to buy your items</p>
+              <input
+                type="text"
+                className="border mt-1.5 outline-none pl-2 py-1 w-96"
+              />
+              <div className="w-96 mt-2 flex justify-end">
+                <button className="border px-2 -py-1 bg-green-500 text-white ">
+                  Save
+                </button>
+              </div>
+            </AccordionItemPanel>
+          </AccordionItem>
+          <AccordionItem>
+            <AccordionItemHeading>
+              <AccordionItemButton>
+                <div className="flex ml-10 -mt-5 space-x-3">
+                  <div className="flex space-x-1">
+                    <img src="/icons/bitcoin.svg" alt="" />
+                    <img src="/icons/tether.svg" alt="" />
+                    <img src="/icons/crypto.svg" alt="" />
+                  </div>
+                  <p>Crypto</p>
+                </div>
+              </AccordionItemButton>
+            </AccordionItemHeading>
+            <AccordionItemPanel>
+              <p>Dial *126# to buy your items</p>
+              <input
+                type="text"
+                className="border mt-1.5 outline-none pl-2 py-1 w-96"
+              />
+              <div className="w-96 mt-2 flex justify-end">
+                <button className="border px-2 -py-1 bg-green-500 text-white ">
+                  Save
+                </button>
+              </div>
+            </AccordionItemPanel>
+          </AccordionItem>
+          <AccordionItem>
+            <AccordionItemHeading>
+              <AccordionItemButton>
+                <div className="flex ml-10 -mt-5 space-x-3">
+                  <div className="flex space-x-1">
+                    <img src="/icons/visas.svg" height={50} width={50} alt="" />
+                    <img src="/icons/master.svg" alt="" />
+                  </div>
+                  <p>Visa / Master</p>
+                </div>
+              </AccordionItemButton>
+            </AccordionItemHeading>
+            <AccordionItemPanel>
+              <p>Dial *126# to buy your items</p>
+              <input
+                type="text"
+                className="border mt-1.5 outline-none pl-2 py-1 w-96"
+              />
+              <div className="w-96 mt-2 flex justify-end">
+                <button className="border px-2 -py-1 bg-green-500 text-white ">
+                  Save
+                </button>
+              </div>
+            </AccordionItemPanel>
+          </AccordionItem>
+          <AccordionItem>
+            <AccordionItemHeading>
+              <AccordionItemButton>
+                <div className="flex ml-10 -mt-5 space-x-2">
+                  <img
+                    src="/icons/giftcard.svg"
+                    height={30}
+                    width={30}
+                    alt=""
+                  />
+                  <p className="mt-0.5">Gift Card</p>
+                </div>
+              </AccordionItemButton>
+            </AccordionItemHeading>
+            <AccordionItemPanel>
+              <p>Enter your gift card promo code </p>
+              <input
+                type="text"
+                className="border mt-1.5 outline-none pl-2 py-1 w-96"
+              />
+              <div className="w-96 mt-2 flex justify-end">
+                <button className="border px-2 -py-1 bg-green-500 text-white ">
+                  Save
+                </button>
+              </div>
+            </AccordionItemPanel>
+          </AccordionItem>
+        </Accordion>
+      </div>
+      <OrderSummary
+        subtotal={context?.orderSummary?.subtotal || 0}
+        discount={context?.orderSummary?.discount || 0}
+        tax={context?.orderSummary?.tax || 0}
+        total={context?.orderSummary?.total || 0}
+        setDiscount={(newDiscount: number) => {
+          if (context?.setOrderSummary) {
+            context.setOrderSummary((prev) => ({
+              ...prev,
+              discount: newDiscount,
+              total: prev.subtotal + prev.tax - newDiscount,
+            }));
+          }
+        }}
+      />
+    </div>
+  );
+};
+export default OtherPayment;

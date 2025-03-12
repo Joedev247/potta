@@ -64,7 +64,7 @@ const Filter = () => {
               color
               text="Export"
               icon={<img src="/images/export.svg" />}
-              theme="lightGreen"
+              theme="lightBlue"
             />
             <SliderVendor />
           </div>

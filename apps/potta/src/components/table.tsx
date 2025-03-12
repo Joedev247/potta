@@ -11,13 +11,13 @@ interface TableProps {
   pagination?: boolean;
   ExpandableComponent?: FC<any> | null;
   size?: boolean;
- 
+  color?: boolean;
+
+  selectable?: boolean;
   paginationServer?: boolean;
   paginationTotalRows?: number;
   onChangePage?: (page: number) => void;
   onChangeRowsPerPage?: (perPage: number, page: number) => void;
-
-
 }
 
 const MyTable: FC<TableProps & { pending?: boolean }> = ({
@@ -32,6 +32,9 @@ const MyTable: FC<TableProps & { pending?: boolean }> = ({
   paginationTotalRows,
   onChangePage,
   onChangeRowsPerPage,
+  selectable,
+  color,
+
 }) => {
   const customStyles = {
     headCells: {
@@ -42,15 +45,17 @@ const MyTable: FC<TableProps & { pending?: boolean }> = ({
     },
     headRow: {
       style: {
-        backgroundColor: '#EBF0F0',
-        minHeight: size ? '40px' : '42px',
-        fontSize: size ? '15px' : '16px',
+        backgroundColor: color ? '#237804' : '#EBF0F0',
+        minHeight: size ? '40px' : '48px',
+        fontSize: size ? '15px' : '18px',
+        color: color ? '#EBF0F0' : '#000',
       },
     },
     rows: {
       style: {
-        minHeight: size ? '40px' : '42px',
-        fontSize: size ? '14.3px' : '14px',
+        minHeight: size ? '40px' : '48px',
+        fontSize: size ? '14px' : '16px',
+  
       },
     },
     cells: {
@@ -61,14 +66,13 @@ const MyTable: FC<TableProps & { pending?: boolean }> = ({
     },
   };
 
-
   return (
     <div className="border ">
       <DataTable
         customStyles={customStyles}
         columns={columns}
         data={data}
-        selectableRows
+        selectableRows={selectable}
         // Simplified conditional rendering for pagination
         pagination={pagination !== false}
         expandableRows={!expanded} // Ensure expandableRows is a boolean

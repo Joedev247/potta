@@ -19,7 +19,7 @@ const Left = () => {
     const [invoice, setInvoice] = useState('Invoice');
     const [customerName, setCustomerName] = useState('ABC Customer');
     const [invoiceNumber, setInvoiceNumber] = useState('0025');
-    const [currency, setCurrency] = useState('USD ($)');
+    const [currency, setCurrency] = useState('USD');
     const [note, setNote] = useState('');
 
     const handleInputChange = (key: string, value: any) => {
@@ -101,27 +101,17 @@ const Left = () => {
                 <div>
                     <Select
                         options={[
-                            { label: "USD ($)", value: "USD ($)" },
-                            { label: "EUR (€)", value: "EUR (€)" },
-                            { label: "GBP (£)", value: "GBP (£)" },
+                            { label: "USD", value: "USD" },
+                            { label: "EUR", value: "EUR" },
+                            { label: "GBP", value: "GBP" },
+                            { label: "FCFA", value: "FCFA" },
                         ]}
                         selectedValue={currency}
                         onChange={(value: any) => handleInputChange('currency', value)}
                         bg={''}
                     />
                 </div>
-                <div>
-                    <Select
-                        options={[
-
-                            { label: "Receipt", value: "Receipt" },
-                        ]}
-                        selectedValue={invoice}
-                        onChange={(value: any) => handleInputChange('invoice', value)}
-                        bg={''}
-                    />
-                </div>
-                <div className='-mt-2'>
+                <div className=''>
                     <Input
                     name="date"
                         type={'date'}
@@ -178,7 +168,7 @@ const Left = () => {
             <textarea
                 value={note}
                 onChange={(e) => handleInputChange('note', e.target.value)}
-                className="h-36 border p-2 w-full outline-none"
+                className="h-36 border p-2 w-full outline-none mt-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
             ></textarea>
 
             <div className="mt-5 w-full flex justify-end">

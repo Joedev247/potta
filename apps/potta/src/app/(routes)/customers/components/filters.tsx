@@ -83,10 +83,10 @@ const Filter = () => {
         <div className="w-full  flex justify-end  space-x-3">
           <Button
             type={'button'}
-            color
             text="Export"
+            color
             icon={<img src="/images/export.svg" />}
-            theme="lightGreen"
+            theme="lightBlue"
           />
 
           <NextPopover

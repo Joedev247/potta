@@ -64,7 +64,7 @@ const Filter = () => {
               color
               text="Export"
               icon={<img src="/images/export.svg" />}
-              theme="lightGreen"
+              theme="lightBlue"
             />
             <NextPopover
               rowUuid={'1'}
@@ -73,7 +73,7 @@ const Filter = () => {
               setOpenPopover={setOpenPopover}
               triggerButton={
                 <Button
-                  text={'New Customer'}
+                  text={'Add New Product'}
                   type={'button'}
                   icon={<i className="ri-file-add-line"></i>}
                 />

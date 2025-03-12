@@ -10,6 +10,13 @@ interface InvoiceItem {
   tax: number;
 }
 
+interface OrderSummary {
+  subtotal: number;
+  discount: number;
+  tax: number;
+  total: number;
+}
+
 interface ContextType {
   toggle: boolean;
   setToggle: (toggle: boolean) => void;
@@ -52,13 +59,19 @@ interface ContextType {
   setDateRangeValue: (value: { startDate: Date | null; endDate: Date | null }) => void;
   invoiceItems: InvoiceItem[];
   setInvoiceItems: React.Dispatch<React.SetStateAction<InvoiceItem[]>>;
+  orderSummary: OrderSummary;
+  setOrderSummary: React.Dispatch<React.SetStateAction<OrderSummary>>;
+  selectedPaymentMethod: string;
+  setSelectedPaymentMethod: (method: string) => void;
+  paymentAmount: number;
+  setPaymentAmount: (amount: number) => void;
 }
-
-const ContextData = createContext<ContextType | null>(null);
 
 interface Children {
   children: ReactNode;
 }
+
+const ContextData = createContext<ContextType | null>(null);
 
 const DataProvider: React.FC<Children> = ({ children }) => {
   const [toggle, setToggle] = useState<boolean>(true);
@@ -67,8 +80,8 @@ const DataProvider: React.FC<Children> = ({ children }) => {
   const [programs, setPrograms] = useState<any>([]);
   const [programDays, setProgramDays] = useState<any>([]);
   const [itemSelected, setItemSelected] = useState<any>("cart");
-  const [data, setData] = useState<any>();
-  const [savedItems, setSavedItems] = useState<any>();
+  const [data, setData] = useState<any>([]);
+  const [savedItems, setSavedItems] = useState<any>([]);
   const [isCashBack, setIsCashBack] = useState<boolean>(true);
   const [isLoyaltyPoints, setIsLoyaltyPoints] = useState<boolean>(false);
   const [isDiscounts, setIsDiscounts] = useState<boolean>(false);
@@ -78,6 +91,15 @@ const DataProvider: React.FC<Children> = ({ children }) => {
   const [branches, setBranches] = useState(allBranches);
   const [users, setUsers] = useState(allUsers);
   const [payouts, setPayouts] = useState(payoutsList);
+  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<string>('cash');
+  const [paymentAmount, setPaymentAmount] = useState<number>(0);
+
+  const [orderSummary, setOrderSummary] = useState<OrderSummary>({
+    subtotal: 0,
+    discount: 0,
+    tax: 0,
+    total: 0
+  });
 
   const [dateRangeValue, setDateRangeValue] = useState<{
     startDate: Date | null;
@@ -136,7 +158,13 @@ const DataProvider: React.FC<Children> = ({ children }) => {
       savedItems,
       setSavedItems,
       itemSelected,
-      setItemSelected
+      setItemSelected,
+      orderSummary,
+      setOrderSummary,
+      selectedPaymentMethod,
+      setSelectedPaymentMethod,
+      paymentAmount,
+      setPaymentAmount
     }}>
       {children}
     </ContextData.Provider>

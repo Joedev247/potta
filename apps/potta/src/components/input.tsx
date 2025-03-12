@@ -1,3 +1,4 @@
+import { autocomplete } from "@nextui-org/react";
 import React from "react";
 import { FieldError, UseFormRegister } from "react-hook-form";
 
@@ -13,6 +14,7 @@ type Props = {
     value?: string | number;
     height?: boolean;
     required?: boolean;
+    autocomplete?: boolean;
 };
 
 const Input: React.FC<Props> = ({
@@ -26,12 +28,14 @@ const Input: React.FC<Props> = ({
     register,
     value,
     height,
-    onchange
+    onchange,
+    autocomplete
 }) => {
     return (
         <div className={`w-full ${className}`}>
             {label && <span className="mb-3 text-gray-900 font-medium">{label}{ required && <span className=" text-red-500">*</span>}</span>}
             <input
+                autoComplete={autocomplete ? 'off' : 'on'}
                 type={type}
                 // onChange={onchange}
                 value={value}

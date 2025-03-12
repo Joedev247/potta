@@ -11,7 +11,7 @@ export const productSchema=yup.object().shape({
   taxable: yup.boolean().required(),
   taxRate: yup.number().typeError("Must be a number"),
   category: yup.string(),
-  image: yup.string(),
+  image: yup.string().default('https://static.nike.com/a/images/t_prod_ss/w_960,c_limit,f_auto/df31fd61-2df7-4c21-9326-94b45f799994/air-jordan-6-university-blue-ct8529-410-release-date.jpg'),
 })
 
 export const UpdateProductSchema=yup.object().shape({
@@ -25,7 +25,7 @@ export const UpdateProductSchema=yup.object().shape({
   taxable: yup.boolean().required(),
   taxRate: yup.number().typeError("Must be a number"),
   category: yup.string(),
-  image: yup.string(),
+  image: yup.string().default('https://static.nike.com/a/images/t_prod_ss/w_960,c_limit,f_auto/df31fd61-2df7-4c21-9326-94b45f799994/air-jordan-6-university-blue-ct8529-410-release-date.jpg'),
   status: yup.string().required('status is required'),
 })
 

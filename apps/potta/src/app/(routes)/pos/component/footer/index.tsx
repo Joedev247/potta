@@ -1,30 +1,92 @@
-'use client'
-import React, { useContext } from 'react'
-import { ContextData } from '@potta/components/context'
+// components/HeldOrders.tsx
+import React, { useContext, useEffect, useState } from 'react';
+import { ContextData } from '@potta/components/context';
 
-const POSFooter = () => {
-    const context = useContext(ContextData)
-    const handleData = (data: any) => {
-        context?.setData(data)
-    }
-    return (
-        <div className='w-full flex  z-30 space-x-6 '>
-            <div className='-mt-1.5'>
-                <i className="ri-menu-line text-2xl text-gray-500"></i>
-            </div>
-            <div className='w-full flex space-x-4 '>
-                {/* {context?.savedItems.map((items: any, id: number) => {
-                    return (
-                        <div key={id} onClick={() => handleData(items.datas)} className='h-6 flex relative cursor-pointer justify-center items-center border border-green-300 text-green-500 px-4'>
-                            <p>{items.id}</p>
-                            <div className='absolute z-30  right-0 top-0 -m-2 text-red-500'>
-                                <i className="ri-close-circle-fill"></i>
-                            </div>
-                        </div>
-                    )
-                })} */}
-            </div>
-        </div>
-    )
+interface CartItem {
+  id: string;
+  name: string;
+  price: number;
+  quantity: number;
+  category?: string;
 }
-export default POSFooter
+
+interface HoldOrder {
+  id: string;
+  items: CartItem[];
+  timestamp: string;
+  total: number;
+}
+
+const HeldOrders: React.FC = () => {
+  const context = useContext(ContextData);
+  const [heldOrders, setHeldOrders] = useState<HoldOrder[]>([]);
+
+  useEffect(() => {
+    const loadHeldOrders = () => {
+      const orders = JSON.parse(localStorage.getItem('heldOrders') || '[]');
+      setHeldOrders(orders);
+    };
+
+    loadHeldOrders();
+    window.addEventListener('storage', loadHeldOrders);
+
+    return () => {
+      window.removeEventListener('storage', loadHeldOrders);
+    };
+  }, []);
+
+  const handleSelectOrder = (order: HoldOrder) => {
+    if (context?.data && context.data.length > 0) {
+      if (!confirm('Current cart will be replaced. Continue?')) {
+        return;
+      }
+    }
+    context?.setData(order.items);
+  };
+
+  const handleDeleteOrder = (orderId: string) => {
+    if (!confirm('Are you sure you want to delete this held order?')) {
+      return;
+    }
+
+    const updatedOrders = heldOrders.filter(o => o.id !== orderId);
+    localStorage.setItem('heldOrders', JSON.stringify(updatedOrders));
+    setHeldOrders(updatedOrders);
+  };
+
+  if (heldOrders.length === 0) {
+    return (
+      <div className="h-20 bg-[#005D1F]  flex items-center justify-center text-white">
+        No held orders
+      </div>
+    );
+  }
+
+  return (
+    <div className="h-20 bg-[#005D1F] p-2">
+      <div className="flex gap-4 overflow-x-auto">
+        {heldOrders.map((order) => (
+          <div
+            key={order.id}
+            className="flex items-center gap-8 min-w-fit px-4 py-3 bg-[#A0E86F] text-black hover:bg-[#8ae74d] transition-colors"
+          >
+            <button
+              onClick={() => handleSelectOrder(order)}
+              className=""
+            >
+              ID:{order.id}
+            </button>
+            <button
+              onClick={() => handleDeleteOrder(order.id)}
+              className=" hover:text-white"
+            >
+              <i className="ri-close-line text-2xl"></i>
+            </button>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+export default HeldOrders;

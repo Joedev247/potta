@@ -1,6 +1,6 @@
 'use client'
-import Input from '@/components/input'
-import Select from '@/components/select'
+import Input from '@potta/components/input'
+import Select from '@potta/components/select'
 import react, { useState } from 'react'
 import ReceiptTable from './component/table'
 

@@ -32,7 +32,7 @@ const Slider: FC<props> = ({
   return (
     <div className="">
       <div>
-        
+
         {buttonText == 'card' && (
           <Button
             text={'New Card'}
@@ -117,7 +117,7 @@ const Slider: FC<props> = ({
               >
                 <div className="flex h-full flex-col overflow-hidden bg-gray-50 py-6 shadow-xl">
                   <div className="flex justify-center ">
-                    <div className="flex items-start py-2 max-w-4xl w-full border-b justify-between">
+                    <div className="flex items-start py-2 px-4 w-full border-b justify-between">
                       <DialogTitle className="text-xl leading-6  font-semibold text-gray-900">
                         {title}
                       </DialogTitle>

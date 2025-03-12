@@ -30,7 +30,7 @@ const InventoryTable = () => {
       name: 'Name',
       selector: (row: any) => (
         <div className="flex items-center space-x-3">
-          <img src={row.img} alt="" width={60} />
+          <img src="https://static.nike.com/a/images/t_prod_ss/w_960,c_limit,f_auto/df31fd61-2df7-4c21-9326-94b45f799994/air-jordan-6-university-blue-ct8529-410-release-date.jpg" alt="" width={60} height={60} />
           <p className="mt-0.5">{row.name}</p>
         </div>
       ),

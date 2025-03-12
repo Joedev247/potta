@@ -2,11 +2,12 @@
 import React, { useContext } from "react";
 import SaleInvoiceTable from "./component/saleInvoiceTable";
 import SaleInvoiceCard from "./component/saleInvoiceCard";
-import POSFooter from "./component/footer";
+
 import { ContextData } from "@potta/components/context";
 import Print from "./component/print/page";
 import RootLayout from "../layout";
 import { Toaster } from "sonner";
+import HeldOrders from "./component/footer";
 
 const POS = () => {
 
@@ -14,22 +15,22 @@ const POS = () => {
     return (
         <RootLayout>
         <Toaster />
-            <div className='pl-16 pr-5 mt-10'>
-                <div className="h-[92vh] flex border space-x-2 p-4 w-full">
-                    <div className="w-[45%]">
+            <div className='pl-8 '>
+                <div className="h-[92vh] flex  w-full">
+                    <div className="w-[60%]">
                         <SaleInvoiceCard />
                     </div>
-                    <div className="w-[55%]">
-                        {context?.toggle ?
-                            <SaleInvoiceTable /> : <Print />
-                        }
+                    <div className="w-[40%]">
+
+                            <SaleInvoiceTable />
+                        
 
                     </div>
                 </div>
-                <div className=" w-full h-[8vh] bg-gray-50 z-30  bottom-0">
-                    <div className="p-3">
+                <div className=" w-full h-[8vh] bg-[#005D1F] z-30 fixed bottom-0 ">
+                    <div className="">
 
-                        <POSFooter />
+                        <HeldOrders />
 
                     </div>
                 </div>

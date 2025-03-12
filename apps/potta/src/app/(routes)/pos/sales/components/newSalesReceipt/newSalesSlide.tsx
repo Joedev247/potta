@@ -15,11 +15,11 @@ const NewSalesReciept = () => {
           >
 
         <div className='w-full   flex'>
-            <div className='w-[50%] p-20'>
+            <div className='w-[60%] p-20'>
                 {/* Left */}
                 <Left />
             </div>
-            <div className='w-[50%]'>
+            <div className='w-[40%]'>
                 <PdfView />
                 {/* Pdf View */}
             </div>

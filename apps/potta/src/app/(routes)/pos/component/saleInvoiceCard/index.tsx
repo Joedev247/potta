@@ -1,90 +1,265 @@
-'use client'
-import Input from "@potta/components/input";
-import React, { useState, useContext, useEffect } from "react";
+'use client';
+import Input from '@potta/components/input';
+import React, { useState, useContext, useEffect } from 'react';
+import { ContextData } from '@potta/components/context';
+import { Filter, Product } from '../../utils/types';
+import useGetAllProducts from '../../hooks/useGetAllProducts';
+import Image from 'next/image';
 
-import { ContextData } from "@potta/components/context";
-// import { GetCatgerory } from "@/api/category/get";
-// import { GetProduct } from "@/api/food/get";
-// import { GetAddons } from "@/api/addons/get";
+// Convert API Product type to MenuItem type
+const convertProductToMenuItem = (product: Product): MenuItem => ({
+  id: product.uuid,
+  name: product.name,
+  image: product.images || '/images/pottaLogo.svg',
+  tax: product.taxRate,
+  category: product.category,
+  quantity: 0,
+  price: product.salesPrice,
+  sku: product.sku,
+  stock: product.inventoryLevel,
+});
 
+interface MenuItem {
+  id: string;
+  name: string;
+  image: string;
+  category: string;
+  quantity: number;
+  price: number;
+  sku?: string;
+  stock?: number;
+  tax: number
+}
 
-
+interface Category {
+  id: string;
+  name: string;
+}
 
 const SaleInvoiceCard = () => {
-    const [selected, setSelected] = useState([]);
-    const [id, setId] = useState([])
+  const [selected, setSelected] = useState<Category[]>([]);
+  const [activeId, setActiveId] = useState<string>('');
+  const [searchTerm, setSearchTerm] = useState<string>('');
+  const [barcodeInput, setBarcodeInput] = useState<string>('');
+  const [currentPage, setCurrentPage] = useState(1);
 
-    const [datas, setDatas] = useState()
-    const [menus, setMenu] = useState<any>()
+  const context = useContext(ContextData);
 
-    const context = useContext(ContextData)
+  // Setup filter for API
+  const filter: Filter = {
+    limit: 50, // Adjust based on your needs
+    page: currentPage,
+    search: searchTerm,
+    sortBy: 'updatedAt',
+    sortOrder: 'DESC',
+  };
 
+  // Fetch products using the hook
+  const { data: productData, isLoading, error } = useGetAllProducts(filter);
 
-    const addItem = (itemToAdd: any) => {
-        context?.setData((prevData: any) => {
-            const existingItem = prevData?.find((item: any) => item.id === itemToAdd.id);
-            if (existingItem) {
-                // Increment quantity if item already exists
-                existingItem.quantity += 1;
-                return [...prevData];
-            } else {
-                if (prevData?.length > 0)
-                    return [...prevData, { ...itemToAdd }];
-                else
-                    return [{ ...itemToAdd }]
-            }
-        });
+  // Convert API products to MenuItems
+  const menus = productData?.data.map(convertProductToMenuItem) || [];
+
+  // Extract unique categories from products
+  useEffect(() => {
+    if (productData?.data) {
+      const categories = Array.from(
+        new Set(productData.data.map((product) => product.category))
+      ).map((categoryName) => ({
+        id: categoryName,
+        name: categoryName,
+      }));
+      setSelected(categories);
+
+      // Set first category as active if none selected
+      if (!activeId && categories.length > 0) {
+        setActiveId(categories[0].id);
+      }
+    }
+  }, [productData?.data]);
+
+  // Handle barcode scanner input
+  const handleBarcodeInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setBarcodeInput(value);
+
+    if (value.length >= 8) {
+      const item = menus.find((item) => item.sku === value);
+      if (item) {
+        addItem(item);
+        setBarcodeInput('');
+      }
+    }
+  };
+
+  // Handle keyboard shortcuts
+  useEffect(() => {
+    const handleKeyPress = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        setSearchTerm('');
+        setBarcodeInput('');
+      }
+      if (e.key === 'F2') {
+        document.getElementById('search-input')?.focus();
+      }
+      if (e.key === 'F3') {
+        document.getElementById('barcode-input')?.focus();
+      }
     };
 
-    const handleActive = (name: any, id: any) => {
-        setId(id)
+    window.addEventListener('keydown', handleKeyPress);
+    return () => window.removeEventListener('keydown', handleKeyPress);
+  }, []);
+
+  const addItem = (itemToAdd: MenuItem) => {
+    if (itemToAdd.stock && itemToAdd.stock <= 0) {
+      // You could add a toast notification here for out of stock items
+      return;
     }
 
+    context?.setData((prevData: MenuItem[]) => {
+      const existingItem = prevData?.find((item) => item.id === itemToAdd.id);
+
+      if (existingItem) {
+        if (itemToAdd.stock && existingItem.quantity >= itemToAdd.stock) {
+          return prevData;
+        }
+        return prevData.map((item) =>
+          item.id === itemToAdd.id
+            ? { ...item, quantity: item.quantity + 1 }
+            : item
+        );
+      }
+
+      return prevData?.length > 0
+        ? [...prevData, { ...itemToAdd, quantity: 1 }]
+        : [{ ...itemToAdd, quantity: 1 }];
+    });
+  };
+
+  const handleActive = (id: string) => {
+    setActiveId(id);
+  };
+
+  // Handle search
+  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchTerm(e.target.value);
+    setCurrentPage(1); // Reset to first page when searching
+  };
+
+  // Filter menu items based on active category
+  const filteredMenus = menus.filter(
+    (item) =>
+      !activeId ||
+      item.category === selected.find((cat) => cat.id === activeId)?.name
+  );
+
+  if (error) {
     return (
-        <div className="w-full py-3 ">
-            <div className="flex w-full px-3 space-x-2">
-                <div className=" w-[50%]  ">
-                    <input type={"text"} name={""} className="py-1.5 border w-full pl-2 outline-none" placeholder="Search Items" />
-                </div>
-                <div className="w-[50%] flex -mt-2">
-                    <div className="h-[38px] mt-2 justify-center items-center border-y border-[#E5E7EB] border-l w-12 flex">
-                        <i className="ri-barcode-line text-2xl"></i>
-                    </div>
-                    <Input type={"text"} placeholder="12&h4569k" height={true} name={""} />
-                </div>
-            </div>
-            <div className="w-full my-2 py-2 border-y">
-                <div className="flex ">
-                    {selected.map((item: any) => {
-                        return (
-                            <button key={item.id} onClick={() => handleActive(item.name, item.id)} className={`${id == item.id ? 'bg-red-500' : 'bg-gray-500'} border py-1 text-sm  rounded-2xl px-4  text-white mx-2 w-full`}>
-                                <div className="w-full">{item.name}</div>
-                            </button>
-                        )
-                    })}
-                </div>
-            </div>
-            <div className="mt-2 w-full ">
-                <div className="w-full h-[60vh] p-3 overflow-y-auto">
-                    <div className="grid grid-cols-4 gap-3">
-                        {selected.map((item: any, i: any) => {
-                            if (id == item.id)
-                                return (
-                                    menus.map((items: any, id: number) => {
-                                        if (item.name == items.category)
-                                            return (
-                                                <div key={id} onClick={() => addItem(items)} className="border cursor-pointer h-36 items-center flex justify-center relative w-full">
-                                                    <img src={items.image} alt="" className="h-24 w-auto -mt-5" />
-                                                    <p className="absolute bottom-0 mb-2 text-gray-500  font-thin">{items.name}</p>
-                                                </div>
-                                            )
-                                    })
-                                )
-                        })}
-                    </div>
-                </div>
-            </div>
+      <div className="w-full h-full flex items-center justify-center text-red-500">
+        Error loading products. Please try again.
+      </div>
+    );
+  }
+
+  return (
+    <div className="w-full bg-slate-100 h-full py-3">
+      {/* Search Section */}
+      <div className="flex w-full px-3 space-x-2">
+        <div className="w-[50%] flex -mt-2">
+          <div className="bg-white mt-2 justify-center items-center border-y border-[#E5E7EB] border-l w-12 flex ">
+            <i className="ri-search-line text-2xl"></i>
+          </div>
+          <input
+            id="search-input"
+            name="search"
+            type="text"
+            placeholder="Search Items (F2)"
+            value={searchTerm}
+            onChange={handleSearch}
+            className={`w-full py-2 px-4 border border-gray-200 rounded-[2px] outline-none mt-2 focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500`}
+          />
         </div>
-    )
-}
-export default SaleInvoiceCard
+        <div className="w-[50%] flex -mt-2">
+          <div className="bg-white mt-2 justify-center items-center border-y border-[#E5E7EB] border-l w-12 flex">
+            <i className="ri-barcode-line text-2xl"></i>
+          </div>
+          <input
+            type="text"
+            placeholder="Scan Barcode (F3)"
+            name="barcode"
+            value={barcodeInput}
+            onChange={handleBarcodeInput}
+            autoComplete="off"
+            className={`w-full py-2 px-4 border border-gray-200 rounded-[2px] outline-none mt-2 focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500`}
+          />
+        </div>
+      </div>
+
+      {/* Categories Section */}
+      <div className="w-full my-2 py-2 border-y">
+        <div className="flex overflow-x-auto no-scrollbar">
+          {selected.map((category) => (
+            <button
+              key={category.id}
+              onClick={() => handleActive(category.id)}
+              className={`${
+                activeId === category.id ? 'bg-green-500' : 'bg-green-800'
+              } border py-2 text-base rounded-3xl px-4 text-white mx-2 min-w-fit whitespace-nowrap`}
+            >
+              {category.name}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* Menu Items Grid */}
+      <div className="mt-2 w-full">
+        <div className="w-full h-[60vh] p-3 overflow-y-auto">
+          {isLoading ? (
+            <div className="flex justify-center items-center h-full">
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900"></div>
+            </div>
+          ) : (
+            <div className="grid grid-cols-4 gap-3">
+              {filteredMenus.map((menuItem) => (
+                <div
+                  key={menuItem.id}
+                  onClick={() => addItem(menuItem)}
+                  className={`bg-white hover:border-green-800 hover:border cursor-pointer h-40 items-center flex flex-col justify-center relative w-full ${
+                    menuItem.stock === 0 ? 'opacity-50' : ''
+                  }`}
+                >
+                  <Image
+                    width={100}
+                    height={100}
+                    src={menuItem.image || '/images/pottaLogo.svg'}
+                    alt={menuItem.name}
+                    className="h-24 w-auto -mt-5"
+                    onError={(e) => {
+                      const target = e.target as HTMLImageElement;
+                      target.src = '/images/pottaLogo.svg'; // Fallback image path
+                    }}
+                  />
+                  <p className="absolute bottom-0 mb-2 text-gray-500 font-thin">
+                    {menuItem.name}
+                  </p>
+                  {menuItem.stock === 0 && (
+                    <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-30 text-white">
+                      Out of Stock
+                    </div>
+                  )}
+                  <div className="absolute top-1 right-1 text-sm font-medium text-gray-700">
+                    ${menuItem.price}
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default SaleInvoiceCard;

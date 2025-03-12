@@ -1,10 +1,10 @@
+'use client'
+
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import Select from '../../../../components/select';
 import { useRouter } from 'next/navigation';
-
-// Import the "useClient" hook here
 
 const urlRouters = [
   {
@@ -20,8 +20,8 @@ const urlRouters = [
     label: 'Vouchers',
   },
   {
-    value: 'POS',
-    label: 'POS',
+    value: "pos",
+    label: "POS"
   },
   {
     value: 'invoicing',
@@ -48,7 +48,10 @@ export default function Navbar() {
     setSeleted(value);
   };
 
-  // Use the "useClient" hook for client-side actions
+  // If the current route is 'pos', don't render the navbar
+  if (str[1] === 'pos') {
+    return null;
+  }
 
   return (
     // <div className="sticky top-0 z-30 w-full bg-white">

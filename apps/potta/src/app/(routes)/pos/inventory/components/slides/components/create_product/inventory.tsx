@@ -76,7 +76,7 @@ const CreateProduct:React.FC<CreateProductProps> = ({ open: controlledOpen,
     setOpen={setIsOpen}
       edit={true}
       buttonText={'Create Product'}
-      title={'Create Product'}
+      title={'Inventory Product'}
     >
       <form
         onSubmit={handleSubmit(onSubmit)}
@@ -231,7 +231,14 @@ const CreateProduct:React.FC<CreateProductProps> = ({ open: controlledOpen,
         </div>
         <div className="flex-grow" /> {/* This div takes up remaining space */}
         <div className="text-center md:text-right  md:flex  space-x-4 fixed bottom-0 left-0 right-0 justify-center bg-white p-4">
-          <div className="flex gap-2 w-full max-w-4xl justify-end">
+          <div className="flex gap-2 w-full max-w-4xl justify-between">
+              <Button
+                text="Cancel"
+                type="button"
+                theme="danger"
+
+                onClick={() => setIsOpen(false)}
+              />
             <div>
               <Button
                 text={'Create Product'}
@@ -239,13 +246,6 @@ const CreateProduct:React.FC<CreateProductProps> = ({ open: controlledOpen,
                 isLoading={mutation.isPending}
               />
             </div>
-            <Button
-              text="Cancel"
-              type="button"
-              theme="gray"
-              color={true}
-              onClick={() => setIsOpen(false)}
-            />
           </div>
         </div>
       </form>

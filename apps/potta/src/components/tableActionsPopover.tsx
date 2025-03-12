@@ -4,7 +4,7 @@ import {
   PopoverTrigger,
   PopoverContent,
   Popover as NextUIPopover,
-  Button
+  Button,
 } from '@nextui-org/react';
 
 // Define the types for the popover actions
@@ -23,13 +23,7 @@ const TableActionPopover: React.FC<{
   openPopover: string | null;
   setOpenPopover: (uuid: string | null) => void;
   onClick?: () => void;
-}> = ({
-  actions,
-  triggerButton,
-  rowUuid,
-  openPopover,
-  setOpenPopover
-}) => {
+}> = ({ actions, triggerButton, rowUuid, openPopover, setOpenPopover }) => {
   return (
     <NextUIPopover
       placement="right-start"
@@ -52,7 +46,7 @@ const TableActionPopover: React.FC<{
             <div
               key={index}
               className={`
-                text-xs
+                text-base
                 cursor-pointer
                 hover:bg-gray-200
                 py-0.5
@@ -77,6 +71,5 @@ const TableActionPopover: React.FC<{
     </NextUIPopover>
   );
 };
-
 
 export default TableActionPopover;
