@@ -5481,6 +5481,87 @@
         "hash": "sha512-sDOLlVbHhXpAUAL0YHDUUwDZf3iN4Bwi4W6a0W0b+QcAezUbRtH4FVb+9J4h+XFPW7l/gQ9F8qC7P+Ec4k8QVQ=="
       }
     },
+    "npm:@types/d3-array": {
+      "type": "npm",
+      "name": "npm:@types/d3-array",
+      "data": {
+        "version": "3.2.1",
+        "packageName": "@types/d3-array",
+        "hash": "sha512-Y2Jn2idRrLzUfAKV2LyRImR+y4oa2AntrgID95SHJxuMUrkNXmanDSed71sRNZysveJVt1hLLemQZIady0FpEg=="
+      }
+    },
+    "npm:@types/d3-color": {
+      "type": "npm",
+      "name": "npm:@types/d3-color",
+      "data": {
+        "version": "3.1.3",
+        "packageName": "@types/d3-color",
+        "hash": "sha512-iO90scth9WAbmgv7ogoq57O9YpKmFBbmoEoCHDB2xMBY0+/KVrqAaCDyCE16dUspeOvIxFFRI+0sEtqDqy2b4A=="
+      }
+    },
+    "npm:@types/d3-ease": {
+      "type": "npm",
+      "name": "npm:@types/d3-ease",
+      "data": {
+        "version": "3.0.2",
+        "packageName": "@types/d3-ease",
+        "hash": "sha512-NcV1JjO5oDzoK26oMzbILE6HW7uVXOHLQvHshBUW4UMdZGfiY6v5BeQwh9a9tCzv+CeefZQHJt5SRgK154RtiA=="
+      }
+    },
+    "npm:@types/d3-interpolate": {
+      "type": "npm",
+      "name": "npm:@types/d3-interpolate",
+      "data": {
+        "version": "3.0.4",
+        "packageName": "@types/d3-interpolate",
+        "hash": "sha512-mgLPETlrpVV1YRJIglr4Ez47g7Yxjl1lj7YKsiMCb27VJH9W8NVM6Bb9d8kkpG/uAQS5AmbA48q2IAolKKo1MA=="
+      }
+    },
+    "npm:@types/d3-path": {
+      "type": "npm",
+      "name": "npm:@types/d3-path",
+      "data": {
+        "version": "3.1.1",
+        "packageName": "@types/d3-path",
+        "hash": "sha512-VMZBYyQvbGmWyWVea0EHs/BwLgxc+MKi1zLDCONksozI4YJMcTt8ZEuIR4Sb1MMTE8MMW49v0IwI5+b7RmfWlg=="
+      }
+    },
+    "npm:@types/d3-scale": {
+      "type": "npm",
+      "name": "npm:@types/d3-scale",
+      "data": {
+        "version": "4.0.9",
+        "packageName": "@types/d3-scale",
+        "hash": "sha512-dLmtwB8zkAeO/juAMfnV+sItKjlsw2lKdZVVy6LRr0cBmegxSABiLEpGVmSJJ8O08i4+sGR6qQtb6WtuwJdvVw=="
+      }
+    },
+    "npm:@types/d3-shape": {
+      "type": "npm",
+      "name": "npm:@types/d3-shape",
+      "data": {
+        "version": "3.1.7",
+        "packageName": "@types/d3-shape",
+        "hash": "sha512-VLvUQ33C+3J+8p+Daf+nYSOsjB4GXp19/S/aGo60m9h1v6XaxjiT82lKVWJCfzhtuZ3yD7i/TPeC/fuKLLOSmg=="
+      }
+    },
+    "npm:@types/d3-time": {
+      "type": "npm",
+      "name": "npm:@types/d3-time",
+      "data": {
+        "version": "3.0.4",
+        "packageName": "@types/d3-time",
+        "hash": "sha512-yuzZug1nkAAaBlBBikKZTgzCeA+k1uy4ZFwWANOfKw5z5LRhV0gNA7gNkKm7HoK+HRN0wX3EkxGk0fpbWhmB7g=="
+      }
+    },
+    "npm:@types/d3-timer": {
+      "type": "npm",
+      "name": "npm:@types/d3-timer",
+      "data": {
+        "version": "3.0.2",
+        "packageName": "@types/d3-timer",
+        "hash": "sha512-Ps3T8E8dZDam6fUyNiMkekK3XUsaUEik+idO9/YjPtfj2qruF8tFBXS7XhtE4iIXBLxhmLjP3SXpLhVf21I9Lw=="
+      }
+    },
     "npm:@types/eslint": {
       "type": "npm",
       "name": "npm:@types/eslint",
@@ -7236,6 +7317,15 @@
         "hash": "sha512-9z8TZaGM1pfswYeXrUpzPrkx8UnWYdhJclsiYMm6x/w5+nN+8Tf/LnAgfLGQCm59qAOxU8WwHEq2vNwF6i4j+Q=="
       }
     },
+    "npm:class-variance-authority": {
+      "type": "npm",
+      "name": "npm:class-variance-authority",
+      "data": {
+        "version": "0.7.1",
+        "packageName": "class-variance-authority",
+        "hash": "sha512-Ka+9Trutv7G8M6WT6SeiRWz792K5qEqIGEGzXKhAE6xOWAY6pPH8U+9IY3oCMv6kqTmLsv7Xh/2w2RigkePMsg=="
+      }
+    },
     "npm:classnames": {
       "type": "npm",
       "name": "npm:classnames",
@@ -7938,6 +8028,114 @@
         "hash": "sha512-M1uQkMl8rQK/szD0LNhtqxIPLpimGm8sOBwU7lLnCpSbTyY3yeU1Vc7l4KT5zT4s/yOxHH5O7tIuuLOCnLADRw=="
       }
     },
+    "npm:currency-symbol-map": {
+      "type": "npm",
+      "name": "npm:currency-symbol-map",
+      "data": {
+        "version": "5.1.0",
+        "packageName": "currency-symbol-map",
+        "hash": "sha512-LO/lzYRw134LMDVnLyAf1dHE5tyO6axEFkR3TXjQIOmMkAM9YL6QsiUwuXzZAmFnuDJcs4hayOgyIYtViXFrLw=="
+      }
+    },
+    "npm:d3-array": {
+      "type": "npm",
+      "name": "npm:d3-array",
+      "data": {
+        "version": "3.2.4",
+        "packageName": "d3-array",
+        "hash": "sha512-tdQAmyA18i4J7wprpYq8ClcxZy3SC31QMeByyCFyRt7BVHdREQZ5lpzoe5mFEYZUWe+oq8HBvk9JjpibyEV4Jg=="
+      }
+    },
+    "npm:d3-color": {
+      "type": "npm",
+      "name": "npm:d3-color",
+      "data": {
+        "version": "3.1.0",
+        "packageName": "d3-color",
+        "hash": "sha512-zg/chbXyeBtMQ1LbD/WSoW2DpC3I0mpmPdW+ynRTj/x2DAWYrIY7qeZIHidozwV24m4iavr15lNwIwLxRmOxhA=="
+      }
+    },
+    "npm:d3-ease": {
+      "type": "npm",
+      "name": "npm:d3-ease",
+      "data": {
+        "version": "3.0.1",
+        "packageName": "d3-ease",
+        "hash": "sha512-wR/XK3D3XcLIZwpbvQwQ5fK+8Ykds1ip7A2Txe0yxncXSdq1L9skcG7blcedkOX+ZcgxGAmLX1FrRGbADwzi0w=="
+      }
+    },
+    "npm:d3-format": {
+      "type": "npm",
+      "name": "npm:d3-format",
+      "data": {
+        "version": "3.1.0",
+        "packageName": "d3-format",
+        "hash": "sha512-YyUI6AEuY/Wpt8KWLgZHsIU86atmikuoOmCfommt0LYHiQSPjvX2AcFc38PX0CBpr2RCyZhjex+NS/LPOv6YqA=="
+      }
+    },
+    "npm:d3-interpolate": {
+      "type": "npm",
+      "name": "npm:d3-interpolate",
+      "data": {
+        "version": "3.0.1",
+        "packageName": "d3-interpolate",
+        "hash": "sha512-3bYs1rOD33uo8aqJfKP3JWPAibgw8Zm2+L9vBKEHJ2Rg+viTR7o5Mmv5mZcieN+FRYaAOWX5SJATX6k1PWz72g=="
+      }
+    },
+    "npm:d3-path": {
+      "type": "npm",
+      "name": "npm:d3-path",
+      "data": {
+        "version": "3.1.0",
+        "packageName": "d3-path",
+        "hash": "sha512-p3KP5HCf/bvjBSSKuXid6Zqijx7wIfNW+J/maPs+iwR35at5JCbLUT0LzF1cnjbCHWhqzQTIN2Jpe8pRebIEFQ=="
+      }
+    },
+    "npm:d3-scale": {
+      "type": "npm",
+      "name": "npm:d3-scale",
+      "data": {
+        "version": "4.0.2",
+        "packageName": "d3-scale",
+        "hash": "sha512-GZW464g1SH7ag3Y7hXjf8RoUuAFIqklOAq3MRl4OaWabTFJY9PN/E1YklhXLh+OQ3fM9yS2nOkCoS+WLZ6kvxQ=="
+      }
+    },
+    "npm:d3-shape": {
+      "type": "npm",
+      "name": "npm:d3-shape",
+      "data": {
+        "version": "3.2.0",
+        "packageName": "d3-shape",
+        "hash": "sha512-SaLBuwGm3MOViRq2ABk3eLoxwZELpH6zhl3FbAoJ7Vm1gofKx6El1Ib5z23NUEhF9AsGl7y+dzLe5Cw2AArGTA=="
+      }
+    },
+    "npm:d3-time": {
+      "type": "npm",
+      "name": "npm:d3-time",
+      "data": {
+        "version": "3.1.0",
+        "packageName": "d3-time",
+        "hash": "sha512-VqKjzBLejbSMT4IgbmVgDjpkYrNWUYJnbCGo874u7MMKIWsILRX+OpX/gTk8MqjpT1A/c6HY2dCA77ZN0lkQ2Q=="
+      }
+    },
+    "npm:d3-time-format": {
+      "type": "npm",
+      "name": "npm:d3-time-format",
+      "data": {
+        "version": "4.1.0",
+        "packageName": "d3-time-format",
+        "hash": "sha512-dJxPBlzC7NugB2PDLwo9Q8JiTR3M3e4/XANkreKSUxF8vvXKqm1Yfq4Q5dl8budlunRVlUUaDUgFt7eA8D6NLg=="
+      }
+    },
+    "npm:d3-timer": {
+      "type": "npm",
+      "name": "npm:d3-timer",
+      "data": {
+        "version": "3.0.1",
+        "packageName": "d3-timer",
+        "hash": "sha512-ndfJ/JxxMd3nw31uyKoY2naivF+r29V+Lc0svZxe1JvvIRmi8hUsrMvdOwgS1o6uBHmiz91geQ0ylPP0aj1VUA=="
+      }
+    },
     "npm:damerau-levenshtein": {
       "type": "npm",
       "name": "npm:damerau-levenshtein",
@@ -8008,6 +8206,15 @@
         "version": "10.5.0",
         "packageName": "decimal.js",
         "hash": "sha512-8vDa8Qxvr/+d94hSh5P3IJwI5t8/c0KsMp+g8bNw9cY2icONa5aPfvKeieW1WlG0WQYwwhJ7mjui2xtiePQSXw=="
+      }
+    },
+    "npm:decimal.js-light": {
+      "type": "npm",
+      "name": "npm:decimal.js-light",
+      "data": {
+        "version": "2.5.1",
+        "packageName": "decimal.js-light",
+        "hash": "sha512-qIMFpTMZmny+MMIitAB6D7iVPEorVw6YQRWkvarTkT4tBeSLLiHzcwj6q0MmYSFCiVpiqPJTJEYIrpcPzVEIvg=="
       }
     },
     "npm:decompress-response": {
@@ -9279,6 +9486,15 @@
         "hash": "sha512-f3qQ9oQy9j2AhBe/H9VC91wLmKBCCU/gDOnKNAYG5hswO7BLKj09Hc5HYNz9cGI++xlpDCIgDaitVs03ATR84Q=="
       }
     },
+    "npm:fast-equals": {
+      "type": "npm",
+      "name": "npm:fast-equals",
+      "data": {
+        "version": "5.2.2",
+        "packageName": "fast-equals",
+        "hash": "sha512-V7/RktU11J3I36Nwq2JnZEM7tNm17eBJz+u25qdxBZeCKiX6BkVSZQjwWIr+IobgnZy+ag73tTZgZi7tr0LrBw=="
+      }
+    },
     "npm:fast-glob": {
       "type": "npm",
       "name": "npm:fast-glob",
@@ -10420,6 +10636,15 @@
         "version": "1.1.0",
         "packageName": "internal-slot",
         "hash": "sha512-4gd7VpWNQNB4UKKCFFVcp1AVv+FMOgs9NKzjHKusc8jTMhd5eL1NqQqOpE0KzMds804/yHlglp3uxgluOqAPLw=="
+      }
+    },
+    "npm:internmap": {
+      "type": "npm",
+      "name": "npm:internmap",
+      "data": {
+        "version": "2.0.3",
+        "packageName": "internmap",
+        "hash": "sha512-5Hh7Y1wQbvY5ooGgPbDaL5iYLAPzMTUrjMulskHLH6wnv/A+1q5rgEaiuqEjB+oxGXIVZs1FF+R/KPN3ZSQYYg=="
       }
     },
     "npm:intl-messageformat": {
@@ -11691,6 +11916,15 @@
         "hash": "sha512-tqNXrS78oMOE73NMxK4EMLQsQowWf8jKooH9g7xPavRT706R6bkQJ6DY2Te7QukaZsulxa30wQ7bk0pm4XiHmA=="
       }
     },
+    "npm:lucide-react": {
+      "type": "npm",
+      "name": "npm:lucide-react",
+      "data": {
+        "version": "0.479.0",
+        "packageName": "lucide-react",
+        "hash": "sha512-aBhNnveRhorBOK7uA4gDjgaf+YlHMdMhQ/3cupk6exM10hWlEU+2QtWYOfhXhjAsmdb6LeKR+NZnow4UxRRiTQ=="
+      }
+    },
     "npm:luxon": {
       "type": "npm",
       "name": "npm:luxon",
@@ -12564,15 +12798,6 @@
         "hash": "sha512-JU3teHTNjmE2VCGFzuY8EXzCDVwEqB2a8fsIvwaStHhAWJEeVd1o1QD80CU6+ZdEXXSLbSsuLwJjkCBWqRQUVA=="
       }
     },
-    "npm:picomatch@4.0.2": {
-      "type": "npm",
-      "name": "npm:picomatch@4.0.2",
-      "data": {
-        "version": "4.0.2",
-        "packageName": "picomatch",
-        "hash": "sha512-M7BAV6Rlcy5u+m6oPhAPFgJTzAioX/6B0DxyvDlo9l8+T3nLKbrczg2WLUyzd45L8RqfUMyGPzekbMvX2Ldkwg=="
-      }
-    },
     "npm:pirates": {
       "type": "npm",
       "name": "npm:pirates",
@@ -13347,6 +13572,15 @@
         "hash": "sha512-rdRJ4PeMsqWq9n69AmF6et6qCbhCF1KEBgjAH8vIiLxE1k5fMxtRYo0k4asxW8qpIH6sqahiMxrxVVoObv8orQ=="
       }
     },
+    "npm:react-resizable-panels": {
+      "type": "npm",
+      "name": "npm:react-resizable-panels",
+      "data": {
+        "version": "2.1.7",
+        "packageName": "react-resizable-panels",
+        "hash": "sha512-JtT6gI+nURzhMYQYsx8DKkx6bSoOGFp7A3CwMrOb8y5jFHFyqwo9m68UhmXRw57fRVJksFn1TSlm3ywEQ9vMgA=="
+      }
+    },
     "npm:react-select": {
       "type": "npm",
       "name": "npm:react-select",
@@ -13354,6 +13588,24 @@
         "version": "5.10.0",
         "packageName": "react-select",
         "hash": "sha512-k96gw+i6N3ExgDwPIg0lUPmexl1ygPe6u5BdQFNBhkpbwroIgCNXdubtIzHfThYXYYTubwOBafoMnn7ruEP1xA=="
+      }
+    },
+    "npm:react-smooth": {
+      "type": "npm",
+      "name": "npm:react-smooth",
+      "data": {
+        "version": "4.0.4",
+        "packageName": "react-smooth",
+        "hash": "sha512-gnGKTpYwqL0Iii09gHobNolvX4Kiq4PKx6eWBCYYix+8cdw+cGo3do906l1NBPKkSWx1DghC1dlWG9L2uGd61Q=="
+      }
+    },
+    "npm:react-tailwindcss-datepicker": {
+      "type": "npm",
+      "name": "npm:react-tailwindcss-datepicker",
+      "data": {
+        "version": "2.0.0",
+        "packageName": "react-tailwindcss-datepicker",
+        "hash": "sha512-HADddzZjeOIMxkKkueAyQmiAExLXYcwgPG0Qv1oP9cjCx4/jrhbbOAbazgjJmxfhGxUw7e0Goqs+DY3htKlhAA=="
       }
     },
     "npm:react-textarea-autosize": {
@@ -13444,6 +13696,24 @@
         "version": "4.1.2",
         "packageName": "readdirp",
         "hash": "sha512-GDhwkLfywWL2s6vEjyhri+eXmfH6j1L7JE27WhqLeYzoh/A3DBaYGEj2H/HFZCn/kMfim73FXxEJTw06WtxQwg=="
+      }
+    },
+    "npm:recharts": {
+      "type": "npm",
+      "name": "npm:recharts",
+      "data": {
+        "version": "2.15.1",
+        "packageName": "recharts",
+        "hash": "sha512-v8PUTUlyiDe56qUj82w/EDVuzEFXwEHp9/xOowGAZwfLjB9uAy3GllQVIYMWF6nU+qibx85WF75zD7AjqoT54Q=="
+      }
+    },
+    "npm:recharts-scale": {
+      "type": "npm",
+      "name": "npm:recharts-scale",
+      "data": {
+        "version": "0.4.5",
+        "packageName": "recharts-scale",
+        "hash": "sha512-kivNFO+0OcUNu7jQquLXAxz1FIwZj8nrj+YkOKc5694NbjCvcT6aSZiIzNzd2Kul4o4rTto8QVR9lMNtxD4G1w=="
       }
     },
     "npm:reflect.getprototypeof": {
@@ -14526,6 +14796,15 @@
         "hash": "sha512-U7sxQk/n397Bmx4JHbJx/iSOOv5G+II3f1kpLpY2QeUv5DcPdcTsYLlusZfq1NthHS1c1cZoyFmmkex1rzke0A=="
       }
     },
+    "npm:tailwindcss-animate": {
+      "type": "npm",
+      "name": "npm:tailwindcss-animate",
+      "data": {
+        "version": "1.0.7",
+        "packageName": "tailwindcss-animate",
+        "hash": "sha512-bl6mpH3T7I3UFxuvDEXLxy/VuFxBk5bbzplh7tXI68mwMokNYd1t9qPBHlnyTwfa4JGC4zP516I1hYYtQ/vspA=="
+      }
+    },
     "npm:tapable": {
       "type": "npm",
       "name": "npm:tapable",
@@ -14634,22 +14913,13 @@
         "hash": "sha512-Eet/eeMhkO6TX8mnUteS9zgPbUMQa4I6Kkp5ORiBD5476/m+PIRiumP5tmh5ioJpH7k51Kehawy2UDfsnxxY8Q=="
       }
     },
-    "npm:tinyglobby": {
+    "npm:tiny-invariant": {
       "type": "npm",
-      "name": "npm:tinyglobby",
+      "name": "npm:tiny-invariant",
       "data": {
-        "version": "0.2.12",
-        "packageName": "tinyglobby",
-        "hash": "sha512-qkf4trmKSIiMTs/E63cxH+ojC2unam7rJ0WrauAzpT3ECNTxGRMlaXxVbfxMUC/w0LaYk6jQ4y/nGR9uBO3tww=="
-      }
-    },
-    "npm:fdir@6.4.3": {
-      "type": "npm",
-      "name": "npm:fdir@6.4.3",
-      "data": {
-        "version": "6.4.3",
-        "packageName": "fdir",
-        "hash": "sha512-PMXmW2y1hDDfTSRc9gaXIuCCRpuoz3Kaz8cUelp3smouvfT632ozg2vrT6lJsHKKOF59YLbOGfAWGUcKEfRMQw=="
+        "version": "1.3.3",
+        "packageName": "tiny-invariant",
+        "hash": "sha512-+FbBPE1o9QAYvviau/qC5SE3caw21q3xkvWKBtja5vgqOWIHHJ3ioaq1VPfn/Szqctz2bU/oYeKd9/z5BL+PVg=="
       }
     },
     "npm:tmp": {
@@ -15055,6 +15325,15 @@
         "version": "1.1.2",
         "packageName": "vary",
         "hash": "sha512-BNGbWLfd0eUPabhkXUVm0j8uuvREyTh5ovRa/dyow/BqAbZJyC+5fU+IzQOzmAKzYqYRAISoRhdQr3eIZ/PXqg=="
+      }
+    },
+    "npm:victory-vendor": {
+      "type": "npm",
+      "name": "npm:victory-vendor",
+      "data": {
+        "version": "36.9.2",
+        "packageName": "victory-vendor",
+        "hash": "sha512-PnpQQMuxlwYdocC8fIJqVXvkeViHYzotI+NJrCuav0ZYFoq912ZHBk3mCeuj+5/VpodOjPe1z0Fk2ihgzlXqjQ=="
       }
     },
     "npm:w3c-xmlserializer": {
@@ -26699,62 +26978,12 @@
     },
     {
       "source": "npm:@react-aria/focus",
-      "target": "npm:@react-aria/utils@3.27.0",
-      "type": "static"
-    },
-    {
-      "source": "npm:@react-aria/focus",
-      "target": "npm:@react-types/shared@3.27.0",
-      "type": "static"
-    },
-    {
-      "source": "npm:@react-aria/focus",
       "target": "npm:@swc/helpers",
       "type": "static"
     },
     {
       "source": "npm:@react-aria/focus",
       "target": "npm:clsx",
-      "type": "static"
-    },
-    {
-      "source": "npm:@react-aria/utils@3.27.0",
-      "target": "npm:react",
-      "type": "static"
-    },
-    {
-      "source": "npm:@react-aria/utils@3.27.0",
-      "target": "npm:react-dom",
-      "type": "static"
-    },
-    {
-      "source": "npm:@react-aria/utils@3.27.0",
-      "target": "npm:@react-aria/ssr",
-      "type": "static"
-    },
-    {
-      "source": "npm:@react-aria/utils@3.27.0",
-      "target": "npm:@react-stately/utils",
-      "type": "static"
-    },
-    {
-      "source": "npm:@react-aria/utils@3.27.0",
-      "target": "npm:@react-types/shared@3.27.0",
-      "type": "static"
-    },
-    {
-      "source": "npm:@react-aria/utils@3.27.0",
-      "target": "npm:@swc/helpers",
-      "type": "static"
-    },
-    {
-      "source": "npm:@react-aria/utils@3.27.0",
-      "target": "npm:clsx",
-      "type": "static"
-    },
-    {
-      "source": "npm:@react-types/shared@3.27.0",
-      "target": "npm:react",
       "type": "static"
     },
     {
@@ -29898,6 +30127,21 @@
       "type": "static"
     },
     {
+      "source": "npm:@types/d3-interpolate",
+      "target": "npm:@types/d3-color",
+      "type": "static"
+    },
+    {
+      "source": "npm:@types/d3-scale",
+      "target": "npm:@types/d3-time",
+      "type": "static"
+    },
+    {
+      "source": "npm:@types/d3-shape",
+      "target": "npm:@types/d3-path",
+      "type": "static"
+    },
+    {
       "source": "npm:@types/eslint",
       "target": "npm:@types/estree",
       "type": "static"
@@ -31663,6 +31907,11 @@
       "type": "static"
     },
     {
+      "source": "npm:class-variance-authority",
+      "target": "npm:clsx",
+      "type": "static"
+    },
+    {
       "source": "npm:cli-cursor",
       "target": "npm:restore-cursor",
       "type": "static"
@@ -32295,6 +32544,56 @@
     {
       "source": "npm:cssstyle",
       "target": "npm:cssom@0.3.8",
+      "type": "static"
+    },
+    {
+      "source": "npm:d3-array",
+      "target": "npm:internmap",
+      "type": "static"
+    },
+    {
+      "source": "npm:d3-interpolate",
+      "target": "npm:d3-color",
+      "type": "static"
+    },
+    {
+      "source": "npm:d3-scale",
+      "target": "npm:d3-array",
+      "type": "static"
+    },
+    {
+      "source": "npm:d3-scale",
+      "target": "npm:d3-format",
+      "type": "static"
+    },
+    {
+      "source": "npm:d3-scale",
+      "target": "npm:d3-interpolate",
+      "type": "static"
+    },
+    {
+      "source": "npm:d3-scale",
+      "target": "npm:d3-time",
+      "type": "static"
+    },
+    {
+      "source": "npm:d3-scale",
+      "target": "npm:d3-time-format",
+      "type": "static"
+    },
+    {
+      "source": "npm:d3-shape",
+      "target": "npm:d3-path",
+      "type": "static"
+    },
+    {
+      "source": "npm:d3-time",
+      "target": "npm:d3-array",
+      "type": "static"
+    },
+    {
+      "source": "npm:d3-time-format",
+      "target": "npm:d3-time",
       "type": "static"
     },
     {
@@ -33655,11 +33954,6 @@
     {
       "source": "npm:eslint-import-resolver-typescript",
       "target": "npm:stable-hash",
-      "type": "static"
-    },
-    {
-      "source": "npm:eslint-import-resolver-typescript",
-      "target": "npm:tinyglobby",
       "type": "static"
     },
     {
@@ -37873,6 +38167,11 @@
       "type": "static"
     },
     {
+      "source": "npm:lucide-react",
+      "target": "npm:react",
+      "type": "static"
+    },
+    {
       "source": "npm:make-dir",
       "target": "npm:semver@7.7.1",
       "type": "static"
@@ -39588,6 +39887,16 @@
       "type": "static"
     },
     {
+      "source": "npm:react-resizable-panels",
+      "target": "npm:react",
+      "type": "static"
+    },
+    {
+      "source": "npm:react-resizable-panels",
+      "target": "npm:react-dom",
+      "type": "static"
+    },
+    {
       "source": "npm:react-select",
       "target": "npm:react",
       "type": "static"
@@ -39640,6 +39949,41 @@
     {
       "source": "npm:react-select",
       "target": "npm:use-isomorphic-layout-effect",
+      "type": "static"
+    },
+    {
+      "source": "npm:react-smooth",
+      "target": "npm:react",
+      "type": "static"
+    },
+    {
+      "source": "npm:react-smooth",
+      "target": "npm:react-dom",
+      "type": "static"
+    },
+    {
+      "source": "npm:react-smooth",
+      "target": "npm:fast-equals",
+      "type": "static"
+    },
+    {
+      "source": "npm:react-smooth",
+      "target": "npm:prop-types",
+      "type": "static"
+    },
+    {
+      "source": "npm:react-smooth",
+      "target": "npm:react-transition-group",
+      "type": "static"
+    },
+    {
+      "source": "npm:react-tailwindcss-datepicker",
+      "target": "npm:dayjs",
+      "type": "static"
+    },
+    {
+      "source": "npm:react-tailwindcss-datepicker",
+      "target": "npm:react",
       "type": "static"
     },
     {
@@ -39815,6 +40159,61 @@
     {
       "source": "npm:readdirp",
       "target": "npm:picomatch",
+      "type": "static"
+    },
+    {
+      "source": "npm:recharts",
+      "target": "npm:react",
+      "type": "static"
+    },
+    {
+      "source": "npm:recharts",
+      "target": "npm:react-dom",
+      "type": "static"
+    },
+    {
+      "source": "npm:recharts",
+      "target": "npm:clsx",
+      "type": "static"
+    },
+    {
+      "source": "npm:recharts",
+      "target": "npm:eventemitter3",
+      "type": "static"
+    },
+    {
+      "source": "npm:recharts",
+      "target": "npm:lodash",
+      "type": "static"
+    },
+    {
+      "source": "npm:recharts",
+      "target": "npm:react-is@18.3.1",
+      "type": "static"
+    },
+    {
+      "source": "npm:recharts",
+      "target": "npm:react-smooth",
+      "type": "static"
+    },
+    {
+      "source": "npm:recharts",
+      "target": "npm:recharts-scale",
+      "type": "static"
+    },
+    {
+      "source": "npm:recharts",
+      "target": "npm:tiny-invariant",
+      "type": "static"
+    },
+    {
+      "source": "npm:recharts",
+      "target": "npm:victory-vendor",
+      "type": "static"
+    },
+    {
+      "source": "npm:recharts-scale",
+      "target": "npm:decimal.js-light",
       "type": "static"
     },
     {
@@ -41493,21 +41892,6 @@
       "type": "static"
     },
     {
-      "source": "npm:tinyglobby",
-      "target": "npm:fdir@6.4.3",
-      "type": "static"
-    },
-    {
-      "source": "npm:tinyglobby",
-      "target": "npm:picomatch@4.0.2",
-      "type": "static"
-    },
-    {
-      "source": "npm:fdir@6.4.3",
-      "target": "npm:picomatch@4.0.2",
-      "type": "static"
-    },
-    {
       "source": "npm:to-regex-range",
       "target": "npm:is-number",
       "type": "static"
@@ -41995,6 +42379,76 @@
     {
       "source": "npm:v8-to-istanbul",
       "target": "npm:convert-source-map",
+      "type": "static"
+    },
+    {
+      "source": "npm:victory-vendor",
+      "target": "npm:@types/d3-array",
+      "type": "static"
+    },
+    {
+      "source": "npm:victory-vendor",
+      "target": "npm:@types/d3-ease",
+      "type": "static"
+    },
+    {
+      "source": "npm:victory-vendor",
+      "target": "npm:@types/d3-interpolate",
+      "type": "static"
+    },
+    {
+      "source": "npm:victory-vendor",
+      "target": "npm:@types/d3-scale",
+      "type": "static"
+    },
+    {
+      "source": "npm:victory-vendor",
+      "target": "npm:@types/d3-shape",
+      "type": "static"
+    },
+    {
+      "source": "npm:victory-vendor",
+      "target": "npm:@types/d3-time",
+      "type": "static"
+    },
+    {
+      "source": "npm:victory-vendor",
+      "target": "npm:@types/d3-timer",
+      "type": "static"
+    },
+    {
+      "source": "npm:victory-vendor",
+      "target": "npm:d3-array",
+      "type": "static"
+    },
+    {
+      "source": "npm:victory-vendor",
+      "target": "npm:d3-ease",
+      "type": "static"
+    },
+    {
+      "source": "npm:victory-vendor",
+      "target": "npm:d3-interpolate",
+      "type": "static"
+    },
+    {
+      "source": "npm:victory-vendor",
+      "target": "npm:d3-scale",
+      "type": "static"
+    },
+    {
+      "source": "npm:victory-vendor",
+      "target": "npm:d3-shape",
+      "type": "static"
+    },
+    {
+      "source": "npm:victory-vendor",
+      "target": "npm:d3-time",
+      "type": "static"
+    },
+    {
+      "source": "npm:victory-vendor",
+      "target": "npm:d3-timer",
       "type": "static"
     },
     {

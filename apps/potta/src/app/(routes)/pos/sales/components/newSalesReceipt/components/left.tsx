@@ -96,7 +96,7 @@ const Left = () => {
     };
 
     return (
-        <div>
+        <div className=''>
             <div className="w-full grid grid-cols-4 gap-4">
                 <div>
                     <Select

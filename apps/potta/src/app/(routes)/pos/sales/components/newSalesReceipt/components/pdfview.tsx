@@ -4,7 +4,10 @@ import Receipt from '../../../../../receipt/page';
 
 const PdfView = () => {
     return (
-        <div className='h-[100vh] w-full bg-[#F2F2F2]'>
+        <div className='h-[100vh] w-full bg-[#F2F2F2] '>
+          <div className='flex mt-10 justify-end p-8'>
+                    <Button text={'Download'} icon={<i className="ri-download-line"></i>} type={'submit'} />
+                </div>
             <div className='p-8  w-full'>
                 <h3 className='text-2xl font-semibold'>PDF Preview</h3>
                 <div className='mt-5 h-36 w-full bg-green-800'>
@@ -18,7 +21,7 @@ const PdfView = () => {
                             <div className='space-y-2 text-sm text-gray-400 flex-col'>
                                 <p>ABC Company</p>
                                 <p>hello@ABCcompany.com</p>
-                                <p>ABC, Street, D'la Cameroon</p>
+                                <p>ABC, Street, D&apos;la Cameroon</p>
                                 <p>+237 695904751</p>
                             </div>
                         </div>
@@ -27,7 +30,7 @@ const PdfView = () => {
                             <div className='space-y-2 text-sm text-gray-400 flex-col'>
                                 <p>ABC Company</p>
                                 <p>hello@ABCcompany.com</p>
-                                <p>ABC, Street, D'la Cameroon</p>
+                                <p>ABC, Street, D&apos;la Cameroon</p>
                                 <p>+237 695904751</p>
                             </div>
                         </div>
@@ -90,9 +93,7 @@ const PdfView = () => {
 
 
                 </div>
-                <div className='flex mt-10 justify-center'>
-                    <Button text={'Download'} icon={<i className="ri-download-line"></i>} type={'submit'} />
-                </div>
+
             </div>
         </div>
     )

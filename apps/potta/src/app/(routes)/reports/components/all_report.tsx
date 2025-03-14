@@ -1,50 +1,170 @@
-import react from 'react'
-const data = [
-    {
-        id: "1",
-        title: "Inventory History",
-        desc: "Provides an evaluation of the total value of inventory based on current stock level and uit cost",
-        selected: false
-    },
-    {
-        id: "1",
-        title: "Inventory History",
-        desc: "Provides an evaluation of the total value of inventory based on current stock level and uit cost",
-        selected: false
-    },
-    {
-        id: "1",
-        title: "Inventory History",
-        desc: "Provides an evaluation of the total value of inventory based on current stock level and uit cost",
-        selected: false
-    },
-    {
-        id: "1",
-        title: "Inventory History",
-        desc: "Provides an evaluation of the total value of inventory based on current stock level and uit cost",
-        selected: false
-    },
-]
-const AllReport = () => {
-    return (
-        <>
-            <div className='w-full grid-cols-3 grid gap-3'>
-                {
-                    data.map((items) => {
-                        return (
-                            <div key={items.id} className={`border w-full p-5 `}>
-                                <div className='flex justify-between'>
-                                    <h3 className='font-semibold'>{items.title}</h3>
-                                    {items.selected ? <i className="ri-star-fill border text-white"></i> : <i className="ri-star-fill text-yellow-500"></i>}
-                                </div>
-                                <p className='mt-2 text-gray-500 mt-2'>{items.desc}</p>
-                            </div>
-                        )
-                    })
-                }
-            </div>
-        </>
-    )
-}
+import React from 'react';
+import { Tabs, Tab } from "@nextui-org/react";
+import PaymentSummaryReport from './disbursementReports/paymentSummaryReport';
+import BudgetUtilizationReport from './disbursementReports/budgetUtilizationReport';
 
-export default AllReport
+
+const FinancePage = () => {
+  // Sample data - in a real application, this would come from your API
+  const sampleData = {
+    reportPeriod: {
+      startDate: '2025-03-01',
+      endDate: '2025-03-31',
+    },
+    payments: [
+      {
+        paymentId: 'PAY001',
+        payee: 'Vendor A',
+        paymentDate: '2025-03-15',
+        paymentMethod: 'Bank Transfer',
+        paymentAmount: 5000,
+        paymentStatus: 'completed',
+        invoiceId: 'INV001',
+        disbursementType: 'Vendor Payment',
+      },
+      {
+        paymentId: 'PAY001',
+        payee: 'Vendor A',
+        paymentDate: '2025-03-15',
+        paymentMethod: 'Bank Transfer',
+        paymentAmount: 5000,
+        paymentStatus: 'completed',
+        invoiceId: 'INV001',
+        disbursementType: 'Vendor Payment',
+      },{
+        paymentId: 'PAY001',
+        payee: 'Vendor A',
+        paymentDate: '2025-03-15',
+        paymentMethod: 'Bank Transfer',
+        paymentAmount: 5000,
+        paymentStatus: 'completed',
+        invoiceId: 'INV001',
+        disbursementType: 'Vendor Payment',
+      },{
+        paymentId: 'PAY001',
+        payee: 'Vendor A',
+        paymentDate: '2025-03-15',
+        paymentMethod: 'Bank Transfer',
+        paymentAmount: 5000,
+        paymentStatus: 'completed',
+        invoiceId: 'INV001',
+        disbursementType: 'Vendor Payment',
+      },{
+        paymentId: 'PAY001',
+        payee: 'Vendor A',
+        paymentDate: '2025-03-15',
+        paymentMethod: 'Bank Transfer',
+        paymentAmount: 5000,
+        paymentStatus: 'completed',
+        invoiceId: 'INV001',
+        disbursementType: 'Vendor Payment',
+      },{
+        paymentId: 'PAY001',
+        payee: 'Vendor A',
+        paymentDate: '2025-03-15',
+        paymentMethod: 'Bank Transfer',
+        paymentAmount: 5000,
+        paymentStatus: 'completed',
+        invoiceId: 'INV001',
+        disbursementType: 'Vendor Payment',
+      },{
+        paymentId: 'PAY001',
+        payee: 'Vendor A',
+        paymentDate: '2025-03-15',
+        paymentMethod: 'Bank Transfer',
+        paymentAmount: 5000,
+        paymentStatus: 'completed',
+        invoiceId: 'INV001',
+        disbursementType: 'Vendor Payment',
+      },{
+        paymentId: 'PAY001',
+        payee: 'Vendor A',
+        paymentDate: '2025-03-15',
+        paymentMethod: 'Bank Transfer',
+        paymentAmount: 5000,
+        paymentStatus: 'completed',
+        invoiceId: 'INV001',
+        disbursementType: 'Vendor Payment',
+      },{
+        paymentId: 'PAY001',
+        payee: 'Vendor A',
+        paymentDate: '2025-03-15',
+        paymentMethod: 'Bank Transfer',
+        paymentAmount: 5000,
+        paymentStatus: 'completed',
+        invoiceId: 'INV001',
+        disbursementType: 'Vendor Payment',
+      },{
+        paymentId: 'PAY001',
+        payee: 'Vendor A',
+        paymentDate: '2025-03-15',
+        paymentMethod: 'Bank Transfer',
+        paymentAmount: 5000,
+        paymentStatus: 'completed',
+        invoiceId: 'INV001',
+        disbursementType: 'Vendor Payment',
+      },
+    ],
+    paymentKpis: {
+      totalPaymentsMade: 50000,
+      numberOfPayments: 25,
+      mostCommonPaymentMethod: 'Bank Transfer',
+      largestPayment: 10000,
+      outstandingPayments: 3,
+    },
+    budgets: [
+      {
+        budgetId: 'BUD001',
+        budgetName: 'Marketing Q1',
+        allocatedBudget: 100000,
+        amountSpent: 75000,
+        remainingBudget: 25000,
+        utilizationPercentage: 75,
+        startDate: '2025-01-01',
+        endDate: '2025-03-31',
+        department: 'Marketing',
+      },
+      // Add more budgets...
+    ],
+    budgetKpis: {
+      totalBudgetAllocated: 500000,
+      totalAmountSpent: 350000,
+      overallUtilizationRate: 70,
+      departmentWithHighestUtilization: 'Sales',
+      departmentWithLowestUtilization: 'IT',
+    },
+  };
+
+  return (
+    <div className="min-h-screen bg-gray-50 p-4">
+      <Tabs
+        aria-label="Finance Reports"
+        color="primary"
+        variant="underlined"
+        classNames={{
+          tabList: "gap-6 w-full relative rounded-none p-0 border-b border-divider",
+          cursor: "w-full bg-primary",
+          tab: "max-w-fit px-0 h-12",
+          tabContent: "group-data-[selected=true]:text-primary"
+        }}
+      >
+        <Tab key="payments" title="Payment Summary">
+          <PaymentSummaryReport
+            reportPeriod={sampleData.reportPeriod}
+            payments={sampleData.payments}
+            kpis={sampleData.paymentKpis}
+          />
+        </Tab>
+        <Tab key="budget" title="Budget Utilization">
+          <BudgetUtilizationReport
+            reportPeriod={sampleData.reportPeriod}
+            budgets={sampleData.budgets}
+            kpis={sampleData.budgetKpis}
+          />
+        </Tab>
+      </Tabs>
+    </div>
+  );
+};
+
+export default FinancePage;
