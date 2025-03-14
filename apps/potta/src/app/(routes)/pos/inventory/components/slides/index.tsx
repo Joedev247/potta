@@ -7,7 +7,7 @@ import CreateProduct from "./components/create_product";
 const SlideOverInventory = () => {
     const [data_to_show, setData_to_show] = useState("")
     return (
-        <Slider edit={false} buttonText="inventory" title={"Inventory"}>
+        <Slider edit={false} buttonText="add new product" title={"Add New Product"}>
             <div className="w-full">
                 {/* <SelectInventory /> */}
                 <CreateProduct />

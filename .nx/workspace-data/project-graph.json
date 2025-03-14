@@ -6308,6 +6308,15 @@
         "hash": "sha512-8TV6R3h2j7a91c+1DXdJi3Syo69zzIZbz7Lg5tORM5LEJG7X/E6a1V3drRyBRZq7/utz7A+c4OgYLiLcYGHG6w=="
       }
     },
+    "npm:@types/react-world-flags": {
+      "type": "npm",
+      "name": "npm:@types/react-world-flags",
+      "data": {
+        "version": "1.6.0",
+        "packageName": "@types/react-world-flags",
+        "hash": "sha512-j/uVy2fnG8gX3Ckic4sccYm9XjieasUsJDMqBDtdPdcwe3aFfz+iBbds+wxOiTzfe5BErVGjdFu6NO1hCg/7lw=="
+      }
+    },
     "npm:@types/responselike": {
       "type": "npm",
       "name": "npm:@types/responselike",
@@ -8205,6 +8214,15 @@
         "version": "1.4.0",
         "packageName": "country-data-list",
         "hash": "sha512-3i1Q1onE9MaqYPdtTUzZRZJY7lBXWpud3eWXrw3ckJyvOzXcsFALiy0Z4Giksy5ECpq9ajYijMPxfRZvVP65UA=="
+      }
+    },
+    "npm:country-flag-icons": {
+      "type": "npm",
+      "name": "npm:country-flag-icons",
+      "data": {
+        "version": "1.5.18",
+        "packageName": "country-flag-icons",
+        "hash": "sha512-z+Uzesi8u8IdkViqqbzzbkf3+a7WJpcET5B7sPwTg7GXqPYpVEgNlZ/FC3l8KO4mEf+mNkmzKLppKTN4PlCJEQ=="
       }
     },
     "npm:country-list-with-dial-code-and-flag": {
@@ -10907,6 +10925,15 @@
         "hash": "sha512-JV/yugV2uzW5iMRSiZAyDtQd+nxtUnjeLt0acNdw98kKLrvuRVyB80tsREOE7yvGVgalhZ6RNXCmEHkUKBKxew=="
       }
     },
+    "npm:input-format": {
+      "type": "npm",
+      "name": "npm:input-format",
+      "data": {
+        "version": "0.3.14",
+        "packageName": "input-format",
+        "hash": "sha512-gHMrgrbCgmT4uK5Um5eVDUohuV9lcs95ZUUN9Px2Y0VIfjTzT2wF8Q3Z4fwLFm7c5Z2OXCm53FHoovj6SlOKdg=="
+      }
+    },
     "npm:input-otp": {
       "type": "npm",
       "name": "npm:input-otp",
@@ -12014,6 +12041,15 @@
         "hash": "sha512-+bT2uH4E5LGE7h/n3evcS/sQlJXCpIp6ym8OWJ5eV6+67Dsql/LaaT7qJBAt2rzfoa/5QBGBhxDix1dMt2kQKQ=="
       }
     },
+    "npm:libphonenumber-js": {
+      "type": "npm",
+      "name": "npm:libphonenumber-js",
+      "data": {
+        "version": "1.11.20",
+        "packageName": "libphonenumber-js",
+        "hash": "sha512-/ipwAMvtSZRdiQBHqW1qxqeYiBMzncOQLVA+62MWYr7N4m7Q2jqpJ0WgT7zlOEOpyLRSqrMXidbJpC0J77AaKA=="
+      }
+    },
     "npm:license-webpack-plugin": {
       "type": "npm",
       "name": "npm:license-webpack-plugin",
@@ -12120,24 +12156,6 @@
         "version": "4.6.2",
         "packageName": "lodash.merge",
         "hash": "sha512-0KpjqXRVvrYyCsX1swR/XTK0va6VQkQM6MNo7PqW77ByjAhoARA8EfrP1N4+KlKj8YS0ZUCtRT/YUuhyYDujIQ=="
-      }
-    },
-    "npm:lodash.reduce": {
-      "type": "npm",
-      "name": "npm:lodash.reduce",
-      "data": {
-        "version": "4.6.0",
-        "packageName": "lodash.reduce",
-        "hash": "sha512-6raRe2vxCYBhpBu+B+TtNGUzah+hQjVdu3E17wfusjyrXBka2nBS8OH/gjVZ5PvHOhWmIZTYri09Z6n/QfnNMw=="
-      }
-    },
-    "npm:lodash.startswith": {
-      "type": "npm",
-      "name": "npm:lodash.startswith",
-      "data": {
-        "version": "4.2.1",
-        "packageName": "lodash.startswith",
-        "hash": "sha512-XClYR1h4/fJ7H+mmCKppbiBmljN/nGs73iq2SjCT9SF4CBPoUHzLvWmH1GtZMhMBZSiRkHXfeA2RY1eIlJ75ww=="
       }
     },
     "npm:lodash.uniq": {
@@ -13841,13 +13859,13 @@
         "hash": "sha512-8EPvlUL8u6EknPp1ISF5MQ3wx2OHJVXIP/iZc4wRh3iV3XozftZERDv9ANZeAtMlhNNQHdFoqcZHFUkBSTONfA=="
       }
     },
-    "npm:react-phone-input-2": {
+    "npm:react-phone-number-input": {
       "type": "npm",
-      "name": "npm:react-phone-input-2",
+      "name": "npm:react-phone-number-input",
       "data": {
-        "version": "2.15.1",
-        "packageName": "react-phone-input-2",
-        "hash": "sha512-W03abwhXcwUoq+vUFvC6ch2+LJYMN8qSOiO889UH6S7SyMCQvox/LF3QWt+cZagZrRdi5z2ON3omnjoCUmlaYw=="
+        "version": "3.4.12",
+        "packageName": "react-phone-number-input",
+        "hash": "sha512-Raob77KdtLGm49iC6nuOX9qy6Mg16idkgC7Y1mHmvG2WBYoauHpzxYNlfmFskQKeiztrJIwPhPzBhjFwjenNCA=="
       }
     },
     "npm:react-pro-sidebar": {
@@ -13911,6 +13929,15 @@
         "version": "1.8.11",
         "packageName": "react-window",
         "hash": "sha512-+SRbUVT2scadgFSWx+R1P754xHPEqvcfSfVX10QYg6POOz+WNgkN48pS+BtZNIMGiL1HYrSEiCkwsMS15QogEQ=="
+      }
+    },
+    "npm:react-world-flags": {
+      "type": "npm",
+      "name": "npm:react-world-flags",
+      "data": {
+        "version": "1.6.0",
+        "packageName": "react-world-flags",
+        "hash": "sha512-eutSeAy5YKoVh14js/JUCSlA6EBk1n4k+bDaV+NkNB50VhnG+f4QDTpYycnTUTsZ5cqw/saPmk0Z4Fa0VVZ1Iw=="
       }
     },
     "npm:read-cache": {
@@ -14894,6 +14921,15 @@
         "hash": "sha512-ot0WnXS9fgdkgIcePe6RHNk1WA8+muPa6cSjeR3V8K27q9BB1rTE3R1p7Hv0z1ZyAc8s6Vvv8DIyWf681MAt0w=="
       }
     },
+    "npm:svg-country-flags": {
+      "type": "npm",
+      "name": "npm:svg-country-flags",
+      "data": {
+        "version": "1.2.10",
+        "packageName": "svg-country-flags",
+        "hash": "sha512-xrqwo0TYf/h2cfPvGpjdSuSguUbri4vNNizBnwzoZnX0xGo3O5nGJMlbYEp7NOYcnPGBm6LE2axqDWSB847bLw=="
+      }
+    },
     "npm:svg-parser": {
       "type": "npm",
       "name": "npm:svg-parser",
@@ -15767,6 +15803,15 @@
         "hash": "sha512-BN22B5eaMMI9UMtjrGd5g5eCYPpCPDUy0FJXbYsaT5zYxjFOckS53SQDE3pWkVoWpHXVb3BrYcEN4Twa55B5cA=="
       }
     },
+    "npm:world-countries": {
+      "type": "npm",
+      "name": "npm:world-countries",
+      "data": {
+        "version": "5.0.0",
+        "packageName": "world-countries",
+        "hash": "sha512-wAfOT9Y5i/xnxNOdKJKXdOCw9Q3yQLahBUeuRol+s+o20F6h2a4tLEbJ1lBCYwEQ30Sf9Meqeipk1gib3YwF5w=="
+      }
+    },
     "npm:wrap-ansi-cjs": {
       "type": "npm",
       "name": "npm:wrap-ansi-cjs",
@@ -16019,11 +16064,6 @@
       },
       {
         "source": "superApp",
-        "target": "npm:react-phone-input-2",
-        "type": "static"
-      },
-      {
-        "source": "superApp",
         "target": "utilities",
         "type": "static"
       },
@@ -16081,6 +16121,16 @@
       },
       {
         "source": "potta",
+        "target": "npm:clsx",
+        "type": "static"
+      },
+      {
+        "source": "potta",
+        "target": "npm:tailwind-merge",
+        "type": "static"
+      },
+      {
+        "source": "potta",
         "target": "npm:@nx/next",
         "type": "static"
       },
@@ -16092,6 +16142,11 @@
       {
         "source": "potta",
         "target": "npm:@testing-library/react",
+        "type": "static"
+      },
+      {
+        "source": "potta",
+        "target": "npm:@tanstack/react-query",
         "type": "static"
       },
       {
@@ -16121,17 +16176,22 @@
       },
       {
         "source": "potta",
-        "target": "npm:@tanstack/react-query",
-        "type": "static"
-      },
-      {
-        "source": "potta",
         "target": "npm:@tanstack/react-table",
         "type": "static"
       },
       {
         "source": "potta",
         "target": "npm:yup",
+        "type": "static"
+      },
+      {
+        "source": "potta",
+        "target": "npm:react-hook-form",
+        "type": "static"
+      },
+      {
+        "source": "potta",
+        "target": "npm:@iconify/react",
         "type": "static"
       },
       {
@@ -16171,12 +16231,27 @@
       },
       {
         "source": "potta",
-        "target": "npm:remixicon",
+        "target": "npm:react-hot-toast",
         "type": "static"
       },
       {
         "source": "potta",
-        "target": "npm:react-hook-form",
+        "target": "npm:@hookform/resolvers",
+        "type": "static"
+      },
+      {
+        "source": "potta",
+        "target": "npm:libphonenumber-js",
+        "type": "static"
+      },
+      {
+        "source": "potta",
+        "target": "npm:react-world-flags",
+        "type": "static"
+      },
+      {
+        "source": "potta",
+        "target": "npm:remixicon",
         "type": "static"
       },
       {
@@ -16221,6 +16296,11 @@
       {
         "source": "@instanvi-global/source",
         "target": "npm:@nx/jest",
+        "type": "static"
+      },
+      {
+        "source": "@instanvi-global/source",
+        "target": "npm:@iconify/react",
         "type": "static"
       },
       {
@@ -16301,6 +16381,11 @@
       {
         "source": "@instanvi-global/source",
         "target": "npm:@types/react-dom",
+        "type": "static"
+      },
+      {
+        "source": "@instanvi-global/source",
+        "target": "npm:@types/react-world-flags",
         "type": "static"
       },
       {
@@ -16475,6 +16560,11 @@
       },
       {
         "source": "@instanvi-global/source",
+        "target": "npm:libphonenumber-js",
+        "type": "static"
+      },
+      {
+        "source": "@instanvi-global/source",
         "target": "npm:moment",
         "type": "static"
       },
@@ -16560,7 +16650,7 @@
       },
       {
         "source": "@instanvi-global/source",
-        "target": "npm:react-phone-input-2",
+        "target": "npm:react-phone-number-input",
         "type": "static"
       },
       {
@@ -16576,6 +16666,11 @@
       {
         "source": "@instanvi-global/source",
         "target": "npm:react-verification-input",
+        "type": "static"
+      },
+      {
+        "source": "@instanvi-global/source",
+        "target": "npm:react-world-flags",
         "type": "static"
       },
       {
@@ -29883,6 +29978,13 @@
         "type": "static"
       }
     ],
+    "npm:@types/react-world-flags": [
+      {
+        "source": "npm:@types/react-world-flags",
+        "target": "npm:@types/react",
+        "type": "static"
+      }
+    ],
     "npm:@types/responselike": [
       {
         "source": "npm:@types/responselike",
@@ -35564,6 +35666,23 @@
         "type": "static"
       }
     ],
+    "npm:input-format": [
+      {
+        "source": "npm:input-format",
+        "target": "npm:react",
+        "type": "static"
+      },
+      {
+        "source": "npm:input-format",
+        "target": "npm:react-dom",
+        "type": "static"
+      },
+      {
+        "source": "npm:input-format",
+        "target": "npm:prop-types",
+        "type": "static"
+      }
+    ],
     "npm:input-otp": [
       {
         "source": "npm:input-otp",
@@ -39565,44 +39684,39 @@
         "type": "static"
       }
     ],
-    "npm:react-phone-input-2": [
+    "npm:react-phone-number-input": [
       {
-        "source": "npm:react-phone-input-2",
+        "source": "npm:react-phone-number-input",
         "target": "npm:react",
         "type": "static"
       },
       {
-        "source": "npm:react-phone-input-2",
+        "source": "npm:react-phone-number-input",
         "target": "npm:react-dom",
         "type": "static"
       },
       {
-        "source": "npm:react-phone-input-2",
+        "source": "npm:react-phone-number-input",
         "target": "npm:classnames",
         "type": "static"
       },
       {
-        "source": "npm:react-phone-input-2",
-        "target": "npm:lodash.debounce",
+        "source": "npm:react-phone-number-input",
+        "target": "npm:country-flag-icons",
         "type": "static"
       },
       {
-        "source": "npm:react-phone-input-2",
-        "target": "npm:lodash.memoize",
+        "source": "npm:react-phone-number-input",
+        "target": "npm:input-format",
         "type": "static"
       },
       {
-        "source": "npm:react-phone-input-2",
-        "target": "npm:lodash.reduce",
+        "source": "npm:react-phone-number-input",
+        "target": "npm:libphonenumber-js",
         "type": "static"
       },
       {
-        "source": "npm:react-phone-input-2",
-        "target": "npm:lodash.startswith",
-        "type": "static"
-      },
-      {
-        "source": "npm:react-phone-input-2",
+        "source": "npm:react-phone-number-input",
         "target": "npm:prop-types",
         "type": "static"
       }
@@ -39793,6 +39907,28 @@
       {
         "source": "npm:react-window",
         "target": "npm:memoize-one@5.2.1",
+        "type": "static"
+      }
+    ],
+    "npm:react-world-flags": [
+      {
+        "source": "npm:react-world-flags",
+        "target": "npm:react",
+        "type": "static"
+      },
+      {
+        "source": "npm:react-world-flags",
+        "target": "npm:svg-country-flags",
+        "type": "static"
+      },
+      {
+        "source": "npm:react-world-flags",
+        "target": "npm:svgo",
+        "type": "static"
+      },
+      {
+        "source": "npm:react-world-flags",
+        "target": "npm:world-countries",
         "type": "static"
       }
     ],
@@ -42911,5 +43047,5 @@
   },
   "version": "6.0",
   "errors": [],
-  "computedAt": 1741299290240
+  "computedAt": 1741942536581
 }

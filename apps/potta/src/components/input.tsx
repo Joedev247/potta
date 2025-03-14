@@ -1,47 +1,47 @@
-import React from "react";
-import { FieldError, UseFormRegister } from "react-hook-form";
+import { cn } from 'lib/utils';
+import React, { HTMLAttributes, InputHTMLAttributes } from 'react';
+import {
+  FieldError,
+  FieldValues,
+  Path,
+  UseFormRegister,
+} from 'react-hook-form';
 
-type Props = {
-    label?: string;
-    type: string;
-    className?: string;
-    name: string;
-    errors?: FieldError;
-    placeholder?: string;
-    register?: UseFormRegister<any>;
-    onchange?: any;
-    value?: any;
-    height?: boolean;
-};
+interface Props<T extends FieldValues>
+  extends InputHTMLAttributes<HTMLInputElement> {
+  label?: string;
+  errors?: FieldError;
+  register?: UseFormRegister<T>;
+  inputClassName?: HTMLAttributes<HTMLDivElement>['className'];
+}
 
-const Input: React.FC<Props> = ({
-    label,
-    type,
-    className,
-    name,
-    placeholder,
-    errors,
-    register,
-    value,
-    height,
-    onchange
-}) => {
-    return (
-        <div className={`w-full ${className}`}>
-            {label && <span className="mb-3 text-gray-900 font-medium">{label}</span>}
-            <input
-                type={type}
-                onChange={onchange}
-                value={value}
-                // {...register(name)}
-                placeholder={placeholder}
-                className={`w-full ${height ? 'py-1.5' : 'py-2.5'} px-4 border border-gray-200 rounded-[2px] outline-none mt-2`}
-            />
-            {errors ? (
-                <small className="col-span-2 text-red-500">{errors?.message}</small>
-            ) : null}
-        </div>
-    );
+const Input = <T extends FieldValues>({
+  label,
+  className,
+  name,
+  placeholder,
+  errors,
+  register,
+  ...rest
+}: Props<T>) => {
+  return (
+    <div className={`w-full ${className}`}>
+      {label && <span className="mb-3 font-bold text-gray-900">{label}</span>}
+      <input
+        {...rest}
+        // onChange={onchange}
+        {...(register ? register(name as Path<T>) : {})}
+        placeholder={placeholder}
+        className={cn(
+          `w-full px-4 border border-gray-200 rounded-[2px] outline-none mt-2`,
+          className
+        )}
+      />
+      {errors ? (
+        <small className="col-span-2 text-red-500">{errors?.message}</small>
+      ) : null}
+    </div>
+  );
 };
 
 export default Input;

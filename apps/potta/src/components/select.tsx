@@ -13,9 +13,10 @@ interface SelectProps {
     onChange: any;
     bg: string;
     name?: string;
+    label?: string;
 }
 
-const Select: React.FC<SelectProps> = ({ options, selectedValue, onChange, bg, name, border }) => {
+const Select: React.FC<SelectProps> = ({ options, selectedValue, onChange, bg, name, border , label}) => {
     const [isOpen, setIsOpen] = useState(false);
 
     const toggleDropdown = () => {
@@ -28,7 +29,9 @@ const Select: React.FC<SelectProps> = ({ options, selectedValue, onChange, bg, n
     };
 
     return (
-        <div className={`relative inline-block ${border ? '' : 'border'} w-full md:w-full`}>
+      <>
+        {label && <span className=" text-gray-900 font-bold">{label}</span>}
+      <div className={`relative inline-block mt-2 ${border ? '' : 'border'} w-full md:w-full`}>
             <div
                 onClick={toggleDropdown}
                 className={`${bg} relative cursor-pointer px-3 py-2.5 pr-8 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 w-full`}
@@ -59,6 +62,7 @@ const Select: React.FC<SelectProps> = ({ options, selectedValue, onChange, bg, n
                 ))}
             </ul>
         </div>
+      </>
     );
 };
 

@@ -1,4 +1,4 @@
-"use client"
+'use client';
 import Box from './components/box';
 import InvoiceTableComponents from './components/table';
 
@@ -10,7 +10,7 @@ import Button from '@potta/components/button';
 import { useState } from 'react';
 import ModalInvoice from '@potta/app/(routes)/invoicing/components/modal';
 import useGetAllInvoice from '@potta/app/(routes)/invoicing/_hooks/useGetAllInvoice';
-import {v4 as uuid} from "uuid"
+import { v4 as uuid } from 'uuid';
 import DataGrid from './components/DataGrid';
 import CustomInput from './components/CustomInput';
 import CustomSelect, { IOption } from './components/CustomSelect';
@@ -18,64 +18,60 @@ const Invoice = () => {
   const [detailsModal, setDetailsModal] = useState<boolean>(false);
   const [page, setPage] = useState(1);
 
-  const {data, isLoading, isFetching, isError, refetch} = useGetAllInvoice({
-    limit:10,
-    page
-  })
+  const { data, isLoading, isFetching, isError, refetch } = useGetAllInvoice({
+    limit: 10,
+    page,
+  });
 
   const [selectedValue, setSelectedValue] = useState<string | null>(null);
 
   const options: IOption[] = [
-    { value: "option1", label: "Option 1" },
-    { value: "option2", label: "Option 2" },
-    { value: "option3", label: "Option 3" },
+    { value: 'option1', label: 'Option 1' },
+    { value: 'option2', label: 'Option 2' },
+    { value: 'option3', label: 'Option 3' },
   ];
 
-  if(isError){
-    return <div className={"w-full py-24 flex flex-col items-center justify-center"}>
-      An Error Occured
-      <button>
-        Refresh
-      </button>
-    </div>
+  if (isError) {
+    return (
+      <div className={'w-full py-24 flex flex-col items-center justify-center'}>
+        An Error Occured
+        <button>Refresh</button>
+      </div>
+    );
   }
   return (
     <div className="pt-10 px-14">
       <Box />
       <div className="flex justify-between w-full">
-        <div className="mt-5 w-[50%] flex space-x-2">
+        <div className="mt-5 w-[50%] flex items-center space-x-2">
           <div className="w-[65%]">
             <Search />
           </div>
-          <div className="w-[17%] mt-4">
-            <Select
-              options={[{ label: 'Filter', value: 'Filter' }]}
-              selectedValue={'Filter'}
-              onChange={undefined}
-              bg={''}
-            />
-          </div>
-          <div className="w-[17%] mt-4">
-            <Select
-              options={[{ label: 'Filter', value: 'Filter' }]}
-              selectedValue={'Filter'}
-              onChange={undefined}
-              bg={''}
-            />
-          </div>
+
+          <CustomSelect
+            options={options}
+            value={selectedValue}
+            onChange={setSelectedValue}
+            placeholder="Choose an option"
+          />
+          <CustomSelect
+            options={options}
+            value={selectedValue}
+            onChange={setSelectedValue}
+            placeholder="Choose an option"
+          />
         </div>
         <div className="w-[50%] flex justify-end">
           <div className="flex mt-10 space-x-2">
             <div>
               {/*<Link href={'/invoicing/new_invoice'}>*/}
-                <Button
-                  text={'Export'}
-                  icon={<i className="ri-upload-2-line"></i>}
-                  theme="lightBlue"
-                  type={'button'}
-                  color={true}
-
-                />
+              <Button
+                text={'Export'}
+                icon={<i className="ri-upload-2-line"></i>}
+                theme="lightBlue"
+                type={'button'}
+                color={true}
+              />
               {/*</Link>*/}
             </div>
             <div>
@@ -94,21 +90,30 @@ const Invoice = () => {
           </div>
         </div>
       </div>
-      {
-        detailsModal ? <ModalInvoice open={detailsModal} setOpen={(bool)=> setDetailsModal((bool))} /> : null
-      }
+      {detailsModal ? (
+        <ModalInvoice
+          open={detailsModal}
+          setOpen={(bool) => setDetailsModal(bool)}
+        />
+      ) : null}
 
-<CustomInput />
-<CustomSelect
+      {/* <CustomInput />
+      <CustomSelect
         options={options}
-        value={selectedValue }
+        value={selectedValue}
         onChange={setSelectedValue}
         placeholder="Choose an option"
-      />
+      /> */}
       <div className="mt-5">
-        <InvoiceTableComponents isInvoiceDetailsOpen={detailsModal} onInvoiceDetailsClose={()=>{setDetailsModal((false))}} onInvoiceDetailsOpen={()=> setDetailsModal((true))} onDeleteModal={()=>{}}  />
+        <InvoiceTableComponents
+          isInvoiceDetailsOpen={detailsModal}
+          onInvoiceDetailsClose={() => {
+            setDetailsModal(false);
+          }}
+          onInvoiceDetailsOpen={() => setDetailsModal(true)}
+          onDeleteModal={() => {}}
+        />
       </div>
-
     </div>
   );
 };

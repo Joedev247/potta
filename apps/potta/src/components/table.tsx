@@ -11,15 +11,27 @@ interface TableProps {
   pagination?: boolean;
   ExpandableComponent?: FC<any> | null;
   size?: boolean;
+ 
+  paginationServer?: boolean;
+  paginationTotalRows?: number;
+  onChangePage?: (page: number) => void;
+  onChangeRowsPerPage?: (perPage: number, page: number) => void;
+
+
 }
 
-const MyTable: FC<TableProps> = ({
+const MyTable: FC<TableProps & { pending?: boolean }> = ({
   columns,
   data,
   expanded,
   pagination,
   ExpandableComponent,
   size,
+  pending,
+  paginationServer = false,
+  paginationTotalRows,
+  onChangePage,
+  onChangeRowsPerPage,
 }) => {
   const customStyles = {
     headCells: {
@@ -49,16 +61,9 @@ const MyTable: FC<TableProps> = ({
     },
   };
 
-  const [pending, setPending] = useState<boolean>(true);
 
-  useEffect(() => {
-    const timeout = setTimeout(() => {
-      setPending(false);
-    }, 2000);
-    return () => clearTimeout(timeout);
-  }, []);
   return (
-    <div className="border">
+    <div className="border ">
       <DataTable
         customStyles={customStyles}
         columns={columns}
@@ -68,6 +73,10 @@ const MyTable: FC<TableProps> = ({
         pagination={pagination !== false}
         expandableRows={!expanded} // Ensure expandableRows is a boolean
         expandableRowsComponent={ExpandableComponent || (() => null)}
+        paginationServer={paginationServer} // Enable server-side pagination
+        paginationTotalRows={paginationTotalRows} // Total rows from backend
+        onChangePage={onChangePage} // Handle page change
+        onChangeRowsPerPage={onChangeRowsPerPage} // Handle per-page change
         progressPending={pending}
         progressComponent={<CustomLoader />}
       />

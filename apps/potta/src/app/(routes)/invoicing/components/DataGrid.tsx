@@ -4,11 +4,13 @@ import {
   getCoreRowModel,
   useReactTable,
 } from '@tanstack/react-table';
+import { cn } from 'lib/utils';
 import React from 'react';
+import { IColumnDef } from '../_utils/types';
 
 interface IDataGrid<T> {
   data: T[];
-  column: ColumnDef<T>[];
+  column: IColumnDef<T>[];
 }
 const DataGrid = <T,>({ column: columns, data }: IDataGrid<T>) => {
   const table = useReactTable({
@@ -18,14 +20,18 @@ const DataGrid = <T,>({ column: columns, data }: IDataGrid<T>) => {
   });
   return (
     <div className="mt-10">
-      <table className="min-w-full border border-collapse border-gray-300 table-auto">
-        <thead>
-          {table.getHeaderGroups().map((headerGroup) => (
+      <table className="min-w-full border-collapse border-gray-300 table-auto">
+        <thead className="border">
+          {table.getHeaderGroups().map((headerGroup, i) => (
             <tr key={headerGroup.id}>
               {headerGroup.headers.map((header) => (
                 <th
                   key={header.id}
-                  className="px-4 py-4 text-left border-b bg- bg-green-50"
+                  className={cn(
+                    'px-4 py-4 text-left border-b bg-[#F3FBFB] ',
+                    (header.column.columnDef as IColumnDef<T>).addBorderRight &&
+                      'border-r'
+                  )}
                 >
                   {header.isPlaceholder
                     ? null
@@ -40,9 +46,16 @@ const DataGrid = <T,>({ column: columns, data }: IDataGrid<T>) => {
         </thead>
         <tbody>
           {table.getRowModel().rows.map((row) => (
-            <tr key={row.id} className="hover:bg-gray-50">
+            <tr key={row.id} className="border-b hover:bg-gray-50">
               {row.getVisibleCells().map((cell) => (
-                <td key={cell.id} className={'py-4 px-4 border-t'}>
+                <td
+                  key={cell.id}
+                  className={cn(
+                    `px-4 py-4 text-left`,
+                    (cell.column.columnDef as IColumnDef<T>).addBorderRight &&
+                      ' border-r'
+                  )}
+                >
                   {flexRender(cell.column.columnDef.cell, cell.getContext())}
                 </td>
               ))}

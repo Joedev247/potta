@@ -14,4 +14,4 @@ export const productSchema=yup.object().shape({
   image: yup.string(),
 })
 
-export type IProductPayload = yup.InferType<typeof productSchema>;
+export type ProductPayload = yup.InferType<typeof productSchema>;
