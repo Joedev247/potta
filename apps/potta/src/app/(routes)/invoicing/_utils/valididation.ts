@@ -114,6 +114,8 @@ export const customerValidationSchema = yup.object().shape({
     .length(10, 'Tax ID must be exactly 10 characters'), // Exact length of 10
 });
 
+export type ICustomerPayload = yup.InferType<typeof customerValidationSchema>;
+
 export type IInvoicePayload = yup.InferType<typeof invoiceSchema>;
 
 // Example usage:
