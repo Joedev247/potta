@@ -81,6 +81,39 @@ export const invoiceSchema = yup.object().shape({
   lineItems: yup.array().of(lineItemValidationSchema).optional(),
 });
 
+export const customerValidationSchema = yup.object().shape({
+  firstName: yup.string().required('First name is required'), // Required string
+  lastName: yup.string().required('Last name is required'), // Required string
+  email: yup
+    .string()
+    .email('Invalid email format')
+    .required('Email is required'), // Valid email format
+  phone: yup.string().required('Phone number is required'), // Required string
+  gender: yup.string().required('Gender is required'), // Required string
+  address: yup.object().shape({
+    address: yup.string().required('Address is required'), // Required string
+    city: yup.string().required('City is required'), // Required string
+    state: yup.string().required('State is required'), // Required string
+    country: yup.string().required('Country is required'), // Required string
+    postalCode: yup.string().required('Postal code is required'), // Required string
+    latitude: yup.number().required('Latitude is required'), // Required number
+    longitude: yup.number().required('Longitude is required'), // Required number
+  }),
+  type: yup
+    .string()
+    .required('Type is required')
+    .oneOf(['individual', 'business'], 'Invalid type'), // Specific string value
+  contactPerson: yup.string().required('Contact person is required'), // Required string
+  creditLimit: yup
+    .number()
+    .required('Credit limit is required')
+    .positive('Credit limit must be positive'), // Positive number
+  taxId: yup
+    .string()
+    .required('Tax ID is required')
+    .length(10, 'Tax ID must be exactly 10 characters'), // Exact length of 10
+});
+
 export type IInvoicePayload = yup.InferType<typeof invoiceSchema>;
 
 // Example usage:

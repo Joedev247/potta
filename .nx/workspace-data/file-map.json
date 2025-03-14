@@ -49,101 +49,6 @@
   ],
   "fileMap": {
     "projectFileMap": {
-      "core": [
-        {
-          "file": "libs/core/.eslintrc.json",
-          "hash": "11012487992710232822"
-        },
-        {
-          "file": "libs/core/README.md",
-          "hash": "862743182427189852"
-        },
-        {
-          "file": "libs/core/project.json",
-          "hash": "8215491323991500792"
-        },
-        {
-          "file": "libs/core/src/index.ts",
-          "hash": "1391443467439822800"
-        },
-        {
-          "file": "libs/core/src/lib/core.spec.tsx",
-          "hash": "10083302775005561580",
-          "deps": [
-            "npm:@testing-library/react"
-          ]
-        },
-        {
-          "file": "libs/core/src/lib/core.tsx",
-          "hash": "12083220179364162819"
-        },
-        {
-          "file": "libs/core/src/lib/hello-server.tsx",
-          "hash": "2397568674684759047"
-        },
-        {
-          "file": "libs/core/src/server.ts",
-          "hash": "8912437808649717296"
-        },
-        {
-          "file": "libs/core/tsconfig.json",
-          "hash": "14088618039610991405"
-        },
-        {
-          "file": "libs/core/tsconfig.lib.json",
-          "hash": "1536859351713546153"
-        }
-      ],
-      "utilities": [
-        {
-          "file": "libs/utilities/.eslintrc.json",
-          "hash": "11012487992710232822"
-        },
-        {
-          "file": "libs/utilities/README.md",
-          "hash": "13228732804139331838"
-        },
-        {
-          "file": "libs/utilities/project.json",
-          "hash": "699343638286385166"
-        },
-        {
-          "file": "libs/utilities/src/index.ts",
-          "hash": "4979336273987222930"
-        },
-        {
-          "file": "libs/utilities/src/lib/configs/axios.ts",
-          "hash": "3794232511606065549",
-          "deps": [
-            "npm:crypto-js",
-            "npm:axios"
-          ]
-        },
-        {
-          "file": "libs/utilities/src/lib/configs/env.ts",
-          "hash": "12101586654834214904"
-        },
-        {
-          "file": "libs/utilities/src/lib/helpers/index.ts",
-          "hash": "10922730425443113868",
-          "deps": [
-            "npm:crypto-js",
-            "npm:country-list-with-dial-code-and-flag"
-          ]
-        },
-        {
-          "file": "libs/utilities/src/server.ts",
-          "hash": "5519843671682787663"
-        },
-        {
-          "file": "libs/utilities/tsconfig.json",
-          "hash": "14088618039610991405"
-        },
-        {
-          "file": "libs/utilities/tsconfig.lib.json",
-          "hash": "1536859351713546153"
-        }
-      ],
       "@instanvi-global/source": [
         {
           "file": ".editorconfig",
@@ -298,6 +203,166 @@
         {
           "file": "tsconfig.base.json",
           "hash": "16257537213835165230"
+        }
+      ],
+      "ui-components": [
+        {
+          "file": "libs/ui-components/.eslintrc.json",
+          "hash": "11012487992710232822"
+        },
+        {
+          "file": "libs/ui-components/README.md",
+          "hash": "9995608240359739017"
+        },
+        {
+          "file": "libs/ui-components/project.json",
+          "hash": "14073386014989480526"
+        },
+        {
+          "file": "libs/ui-components/src/index.ts",
+          "hash": "3890638239984739746"
+        },
+        {
+          "file": "libs/ui-components/src/lib/button/button.css",
+          "hash": "3244421341483603138"
+        },
+        {
+          "file": "libs/ui-components/src/lib/button/button.spec.tsx",
+          "hash": "6024628988384396619",
+          "deps": [
+            "npm:@testing-library/react",
+            "npm:react"
+          ]
+        },
+        {
+          "file": "libs/ui-components/src/lib/button/button.tsx",
+          "hash": "14294175664207578953",
+          "deps": [
+            "npm:react"
+          ]
+        },
+        {
+          "file": "libs/ui-components/src/lib/checkbox/checkbox.spec.tsx",
+          "hash": "16773171947338653164",
+          "deps": [
+            "npm:@testing-library/react"
+          ]
+        },
+        {
+          "file": "libs/ui-components/src/lib/checkbox/checkbox.tsx",
+          "hash": "9330927587529167350",
+          "deps": [
+            "npm:react"
+          ]
+        },
+        {
+          "file": "libs/ui-components/src/lib/file-upload/file-upload.spec.tsx",
+          "hash": "13729243159011131943",
+          "deps": [
+            "npm:@testing-library/react"
+          ]
+        },
+        {
+          "file": "libs/ui-components/src/lib/file-upload/file-upload.tsx",
+          "hash": "15745855549206970964",
+          "deps": [
+            "npm:next",
+            "npm:react",
+            "npm:react-dropzone"
+          ]
+        },
+        {
+          "file": "libs/ui-components/src/lib/input/input.css",
+          "hash": "10999915296015192048"
+        },
+        {
+          "file": "libs/ui-components/src/lib/input/input.spec.tsx",
+          "hash": "1956756580387732921",
+          "deps": [
+            "npm:@testing-library/react"
+          ]
+        },
+        {
+          "file": "libs/ui-components/src/lib/input/input.tsx",
+          "hash": "4109157862373855892",
+          "deps": [
+            "npm:@heroicons/react",
+            "npm:react-hook-form",
+            "npm:react"
+          ]
+        },
+        {
+          "file": "libs/ui-components/src/lib/modal/modal.spec.tsx",
+          "hash": "6472563329112809072",
+          "deps": [
+            "npm:@testing-library/react"
+          ]
+        },
+        {
+          "file": "libs/ui-components/src/lib/modal/modal.tsx",
+          "hash": "14108573289638167965",
+          "deps": [
+            "npm:react",
+            "npm:@headlessui/react"
+          ]
+        },
+        {
+          "file": "libs/ui-components/src/lib/search/search.css",
+          "hash": "10172889319337957757"
+        },
+        {
+          "file": "libs/ui-components/src/lib/search/search.spec.tsx",
+          "hash": "1172712103285773831",
+          "deps": [
+            "npm:@testing-library/react"
+          ]
+        },
+        {
+          "file": "libs/ui-components/src/lib/search/search.tsx",
+          "hash": "16498275226319806576",
+          "deps": [
+            "npm:react",
+            "npm:next"
+          ]
+        },
+        {
+          "file": "libs/ui-components/src/lib/select/select.spec.tsx",
+          "hash": "16176134918512818464"
+        },
+        {
+          "file": "libs/ui-components/src/lib/select/select.tsx",
+          "hash": "15616048433895510667",
+          "deps": [
+            "npm:react",
+            "npm:react-select"
+          ]
+        },
+        {
+          "file": "libs/ui-components/src/lib/toast/toast.spec.tsx",
+          "hash": "17609396385370758005",
+          "deps": [
+            "npm:@testing-library/react"
+          ]
+        },
+        {
+          "file": "libs/ui-components/src/lib/toast/toast.tsx",
+          "hash": "9392764110185592652",
+          "deps": [
+            "npm:react",
+            "npm:react-hot-toast"
+          ]
+        },
+        {
+          "file": "libs/ui-components/src/server.ts",
+          "hash": "5519843671682787663"
+        },
+        {
+          "file": "libs/ui-components/tsconfig.json",
+          "hash": "14088618039610991405"
+        },
+        {
+          "file": "libs/ui-components/tsconfig.lib.json",
+          "hash": "1536859351713546153"
         }
       ],
       "superApp": [
@@ -1754,6 +1819,101 @@
         {
           "file": "apps/superApp/tsconfig.spec.json",
           "hash": "6922413205408300107"
+        }
+      ],
+      "utilities": [
+        {
+          "file": "libs/utilities/.eslintrc.json",
+          "hash": "11012487992710232822"
+        },
+        {
+          "file": "libs/utilities/README.md",
+          "hash": "13228732804139331838"
+        },
+        {
+          "file": "libs/utilities/project.json",
+          "hash": "699343638286385166"
+        },
+        {
+          "file": "libs/utilities/src/index.ts",
+          "hash": "4979336273987222930"
+        },
+        {
+          "file": "libs/utilities/src/lib/configs/axios.ts",
+          "hash": "3794232511606065549",
+          "deps": [
+            "npm:crypto-js",
+            "npm:axios"
+          ]
+        },
+        {
+          "file": "libs/utilities/src/lib/configs/env.ts",
+          "hash": "12101586654834214904"
+        },
+        {
+          "file": "libs/utilities/src/lib/helpers/index.ts",
+          "hash": "10922730425443113868",
+          "deps": [
+            "npm:crypto-js",
+            "npm:country-list-with-dial-code-and-flag"
+          ]
+        },
+        {
+          "file": "libs/utilities/src/server.ts",
+          "hash": "5519843671682787663"
+        },
+        {
+          "file": "libs/utilities/tsconfig.json",
+          "hash": "14088618039610991405"
+        },
+        {
+          "file": "libs/utilities/tsconfig.lib.json",
+          "hash": "1536859351713546153"
+        }
+      ],
+      "core": [
+        {
+          "file": "libs/core/.eslintrc.json",
+          "hash": "11012487992710232822"
+        },
+        {
+          "file": "libs/core/README.md",
+          "hash": "862743182427189852"
+        },
+        {
+          "file": "libs/core/project.json",
+          "hash": "8215491323991500792"
+        },
+        {
+          "file": "libs/core/src/index.ts",
+          "hash": "1391443467439822800"
+        },
+        {
+          "file": "libs/core/src/lib/core.spec.tsx",
+          "hash": "10083302775005561580",
+          "deps": [
+            "npm:@testing-library/react"
+          ]
+        },
+        {
+          "file": "libs/core/src/lib/core.tsx",
+          "hash": "12083220179364162819"
+        },
+        {
+          "file": "libs/core/src/lib/hello-server.tsx",
+          "hash": "2397568674684759047"
+        },
+        {
+          "file": "libs/core/src/server.ts",
+          "hash": "8912437808649717296"
+        },
+        {
+          "file": "libs/core/tsconfig.json",
+          "hash": "14088618039610991405"
+        },
+        {
+          "file": "libs/core/tsconfig.lib.json",
+          "hash": "1536859351713546153"
         }
       ],
       "potta": [
@@ -4122,166 +4282,6 @@
         {
           "file": "apps/potta/type/index.d.ts",
           "hash": "9950754265127537988"
-        }
-      ],
-      "ui-components": [
-        {
-          "file": "libs/ui-components/.eslintrc.json",
-          "hash": "11012487992710232822"
-        },
-        {
-          "file": "libs/ui-components/README.md",
-          "hash": "9995608240359739017"
-        },
-        {
-          "file": "libs/ui-components/project.json",
-          "hash": "14073386014989480526"
-        },
-        {
-          "file": "libs/ui-components/src/index.ts",
-          "hash": "3890638239984739746"
-        },
-        {
-          "file": "libs/ui-components/src/lib/button/button.css",
-          "hash": "3244421341483603138"
-        },
-        {
-          "file": "libs/ui-components/src/lib/button/button.spec.tsx",
-          "hash": "6024628988384396619",
-          "deps": [
-            "npm:@testing-library/react",
-            "npm:react"
-          ]
-        },
-        {
-          "file": "libs/ui-components/src/lib/button/button.tsx",
-          "hash": "14294175664207578953",
-          "deps": [
-            "npm:react"
-          ]
-        },
-        {
-          "file": "libs/ui-components/src/lib/checkbox/checkbox.spec.tsx",
-          "hash": "16773171947338653164",
-          "deps": [
-            "npm:@testing-library/react"
-          ]
-        },
-        {
-          "file": "libs/ui-components/src/lib/checkbox/checkbox.tsx",
-          "hash": "9330927587529167350",
-          "deps": [
-            "npm:react"
-          ]
-        },
-        {
-          "file": "libs/ui-components/src/lib/file-upload/file-upload.spec.tsx",
-          "hash": "13729243159011131943",
-          "deps": [
-            "npm:@testing-library/react"
-          ]
-        },
-        {
-          "file": "libs/ui-components/src/lib/file-upload/file-upload.tsx",
-          "hash": "15745855549206970964",
-          "deps": [
-            "npm:next",
-            "npm:react",
-            "npm:react-dropzone"
-          ]
-        },
-        {
-          "file": "libs/ui-components/src/lib/input/input.css",
-          "hash": "10999915296015192048"
-        },
-        {
-          "file": "libs/ui-components/src/lib/input/input.spec.tsx",
-          "hash": "1956756580387732921",
-          "deps": [
-            "npm:@testing-library/react"
-          ]
-        },
-        {
-          "file": "libs/ui-components/src/lib/input/input.tsx",
-          "hash": "4109157862373855892",
-          "deps": [
-            "npm:@heroicons/react",
-            "npm:react-hook-form",
-            "npm:react"
-          ]
-        },
-        {
-          "file": "libs/ui-components/src/lib/modal/modal.spec.tsx",
-          "hash": "6472563329112809072",
-          "deps": [
-            "npm:@testing-library/react"
-          ]
-        },
-        {
-          "file": "libs/ui-components/src/lib/modal/modal.tsx",
-          "hash": "14108573289638167965",
-          "deps": [
-            "npm:react",
-            "npm:@headlessui/react"
-          ]
-        },
-        {
-          "file": "libs/ui-components/src/lib/search/search.css",
-          "hash": "10172889319337957757"
-        },
-        {
-          "file": "libs/ui-components/src/lib/search/search.spec.tsx",
-          "hash": "1172712103285773831",
-          "deps": [
-            "npm:@testing-library/react"
-          ]
-        },
-        {
-          "file": "libs/ui-components/src/lib/search/search.tsx",
-          "hash": "16498275226319806576",
-          "deps": [
-            "npm:react",
-            "npm:next"
-          ]
-        },
-        {
-          "file": "libs/ui-components/src/lib/select/select.spec.tsx",
-          "hash": "16176134918512818464"
-        },
-        {
-          "file": "libs/ui-components/src/lib/select/select.tsx",
-          "hash": "15616048433895510667",
-          "deps": [
-            "npm:react",
-            "npm:react-select"
-          ]
-        },
-        {
-          "file": "libs/ui-components/src/lib/toast/toast.spec.tsx",
-          "hash": "17609396385370758005",
-          "deps": [
-            "npm:@testing-library/react"
-          ]
-        },
-        {
-          "file": "libs/ui-components/src/lib/toast/toast.tsx",
-          "hash": "9392764110185592652",
-          "deps": [
-            "npm:react",
-            "npm:react-hot-toast"
-          ]
-        },
-        {
-          "file": "libs/ui-components/src/server.ts",
-          "hash": "5519843671682787663"
-        },
-        {
-          "file": "libs/ui-components/tsconfig.json",
-          "hash": "14088618039610991405"
-        },
-        {
-          "file": "libs/ui-components/tsconfig.lib.json",
-          "hash": "1536859351713546153"
         }
       ]
     },
