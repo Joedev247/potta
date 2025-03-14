@@ -1,5 +1,45 @@
 import * as yup from 'yup';
 
+export const lineItemValidationSchema = yup.object().shape({
+  description: yup.string().required('Description is required'), // Required string
+  quantity: yup
+    .number()
+    .required('Quantity is required')
+    .positive('Quantity must be positive')
+    .integer('Quantity must be an integer'), // Positive integer
+  discountCap: yup
+    .number()
+    .required('Discount cap is required')
+    .positive('Discount cap must be positive'), // Positive number
+  discountType: yup
+    .string()
+    .required('Discount type is required')
+    .oneOf(['PercentageWithCap'], 'Invalid discount type'), // Specific string value
+  unitPrice: yup
+    .number()
+    .required('Unit price is required')
+    .positive('Unit price must be positive'), // Positive number
+  taxRate: yup
+    .number()
+    .required('Tax rate is required')
+    .positive('Tax rate must be positive'), // Positive number
+  discountRate: yup
+    .number()
+    .required('Discount rate is required')
+    .positive('Discount rate must be positive'), // Positive number
+  paymentTerms: yup.string().required('Payment terms are required'), // Required string
+  paymentMethod: yup
+    .string()
+    .required('Payment method is required')
+    .oneOf(['ACH Transfer'], 'Invalid payment method'), // Specific string value
+  paymentReference: yup.string().required('Payment reference is required'), // Required string
+  productId: yup.string().optional().uuid('Product ID must be a valid UUID'), // UUID validation
+  salesReceiptId: yup
+    .string()
+    .optional()
+    .uuid('Sales receipt ID must be a valid UUID'), // UUID validation
+});
+
 export const invoiceSchema = yup.object().shape({
   customerId: yup.string().uuid().required(),
   currency: yup.string().oneOf(['XAF']).required('Currency is required'),
@@ -38,55 +78,7 @@ export const invoiceSchema = yup.object().shape({
     .oneOf(['Overdue'], 'must be a valid status')
     .required('status is required'),
   paymentReference: yup.string().required('payment reference is required'),
-  lineItems: yup
-    .array()
-    .of(
-      yup.object().shape({
-        description: yup.string().required('Description is required'), // Required string
-        quantity: yup
-          .number()
-          .required('Quantity is required')
-          .positive('Quantity must be positive')
-          .integer('Quantity must be an integer'), // Positive integer
-        discountCap: yup
-          .number()
-          .required('Discount cap is required')
-          .positive('Discount cap must be positive'), // Positive number
-        discountType: yup
-          .string()
-          .required('Discount type is required')
-          .oneOf(['PercentageWithCap'], 'Invalid discount type'), // Specific string value
-        unitPrice: yup
-          .number()
-          .required('Unit price is required')
-          .positive('Unit price must be positive'), // Positive number
-        taxRate: yup
-          .number()
-          .required('Tax rate is required')
-          .positive('Tax rate must be positive'), // Positive number
-        discountRate: yup
-          .number()
-          .required('Discount rate is required')
-          .positive('Discount rate must be positive'), // Positive number
-        paymentTerms: yup.string().required('Payment terms are required'), // Required string
-        paymentMethod: yup
-          .string()
-          .required('Payment method is required')
-          .oneOf(['ACH Transfer'], 'Invalid payment method'), // Specific string value
-        paymentReference: yup
-          .string()
-          .required('Payment reference is required'), // Required string
-        productId: yup
-          .string()
-          .optional()
-          .uuid('Product ID must be a valid UUID'), // UUID validation
-        salesReceiptId: yup
-          .string()
-          .optional()
-          .uuid('Sales receipt ID must be a valid UUID'), // UUID validation
-      })
-    )
-    .optional(),
+  lineItems: yup.array().of(lineItemValidationSchema).optional(),
 });
 
 export type IInvoicePayload = yup.InferType<typeof invoiceSchema>;
