@@ -88,7 +88,11 @@ export const customerValidationSchema = yup.object().shape({
     .string()
     .email('Invalid email format')
     .required('Email is required'), // Valid email format
-  phone: yup.string().required('Phone number is required'), // Required string
+  phone: yup
+    .string()
+    .min(9, 'Phone numbers must be atleast 9 characters')
+    .matches(/^\d+$/, 'Phone number must contain only digits')
+    .required('Phone number is required'), // Required string
   gender: yup.string().required('Gender is required'), // Required string
   address: yup.object().shape({
     address: yup.string().required('Address is required'), // Required string

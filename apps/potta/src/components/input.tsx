@@ -22,10 +22,11 @@ const Input = <T extends FieldValues>({
   placeholder,
   errors,
   register,
+  inputClassName,
   ...rest
 }: Props<T>) => {
   return (
-    <div className={`w-full ${className}`}>
+    <div className={cn(`w-full `, className)}>
       {label && <span className="mb-3 font-bold text-gray-900">{label}</span>}
       <input
         {...rest}
@@ -33,8 +34,8 @@ const Input = <T extends FieldValues>({
         {...(register ? register(name as Path<T>) : {})}
         placeholder={placeholder}
         className={cn(
-          `w-full px-4 border border-gray-200 rounded-[2px] outline-none mt-2`,
-          className
+          `w-full px-4 border border-gray-200 rounded-[2px] outline-none mt-2  py-3 `,
+          inputClassName
         )}
       />
       {errors ? (

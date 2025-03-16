@@ -16201,6 +16201,11 @@
       },
       {
         "source": "potta",
+        "target": "npm:@hookform/resolvers",
+        "type": "static"
+      },
+      {
+        "source": "potta",
         "target": "npm:uuid",
         "type": "static"
       },
@@ -16232,11 +16237,6 @@
       {
         "source": "potta",
         "target": "npm:react-hot-toast",
-        "type": "static"
-      },
-      {
-        "source": "potta",
-        "target": "npm:@hookform/resolvers",
         "type": "static"
       },
       {
@@ -43047,5 +43047,5 @@
   },
   "version": "6.0",
   "errors": [],
-  "computedAt": 1741944664073
+  "computedAt": 1742161028796
 }

@@ -8,7 +8,7 @@ import {
   DrawerHeader,
 } from '@nextui-org/react';
 import React, { FC } from 'react';
-import { useForm } from 'react-hook-form';
+import { SubmitHandler, useForm } from 'react-hook-form';
 import {
   customerValidationSchema,
   ICustomerPayload,
@@ -16,7 +16,7 @@ import {
 import Input from '@potta/components/input';
 // import Button from '@potta/components/button';
 
-interface IAddCustomerDrawer {
+export interface IAddCustomerDrawer {
   open: boolean;
   onClose: () => void;
 }
@@ -25,16 +25,33 @@ const AddCustomerDrawer: FC<IAddCustomerDrawer> = ({ onClose, open }) => {
     mode: 'onChange',
     resolver: yupResolver(customerValidationSchema),
   });
+
+  const onSubmit: SubmitHandler<ICustomerPayload> = (inputs) => {
+    console.log(inputs);
+  };
   return (
-    <Drawer isOpen={open} onOpenChange={onClose}>
-      <DrawerContent>
-        {(onClose) => (
+    <>
+      <Drawer
+        isOpen={open}
+        onOpenChange={onClose}
+        placement="right"
+        shouldBlockScroll={true}
+        // closeButton={<div className="absolute right-0">close</div>}
+        hideCloseButton
+      >
+        {open && (
+          <div
+            className="fixed inset-0 z-40 bg-black/50" // Custom overlay styling
+            onClick={onClose} // Close the drawer when the overlay is clicked
+          />
+        )}
+        <DrawerContent className="bg-white min-w-[40vw] px-4 ">
           <>
-            <DrawerHeader>
-              <h3>Add Customers</h3>
+            <DrawerHeader className="relative">
+              <h3 className="text-xl font-extrabold">New Customers</h3>
             </DrawerHeader>
-            <form action="">
-              <DrawerBody>
+            <form onSubmit={form.handleSubmit(onSubmit)}>
+              <DrawerBody className="flex flex-col gap-8">
                 <Input
                   label="Customer first name"
                   register={form.register}
@@ -110,13 +127,13 @@ const AddCustomerDrawer: FC<IAddCustomerDrawer> = ({ onClose, open }) => {
                 </div>
               </DrawerBody>
               <DrawerFooter>
-                <Button>Add Customer</Button>
+                <Button type="submit">Add Customer</Button>
               </DrawerFooter>
             </form>
           </>
-        )}
-      </DrawerContent>
-    </Drawer>
+        </DrawerContent>
+      </Drawer>
+    </>
   );
 };
 

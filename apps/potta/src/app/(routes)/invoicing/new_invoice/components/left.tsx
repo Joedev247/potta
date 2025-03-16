@@ -148,7 +148,7 @@ const Left = () => {
     <>
       <form onSubmit={form.handleSubmit(onSubmit)}>
         <div className="max-h-[90vh] overflow-y-auto ">
-          <div className="grid w-full grid-cols-4 gap-4">
+          <div className="grid w-full grid-cols-2 gap-4">
             <Select
               options={[
                 { label: 'USD ($)', value: 'USD ($)' },
@@ -201,12 +201,33 @@ const Left = () => {
             </div>
             <button
               type="button"
+              onClick={() => setIsAddCustomerDrawer(true)}
               className="flex items-center justify-center text-white bg-green-700 rounded-full size-8"
             >
               <Icon icon="material-symbols:add" width="24" height="24" />
             </button>
           </div>
-
+          <div>
+            <p>Payment terms</p>
+            <textarea
+              value={note}
+              onChange={(e) => handleInputChange('note', e.target.value)}
+              className="w-full p-2 border outline-none h-36"
+            />
+          </div>
+          <div>
+            <Input label="issuedDate" type="date" />
+            <Input label="dueDate" />
+          </div>
+          <div>
+            <Input label="invoiceTotal" />
+            <Input label="invoiceNumber" />
+            <Input label="taxRate" />
+            <Input label="taxAmount" />
+            <Input label="billingAddress" />
+            <Input label="status" />
+            <Input label="paymentReference" />
+          </div>
           <div className="flex flex-col gap-2 pt-10 my-5 min-h-[40vh]">
             {/* <DynamicTable /> */}
             <div className="flex items-center py-2 font-semibold bg-[#F2F2F2]">
@@ -215,14 +236,26 @@ const Left = () => {
               <p className="w-1/6 px-2">Price</p>
               <p className="w-1/6 px-2">Tax</p>
             </div>
-            <div className="flex items-center gap-2">
+            <div className="flex items-center w-full gap-2">
               <Input
-                className="w-3/6"
+                className="w-full"
                 placeholder="Dell Inspiron DMX Laptops"
               />
-              <Input className="w-1/6" placeholder="1000" type="number" />
-              <Input className="w-1/6" placeholder="2000" type="number" />
-              <Input className="w-1/6" placeholder="3000" type="number" />
+              <Input
+                className="w-1/6 shrink-0"
+                placeholder="1000"
+                type="number"
+              />
+              <Input
+                className="w-1/6 shrink-0"
+                placeholder="2000"
+                type="number"
+              />
+              <Input
+                className="w-1/6 shrink-0"
+                placeholder="3000"
+                type="number"
+              />
             </div>
           </div>
 
