@@ -210,23 +210,75 @@ const Left = () => {
           <div>
             <p>Payment terms</p>
             <textarea
-              value={note}
-              onChange={(e) => handleInputChange('note', e.target.value)}
+              placeholder="payment terms"
+              {...form.register('paymentTerms')}
               className="w-full p-2 border outline-none h-36"
+            />
+            {form.formState.errors?.paymentTerms ? (
+              <p className="text-red-600">
+                {form.formState.errors?.paymentTerms.message}
+              </p>
+            ) : null}
+          </div>
+          <div>
+            <Input
+              label="issuedDate"
+              type="date"
+              register={form.register}
+              errors={form.formState.errors?.issuedDate}
+              name="issuedDate"
+            />
+            <Input
+              label="dueDate"
+              register={form.register}
+              errors={form.formState.errors?.dueDate}
+              type="date"
+              name="dueDate"
             />
           </div>
           <div>
-            <Input label="issuedDate" type="date" />
-            <Input label="dueDate" />
-          </div>
-          <div>
-            <Input label="invoiceTotal" />
-            <Input label="invoiceNumber" />
-            <Input label="taxRate" />
-            <Input label="taxAmount" />
-            <Input label="billingAddress" />
-            <Input label="status" />
-            <Input label="paymentReference" />
+            <Input
+              label="invoiceTotal"
+              register={form.register}
+              errors={form.formState.errors?.invoiceTotal}
+              name="invoiceTotal"
+            />
+            <Input
+              label="invoiceNumber"
+              register={form.register}
+              errors={form.formState.errors?.invoiceTotal}
+              name="invoiceNumber"
+            />
+            <Input
+              label="taxRate"
+              register={form.register}
+              errors={form.formState.errors?.taxRate}
+              name="taxRate"
+            />
+            <Input
+              label="taxAmount"
+              register={form.register}
+              errors={form.formState.errors?.taxAmount}
+              name="taxAmount"
+            />
+            <Input
+              label="billingAddress"
+              register={form.register}
+              errors={form.formState.errors?.billingAddress}
+              name="billingAddress"
+            />
+            <Input
+              label="status"
+              register={form.register}
+              errors={form.formState.errors?.status}
+              name="status"
+            />
+            <Input
+              label="paymentReference"
+              register={form.register}
+              errors={form.formState.errors?.paymentReference}
+              name="paymentReference"
+            />
           </div>
           <div className="flex flex-col gap-2 pt-10 my-5 min-h-[40vh]">
             {/* <DynamicTable /> */}

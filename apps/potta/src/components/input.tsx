@@ -13,6 +13,7 @@ interface Props<T extends FieldValues>
   errors?: FieldError;
   register?: UseFormRegister<T>;
   inputClassName?: HTMLAttributes<HTMLDivElement>['className'];
+  name?: Path<T>;
 }
 
 const Input = <T extends FieldValues>({
@@ -31,7 +32,7 @@ const Input = <T extends FieldValues>({
       <input
         {...rest}
         // onChange={onchange}
-        {...(register ? register(name as Path<T>) : {})}
+        {...(register ? register(name) : {})}
         placeholder={placeholder}
         className={cn(
           `w-full px-4 border border-gray-200 rounded-[2px] outline-none mt-2  py-3 `,
