@@ -130,6 +130,24 @@ const Left = () => {
   const form = useForm({
     mode: 'onChange',
     resolver: yupResolver(invoiceSchema),
+    defaultValues: {
+      lineItems: [
+        {
+          description: 'new line items',
+          discountCap: 100,
+          discountRate: 20,
+          discountType: 'discount type',
+          paymentMethod: 'MTN_MOMO',
+          paymentReference: 'reference 1',
+          paymentTerms: 'payment terms',
+          quantity: 2,
+          taxRate: 20,
+          unitPrice: 2000,
+          productId: v4(),
+          salesReceiptId: v4(),
+        },
+      ],
+    },
   });
 
   const onSubmit: SubmitHandler<IInvoicePayload> = (inputs) => {
