@@ -45,7 +45,7 @@ const MyTable: FC<TableProps & { pending?: boolean }> = ({
     },
     headRow: {
       style: {
-        backgroundColor: color ? '#237804' : '#EBF0F0',
+        backgroundColor: color ? '#237804' : '#F3FBFB',
         minHeight: size ? '40px' : '48px',
         fontSize: size ? '15px' : '18px',
         color: color ? '#EBF0F0' : '#000',
@@ -55,7 +55,7 @@ const MyTable: FC<TableProps & { pending?: boolean }> = ({
       style: {
         minHeight: size ? '40px' : '48px',
         fontSize: size ? '14px' : '16px',
-  
+
       },
     },
     cells: {

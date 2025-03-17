@@ -1,5 +1,5 @@
 import React from 'react';
-import { Card, CardBody, ScrollShadow, Progress } from '@nextui-org/react';
+import { Card, CardBody, ScrollShadow} from '@nextui-org/react';
 import {
   Download,
   Printer,
@@ -20,6 +20,7 @@ import {
   TableHeader,
   TableRow,
 } from '@potta/components/simpleTable';
+import { Progress } from '@potta/components/progress';
 
 interface BudgetUtilizationReportProps {
   reportPeriod: ReportPeriod;
@@ -66,13 +67,13 @@ const BudgetUtilizationReport: React.FC<BudgetUtilizationReportProps> = ({
       </Card>
 
       {/* KPI Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-2">
         <Card className="">
           <CardBody>
             <div className="flex items-center gap-2">
               <DollarSign className="h-5 w-5 text-green-500" />
               <div>
-                <p className="text-sm text-gray-500">Total Budget Allocated</p>
+                <p className="text-sm text-gray-500">Total Budget </p>
                 <p className="text-xl font-bold">
                   ${kpis.totalBudgetAllocated.toLocaleString()}
                 </p>
@@ -167,18 +168,18 @@ const BudgetUtilizationReport: React.FC<BudgetUtilizationReportProps> = ({
                     </TableCell>
                     <TableCell>
                       <div className="w-full">
-                        <Progress
-                          value={budget.utilizationPercentage}
-                          color={
-                            budget.utilizationPercentage > 90
-                              ? 'danger'
-                              : budget.utilizationPercentage > 70
-                              ? 'warning'
-                              : 'success'
-                          }
-                          className="w-full"
-                        />
-                        <span className="text-xs">
+                      <Progress 
+                        value={budget.utilizationPercentage} 
+                        className={`h-2 w-full ${
+                          budget.utilizationPercentage > 90
+                            ? 'bg-red-500'
+                            : budget.utilizationPercentage > 70
+                            ? 'bg-yellow-500'
+                            : 'bg-green-500'
+                        }`}
+                        
+                      />
+                        <span className="">
                           {budget.utilizationPercentage.toFixed(1)}%
                         </span>
                       </div>

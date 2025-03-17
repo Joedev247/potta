@@ -61,7 +61,7 @@ const FinancialReports = () => {
                 <report.icon className="h-5 w-5 text-green-500" />
                 <CardTitle className="text-lg">{report.title}</CardTitle>
               </div>
-              <CardDescription>{report.description}</CardDescription>
+              <CardDescription className=''>{report.description}</CardDescription>
             </CardHeader>
           </Card>
         ))}

@@ -2,7 +2,7 @@ import React from 'react';
 
 import Boxes from './components/boxes';
 import TableComponents from './components/table';
-import RootLayout from '../layout';
+import RootLayout from '../../layout';
 
 
 const Vendors = () => {

@@ -31,6 +31,10 @@ const urlRouters = [
     value: 'taxation',
     label: 'Taxation',
   },
+  {
+    value: "reports",
+    label: "Reports"
+  },
 ];
 
 export default function Navbar() {

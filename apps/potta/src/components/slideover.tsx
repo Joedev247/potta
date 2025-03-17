@@ -116,8 +116,8 @@ const Slider: FC<props> = ({
                 className="pointer-events-auto border-b  max-w-screen w-full transform transition duration-500 ease-in-out data-[closed]:-translate-y-full sm:duration-700"
               >
                 <div className="flex h-full flex-col overflow-hidden bg-gray-50 py-6 shadow-xl">
-                  <div className="flex justify-center ">
-                    <div className="flex items-start py-2 px-4 w-full border-b justify-between">
+                  <div className="flex justify-center items-center ">
+                    <div className="flex  py-2 px-4 w-full border-b justify-between">
                       <DialogTitle className="text-xl leading-6  font-semibold text-gray-900">
                         {title}
                       </DialogTitle>

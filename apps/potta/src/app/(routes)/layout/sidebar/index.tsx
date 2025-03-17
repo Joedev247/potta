@@ -27,6 +27,7 @@ const Sidebars = () => {
       {str[1] == 'vendors' && <SidebarsVoucher />}
       {str[1] == 'payroll' && <SidebarsPayroll />}
       {str[1] == 'Account' && <SidebarsVoucher />}
+      {str[1] == 'reports' && <SidebarsVoucher />}
     </>
   );
 };

@@ -138,7 +138,13 @@ const TableComponents = () => {
 
   if (error)
     return (
-      <p className="text-red-600">Error fetching customers: {error.message}</p>
+      <div className="mt-10">
+      <Filter />
+      <div className="min-h-60 items-center flex justify-center">
+
+      <p className="text-red-600  text-center">An Error occured while fetching customers please try again later</p>
+      </div>
+  </div>
     );
 
   return (
