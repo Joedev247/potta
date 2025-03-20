@@ -36,7 +36,7 @@ const InvoiceTableComponents = ({
           <Checkbox color="success" size="lg" />
         </>
       ),
-      selector: (row) => <Checkbox color="success" size="lg" />,
+      selector: (row: any) => <Checkbox color="success" size="lg" />,
     },
     {
       name: 'Date',

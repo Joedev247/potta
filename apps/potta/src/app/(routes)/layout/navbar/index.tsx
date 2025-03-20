@@ -74,7 +74,7 @@ export default function Navbar() {
             <Select
               options={urlRouters}
               selectedValue={selected.toString()}
-              onChange={(value) => {
+              onChange={(value:any) => {
                 handleSelect(value);
               }}
               bg={''}

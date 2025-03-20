@@ -1,6 +1,6 @@
 import { VendorPayload } from './validations';
 // import axios from 'config/axios.config';
-import axios from 'config/posconfig';
+import axios from 'config/axios.config';
 import { VendorFilter, Vendor, VendorResponse } from './types';
 import { AxiosResponse } from 'axios';
 

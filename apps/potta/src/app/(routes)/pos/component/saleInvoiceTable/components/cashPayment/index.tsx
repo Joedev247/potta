@@ -1,11 +1,13 @@
 import Button from '@potta/components/button';
-import Input from '@potta/components/input';
-import React, { useContext, useState, useEffect } from 'react';
+import React, { useContext, useState } from 'react';
 import { ContextData } from '@potta/components/context';
 import HoldOrderButton from '../holdOn';
 import { toast } from 'sonner';
 import ReceiptPrinter from '../../../print/page';
-
+import { LineItem, PaymentMethod } from '@potta/app/(routes)/pos/utils/types';
+import { SalesReceiptPayload } from '@potta/app/(routes)/pos/utils/validation';
+import { posApi } from '@potta/app/(routes)/pos/utils/api';
+import SalesReceiptReport from '../../../../../reports/components/collectioReports/salesReceiptReport';
 
 const PayCash = () => {
   const context = useContext(ContextData);
@@ -13,26 +15,39 @@ const PayCash = () => {
   const [error, setError] = useState('');
   const [lastOrderData, setLastOrderData] = useState<any>(null);
   const [printer] = useState(() => new ReceiptPrinter());
+  const [isProcessing, setIsProcessing] = useState(false);
 
   const total = context?.orderSummary?.total || 0;
   const change = cashAmount === 0 ? 0 : cashAmount - total;
-  const orderNumber = Math.floor(Math.random() * (200000000 - 100000000 + 1)) + 100000000;
+  const orderNumber =
+    Math.floor(Math.random() * (200000000 - 100000000 + 1)) + 100000000;
 
   const handleCashInput = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = parseFloat(e.target.value);
     setCashAmount(isNaN(value) ? 0 : value);
   };
 
+  const formatOrderItemsForPrinting = (items: LineItem[]) => {
+    return items.map((item) => {
+      return {
+        quantity: item.quantity,
+        name: item.description,
+        // Ensure price is a number
+        price:
+          typeof item.unitPrice === 'string'
+            ? parseFloat(item.unitPrice)
+            : item.unitPrice,
+      };
+    });
+  };
+
   const handleReprint = async () => {
     if (lastOrderData) {
-      toast.promise(
-        printer.printReceipt(lastOrderData),
-        {
-          loading: 'Reprinting receipt...',
-          success: 'Receipt reprinted successfully',
-          error: 'Failed to reprint receipt',
-        }
-      );
+      toast.promise(printer.printReceipt(lastOrderData), {
+        loading: 'Reprinting receipt...',
+        success: 'Receipt reprinted successfully',
+        error: 'Failed to reprint receipt',
+      });
     } else {
       toast.error('No previous order found to reprint');
     }
@@ -44,31 +59,83 @@ const PayCash = () => {
       return;
     }
     setError('');
+    setIsProcessing(true);
 
-    const orderData = {
-      orderNumber,
-      orderItems: context?.data || [],
-      total: total,
-      cashAmount: cashAmount,
-      change: change,
-      timestamp: new Date().toISOString(),
-    };
+    try {
+      // Format order items for receipt printing
+      const formattedItems = formatOrderItemsForPrinting(context?.data || []);
 
-    setLastOrderData(orderData);
-    console.log('Order Completed:', orderData);
+      // Create order data for receipt printing
+      const orderData = {
+        orderNumber,
+        orderItems: formattedItems,
+        total: total,
+        cashAmount: cashAmount,
+        change: change,
+        timestamp: new Date().toISOString(),
+      };
 
-    toast.promise(
-      printer.printReceipt(orderData),
-      {
-        loading: 'Processing order...',
-        success: 'Order completed successfully',
-        error: 'Failed to process order',
+      // Ensure line items have numeric unit prices for the API
+      const lineItemsWithNumericPrices = (context?.data || []).map((item:any) => ({
+        ...item,
+        unitPrice:
+          typeof item.unitPrice === 'string'
+            ? parseFloat(item.unitPrice)
+            : item.unitPrice,
+      }));
+
+      // Create sales receipt data for API submission
+      const salesReceiptData: SalesReceiptPayload = {
+        saleDate: new Date().toISOString(),
+        totalAmount: total,
+        paymentReference: orderNumber.toString(),
+        notes: '',
+        paymentMethod: 'Other' as PaymentMethod,
+        receiptNumber: orderNumber.toString(),
+        discountAmount: context?.orderSummary?.discount || 0,
+        customerId: '6f7f8a95-5524-429a-9d86-89c72a91174a',
+        salePerson: 'c654770d-2184-4e0a-af8c-ec0a62ef1f57',
+        lineItems: lineItemsWithNumericPrices,
+      };
+
+      console.log('Order', salesReceiptData);
+      // Save the sales receipt to the server
+      const response = await posApi.create(salesReceiptData);
+
+      // Log the response and sales receipt data
+      console.log('Sales Receipt Created:', response);
+
+      setLastOrderData(orderData);
+
+      // Print the receipt
+      await printer.printReceipt(orderData);
+
+      toast.success('Order completed successfully');
+
+      // Reset the cart after successful order
+      if (context?.setData) {
+        context.setData([]);
       }
-    );
 
-    // if (context?.resetCart) {
-    //   context.resetCart();
-    // }
+      // Reset the order summary
+      if (context?.setOrderSummary) {
+        context.setOrderSummary({
+          subtotal: 0,
+          discount: 0,
+          itemDiscounts: 0,
+          tax: 0,
+          total: 0,
+        });
+      }
+
+      // Reset the cash amount
+      setCashAmount(0);
+    } catch (error) {
+      console.error('Failed to process order:', error);
+      toast.error('Failed to process order');
+    } finally {
+      setIsProcessing(false);
+    }
   };
 
   return (
@@ -117,17 +184,21 @@ const PayCash = () => {
           </div>
           <div className="w-full flex justify-between py-2">
             <span className="font-thin">Change</span>
-            <p className={`font-semibold text-lg ${change < 0 ? 'text-red-500' : ''}`}>
+            <p
+              className={`font-semibold text-lg ${
+                change < 0 ? 'text-red-500' : ''
+              }`}
+            >
               {change.toFixed(2)} XAF
             </p>
           </div>
           <div className="w-full mt-5">
             <Button
               width="full"
-              text="Complete"
+              text={isProcessing ? 'Processing...' : 'Complete'}
               type="button"
               onClick={handleComplete}
-              disabled={cashAmount < total || cashAmount === 0}
+              disabled={cashAmount < total || cashAmount === 0 || isProcessing}
             />
           </div>
         </div>

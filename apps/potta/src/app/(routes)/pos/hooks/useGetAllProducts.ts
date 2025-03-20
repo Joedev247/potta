@@ -1,6 +1,8 @@
 import { useQuery } from '@tanstack/react-query';
-import { posApi } from '../utils/api';
 import { Filter, ProductResponse } from '../utils/types';
+import { posApi } from '../utils/api';
+
+
 
 const useGetAllProducts = (filter: Filter,) => {
   return useQuery<ProductResponse>({

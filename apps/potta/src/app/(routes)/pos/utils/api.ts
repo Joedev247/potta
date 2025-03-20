@@ -1,12 +1,17 @@
-import axios from "config/posconfig";
-import { Filter, ProductResponse } from "./types";
+// import axios from 'config/axios.config';
+import axios from 'config/axios.config';
+import { Filter, ProductResponse } from './types';
+import { SalesReceiptPayload } from './validation';
 
-
-export const posApi={
+export const posApi = {
+  create: async (data: SalesReceiptPayload) => {
+    const result = await axios.post(`/sales-receipt/create`, data);
+    return result;
+  },
   getAll: async (filter: Filter) => {
-    const result:ProductResponse = await axios.get(`/vendor/8f79d19a-5319-4783-8ddc-c863d98ecc16/products`, {
+    const result = await axios.get(`/vendor/6099ee5e-7f6d-4d5c-a804-1e186f517a09/products`, {
       params: { ...filter },
     });
-    return result
+    return result.data
   },
 }

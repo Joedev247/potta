@@ -4580,6 +4580,51 @@
         "hash": "sha512-P1st0aksCrn9sGZhp8GMYwBnQsbvAWsZAX44oXNNvLHGqAOcoVxmjZiohstwQ7SqKnbR47akdNi+uleWD8+g6A=="
       }
     },
+    "npm:@radix-ui/react-compose-refs": {
+      "type": "npm",
+      "name": "npm:@radix-ui/react-compose-refs",
+      "data": {
+        "version": "1.1.1",
+        "packageName": "@radix-ui/react-compose-refs",
+        "hash": "sha512-Y9VzoRDSJtgFMUCoiZBDVo084VQ5hfpXxVE+NgkdNsjiDBByiImMZKKhxMwCbdHvhlENG6a833CbFkOQvTricw=="
+      }
+    },
+    "npm:@radix-ui/react-context": {
+      "type": "npm",
+      "name": "npm:@radix-ui/react-context",
+      "data": {
+        "version": "1.1.1",
+        "packageName": "@radix-ui/react-context",
+        "hash": "sha512-UASk9zi+crv9WteK/NU4PLvOoL3OuE6BWVKNF6hPRBtYBDXQ2u5iu3O59zUlJiTVvkyuycnqrztsHVJwcK9K+Q=="
+      }
+    },
+    "npm:@radix-ui/react-primitive": {
+      "type": "npm",
+      "name": "npm:@radix-ui/react-primitive",
+      "data": {
+        "version": "2.0.2",
+        "packageName": "@radix-ui/react-primitive",
+        "hash": "sha512-Ec/0d38EIuvDF+GZjcMU/Ze6MxntVJYO/fRlCPhCaVUyPY9WTalHJw54tp9sXeJo3tlShWpy41vQRgLRGOuz+w=="
+      }
+    },
+    "npm:@radix-ui/react-progress": {
+      "type": "npm",
+      "name": "npm:@radix-ui/react-progress",
+      "data": {
+        "version": "1.1.2",
+        "packageName": "@radix-ui/react-progress",
+        "hash": "sha512-u1IgJFQ4zNAUTjGdDL5dcl/U8ntOR6jsnhxKb5RKp5Ozwl88xKR9EqRZOe/Mk8tnx0x5tNUe2F+MzsyjqMg0MA=="
+      }
+    },
+    "npm:@radix-ui/react-slot": {
+      "type": "npm",
+      "name": "npm:@radix-ui/react-slot",
+      "data": {
+        "version": "1.1.2",
+        "packageName": "@radix-ui/react-slot",
+        "hash": "sha512-YAKxaiGsSQJ38VzKH86/BPRC4rh+b1Jpa+JneA5LRE7skmLPNAyeG8kPJj/oo4STLvlrs8vkf/iYyc3A5stYCQ=="
+      }
+    },
     "npm:@react-aria/breadcrumbs": {
       "type": "npm",
       "name": "npm:@react-aria/breadcrumbs",
@@ -4634,6 +4679,15 @@
         "hash": "sha512-p681OtApnKOdbeN8ITfnnYqfdHS0z7GE+4l8EXlfLnr70Rp/9xicBO6d2rU+V/B3JujDw2gPWxYKEnEeh0CGCw=="
       }
     },
+    "npm:@react-aria/utils@3.28.1": {
+      "type": "npm",
+      "name": "npm:@react-aria/utils@3.28.1",
+      "data": {
+        "version": "3.28.1",
+        "packageName": "@react-aria/utils",
+        "hash": "sha512-mnHFF4YOVu9BRFQ1SZSKfPhg3z+lBRYoW5mLcYTQihbKhz48+I1sqRkP7ahMITr8ANH3nb34YaMME4XWmK2Mgg=="
+      }
+    },
     "npm:@react-aria/utils": {
       "type": "npm",
       "name": "npm:@react-aria/utils",
@@ -4686,6 +4740,15 @@
         "version": "3.27.0",
         "packageName": "@react-types/shared",
         "hash": "sha512-gvznmLhi6JPEf0bsq7SwRYTHAKKq/wcmKqFez9sRdbED+SPMUmK5omfZ6w3EwUFQHbYUa4zPBYedQ7Knv70RMw=="
+      }
+    },
+    "npm:@react-types/shared@3.28.0": {
+      "type": "npm",
+      "name": "npm:@react-types/shared@3.28.0",
+      "data": {
+        "version": "3.28.0",
+        "packageName": "@react-types/shared",
+        "hash": "sha512-9oMEYIDc3sk0G5rysnYvdNrkSg7B04yTKl50HHSZVbokeHpnU0yRmsDaWb9B/5RprcKj8XszEk5guBO8Sa/Q+Q=="
       }
     },
     "npm:@react-types/shared": {
@@ -5034,9 +5097,9 @@
       "type": "npm",
       "name": "npm:@react-stately/flags",
       "data": {
-        "version": "3.0.5",
+        "version": "3.1.0",
         "packageName": "@react-stately/flags",
-        "hash": "sha512-6wks4csxUwPCp23LgJSnkBRhrWpd9jGd64DjcCTNB2AHIFu7Ab1W59pJpUL6TW7uAxVxdNKjgn6D1hlBy8qWsA=="
+        "hash": "sha512-KSHOCxTFpBtxhIRcKwsD1YDTaNxFtCYuAUb0KEihc16QwqZViq4hasgPBs2gYm7fHRbw7WYzWKf6ZSo/+YsFlg=="
       }
     },
     "npm:@react-stately/form": {
@@ -8556,15 +8619,6 @@
         "version": "3.1.3",
         "packageName": "csstype",
         "hash": "sha512-M1uQkMl8rQK/szD0LNhtqxIPLpimGm8sOBwU7lLnCpSbTyY3yeU1Vc7l4KT5zT4s/yOxHH5O7tIuuLOCnLADRw=="
-      }
-    },
-    "npm:currency-symbol-map": {
-      "type": "npm",
-      "name": "npm:currency-symbol-map",
-      "data": {
-        "version": "5.1.0",
-        "packageName": "currency-symbol-map",
-        "hash": "sha512-LO/lzYRw134LMDVnLyAf1dHE5tyO6axEFkR3TXjQIOmMkAM9YL6QsiUwuXzZAmFnuDJcs4hayOgyIYtViXFrLw=="
       }
     },
     "npm:d3-array": {
@@ -13328,6 +13382,15 @@
         "hash": "sha512-JU3teHTNjmE2VCGFzuY8EXzCDVwEqB2a8fsIvwaStHhAWJEeVd1o1QD80CU6+ZdEXXSLbSsuLwJjkCBWqRQUVA=="
       }
     },
+    "npm:picomatch@4.0.2": {
+      "type": "npm",
+      "name": "npm:picomatch@4.0.2",
+      "data": {
+        "version": "4.0.2",
+        "packageName": "picomatch",
+        "hash": "sha512-M7BAV6Rlcy5u+m6oPhAPFgJTzAioX/6B0DxyvDlo9l8+T3nLKbrczg2WLUyzd45L8RqfUMyGPzekbMvX2Ldkwg=="
+      }
+    },
     "npm:pirates": {
       "type": "npm",
       "name": "npm:pirates",
@@ -14129,15 +14192,6 @@
         "hash": "sha512-gnGKTpYwqL0Iii09gHobNolvX4Kiq4PKx6eWBCYYix+8cdw+cGo3do906l1NBPKkSWx1DghC1dlWG9L2uGd61Q=="
       }
     },
-    "npm:react-tailwindcss-datepicker": {
-      "type": "npm",
-      "name": "npm:react-tailwindcss-datepicker",
-      "data": {
-        "version": "2.0.0",
-        "packageName": "react-tailwindcss-datepicker",
-        "hash": "sha512-HADddzZjeOIMxkKkueAyQmiAExLXYcwgPG0Qv1oP9cjCx4/jrhbbOAbazgjJmxfhGxUw7e0Goqs+DY3htKlhAA=="
-      }
-    },
     "npm:react-textarea-autosize": {
       "type": "npm",
       "name": "npm:react-textarea-autosize",
@@ -14822,6 +14876,15 @@
         "hash": "sha512-0/A9rDy9P7cJ+8w1c9WD9V//9Wj15Ce2MPz8Ri6032usz+NfePxx5AcN3bN+r6ZL6jEo066/yNYB3tn4pQEx+A=="
       }
     },
+    "npm:sonner": {
+      "type": "npm",
+      "name": "npm:sonner",
+      "data": {
+        "version": "2.0.1",
+        "packageName": "sonner",
+        "hash": "sha512-FRBphaehZ5tLdLcQ8g2WOIRE+Y7BCfWi5Zyd8bCvBjiW8TxxAyoWZIxS661Yz6TGPqFQ4VLzOF89WEYhfynSFQ=="
+      }
+    },
     "npm:sort-keys": {
       "type": "npm",
       "name": "npm:sort-keys",
@@ -15450,6 +15513,24 @@
         "version": "1.3.3",
         "packageName": "tiny-invariant",
         "hash": "sha512-+FbBPE1o9QAYvviau/qC5SE3caw21q3xkvWKBtja5vgqOWIHHJ3ioaq1VPfn/Szqctz2bU/oYeKd9/z5BL+PVg=="
+      }
+    },
+    "npm:tinyglobby": {
+      "type": "npm",
+      "name": "npm:tinyglobby",
+      "data": {
+        "version": "0.2.12",
+        "packageName": "tinyglobby",
+        "hash": "sha512-qkf4trmKSIiMTs/E63cxH+ojC2unam7rJ0WrauAzpT3ECNTxGRMlaXxVbfxMUC/w0LaYk6jQ4y/nGR9uBO3tww=="
+      }
+    },
+    "npm:fdir@6.4.3": {
+      "type": "npm",
+      "name": "npm:fdir@6.4.3",
+      "data": {
+        "version": "6.4.3",
+        "packageName": "fdir",
+        "hash": "sha512-PMXmW2y1hDDfTSRc9gaXIuCCRpuoz3Kaz8cUelp3smouvfT632ozg2vrT6lJsHKKOF59YLbOGfAWGUcKEfRMQw=="
       }
     },
     "npm:tmp": {
@@ -16400,6 +16481,16 @@
       },
       {
         "source": "potta",
+        "target": "npm:clsx",
+        "type": "static"
+      },
+      {
+        "source": "potta",
+        "target": "npm:tailwind-merge",
+        "type": "static"
+      },
+      {
+        "source": "potta",
         "target": "npm:@nx/next",
         "type": "static"
       },
@@ -16411,6 +16502,11 @@
       {
         "source": "potta",
         "target": "npm:@testing-library/react",
+        "type": "static"
+      },
+      {
+        "source": "potta",
+        "target": "npm:@tanstack/react-query",
         "type": "static"
       },
       {
@@ -16440,11 +16536,6 @@
       },
       {
         "source": "potta",
-        "target": "npm:@tanstack/react-query",
-        "type": "static"
-      },
-      {
-        "source": "potta",
         "target": "npm:@tanstack/react-table",
         "type": "static"
       },
@@ -16456,6 +16547,26 @@
       {
         "source": "potta",
         "target": "npm:@nextui-org/react",
+        "type": "static"
+      },
+      {
+        "source": "potta",
+        "target": "npm:react-hook-form",
+        "type": "static"
+      },
+      {
+        "source": "potta",
+        "target": "npm:@iconify/react",
+        "type": "static"
+      },
+      {
+        "source": "potta",
+        "target": "npm:@hookform/resolvers",
+        "type": "static"
+      },
+      {
+        "source": "potta",
+        "target": "npm:uuid",
         "type": "static"
       },
       {
@@ -16480,6 +16591,11 @@
       },
       {
         "source": "potta",
+        "target": "npm:sonner",
+        "type": "static"
+      },
+      {
+        "source": "potta",
         "target": "npm:react-accessible-accordion",
         "type": "static"
       },
@@ -16490,22 +16606,22 @@
       },
       {
         "source": "potta",
-        "target": "npm:react-hook-form",
-        "type": "static"
-      },
-      {
-        "source": "potta",
-        "target": "npm:@hookform/resolvers",
-        "type": "static"
-      },
-      {
-        "source": "potta",
         "target": "npm:libphonenumber-js",
         "type": "static"
       },
       {
         "source": "potta",
         "target": "npm:react-world-flags",
+        "type": "static"
+      },
+      {
+        "source": "potta",
+        "target": "npm:lucide-react",
+        "type": "static"
+      },
+      {
+        "source": "potta",
+        "target": "npm:recharts",
         "type": "static"
       },
       {
@@ -16521,6 +16637,16 @@
       {
         "source": "potta",
         "target": "npm:react-icomoon",
+        "type": "static"
+      },
+      {
+        "source": "potta",
+        "target": "npm:@radix-ui/react-progress",
+        "type": "static"
+      },
+      {
+        "source": "potta",
+        "target": "npm:react-resizable-panels",
         "type": "static"
       },
       {
@@ -16769,6 +16895,11 @@
       },
       {
         "source": "@instanvi-global/source",
+        "target": "npm:@radix-ui/react-progress",
+        "type": "static"
+      },
+      {
+        "source": "@instanvi-global/source",
         "target": "npm:@tanstack/react-query",
         "type": "static"
       },
@@ -16790,6 +16921,11 @@
       {
         "source": "@instanvi-global/source",
         "target": "npm:axios",
+        "type": "static"
+      },
+      {
+        "source": "@instanvi-global/source",
+        "target": "npm:class-variance-authority",
         "type": "static"
       },
       {
@@ -16820,6 +16956,11 @@
       {
         "source": "@instanvi-global/source",
         "target": "npm:libphonenumber-js",
+        "type": "static"
+      },
+      {
+        "source": "@instanvi-global/source",
+        "target": "npm:lucide-react",
         "type": "static"
       },
       {
@@ -16919,6 +17060,11 @@
       },
       {
         "source": "@instanvi-global/source",
+        "target": "npm:react-resizable-panels",
+        "type": "static"
+      },
+      {
+        "source": "@instanvi-global/source",
         "target": "npm:react-select",
         "type": "static"
       },
@@ -16934,12 +17080,32 @@
       },
       {
         "source": "@instanvi-global/source",
+        "target": "npm:recharts",
+        "type": "static"
+      },
+      {
+        "source": "@instanvi-global/source",
         "target": "npm:remixicon",
         "type": "static"
       },
       {
         "source": "@instanvi-global/source",
+        "target": "npm:sonner",
+        "type": "static"
+      },
+      {
+        "source": "@instanvi-global/source",
+        "target": "npm:styled-components",
+        "type": "static"
+      },
+      {
+        "source": "@instanvi-global/source",
         "target": "npm:tailwind-merge",
+        "type": "static"
+      },
+      {
+        "source": "@instanvi-global/source",
+        "target": "npm:tailwindcss-animate",
         "type": "static"
       },
       {
@@ -16954,7 +17120,7 @@
       },
       {
         "source": "@instanvi-global/source",
-        "target": "npm:uuid@8.3.2",
+        "target": "npm:uuid",
         "type": "static"
       },
       {
@@ -26446,6 +26612,106 @@
         "type": "static"
       }
     ],
+    "npm:@radix-ui/react-compose-refs": [
+      {
+        "source": "npm:@radix-ui/react-compose-refs",
+        "target": "npm:@types/react",
+        "type": "static"
+      },
+      {
+        "source": "npm:@radix-ui/react-compose-refs",
+        "target": "npm:react",
+        "type": "static"
+      }
+    ],
+    "npm:@radix-ui/react-context": [
+      {
+        "source": "npm:@radix-ui/react-context",
+        "target": "npm:@types/react",
+        "type": "static"
+      },
+      {
+        "source": "npm:@radix-ui/react-context",
+        "target": "npm:react",
+        "type": "static"
+      }
+    ],
+    "npm:@radix-ui/react-primitive": [
+      {
+        "source": "npm:@radix-ui/react-primitive",
+        "target": "npm:@types/react",
+        "type": "static"
+      },
+      {
+        "source": "npm:@radix-ui/react-primitive",
+        "target": "npm:@types/react-dom",
+        "type": "static"
+      },
+      {
+        "source": "npm:@radix-ui/react-primitive",
+        "target": "npm:react",
+        "type": "static"
+      },
+      {
+        "source": "npm:@radix-ui/react-primitive",
+        "target": "npm:react-dom",
+        "type": "static"
+      },
+      {
+        "source": "npm:@radix-ui/react-primitive",
+        "target": "npm:@radix-ui/react-slot",
+        "type": "static"
+      }
+    ],
+    "npm:@radix-ui/react-progress": [
+      {
+        "source": "npm:@radix-ui/react-progress",
+        "target": "npm:@types/react",
+        "type": "static"
+      },
+      {
+        "source": "npm:@radix-ui/react-progress",
+        "target": "npm:@types/react-dom",
+        "type": "static"
+      },
+      {
+        "source": "npm:@radix-ui/react-progress",
+        "target": "npm:react",
+        "type": "static"
+      },
+      {
+        "source": "npm:@radix-ui/react-progress",
+        "target": "npm:react-dom",
+        "type": "static"
+      },
+      {
+        "source": "npm:@radix-ui/react-progress",
+        "target": "npm:@radix-ui/react-context",
+        "type": "static"
+      },
+      {
+        "source": "npm:@radix-ui/react-progress",
+        "target": "npm:@radix-ui/react-primitive",
+        "type": "static"
+      }
+    ],
+    "npm:@radix-ui/react-slot": [
+      {
+        "source": "npm:@radix-ui/react-slot",
+        "target": "npm:@types/react",
+        "type": "static"
+      },
+      {
+        "source": "npm:@radix-ui/react-slot",
+        "target": "npm:react",
+        "type": "static"
+      },
+      {
+        "source": "npm:@radix-ui/react-slot",
+        "target": "npm:@radix-ui/react-compose-refs",
+        "type": "static"
+      }
+    ],
     "npm:@react-aria/breadcrumbs": [
       {
         "source": "npm:@react-aria/breadcrumbs",
@@ -27033,12 +27299,71 @@
       },
       {
         "source": "npm:@react-aria/focus",
+        "target": "npm:@react-aria/utils@3.28.1",
+        "type": "static"
+      },
+      {
+        "source": "npm:@react-aria/focus",
+        "target": "npm:@react-types/shared@3.28.0",
+        "type": "static"
+      },
+      {
+        "source": "npm:@react-aria/focus",
         "target": "npm:@swc/helpers",
         "type": "static"
       },
       {
         "source": "npm:@react-aria/focus",
         "target": "npm:clsx",
+        "type": "static"
+      }
+    ],
+    "npm:@react-aria/utils@3.28.1": [
+      {
+        "source": "npm:@react-aria/utils@3.28.1",
+        "target": "npm:react",
+        "type": "static"
+      },
+      {
+        "source": "npm:@react-aria/utils@3.28.1",
+        "target": "npm:react-dom",
+        "type": "static"
+      },
+      {
+        "source": "npm:@react-aria/utils@3.28.1",
+        "target": "npm:@react-aria/ssr",
+        "type": "static"
+      },
+      {
+        "source": "npm:@react-aria/utils@3.28.1",
+        "target": "npm:@react-stately/flags",
+        "type": "static"
+      },
+      {
+        "source": "npm:@react-aria/utils@3.28.1",
+        "target": "npm:@react-stately/utils",
+        "type": "static"
+      },
+      {
+        "source": "npm:@react-aria/utils@3.28.1",
+        "target": "npm:@react-types/shared@3.28.0",
+        "type": "static"
+      },
+      {
+        "source": "npm:@react-aria/utils@3.28.1",
+        "target": "npm:@swc/helpers",
+        "type": "static"
+      },
+      {
+        "source": "npm:@react-aria/utils@3.28.1",
+        "target": "npm:clsx",
+        "type": "static"
+      }
+    ],
+    "npm:@react-types/shared@3.28.0": [
+      {
+        "source": "npm:@react-types/shared@3.28.0",
+        "target": "npm:react",
         "type": "static"
       }
     ],
@@ -34163,6 +34488,11 @@
         "source": "npm:eslint-import-resolver-typescript",
         "target": "npm:stable-hash",
         "type": "static"
+      },
+      {
+        "source": "npm:eslint-import-resolver-typescript",
+        "target": "npm:tinyglobby",
+        "type": "static"
       }
     ],
     "npm:eslint-module-utils": [
@@ -40190,18 +40520,6 @@
         "type": "static"
       }
     ],
-    "npm:react-tailwindcss-datepicker": [
-      {
-        "source": "npm:react-tailwindcss-datepicker",
-        "target": "npm:dayjs",
-        "type": "static"
-      },
-      {
-        "source": "npm:react-tailwindcss-datepicker",
-        "target": "npm:react",
-        "type": "static"
-      }
-    ],
     "npm:react-textarea-autosize": [
       {
         "source": "npm:react-textarea-autosize",
@@ -41193,6 +41511,18 @@
       {
         "source": "npm:sockjs",
         "target": "npm:websocket-driver",
+        "type": "static"
+      }
+    ],
+    "npm:sonner": [
+      {
+        "source": "npm:sonner",
+        "target": "npm:react",
+        "type": "static"
+      },
+      {
+        "source": "npm:sonner",
+        "target": "npm:react-dom",
         "type": "static"
       }
     ],
@@ -42214,6 +42544,25 @@
       {
         "source": "npm:thenify-all",
         "target": "npm:thenify",
+        "type": "static"
+      }
+    ],
+    "npm:tinyglobby": [
+      {
+        "source": "npm:tinyglobby",
+        "target": "npm:fdir@6.4.3",
+        "type": "static"
+      },
+      {
+        "source": "npm:tinyglobby",
+        "target": "npm:picomatch@4.0.2",
+        "type": "static"
+      }
+    ],
+    "npm:fdir@6.4.3": [
+      {
+        "source": "npm:fdir@6.4.3",
+        "target": "npm:picomatch@4.0.2",
         "type": "static"
       }
     ],
@@ -43551,5 +43900,5 @@
   },
   "version": "6.0",
   "errors": [],
-  "computedAt": 1742221480761
+  "computedAt": 1742466709947
 }

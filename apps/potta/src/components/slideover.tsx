@@ -10,36 +10,49 @@ interface props {
   buttonText?: string;
   title: string;
   onOpen?: () => void;
-  open: boolean;
-  setOpen: (value: boolean) => void;
+  open?: boolean; // Made optional
+  setOpen?: (value: boolean) => void; // Made optional
   closeButton?: boolean;
 }
+
 const Slider: FC<props> = ({
   children,
   edit,
   buttonText,
   title,
   onOpen,
-  open,
-  setOpen,
+  open: externalOpen,
+  setOpen: externalSetOpen,
   closeButton,
 }) => {
+  // Internal state for when open/setOpen aren't provided
+  const [internalOpen, setInternalOpen] = useState(false);
+
+  // Determine if we're in controlled or uncontrolled mode
+  const isControlled = externalOpen !== undefined && externalSetOpen !== undefined;
+
+  // Use either the external or internal state
+  const open = isControlled ? externalOpen : internalOpen;
+  const setOpen = isControlled ? externalSetOpen : setInternalOpen;
+
   useEffect(() => {
     if (open && onOpen) {
       onOpen(); // Call the onOpen callback when slider opens
     }
   }, [open, onOpen]);
+
+  const handleToggle = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setOpen(!open);
+  };
+
   return (
     <div className="">
       <div>
-
         {buttonText == 'card' && (
           <Button
             text={'New Card'}
-            onClick={(e) => {
-              e.stopPropagation();
-              setOpen(!open);
-            }}
+            onClick={handleToggle}
             type={'button'}
             icon={<i className="ri-file-add-line"></i>}
           />
@@ -47,10 +60,7 @@ const Slider: FC<props> = ({
         {buttonText == 'ussd' && (
           <Button
             text={'New USSD'}
-            onClick={(e) => {
-              e.stopPropagation();
-              setOpen(!open);
-            }}
+            onClick={handleToggle}
             type={'button'}
             icon={<i className="ri-file-add-line"></i>}
           />
@@ -58,10 +68,7 @@ const Slider: FC<props> = ({
         {buttonText == 'agent' && (
           <Button
             text={'New Agent'}
-            onClick={(e) => {
-              e.stopPropagation();
-              setOpen(!open);
-            }}
+            onClick={handleToggle}
             type={'button'}
             icon={<i className="ri-file-add-line"></i>}
           />
@@ -69,10 +76,7 @@ const Slider: FC<props> = ({
         {buttonText == 'page' && (
           <Button
             text={'New Page'}
-            onClick={(e) => {
-              e.stopPropagation();
-              setOpen(!open);
-            }}
+            onClick={handleToggle}
             type={'button'}
             icon={<i className="ri-file-add-line"></i>}
           />
@@ -80,10 +84,7 @@ const Slider: FC<props> = ({
         {buttonText == 'vendor' && (
           <Button
             text={'New Vendor'}
-            onClick={(e) => {
-              e.stopPropagation();
-              setOpen(!open);
-            }}
+            onClick={handleToggle}
             type={'button'}
             icon={<i className="ri-file-add-line"></i>}
           />
@@ -91,16 +92,11 @@ const Slider: FC<props> = ({
         {buttonText == 'New Sales Receipt' && (
           <Button
             text={'New Sales Receipt'}
-            onClick={(e) => {
-              e.stopPropagation();
-              setOpen(!open);
-            }}
+            onClick={handleToggle}
             type={'button'}
             icon={<i className="ri-file-add-line"></i>}
           />
         )}
-
-
       </div>
       <Dialog
         open={open}
@@ -113,15 +109,15 @@ const Slider: FC<props> = ({
             <div className="pointer-events-none fixed inset-x-0 top-0 flex max-h-full bg-gray-500 bg-opacity-75 transition-opacity justify-center">
               <DialogPanel
                 transition
-                className="pointer-events-auto border-b  max-w-screen w-full transform transition duration-500 ease-in-out data-[closed]:-translate-y-full sm:duration-700"
+                className="pointer-events-auto border-b max-w-screen w-full transform transition duration-500 ease-in-out data-[closed]:-translate-y-full sm:duration-700"
               >
                 <div className="flex h-full flex-col overflow-hidden bg-gray-50 py-6 shadow-xl">
                   <div className="flex justify-center items-center ">
-                    <div className="flex  py-2 px-4 w-full border-b justify-between">
-                      <DialogTitle className="text-xl leading-6  font-semibold text-gray-900">
+                    <div className="flex py-2 px-4 w-full border-b justify-between">
+                      <DialogTitle className="text-xl leading-6 font-semibold text-gray-900">
                         {title}
                       </DialogTitle>
-                      <div className="ml-3  flex h-7 items-center">
+                      <div className="ml-3 flex h-7 items-center">
                         {!closeButton && (
                           <button
                             type="button"
@@ -148,4 +144,5 @@ const Slider: FC<props> = ({
     </div>
   );
 };
+
 export default Slider;

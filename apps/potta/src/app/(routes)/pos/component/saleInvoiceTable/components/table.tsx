@@ -4,33 +4,75 @@ import MyTable from '@potta/components/table';
 import { ContextData } from '@potta/components/context';
 import OrderSummary from './orderSummary';
 
+// Import or define the LineItem type
+export type DiscountType = 'PERCENTAGE' | 'FIXED' | 'NONE';
+
+export type LineItem = {
+  description: string;
+  quantity: number;
+  discountCap: number;
+  discountType: DiscountType;
+  unitPrice: number;
+  taxRate: number;
+  discountRate?: number;
+  productId: string;
+};
+
 const TableOPS = () => {
   const context = useContext(ContextData);
 
-  const deleteItem = (id: string) => {
-    context?.setData(context?.data.filter((item: any) => item.id !== id));
+  const deleteItem = (productId: string) => {
+    context?.setData(context?.data.filter((item: LineItem) => item.productId !== productId));
   };
 
   const calculateTotalPrice = () => {
     if (!context?.data) return;
 
-    const calculatedSubtotal = context.data.reduce((acc: number, item: any) => {
-      const price = Number(item.price);
+    const calculatedSubtotal = context.data.reduce((acc: number, item: LineItem) => {
+      const price = Number(item.unitPrice);
       const quantity = Number(item.quantity);
       return acc + price * quantity;
     }, 0);
 
-    // Assuming tax is 10% of subtotal
-    const calculatedTax = calculatedSubtotal * 0.1;
+    // Calculate tax based on each item's tax rate
+    const calculatedTax = context.data.reduce((acc: number, item: LineItem) => {
+      const price = Number(item.unitPrice);
+      const quantity = Number(item.quantity);
+      const taxRate = Number(item.taxRate) / 100; // Assuming taxRate is stored as percentage
+      return acc + (price * quantity * taxRate);
+    }, 0);
 
-    // Calculate final total with current discount from context
-    const calculatedTotal = calculatedSubtotal + calculatedTax - (context.orderSummary?.discount || 0);
+    // Calculate item discounts
+    const itemDiscounts = context.data.reduce((acc: number, item: LineItem) => {
+      const price = Number(item.unitPrice);
+      const quantity = Number(item.quantity);
+      const discountRate = Number(item.discountRate || 0);
+
+      let discount = 0;
+      if (item.discountType === 'PERCENTAGE') {
+        discount = price * quantity * (discountRate / 100);
+        // Apply discount cap if needed
+        if (item.discountCap > 0 && discount > item.discountCap) {
+          discount = item.discountCap;
+        }
+      } else if (item.discountType === 'FIXED') {
+        discount = discountRate * quantity;
+      }
+
+      return acc + discount;
+    }, 0);
+
+    // Calculate final total with current order-level discount from context
+    const orderDiscount = context.orderSummary?.discount || 0;
+    const totalDiscount = itemDiscounts + orderDiscount;
+    const calculatedTotal = calculatedSubtotal + calculatedTax - totalDiscount;
 
     // Update order summary in context
     context?.setOrderSummary({
       subtotal: calculatedSubtotal,
       tax: calculatedTax,
-      discount: context.orderSummary?.discount || 0,
+      discount: orderDiscount,
+      itemDiscounts: itemDiscounts,
       total: calculatedTotal
     });
   };
@@ -39,10 +81,10 @@ const TableOPS = () => {
     calculateTotalPrice();
   }, [context?.data, context?.orderSummary?.discount]);
 
-  const handleQuantityChange = (itemId: string, change: number) => {
-    context?.setData((prevData: any) =>
-      prevData.map((item: any) => {
-        if (item.id === itemId) {
+  const handleQuantityChange = (productId: string, change: number) => {
+    context?.setData((prevData: LineItem[]) =>
+      prevData.map((item: LineItem) => {
+        if (item.productId === productId) {
           const newQuantity = item.quantity + change;
           if (newQuantity < 1) {
             alert('Minimum quantity is 1');
@@ -55,18 +97,39 @@ const TableOPS = () => {
     );
   };
 
+  const calculateItemDiscount = (item: LineItem): number => {
+    const price = Number(item.unitPrice);
+    const quantity = Number(item.quantity);
+    const discountRate = Number(item.discountRate || 0);
+
+    if (item.discountType === 'NONE') return 0;
+
+    let discount = 0;
+    if (item.discountType === 'PERCENTAGE') {
+      discount = price * quantity * (discountRate / 100);
+      // Apply discount cap if needed
+      if (item.discountCap > 0 && discount > item.discountCap) {
+        discount = item.discountCap;
+      }
+    } else if (item.discountType === 'FIXED') {
+      discount = discountRate * quantity;
+    }
+
+    return discount;
+  };
+
   const columns = [
     {
       name: 'Name',
       width: '170px',
-      selector: (row: any) => row.name,
+      selector: (row: LineItem) => row.description,
     },
     {
       name: 'Quantity',
-      selector: (row: any) => (
+      selector: (row: LineItem) => (
         <div className="flex space-x-1 items-center">
           <button
-            onClick={() => handleQuantityChange(row.id, -1)}
+            onClick={() => handleQuantityChange(row.productId, -1)}
             disabled={row.quantity <= 1}
             className="h-[20px] bg-red-500 border-red-500 px-2 items-center border text-white flex justify-center w-[20px]"
           >
@@ -79,7 +142,7 @@ const TableOPS = () => {
             className="h-[26px] w-1/3 text-base outline-none pl-2"
           />
           <button
-            onClick={() => handleQuantityChange(row.id, 1)}
+            onClick={() => handleQuantityChange(row.productId, 1)}
             className="h-[20px] bg-green-800 border-green-800 px-2 text-white border-y border-r w-[20px] items-center flex justify-center"
           >
             <i className="ri-add-line text-lg"></i>
@@ -89,39 +152,40 @@ const TableOPS = () => {
     },
     {
       name: 'Price',
-      selector: (row: any) => {
-        const price = Number(row.price);
+      selector: (row: LineItem) => {
+        const price = Number(row.unitPrice);
         return isNaN(price) ? '0.00' : `$${price.toFixed(2)}`;
       },
     },
     {
       name: 'Discount',
-      selector: (row: any) => {
-        const tax = Number(row.tax);
-        return isNaN(tax) ? '0.00' : `$${tax.toFixed(2)}`;
+      selector: (row: LineItem) => {
+        const discount = calculateItemDiscount(row);
+        return isNaN(discount) ? '0.00' : `$${discount.toFixed(2)}`;
       },
     },
     {
       name: 'Total',
-      selector: (row: any) => {
-        const price = Number(row.price);
-        const tax = Number(row.tax);
+      selector: (row: LineItem) => {
+        const price = Number(row.unitPrice);
         const quantity = Number(row.quantity);
+        const discount = calculateItemDiscount(row);
+        const taxAmount = price * quantity * (row.taxRate / 100);
 
-        if (isNaN(price) || isNaN(tax) || isNaN(quantity)) {
+        if (isNaN(price) || isNaN(quantity)) {
           return '$0.00';
         }
 
-        const subtotal = (price + tax) * quantity;
+        const subtotal = (price * quantity) + taxAmount - discount;
         return `$${subtotal.toFixed(2)}`;
       },
     },
     {
       name: '',
-      selector: (row: any) => (
+      selector: (row: LineItem) => (
         <button
           className="text-red-500 hover:text-red-400"
-          onClick={() => deleteItem(row.id)}
+          onClick={() => deleteItem(row.productId)}
         >
           <i className="ri-delete-bin-line text-xl"></i>
         </button>
@@ -146,6 +210,7 @@ const TableOPS = () => {
         <OrderSummary
           subtotal={context?.orderSummary?.subtotal || 0}
           discount={context?.orderSummary?.discount || 0}
+          itemDiscounts={context?.orderSummary?.itemDiscounts || 0}
           tax={context?.orderSummary?.tax || 0}
           total={context?.orderSummary?.total || 0}
           setDiscount={(newDiscount: number) => {
@@ -153,7 +218,7 @@ const TableOPS = () => {
               context.setOrderSummary(prev => ({
                 ...prev,
                 discount: newDiscount,
-                total: prev.subtotal + prev.tax - newDiscount
+                total: prev.subtotal + prev.tax - (prev.itemDiscounts + newDiscount)
               }));
             }
           }}

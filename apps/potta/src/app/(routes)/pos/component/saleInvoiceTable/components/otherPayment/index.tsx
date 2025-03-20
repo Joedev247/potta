@@ -144,6 +144,7 @@ const OtherPayment = () => {
         subtotal={context?.orderSummary?.subtotal || 0}
         discount={context?.orderSummary?.discount || 0}
         tax={context?.orderSummary?.tax || 0}
+        itemDiscounts={context?.orderSummary?.itemDiscounts || 0}
         total={context?.orderSummary?.total || 0}
         setDiscount={(newDiscount: number) => {
           if (context?.setOrderSummary) {

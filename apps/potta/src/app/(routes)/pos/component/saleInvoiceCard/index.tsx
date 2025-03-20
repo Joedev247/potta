@@ -6,6 +6,20 @@ import { Filter, Product } from '../../utils/types';
 import useGetAllProducts from '../../hooks/useGetAllProducts';
 import Image from 'next/image';
 
+// LineItem interface as provided
+export type DiscountType = 'FlatRate' | 'Percentage' | 'PercentageWithCap';
+
+export type LineItem = {
+  description: string;
+  quantity: number;
+  discountCap: number;
+  discountType: DiscountType;
+  unitPrice: number;
+  taxRate: number;
+  discountRate?: number;
+  productId: string;
+};
+
 // Convert API Product type to MenuItem type
 const convertProductToMenuItem = (product: Product): MenuItem => ({
   id: product.uuid,
@@ -111,29 +125,44 @@ const SaleInvoiceCard = () => {
     return () => window.removeEventListener('keydown', handleKeyPress);
   }, []);
 
+  // Convert MenuItem to LineItem with the required fields
+  const convertToLineItem = (menuItem: MenuItem): LineItem => ({
+    description: menuItem.name,
+    quantity: 1,
+    discountCap: 0,
+    discountType: 'FlatRate',
+    unitPrice:menuItem.price,
+    taxRate: menuItem.tax,
+    discountRate: 0,
+    productId: menuItem.id,
+  });
+
   const addItem = (itemToAdd: MenuItem) => {
     if (itemToAdd.stock && itemToAdd.stock <= 0) {
       // You could add a toast notification here for out of stock items
       return;
     }
 
-    context?.setData((prevData: MenuItem[]) => {
-      const existingItem = prevData?.find((item) => item.id === itemToAdd.id);
+    context?.setData((prevData: LineItem[]) => {
+      const existingItem = prevData?.find((item) => item.productId === itemToAdd.id);
 
       if (existingItem) {
         if (itemToAdd.stock && existingItem.quantity >= itemToAdd.stock) {
           return prevData;
         }
         return prevData.map((item) =>
-          item.id === itemToAdd.id
+          item.productId === itemToAdd.id
             ? { ...item, quantity: item.quantity + 1 }
             : item
         );
       }
 
+      // Convert to LineItem when adding new item
+      const lineItem = convertToLineItem(itemToAdd);
+
       return prevData?.length > 0
-        ? [...prevData, { ...itemToAdd, quantity: 1 }]
-        : [{ ...itemToAdd, quantity: 1 }];
+        ? [...prevData, lineItem]
+        : [lineItem];
     });
   };
 
@@ -254,6 +283,16 @@ const SaleInvoiceCard = () => {
                   </div>
                 </div>
               ))}
+            </div>
+          )}
+          {filteredMenus.length === 0 && searchTerm !== '' && (
+            <div className="flex justify-center items-center h-full">
+              <p className="text-center text-gray-500">No matching items found.</p>
+            </div>
+          )}
+          {filteredMenus.length === 0 && searchTerm === '' && (
+            <div className="flex justify-center items-center h-full">
+              <p className="text-center text-gray-500">No items found.</p>
             </div>
           )}
         </div>

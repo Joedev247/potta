@@ -1,3 +1,4 @@
+// salesReceiptTypes.ts
 export type Filter = {
   limit: number;
   page: number;
@@ -5,50 +6,81 @@ export type Filter = {
   sortOrder?: 'ASC' | 'DESC';
   search?: string;
 };
+// UUID Regex Pattern
+export const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
-type Vendor = {
+// Enum Types
+export const PaymentMethods = ['Credit Card', 'Bank Transfer', 'ACH Transfer', 'Other'] as const;
+export type PaymentMethod = typeof PaymentMethods[number];
 
-  uuid: string,
-  createdAt: string | null,
-  createdBy: string | null,
-  updatedBy: string | null,
-  deletedAt: string | null,
-  updatedAt: string | null,
-  orgId: string | null,
-  vendorId: string | null,
-  type: string,
-  name: string | null,
-  paymentTerms: string | null,
-  paymentMethod: string | null,
-  accountDetails: string | null,
-  openingBalance: string | null,
-  currency: string,
-  phone: string | null,
-  email: string | null,
-  contactPerson: string | null,
-  website: string | null,
-  taxId: string | null,
-  classification: string,
-  notes: string | null,
-  status: string | null,
-  address: {
-    uuid: string | null,
-    createdAt: string | null,
-    createdBy: null,
-    updatedBy: null,
-    deletedAt: null,
-    updatedAt: string | null,
-    address: string | null,
-    city: string | null,
-    state: string | null,
-    country: string | null,
-    postalCode: string | null,
-    latitude: number,
-    longitude: number,
-    geospatialLocation: string | null
-  }
+export const DiscountTypes = ['FlatRate', 'Percentage', 'PercentageWithCap'] as const;
+export type DiscountType = typeof DiscountTypes[number];
 
-}
+// Line Item Type
+export type LineItem = {
+  description: string;
+  quantity: number;
+  discountCap: number;
+  discountType: DiscountType;
+  unitPrice: number;
+  taxRate: number;
+  discountRate?: number;
+  productId: string;
+};
+
+// Sales Receipt Type
+export type SalesReceipt = {
+  saleDate: string;
+  totalAmount: number;
+  paymentReference?: string;
+  notes?: string;
+  paymentMethod: PaymentMethod;
+  receiptNumber?: string;
+  discountAmount: number;
+  customerId: string;
+  salePerson: string;
+  lineItems: LineItem[];
+};
+
+// Optional: Type for unregistered customer sales
+export type UnregisteredSalesReceipt = Omit<SalesReceipt, 'customerId'> & {
+  customerId?: string;
+};
+
+// Response Types
+export type SalesReceiptResponse = {
+  success: boolean;
+  data: SalesReceipt;
+  message?: string;
+};
+
+export type SalesReceiptListResponse = {
+  success: boolean;
+  data: SalesReceipt[];
+  meta: {
+    itemsPerPage: number;
+    totalItems: number;
+    currentPage: number;
+    totalPages: number;
+  };
+  message?: string;
+};
+
+// Filter Type for Sales Receipt Queries
+export type SalesReceiptFilter = {
+  limit: number;
+  page: number;
+  sortBy?: 'saleDate' | 'totalAmount' | 'createdAt' | 'updatedAt';
+  sortOrder?: 'ASC' | 'DESC';
+  search?: string;
+  startDate?: string;
+  endDate?: string;
+  paymentMethod?: PaymentMethod;
+  minAmount?: number;
+  maxAmount?: number;
+  customerId?: string;
+  salePerson?: string;
+};
 export type Product = {
   uuid: string,
   createdAt: string,
@@ -69,7 +101,7 @@ export type Product = {
   category: string,
   images: null,
   status: string,
-  vendor: Vendor
+
 }
 
 
@@ -82,4 +114,3 @@ export type ProductResponse = {
     totalPages: number
   }
 }
-

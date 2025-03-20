@@ -13,6 +13,8 @@ interface InvoiceItem {
 interface OrderSummary {
   subtotal: number;
   discount: number;
+
+  itemDiscounts: number;
   tax: number;
   total: number;
 }
@@ -97,6 +99,7 @@ const DataProvider: React.FC<Children> = ({ children }) => {
   const [orderSummary, setOrderSummary] = useState<OrderSummary>({
     subtotal: 0,
     discount: 0,
+    itemDiscounts: 0,
     tax: 0,
     total: 0
   });

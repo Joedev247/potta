@@ -1,6 +1,6 @@
 import { CustomerPayload } from './validations';
 // import axios from 'config/axios.config';
-import axios from 'config/posconfig';
+import axios from 'config/axios.config';
 import { CustomerFilter, Customer, CustomerResponse } from './types';
 import { AxiosResponse } from 'axios';
 
@@ -23,7 +23,8 @@ export const customerApi = {
     const result:CustomerResponse = await axios.post(
       `customer/filter?${queryParams}`
     );
-   return result
+    console.log(result);
+   return result.data
   },
   getOne: async (customer_id: string) => {
     const result = await axios.get<Customer>(`/customer/details/${customer_id}`);
