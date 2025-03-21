@@ -9,7 +9,7 @@ export const posApi = {
     return result;
   },
   getAll: async (filter: Filter) => {
-    const result = await axios.get(`/vendor/6099ee5e-7f6d-4d5c-a804-1e186f517a09/products`, {
+    const result = await axios.get(`/vendor/products`, {
       params: { ...filter },
     });
     return result.data

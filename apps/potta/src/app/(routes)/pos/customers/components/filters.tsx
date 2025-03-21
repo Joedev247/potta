@@ -3,7 +3,7 @@ import Button from '@potta/components/button';
 import Search from '@potta/components/search';
 import Select from '@potta/components/select';
 import React, { useState } from 'react';
-import SliderVendor from './customerSlider';
+import SliderCustomer from './customerSlider';
 import { PopoverAction } from '@potta/components/tableActionsPopover';
 import { NextPopover } from '@potta/components/popover';
 
@@ -103,7 +103,7 @@ const Filter = () => {
             }
           />
 
-          <SliderVendor  open={isCreateOpen} setOpen={setIsCreateOpen}/>
+          <SliderCustomer  open={isCreateOpen} setOpen={setIsCreateOpen}/>
         </div>
       </div>
     </div>

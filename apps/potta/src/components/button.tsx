@@ -13,6 +13,7 @@ type Props = {
     width?: 'full' ;
     height?: boolean,
     color?: boolean,
+    rounded?: boolean
 
 };
 
@@ -28,12 +29,12 @@ const themes = {
 
 };
 
-const Button = ({ onClick, text, icon, theme, color, type, isLoading, width, height, }: Props) => {
+const Button = ({ onClick, text, icon, theme, color, type, isLoading, width, height, rounded }: Props) => {
 
   return (
     <button
       type={type}
-      className={`${color ? 'text-black' : 'text-white'} items-center text-center gap-2 cursor-pointer ${width ? 'w-full text-center' : 'flex text-center justify-end'} ${theme ? themes[theme] : themes.default} rounded-[2px] ${height ? 'py-1.5' : 'py-4'}  px-6 ${isLoading ? "opacity-65" : "opacity-none"}`}
+      className={`${color ? 'text-black' : 'text-white'} items-center text-center gap-2 cursor-pointer ${width ? 'w-full text-center' : 'flex text-center justify-end'} ${theme ? themes[theme] : themes.default} ${rounded ? "rounded-full" : "rounded-[2px]"}  ${height ? 'py-1' : 'py-4'}  px-6 ${isLoading ? "opacity-65" : "opacity-none"}`}
       onClick={onClick}
     >
       {icon && icon}

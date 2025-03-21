@@ -7,7 +7,7 @@ import {
   PopoverContent,
   Button,
 } from '@nextui-org/react';
-import { Filter } from '../_utils/types';
+import { Filter, Product } from '../_utils/types';
 import useGetAllProducts from '../_hooks/useGetAllProducts';
 import DeleteModal from './deleteModal';
 import CustomPopover from '@potta/components/popover';
@@ -28,7 +28,7 @@ const InventoryTable = () => {
   const columns = [
     {
       name: 'Name',
-      selector: (row: any) => (
+      selector: (row: Product) => (
         <div className="flex items-center space-x-3">
           <img src="https://static.nike.com/a/images/t_prod_ss/w_960,c_limit,f_auto/df31fd61-2df7-4c21-9326-94b45f799994/air-jordan-6-university-blue-ct8529-410-release-date.jpg" alt="" width={60} height={60} />
           <p className="mt-0.5">{row.name}</p>
@@ -37,27 +37,27 @@ const InventoryTable = () => {
     },
     {
       name: 'Sku',
-      selector: (row: { sku: any }) => row.sku,
+      selector: (row: Product) => row.sku,
     },
     {
       name: 'Type',
-      selector: (row: { category: any }) => row.category,
+      selector: (row: Product) => row.category,
     },
     {
       name: 'Cost',
-      selector: (row: any) =>  <div>{row.vendor.currency} {row.cost}</div>,
+      selector: (row: Product) =>  <div> {row.cost}</div>,
     },
     {
       name: 'Sale Price',
-      selector: (row:  any) => <div>{row.vendor.currency} {row.salesPrice}</div>,
+      selector: (row: Product) => <div> {row.salesPrice}</div>,
     },
     {
       name: 'Inventory',
-      selector: (row: any) => <div>{row.inventoryLevels}</div>,
+      selector: (row: Product) => <div>{row.inventoryLevel}</div>,
     },
     {
       name: 'Reorder Point',
-      selector: (row: { points: any }) => <div className="">355</div>,
+      selector: (row: Product) => <div className="">355</div>,
     },
     {
       name: '',
@@ -104,25 +104,13 @@ const InventoryTable = () => {
       },
     },
   ];
-  const data = [
-    {
-      id: 'Inv 001',
-      name: 'Black Shoes Nike',
-      img: '/icons/shoes.svg',
-      sku: '194E175W',
-      type: 'Inventory',
-      cost: 'Xaf 350,000',
-      salePrice: 'Xaf 450,000',
-      inventory: '245',
-      points: '23 ',
-    },
-  ];
+
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(10);
 
   const filter: Filter = { page, limit };
   const {
-    data: products,
+    data,
     isLoading,
     error,
     refetch,
@@ -139,13 +127,13 @@ const InventoryTable = () => {
       <div></div>
       <Table
         columns={columns}
-        data={products?.data || []}
+        data={data?.data || []}
         ExpandableComponent={null}
         expanded
         pagination
         pending={isLoading}
         paginationServer
-        paginationTotalRows={products?.meta?.totalItems ?? 0}
+        paginationTotalRows={data?.meta?.totalItems ?? 0}
         onChangePage={handlePageChange}
         onChangeRowsPerPage={handlePerRowsChange}
       />

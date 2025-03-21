@@ -108,7 +108,7 @@ const ViewProductSlider: React.FC<ProductDetailsProps> = ({
           </div>
           <div className="w-full grid grid-cols-2 gap-3">
             <Text name="Created At" value={data.createdAt} height />
-            <Text name="Vendor Name" value={data.vendor.name} height />
+            
           </div>
 
           {/* <div className="text-center md:text-right mt-4 md:flex md:justify-end space-x-4">

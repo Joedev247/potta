@@ -16651,6 +16651,11 @@
       },
       {
         "source": "potta",
+        "target": "npm:lodash",
+        "type": "static"
+      },
+      {
+        "source": "potta",
         "target": "npm:react-icons",
         "type": "static"
       },
@@ -43900,5 +43905,5 @@
   },
   "version": "6.0",
   "errors": [],
-  "computedAt": 1742466709947
+  "computedAt": 1742580558956
 }

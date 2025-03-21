@@ -3,7 +3,7 @@ import Button from '@potta/components/button';
 import Search from '@potta/components/search';
 import Select from '@potta/components/select';
 import React, { useState } from 'react';
-import NewSalesReciept from './newSalesReceipt/newSalesSlide';
+import NewSalesReciept from '../new/page';
 
 const Filter = () => {
   const [selectedValue, setSelectedValue] = useState('All Time'); // Set your default value here
@@ -68,7 +68,7 @@ const Filter = () => {
             />
           </div>
           <div className="w-full">
-            <NewSalesReciept />
+            
           </div>
         </div>
       </div>
