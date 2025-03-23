@@ -20,6 +20,7 @@ interface SearchSelectProps extends Omit<SelectProps<Option, false>, 'value' | '
   isClearable?: boolean;
   minInputLength?: number;
   isAsync?: boolean;
+  required?: boolean;
 }
 
 const SearchSelect: React.FC<SearchSelectProps> = ({
@@ -34,12 +35,19 @@ const SearchSelect: React.FC<SearchSelectProps> = ({
   isClearable = true,
   minInputLength = 0,
   isAsync = false,
+  required = false,
+  className,
   ...props
 }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [inputValue, setInputValue] = useState('');
   const [dynamicOptions, setDynamicOptions] = useState<Option[]>(options);
   const [fetchError, setFetchError] = useState<string | null>(null);
+
+  // Update dynamicOptions when options prop changes
+  useEffect(() => {
+    setDynamicOptions(options);
+  }, [options]);
 
   // Debounced function to load options
   const debouncedLoadOptions = useCallback(
@@ -88,34 +96,51 @@ const SearchSelect: React.FC<SearchSelectProps> = ({
   };
 
   const customStyles = {
+    container: (base: any) => ({
+      ...base,
+      marginTop: '0.5rem', // mt-2
+    }),
     control: (base: any, state: { isFocused: boolean }) => ({
       ...base,
-      minHeight: '42px',
-      borderColor: error ? '#ef4444' : state.isFocused ? '#2563eb' : '#e5e7eb',
-      boxShadow: state.isFocused ? '0 0 0 1px #2563eb' : 'none',
+      minHeight: '46px',
+      padding: '0.25rem 0', // to match py-2.5
+      borderRadius: '2px', // rounded-[2px]
+      borderColor: state.isFocused ? '#3b82f6' : '#e5e7eb', // border-gray-200, focus:border-blue-500
+      boxShadow: state.isFocused ? '0 0 0 2px #3b82f6' : 'none', // focus:ring-2 focus:ring-blue-500
       '&:hover': {
-        borderColor: error ? '#ef4444' : '#2563eb',
+        borderColor: state.isFocused ? '#3b82f6' : '#e5e7eb',
       },
+    }),
+    valueContainer: (base: any) => ({
+      ...base,
+      padding: '0 1rem', // px-4
+    }),
+    input: (base: any) => ({
+      ...base,
+      color: '#111827',
+      padding: '0',
+      margin: '0',
+
     }),
     placeholder: (base: any) => ({
       ...base,
       color: '#9ca3af',
     }),
-    input: (base: any) => ({
+    singleValue: (base: any) => ({
       ...base,
       color: '#111827',
     }),
     option: (base: any, state: { isSelected: boolean; isFocused: boolean }) => ({
       ...base,
       backgroundColor: state.isSelected
-        ? '#2563eb'
+        ? '#3b82f6'
         : state.isFocused
-          ? '#e5e7eb'
+          ? '#f3f4f6'
           : 'transparent',
       color: state.isSelected ? 'white' : '#111827',
       cursor: 'pointer',
       '&:active': {
-        backgroundColor: '#2563eb',
+        backgroundColor: '#3b82f6',
       },
     }),
     loadingMessage: (base: any) => ({
@@ -126,27 +151,55 @@ const SearchSelect: React.FC<SearchSelectProps> = ({
       ...base,
       color: '#6b7280',
     }),
+    indicatorSeparator: () => ({
+      display: 'none', // Remove the separator
+    }),
+    dropdownIndicator: (base: any) => ({
+      ...base,
+      padding: '0 0.5rem',
+    }),
+    clearIndicator: (base: any) => ({
+      ...base,
+      padding: '0 0.5rem',
+    }),
+    menu: (base: any) => ({
+      ...base,
+      marginTop: '4px',
+      borderRadius: '2px',
+      border: '1px solid #e5e7eb',
+      boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
+    }),
   };
 
   const SelectComponent = isAsync ? AsyncSelect : Select;
 
+  // For debugging
+  console.log('SearchSelect props:', {
+    options,
+    dynamicOptions,
+    value,
+    isLoading,
+    isAsync
+  });
+
   return (
-    <div className="w-full">
+    <div className={`w-full `}>
       {label && (
-        <label className="block text-sm font-medium text-gray-700 mb-1">
+        <span className="mb-3 text-gray-900 font-medium">
           {label}
-        </label>
+          {required && <span className="text-red-500">*</span>}
+        </span>
       )}
       <SelectComponent
         className="w-full"
         classNamePrefix="search-select"
         value={value}
-        onChange={(newValue) => onChange?.(newValue)}
+        onChange={(newValue: Option | null) => onChange?.(newValue)}
         isSearchable={isSearchable}
         isClearable={isClearable}
         placeholder={placeholder}
         isLoading={isLoading}
-        options={isAsync ? undefined : dynamicOptions}
+        options={isAsync ? undefined : options}
         loadOptions={isAsync ? loadOptionsAsync : undefined}
         onInputChange={(newValue) => handleInputChange(newValue)}
         noOptionsMessage={({ inputValue }) => {
@@ -161,61 +214,10 @@ const SearchSelect: React.FC<SearchSelectProps> = ({
         {...props}
       />
       {error && (
-        <p className="mt-1 text-sm text-red-500">
-          {error}
-        </p>
+        <small className="col-span-2 text-red-500">{error}</small>
       )}
     </div>
   );
 };
 
 export default SearchSelect;
-
-
-
-// 'use client'
-// import { useState } from 'react';
-// import SearchSelect, { Option } from '@/components/search-select';
-
-// const ExamplePage = () => {
-//   const [selectedOption, setSelectedOption] = useState<Option | null>(null);
-
-//   // Example API function to load options
-//   const loadOptions = async (inputValue: string): Promise<Option[]> => {
-//     try {
-//       // Replace with your API endpoint
-//       const response = await fetch(`/api/search?query=${encodeURIComponent(inputValue)}`);
-
-//       if (!response.ok) {
-//         throw new Error('Failed to fetch options');
-//       }
-
-//       const data = await response.json();
-
-//       // Transform your API response to Option format
-//       return data.map((item: any) => ({
-//         value: item.id,
-//         label: item.name,
-//       }));
-//     } catch (error) {
-//       console.error('Error loading options:', error);
-//       throw error;
-//     }
-//   };
-
-//   return (
-//     <div className="p-4">
-//       <SearchSelect
-//         label="Search Items"
-//         value={selectedOption}
-//         onChange={setSelectedOption}
-//         loadOptions={loadOptions}
-//         isAsync={true} // Use async loading
-//         minInputLength={2} // Only start searching after 2 characters
-//         placeholder="Type to search..."
-//       />
-//     </div>
-//   );
-// };
-
-// export default ExamplePage;

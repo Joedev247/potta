@@ -1,3 +1,4 @@
+"use client"
 import { useQuery } from '@tanstack/react-query';
 import { customerApi } from '../utils/api';
 import { Customer } from '../utils/types';

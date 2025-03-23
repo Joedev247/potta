@@ -14,4 +14,4 @@ const useGetAllCustomers = (filter: CustomerFilter) => {
   });
 };
 
-export default useGetAllCustomers; 
+export default useGetAllCustomers;

@@ -20,7 +20,7 @@ export const customerApi = {
   getAll: async (filter: Record<string, any> = {}) => {
     const queryParams = new URLSearchParams(filter).toString();
 
-    const result:CustomerResponse = await axios.post(
+    const result = await axios.post(
       `customer/filter?${queryParams}`
     );
     console.log(result);
@@ -28,7 +28,8 @@ export const customerApi = {
   },
   getOne: async (customer_id: string) => {
     const result = await axios.get<Customer>(`/customer/details/${customer_id}`);
-    return result;
+    
+    return result.data;
   },
   update: async (customer_id: string,data: unknown) => {
     const result = await axios.put(`/customer/${customer_id}`, data,{
