@@ -1,7 +1,7 @@
 import { useContext, useState } from 'react';
 import { ContextData } from '@potta/components/context';
 import SearchSelect, { Option } from '@potta/components/search-select'; // Import Option type
-import useGetAllProducts from '../../../inventory/_hooks/useGetAllProducts';
+import useGetAllProducts from '@potta/app/(routes)/pos/inventory/_hooks/useGetAllProducts';
 
 
 interface Product {
@@ -136,23 +136,24 @@ export default function DynamicTable() {
       <table className="min-w-full border-collapse text-gray-500">
         <thead>
           <tr className="bg-gray-100">
-            <th className="text-left px-10 py-2">Product</th>
-            <th className="text-left px-4 py-2">Qty</th>
-            <th className="text-left px-4 py-2">Price</th>
-            <th className="text-left px-4 py-2">Tax</th>
-            <th className="text-left px-4 py-2">Actions</th>
+            <th colSpan={3} className="text-center px-10 py-2">Product</th>
+            <th colSpan={1} className="text-center px-4 py-2">Qty</th>
+            <th colSpan={1}className="text-center px-4 py-2">Price</th>
+            <th colSpan={1}className="text-center px-4 py-2">Tax</th>
+            <th colSpan={1}className="text-center px-4 py-2">Actions</th>
+
           </tr>
         </thead>
         <tbody>
           {rows.map((row: any) => (
             <tr key={row.id}>
-              <td className="px-10 py-2">
+              <td colSpan={3} className="px-10 py-2">
                  {row.name}
               </td>
-              <td className="px-4 py-2">{row.qty}</td>
-              <td className="px-4 py-2">{currencySymbol} {row.price}</td>
-              <td className="px-4 py-2">{row.tax}%</td>
-              <td className="px-4 py-2">
+              <td className="px-4 py-2 text-center">{row.qty}</td>
+              <td className="px-4 py-2 text-center">{currencySymbol} {row.price}</td>
+              <td className="px-4 py-2 text-center">{row.tax}%</td>
+              <td className="px-4 py-2 text-center">
                 <button
                   onClick={() => handleRemoveRow(row.id)}
                   className="text-red-500"
@@ -162,8 +163,10 @@ export default function DynamicTable() {
               </td>
             </tr>
           ))}
-          <tr className="py-4">
-            <td className="mb-2">
+        </tbody>
+      </table>
+          <tr className="py-4 grid grid-cols-8 gap-4">
+            <td className="mb-2 col-span-3">
               <SearchSelect
                 options={productOptions}
                 value={selectedProduct ? { label: selectedProduct.label, value: selectedProduct.value } : null}
@@ -180,7 +183,7 @@ export default function DynamicTable() {
                 type="number"
                 value={qty}
                 onChange={(e) => setQty(parseInt(e.target.value))}
-                className="border border-gray-300 px-2 pl-3 py-2.5 w-full outline-none mt-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                className="border border-gray-300 px-2 pl-3 py-2.5 w-full outline-none mt-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-center"
               />
             </td>
             <td className="relative">
@@ -189,12 +192,12 @@ export default function DynamicTable() {
                 type="number"
                 value={price}
                 onChange={(e) => setPrice(parseFloat(e.target.value))}
-                className="border border-gray-300 px-2 pl-8 py-2.5 w-full outline-none mt-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                className="border border-gray-300 px-2 pl-3 py-2.5 w-full outline-none mt-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-center"
                 disabled
               />
             </td>
             <td className="relative">
-             
+
               <input
                 type="number"
                 value={tax}
@@ -204,8 +207,6 @@ export default function DynamicTable() {
               />
             </td>
           </tr>
-        </tbody>
-      </table>
 
       <button
         onClick={handleAddRow}

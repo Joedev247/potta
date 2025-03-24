@@ -8,7 +8,8 @@ import { ContextData } from '@potta/components/context';
 import useGetAllCustomers from '@potta/app/(routes)/pos/customers/hooks/useGetAllCustomers';
 import SliderCustomer from '@potta/app/(routes)/pos/customers/components/customerSlider';
 import Select from '@potta/components/select';
-import { Customer } from '../../../customers/utils/types';
+import { Customer } from '@potta/app/(routes)/pos/customers/utils/types';
+
 
 // Define Option interface to match the one in SearchSelect component
 interface Option {
@@ -219,7 +220,7 @@ const Left = () => {
   return (
     <div className="max-w-4xl pl-2">
        <div className="flex  min-w-[45rem]  justify-between w-full mb-8 ">
-        <h3 className="text-2xl ">Create Sales Recipt</h3>
+        <h3 className="text-2xl ">Create Invoice</h3>
       </div>
       <div className="w-full grid grid-cols-4 gap-4">
         <div>

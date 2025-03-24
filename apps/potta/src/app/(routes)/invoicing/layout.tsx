@@ -12,8 +12,8 @@ const InvoiceLayout: FC<Props> = ({ children }) => {
   return (
     <NextUiProvider>
       <RootLayout>
-        <div className="w-full h-screen">
-          <div className="h-[100vh] w-full overflow-hidden  relative  p-0 ">
+        <div className="w-full ">
+          <div className=" w-full overflow-hidden  relative  p-0 ">
             {children}
           </div>
         </div>

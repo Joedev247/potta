@@ -14,7 +14,7 @@ const NewSalesReciept = () => {
       <div className="max-h-[98vh]">
         <ResizablePanelGroup direction="horizontal">
           <ResizablePanel minSize={40} defaultSize={60}>
-            <div className="py-8 px-10 h-[98vh] flex justify-center">
+            <div className="py-8  h-[98vh] flex justify-center">
               {/* Left */}
               <Left />
             </div>
