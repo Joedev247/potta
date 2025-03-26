@@ -20,7 +20,7 @@ const Sidebars = () => {
       {str[1] == undefined && <SidebarsPayment />}
       {str[1] == 'payments' && <SidebarsPayment />}
       {str[1] == 'expenses' && <SidebarsExpenses />}
-      {str[1] == 'invoicing' && <Sidebarsinvoicing />}
+      {str[1] == 'invoice' && <Sidebarsinvoicing />}
       {str[1] == 'POS' || (str[1] == 'pos' && <SidebarsPOS />)}
       {str[1] == 'taxation' && <SidebarsTaxation />}
       {str[1] == 'voucher' && <SidebarsVoucher />}

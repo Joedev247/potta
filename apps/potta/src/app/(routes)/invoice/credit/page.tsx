@@ -75,7 +75,7 @@ const Invoice = () => {
               {/*</Link>*/}
             </div>
             <div>
-              <Link href={'/invoice/new'}>
+              <Link href={'/invoicing/new_invoice'}>
                 <Button
                   text={'Create Invoice'}
                   icon={<i className="ri-file-add-line"></i>}

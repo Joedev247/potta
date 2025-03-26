@@ -57,10 +57,11 @@ const ModalCoupon: React.FC<CouponModalProps> = ({
     >
       <div className='h-[35vh] -mt-5 px-2 w-full flex flex-col justify-center'>
         <div className='w-full'>
-          <input
+          <Input
+          name="coupon"
             type='text'
             value={couponCode}
-            onChange={(e) => {
+            onchange={(e) => {
               setCouponCode(e.target.value);
               setError('');
             }}
@@ -77,7 +78,6 @@ const ModalCoupon: React.FC<CouponModalProps> = ({
           height={true}
           text='Apply'
           type='button'
-          theme=''
           icon={<i className='ri-arrow-right-line text-xl'></i>}
           onClick={handleApplyCoupon}
         />

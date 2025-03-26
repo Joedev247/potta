@@ -68,10 +68,11 @@ const HeldOrders: React.FC = () => {
         {heldOrders.map((order) => (
           <div
             key={order.id}
-            className="flex items-center gap-8 min-w-fit px-4 py-3 bg-[#A0E86F] text-black hover:bg-[#8ae74d] transition-colors"
+            onClick={() => handleSelectOrder(order)}
+            className="flex items-center gap-8 min-w-fit px-4 py-3 bg-[#A0E86F] text-black hover:bg-[#8ae74d] transition-colors cursor-pointer"
           >
             <button
-              onClick={() => handleSelectOrder(order)}
+              
               className=""
             >
               ID:{order.id}

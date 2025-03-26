@@ -24,7 +24,7 @@ export type LineItem = {
 const convertProductToMenuItem = (product: Product): MenuItem => ({
   id: product.uuid,
   name: product.name,
-  image: product.images || '/images/pottaLogo.svg',
+  image: product.images || '/images/placeholder.png',
   tax: product.taxRate,
   category: product.category,
   quantity: 0,
@@ -192,7 +192,7 @@ const SaleInvoiceCard = () => {
   }
 
   return (
-    <div className="w-full bg-slate-100 h-full py-3">
+    <div className="w-full bg-slate-50 h-full py-3">
       {/* Search Section */}
       <div className="flex w-full px-3 space-x-2">
         <div className="w-[50%] flex -mt-2">
@@ -233,8 +233,8 @@ const SaleInvoiceCard = () => {
               key={category.id}
               onClick={() => handleActive(category.id)}
               className={`${
-                activeId === category.id ? 'bg-green-500' : 'bg-green-800'
-              } border py-2 text-base rounded-3xl px-4 text-white mx-2 min-w-fit whitespace-nowrap`}
+                activeId === category.id ? 'bg-green-700' : 'bg-green-400'
+              } border py-2 text-base rounded-3xl px-4 hover:bg-green-700 text-white mx-2 min-w-fit whitespace-nowrap`}
             >
               {category.name}
             </button>
@@ -244,7 +244,7 @@ const SaleInvoiceCard = () => {
 
       {/* Menu Items Grid */}
       <div className="mt-2 w-full">
-        <div className="w-full h-[60vh] p-3 overflow-y-auto">
+        <div className="w-full h-[80vh] p-3 overflow-y-auto">
           {isLoading ? (
             <div className="flex justify-center items-center h-full">
               <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900"></div>
@@ -255,22 +255,22 @@ const SaleInvoiceCard = () => {
                 <div
                   key={menuItem.id}
                   onClick={() => addItem(menuItem)}
-                  className={`bg-white hover:border-green-800 hover:border cursor-pointer h-40 items-center flex flex-col justify-center relative w-full ${
+                  className={`bg-white hover:border-green-100 hover:bg-green-300 hover:border cursor-pointer h-48 items-center flex flex-col justify-center relative max-w-48  ${
                     menuItem.stock === 0 ? 'opacity-50' : ''
                   }`}
                 >
                   <Image
                     width={100}
                     height={100}
-                    src={menuItem.image || '/images/pottaLogo.svg'}
+                    src={menuItem.image || '/images/placeholder.png'}
                     alt={menuItem.name}
-                    className="h-24 w-auto -mt-5"
+                    className="h-32 w-auto mt-2"
                     onError={(e) => {
                       const target = e.target as HTMLImageElement;
-                      target.src = '/images/pottaLogo.svg'; // Fallback image path
+                      target.src = '/images/placeholder.png'; // Fallback image path
                     }}
                   />
-                  <p className="absolute bottom-0 mb-2 text-gray-500 font-thin">
+                  <p className=" text-gray-500 font-thin">
                     {menuItem.name}
                   </p>
                   {menuItem.stock === 0 && (
@@ -278,7 +278,7 @@ const SaleInvoiceCard = () => {
                       Out of Stock
                     </div>
                   )}
-                  <div className="absolute top-1 right-1 text-sm font-medium text-gray-700">
+                  <div className=" text-lg font-medium text-gray-700">
                     ${menuItem.price}
                   </div>
                 </div>

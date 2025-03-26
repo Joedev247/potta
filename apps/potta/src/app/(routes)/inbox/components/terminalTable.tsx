@@ -49,10 +49,17 @@ const TerminalDatatable = () => {
       terminal: 'James Craxton',
       reason: 'Inventory Restocks',
     },
+    {
+      id: 2,
+      amount: 'XAF 200,000',
+      Date: '02/04/24 | 03 : 55',
+      terminal: 'James Craxton',
+      reason: 'Inventory Restocks',
+    },
   ];
   return (
     <div className="mt-10">
-      <MyTable columns={columns} data={data} />
+      <MyTable columns={columns} data={data} minHeight='70vh' />
     </div>
   );
 };

@@ -61,10 +61,19 @@ const BillDatatable = () => {
       category: 'Electricity',
       reason: 'Inventory Restocks',
     },
+    {
+      id: 2,
+      vendor: 'MTN',
+      amount: 'XAF 300,000',
+      approvers: '1/3',
+      Date: 'Feb 04, 2024 ',
+      category: 'Electricity',
+      reason: 'Inventory Restocks',
+    },
   ];
   return (
     <div className="mt-10">
-      <MyTable columns={columns} data={data} />
+      <MyTable columns={columns} data={data} minHeight='70vh'/>
     </div>
   );
 };

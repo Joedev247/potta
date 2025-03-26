@@ -15,9 +15,10 @@ interface SelectProps {
     name?: string;
     label?: string;
     required?: boolean;
+    outline?: boolean
 }
 
-const Select: React.FC<SelectProps> = ({ options, selectedValue, onChange, bg, name, border, label, required }) => {
+const Select: React.FC<SelectProps> = ({ options, selectedValue, onChange, bg, name, border, label, required, outline }) => {
     const [isOpen, setIsOpen] = useState(false);
 
     const toggleDropdown = () => {
@@ -36,7 +37,7 @@ const Select: React.FC<SelectProps> = ({ options, selectedValue, onChange, bg, n
             <div
                 onClick={toggleDropdown}
                 tabIndex={0}  // Added to make it focusable
-                className={`${bg} relative cursor-pointer px-3 py-2.5 pr-8 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 w-full`}
+                className={`${bg} relative cursor-pointer px-3 py-2.5 pr-8  ${ !outline ?"focus:ring-blue-500 focus:border-blue-500 focus:outline-none focus:ring-2" : ""} w-full`}
             >
                 <span className="block truncate">{options.find(option => option.value === selectedValue)?.label || name}</span>
                 <span className="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">

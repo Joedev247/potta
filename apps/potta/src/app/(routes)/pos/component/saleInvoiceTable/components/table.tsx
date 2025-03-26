@@ -22,24 +22,29 @@ const TableOPS = () => {
   const context = useContext(ContextData);
 
   const deleteItem = (productId: string) => {
-    context?.setData(context?.data.filter((item: LineItem) => item.productId !== productId));
+    context?.setData(
+      context?.data.filter((item: LineItem) => item.productId !== productId)
+    );
   };
 
   const calculateTotalPrice = () => {
     if (!context?.data) return;
 
-    const calculatedSubtotal = context.data.reduce((acc: number, item: LineItem) => {
-      const price = Number(item.unitPrice);
-      const quantity = Number(item.quantity);
-      return acc + price * quantity;
-    }, 0);
+    const calculatedSubtotal = context.data.reduce(
+      (acc: number, item: LineItem) => {
+        const price = Number(item.unitPrice);
+        const quantity = Number(item.quantity);
+        return acc + price * quantity;
+      },
+      0
+    );
 
     // Calculate tax based on each item's tax rate
     const calculatedTax = context.data.reduce((acc: number, item: LineItem) => {
       const price = Number(item.unitPrice);
       const quantity = Number(item.quantity);
       const taxRate = Number(item.taxRate) / 100; // Assuming taxRate is stored as percentage
-      return acc + (price * quantity * taxRate);
+      return acc + price * quantity * taxRate;
     }, 0);
 
     // Calculate item discounts
@@ -73,7 +78,7 @@ const TableOPS = () => {
       tax: calculatedTax,
       discount: orderDiscount,
       itemDiscounts: itemDiscounts,
-      total: calculatedTotal
+      total: calculatedTotal,
     });
   };
 
@@ -126,6 +131,7 @@ const TableOPS = () => {
     },
     {
       name: 'Quantity',
+      width: '110px',
       selector: (row: LineItem) => (
         <div className="flex space-x-1 items-center">
           <button
@@ -139,7 +145,7 @@ const TableOPS = () => {
             type="text"
             value={row.quantity}
             readOnly
-            className="h-[26px] w-1/3 text-base outline-none pl-2"
+            className="h-[26px] w-[40px] text-base bg-slate-300 outline-none pl-2"
           />
           <button
             onClick={() => handleQuantityChange(row.productId, 1)}
@@ -176,12 +182,13 @@ const TableOPS = () => {
           return '$0.00';
         }
 
-        const subtotal = (price * quantity) + taxAmount - discount;
+        const subtotal = price * quantity + taxAmount - discount;
         return `$${subtotal.toFixed(2)}`;
       },
     },
     {
       name: '',
+      width:"36px",
       selector: (row: LineItem) => (
         <button
           className="text-red-500 hover:text-red-400"
@@ -205,6 +212,7 @@ const TableOPS = () => {
             selectable={false}
             expanded={true}
             color
+            minHeight='48vh'
           />
         </div>
         <OrderSummary
@@ -215,10 +223,11 @@ const TableOPS = () => {
           total={context?.orderSummary?.total || 0}
           setDiscount={(newDiscount: number) => {
             if (context?.setOrderSummary) {
-              context.setOrderSummary(prev => ({
+              context.setOrderSummary((prev) => ({
                 ...prev,
                 discount: newDiscount,
-                total: prev.subtotal + prev.tax - (prev.itemDiscounts + newDiscount)
+                total:
+                  prev.subtotal + prev.tax - (prev.itemDiscounts + newDiscount),
               }));
             }
           }}

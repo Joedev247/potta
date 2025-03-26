@@ -50,6 +50,219 @@
   "fileMap": {
     "nonProjectFiles": [],
     "projectFileMap": {
+      "@instanvi-global/source": [
+        {
+          "file": ".editorconfig",
+          "hash": "5443105041930014821"
+        },
+        {
+          "file": ".eslintignore",
+          "hash": "7663861978715868291"
+        },
+        {
+          "file": ".eslintrc.json",
+          "hash": "18315524891129148814"
+        },
+        {
+          "file": ".github/workflows/staging.yaml",
+          "hash": "6745584629413967094"
+        },
+        {
+          "file": ".gitignore",
+          "hash": "11170925426653951849"
+        },
+        {
+          "file": ".prettierignore",
+          "hash": "14688272390704683536"
+        },
+        {
+          "file": ".prettierrc",
+          "hash": "16267754514737964994"
+        },
+        {
+          "file": "Dockerfile",
+          "hash": "659189421521947874"
+        },
+        {
+          "file": "README.md",
+          "hash": "6840628470554381479"
+        },
+        {
+          "file": "docker-compose-build.yml",
+          "hash": "17454110849002822681"
+        },
+        {
+          "file": "docker-compose.yml",
+          "hash": "6344911347125248550"
+        },
+        {
+          "file": "jest.config.ts",
+          "hash": "3494843969422251966",
+          "deps": [
+            "npm:@nx/jest"
+          ]
+        },
+        {
+          "file": "jest.preset.js",
+          "hash": "9430166341120122740",
+          "deps": [
+            "npm:@nx/jest"
+          ]
+        },
+        {
+          "file": "nx.json",
+          "hash": "6581483826470430266"
+        },
+        {
+          "file": "package-lock.json",
+          "hash": "2612408419548144236"
+        },
+        {
+          "file": "package.json",
+          "hash": "16145696503970074203",
+          "deps": [
+            "npm:@iconify/react",
+            "npm:@nx/eslint",
+            "npm:@nx/eslint-plugin",
+            "npm:@nx/jest",
+            "npm:@nx/js",
+            "npm:@nx/next",
+            "npm:@nx/react",
+            "npm:@nx/workspace",
+            "npm:@swc-node/register",
+            "npm:@swc/cli",
+            "npm:@swc/core",
+            "npm:@swc/helpers",
+            "npm:@testing-library/react",
+            "npm:@types/crypto-js",
+            "npm:@types/jest",
+            "npm:@types/node",
+            "npm:@types/react",
+            "npm:@types/react-dom",
+            "npm:@types/react-world-flags",
+            "npm:@typescript-eslint/eslint-plugin",
+            "npm:@typescript-eslint/parser",
+            "npm:autoprefixer",
+            "npm:babel-jest",
+            "npm:eslint",
+            "npm:eslint-config-next",
+            "npm:eslint-config-prettier",
+            "npm:eslint-plugin-import",
+            "npm:eslint-plugin-jsx-a11y",
+            "npm:eslint-plugin-react",
+            "npm:eslint-plugin-react-hooks",
+            "npm:jest",
+            "npm:jest-environment-jsdom",
+            "npm:nx",
+            "npm:postcss",
+            "npm:prettier",
+            "npm:tailwindcss",
+            "npm:ts-jest",
+            "npm:ts-node",
+            "npm:typescript",
+            "npm:@headlessui/react",
+            "npm:@heroicons/react",
+            "npm:@hookform/resolvers",
+            "npm:@nextui-org/react",
+            "npm:@radix-ui/react-progress",
+            "npm:@tanstack/react-query",
+            "npm:@tanstack/react-table",
+            "npm:@types/react-csv",
+            "npm:apexcharts",
+            "npm:axios",
+            "npm:class-variance-authority",
+            "npm:clsx",
+            "npm:country-data-list",
+            "npm:country-list-with-dial-code-and-flag",
+            "npm:crypto-js",
+            "npm:framer-motion",
+            "npm:libphonenumber-js",
+            "npm:lucide-react",
+            "npm:moment",
+            "npm:next",
+            "npm:nookies",
+            "npm:react",
+            "npm:react-accessible-accordion",
+            "npm:react-apexcharts",
+            "npm:react-barcode",
+            "npm:react-csv",
+            "npm:react-data-table-component",
+            "npm:react-dom",
+            "npm:react-dropzone",
+            "npm:react-google-flight-datepicker",
+            "npm:react-hook-form",
+            "npm:react-hot-toast",
+            "npm:react-icomoon",
+            "npm:react-icons",
+            "npm:react-moment",
+            "npm:react-phone-number-input",
+            "npm:react-pro-sidebar",
+            "npm:react-resizable-panels",
+            "npm:react-select",
+            "npm:react-verification-input",
+            "npm:react-world-flags",
+            "npm:recharts",
+            "npm:remixicon",
+            "npm:sonner",
+            "npm:styled-components",
+            "npm:tailwind-merge",
+            "npm:tailwindcss-animate",
+            "npm:timezones-list",
+            "npm:tslib",
+            "npm:uuid",
+            "npm:yup"
+          ]
+        },
+        {
+          "file": "tsconfig.base.json",
+          "hash": "16257537213835165230"
+        }
+      ],
+      "core": [
+        {
+          "file": "libs/core/.eslintrc.json",
+          "hash": "11012487992710232822"
+        },
+        {
+          "file": "libs/core/README.md",
+          "hash": "862743182427189852"
+        },
+        {
+          "file": "libs/core/project.json",
+          "hash": "8215491323991500792"
+        },
+        {
+          "file": "libs/core/src/index.ts",
+          "hash": "1391443467439822800"
+        },
+        {
+          "file": "libs/core/src/lib/core.spec.tsx",
+          "hash": "10083302775005561580",
+          "deps": [
+            "npm:@testing-library/react"
+          ]
+        },
+        {
+          "file": "libs/core/src/lib/core.tsx",
+          "hash": "12083220179364162819"
+        },
+        {
+          "file": "libs/core/src/lib/hello-server.tsx",
+          "hash": "2397568674684759047"
+        },
+        {
+          "file": "libs/core/src/server.ts",
+          "hash": "8912437808649717296"
+        },
+        {
+          "file": "libs/core/tsconfig.json",
+          "hash": "14088618039610991405"
+        },
+        {
+          "file": "libs/core/tsconfig.lib.json",
+          "hash": "1536859351713546153"
+        }
+      ],
       "superApp": [
         {
           "file": "apps/superApp/.env.build",
@@ -1506,6 +1719,216 @@
           "hash": "6922413205408300107"
         }
       ],
+      "utilities": [
+        {
+          "file": "libs/utilities/.eslintrc.json",
+          "hash": "11012487992710232822"
+        },
+        {
+          "file": "libs/utilities/README.md",
+          "hash": "13228732804139331838"
+        },
+        {
+          "file": "libs/utilities/project.json",
+          "hash": "699343638286385166"
+        },
+        {
+          "file": "libs/utilities/src/index.ts",
+          "hash": "4979336273987222930"
+        },
+        {
+          "file": "libs/utilities/src/lib/configs/axios.ts",
+          "hash": "3794232511606065549",
+          "deps": [
+            "npm:crypto-js",
+            "npm:axios"
+          ]
+        },
+        {
+          "file": "libs/utilities/src/lib/configs/env.ts",
+          "hash": "12101586654834214904"
+        },
+        {
+          "file": "libs/utilities/src/lib/helpers/index.ts",
+          "hash": "10922730425443113868",
+          "deps": [
+            "npm:crypto-js",
+            "npm:country-list-with-dial-code-and-flag"
+          ]
+        },
+        {
+          "file": "libs/utilities/src/server.ts",
+          "hash": "5519843671682787663"
+        },
+        {
+          "file": "libs/utilities/tsconfig.json",
+          "hash": "14088618039610991405"
+        },
+        {
+          "file": "libs/utilities/tsconfig.lib.json",
+          "hash": "1536859351713546153"
+        }
+      ],
+      "ui-components": [
+        {
+          "file": "libs/ui-components/.eslintrc.json",
+          "hash": "11012487992710232822"
+        },
+        {
+          "file": "libs/ui-components/README.md",
+          "hash": "9995608240359739017"
+        },
+        {
+          "file": "libs/ui-components/project.json",
+          "hash": "14073386014989480526"
+        },
+        {
+          "file": "libs/ui-components/src/index.ts",
+          "hash": "3890638239984739746"
+        },
+        {
+          "file": "libs/ui-components/src/lib/button/button.css",
+          "hash": "3244421341483603138"
+        },
+        {
+          "file": "libs/ui-components/src/lib/button/button.spec.tsx",
+          "hash": "6024628988384396619",
+          "deps": [
+            "npm:@testing-library/react",
+            "npm:react"
+          ]
+        },
+        {
+          "file": "libs/ui-components/src/lib/button/button.tsx",
+          "hash": "14294175664207578953",
+          "deps": [
+            "npm:react"
+          ]
+        },
+        {
+          "file": "libs/ui-components/src/lib/checkbox/checkbox.spec.tsx",
+          "hash": "16773171947338653164",
+          "deps": [
+            "npm:@testing-library/react"
+          ]
+        },
+        {
+          "file": "libs/ui-components/src/lib/checkbox/checkbox.tsx",
+          "hash": "9330927587529167350",
+          "deps": [
+            "npm:react"
+          ]
+        },
+        {
+          "file": "libs/ui-components/src/lib/file-upload/file-upload.spec.tsx",
+          "hash": "13729243159011131943",
+          "deps": [
+            "npm:@testing-library/react"
+          ]
+        },
+        {
+          "file": "libs/ui-components/src/lib/file-upload/file-upload.tsx",
+          "hash": "15745855549206970964",
+          "deps": [
+            "npm:next",
+            "npm:react",
+            "npm:react-dropzone"
+          ]
+        },
+        {
+          "file": "libs/ui-components/src/lib/input/input.css",
+          "hash": "10999915296015192048"
+        },
+        {
+          "file": "libs/ui-components/src/lib/input/input.spec.tsx",
+          "hash": "1956756580387732921",
+          "deps": [
+            "npm:@testing-library/react"
+          ]
+        },
+        {
+          "file": "libs/ui-components/src/lib/input/input.tsx",
+          "hash": "4109157862373855892",
+          "deps": [
+            "npm:@heroicons/react",
+            "npm:react-hook-form",
+            "npm:react"
+          ]
+        },
+        {
+          "file": "libs/ui-components/src/lib/modal/modal.spec.tsx",
+          "hash": "6472563329112809072",
+          "deps": [
+            "npm:@testing-library/react"
+          ]
+        },
+        {
+          "file": "libs/ui-components/src/lib/modal/modal.tsx",
+          "hash": "14108573289638167965",
+          "deps": [
+            "npm:react",
+            "npm:@headlessui/react"
+          ]
+        },
+        {
+          "file": "libs/ui-components/src/lib/search/search.css",
+          "hash": "10172889319337957757"
+        },
+        {
+          "file": "libs/ui-components/src/lib/search/search.spec.tsx",
+          "hash": "1172712103285773831",
+          "deps": [
+            "npm:@testing-library/react"
+          ]
+        },
+        {
+          "file": "libs/ui-components/src/lib/search/search.tsx",
+          "hash": "16498275226319806576",
+          "deps": [
+            "npm:react",
+            "npm:next"
+          ]
+        },
+        {
+          "file": "libs/ui-components/src/lib/select/select.spec.tsx",
+          "hash": "16176134918512818464"
+        },
+        {
+          "file": "libs/ui-components/src/lib/select/select.tsx",
+          "hash": "15616048433895510667",
+          "deps": [
+            "npm:react",
+            "npm:react-select"
+          ]
+        },
+        {
+          "file": "libs/ui-components/src/lib/toast/toast.spec.tsx",
+          "hash": "17609396385370758005",
+          "deps": [
+            "npm:@testing-library/react"
+          ]
+        },
+        {
+          "file": "libs/ui-components/src/lib/toast/toast.tsx",
+          "hash": "9392764110185592652",
+          "deps": [
+            "npm:react",
+            "npm:react-hot-toast"
+          ]
+        },
+        {
+          "file": "libs/ui-components/src/server.ts",
+          "hash": "5519843671682787663"
+        },
+        {
+          "file": "libs/ui-components/tsconfig.json",
+          "hash": "14088618039610991405"
+        },
+        {
+          "file": "libs/ui-components/tsconfig.lib.json",
+          "hash": "1536859351713546153"
+        }
+      ],
       "potta": [
         {
           "file": "apps/potta/.eslintrc.json",
@@ -1922,6 +2345,10 @@
           "hash": "17370264268126582128"
         },
         {
+          "file": "apps/potta/public/images/placeholder.png",
+          "hash": "15595494495158882289"
+        },
+        {
           "file": "apps/potta/public/images/pottaLogo.svg",
           "hash": "11543684020214624355"
         },
@@ -2046,20 +2473,165 @@
           ]
         },
         {
-          "file": "apps/potta/src/app/(routes)/customers/_hooks/usegetAllCustomers.ts",
-          "hash": "2875877893623365093",
+          "file": "apps/potta/src/app/(routes)/customers/components/address.tsx",
+          "hash": "9421439172240448068",
           "deps": [
-            "npm:@tanstack/react-query",
+            "npm:react-hook-form"
+          ]
+        },
+        {
+          "file": "apps/potta/src/app/(routes)/customers/components/attachment.tsx",
+          "hash": "3244421341483603138"
+        },
+        {
+          "file": "apps/potta/src/app/(routes)/customers/components/boxes.tsx",
+          "hash": "2614074599238602550",
+          "deps": [
             "npm:react"
           ]
         },
         {
-          "file": "apps/potta/src/app/(routes)/customers/_utils/api.ts",
-          "hash": "13232204024676505141"
+          "file": "apps/potta/src/app/(routes)/customers/components/customerSlider.tsx",
+          "hash": "17754001757989751891",
+          "deps": [
+            "npm:react",
+            "npm:react-select",
+            "npm:react-hook-form",
+            "npm:@hookform/resolvers",
+            "npm:react-hot-toast"
+          ]
         },
         {
-          "file": "apps/potta/src/app/(routes)/customers/_utils/types.ts",
-          "hash": "13593351615652396773"
+          "file": "apps/potta/src/app/(routes)/customers/components/deleteModal.tsx",
+          "hash": "3669823295791396372",
+          "deps": [
+            "npm:react",
+            "npm:react-hot-toast"
+          ]
+        },
+        {
+          "file": "apps/potta/src/app/(routes)/customers/components/filters.tsx",
+          "hash": "1923420051311864748",
+          "deps": [
+            "npm:react"
+          ]
+        },
+        {
+          "file": "apps/potta/src/app/(routes)/customers/components/note.tsx",
+          "hash": "16989206526114703201",
+          "deps": [
+            "npm:react",
+            "npm:react-hook-form"
+          ]
+        },
+        {
+          "file": "apps/potta/src/app/(routes)/customers/components/table.tsx",
+          "hash": "7315151604817555871",
+          "deps": [
+            "npm:react",
+            "npm:libphonenumber-js",
+            "npm:react-world-flags",
+            "npm:@nextui-org/react"
+          ]
+        },
+        {
+          "file": "apps/potta/src/app/(routes)/customers/components/tax.tsx",
+          "hash": "18005923146642752545",
+          "deps": [
+            "npm:react",
+            "npm:react-hook-form"
+          ]
+        },
+        {
+          "file": "apps/potta/src/app/(routes)/customers/components/updateCustomerSlider.tsx",
+          "hash": "526302396499511710",
+          "deps": [
+            "npm:react",
+            "npm:react-hook-form",
+            "npm:@hookform/resolvers",
+            "npm:react-hot-toast"
+          ]
+        },
+        {
+          "file": "apps/potta/src/app/(routes)/customers/components/viewCustomerSlider.tsx.tsx",
+          "hash": "14632776768832622142",
+          "deps": [
+            "npm:react",
+            "npm:react-select",
+            "npm:react-hook-form",
+            "npm:@hookform/resolvers",
+            "npm:react-hot-toast"
+          ]
+        },
+        {
+          "file": "apps/potta/src/app/(routes)/customers/hooks/useCreateCustomer.ts",
+          "hash": "6991191475379514349",
+          "deps": [
+            "npm:@tanstack/react-query"
+          ]
+        },
+        {
+          "file": "apps/potta/src/app/(routes)/customers/hooks/useDeleteCustomer.ts",
+          "hash": "10416770937487944659",
+          "deps": [
+            "npm:@tanstack/react-query"
+          ]
+        },
+        {
+          "file": "apps/potta/src/app/(routes)/customers/hooks/useGetAllCustomers.ts",
+          "hash": "16611179934327156361",
+          "deps": [
+            "npm:@tanstack/react-query",
+            "npm:axios"
+          ]
+        },
+        {
+          "file": "apps/potta/src/app/(routes)/customers/hooks/useGetOneCustomer.ts",
+          "hash": "7988708232022911055",
+          "deps": [
+            "npm:@tanstack/react-query"
+          ]
+        },
+        {
+          "file": "apps/potta/src/app/(routes)/customers/hooks/useUpdateCustomer.ts",
+          "hash": "13400762246145450987",
+          "deps": [
+            "npm:@tanstack/react-query"
+          ]
+        },
+        {
+          "file": "apps/potta/src/app/(routes)/customers/layout.tsx",
+          "hash": "14143028432013999192",
+          "deps": [
+            "npm:@tanstack/react-query",
+            "npm:react",
+            "npm:react-hot-toast"
+          ]
+        },
+        {
+          "file": "apps/potta/src/app/(routes)/customers/page.tsx",
+          "hash": "10024399795538248500",
+          "deps": [
+            "npm:react"
+          ]
+        },
+        {
+          "file": "apps/potta/src/app/(routes)/customers/utils/api.ts",
+          "hash": "13747630564936531255",
+          "deps": [
+            "npm:axios"
+          ]
+        },
+        {
+          "file": "apps/potta/src/app/(routes)/customers/utils/types.ts",
+          "hash": "8227107143413561965"
+        },
+        {
+          "file": "apps/potta/src/app/(routes)/customers/utils/validations.ts",
+          "hash": "6482498702206025227",
+          "deps": [
+            "npm:yup"
+          ]
         },
         {
           "file": "apps/potta/src/app/(routes)/dashboard/components/balanceBoxes.tsx",
@@ -2240,28 +2812,28 @@
         },
         {
           "file": "apps/potta/src/app/(routes)/inbox/components/billTable.tsx",
-          "hash": "16765435754090899883",
+          "hash": "15345157015544660142",
           "deps": [
             "npm:react"
           ]
         },
         {
           "file": "apps/potta/src/app/(routes)/inbox/components/reimburesmentTable.tsx",
-          "hash": "3131956597082156911",
+          "hash": "15845908654651947284",
           "deps": [
             "npm:react"
           ]
         },
         {
           "file": "apps/potta/src/app/(routes)/inbox/components/terminal.tsx",
-          "hash": "84638178929557851",
+          "hash": "3701992936751000056",
           "deps": [
             "npm:react"
           ]
         },
         {
           "file": "apps/potta/src/app/(routes)/inbox/components/terminalTable.tsx",
-          "hash": "5160184887480316983",
+          "hash": "3821445020284277054",
           "deps": [
             "npm:react"
           ]
@@ -2275,7 +2847,7 @@
         },
         {
           "file": "apps/potta/src/app/(routes)/inbox/page.tsx",
-          "hash": "14815766025053561230",
+          "hash": "890554056255853448",
           "deps": [
             "npm:react"
           ]
@@ -2349,7 +2921,10 @@
         },
         {
           "file": "apps/potta/src/app/(routes)/invoice/_utils/types.ts",
-          "hash": "15998958723963503882"
+          "hash": "15998958723963503882",
+          "deps": [
+            "npm:@tanstack/react-table"
+          ]
         },
         {
           "file": "apps/potta/src/app/(routes)/invoice/_utils/utils.ts",
@@ -2360,6 +2935,30 @@
           "hash": "351768102848182076",
           "deps": [
             "npm:yup"
+          ]
+        },
+        {
+          "file": "apps/potta/src/app/(routes)/invoice/components/CustomInput.tsx",
+          "hash": "7335673478003246552",
+          "deps": [
+            "npm:react",
+            "npm:react-hook-form"
+          ]
+        },
+        {
+          "file": "apps/potta/src/app/(routes)/invoice/components/CustomSelect.tsx",
+          "hash": "7923582916704861096",
+          "deps": [
+            "npm:react",
+            "npm:@iconify/react"
+          ]
+        },
+        {
+          "file": "apps/potta/src/app/(routes)/invoice/components/DataGrid.tsx",
+          "hash": "17433835797555142430",
+          "deps": [
+            "npm:@tanstack/react-table",
+            "npm:react"
           ]
         },
         {
@@ -2384,6 +2983,14 @@
           ]
         },
         {
+          "file": "apps/potta/src/app/(routes)/invoice/components/provider.tsx",
+          "hash": "8746743789757377924",
+          "deps": [
+            "npm:react",
+            "npm:@nextui-org/react"
+          ]
+        },
+        {
           "file": "apps/potta/src/app/(routes)/invoice/components/slideNewInvoice.tsx",
           "hash": "8997818938844961787",
           "deps": [
@@ -2399,141 +3006,92 @@
           ]
         },
         {
-          "file": "apps/potta/src/app/(routes)/invoice/layout.tsx",
-          "hash": "6895566963205254858",
-          "deps": [
-            "npm:react"
-          ]
-        },
-        {
-          "file": "apps/potta/src/app/(routes)/invoice/new_invoice/components/left.tsx",
-          "hash": "12805168899448078728",
-          "deps": [
-            "npm:react"
-          ]
-        },
-        {
-          "file": "apps/potta/src/app/(routes)/invoice/new_invoice/components/newtableInvoice.tsx",
-          "hash": "17826493889595519885",
-          "deps": [
-            "npm:react"
-          ]
-        },
-        {
-          "file": "apps/potta/src/app/(routes)/invoice/new_invoice/components/pdfview.tsx",
-          "hash": "13906652808853573555",
-          "deps": [
-            "npm:react"
-          ]
-        },
-        {
-          "file": "apps/potta/src/app/(routes)/invoice/new_invoice/layout.tsx",
-          "hash": "11458866933459810833",
-          "deps": [
-            "npm:react"
-          ]
-        },
-        {
-          "file": "apps/potta/src/app/(routes)/invoice/new_invoice/page.tsx",
-          "hash": "8248575119093229297",
-          "deps": [
-            "npm:react"
-          ]
-        },
-        {
-          "file": "apps/potta/src/app/(routes)/invoice/page.tsx",
-          "hash": "6856766918796180353",
-          "deps": [
-            "npm:next"
-          ]
-        },
-        {
-          "file": "apps/potta/src/app/(routes)/invoicing/_hooks/useAddInvoiceLineItem.ts",
+          "file": "apps/potta/src/app/(routes)/invoice/credit/_hooks/useAddInvoiceLineItem.ts",
           "hash": "8526487624532220845",
           "deps": [
             "npm:@tanstack/react-query"
           ]
         },
         {
-          "file": "apps/potta/src/app/(routes)/invoicing/_hooks/useCreateInvoice.ts",
+          "file": "apps/potta/src/app/(routes)/invoice/credit/_hooks/useCreateInvoice.ts",
           "hash": "8799536974953067433",
           "deps": [
             "npm:@tanstack/react-query"
           ]
         },
         {
-          "file": "apps/potta/src/app/(routes)/invoicing/_hooks/useDeleteInvoice.ts",
+          "file": "apps/potta/src/app/(routes)/invoice/credit/_hooks/useDeleteInvoice.ts",
           "hash": "8057694194318188757",
           "deps": [
             "npm:@tanstack/react-query"
           ]
         },
         {
-          "file": "apps/potta/src/app/(routes)/invoicing/_hooks/useGetAllCustomer.ts",
+          "file": "apps/potta/src/app/(routes)/invoice/credit/_hooks/useGetAllCustomer.ts",
           "hash": "4437670519017441277",
           "deps": [
             "npm:@tanstack/react-query"
           ]
         },
         {
-          "file": "apps/potta/src/app/(routes)/invoicing/_hooks/useGetAllInvoice.ts",
+          "file": "apps/potta/src/app/(routes)/invoice/credit/_hooks/useGetAllInvoice.ts",
           "hash": "13667589138818637684",
           "deps": [
             "npm:@tanstack/react-query"
           ]
         },
         {
-          "file": "apps/potta/src/app/(routes)/invoicing/_hooks/useGetOneInvoice.ts",
+          "file": "apps/potta/src/app/(routes)/invoice/credit/_hooks/useGetOneInvoice.ts",
           "hash": "2391506407351853347",
           "deps": [
             "npm:@tanstack/react-query"
           ]
         },
         {
-          "file": "apps/potta/src/app/(routes)/invoicing/_hooks/useUpdateInvoice.ts",
+          "file": "apps/potta/src/app/(routes)/invoice/credit/_hooks/useUpdateInvoice.ts",
           "hash": "8786436434875352630",
           "deps": [
             "npm:@tanstack/react-query"
           ]
         },
         {
-          "file": "apps/potta/src/app/(routes)/invoicing/_hooks/useremoveInvoiceLineItem.ts",
+          "file": "apps/potta/src/app/(routes)/invoice/credit/_hooks/useremoveInvoiceLineItem.ts",
           "hash": "10870756522789543661",
           "deps": [
             "npm:@tanstack/react-query"
           ]
         },
         {
-          "file": "apps/potta/src/app/(routes)/invoicing/_utils/api.ts",
+          "file": "apps/potta/src/app/(routes)/invoice/credit/_utils/api.ts",
           "hash": "6181376268402194317"
         },
         {
-          "file": "apps/potta/src/app/(routes)/invoicing/_utils/column.ts",
+          "file": "apps/potta/src/app/(routes)/invoice/credit/_utils/column.ts",
           "hash": "16044814641259153768",
           "deps": [
             "npm:@tanstack/react-table"
           ]
         },
         {
-          "file": "apps/potta/src/app/(routes)/invoicing/_utils/types.ts",
+          "file": "apps/potta/src/app/(routes)/invoice/credit/_utils/types.ts",
           "hash": "16430523138648480723",
           "deps": [
             "npm:@tanstack/react-table"
           ]
         },
         {
-          "file": "apps/potta/src/app/(routes)/invoicing/_utils/utils.ts",
+          "file": "apps/potta/src/app/(routes)/invoice/credit/_utils/utils.ts",
           "hash": "9441533894932745273"
         },
         {
-          "file": "apps/potta/src/app/(routes)/invoicing/_utils/valididation.ts",
+          "file": "apps/potta/src/app/(routes)/invoice/credit/_utils/valididation.ts",
           "hash": "11570155650873112486",
           "deps": [
             "npm:yup"
           ]
         },
         {
-          "file": "apps/potta/src/app/(routes)/invoicing/components/CustomInput.tsx",
+          "file": "apps/potta/src/app/(routes)/invoice/credit/components/CustomInput.tsx",
           "hash": "7335673478003246552",
           "deps": [
             "npm:react",
@@ -2541,7 +3099,7 @@
           ]
         },
         {
-          "file": "apps/potta/src/app/(routes)/invoicing/components/CustomSelect.tsx",
+          "file": "apps/potta/src/app/(routes)/invoice/credit/components/CustomSelect.tsx",
           "hash": "7923582916704861096",
           "deps": [
             "npm:react",
@@ -2549,7 +3107,7 @@
           ]
         },
         {
-          "file": "apps/potta/src/app/(routes)/invoicing/components/DataGrid.tsx",
+          "file": "apps/potta/src/app/(routes)/invoice/credit/components/DataGrid.tsx",
           "hash": "17433835797555142430",
           "deps": [
             "npm:@tanstack/react-table",
@@ -2557,14 +3115,14 @@
           ]
         },
         {
-          "file": "apps/potta/src/app/(routes)/invoicing/components/box.tsx",
+          "file": "apps/potta/src/app/(routes)/invoice/credit/components/box.tsx",
           "hash": "17216220639925212689",
           "deps": [
             "npm:react"
           ]
         },
         {
-          "file": "apps/potta/src/app/(routes)/invoicing/components/modal.tsx",
+          "file": "apps/potta/src/app/(routes)/invoice/credit/components/modal.tsx",
           "hash": "14298315105621107481",
           "deps": [
             "npm:react",
@@ -2572,7 +3130,7 @@
           ]
         },
         {
-          "file": "apps/potta/src/app/(routes)/invoicing/components/modalInvoice.tsx",
+          "file": "apps/potta/src/app/(routes)/invoice/credit/components/modalInvoice.tsx",
           "hash": "2160305750628653800",
           "deps": [
             "npm:react",
@@ -2580,7 +3138,7 @@
           ]
         },
         {
-          "file": "apps/potta/src/app/(routes)/invoicing/components/provider.tsx",
+          "file": "apps/potta/src/app/(routes)/invoice/credit/components/provider.tsx",
           "hash": "8746743789757377924",
           "deps": [
             "npm:react",
@@ -2588,14 +3146,14 @@
           ]
         },
         {
-          "file": "apps/potta/src/app/(routes)/invoicing/components/slideNewInvoice.tsx",
+          "file": "apps/potta/src/app/(routes)/invoice/credit/components/slideNewInvoice.tsx",
           "hash": "8997818938844961787",
           "deps": [
             "npm:react"
           ]
         },
         {
-          "file": "apps/potta/src/app/(routes)/invoicing/components/table.tsx",
+          "file": "apps/potta/src/app/(routes)/invoice/credit/components/table.tsx",
           "hash": "17409369150324730976",
           "deps": [
             "npm:react",
@@ -2605,193 +3163,8 @@
           ]
         },
         {
-          "file": "apps/potta/src/app/(routes)/invoicing/credit/_hooks/useAddInvoiceLineItem.ts",
-          "hash": "8526487624532220845",
-          "deps": [
-            "npm:@tanstack/react-query"
-          ]
-        },
-        {
-          "file": "apps/potta/src/app/(routes)/invoicing/credit/_hooks/useCreateInvoice.ts",
-          "hash": "8799536974953067433",
-          "deps": [
-            "npm:@tanstack/react-query"
-          ]
-        },
-        {
-          "file": "apps/potta/src/app/(routes)/invoicing/credit/_hooks/useDeleteInvoice.ts",
-          "hash": "8057694194318188757",
-          "deps": [
-            "npm:@tanstack/react-query"
-          ]
-        },
-        {
-          "file": "apps/potta/src/app/(routes)/invoicing/credit/_hooks/useGetAllCustomer.ts",
-          "hash": "4437670519017441277",
-          "deps": [
-            "npm:@tanstack/react-query"
-          ]
-        },
-        {
-          "file": "apps/potta/src/app/(routes)/invoicing/credit/_hooks/useGetAllInvoice.ts",
-          "hash": "13667589138818637684",
-          "deps": [
-            "npm:@tanstack/react-query"
-          ]
-        },
-        {
-          "file": "apps/potta/src/app/(routes)/invoicing/credit/_hooks/useGetOneInvoice.ts",
-          "hash": "2391506407351853347",
-          "deps": [
-            "npm:@tanstack/react-query"
-          ]
-        },
-        {
-          "file": "apps/potta/src/app/(routes)/invoicing/credit/_hooks/useUpdateInvoice.ts",
-          "hash": "8786436434875352630",
-          "deps": [
-            "npm:@tanstack/react-query"
-          ]
-        },
-        {
-          "file": "apps/potta/src/app/(routes)/invoicing/credit/_hooks/useremoveInvoiceLineItem.ts",
-          "hash": "10870756522789543661",
-          "deps": [
-            "npm:@tanstack/react-query"
-          ]
-        },
-        {
-          "file": "apps/potta/src/app/(routes)/invoicing/credit/_utils/api.ts",
-          "hash": "6181376268402194317"
-        },
-        {
-          "file": "apps/potta/src/app/(routes)/invoicing/credit/_utils/column.ts",
-          "hash": "16044814641259153768",
-          "deps": [
-            "npm:@tanstack/react-table"
-          ]
-        },
-        {
-          "file": "apps/potta/src/app/(routes)/invoicing/credit/_utils/types.ts",
-          "hash": "16430523138648480723",
-          "deps": [
-            "npm:@tanstack/react-table"
-          ]
-        },
-        {
-          "file": "apps/potta/src/app/(routes)/invoicing/credit/_utils/utils.ts",
-          "hash": "9441533894932745273"
-        },
-        {
-          "file": "apps/potta/src/app/(routes)/invoicing/credit/_utils/valididation.ts",
-          "hash": "11570155650873112486",
-          "deps": [
-            "npm:yup"
-          ]
-        },
-        {
-          "file": "apps/potta/src/app/(routes)/invoicing/credit/components/CustomInput.tsx",
-          "hash": "7335673478003246552",
-          "deps": [
-            "npm:react",
-            "npm:react-hook-form"
-          ]
-        },
-        {
-          "file": "apps/potta/src/app/(routes)/invoicing/credit/components/CustomSelect.tsx",
-          "hash": "7923582916704861096",
-          "deps": [
-            "npm:react",
-            "npm:@iconify/react"
-          ]
-        },
-        {
-          "file": "apps/potta/src/app/(routes)/invoicing/credit/components/DataGrid.tsx",
-          "hash": "17433835797555142430",
-          "deps": [
-            "npm:@tanstack/react-table",
-            "npm:react"
-          ]
-        },
-        {
-          "file": "apps/potta/src/app/(routes)/invoicing/credit/components/box.tsx",
-          "hash": "17216220639925212689",
-          "deps": [
-            "npm:react"
-          ]
-        },
-        {
-          "file": "apps/potta/src/app/(routes)/invoicing/credit/components/modal.tsx",
-          "hash": "14298315105621107481",
-          "deps": [
-            "npm:react",
-            "npm:@headlessui/react"
-          ]
-        },
-        {
-          "file": "apps/potta/src/app/(routes)/invoicing/credit/components/modalInvoice.tsx",
-          "hash": "2160305750628653800",
-          "deps": [
-            "npm:react",
-            "npm:@headlessui/react"
-          ]
-        },
-        {
-          "file": "apps/potta/src/app/(routes)/invoicing/credit/components/provider.tsx",
-          "hash": "8746743789757377924",
-          "deps": [
-            "npm:react",
-            "npm:@nextui-org/react"
-          ]
-        },
-        {
-          "file": "apps/potta/src/app/(routes)/invoicing/credit/components/slideNewInvoice.tsx",
-          "hash": "8997818938844961787",
-          "deps": [
-            "npm:react"
-          ]
-        },
-        {
-          "file": "apps/potta/src/app/(routes)/invoicing/credit/components/table.tsx",
-          "hash": "17409369150324730976",
-          "deps": [
-            "npm:react",
-            "npm:@nextui-org/react",
-            "npm:@tanstack/react-table",
-            "npm:@iconify/react"
-          ]
-        },
-        {
-          "file": "apps/potta/src/app/(routes)/invoicing/credit/new/components/left.tsx",
-          "hash": "12063382018717004982",
-          "deps": [
-            "npm:react"
-          ]
-        },
-        {
-          "file": "apps/potta/src/app/(routes)/invoicing/credit/new/components/newtableInvoice.tsx",
-          "hash": "12915427396249723706",
-          "deps": [
-            "npm:react"
-          ]
-        },
-        {
-          "file": "apps/potta/src/app/(routes)/invoicing/credit/new/components/pdfview.tsx",
-          "hash": "8881091453174501578",
-          "deps": [
-            "npm:react"
-          ]
-        },
-        {
-          "file": "apps/potta/src/app/(routes)/invoicing/credit/new/page.tsx",
-          "hash": "1801208493336458801",
-          "deps": [
-            "npm:react"
-          ]
-        },
-        {
-          "file": "apps/potta/src/app/(routes)/invoicing/credit/page.tsx",
-          "hash": "13503044701105512160",
+          "file": "apps/potta/src/app/(routes)/invoice/credit/page.tsx",
+          "hash": "1377292963432330601",
           "deps": [
             "npm:next",
             "npm:react",
@@ -2799,101 +3172,65 @@
           ]
         },
         {
-          "file": "apps/potta/src/app/(routes)/invoicing/layout.tsx",
-          "hash": "17708302584173086690",
+          "file": "apps/potta/src/app/(routes)/invoice/customers/page.tsx",
+          "hash": "11761069608228277341",
           "deps": [
             "npm:react"
           ]
         },
         {
-          "file": "apps/potta/src/app/(routes)/invoicing/new/components/left.tsx",
-          "hash": "10849913146434077023",
+          "file": "apps/potta/src/app/(routes)/invoice/inbox/page.tsx",
+          "hash": "6635153945931563069",
+          "deps": [
+            "npm:react"
+          ]
+        },
+        {
+          "file": "apps/potta/src/app/(routes)/invoice/layout.tsx",
+          "hash": "265813093775740761",
+          "deps": [
+            "npm:react"
+          ]
+        },
+        {
+          "file": "apps/potta/src/app/(routes)/invoice/new/components/left.tsx",
+          "hash": "8952907298725787651",
           "deps": [
             "npm:react",
             "npm:react-hook-form"
           ]
         },
         {
-          "file": "apps/potta/src/app/(routes)/invoicing/new/components/newtableInvoice.tsx",
+          "file": "apps/potta/src/app/(routes)/invoice/new/components/newtableInvoice.tsx",
           "hash": "5745953960121362336",
           "deps": [
             "npm:react"
           ]
         },
         {
-          "file": "apps/potta/src/app/(routes)/invoicing/new/components/pdfview.tsx",
-          "hash": "13970155847287665913",
+          "file": "apps/potta/src/app/(routes)/invoice/new/components/pdfview.tsx",
+          "hash": "13302603685411716251",
           "deps": [
             "npm:react"
           ]
         },
         {
-          "file": "apps/potta/src/app/(routes)/invoicing/new/layout.tsx",
+          "file": "apps/potta/src/app/(routes)/invoice/new/layout.tsx",
           "hash": "2181133564677450344",
           "deps": [
             "npm:react"
           ]
         },
         {
-          "file": "apps/potta/src/app/(routes)/invoicing/new/page.tsx",
-          "hash": "17440425072734766276",
+          "file": "apps/potta/src/app/(routes)/invoice/new/page.tsx",
+          "hash": "1185812798219031960",
           "deps": [
             "npm:react"
           ]
         },
         {
-          "file": "apps/potta/src/app/(routes)/invoicing/new_invoice/components/AddCustomerDrawer.tsx",
-          "hash": "9231657687382347022",
-          "deps": [
-            "npm:@hookform/resolvers",
-            "npm:@nextui-org/react",
-            "npm:react",
-            "npm:react-hook-form"
-          ]
-        },
-        {
-          "file": "apps/potta/src/app/(routes)/invoicing/new_invoice/components/left.tsx",
-          "hash": "14882861663653441578",
-          "deps": [
-            "npm:react",
-            "npm:@iconify/react",
-            "npm:@nextui-org/react",
-            "npm:react-hook-form",
-            "npm:@hookform/resolvers",
-            "npm:uuid"
-          ]
-        },
-        {
-          "file": "apps/potta/src/app/(routes)/invoicing/new_invoice/components/newtableInvoice.tsx",
-          "hash": "17826493889595519885",
-          "deps": [
-            "npm:react"
-          ]
-        },
-        {
-          "file": "apps/potta/src/app/(routes)/invoicing/new_invoice/components/pdfview.tsx",
-          "hash": "15836592783614445450",
-          "deps": [
-            "npm:react"
-          ]
-        },
-        {
-          "file": "apps/potta/src/app/(routes)/invoicing/new_invoice/layout.tsx",
-          "hash": "11458866933459810833",
-          "deps": [
-            "npm:react"
-          ]
-        },
-        {
-          "file": "apps/potta/src/app/(routes)/invoicing/new_invoice/page.tsx",
-          "hash": "10698182919515889638",
-          "deps": [
-            "npm:react"
-          ]
-        },
-        {
-          "file": "apps/potta/src/app/(routes)/invoicing/page.tsx",
-          "hash": "13503044701105512160",
+          "file": "apps/potta/src/app/(routes)/invoice/page.tsx",
+          "hash": "16831661809044476192",
           "deps": [
             "npm:next",
             "npm:react",
@@ -2902,7 +3239,7 @@
         },
         {
           "file": "apps/potta/src/app/(routes)/layout/index.tsx",
-          "hash": "4162366935693138504",
+          "hash": "4917707000765515418",
           "deps": [
             "npm:next",
             "npm:react"
@@ -2910,7 +3247,7 @@
         },
         {
           "file": "apps/potta/src/app/(routes)/layout/navbar/index.tsx",
-          "hash": "15251197490293841010",
+          "hash": "1777475056089981467",
           "deps": [
             "npm:react",
             "npm:next"
@@ -2918,11 +3255,12 @@
         },
         {
           "file": "apps/potta/src/app/(routes)/layout/sidebar/components/POS.tsx",
-          "hash": "1653688645533621810",
+          "hash": "8933316931584334945",
           "deps": [
             "npm:react",
             "npm:react-pro-sidebar",
-            "npm:next"
+            "npm:next",
+            "npm:lucide-react"
           ]
         },
         {
@@ -2936,7 +3274,7 @@
         },
         {
           "file": "apps/potta/src/app/(routes)/layout/sidebar/components/invoicing.tsx",
-          "hash": "2417751606884793277",
+          "hash": "5499684393367330359",
           "deps": [
             "npm:react",
             "npm:react-pro-sidebar",
@@ -2981,7 +3319,7 @@
         },
         {
           "file": "apps/potta/src/app/(routes)/layout/sidebar/index.tsx",
-          "hash": "12360213799450181696",
+          "hash": "4958535497876204306",
           "deps": [
             "npm:react",
             "npm:react-pro-sidebar",
@@ -3471,7 +3809,7 @@
         },
         {
           "file": "apps/potta/src/app/(routes)/pos/component/footer/index.tsx",
-          "hash": "10911147967274401359",
+          "hash": "6849231804026579563",
           "deps": [
             "npm:react"
           ]
@@ -3487,7 +3825,7 @@
         },
         {
           "file": "apps/potta/src/app/(routes)/pos/component/saleInvoiceCard/index.tsx",
-          "hash": "16544349812345419572",
+          "hash": "3184864741393672014",
           "deps": [
             "npm:react",
             "npm:next"
@@ -3524,14 +3862,14 @@
         },
         {
           "file": "apps/potta/src/app/(routes)/pos/component/saleInvoiceTable/components/modalCoupon.tsx",
-          "hash": "13158415386212986060",
+          "hash": "10086267498318258708",
           "deps": [
             "npm:react"
           ]
         },
         {
           "file": "apps/potta/src/app/(routes)/pos/component/saleInvoiceTable/components/orderSummary.tsx",
-          "hash": "13970360553810823458",
+          "hash": "5345067460666874471",
           "deps": [
             "npm:react"
           ]
@@ -3553,177 +3891,23 @@
         },
         {
           "file": "apps/potta/src/app/(routes)/pos/component/saleInvoiceTable/components/table.tsx",
-          "hash": "17398247186705447289",
+          "hash": "14510482846410347543",
           "deps": [
             "npm:react"
           ]
         },
         {
           "file": "apps/potta/src/app/(routes)/pos/component/saleInvoiceTable/index.tsx",
-          "hash": "947821096712384078",
+          "hash": "15205231915714535268",
           "deps": [
             "npm:react"
-          ]
-        },
-        {
-          "file": "apps/potta/src/app/(routes)/pos/customers/components/address.tsx",
-          "hash": "9421439172240448068",
-          "deps": [
-            "npm:react-hook-form"
-          ]
-        },
-        {
-          "file": "apps/potta/src/app/(routes)/pos/customers/components/attachment.tsx",
-          "hash": "3244421341483603138"
-        },
-        {
-          "file": "apps/potta/src/app/(routes)/pos/customers/components/boxes.tsx",
-          "hash": "2614074599238602550",
-          "deps": [
-            "npm:react"
-          ]
-        },
-        {
-          "file": "apps/potta/src/app/(routes)/pos/customers/components/customerSlider.tsx",
-          "hash": "17754001757989751891",
-          "deps": [
-            "npm:react",
-            "npm:react-select",
-            "npm:react-hook-form",
-            "npm:@hookform/resolvers",
-            "npm:react-hot-toast"
-          ]
-        },
-        {
-          "file": "apps/potta/src/app/(routes)/pos/customers/components/deleteModal.tsx",
-          "hash": "3669823295791396372",
-          "deps": [
-            "npm:react",
-            "npm:react-hot-toast"
-          ]
-        },
-        {
-          "file": "apps/potta/src/app/(routes)/pos/customers/components/filters.tsx",
-          "hash": "1923420051311864748",
-          "deps": [
-            "npm:react"
-          ]
-        },
-        {
-          "file": "apps/potta/src/app/(routes)/pos/customers/components/note.tsx",
-          "hash": "16989206526114703201",
-          "deps": [
-            "npm:react",
-            "npm:react-hook-form"
-          ]
-        },
-        {
-          "file": "apps/potta/src/app/(routes)/pos/customers/components/table.tsx",
-          "hash": "5135087167448574613",
-          "deps": [
-            "npm:react",
-            "npm:libphonenumber-js",
-            "npm:react-world-flags",
-            "npm:@nextui-org/react"
-          ]
-        },
-        {
-          "file": "apps/potta/src/app/(routes)/pos/customers/components/tax.tsx",
-          "hash": "18005923146642752545",
-          "deps": [
-            "npm:react",
-            "npm:react-hook-form"
-          ]
-        },
-        {
-          "file": "apps/potta/src/app/(routes)/pos/customers/components/updateCustomerSlider.tsx",
-          "hash": "526302396499511710",
-          "deps": [
-            "npm:react",
-            "npm:react-hook-form",
-            "npm:@hookform/resolvers",
-            "npm:react-hot-toast"
-          ]
-        },
-        {
-          "file": "apps/potta/src/app/(routes)/pos/customers/components/viewCustomerSlider.tsx.tsx",
-          "hash": "14632776768832622142",
-          "deps": [
-            "npm:react",
-            "npm:react-select",
-            "npm:react-hook-form",
-            "npm:@hookform/resolvers",
-            "npm:react-hot-toast"
-          ]
-        },
-        {
-          "file": "apps/potta/src/app/(routes)/pos/customers/hooks/useCreateCustomer.ts",
-          "hash": "6991191475379514349",
-          "deps": [
-            "npm:@tanstack/react-query"
-          ]
-        },
-        {
-          "file": "apps/potta/src/app/(routes)/pos/customers/hooks/useDeleteCustomer.ts",
-          "hash": "10416770937487944659",
-          "deps": [
-            "npm:@tanstack/react-query"
-          ]
-        },
-        {
-          "file": "apps/potta/src/app/(routes)/pos/customers/hooks/useGetAllCustomers.ts",
-          "hash": "16611179934327156361",
-          "deps": [
-            "npm:@tanstack/react-query",
-            "npm:axios"
-          ]
-        },
-        {
-          "file": "apps/potta/src/app/(routes)/pos/customers/hooks/useGetOneCustomer.ts",
-          "hash": "7988708232022911055",
-          "deps": [
-            "npm:@tanstack/react-query"
-          ]
-        },
-        {
-          "file": "apps/potta/src/app/(routes)/pos/customers/hooks/useUpdateCustomer.ts",
-          "hash": "13400762246145450987",
-          "deps": [
-            "npm:@tanstack/react-query"
-          ]
-        },
-        {
-          "file": "apps/potta/src/app/(routes)/pos/customers/layout.tsx",
-          "hash": "14143028432013999192",
-          "deps": [
-            "npm:@tanstack/react-query",
-            "npm:react",
-            "npm:react-hot-toast"
           ]
         },
         {
           "file": "apps/potta/src/app/(routes)/pos/customers/page.tsx",
-          "hash": "18375001433396478035",
+          "hash": "15376518719502353304",
           "deps": [
             "npm:react"
-          ]
-        },
-        {
-          "file": "apps/potta/src/app/(routes)/pos/customers/utils/api.ts",
-          "hash": "13747630564936531255",
-          "deps": [
-            "npm:axios"
-          ]
-        },
-        {
-          "file": "apps/potta/src/app/(routes)/pos/customers/utils/types.ts",
-          "hash": "8227107143413561965"
-        },
-        {
-          "file": "apps/potta/src/app/(routes)/pos/customers/utils/validations.ts",
-          "hash": "6482498702206025227",
-          "deps": [
-            "npm:yup"
           ]
         },
         {
@@ -3766,6 +3950,13 @@
           "hash": "459943590412883449",
           "deps": [
             "npm:@tanstack/react-query"
+          ]
+        },
+        {
+          "file": "apps/potta/src/app/(routes)/pos/inbox/page.tsx",
+          "hash": "15996510895106794064",
+          "deps": [
+            "npm:react"
           ]
         },
         {
@@ -3955,7 +4146,7 @@
         },
         {
           "file": "apps/potta/src/app/(routes)/pos/inventory/components/table.tsx",
-          "hash": "17387680127838283842",
+          "hash": "6048475454345020967",
           "deps": [
             "npm:react",
             "npm:@nextui-org/react"
@@ -3972,7 +4163,7 @@
         },
         {
           "file": "apps/potta/src/app/(routes)/pos/inventory/page.tsx",
-          "hash": "2916050429428057999",
+          "hash": "10110181441972673179",
           "deps": [
             "npm:react"
           ]
@@ -3986,18 +4177,10 @@
         },
         {
           "file": "apps/potta/src/app/(routes)/pos/page.tsx",
-          "hash": "6303305796938537288",
+          "hash": "15194793258625399701",
           "deps": [
             "npm:react",
             "npm:sonner"
-          ]
-        },
-        {
-          "file": "apps/potta/src/app/(routes)/pos/products/hooks/useGetAllProducts.ts",
-          "hash": "13866236245915219709",
-          "deps": [
-            "npm:@tanstack/react-query",
-            "npm:axios"
           ]
         },
         {
@@ -4009,14 +4192,15 @@
         },
         {
           "file": "apps/potta/src/app/(routes)/pos/sales/components/filters.tsx",
-          "hash": "7253069196887427445",
+          "hash": "8072794050744488145",
           "deps": [
-            "npm:react"
+            "npm:react",
+            "npm:next"
           ]
         },
         {
           "file": "apps/potta/src/app/(routes)/pos/sales/components/table.tsx",
-          "hash": "12491572907915574121",
+          "hash": "16817149008315269707",
           "deps": [
             "npm:react"
           ]
@@ -4058,28 +4242,28 @@
         },
         {
           "file": "apps/potta/src/app/(routes)/pos/sales/new/components/left.tsx",
-          "hash": "4426959365629108488",
+          "hash": "3500225017752328463",
           "deps": [
             "npm:react"
           ]
         },
         {
           "file": "apps/potta/src/app/(routes)/pos/sales/new/components/newtableInvoice.tsx",
-          "hash": "12915427396249723706",
+          "hash": "6552222219612181940",
           "deps": [
             "npm:react"
           ]
         },
         {
           "file": "apps/potta/src/app/(routes)/pos/sales/new/components/pdfview.tsx",
-          "hash": "8881091453174501578",
+          "hash": "3809016799131806173",
           "deps": [
             "npm:react"
           ]
         },
         {
           "file": "apps/potta/src/app/(routes)/pos/sales/new/page.tsx",
-          "hash": "10460369183739388620",
+          "hash": "12688821560150636651",
           "deps": [
             "npm:react"
           ]
@@ -4697,7 +4881,7 @@
         },
         {
           "file": "apps/potta/src/app/globals.css",
-          "hash": "7831147634329919652"
+          "hash": "16297381104620512802"
         },
         {
           "file": "apps/potta/src/app/layout.tsx",
@@ -4717,7 +4901,7 @@
         },
         {
           "file": "apps/potta/src/components/button.tsx",
-          "hash": "662543825403427168",
+          "hash": "10732663523929849577",
           "deps": [
             "npm:react"
           ]
@@ -4807,7 +4991,7 @@
         },
         {
           "file": "apps/potta/src/components/icon_fonts/selection.json",
-          "hash": "6103283382345798640"
+          "hash": "1841699478341937683"
         },
         {
           "file": "apps/potta/src/components/icon_fonts/selections.json",
@@ -4819,7 +5003,7 @@
         },
         {
           "file": "apps/potta/src/components/input.tsx",
-          "hash": "12387633637267504976",
+          "hash": "407410849869032627",
           "deps": [
             "npm:react",
             "npm:react-hook-form"
@@ -4895,7 +5079,21 @@
         },
         {
           "file": "apps/potta/src/components/select.tsx",
-          "hash": "9214040136731175769",
+          "hash": "15740227817582771186",
+          "deps": [
+            "npm:react"
+          ]
+        },
+        {
+          "file": "apps/potta/src/components/shared/CustomerContent.tsx",
+          "hash": "9722867002197967452",
+          "deps": [
+            "npm:react"
+          ]
+        },
+        {
+          "file": "apps/potta/src/components/shared/InboxContent.tsx",
+          "hash": "16397007933812483171",
           "deps": [
             "npm:react"
           ]
@@ -4918,7 +5116,7 @@
         },
         {
           "file": "apps/potta/src/components/table.tsx",
-          "hash": "8033816470490102496",
+          "hash": "15070837843216591803",
           "deps": [
             "npm:next",
             "npm:react",
@@ -4966,429 +5164,6 @@
         {
           "file": "apps/potta/type/index.d.ts",
           "hash": "9950754265127537988"
-        }
-      ],
-      "core": [
-        {
-          "file": "libs/core/.eslintrc.json",
-          "hash": "11012487992710232822"
-        },
-        {
-          "file": "libs/core/README.md",
-          "hash": "862743182427189852"
-        },
-        {
-          "file": "libs/core/project.json",
-          "hash": "8215491323991500792"
-        },
-        {
-          "file": "libs/core/src/index.ts",
-          "hash": "1391443467439822800"
-        },
-        {
-          "file": "libs/core/src/lib/core.spec.tsx",
-          "hash": "10083302775005561580",
-          "deps": [
-            "npm:@testing-library/react"
-          ]
-        },
-        {
-          "file": "libs/core/src/lib/core.tsx",
-          "hash": "12083220179364162819"
-        },
-        {
-          "file": "libs/core/src/lib/hello-server.tsx",
-          "hash": "2397568674684759047"
-        },
-        {
-          "file": "libs/core/src/server.ts",
-          "hash": "8912437808649717296"
-        },
-        {
-          "file": "libs/core/tsconfig.json",
-          "hash": "14088618039610991405"
-        },
-        {
-          "file": "libs/core/tsconfig.lib.json",
-          "hash": "1536859351713546153"
-        }
-      ],
-      "@instanvi-global/source": [
-        {
-          "file": ".editorconfig",
-          "hash": "5443105041930014821"
-        },
-        {
-          "file": ".eslintignore",
-          "hash": "7663861978715868291"
-        },
-        {
-          "file": ".eslintrc.json",
-          "hash": "18315524891129148814"
-        },
-        {
-          "file": ".github/workflows/staging.yaml",
-          "hash": "6745584629413967094"
-        },
-        {
-          "file": ".gitignore",
-          "hash": "11170925426653951849"
-        },
-        {
-          "file": ".prettierignore",
-          "hash": "14688272390704683536"
-        },
-        {
-          "file": ".prettierrc",
-          "hash": "16267754514737964994"
-        },
-        {
-          "file": "Dockerfile",
-          "hash": "659189421521947874"
-        },
-        {
-          "file": "README.md",
-          "hash": "6840628470554381479"
-        },
-        {
-          "file": "docker-compose-build.yml",
-          "hash": "17454110849002822681"
-        },
-        {
-          "file": "docker-compose.yml",
-          "hash": "6344911347125248550"
-        },
-        {
-          "file": "jest.config.ts",
-          "hash": "3494843969422251966",
-          "deps": [
-            "npm:@nx/jest"
-          ]
-        },
-        {
-          "file": "jest.preset.js",
-          "hash": "9430166341120122740",
-          "deps": [
-            "npm:@nx/jest"
-          ]
-        },
-        {
-          "file": "nx.json",
-          "hash": "6581483826470430266"
-        },
-        {
-          "file": "package-lock.json",
-          "hash": "2612408419548144236"
-        },
-        {
-          "file": "package.json",
-          "hash": "16145696503970074203",
-          "deps": [
-            "npm:@iconify/react",
-            "npm:@nx/eslint",
-            "npm:@nx/eslint-plugin",
-            "npm:@nx/jest",
-            "npm:@nx/js",
-            "npm:@nx/next",
-            "npm:@nx/react",
-            "npm:@nx/workspace",
-            "npm:@swc-node/register",
-            "npm:@swc/cli",
-            "npm:@swc/core",
-            "npm:@swc/helpers",
-            "npm:@testing-library/react",
-            "npm:@types/crypto-js",
-            "npm:@types/jest",
-            "npm:@types/node",
-            "npm:@types/react",
-            "npm:@types/react-dom",
-            "npm:@types/react-world-flags",
-            "npm:@typescript-eslint/eslint-plugin",
-            "npm:@typescript-eslint/parser",
-            "npm:autoprefixer",
-            "npm:babel-jest",
-            "npm:eslint",
-            "npm:eslint-config-next",
-            "npm:eslint-config-prettier",
-            "npm:eslint-plugin-import",
-            "npm:eslint-plugin-jsx-a11y",
-            "npm:eslint-plugin-react",
-            "npm:eslint-plugin-react-hooks",
-            "npm:jest",
-            "npm:jest-environment-jsdom",
-            "npm:nx",
-            "npm:postcss",
-            "npm:prettier",
-            "npm:tailwindcss",
-            "npm:ts-jest",
-            "npm:ts-node",
-            "npm:typescript",
-            "npm:@headlessui/react",
-            "npm:@heroicons/react",
-            "npm:@hookform/resolvers",
-            "npm:@nextui-org/react",
-            "npm:@radix-ui/react-progress",
-            "npm:@tanstack/react-query",
-            "npm:@tanstack/react-table",
-            "npm:@types/react-csv",
-            "npm:apexcharts",
-            "npm:axios",
-            "npm:class-variance-authority",
-            "npm:clsx",
-            "npm:country-data-list",
-            "npm:country-list-with-dial-code-and-flag",
-            "npm:crypto-js",
-            "npm:framer-motion",
-            "npm:libphonenumber-js",
-            "npm:lucide-react",
-            "npm:moment",
-            "npm:next",
-            "npm:nookies",
-            "npm:react",
-            "npm:react-accessible-accordion",
-            "npm:react-apexcharts",
-            "npm:react-barcode",
-            "npm:react-csv",
-            "npm:react-data-table-component",
-            "npm:react-dom",
-            "npm:react-dropzone",
-            "npm:react-google-flight-datepicker",
-            "npm:react-hook-form",
-            "npm:react-hot-toast",
-            "npm:react-icomoon",
-            "npm:react-icons",
-            "npm:react-moment",
-            "npm:react-phone-number-input",
-            "npm:react-pro-sidebar",
-            "npm:react-resizable-panels",
-            "npm:react-select",
-            "npm:react-verification-input",
-            "npm:react-world-flags",
-            "npm:recharts",
-            "npm:remixicon",
-            "npm:sonner",
-            "npm:styled-components",
-            "npm:tailwind-merge",
-            "npm:tailwindcss-animate",
-            "npm:timezones-list",
-            "npm:tslib",
-            "npm:uuid",
-            "npm:yup"
-          ]
-        },
-        {
-          "file": "tsconfig.base.json",
-          "hash": "16257537213835165230"
-        }
-      ],
-      "utilities": [
-        {
-          "file": "libs/utilities/.eslintrc.json",
-          "hash": "11012487992710232822"
-        },
-        {
-          "file": "libs/utilities/README.md",
-          "hash": "13228732804139331838"
-        },
-        {
-          "file": "libs/utilities/project.json",
-          "hash": "699343638286385166"
-        },
-        {
-          "file": "libs/utilities/src/index.ts",
-          "hash": "4979336273987222930"
-        },
-        {
-          "file": "libs/utilities/src/lib/configs/axios.ts",
-          "hash": "3794232511606065549",
-          "deps": [
-            "npm:crypto-js",
-            "npm:axios"
-          ]
-        },
-        {
-          "file": "libs/utilities/src/lib/configs/env.ts",
-          "hash": "12101586654834214904"
-        },
-        {
-          "file": "libs/utilities/src/lib/helpers/index.ts",
-          "hash": "10922730425443113868",
-          "deps": [
-            "npm:crypto-js",
-            "npm:country-list-with-dial-code-and-flag"
-          ]
-        },
-        {
-          "file": "libs/utilities/src/server.ts",
-          "hash": "5519843671682787663"
-        },
-        {
-          "file": "libs/utilities/tsconfig.json",
-          "hash": "14088618039610991405"
-        },
-        {
-          "file": "libs/utilities/tsconfig.lib.json",
-          "hash": "1536859351713546153"
-        }
-      ],
-      "ui-components": [
-        {
-          "file": "libs/ui-components/.eslintrc.json",
-          "hash": "11012487992710232822"
-        },
-        {
-          "file": "libs/ui-components/README.md",
-          "hash": "9995608240359739017"
-        },
-        {
-          "file": "libs/ui-components/project.json",
-          "hash": "14073386014989480526"
-        },
-        {
-          "file": "libs/ui-components/src/index.ts",
-          "hash": "3890638239984739746"
-        },
-        {
-          "file": "libs/ui-components/src/lib/button/button.css",
-          "hash": "3244421341483603138"
-        },
-        {
-          "file": "libs/ui-components/src/lib/button/button.spec.tsx",
-          "hash": "6024628988384396619",
-          "deps": [
-            "npm:@testing-library/react",
-            "npm:react"
-          ]
-        },
-        {
-          "file": "libs/ui-components/src/lib/button/button.tsx",
-          "hash": "14294175664207578953",
-          "deps": [
-            "npm:react"
-          ]
-        },
-        {
-          "file": "libs/ui-components/src/lib/checkbox/checkbox.spec.tsx",
-          "hash": "16773171947338653164",
-          "deps": [
-            "npm:@testing-library/react"
-          ]
-        },
-        {
-          "file": "libs/ui-components/src/lib/checkbox/checkbox.tsx",
-          "hash": "9330927587529167350",
-          "deps": [
-            "npm:react"
-          ]
-        },
-        {
-          "file": "libs/ui-components/src/lib/file-upload/file-upload.spec.tsx",
-          "hash": "13729243159011131943",
-          "deps": [
-            "npm:@testing-library/react"
-          ]
-        },
-        {
-          "file": "libs/ui-components/src/lib/file-upload/file-upload.tsx",
-          "hash": "15745855549206970964",
-          "deps": [
-            "npm:next",
-            "npm:react",
-            "npm:react-dropzone"
-          ]
-        },
-        {
-          "file": "libs/ui-components/src/lib/input/input.css",
-          "hash": "10999915296015192048"
-        },
-        {
-          "file": "libs/ui-components/src/lib/input/input.spec.tsx",
-          "hash": "1956756580387732921",
-          "deps": [
-            "npm:@testing-library/react"
-          ]
-        },
-        {
-          "file": "libs/ui-components/src/lib/input/input.tsx",
-          "hash": "4109157862373855892",
-          "deps": [
-            "npm:@heroicons/react",
-            "npm:react-hook-form",
-            "npm:react"
-          ]
-        },
-        {
-          "file": "libs/ui-components/src/lib/modal/modal.spec.tsx",
-          "hash": "6472563329112809072",
-          "deps": [
-            "npm:@testing-library/react"
-          ]
-        },
-        {
-          "file": "libs/ui-components/src/lib/modal/modal.tsx",
-          "hash": "14108573289638167965",
-          "deps": [
-            "npm:react",
-            "npm:@headlessui/react"
-          ]
-        },
-        {
-          "file": "libs/ui-components/src/lib/search/search.css",
-          "hash": "10172889319337957757"
-        },
-        {
-          "file": "libs/ui-components/src/lib/search/search.spec.tsx",
-          "hash": "1172712103285773831",
-          "deps": [
-            "npm:@testing-library/react"
-          ]
-        },
-        {
-          "file": "libs/ui-components/src/lib/search/search.tsx",
-          "hash": "16498275226319806576",
-          "deps": [
-            "npm:react",
-            "npm:next"
-          ]
-        },
-        {
-          "file": "libs/ui-components/src/lib/select/select.spec.tsx",
-          "hash": "16176134918512818464"
-        },
-        {
-          "file": "libs/ui-components/src/lib/select/select.tsx",
-          "hash": "15616048433895510667",
-          "deps": [
-            "npm:react",
-            "npm:react-select"
-          ]
-        },
-        {
-          "file": "libs/ui-components/src/lib/toast/toast.spec.tsx",
-          "hash": "17609396385370758005",
-          "deps": [
-            "npm:@testing-library/react"
-          ]
-        },
-        {
-          "file": "libs/ui-components/src/lib/toast/toast.tsx",
-          "hash": "9392764110185592652",
-          "deps": [
-            "npm:react",
-            "npm:react-hot-toast"
-          ]
-        },
-        {
-          "file": "libs/ui-components/src/server.ts",
-          "hash": "5519843671682787663"
-        },
-        {
-          "file": "libs/ui-components/tsconfig.json",
-          "hash": "14088618039610991405"
-        },
-        {
-          "file": "libs/ui-components/tsconfig.lib.json",
-          "hash": "1536859351713546153"
         }
       ]
     }

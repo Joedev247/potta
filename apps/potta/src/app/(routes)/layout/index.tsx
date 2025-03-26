@@ -36,7 +36,7 @@ export default function RootLayout({
               context?.toggle ? 'flex w-full  pl-[35px]' : 'pl-[150px] w-full '
             }`}
           >
-            <div className="mt-3 w-full relative  mx-0">
+            <div className=" w-full relative  mx-0">
               <Navbar />
               {children}
             </div>

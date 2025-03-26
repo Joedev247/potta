@@ -126,6 +126,7 @@ const InventoryTable = () => {
     <div className="mt-10">
       <div></div>
       <Table
+      minHeight='70vh'
         columns={columns}
         data={data?.data || []}
         ExpandableComponent={null}

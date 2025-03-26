@@ -27,7 +27,7 @@ const POS = () => {
 
                     </div>
                 </div>
-                <div className=" w-full h-[8vh] bg-[#005D1F] z-30 fixed bottom-0 ">
+                <div className=" w-full h-[7vh] bg-[#005D1F] z-30 fixed bottom-0 ">
                     <div className="">
 
                         <HeldOrders />

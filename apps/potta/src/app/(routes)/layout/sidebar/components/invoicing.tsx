@@ -28,15 +28,15 @@ const Sidebarsinvoicing = () => {
           {' '}
         </MenuItem>
         <MenuItem
-          active={str[1] == 'dashboard' ? true : false}
+          active={str[1] == 'invoice' && str[2] == undefined ? true : false}
           className="mt-8  font-thin"
-          href="/dashboard"
+          href="/invoice"
           icon={
             <Icon
-              icon="Pie-Chart-2"
+              icon="file-invoice-dollar"
               size={23}
               color={
-                str[1] == 'analytics' || str[1] == undefined || str[1] == ''
+                str[1] == 'invoice' && str[2] == undefined || str[1] == undefined || str[1] == ''
                   ? 'white'
                   : 'black'
               }
@@ -44,80 +44,28 @@ const Sidebarsinvoicing = () => {
           }
         >
           {' '}
-          <h3 className="text-lg mt-[2px]">Overview</h3>{' '}
+          <h3 className="text-lg mt-[2px]">Invoice</h3>{' '}
         </MenuItem>
+
         <MenuItem
-          active={str[1] == 'inbox' ? true : false}
+          active={str[2] == 'inbox' ? true : false}
           className="mt-4 font-thin"
-          href="/inbox"
+          href="/invoice/inbox"
           icon={
             <Icon
-              icon="Open-Mail"
+              icon="Mails"
               size={21}
               color={
-                str[1] == 'analytics' || str[1] == undefined || str[1] == ''
+                str[1] == 'invoice' && str[2] == 'inbox' || str[1] == undefined || str[1] == ''
                   ? 'white'
                   : 'black'
               }
             />
           }
         >
-          <h3 className="text-lg mt-1.5">Cancelled</h3>
+          <h3 className="text-lg mt-1.5">Inbox</h3>
         </MenuItem>
-        <MenuItem
-          active={str[1] == 'inbox' ? true : false}
-          className="mt-4 font-thin"
-          href="/inbox"
-          icon={
-            <Icon
-              icon="Open-Mail"
-              size={21}
-              color={
-                str[1] == 'analytics' || str[1] == undefined || str[1] == ''
-                  ? 'white'
-                  : 'black'
-              }
-            />
-          }
-        >
-          <h3 className="text-lg mt-1.5">Failed</h3>
-        </MenuItem>
-        <MenuItem
-          active={str[1] == 'inbox' ? true : false}
-          className="mt-4 font-thin"
-          href="/inbox"
-          icon={
-            <Icon
-              icon="Open-Mail"
-              size={21}
-              color={
-                str[1] == 'analytics' || str[1] == undefined || str[1] == ''
-                  ? 'white'
-                  : 'black'
-              }
-            />
-          }
-        >
-          <h3 className="text-lg mt-1.5">Terminals</h3>
-        </MenuItem>
-        <MenuItem
-          active={str[1] == 'inbox' ? true : false}
-          className="mt-4 font-thin"
-          href="/inbox"
-          icon={
-            <Icon
-              icon="Open-Mail"
-              size={21}
-              color={
-                str[1] == 'analytics' || str[1] == undefined || str[1] == ''
-                  ? 'white'
-                  : 'black'
-              }
-            />
-          }
-        >
-          <h3 className="text-lg mt-1.5">Report</h3>
-        </MenuItem>
+        
       </Menu>
       <div className="absolute cursor-pointer mb-10 ml-6 bottom-0">
         <div className="flex-1 space-y-7 flex-col">

@@ -5,10 +5,10 @@ import { useContext, useState, useEffect, useRef } from 'react';
 import DynamicTable from './newtableInvoice';
 import Button from '@potta/components/button';
 import { ContextData } from '@potta/components/context';
-import useGetAllCustomers from '@potta/app/(routes)/pos/customers/hooks/useGetAllCustomers';
-import SliderCustomer from '@potta/app/(routes)/pos/customers/components/customerSlider';
+import useGetAllCustomers from '@potta/app/(routes)/customers/hooks/useGetAllCustomers';
+import SliderCustomer from '@potta/app/(routes)/customers/components/customerSlider';
 import Select from '@potta/components/select';
-import { Customer } from '../../../customers/utils/types';
+import { Customer } from '../../../../customers/utils/types';
 
 // Define Option interface to match the one in SearchSelect component
 interface Option {
@@ -40,7 +40,9 @@ interface LineItemsDto {
 
 const Left = () => {
   const context = useContext(ContextData);
-  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<string | null>(null);
+  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<
+    string | null
+  >(null);
   const { data, isLoading: customersLoading } = useGetAllCustomers({
     page: 1,
     limit: 100,
@@ -60,7 +62,10 @@ const Left = () => {
 
   // Create customer options with proper typing
   const customerOptions: Option[] = customers.map((customer: Customer) => ({
-    label: customer.firstName || customer.lastName || `Customer ${customer.customerId || customer.uuid.slice(0, 8)}`,
+    label:
+      customer.firstName ||
+      customer.lastName ||
+      `Customer ${customer.customerId || customer.uuid.slice(0, 8)}`,
     value: customer.uuid,
   }));
 
@@ -74,7 +79,12 @@ const Left = () => {
     ) {
       const firstCustomer = customers[0];
       const firstOption = {
-        label: firstCustomer.firstName || firstCustomer.lastName || `Customer ${firstCustomer.customerId || firstCustomer.uuid.slice(0, 8)}`,
+        label:
+          firstCustomer.firstName ||
+          firstCustomer.lastName ||
+          `Customer ${
+            firstCustomer.customerId || firstCustomer.uuid.slice(0, 8)
+          }`,
         value: firstCustomer.uuid,
       };
 
@@ -150,7 +160,7 @@ const Left = () => {
       unitPrice: item.price,
       taxRate: item.tax,
       discountRate: 0,
-      productId: item.uuid
+      productId: item.uuid,
     }));
 
     // Calculate total amount with proper typing
@@ -169,8 +179,8 @@ const Left = () => {
       receiptNumber: invoiceNumber,
       discountAmount: 0, // Add default or actual value if available
       customerId: customerName, // Using the customer UUID as customerId
-      salePerson: "", // Add actual salesperson if available
-      lineItems: lineItems
+      salePerson: '', // Add actual salesperson if available
+      lineItems: lineItems,
     };
 
     // Log the formatted data
@@ -186,7 +196,7 @@ const Left = () => {
     console.log(`  customerId: "${saleReceiptData.customerId}"`);
     console.log(`  salePerson: "${saleReceiptData.salePerson}"`);
     console.log('  lineItems: [');
-    saleReceiptData.lineItems.forEach(item => {
+    saleReceiptData.lineItems.forEach((item) => {
       console.log('    LineItemsDto {');
       console.log(`      description: "${item.description}"`);
       console.log(`      quantity: ${item.quantity}`);
@@ -204,7 +214,7 @@ const Left = () => {
     // Save to context
     context?.setData((prevData: any) => ({
       ...prevData,
-      saleReceipt: saleReceiptData
+      saleReceipt: saleReceiptData,
     }));
 
     // Also log the raw data object if needed
@@ -217,18 +227,18 @@ const Left = () => {
   console.log('Selected customer option:', selectedCustomer);
 
   return (
-    <div className="max-w-4xl pl-2">
-       <div className="flex  min-w-[45rem]  justify-between w-full mb-8 ">
+    <div className="max-w-5xl min-w-5xl px-2 overflow-y-auto css-dip3t8 ">
+      <div className="flex min-w-[45rem] justify-between w-full mb-8">
         <h3 className="text-2xl ">Create Sales Recipt</h3>
       </div>
       <div className="w-full grid grid-cols-4 gap-4">
         <div>
           <Select
+            label="Currency"
             options={[
-              { label: '$', value: 'USD' },
-              { label: '€', value: 'EUR' },
-              { label: '£', value: 'GBP' },
-              { label: 'FCFA', value: 'FCFA' },
+              { label: 'USD($)', value: 'USD' },
+              { label: 'EUR(€)', value: 'EUR' },
+              { label: 'XAF', value: 'XAF' },
             ]}
             selectedValue={currency}
             onChange={(value: any) => handleInputChange('currency', value)}
@@ -236,12 +246,13 @@ const Left = () => {
           />
         </div>
         <div className="">
-          <input
+          <Input
+          label='Date'
             name="date"
             type={'date'}
             value={date}
-            onChange={(e: any) => handleInputChange('date', e.target.value)}
-            className={`w-full py-2.5 px-4 border border-gray-200 rounded-[2px] outline-none mt-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500`}
+            onchange={(e: any) => handleInputChange('date', e.target.value)}
+           
           />
         </div>
       </div>
@@ -249,6 +260,7 @@ const Left = () => {
       <div className="mt-3 w-full flex">
         <div className="w-[50%] flex items-center space-x-3">
           <SearchSelect
+          label='Customer'
             options={customerOptions}
             value={selectedCustomer}
             onChange={(option: Option | null) => {
@@ -285,7 +297,7 @@ const Left = () => {
               <div
                 key={option}
                 onClick={() => handlePaymentMethodClick(option)}
-                className={`p-4 border cursor-pointer ${
+                className={`p-4 border cursor-pointer hover:border-green-500 hover:text-green-500 ${
                   selectedPaymentMethod === option
                     ? 'border-green-500 text-green-500'
                     : 'border-gray-300'
@@ -293,10 +305,10 @@ const Left = () => {
               >
                 <div className="flex items-center">
                   <input
-                    type="radio"
+                    type="checkbox"
                     checked={selectedPaymentMethod === option}
                     onChange={() => handlePaymentMethodClick(option)}
-                    className="mr-2 text-xl"
+                    className="mr-2 text-xl text-white accent-green-700"
                     name="paymentMethod"
                   />
                   <span>{option.replace(/([A-Z])/g, ' $1').toUpperCase()}</span>

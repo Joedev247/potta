@@ -4,6 +4,7 @@ import Search from '@potta/components/search';
 import Select from '@potta/components/select';
 import React, { useState } from 'react';
 import NewSalesReciept from '../new/page';
+import Link from 'next/link';
 
 const Filter = () => {
   const [selectedValue, setSelectedValue] = useState('All Time'); // Set your default value here
@@ -22,11 +23,12 @@ const Filter = () => {
         <div className="w-full w-[60%]">
           <Search />
         </div>
-        <div className="flex mt-4 w-[40%] space-x-2">
-          <div className="flex h-[47px] pt-3 w-full px-2 border">
+        <div className="flex mt-4 w-[40%] space-x-2 ">
+          <div className="flex h-[47px]  w-full px-2 border items-center">
             <p className="text-[17px] -mt-1">Filter&nbsp;: </p>
             <div className="-mt-3">
               <Select
+              outline
                 border={true}
                 options={[
                   { label: 'All', value: 'all' },
@@ -39,10 +41,11 @@ const Filter = () => {
               />
             </div>
           </div>
-          <div className="flex h-[47px] py-3.5  w-full px-2 border">
+          <div className="flex h-[47px] py-3.5 items-center space-x-1 w-full px-2 border">
             <p className="text-[17px] -mt-1">Date&nbsp;: </p>
             <div className="-mt-3">
               <Select
+              outline
                 border={true}
                 options={[
                   { label: 'All Time', value: 'All Time' },
@@ -68,7 +71,14 @@ const Filter = () => {
             />
           </div>
           <div className="w-full">
-            
+          <Link href={'/pos/sales/new'}>
+                <Button
+                  text={'Create Sale'}
+                  icon={<i className="ri-file-add-line"></i>}
+                  theme="default"
+                  type={'button'}
+                />
+              </Link>
           </div>
         </div>
       </div>

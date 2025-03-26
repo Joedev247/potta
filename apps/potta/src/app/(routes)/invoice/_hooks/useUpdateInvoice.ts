@@ -4,10 +4,10 @@ import { invoiceApi } from '../_utils/api';
 const useUpdateInvoice = (invoice_id: string) => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationKey: ['update-invoice'],
+    mutationKey: ['update-invoicing'],
     mutationFn: (data) => invoiceApi.update(invoice_id, data),
     onSuccess: () =>
-      queryClient.invalidateQueries({ queryKey: ['get-all-invoice'] }),
+      queryClient.invalidateQueries({ queryKey: ['get-all-invoicing'] }),
   });
 };
 

@@ -74,7 +74,7 @@ const ReimbusementDatatable = () => {
   ];
   return (
     <div className="mt-10">
-      <MyTable columns={columns} data={data} />
+      <MyTable columns={columns} data={data} minHeight='70vh'/>
     </div>
   );
 };

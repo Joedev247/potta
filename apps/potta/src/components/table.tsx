@@ -12,7 +12,7 @@ interface TableProps {
   ExpandableComponent?: FC<any> | null;
   size?: boolean;
   color?: boolean;
-
+  minHeight?: string; // Added minHeight prop
   selectable?: boolean;
   paginationServer?: boolean;
   paginationTotalRows?: number;
@@ -34,7 +34,7 @@ const MyTable: FC<TableProps & { pending?: boolean }> = ({
   onChangeRowsPerPage,
   selectable,
   color,
-
+  minHeight = '400px', // Default min height of 400px if not specified
 }) => {
   const customStyles = {
     headCells: {
@@ -55,7 +55,6 @@ const MyTable: FC<TableProps & { pending?: boolean }> = ({
       style: {
         minHeight: size ? '40px' : '48px',
         fontSize: size ? '14px' : '16px',
-
       },
     },
     cells: {
@@ -64,10 +63,15 @@ const MyTable: FC<TableProps & { pending?: boolean }> = ({
         paddingRight: '8px',
       },
     },
+    table: {
+      style: {
+        minHeight: minHeight, // Apply the minimum height to the table
+      },
+    },
   };
 
   return (
-    <div className="border ">
+    <div className="border" style={{ minHeight: minHeight }}> {/* Also apply minHeight to the container */}
       <DataTable
         customStyles={customStyles}
         columns={columns}
@@ -83,6 +87,11 @@ const MyTable: FC<TableProps & { pending?: boolean }> = ({
         onChangeRowsPerPage={onChangeRowsPerPage} // Handle per-page change
         progressPending={pending}
         progressComponent={<CustomLoader />}
+        noDataComponent={
+          <div style={{ padding: '24px', minHeight: minHeight }}>
+            No records to display
+          </div>
+        }
       />
     </div>
   );

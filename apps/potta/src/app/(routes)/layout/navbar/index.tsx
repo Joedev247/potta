@@ -24,8 +24,8 @@ const urlRouters = [
     label: "POS"
   },
   {
-    value: 'invoicing',
-    label: 'Invoicing',
+    value: 'invoice',
+    label: 'Invoice',
   },
   {
     value: 'taxation',
@@ -44,7 +44,7 @@ export default function Navbar() {
   const str = string.split('/');
   const [selected, setSeleted] = useState(
     // eslint-disable-next-line no-constant-condition
-    str[1] == undefined || 'payments' ? 'payments' : str[1] == 'paymentls'
+    str[1] == undefined || 'payments' ? 'payments' : str[1] == 'payments'
   );
 
   const handleSelect = (value: string) => {
@@ -53,8 +53,11 @@ export default function Navbar() {
   };
 
   // If the current route is 'pos', don't render the navbar
-  if (str[1] === 'pos') {
+  if (str[1] === 'pos' && str[2] === undefined) {
     return null;
+  }
+  if(str[2] === 'new'){
+    return null
   }
 
   return (

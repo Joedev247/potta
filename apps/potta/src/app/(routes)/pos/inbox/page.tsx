@@ -1,16 +1,16 @@
 "use client"
 import React from 'react'
-import CustomerContent from '../../../../components/shared/CustomerContent'
+import InboxContent from '../../../../components/shared/InboxContent'
 import RootLayout from '../../layout'
 
-const POSCustomers = () => {
+const POSInbox = () => {
     return (
       <RootLayout>
 
         <div className="w-full">
-            <CustomerContent />
+            <InboxContent />
         </div>
       </RootLayout>
     )
 }
-export default POSCustomers
+export default POSInbox

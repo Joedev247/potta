@@ -3,7 +3,7 @@ import { invoiceApi } from '../_utils/api';
 
 const useGetOneInvoice = (invoice_id: string) => {
   return useQuery({
-    queryKey: ['get-one-invoice', invoice_id],
+    queryKey: ['get-one-invoicing', invoice_id],
     queryFn: () => invoiceApi.getOne(invoice_id),
   });
 };

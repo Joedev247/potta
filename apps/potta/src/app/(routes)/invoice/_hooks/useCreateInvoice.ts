@@ -5,10 +5,10 @@ import { IInvoicePayload } from '../_utils/valididation';
 const useCreateInvoice = (user_id: string) => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationKey: ['create-invoice'],
+    mutationKey: ['create-invoicing'],
     mutationFn: (data: IInvoicePayload) => invoiceApi.create(data, user_id),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['get-all-invoice'] });
+      queryClient.invalidateQueries({ queryKey: ['get-all-invoicing'] });
     },
   });
 };

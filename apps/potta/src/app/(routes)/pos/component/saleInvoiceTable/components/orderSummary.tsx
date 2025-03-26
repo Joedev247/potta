@@ -39,7 +39,7 @@ const OrderSummary: React.FC<OrderSummaryProps> = ({
           onApplyCoupon={(amount) => setDiscount(amount)}
         />
       </div>
-      <div className="mt-4 w-full flex justify-between">
+      <div className="mt-4 w-full flex justify-between items-end">
         <HoldOrderButton />
         <div className="w-1/2">
           <div className="w-full flex justify-end ">

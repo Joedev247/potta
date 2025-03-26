@@ -16506,7 +16506,47 @@
       },
       {
         "source": "potta",
+        "target": "npm:react-hook-form",
+        "type": "static"
+      },
+      {
+        "source": "potta",
+        "target": "npm:react-select",
+        "type": "static"
+      },
+      {
+        "source": "potta",
+        "target": "npm:@hookform/resolvers",
+        "type": "static"
+      },
+      {
+        "source": "potta",
+        "target": "npm:react-hot-toast",
+        "type": "static"
+      },
+      {
+        "source": "potta",
+        "target": "npm:libphonenumber-js",
+        "type": "static"
+      },
+      {
+        "source": "potta",
+        "target": "npm:react-world-flags",
+        "type": "static"
+      },
+      {
+        "source": "potta",
+        "target": "npm:@nextui-org/react",
+        "type": "static"
+      },
+      {
+        "source": "potta",
         "target": "npm:@tanstack/react-query",
+        "type": "static"
+      },
+      {
+        "source": "potta",
+        "target": "npm:yup",
         "type": "static"
       },
       {
@@ -16541,21 +16581,6 @@
       },
       {
         "source": "potta",
-        "target": "npm:yup",
-        "type": "static"
-      },
-      {
-        "source": "potta",
-        "target": "npm:@nextui-org/react",
-        "type": "static"
-      },
-      {
-        "source": "potta",
-        "target": "npm:react-hook-form",
-        "type": "static"
-      },
-      {
-        "source": "potta",
         "target": "npm:@iconify/react",
         "type": "static"
       },
@@ -16566,17 +16591,12 @@
       },
       {
         "source": "potta",
-        "target": "npm:@hookform/resolvers",
-        "type": "static"
-      },
-      {
-        "source": "potta",
         "target": "npm:react-pro-sidebar",
         "type": "static"
       },
       {
         "source": "potta",
-        "target": "npm:react-select",
+        "target": "npm:lucide-react",
         "type": "static"
       },
       {
@@ -16597,26 +16617,6 @@
       {
         "source": "potta",
         "target": "npm:react-accessible-accordion",
-        "type": "static"
-      },
-      {
-        "source": "potta",
-        "target": "npm:react-hot-toast",
-        "type": "static"
-      },
-      {
-        "source": "potta",
-        "target": "npm:libphonenumber-js",
-        "type": "static"
-      },
-      {
-        "source": "potta",
-        "target": "npm:react-world-flags",
-        "type": "static"
-      },
-      {
-        "source": "potta",
-        "target": "npm:lucide-react",
         "type": "static"
       },
       {
@@ -43905,5 +43905,5 @@
   },
   "version": "6.0",
   "errors": [],
-  "computedAt": 1742836378815
+  "computedAt": 1743011981838
 }

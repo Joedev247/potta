@@ -59,14 +59,14 @@ label {
 .scroll::-webkit-scrollbar-track,
 .css-dip3t8::-webkit-scrollbar-track {
   box-shadow: inset 0 0 5px rgb(245, 244, 244);
-  border-radius: 10px;
+  border-radius: 0px;
 }
 
 /* Handle */
 .scroll::-webkit-scrollbar-thumb,
 .css-dip3t8::-webkit-scrollbar-thumb {
   background: rgb(243, 241, 241);
-  border-radius: 10px;
+  border-radius: 0px;
 }
 
 /* Handle on hover */

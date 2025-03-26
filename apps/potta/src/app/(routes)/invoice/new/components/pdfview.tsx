@@ -1,9 +1,9 @@
 'use client';
+import useGetOneCustomer from '@potta/app/(routes)/customers/hooks/useGetOneCustomer';
+import { Customer } from '@potta/app/(routes)/customers/utils/types';
 import Button from '@potta/components/button';
 import { ContextData } from '@potta/components/context';
 import React, { useContext, useEffect, useState } from 'react';
-import { Customer } from '../../../../customers/utils/types';
-import useGetOneCustomer from '../../../../customers/hooks/useGetOneCustomer';
 
 interface TableItem {
   name: string;
@@ -21,6 +21,23 @@ const PdfView = () => {
   const tableData: TableItem[] = contextData.table || [];
   const customerId = contextData.customerName; // Get customer ID from context
 
+  // Format dates if they exist
+  const formattedIssueDate = contextData.issueDate
+    ? new Date(contextData.issueDate).toLocaleDateString()
+    : 'Not set';
+
+  const formattedDueDate = contextData.dueDate
+    ? new Date(contextData.dueDate).toLocaleDateString()
+    : 'Not set';
+
+  const invoiceType = contextData.invoiceType || 'Invoice';
+  const invoiceNumber = contextData.invoiceNumber || '0025';
+  const billingAddress = contextData.billing || '';
+  const shippingAddress = contextData.shipping || '';
+  const paymentTerms = contextData.paymentTerms || '';
+  const paymentReference = contextData.paymentReference || '';
+  const taxRate = contextData.taxRate || 0;
+
   const getCurrencySymbol = (currencyCode: string): string => {
     switch (currencyCode) {
       case 'USD':
@@ -29,19 +46,20 @@ const PdfView = () => {
         return '€';
       case 'GBP':
         return '£';
-      case 'FCFA':
-        return 'FCFA';
+      case 'XAF':
+        return 'XAF';
       default:
         return currencyCode;
     }
   };
-  const currencySymbol = getCurrencySymbol(contextData.currency || '');
+  const currencySymbol = getCurrencySymbol(contextData.currency || 'USD');
+
   // Use the getOneCustomer hook with the customer ID
   const { data: customerData, isLoading: customerLoading } = useGetOneCustomer(
     customerId || ''
   );
   const customerDetails: Customer | null = customerData || null;
-  console.log(customerDetails);
+
   // Calculate totals
   const subtotal = tableData.reduce((sum: number, item: TableItem) => {
     const price = Number(item.price);
@@ -59,8 +77,8 @@ const PdfView = () => {
   const total = subtotal + totalTax;
 
   return (
-    <div className=" flex min-h-full flex-col items-center justify-center overflow-y-auto  w-full bg-[#F2F2F2]">
-      <div className="flex  min-w-[45rem]  justify-between w-full p-8">
+    <div className="flex min-h-full flex-col items-center justify-center overflow-y-auto w-full bg-[#F2F2F2]">
+      <div className="flex min-w-[45rem] justify-between w-full p-8">
         <h3 className="text-xl font-semibold">PDF Preview</h3>
         <Button
           text={'Download'}
@@ -68,21 +86,29 @@ const PdfView = () => {
           type={'submit'}
         />
       </div>
-      <div className=" max-w-[48rem] bg-white space-y-8 min-w-[45rem] w-full">
-        <div className=" h-36 w-full flex items-center justify-between px-4 bg-green-800">
-          <p className="text-3xl mt-5 font-semibold text-white">
-            Sales Receipt
-          </p>
+      <div className="max-w-[48rem] bg-white space-y-8 min-w-[45rem] w-full mb-10">
+        <div className="h-36 w-full flex items-center justify-between px-8 bg-yellow-800">
+          <div>
+            <p className="text-3xl font-semibold text-white">{invoiceType}</p>
+            <p className="text-white mt-2">#{invoiceNumber}</p>
+          </div>
           <div className="text-right text-white">
-            <p>Date: {contextData.date || 'Not set'}</p>
-            <p>Currency: {contextData.currency || 'USD'}</p>
+            <p>
+              <strong>Issue Date:</strong> {formattedIssueDate}
+            </p>
+            <p>
+              <strong>Due Date:</strong> {formattedDueDate}
+            </p>
+            <p>
+              <strong>Currency:</strong> {contextData.currency || 'USD'}
+            </p>
           </div>
         </div>
         <div className="p-5 space-y-16 bg-white">
           <div className="mt-5 w-full flex space-x-5">
             <div className="flex w-[40%] space-x-2">
-              <h3>From : </h3>
-              <div className="space-y-2 text-sm text-gray-400 flex-col">
+              <h3 className="font-bold">From: </h3>
+              <div className="space-y-2 text-sm text-gray-600 flex-col">
                 <p>ABC Company</p>
                 <p>hello@ABCcompany.com</p>
                 <p>ABC, Street, D'la Cameroon</p>
@@ -90,8 +116,8 @@ const PdfView = () => {
               </div>
             </div>
             <div className="flex space-x-2">
-              <h3>To : </h3>
-              <div className="space-y-2 text-sm text-gray-400 flex-col">
+              <h3 className="font-bold">To: </h3>
+              <div className="space-y-2 text-sm text-gray-600 flex-col">
                 {customerLoading ? (
                   <p>Loading customer details...</p>
                 ) : customerDetails ? (
@@ -100,7 +126,11 @@ const PdfView = () => {
                       {customerDetails.firstName} {customerDetails.lastName}
                     </p>
                     <p>{customerDetails.email || 'No email'}</p>
-                    <p>{customerDetails.address.address || 'No address'}</p>
+                    <p>
+                      {billingAddress ||
+                        customerDetails.address?.address ||
+                        'No address'}
+                    </p>
                     <p>{customerDetails.phone || 'No phone'}</p>
                   </>
                 ) : (
@@ -110,7 +140,14 @@ const PdfView = () => {
             </div>
           </div>
 
-          <table className="min-w-full h-40 table-auto mt-10 ">
+          {shippingAddress && (
+            <div className="mt-4">
+              <h3 className="font-bold">Shipping Address:</h3>
+              <p className="text-sm text-gray-600">{shippingAddress}</p>
+            </div>
+          )}
+
+          <table className="min-w-full h-40 table-auto mt-10">
             <thead>
               <tr className="bg-gray-50">
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
@@ -148,13 +185,16 @@ const PdfView = () => {
                     <td className="border-b px-4 py-2">{item.name}</td>
                     <td className="border-b px-4 py-2">{qty}</td>
                     <td className="border-b px-4 py-2">
+                      {currencySymbol}
                       {price.toFixed(2)}
-                      {currencySymbol}
                     </td>
-                    <td className="border-b px-4 py-2">{itemTax.toFixed(2)}</td>
                     <td className="border-b px-4 py-2">
-                      {totalWithTax.toFixed(2)}
                       {currencySymbol}
+                      {itemTax.toFixed(2)}
+                    </td>
+                    <td className="border-b px-4 py-2">
+                      {currencySymbol}
+                      {totalWithTax.toFixed(2)}
                     </td>
                   </tr>
                 );
@@ -169,8 +209,24 @@ const PdfView = () => {
               <div className="pl-4">
                 <p>
                   <strong>Payment Method:</strong>{' '}
-                  {contextData.payment_method?.[0] || 'Not selected'}
+                  {contextData.payment_method?.[0]
+                    ?.replace(/([A-Z])/g, ' $1')
+                    .toUpperCase() || 'Not selected'}
                 </p>
+
+                {paymentReference && (
+                  <p className="mt-2">
+                    <strong>Payment Reference:</strong> {paymentReference}
+                  </p>
+                )}
+
+                {paymentTerms && (
+                  <div className="mt-2">
+                    <strong>Payment Terms:</strong>
+                    <p className="text-gray-600 mt-1">{paymentTerms}</p>
+                  </div>
+                )}
+
                 {contextData.note && (
                   <div className="mt-4">
                     <strong>Notes:</strong>
@@ -180,19 +236,19 @@ const PdfView = () => {
               </div>
             </div>
             <div className="w-[50%]">
-              <div className="mt-4 flex justify-between ">
+              <div className="mt-4 flex justify-between">
                 <div className="w-1/2">Sub Total:</div>
                 <div className="w-1/2 text-right pr-20">
-                  {subtotal.toFixed(2)}
                   {currencySymbol}
+                  {subtotal.toFixed(2)}
                 </div>
               </div>
 
-              <div className="mt-2 flex justify-between ">
-                <div className="w-1/2">Tax:</div>
+              <div className="mt-2 flex justify-between">
+                <div className="w-1/2">Tax ({taxRate || 0}%):</div>
                 <div className="w-1/2 text-right pr-20">
-                  {totalTax.toFixed(2)}
                   {currencySymbol}
+                  {totalTax.toFixed(2)}
                 </div>
               </div>
               {/* Horizontal Line */}
@@ -200,8 +256,8 @@ const PdfView = () => {
               <div className="flex justify-between font-bold">
                 <div className="w-1/2">Total:</div>
                 <div className="w-1/2 text-right pr-20">
-                  {total.toFixed(2)}
                   {currencySymbol}
+                  {total.toFixed(2)}
                 </div>
               </div>
             </div>
