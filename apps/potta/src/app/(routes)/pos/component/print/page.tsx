@@ -17,10 +17,6 @@ interface OrderData {
   timestamp: string;
 }
 
-interface ReceiptPrinterProps {
-  onPrintSuccess?: () => void;
-}
-
 export class ReceiptPrinter {
   private iframeRef: React.RefObject<HTMLIFrameElement>;
 
@@ -30,8 +26,8 @@ export class ReceiptPrinter {
 
   private generatePrintContent(orderData: OrderData): string {
     return `
-      <div class="flex prints w-full print justify-center">
-        <div class="w-full">
+      <div class="receipt-wrapper">
+        <div class="receipt-content">
           <center>
             <img src="/icons/logo.svg" class="h-16 text-center w-auto" alt="" />
           </center>
@@ -54,7 +50,7 @@ export class ReceiptPrinter {
               `).join('')}
               <tr>
                 <td><p class="font-thin prints">Qty</p></td>
-                <td class="text-right"><p class="font-thin prints">${orderData.orderItems.length}</p></td>
+                <td class="text-right"><p class="font-thin prints">${orderData.orderItems.reduce((total, item) => total + item.quantity, 0)}</p></td>
               </tr>
               <tr>
                 <td><p class="font-thin prints">Total Price:</p></td>
@@ -81,7 +77,7 @@ export class ReceiptPrinter {
   }
 
   public getIframeElement(): JSX.Element {
-    return <iframe ref={this.iframeRef} style={{ display: 'none' }} title="Print Frame" />;
+    return <iframe ref={this.iframeRef} style={{ width: '100%', height: '400px', border: '1px solid #ddd' }} title="Receipt Preview" />;
   }
 
   public async printReceipt(orderData: OrderData): Promise<void> {
@@ -95,15 +91,83 @@ export class ReceiptPrinter {
       try {
         const doc = iframe.contentWindow!.document;
         doc.open();
-        doc.write('<html><head><title>Print</title>');
+        doc.write('<!DOCTYPE html><html><head><title>Receipt Preview</title>');
+        doc.write('<meta charset="UTF-8">');
+        doc.write('<meta name="viewport" content="width=device-width, initial-scale=1.0">');
         doc.write('<link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />');
+        doc.write(`
+          <style>
+            @page {
+              size: 80mm auto;
+              margin: 0;
+            }
+            html, body {
+              margin: 0;
+              padding: 0;
+              font-family: Arial, sans-serif;
+              background-color: white;
+            }
+            .receipt-wrapper {
+              width: 80mm;
+              max-width: 100%;
+              margin: 0 auto;
+              padding: 10px;
+              box-sizing: border-box;
+              background-color: white;
+            }
+            .receipt-content {
+              width: 100%;
+            }
+            .prints {
+              font-size: 14px;
+              line-height: 1.2;
+              margin: 4px 0;
+            }
+            table {
+              width: 100%;
+              border-collapse: collapse;
+            }
+            td {
+              padding: 2px 0;
+            }
+            @media print {
+              html, body {
+                height: fit-content;
+                page-break-after: avoid;
+                page-break-before: avoid;
+                width: 80mm;
+              }
+              .receipt-wrapper {
+                width: 100%;
+              }
+            }
+          </style>
+        `);
         doc.write('</head><body>');
         doc.write(this.generatePrintContent(orderData));
+        doc.write(`
+          <script>
+            // Ensure the paper height matches the content exactly
+            document.addEventListener('DOMContentLoaded', function() {
+              const content = document.querySelector('.receipt-content');
+              if (content) {
+                const contentHeight = content.offsetHeight;
+                document.body.style.height = contentHeight + 'px';
+              }
+            });
+          </script>
+        `);
         doc.write('</body></html>');
         doc.close();
 
         // Wait for resources to load
         setTimeout(() => {
+          // Set the height to match content before printing
+          const contentHeight = iframe.contentWindow!.document.querySelector('.receipt-content')?.clientHeight || 0;
+          if (contentHeight > 0) {
+            iframe.contentWindow!.document.body.style.height = contentHeight + 'px';
+          }
+
           iframe.contentWindow!.focus();
           iframe.contentWindow!.print();
 
@@ -114,7 +178,7 @@ export class ReceiptPrinter {
           });
 
           resolve();
-        }, 500);
+        }, 800);
       } catch (error) {
         reject(error);
       }

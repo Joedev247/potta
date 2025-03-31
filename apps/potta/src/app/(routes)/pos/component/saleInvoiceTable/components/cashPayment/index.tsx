@@ -100,10 +100,10 @@ const PayCash = () => {
 
       console.log('Order', salesReceiptData);
       // Save the sales receipt to the server
-      const response = await posApi.create(salesReceiptData);
+      // const response = await posApi.create(salesReceiptData);
 
       // Log the response and sales receipt data
-      console.log('Sales Receipt Created:', response);
+      // console.log('Sales Receipt Created:', response);
 
       setLastOrderData(orderData);
 
