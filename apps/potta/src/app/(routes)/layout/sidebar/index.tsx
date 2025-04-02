@@ -9,6 +9,7 @@ import SidebarsTaxation from './components/taxation';
 import SidebarsVoucher from './components/voucher';
 import SidebarsPayroll from './components/payroll';
 import { ContextData } from '@potta/components/context';
+import SidebarsAccounts from './components/accounts';
 const Sidebars = () => {
   const pathname = usePathname();
   const string = pathname;
@@ -26,7 +27,7 @@ const Sidebars = () => {
       {str[1] == 'voucher' && <SidebarsVoucher />}
       {str[1] == 'vendors' && <SidebarsVoucher />}
       {str[1] == 'payroll' && <SidebarsPayroll />}
-      {str[1] == 'Account' && <SidebarsVoucher />}
+      {str[1] == 'accounts' && <SidebarsAccounts />}
       {str[1] == 'reports' && <SidebarsVoucher />}
     </>
   );

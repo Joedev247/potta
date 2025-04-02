@@ -57,8 +57,8 @@ const Filter = () => {
         </div>
       </div>
       <div className=" w-[25%] mt-4 ">
-        <div className="flex w-full space-x-3">
-          <div className="w-full  flex space-x-3 justify-end ">
+        <div className="flex justify-end">
+          <div className="w-fit justify-end flex">
             <Button
               type={'button'}
               color
@@ -66,6 +66,8 @@ const Filter = () => {
               icon={<img src="/images/export.svg" />}
               theme="lightBlue"
             />
+          </div>
+          <div className="w-fit ml-2">
             <NextPopover
               rowUuid={'1'}
               actions={actions}
@@ -73,15 +75,18 @@ const Filter = () => {
               setOpenPopover={setOpenPopover}
               triggerButton={
                 <Button
-                  text={'Add New Product'}
+                  text={'New Product'}
                   type={'button'}
                   icon={<i className="ri-file-add-line"></i>}
                 />
               }
             />
-            <CreateProduct  open={isCreateOpen} setOpen={setIsCreateOpen}/>
-            <CreateNonInventoryProduct open={isImportOpen} setOpen={setIsImportOpen}/>
           </div>
+          <CreateProduct open={isCreateOpen} setOpen={setIsCreateOpen} />
+          <CreateNonInventoryProduct
+            open={isImportOpen}
+            setOpen={setIsImportOpen}
+          />
         </div>
       </div>
     </div>

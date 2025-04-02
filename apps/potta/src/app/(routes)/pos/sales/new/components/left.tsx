@@ -228,9 +228,6 @@ const Left = () => {
 
   return (
     <div className="max-w-5xl min-w-5xl px-2 overflow-y-auto css-dip3t8 ">
-      <div className="flex min-w-[45rem] justify-between w-full mb-8">
-        <h3 className="text-2xl ">Create Sales Recipt</h3>
-      </div>
       <div className="w-full grid grid-cols-4 gap-4">
         <div>
           <Select
@@ -252,13 +249,14 @@ const Left = () => {
             type={'date'}
             value={date}
             onchange={(e: any) => handleInputChange('date', e.target.value)}
-           
+
           />
         </div>
       </div>
 
       <div className="mt-3 w-full flex">
         <div className="w-[50%] flex items-center space-x-3">
+        <div className="w-full">
           <SearchSelect
           label='Customer'
             options={customerOptions}
@@ -273,7 +271,8 @@ const Left = () => {
             isClearable={true}
             isSearchable={true}
           />
-          <div className="h-full mt-2 flex items-center">
+          </div>
+          <div className="h-full mt-8 flex items-center">
             <button
               type="button"
               onClick={() => setIsAddCustomerDrawer(true)}

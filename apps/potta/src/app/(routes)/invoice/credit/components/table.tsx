@@ -14,7 +14,7 @@ import ModalInvoice from './modal';
 import DataGrid from './DataGrid';
 import { ColumnDef } from '@tanstack/react-table';
 import { IColumnDef } from '../_utils/types';
-import { cn } from 'lib/utils';
+import { cn } from '@potta/lib/utils';
 import { Icon } from '@iconify/react';
 
 interface IInvoiceTableComponents {

@@ -21,7 +21,8 @@
       "@instanvi/ui-components/server": ["libs/ui-components/src/server.ts"],
       "@instanvi/utilities": ["libs/utilities/src/index.ts"],
       "@instanvi/utilities/server": ["libs/utilities/src/server.ts"],
-      "@potta/components": ["./apps/potta/src/components/*"],
+      "@potta/src/*": ["apps/potta/src/*"],
+      "@potta/components": ["./apps/potta/src/components/*"]
     }
   },
   "exclude": ["node_modules", "tmp"]

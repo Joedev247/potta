@@ -27,7 +27,6 @@ const Filter = () => {
         setIsCreateOpen(true);
       },
       className: 'hover:bg-gray-200',
-
     },
     {
       label: 'Import Customers',
@@ -35,7 +34,6 @@ const Filter = () => {
         setIsImportOpen(true);
       },
       className: 'hover:bg-gray-200',
-
     },
   ];
 
@@ -79,31 +77,33 @@ const Filter = () => {
           </div>
         </div> */}
       </div>
-      <div className=" w-1/2 flex items-center">
-        <div className="w-full  flex justify-end  space-x-3">
-          <Button
-            type={'button'}
-            text="Export"
-            color
-            icon={<img src="/images/export.svg" />}
-            theme="lightBlue"
-          />
-
-          <NextPopover
-            rowUuid={'1'}
-            actions={actions}
-            openPopover={openPopover}
-            setOpenPopover={setOpenPopover}
-            triggerButton={
-              <Button
-                text={'New Customer'}
-                type={'button'}
-                icon={<i className="ri-file-add-line"></i>}
-              />
-            }
-          />
-
-          <SliderCustomer  open={isCreateOpen} setOpen={setIsCreateOpen}/>
+      <div className=" w-1/2 flex items-center justify-end">
+        <div className="flex justify-end">
+          <div className="w-fit justify-end flex">
+            <Button
+              type={'button'}
+              text="Export"
+              color
+              icon={<img src="/images/export.svg" />}
+              theme="lightBlue"
+            />
+          </div>
+          <div className="w-fit ml-2">
+            <NextPopover
+              rowUuid={'1'}
+              actions={actions}
+              openPopover={openPopover}
+              setOpenPopover={setOpenPopover}
+              triggerButton={
+                <Button
+                  text={'New Customer'}
+                  type={'button'}
+                  icon={<i className="ri-file-add-line"></i>}
+                />
+              }
+            />
+          </div>
+          <SliderCustomer open={isCreateOpen} setOpen={setIsCreateOpen} />
         </div>
       </div>
     </div>

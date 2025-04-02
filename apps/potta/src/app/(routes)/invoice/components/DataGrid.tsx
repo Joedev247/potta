@@ -4,7 +4,7 @@ import {
   getCoreRowModel,
   useReactTable,
 } from '@tanstack/react-table';
-import { cn } from 'lib/utils';
+import { cn } from '@potta/lib/utils';
 import React from 'react';
 import { IColumnDef } from '../_utils/types';
 

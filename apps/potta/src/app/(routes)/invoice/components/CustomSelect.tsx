@@ -1,6 +1,6 @@
 import React, { FC, useState } from 'react';
 import { Icon as Iconify } from '@iconify/react';
-import { cn } from 'lib/utils';
+import { cn } from '@potta/lib/utils';
 import useCloseOnOusideClick from '@potta/app/_hooks/useCloseOnOusideClick';
 export type IOption = {
   value: string;

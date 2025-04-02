@@ -1,133 +1,47 @@
-'use client';
-import React, { FC, ChangeEvent } from 'react';
-import { useState, useContext } from 'react';
-import Link from 'next/link';
-import NewBudget from './component/modal';
-import FilterComponent from './component/filterComponent';
+// src/app/budgets/page.tsx (or wherever your page resides)
+'use client'; // Needed for useState
+
+import React, { useState } from 'react';
 import RootLayout from '../../layout';
-import { ContextData } from '@potta/components/context';
+import { BudgetCard } from './component/budgetCard'; // Adjust path if needed
+import { mockBudgets } from './data/data'; // Adjust path if needed
+import { Budget } from './types/budget'; // Adjust path if needed
+import { Search, Upload, Plus, Calendar } from 'lucide-react'; // Import icons
+import { Button } from '@potta/components/shadcn/button';
+import Input from '@potta/components/input';
+import Filter from '../components/filters';
 
-interface Payout {
-  id: number;
-  budget_name: string;
-  currency: string;
-  budget_goal: number;
-  amount_spent: number;
-  amount_allocated: number;
-  amount_available: number;
-}
+export default function BudgetsPage() {
+  const [searchTerm, setSearchTerm] = useState('');
+  // Add state for filters if needed later
+  // const [activeFilter, setActiveFilter] = useState('all');
+  // const [activeDateRange, setActiveDateRange] = useState('all-time');
 
-const Budgets: FC = () => {
-  const context = useContext(ContextData);
-
-  const [filteredPayouts, setFilteredPayouts] = useState<Payout[]>(
-    context?.payouts
+  const filteredBudgets = mockBudgets.filter((budget) =>
+    budget.title.toLowerCase().includes(searchTerm.toLowerCase())
   );
-
-  const handleSearchPayoutChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const filteredResults = context?.payouts.filter((payout: Payout) =>
-      payout.budget_name.toLowerCase().includes(e.target.value.toLowerCase())
-    );
-    setFilteredPayouts(filteredResults);
-  };
-
-  const [dataIsSorted, setDataIsSorted] = useState<boolean>(false);
-
-  const handleSortData = (isSorted: boolean) => {
-    setDataIsSorted(isSorted);
-    setFilteredPayouts(filteredPayouts.reverse());
-  };
 
   return (
     <RootLayout>
-      <div className="pl-16 pr-5 mt-10">
-        <div className="flex justify-between mt-10">
-          <FilterComponent
-            includeSearch={true}
-            handleSearchChange={handleSearchPayoutChange}
-            includeSort={true}
-            activeSort={handleSortData}
-            includeDatePicker={true}
-            placeholder={''}
-            includePopover={false}
-            children={undefined}
-          />
+      <div className=" bg-gray-50  pl-16 pr-5 w-full ">
+        {/* Header Section */}
+        <div className="mb-6 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+          {/* Search and Filters */}
+          <Filter />
+        </div>
 
-          <NewBudget />
-        </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 mt-8 gap-4">
-          {filteredPayouts.map((payout: Payout) => (
-            <Link key={payout.id} href={`/expenses/budgets/${payout.id}`}>
-              <div className="flex flex-col border  py-4 px-4 cursor-pointer">
-                <div className="flex justify-between px-3">
-                  <div className="flex flex-col gap-2">
-                    <h1 className="text-lg font-medium">
-                      {payout.budget_name}
-                    </h1>
-                    <p className="text-xs">
-                      Budget goal:{' '}
-                      <span className="font-medium">
-                        {' '}
-                        {payout.currency} {payout.budget_goal}
-                      </span>
-                    </p>
-                  </div>
-                  <div className="flex relative">
-                    <div className="flex w-8 h-8 rounded-full border border-white bg-gray-200 absolute items-center justify-evenly text-sm font-medium right-10"></div>
-                    <div className="flex w-8 h-8 rounded-full border border-white bg-gray-200 absolute items-center justify-evenly text-sm font-medium right-5"></div>
-                    <div className="flex w-8 h-8 rounded-full border border-white bg-gray-200 absolute items-center justify-evenly text-sm font-medium right-0">
-                      +2
-                    </div>
-                  </div>
-                </div>
-                <div className="flex w-full justify-between bg-orange-500 h-2 rounded-full mt-5">
-                  <div className="flex bg-orange-500"></div>
-                  <div className="flex bg-[brown]"></div>
-                  <div className="flex bg-green-300"></div>
-                </div>
-                <div className="flex justify-between px-3 mt-5">
-                  <div className="flex gap-3 w-1/3">
-                    <div className="flex w-3 h-3 mt-1.5 bg-orange-500 rounded-full"></div>
-                    <div className="flex flex-col">
-                      <p className="font-medium text-balse">Spent</p>
-                      <p className="text-sm ">
-                        {payout.currency} {payout.amount_spent}
-                      </p>
-                    </div>
-                  </div>
-                  <div className="flex gap-3 w-1/3">
-                    <div className="flex w-3 h-3 mt-1.5 bg-green-300 rounded-full"></div>
-                    <div className="flex flex-col">
-                      <p className="font-medium text-balse">Allocated</p>
-                      <p className="text-sm ">
-                        {payout.currency} {payout.amount_allocated}
-                      </p>
-                    </div>
-                  </div>
-                  <div className="flex gap-3 w-1/3">
-                    <div className="flex w-3 h-3 mt-1.5 bg-[brown] rounded-full"></div>
-                    <div className="flex flex-col">
-                      <p className="font-medium text-balse">Available</p>
-                      <p className="text-sm ">
-                        {payout.currency} {payout.amount_available}
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </Link>
+        {/* Budgets Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 ">
+          {filteredBudgets.map((budget) => (
+            <BudgetCard key={budget.id} budget={budget} />
           ))}
-        </div>
-        <div
-          className={`p-4 w-full mt-8 flex justify-evenly items-center ${
-            filteredPayouts.length < 1 ? '' : 'hidden'
-          }`}
-        >
-          <h1 className="font-medium text-xl">Sorry, No data</h1>
+          {filteredBudgets.length === 0 && (
+            <p className="col-span-full text-center text-gray-500 mt-10">
+              No budgets found matching your search.
+            </p>
+          )}
         </div>
       </div>
     </RootLayout>
   );
-};
-
-export default Budgets;
+}

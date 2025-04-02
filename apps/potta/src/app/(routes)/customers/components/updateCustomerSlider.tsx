@@ -17,12 +17,20 @@ import Notes from './note';
 import Tax from './tax';
 import useUpdateCustomer from '../hooks/useUpdateCustomer';
 import toast from 'react-hot-toast';
+import { PhoneInput } from '@potta/components/phoneInput';
 
 interface EditCustomerProps {
   customer: UpdateCustomerPayload | null; // Existing vendor data
   customerId: string; // ID of the vendor to be edited
   open?: boolean; // Optional controlled open state
   setOpen?: (open: boolean) => void; // Optional setter from parent
+}
+
+// Define the PhoneMetadata interface to match what our PhoneInput component provides
+interface PhoneMetadata {
+  formattedValue: string;
+  countryCode: string;
+  rawInput: string;
 }
 
 const EditVendor: React.FC<EditCustomerProps> = ({
@@ -40,12 +48,21 @@ const EditVendor: React.FC<EditCustomerProps> = ({
   const [tabs, setTabs] = useState<string>('Address');
   const context = useContext(ContextData);
 
+  // Track phone metadata separately to maintain all parts of the phone number
+  const [phoneMetadata, setPhoneMetadata] = useState<PhoneMetadata>({
+    formattedValue: '',
+    countryCode: '+237', // Default to Cameroon
+    rawInput: ''
+  });
+
   const {
     register,
     handleSubmit,
     control,
     formState: { errors },
     reset,
+    setValue,
+    watch,
   } = useForm<UpdateCustomerPayload>({
     resolver: yupResolver(updateCustomerSchema),
     defaultValues: customer || {
@@ -75,6 +92,23 @@ const EditVendor: React.FC<EditCustomerProps> = ({
   useEffect(() => {
     if (customer) {
       reset(customer);
+
+      // Try to extract country code from the phone number
+      // This is a simple implementation assuming the phone number starts with a country code
+      // You may need a more sophisticated approach depending on your data format
+      if (customer.phone) {
+        const phoneNumber = customer.phone;
+        // Assuming the country code is at the beginning of the phone number
+        // This is a simplified approach - you might need a library like libphonenumber-js for more accurate parsing
+        const countryCodeMatch = phoneNumber.match(/^\+\d{1,4}/);
+        const countryCode = countryCodeMatch ? countryCodeMatch[0] : '+237';
+
+        setPhoneMetadata({
+          formattedValue: phoneNumber,
+          countryCode: countryCode,
+          rawInput: phoneNumber.replace(countryCode, '')
+        });
+      }
     }
   }, [customer, reset]);
 
@@ -99,6 +133,15 @@ const EditVendor: React.FC<EditCustomerProps> = ({
     { value: 'taken', label: 'Taken' },
   ];
 
+  // Handle phone number changes with the new API
+  const handlePhoneChange = (combinedValue: string, metadata: PhoneMetadata) => {
+    // Store the complete metadata for future reference
+    setPhoneMetadata(metadata);
+
+    // Set the combined value (country code + phone number) to the form
+    setValue('phone', combinedValue);
+  };
+
   const mutation = useUpdateCustomer(customerId); // Hook for updating vendor
   const onSubmit = (data: UpdateCustomerPayload) => {
     console.log('Updated Data:', data);
@@ -120,8 +163,8 @@ const EditVendor: React.FC<EditCustomerProps> = ({
       open={isOpen}
       setOpen={setIsOpen}
       edit={true}
-      title={'Edit Vendor'}
-      buttonText="update vendor"
+      title={'Edit Customer'}
+      buttonText="update customer"
     >
       <form
         onSubmit={handleSubmit(onSubmit)}
@@ -237,14 +280,25 @@ const EditVendor: React.FC<EditCustomerProps> = ({
           <h1 className="text-xl">Contact Information </h1>
           <div className="w-full grid mt-7 grid-cols-2 gap-3">
             <div>
-              <Input
-                type="tel"
-                label={'Phone Number'}
-                name={'phone'}
-                placeholder="(555) 123-4567"
-                register={register}
-                errors={errors.phone}
-                required
+              {/* New Phone Input Component with correct props */}
+              <Controller
+                name="phone"
+                control={control}
+                render={({ field }) => (
+                  <>
+                    <PhoneInput
+                      label="Phone Number"
+                      placeholder="Enter phone number"
+                      value={phoneMetadata.formattedValue} // Use the formatted value from metadata
+                      onChange={handlePhoneChange}
+                      whatsapp={false}
+                      countryCode={phoneMetadata.countryCode} // Use the country code from metadata
+                    />
+                    {errors.phone && (
+                      <small className="text-red-500">{errors.phone.message}</small>
+                    )}
+                  </>
+                )}
               />
             </div>
             <div>

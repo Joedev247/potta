@@ -35,6 +35,10 @@ const urlRouters = [
     value: "reports",
     label: "Reports"
   },
+  {
+    value: "account",
+    label: "Accounts"
+  },
 ];
 
 export default function Navbar() {
@@ -42,9 +46,12 @@ export default function Navbar() {
   const pathname = usePathname();
   const string = pathname;
   const str = string.split('/');
+
+  // Check if str[1] is one of the valid route values
+  const isValidRoute = str[1] && urlRouters.some(route => route.value === str[1]);
+
   const [selected, setSeleted] = useState(
-    // eslint-disable-next-line no-constant-condition
-    str[1] == undefined || 'payments' ? 'payments' : str[1] == 'payments'
+    isValidRoute ? str[1] : 'payments'
   );
 
   const handleSelect = (value: string) => {
@@ -56,9 +63,21 @@ export default function Navbar() {
   if (str[1] === 'pos' && str[2] === undefined) {
     return null;
   }
-  if(str[2] === 'new'){
-    return null
-  }
+
+
+  // Determine the title to display
+  const getTitle = () => {
+    // Special case for /pos/new route
+    if (str[1] === 'pos' && str[2] === 'sales' && str[3] === 'new') {
+      return 'New Sales Reciept';
+    }
+
+    if (str[1] === 'invoice' && str[2] === 'new') {
+      return 'New Invoice';
+    }
+    // Default behavior
+    return str[2] == undefined ? str[1] : str[2];
+  };
 
   return (
     // <div className="sticky top-0 z-30 w-full bg-white">
@@ -68,12 +87,12 @@ export default function Navbar() {
         <div className="flex items-center gap-20 py-4">
           <Link href={'/'} className="flex items-center ml-10 -mt-2"></Link>
           <h1 className="font-medium text-[22px] -ml-14 capitalize">
-            {str[2] == undefined ? str[1] : str[2]}
+            {getTitle()}
           </h1>
         </div>
         <div className="flex gap-8 px-4">
           {/* <Icon icon="Bell" size={23} /> */}
-          <div className="w-full ">
+          <div className="w-full min-w-32 ">
             <Select
               options={urlRouters}
               selectedValue={selected.toString()}

@@ -56,7 +56,7 @@ const TableComponents = () => {
   const columns = [
     {
       name: 'Customer Name',
-      selector: (row: any) => <div className="">{row.firstName }</div>,
+      selector: (row: any) => <div className="">{row.firstName} {row.lastName}</div>,
 
     },
     {
@@ -76,7 +76,32 @@ const TableComponents = () => {
       ),
     },
     {
-      name: '',
+      name: 'Status',
+      selector: (row: any) => {
+        const status = row.status || 'enabled'; // Default to enabled if status is not provided
+
+        // Status color mapping based on the specific status values from validations.ts
+        const statusColorMap: Record<string, string> = {
+          'pending': 'bg-yellow-100 text-yellow-800',
+          'schedule': 'bg-blue-100 text-blue-800',
+          'complete': 'bg-green-100 text-green-800',
+          'enabled': 'bg-green-100 text-green-800',
+          'disabled': 'bg-red-100 text-red-800',
+          'available': 'bg-teal-100 text-teal-800',
+          'expired': 'bg-gray-100 text-gray-800',
+          'taken': 'bg-purple-100 text-purple-800'
+        };
+
+        const colorClass = statusColorMap[status.toLowerCase()] || 'bg-gray-100 text-gray-800'; // Default styling
+        return (
+          <div className={`px-3 py-1 rounded-full text-xs font-medium ${colorClass}`}>
+            {status.charAt(0).toUpperCase() + status.slice(1)} {/* Capitalize first letter */}
+          </div>
+        );
+      },
+    },
+    {
+      name: 'Actions',
       selector: (row: any) => {
         const actions: PopoverAction[] = [
           {

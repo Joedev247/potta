@@ -7,7 +7,7 @@ import { AxiosResponse } from 'axios';
 
 export const customerApi = {
   create: async (data: CustomerPayload) => {
-    const result = await axios.post(`/customer/create`, data,{
+    const result = await axios.post(`/customer/create/{e50cf599-d02d-435c-8a3b-25c4a15adab4}`, data,{
       headers: {
         'Content-Type': 'application/json',
         'accept': '*/*',
@@ -28,7 +28,7 @@ export const customerApi = {
   },
   getOne: async (customer_id: string) => {
     const result = await axios.get<Customer>(`/customer/details/${customer_id}`);
-    
+
     return result.data;
   },
   update: async (customer_id: string,data: unknown) => {

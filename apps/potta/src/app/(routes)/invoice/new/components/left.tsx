@@ -294,10 +294,8 @@ const Left = () => {
   console.log('Selected customer option:', selectedCustomer);
 
   return (
-    <div className="max-w-5xl min-w-5xl px-2 overflow-y-auto css-dip3t8 ">
-      <div className="flex min-w-[45rem] justify-between w-full mb-8">
-        <h3 className="text-2xl">Create Invoice</h3>
-      </div>
+    <div className="max-w-5xl min-w-5xl px-2 bg-transparent overflow-y-auto css-dip3t8 ">
+      
       <div className="w-full grid grid-cols-4 gap-4">
         <div>
           <Select

@@ -1,5 +1,5 @@
 'use client';
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import Input from '@potta/components/input';
 
 import Slider from '@potta/components/slideover';
@@ -15,22 +15,39 @@ import Notes from './note';
 import Tax from './tax';
 import useCreateCustomer from '../hooks/useCreateCustomer';
 import toast from 'react-hot-toast';
+import { PhoneInput } from '@potta/components/phoneInput';
+// Import the new PhoneInput component
 
 interface CustomerCreateProps {
   open?: boolean; // Optional controlled open state
   setOpen?: (open: boolean) => void; // Optional setter from parent
 }
+
+// Define the PhoneMetadata interface to match what our PhoneInput component provides
+interface PhoneMetadata {
+  formattedValue: string;
+  countryCode: string;
+  rawInput: string;
+}
+
 const SliderCustomer: React.FC<CustomerCreateProps> = ({
   open: controlledOpen, // Renamed to avoid naming conflict
   setOpen: setControlledOpen,
 }) => {
   const [tabs, setTabs] = useState<string>('Address');
-   // Local state as fallback if no controlled state is provided
-    const [localOpen, setLocalOpen] = useState(false);
+  // Local state as fallback if no controlled state is provided
+  const [localOpen, setLocalOpen] = useState(false);
 
-    // Determine which open state to use
-    const isOpen = controlledOpen ?? localOpen;
-    const setIsOpen = setControlledOpen ?? setLocalOpen;
+  // Track phone metadata separately to maintain all parts of the phone number
+  const [phoneMetadata, setPhoneMetadata] = useState<PhoneMetadata>({
+    formattedValue: '',
+    countryCode: '+237', // Default to Cameroon
+    rawInput: ''
+  });
+
+  // Determine which open state to use
+  const isOpen = controlledOpen ?? localOpen;
+  const setIsOpen = setControlledOpen ?? setLocalOpen;
   const context = useContext(ContextData);
   const {
     register,
@@ -38,6 +55,8 @@ const SliderCustomer: React.FC<CustomerCreateProps> = ({
     control,
     formState: { errors },
     reset,
+    setValue,
+    watch,
   } = useForm<CustomerPayload>({
     resolver: yupResolver(customerSchema),
     defaultValues: {
@@ -87,10 +106,32 @@ const SliderCustomer: React.FC<CustomerCreateProps> = ({
       },
     });
   };
+
+  // Handle phone number changes with the new API
+  const handlePhoneChange = (combinedValue: string, metadata: PhoneMetadata) => {
+    // Store the complete metadata for future reference
+    setPhoneMetadata(metadata);
+
+    // Set the combined value (country code + phone number) to the form
+    setValue('phone', combinedValue);
+  };
+
+  // Reset form and metadata when the form is closed
+  useEffect(() => {
+    if (!isOpen) {
+      reset();
+      setPhoneMetadata({
+        formattedValue: '',
+        countryCode: '+237',
+        rawInput: ''
+      });
+    }
+  }, [isOpen, reset]);
+
   return (
     <Slider
-    open={isOpen} // Use controlled or local state
-    setOpen={setIsOpen} // Use controlled or local setter
+      open={isOpen} // Use controlled or local state
+      setOpen={setIsOpen} // Use controlled or local setter
       edit={false}
       title={'Create Customer'}
       buttonText="customer"
@@ -192,14 +233,25 @@ const SliderCustomer: React.FC<CustomerCreateProps> = ({
           <h1 className="text-xl">Contact Information </h1>
           <div className="w-full grid mt-7 grid-cols-2 gap-3">
             <div>
-              <Input
-                type="tel"
-                label={'Phone Number'}
-                name={'phone'}
-                placeholder="(555) 123-4567"
-                register={register}
-                errors={errors.phone}
-                required
+              {/* Phone Input Component with correct props */}
+              <Controller
+                name="phone"
+                control={control}
+                render={({ field }) => (
+                  <>
+                    <PhoneInput
+                      label="Phone Number"
+                      placeholder="Enter phone number"
+                      value={phoneMetadata.formattedValue} // Use the formatted value from metadata
+                      onChange={handlePhoneChange}
+                      whatsapp={false}
+                      countryCode={phoneMetadata.countryCode} // Use the country code from metadata
+                    />
+                    {errors.phone && (
+                      <small className="text-red-500">{errors.phone.message}</small>
+                    )}
+                  </>
+                )}
               />
             </div>
             <div>
@@ -210,7 +262,6 @@ const SliderCustomer: React.FC<CustomerCreateProps> = ({
                 placeholder="abcdfg@abc.com"
                 register={register}
                 errors={errors.email}
-
               />
             </div>
           </div>
@@ -246,21 +297,19 @@ const SliderCustomer: React.FC<CustomerCreateProps> = ({
         </div>
         <div className="flex-grow" /> {/* This div takes up remaining space */}
         <div className="text-center md:text-right  md:flex  space-x-4 fixed bottom-0 left-0 right-0 justify-center bg-white p-4">
-        <div className="flex gap-2 w-full max-w-4xl justify-between">
-          <Button
-            text="Cancel"
-            type="button"
-            theme="danger"
-
-            onClick={() => setIsOpen(false)}
-          />
-          <Button
-            text={'Add Customer'}
-
-            type={'submit'}
-            isLoading={mutation.isPending}
-          />
-        </div>
+          <div className="flex gap-2 w-full max-w-4xl justify-between">
+            <Button
+              text="Cancel"
+              type="button"
+              theme="danger"
+              onClick={() => setIsOpen(false)}
+            />
+            <Button
+              text={'Add Customer'}
+              type={'submit'}
+              isLoading={mutation.isPending}
+            />
+          </div>
         </div>
       </form>
     </Slider>

@@ -105,7 +105,7 @@ const SaleTable = () => {
             <div>
 
             </div>
-            <Table minHeight='60vh' columns={columns} data={data} ExpandableComponent={null} expanded pagination={data.length > 9 ? true : false} />
+            <Table minHeight='50vh' columns={columns} data={data} ExpandableComponent={null} expanded pagination={data.length > 9 ? true : false} />
         </div>
     )
 }

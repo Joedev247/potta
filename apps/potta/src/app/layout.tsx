@@ -6,6 +6,7 @@ import "remixicon/fonts/remixicon.css";
 import 'react-accessible-accordion/dist/fancy-example.css';
 import { DataProvider } from "../components/context";
 import TanstackQueryClientProvider from "./_components/queryClientProvider";
+import { Toaster } from "react-hot-toast";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -36,6 +37,7 @@ export default function RootLayout({
           className={`${geistSans.variable} ${geistMono.variable} antialiased`}
         >
           <TanstackQueryClientProvider>
+          <Toaster position="top-center" />
           {children}
           </TanstackQueryClientProvider>
         </body>

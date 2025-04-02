@@ -26,7 +26,7 @@ const TableActionPopover: React.FC<{
 }> = ({ actions, triggerButton, rowUuid, openPopover, setOpenPopover }) => {
   return (
     <NextUIPopover
-      placement="right-start"
+      placement="bottom-end"
       shouldCloseOnBlur={false}
       isOpen={openPopover === rowUuid}
       onOpenChange={(isOpen) => {
@@ -46,7 +46,7 @@ const TableActionPopover: React.FC<{
             <div
               key={index}
               className={`
-                text-base
+                text-lg
                 cursor-pointer
                 hover:bg-gray-200
                 py-0.5

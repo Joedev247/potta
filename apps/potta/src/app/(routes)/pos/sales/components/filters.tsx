@@ -20,7 +20,7 @@ const Filter = () => {
   return (
     <div className="w-full flex justify-between ">
       <div className="flex space-x-2 w-[60%]">
-        <div className="w-full w-[60%]">
+        <div className=" w-[60%]">
           <Search />
         </div>
         <div className="flex mt-4 w-[40%] space-x-2 ">
@@ -60,7 +60,7 @@ const Filter = () => {
         </div>
       </div>
       <div className=" w-[25%] mt-4 ">
-        <div className="flex w-full space-x-3">
+        <div className="flex w-full space-x-2">
           <div className="w-full  flex justify-end ">
             <Button
               type={'button'}
@@ -71,7 +71,7 @@ const Filter = () => {
             />
           </div>
           <div className="w-full">
-          <Link href={'/pos/sales/new'}>
+          <Link className='flex justify-end' href={'/pos/sales/new'}>
                 <Button
                   text={'Create Sale'}
                   icon={<i className="ri-file-add-line"></i>}

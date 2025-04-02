@@ -1,0 +1,9 @@
+// tsconfig.json (NEW FILE at monorepo root)
+{
+  "extends": "./tsconfig.base.json",
+  "compilerOptions": {
+    // You might need to explicitly restate baseUrl if 'extends' doesn't fully satisfy the CLI
+    "baseUrl": "."
+  }
+  // No need to repeat paths - they are inherited from tsconfig.base.json
+}

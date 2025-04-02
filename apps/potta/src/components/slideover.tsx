@@ -109,7 +109,7 @@ const Slider: FC<props> = ({
             <div className="pointer-events-none fixed inset-x-0 top-0 flex max-h-full bg-gray-500 bg-opacity-75 transition-opacity justify-center">
               <DialogPanel
                 transition
-                className="pointer-events-auto border-b max-w-screen w-full transform transition duration-500 ease-in-out data-[closed]:-translate-y-full sm:duration-700"
+                className="pointer-events-auto border-b max-w-screen w-full transform transition duration-500 ease-in-out data-[closed]:-translate-y-full sm:duration-500"
               >
                 <div className="flex h-full flex-col overflow-hidden bg-gray-50 py-6 shadow-xl">
                   <div className="flex justify-center items-center ">

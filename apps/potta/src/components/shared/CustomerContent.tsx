@@ -2,6 +2,7 @@
 import React from 'react';
 import Boxes from '../../app/(routes)/customers/components/boxes';
 import TableComponents from '../../app/(routes)/customers/components/table';
+import { toast } from 'react-hot-toast';
 
 const CustomerContent = () => {
   return (
@@ -11,6 +12,7 @@ const CustomerContent = () => {
       </div>
       <div>
         <TableComponents />
+      
       </div>
     </div>
   );

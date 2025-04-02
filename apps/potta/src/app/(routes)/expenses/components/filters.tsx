@@ -16,12 +16,12 @@ const Filter = () => {
   };
 
   return (
-    <div className="w-full flex justify-between ">
-      <div className="flex space-x-2 w-[60%]">
-        <div className="w-full w-[60%]">
+    <div className="w-full flex justify-between my-4 ">
+      <div className="flex space-x-2 w-[50%]">
+        <div className=" w-[50%]">
           <Search />
         </div>
-        <div className="flex mt-4 w-[40%] space-x-2">
+        <div className="flex mt-4 w-[50%] space-x-2">
           <div className="flex h-[47px] pt-3 w-full px-2 border">
             <p className="text-[17px] -mt-1">Filter&nbsp;: </p>
             <div className="-mt-3">
@@ -56,30 +56,23 @@ const Filter = () => {
         </div>
       </div>
       <div className=" w-[25%] mt-4 ">
-        <div className="flex w-full space-x-3">
+        <div className="flex w-full ">
           <div className="w-full  flex justify-end ">
             <Button
               type={'button'}
               color
               text="Export"
               icon={<img src="/images/export.svg" />}
-              theme="lightGreen"
+              theme="lightBlue"
             />
           </div>
-          <div className="w-full">
-            <div className="h-12 pt-4 px-4 text-white flex bg-green-900 space-x-1">
-              <i className="ri-file-add-line text-white text-xl -mt-1"></i>
-              <Select
-                border
-                options={[
-                  { label: 'Single Payment', value: 'Single Payment' },
-                  { label: 'Multiple Payment', value: 'Multiple Payment' },
-                ]}
-                selectedValue={'Make Payment'}
-                onChange={() => {}}
-                bg={''}
-              />
-            </div>
+          <div className="w-full flex justify-end">
+            <Button
+              type={'button'}
+              text="Create Budget"
+              icon={<i className="ri-add-line text-white text-xl "></i>}
+              theme="default"
+            />
           </div>
         </div>
       </div>

@@ -6,6 +6,7 @@ import { useContext, useState } from 'react';
 
 import ChatAI from '../../../app/chatai';
 import { ContextData } from '../../../components/context';
+import { Toaster } from 'sonner';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -23,8 +24,8 @@ export default function RootLayout({
   return (
     <div className="relative flex  w-full h-screen">
       <div
-        className={`transition-all flex  duration-1000  ease-in-out ${
-          show ? 'w-[82.5%]' : 'w-[97.5%]'
+        className={`transition-all flex  duration-500  ease-in-out ${
+          show ? 'w-[75%]' : 'w-[97.5%]'
         }`}
       >
         <div className="w-full overflow-x-hidden overflow-y-auto scroll z-10 flex">
@@ -38,6 +39,7 @@ export default function RootLayout({
           >
             <div className=" w-full relative  mx-0">
               <Navbar />
+              <Toaster position="top-center" />
               {children}
             </div>
           </div>
