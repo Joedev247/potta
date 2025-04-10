@@ -19,6 +19,7 @@ import {
 } from '@potta/components/shadcn/dropdown';
 import { Button } from '@potta/components/shadcn/button';
 import MyTable from '@potta/components/table';
+import Icon from '@potta/components/icon_fonts/icon';
 
 interface PaymentRequestDataTableWrapperProps {
   requests: PaymentRequest[];
@@ -132,11 +133,14 @@ export function PaymentRequestDataTableWrapper({
         name: 'Request Status',
         center: true,
         cell: (row: PaymentRequest) => (
-          // Using the same custom styled div as before for visual consistency
-          <div className="inline-flex items-center rounded-md border border-green-300 bg-green-50 px-2.5 py-0.5 text-xs font-semibold text-green-700 transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 cursor-pointer hover:bg-green-100">
-            <CheckIcon className="mr-1 h-3 w-3" />
-            Approve {/* Assuming all are approvable for now */}
-          </div>
+          <div className="border-r">
+                       <div className="flex items-center gap-3  w-fit px-3 py-0.5 border border-green-500 bg-green-50 text-green-700">
+                         <div className="flex items-center justify-center text-white bg-green-700 rounded-full size-4">
+                           <Icon icon="material-symbols:check" width="20" height="20" />
+                         </div>
+                         Approved
+                       </div>
+                     </div>
         ),
         minWidth: '100px',
       },

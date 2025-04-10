@@ -1,6 +1,6 @@
 // src/data/mockBudgets.ts (or similar location)
 
-import { Budget, User } from "../types/budget";
+import { Budget, User } from "../new/types/budget";
 
 
 const users: User[] = [
@@ -31,7 +31,7 @@ export const mockBudgets: Budget[] = [
     users: users.slice(0, 2), // Different users for variety
     currency: 'XAF',
   },
-   {
+  {
     id: 'b3',
     title: 'School Running Budget',
     budgetGoal: 1000000,
@@ -41,7 +41,7 @@ export const mockBudgets: Budget[] = [
     users: users,
     currency: 'XAF',
   },
-   {
+  {
     id: 'b4',
     title: 'Back to school budget allocation',
     budgetGoal: 1000000,
@@ -51,7 +51,7 @@ export const mockBudgets: Budget[] = [
     users: users.slice(1, 3),
     currency: 'XAF',
   },
-   {
+  {
     id: 'b5',
     title: 'School Running Budget',
     budgetGoal: 1000000,
@@ -71,7 +71,7 @@ export const mockBudgets: Budget[] = [
     users: users.slice(0, 1),
     currency: 'XAF',
   },
-    {
+  {
     id: 'b7',
     title: 'Back to school budget allocation',
     budgetGoal: 1000000,
@@ -91,7 +91,7 @@ export const mockBudgets: Budget[] = [
     users: users.slice(0, 2), // Different users for variety
     currency: 'XAF',
   },
-   {
+  {
     id: 'b9',
     title: 'School Running Budget',
     budgetGoal: 1000000,

@@ -5,7 +5,7 @@ import React, { useState } from 'react';
 import RootLayout from '../../layout';
 import { BudgetCard } from './component/budgetCard'; // Adjust path if needed
 import { mockBudgets } from './data/data'; // Adjust path if needed
-import { Budget } from './types/budget'; // Adjust path if needed
+import { Budget } from './new/types/budget'; // Adjust path if needed
 import { Search, Upload, Plus, Calendar } from 'lucide-react'; // Import icons
 import { Button } from '@potta/components/shadcn/button';
 import Input from '@potta/components/input';

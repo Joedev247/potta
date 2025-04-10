@@ -7,7 +7,7 @@ import { AxiosResponse } from 'axios';
 
 export const customerApi = {
   create: async (data: CustomerPayload) => {
-    const result = await axios.post(`/customer/create/{e50cf599-d02d-435c-8a3b-25c4a15adab4}`, data,{
+    const result = await axios.post(`/customer/create`, data,{
       headers: {
         'Content-Type': 'application/json',
         'accept': '*/*',
@@ -21,7 +21,7 @@ export const customerApi = {
     const queryParams = new URLSearchParams(filter).toString();
 
     const result = await axios.post(
-      `customer/filter?${queryParams}`
+      `/customer/filter?${queryParams}`
     );
     console.log(result);
    return result.data
