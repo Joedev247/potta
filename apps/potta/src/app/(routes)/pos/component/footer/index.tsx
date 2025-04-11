@@ -72,13 +72,16 @@ const HeldOrders: React.FC = () => {
             className="flex items-center gap-8 min-w-fit px-4 py-3 bg-[#A0E86F] text-black hover:bg-[#8ae74d] transition-colors cursor-pointer"
           >
             <button
-              
+
               className=""
             >
               ID:{order.id}
             </button>
             <button
-              onClick={() => handleDeleteOrder(order.id)}
+              onClick={(e:any) =>{
+                e.stopPropagation(); // Prevent the click event from bubbling up to the parent div
+                handleDeleteOrder(order.id)
+              } }
               className=" hover:text-white"
             >
               <i className="ri-close-line text-2xl"></i>
