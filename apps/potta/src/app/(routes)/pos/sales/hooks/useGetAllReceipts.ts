@@ -1,10 +1,10 @@
 import { useQuery } from "@tanstack/react-query";
 import { salesApi } from "../utils/api";
-import { Filter } from "../utils/types";
+import { Filters } from "../utils/types";
 
-export const useGetAllSalesReceipts = (filter: Filter) => {
+export const useGetAllSalesReceipts = (filter: Filters) => {
   return useQuery({
-    queryKey: ['get-all-sales-receipts', filter],
+    queryKey: ['get-all-sales-receipts', filter.page, filter.limit],
     queryFn: () => salesApi.getAll(filter),
   });
 };

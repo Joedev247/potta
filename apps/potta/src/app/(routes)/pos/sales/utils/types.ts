@@ -1,5 +1,5 @@
 // salesReceiptTypes.ts
-export type Filter = {
+export type Filters = {
   limit: number;
   page: number;
   sortBy?: 'updatedAt' | 'createdAt';
@@ -41,6 +41,7 @@ export type SalesReceipt = {
   salePerson: string;
   lineItems: LineItem[];
 };
+
 
 // Optional: Type for unregistered customer sales
 export type UnregisteredSalesReceipt = Omit<SalesReceipt, 'customerId'> & {

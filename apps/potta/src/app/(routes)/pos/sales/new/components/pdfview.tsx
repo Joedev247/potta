@@ -17,9 +17,18 @@ interface TableItem {
 
 const PdfView = () => {
   const context = useContext(ContextData);
+  const [currentCustomerId, setCurrentCustomerId] = useState<string>('');
+
+  // Get the latest context data on each render
   const contextData = context?.data || {};
   const tableData: TableItem[] = contextData.table || [];
-  const customerId = contextData.customerName; // Get customer ID from context
+
+  // Track customer ID changes from context
+  useEffect(() => {
+    if (contextData.customerName && contextData.customerName !== currentCustomerId) {
+      setCurrentCustomerId(contextData.customerName);
+    }
+  }, [contextData.customerName]);
 
   const getCurrencySymbol = (currencyCode: string): string => {
     switch (currencyCode) {
@@ -35,13 +44,17 @@ const PdfView = () => {
         return currencyCode;
     }
   };
+
   const currencySymbol = getCurrencySymbol(contextData.currency || '');
-  // Use the getOneCustomer hook with the customer ID
+
+  // Use the getOneCustomer hook with the customer ID from state
+  // This will re-fetch when currentCustomerId changes
   const { data: customerData, isLoading: customerLoading } = useGetOneCustomer(
-    customerId || ''
+    currentCustomerId || ''
   );
+
   const customerDetails: Customer | null = customerData || null;
-  console.log(customerDetails);
+
   // Calculate totals
   const subtotal = tableData.reduce((sum: number, item: TableItem) => {
     const price = Number(item.price);
@@ -59,8 +72,8 @@ const PdfView = () => {
   const total = subtotal + totalTax;
 
   return (
-    <div className=" flex min-h-full flex-col items-center justify-center overflow-y-auto  w-full bg-[#F2F2F2]">
-      <div className="flex  min-w-[45rem]  justify-between w-full p-8">
+    <div className="flex min-h-full flex-col items-center justify-center overflow-y-auto w-full bg-[#F2F2F2]">
+      <div className="flex min-w-[45rem] justify-between w-full p-8">
         <h3 className="text-xl font-semibold">PDF Preview</h3>
         <Button
           text={'Download'}
@@ -68,13 +81,13 @@ const PdfView = () => {
           type={'submit'}
         />
       </div>
-      <div className=" max-w-[48rem] bg-white space-y-8 min-w-[45rem] w-full">
-        <div className=" h-36 w-full flex items-center justify-between px-4 bg-green-800">
+      <div className="max-w-[48rem] bg-white space-y-8 min-w-[45rem] w-full">
+        <div className="h-36 w-full flex items-center justify-between px-4 bg-green-800">
           <p className="text-3xl mt-5 font-semibold text-white">
             Sales Receipt
           </p>
           <div className="text-right text-white">
-            <p>Date: {contextData.date || 'Not set'}</p>
+            <p>Date: {contextData.saleDate || 'Not set'}</p>
             <p>Currency: {contextData.currency || 'USD'}</p>
           </div>
         </div>
@@ -110,7 +123,7 @@ const PdfView = () => {
             </div>
           </div>
 
-          <table className="min-w-full h-40 table-auto mt-10 ">
+          <table className="min-w-full h-40 mt-5 ">
             <thead>
               <tr className="bg-gray-50">
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
@@ -143,16 +156,16 @@ const PdfView = () => {
                 const totalWithTax = itemTotal + itemTax;
 
                 return (
-                  <tr key={item.id || index}>
-                    <td className="border-b px-4 py-2">{index + 1}</td>
-                    <td className="border-b px-4 py-2">{item.name}</td>
-                    <td className="border-b px-4 py-2">{qty}</td>
-                    <td className="border-b px-4 py-2">
+                  <tr className='h-fit' key={item.id || index}>
+                    <td className="border-b px-4 h-fit">{index + 1}</td>
+                    <td className="border-b px-4 h-fit">{item.name}</td>
+                    <td className="border-b px-4 h-fit">{qty}</td>
+                    <td className="border-b px-4 h-fit">
                       {price.toFixed(2)}
                       {currencySymbol}
                     </td>
-                    <td className="border-b px-4 py-2">{itemTax.toFixed(2)}</td>
-                    <td className="border-b px-4 py-2">
+                    <td className="border-b px-4 h-fit">{itemTax.toFixed(2)}</td>
+                    <td className="border-b px-4 h-fit">
                       {totalWithTax.toFixed(2)}
                       {currencySymbol}
                     </td>

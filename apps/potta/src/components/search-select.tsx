@@ -174,13 +174,7 @@ const SearchSelect: React.FC<SearchSelectProps> = ({
   const SelectComponent = isAsync ? AsyncSelect : Select;
 
   // For debugging
-  console.log('SearchSelect props:', {
-    options,
-    dynamicOptions,
-    value,
-    isLoading,
-    isAsync
-  });
+ 
 
   return (
     <div className={`w-full `}>

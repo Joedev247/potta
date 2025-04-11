@@ -17316,6 +17316,11 @@
       },
       {
         "source": "@instanvi-global/source",
+        "target": "npm:dayjs",
+        "type": "static"
+      },
+      {
+        "source": "@instanvi-global/source",
         "target": "npm:framer-motion",
         "type": "static"
       },
@@ -45260,5 +45265,5 @@
   },
   "version": "6.0",
   "errors": [],
-  "computedAt": 1744285922452
+  "computedAt": 1744381456955
 }

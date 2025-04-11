@@ -13,7 +13,7 @@ const Files = () => {
                 <div className="mb-6">
                     <SaleBoxes />
                 </div>
-                <Filter />
+               
                 <SaleTable />
             </div>
         </RootLayout>
