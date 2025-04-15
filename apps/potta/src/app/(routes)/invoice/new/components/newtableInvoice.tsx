@@ -4,12 +4,15 @@ import SearchSelect, { Option } from '@potta/components/search-select'; // Impor
 import useGetAllProducts from '@potta/app/(routes)/pos/inventory/_hooks/useGetAllProducts';
 
 
+
 interface Product {
   uuid: string;
   name: string;
   price: number;
   tax: number;
   productId: string;
+  
+
 }
 
 interface ProductOption {
@@ -58,7 +61,8 @@ export default function DynamicTable() {
     name: product.name,
     price: product.salesPrice,
     tax: product.taxRate,
-    productId: product.productId
+    productId: product.productId,
+    
   }));
 
   // Create product options as regular Options instead of ProductOptions

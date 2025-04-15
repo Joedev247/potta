@@ -27,56 +27,35 @@ export const lineItemValidationSchema = yup.object().shape({
     .number()
     .required('Discount rate is required')
     .positive('Discount rate must be positive'), // Positive number
-  paymentTerms: yup.string().required('Payment terms are required'), // Required string
-  paymentMethod: yup
-    .string()
-    .required('Payment method is required')
-    .oneOf(['ACH Transfer'], 'Invalid payment method'), // Specific string value
-  paymentReference: yup.string().required('Payment reference is required'), // Required string
+
   productId: yup.string().optional().uuid('Product ID must be a valid UUID'), // UUID validation
-  salesReceiptId: yup
-    .string()
-    .optional()
-    .uuid('Sales receipt ID must be a valid UUID'), // UUID validation
+
 });
 
 export const invoiceSchema = yup.object().shape({
   customerId: yup.string().uuid().required(),
-  currency: yup.string().oneOf(['XAF']).required('Currency is required'),
+  currency: yup.string().required('Currency is required'),
   invoiceType: yup
     .string()
-    .oneOf(['Invoice'], 'must be a valid type')
     .required('invoice type is required'),
   notes: yup.string().required('note is required'),
   paymentTerms: yup.string().required('the payment term is required'),
   paymentMethod: yup
     .string()
-    .oneOf(['ACH Transfer'], 'must be a valid payment method')
     .required('Payment method is required'),
   issuedDate: yup
-    .date()
-    .typeError('must be a valid date')
-    .required('issued date is required'),
+    .string().required('issued date is required'),
   dueDate: yup
-    .date()
-    .typeError('must be a valid date')
-    .required('due date is required'),
-  invoiceTotal: yup.number().required('invoice total is required'),
+    .string().required('due date is required'),
+
   invoiceNumber: yup.string().required('invoice number is required'),
   taxRate: yup
     .number()
     .typeError('must be a number')
     .required('Tax rate is required'),
-  taxAmount: yup
-    .number()
-    .typeError('must be a number')
-    .required('Tax amount is required'),
   billingAddress: yup.string().required('billing address is required'),
   shippingAddress: yup.string().required('shipping address is required'),
-  status: yup
-    .string()
-    .oneOf(['Overdue'], 'must be a valid status')
-    .required('status is required'),
+
   paymentReference: yup.string().required('payment reference is required'),
   lineItems: yup.array().of(lineItemValidationSchema).optional(),
 });

@@ -10,16 +10,17 @@ export const salesApi = {
   },
   getAll: async (filter:Record<string, any> = {}) => {
     const queryParams = new URLSearchParams(filter).toString();
-    const result= await axios.post(`sales-receipt/filter?${queryParams}`);
+    const result= await axios.post(`/sales-receipt/filter?${queryParams}`);
     return result.data
   },
   getOne: async ( receipt_id: string) => {
-    const result = await axios.get(`sales-receipt/details/${receipt_id}`);
+    const result = await axios.get(`/sales-receipt/details/${receipt_id}`);
+    console.log(result)
     return result;
   },
 
   delete: async (receipt_id: string) => {
-    const result = await axios.delete(`sales-receipt/${receipt_id}`);
+    const result = await axios.delete(`/sales-receipt/${receipt_id}`);
     return result?.data;
   },
 

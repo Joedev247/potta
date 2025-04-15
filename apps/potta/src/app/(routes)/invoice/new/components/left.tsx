@@ -11,6 +11,8 @@ import Select from '@potta/components/select';
 import { Customer } from '@potta/app/(routes)/customers/utils/types';
 import { set } from 'react-hook-form';
 import TextArea from '@potta/components/textArea';
+import useCreateInvoice from '../../_hooks/useCreateInvoice';
+import toast from 'react-hot-toast';
 
 // Define Option interface to match the one in SearchSelect component
 interface Option {
@@ -33,7 +35,7 @@ interface LineItemsDto {
   description: string;
   quantity: number;
   discountCap: number;
-  discountType: string | null;
+  discountType: string ;
   unitPrice: number;
   taxRate: number;
   discountRate: number;
@@ -53,8 +55,8 @@ interface ValidationErrors {
 const Left = () => {
   const context = useContext(ContextData);
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<
-    string | null
-  >(null);
+    string
+  >('');
   const { data, isLoading: customersLoading } = useGetAllCustomers({
     page: 1,
     limit: 100,
@@ -218,10 +220,10 @@ const Left = () => {
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
-
+  const mutation = useCreateInvoice();
   const handleSaveInvoice = () => {
     setFormSubmitted(true);
-
+  
     // Validate form
     const isValid = validateForm();
     if (!isValid) {
@@ -232,57 +234,70 @@ const Left = () => {
       }
       return;
     }
-
+  
     // Get table data from context with type annotation
     const tableData: TableItem[] = context?.data?.table || [];
-
+  
     // Format line items according to LineItemsDto structure with proper typing
     const lineItems: LineItemsDto[] = tableData.map((item: TableItem) => ({
       description: item.name,
       quantity: item.qty,
       discountCap: 0,
-      discountType: null,
-      unitPrice: item.price,
+      discountType: 'PercentageWithCap',
+      unitPrice: Number(item.price),
       taxRate: item.tax,
       discountRate: 0,
       productId: item.uuid,
     }));
-
+  
     // Calculate total amount with proper typing
     const totalAmount = tableData.reduce((sum: number, item: TableItem) => {
       const itemTotal = item.qty * item.price;
       const itemTax = (itemTotal * item.tax) / 100;
       return sum + itemTotal + itemTax;
     }, 0);
-
+  
     const InvoiceData = {
-      issueDate: issueDate,
-      dueDate: dueDate,
+      issuedDate: issueDate, // Convert string to Date object
+      dueDate: dueDate, // Convert string to Date object
       shippingAddress: shippingAddress,
       billingAddress: billingAddress,
       invoiceType: invoiceType,
       currency: currency,
-      taxRate: taxRate,
+      taxRate: Number(taxRate),
       totalAmount: totalAmount,
       paymentTerms: paymentTerms,
-      paymentReference: invoiceNumber, // or generate a unique reference
+      paymentReference: paymentReference, // or generate a unique reference
       notes: note,
       paymentMethod: selectedPaymentMethod,
       invoiceNumber: invoiceNumber,
       discountAmount: 0, // Add default or actual value if available
       customerId: customerName, // Using the customer UUID as customerId
-      salePersonId: '', // Add actual salesperson if available
+      salePersonId: 'c9c0c3a4-353f-4907-a342-ae64e629936f', // Add actual salesperson if available
       lineItems: lineItems,
     };
-
+  
     // Save to context
     context?.setData((prevData: any) => ({
       ...prevData,
       saleReceipt: InvoiceData,
     }));
-
-    // Also log the raw data object if needed
+    
     console.log('Raw Sale Receipt Data:', InvoiceData);
+    mutation.mutate(InvoiceData, {
+      onSuccess: () => {
+        toast.success(`${InvoiceData.invoiceType} created successfully`);
+        // You can add navigation or other actions here after successful creation
+        // For example: router.push('/pos/sales');
+      },
+      onError: (error: any) => {
+        toast.error(
+          `Failed to create Invoice: ${error.message || 'Unknown error'}`
+        );
+        console.error('Error creating Invoice Please Try again later:', error);
+      },
+    });
+    // Also log the raw data object if needed
   };
 
   // Helper function to render required field marker
@@ -295,7 +310,6 @@ const Left = () => {
 
   return (
     <div className="max-w-5xl min-w-5xl px-2 bg-transparent overflow-y-auto css-dip3t8 ">
-      
       <div className="w-full grid grid-cols-4 gap-4">
         <div>
           <Select
@@ -443,7 +457,7 @@ const Left = () => {
       </h3>
       <div className={`mt-2 ${errors.paymentMethod ? 'error-field' : ''}`}>
         <div className="grid grid-cols-2 py-4 gap-4">
-          {['mtnMobileMoney', 'orangeMoney', 'other', 'bankTransfer'].map(
+          {['Credit Card', 'Bank Transfer', 'Other', 'ACH Transfer'].map(
             (option) => (
               <div
                 key={option}

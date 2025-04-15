@@ -28,7 +28,7 @@ const Filter = () => {
             <p className="text-[17px] -mt-1">Filter&nbsp;: </p>
             <div className="-mt-3">
               <Select
-              outline
+                outline
                 border={true}
                 options={[
                   { label: 'All', value: 'all' },
@@ -45,7 +45,7 @@ const Filter = () => {
             <p className="text-[17px] -mt-1">Date&nbsp;: </p>
             <div className="-mt-3">
               <Select
-              outline
+                outline
                 border={true}
                 options={[
                   { label: 'All Time', value: 'All Time' },
@@ -59,9 +59,9 @@ const Filter = () => {
           </div>
         </div>
       </div>
-      <div className=" w-[25%] mt-4 ">
-        <div className="flex w-full space-x-2">
-          <div className="w-full  flex justify-end ">
+      <div className=" w-1/2 flex items-center justify-end">
+        <div className="flex justify-end ">
+          <div className="w-fit  flex justify-end ">
             <Button
               type={'button'}
               color
@@ -70,15 +70,15 @@ const Filter = () => {
               theme="lightBlue"
             />
           </div>
-          <div className="w-full">
-          <Link className='flex justify-end' href={'/pos/sales/new'}>
-                <Button
-                  text={'Create Sale'}
-                  icon={<i className="ri-file-add-line"></i>}
-                  theme="default"
-                  type={'button'}
-                />
-              </Link>
+          <div className="w-fit ml-2">
+            <Link className="flex justify-end" href={'/pos/sales/new'}>
+              <Button
+                text={'Create Sale'}
+                icon={<i className="ri-file-add-line"></i>}
+                theme="default"
+                type={'button'}
+              />
+            </Link>
           </div>
         </div>
       </div>

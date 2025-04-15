@@ -1,10 +1,16 @@
-"use client"
+'use client';
 import React, { useState } from 'react';
 import MyTable from '@potta/components/table';
 import { useGetAllSalesReceipts } from '../hooks/useGetAllReceipts';
 import { Filters, SalesReceipt } from '../utils/types';
-import TableActionPopover, { PopoverAction } from '@potta/components/tableActionsPopover';
+import TableActionPopover, {
+  PopoverAction,
+} from '@potta/components/tableActionsPopover';
 import Filter from './filters';
+import { Icon } from '@iconify/react';
+import { CloudDownload, FileDown } from 'lucide-react';
+import ViewReceiptSlider from './viewSlider';
+import DeleteModal from './deleteModal';
 
 // Updated type to match the actual response structure
 type ResponseSalesReceipt = {
@@ -64,7 +70,8 @@ const SaleTable = () => {
   const [isViewOpen, setIsViewOpen] = useState(false);
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
-  const [receiptDetails, setReceiptDetails] = useState<ResponseSalesReceipt | null>(null);
+  const [receiptDetails, setReceiptDetails] =
+    useState<ResponseSalesReceipt | null>(null);
 
   // Pagination state
   const [page, setPage] = useState(1);
@@ -84,7 +91,9 @@ const SaleTable = () => {
   const columns = [
     {
       name: 'Date',
-      selector: (row: ResponseSalesReceipt) => <div className="">{new Date(row.saleDate).toLocaleDateString()}</div>,
+      selector: (row: ResponseSalesReceipt) => (
+        <div className="">{new Date(row.saleDate).toLocaleDateString()}</div>
+      ),
     },
     {
       name: 'Type',
@@ -92,38 +101,63 @@ const SaleTable = () => {
     },
     {
       name: 'Customer',
-      selector: (row: ResponseSalesReceipt) => <div className="">{row.customer.firstName} {row.customer.lastName}</div>,
+      selector: (row: ResponseSalesReceipt) => (
+        <div className="">
+          {row.customer.firstName} {row.customer.lastName}
+        </div>
+      ),
     },
     {
       name: 'Method',
-      selector: (row: ResponseSalesReceipt) => <div className="">{row.paymentMethod}</div>,
+      selector: (row: ResponseSalesReceipt) => (
+        <div className="">{row.paymentMethod}</div>
+      ),
     },
     {
       name: 'Memo',
-      selector: (row: ResponseSalesReceipt) => <div className="">{row.notes || '-'}</div>,
+      selector: (row: ResponseSalesReceipt) => (
+        <div className="">{row.notes || '-'}</div>
+      ),
     },
- 
+
     {
       name: 'Balance',
       selector: (row: ResponseSalesReceipt) => <div className="">XAF 0</div>,
     },
     {
       name: 'Total',
-      selector: (row: ResponseSalesReceipt) => <div className="">XAF {row.totalAmount.toLocaleString()}</div>,
+      selector: (row: ResponseSalesReceipt) => (
+        <div className="">XAF {row.totalAmount.toLocaleString()}</div>
+      ),
+    },
+    {
+      name: ``,
+      selector: (row: ResponseSalesReceipt) => (
+        <div className=""><FileDown /></div>),
+        width: '50px',
     },
     {
       name: 'Resolution',
       selector: (row: ResponseSalesReceipt) => {
-        const status = 'Completed'; // Assuming all are completed, adjust if needed
+        const status = 'Closed';
         return (
-          <div className="px-3 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
-            {status}
+          <div className="border-r pr-4 flex justify-center">
+            <div className="flex items-center gap-3  w-full px-3 py-2 border border-green-500 bg-green-50 text-green-700">
+              <div className="flex items-center justify-center text-white bg-green-700 rounded-full size-4">
+                <Icon icon="material-symbols:check" width="20" height="20" />
+              </div>
+              {status}
+            </div>
           </div>
         );
       },
+      hasBorderLeft: true,          // Left border for data cells
+  headerBorderLeft: true,       // Left border for header cell
+      width: "150px"
+
     },
     {
-      name: 'Actions',
+      name: '',
       selector: (row: ResponseSalesReceipt) => {
         const actions: PopoverAction[] = [
           {
@@ -134,17 +168,7 @@ const SaleTable = () => {
               setIsViewOpen(true);
             },
             className: 'hover:bg-gray-200',
-            icon: <i className="ri-eye-line" />
-          },
-          {
-            label: 'Edit',
-            onClick: () => {
-              setOpenUpdateModal(row.uuid);
-              setReceiptDetails(row);
-              setIsEditOpen(true);
-            },
-            className: 'hover:bg-gray-200',
-            icon: <i className="ri-edit-line" />
+            icon: <i className="ri-eye-line" />,
           },
           {
             label: 'Delete',
@@ -154,8 +178,8 @@ const SaleTable = () => {
               setIsDeleteOpen(true);
             },
             className: 'hover:bg-red-200 text-red-600',
-            icon: <i className="ri-delete-bin-line" />
-          }
+            icon: <i className="ri-delete-bin-line" />,
+          },
         ];
 
         return (
@@ -167,6 +191,7 @@ const SaleTable = () => {
           />
         );
       },
+      width: '70px',
     },
   ];
 
@@ -186,7 +211,9 @@ const SaleTable = () => {
       <div className="mt-10">
         <Filter />
         <div className="min-h-60 items-center flex justify-center">
-          <p className="text-red-600 text-center">An error occurred while fetching receipts. Please try again later.</p>
+          <p className="text-red-600 text-center">
+            An error occurred while fetching receipts. Please try again later.
+          </p>
         </div>
       </div>
     );
@@ -201,6 +228,7 @@ const SaleTable = () => {
       <MyTable
         minHeight="50vh"
         columns={columns}
+        selectable={true}
         data={receiptsData}
         pagination
         expanded
@@ -212,20 +240,12 @@ const SaleTable = () => {
       />
 
       {/* Add your modal components here when implemented */}
-      {/* Example:
+   
       {openDeleteModal && (
         <DeleteModal
-          receiptID={openDeleteModal}
+          recieptID={openDeleteModal}
           open={isDeleteOpen}
           setOpen={setIsDeleteOpen}
-        />
-      )}
-      {openUpdateModal && (
-        <EditReceipt
-          receipt={receiptDetails}
-          receiptId={openUpdateModal}
-          open={isEditOpen}
-          setOpen={setIsEditOpen}
         />
       )}
       {openViewModal && (
@@ -235,7 +255,7 @@ const SaleTable = () => {
           setOpen={setIsViewOpen}
         />
       )}
-      */}
+     
     </div>
   );
 };

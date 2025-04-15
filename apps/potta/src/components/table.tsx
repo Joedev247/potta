@@ -4,20 +4,44 @@ import { Children, FC, ReactNode, useEffect, useState } from 'react';
 import DataTable from 'react-data-table-component';
 import CustomLoader from './loader';
 
+// Define a type for column with border options
+interface ColumnWithBorder {
+  name: string | ReactNode;  // Updated to accept both string and ReactNode
+  selector: (row: any) => any;
+  sortable?: boolean;
+  cell?: (row: any, index?: number, column?: any) => ReactNode;
+  width?: string;
+  // Cell border options
+  hasBorder?: boolean;      // General border on all sides
+  hasBorderRight?: boolean; // Border only on the right
+  hasBorderLeft?: boolean;  // Border only on the left
+  borderStyle?: string;     // Custom border style for this column
+  // Header border options
+  headerBorder?: boolean;   // Border for header cell (all sides)
+  headerBorderRight?: boolean; // Border only on the right of header
+  headerBorderLeft?: boolean;  // Border only on the left of header
+  headerBorderBottom?: boolean; // Border only on the bottom of header
+  headerBorderStyle?: string; // Custom border style for header
+  [key: string]: any;       // For other column properties
+}
+
 interface TableProps {
-  columns: any;
+  columns: ColumnWithBorder[];  // Updated to use our new column type
   data: any;
   expanded?: boolean;
   pagination?: boolean;
   ExpandableComponent?: FC<any> | null;
   size?: boolean;
   color?: boolean;
-  minHeight?: string; // Added minHeight prop
+  minHeight?: string;
   selectable?: boolean;
   paginationServer?: boolean;
   paginationTotalRows?: number;
   onChangePage?: (page: number) => void;
   onChangeRowsPerPage?: (perPage: number, page: number) => void;
+  defaultBorderStyle?: string;  // Default border style to use
+  headerRowBorder?: boolean;    // Border for the entire header row
+  headerRowBorderStyle?: string; // Custom border style for header row
 }
 
 const MyTable: FC<TableProps & { pending?: boolean }> = ({
@@ -34,8 +58,87 @@ const MyTable: FC<TableProps & { pending?: boolean }> = ({
   onChangeRowsPerPage,
   selectable,
   color,
-  minHeight = '400px', // Default min height of 400px if not specified
+  minHeight = '400px',
+  defaultBorderStyle = '1px solid #e0e0e0',  // Default border style
+  headerRowBorder = false,                   // Default no header row border
+  headerRowBorderStyle = '1px solid #cccccc', // Default header border style
 }) => {
+  // Process columns to add cell styling for borders
+  const processedColumns = columns.map(column => {
+    // Create a new column with appropriate styling
+    const newColumn = { ...column };
+    
+    // Determine border styles
+    const headerBorderStyle = column.headerBorderStyle || headerRowBorderStyle;
+    const cellBorderStyle = column.borderStyle || defaultBorderStyle;
+    
+    // Check for header border options
+    const hasHeaderLeft = column.headerBorder || column.headerBorderLeft;
+    const hasHeaderRight = column.headerBorder || column.headerBorderRight;
+    const hasHeaderBottom = column.headerBorder || column.headerBorderBottom || headerRowBorder;
+    
+    // Check for cell border options
+    const hasCellLeft = column.hasBorder || column.hasBorderLeft;
+    const hasCellRight = column.hasBorder || column.hasBorderRight;
+    
+    // Apply header styling if needed
+    if (hasHeaderLeft || hasHeaderRight || hasHeaderBottom) {
+      // Create a styled header
+      const originalName = column.name;
+      newColumn.name = (
+        <div 
+          style={{
+            borderLeft: hasHeaderLeft ? headerBorderStyle : 'none',
+            borderRight: hasHeaderRight ? headerBorderStyle : 'none',
+            borderBottom: hasHeaderBottom ? headerBorderStyle : 'none',
+            height: '100%',
+            width: '100%',
+            display: 'flex',
+            alignItems: 'center',
+            padding: '4px',
+          }}
+        >
+          {originalName}
+        </div>
+      );
+    }
+    
+    // Apply cell styling if needed
+    if (hasCellLeft || hasCellRight) {
+      // Create a custom cell renderer
+      const originalCell = column.cell;
+      
+      newColumn.cell = (row: any, index?: number, column?: any) => {
+        // Get the original cell content
+        let cellContent;
+        if (originalCell) {
+          cellContent = originalCell(row, index, column);
+        } else {
+          cellContent = column.selector(row);
+        }
+        
+        // Wrap it with our styled div
+        return (
+          <div 
+            style={{
+              borderLeft: hasCellLeft ? cellBorderStyle : 'none',
+              borderRight: hasCellRight ? cellBorderStyle : 'none',
+              height: '100%',
+              width: '100%',
+              display: 'flex',
+              alignItems: 'center',
+              padding: '0 8px',
+            }}
+          >
+            {cellContent}
+          </div>
+        );
+      };
+    }
+
+    return newColumn;
+  });
+
   const customStyles = {
     headCells: {
       style: {
@@ -46,45 +149,45 @@ const MyTable: FC<TableProps & { pending?: boolean }> = ({
     headRow: {
       style: {
         backgroundColor: color ? '#237804' : '#F3FBFB',
-        minHeight: size ? '40px' : '48px',
+        minHeight: size ? '50px' : '58px',
         fontSize: size ? '15px' : '18px',
         color: color ? '#EBF0F0' : '#000',
       },
     },
     rows: {
       style: {
-        minHeight: size ? '40px' : '48px',
+        minHeight: size ? '50px' : '58px',
         fontSize: size ? '14px' : '16px',
       },
     },
     cells: {
       style: {
-        paddingLeft: '8px',
-        paddingRight: '8px',
+        paddingLeft: '6px',  // Reduced padding to allow our custom div to handle padding
+        paddingRight: '6px', // Reduced padding to allow our custom div to handle padding
+      
       },
     },
     table: {
       style: {
-        minHeight: minHeight, // Apply the minimum height to the table
+        minHeight: minHeight,
       },
     },
   };
 
   return (
-    <div className="border" style={{ minHeight: minHeight }}> {/* Also apply minHeight to the container */}
+    <div className="border" style={{ minHeight: minHeight }}>
       <DataTable
         customStyles={customStyles}
-        columns={columns}
+        columns={processedColumns} // Use processed columns with border styling
         data={data}
         selectableRows={selectable}
-        // Simplified conditional rendering for pagination
         pagination={pagination !== false}
-        expandableRows={!expanded} // Ensure expandableRows is a boolean
+        expandableRows={!expanded}
         expandableRowsComponent={ExpandableComponent || (() => null)}
-        paginationServer={paginationServer} // Enable server-side pagination
-        paginationTotalRows={paginationTotalRows} // Total rows from backend
-        onChangePage={onChangePage} // Handle page change
-        onChangeRowsPerPage={onChangeRowsPerPage} // Handle per-page change
+        paginationServer={paginationServer}
+        paginationTotalRows={paginationTotalRows}
+        onChangePage={onChangePage}
+        onChangeRowsPerPage={onChangeRowsPerPage}
         progressPending={pending}
         progressComponent={<CustomLoader />}
         noDataComponent={

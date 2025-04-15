@@ -3,10 +3,8 @@ import { IFilter } from './types';
 import { IInvoicePayload } from './valididation';
 
 export const invoiceApi = {
-  create: async (data: IInvoicePayload, user_Id: string) => {
-    const result = await axios.post(`/invoice/create`, data, {
-      params: { user_Id },
-    });
+  create: async (data: IInvoicePayload) => {
+    const result = await axios.post(`/invoice/create`, data);
     return result?.data;
   },
   getAll: async (filter: IFilter) => {
