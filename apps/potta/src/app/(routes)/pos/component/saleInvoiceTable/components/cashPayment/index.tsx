@@ -8,6 +8,7 @@ import { LineItem, PaymentMethod } from '@potta/app/(routes)/pos/utils/types';
 import { SalesReceiptPayload } from '@potta/app/(routes)/pos/utils/validation';
 import { posApi } from '@potta/app/(routes)/pos/utils/api';
 import SalesReceiptReport from '../../../../../reports/components/collectioReports/salesReceiptReport';
+import { useCreateSalesReceipt } from '@potta/app/(routes)/pos/sales/hooks/useCreateReceipt';
 
 const PayCash = () => {
   const context = useContext(ContextData);
@@ -53,6 +54,8 @@ const PayCash = () => {
     }
   };
 
+  const mutation = useCreateSalesReceipt();
+
   const handleComplete = async () => {
     if (cashAmount < total) {
       setError('Cash amount must be greater than or equal to total amount');
@@ -76,13 +79,15 @@ const PayCash = () => {
       };
 
       // Ensure line items have numeric unit prices for the API
-      const lineItemsWithNumericPrices = (context?.data || []).map((item:any) => ({
-        ...item,
-        unitPrice:
-          typeof item.unitPrice === 'string'
-            ? parseFloat(item.unitPrice)
-            : item.unitPrice,
-      }));
+      const lineItemsWithNumericPrices = (context?.data || []).map(
+        (item: any) => ({
+          ...item,
+          unitPrice:
+            typeof item.unitPrice === 'string'
+              ? parseFloat(item.unitPrice)
+              : item.unitPrice,
+        })
+      );
 
       // Create sales receipt data for API submission
       const salesReceiptData: SalesReceiptPayload = {
@@ -93,40 +98,44 @@ const PayCash = () => {
         paymentMethod: 'Other' as PaymentMethod,
         receiptNumber: orderNumber.toString(),
         discountAmount: context?.orderSummary?.discount || 0,
-        customerId: '6f7f8a95-5524-429a-9d86-89c72a91174a',
-        salePerson: 'c654770d-2184-4e0a-af8c-ec0a62ef1f57',
+        customerId: 'e8d58a3f-448d-4532-a449-75ddef9d0cb1',
+        salePerson: 'c9c0c3a4-353f-4907-a342-ae64e629936f',
         lineItems: lineItemsWithNumericPrices,
       };
 
       console.log('Order', salesReceiptData);
-      // Save the sales receipt to the server
-      // const response = await posApi.create(salesReceiptData);
+      mutation.mutate(salesReceiptData, {
+        onSuccess: async () => {
+          setLastOrderData(orderData);
 
-      // Log the response and sales receipt data
-      // console.log('Sales Receipt Created:', response);
+          // Print the receipt
+          await printer.printReceipt(orderData);
 
-      setLastOrderData(orderData);
+          toast.success('Order completed successfully');
 
-      // Print the receipt
-      await printer.printReceipt(orderData);
+          // Reset the cart after successful order
+          if (context?.setData) {
+            context.setData([]);
+          }
 
-      toast.success('Order completed successfully');
-
-      // Reset the cart after successful order
-      if (context?.setData) {
-        context.setData([]);
-      }
-
-      // Reset the order summary
-      if (context?.setOrderSummary) {
-        context.setOrderSummary({
-          subtotal: 0,
-          discount: 0,
-          itemDiscounts: 0,
-          tax: 0,
-          total: 0,
-        });
-      }
+          // Reset the order summary
+          if (context?.setOrderSummary) {
+            context.setOrderSummary({
+              subtotal: 0,
+              discount: 0,
+              itemDiscounts: 0,
+              tax: 0,
+              total: 0,
+            });
+          }
+        },
+        onError: (error: any) => {
+          toast.error(
+            `Failed to create receipt: ${error.message || 'Unknown error'}`
+          );
+          console.error('Error creating sales receipt:', error);
+        },
+      });
 
       // Reset the cash amount
       setCashAmount(0);
