@@ -76,7 +76,7 @@ const CreateProduct:React.FC<CreateProductProps> = ({ open: controlledOpen,
     setOpen={setIsOpen}
       edit={true}
       buttonText={'Create Product'}
-      title={'Inventory Product'}
+      title={'Inventory Item'}
     >
       <form
         onSubmit={handleSubmit(onSubmit)}
@@ -241,7 +241,7 @@ const CreateProduct:React.FC<CreateProductProps> = ({ open: controlledOpen,
               />
             <div>
               <Button
-                text={'Create Product'}
+                text={'Add Item'}
                 type={'submit'}
                 isLoading={mutation.isPending}
               />

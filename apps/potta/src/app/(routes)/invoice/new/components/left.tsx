@@ -223,7 +223,7 @@ const Left = () => {
   const mutation = useCreateInvoice();
   const handleSaveInvoice = () => {
     setFormSubmitted(true);
-  
+
     // Validate form
     const isValid = validateForm();
     if (!isValid) {
@@ -234,10 +234,10 @@ const Left = () => {
       }
       return;
     }
-  
+
     // Get table data from context with type annotation
     const tableData: TableItem[] = context?.data?.table || [];
-  
+
     // Format line items according to LineItemsDto structure with proper typing
     const lineItems: LineItemsDto[] = tableData.map((item: TableItem) => ({
       description: item.name,
@@ -249,14 +249,14 @@ const Left = () => {
       discountRate: 0,
       productId: item.uuid,
     }));
-  
+
     // Calculate total amount with proper typing
     const totalAmount = tableData.reduce((sum: number, item: TableItem) => {
       const itemTotal = item.qty * item.price;
       const itemTax = (itemTotal * item.tax) / 100;
       return sum + itemTotal + itemTax;
     }, 0);
-  
+
     const InvoiceData = {
       issuedDate: issueDate, // Convert string to Date object
       dueDate: dueDate, // Convert string to Date object
@@ -276,13 +276,13 @@ const Left = () => {
       salePersonId: 'c9c0c3a4-353f-4907-a342-ae64e629936f', // Add actual salesperson if available
       lineItems: lineItems,
     };
-  
+
     // Save to context
     context?.setData((prevData: any) => ({
       ...prevData,
       saleReceipt: InvoiceData,
     }));
-    
+
     console.log('Raw Sale Receipt Data:', InvoiceData);
     mutation.mutate(InvoiceData, {
       onSuccess: () => {
@@ -309,7 +309,7 @@ const Left = () => {
   console.log('Selected customer option:', selectedCustomer);
 
   return (
-    <div className="max-w-5xl min-w-5xl px-2 bg-transparent overflow-y-auto css-dip3t8 ">
+    <div className="max-w-5xl min-w-5xl px-2 bg-transparent overflow-y-auto scroll bg-white ">
       <div className="w-full grid grid-cols-4 gap-4">
         <div>
           <Select

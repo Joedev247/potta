@@ -99,7 +99,7 @@ const EditProduct: React.FC<EditProductProps> = ({
       setOpen={setIsOpen}
       edit={false}
       buttonText={'update product'}
-      title={'Edit Product'}
+      title={'Edit Item'}
     >
       <form
         onSubmit={handleSubmit(onSubmit)}
@@ -276,11 +276,11 @@ const EditProduct: React.FC<EditProductProps> = ({
             text="Cancel"
             type="button"
             theme="danger"
-            
+
             onClick={() => setIsOpen(false)}
           />
           <Button
-            text={'Update Product'}
+            text={'Update Item'}
 
             type={'submit'}
             isLoading={mutation.isPending}

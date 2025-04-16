@@ -75,7 +75,7 @@ const CreateNonInventoryProduct:React.FC<CreateProductProps> = ({ open: controll
     setOpen={setIsOpen}
       edit={true}
       buttonText={'Create Product'}
-      title={'None Inventory Product'}
+      title={'None Inventory Item'}
     >
       <form
         onSubmit={handleSubmit(onSubmit)}
@@ -192,7 +192,7 @@ const CreateNonInventoryProduct:React.FC<CreateProductProps> = ({ open: controll
               />
             <div>
               <Button
-                text={'Create Product'}
+                text={'Add Item'}
                 type={'submit'}
                 isLoading={mutation.isPending}
               />

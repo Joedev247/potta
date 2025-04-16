@@ -1,278 +1,250 @@
-'use client'; // Make sure to mark this component as client-side
+'use client';
+import React, { useState } from 'react';
+import MyTable from '@potta/components/table';
 
-import React, { useState, FC, useMemo } from 'react';
-import {
-  Popover,
-  PopoverTrigger,
-  PopoverContent,
-  Button,
-  Checkbox,
-  checkbox,
-} from '@nextui-org/react';
-import InvoiceModal from './modalInvoice';
+import { IFilter } from '../_utils/types';
+import TableActionPopover from '@potta/components/tableActionsPopover';
+import { MoreVertical } from 'lucide-react';
+import useGetAllInvoice from '../_hooks/useGetAllInvoice';
+import Search from '@potta/components/search';
+import CustomSelect, { IOption } from './CustomSelect';
+import Button from '@potta/components/button';
 import ModalInvoice from './modal';
-import DataGrid from './DataGrid';
-import { ColumnDef } from '@tanstack/react-table';
-import { IColumnDef } from '../_utils/types';
-import { cn } from '@potta/lib/utils';
 import { Icon } from '@iconify/react';
 
-interface IInvoiceTableComponents {
-  onInvoiceDetailsClose: () => void;
-  onInvoiceDetailsOpen: () => void;
-  onDeleteModal: () => void;
-  isInvoiceDetailsOpen: boolean;
+// Define types based on the API response
+interface Invoice {
+  uuid: string;
+  invoiceId: string;
+  issuedDate: string;
+  dueDate: string;
+  invoiceType: string;
+  invoiceTotal: number;
+  status: string;
+  notes: string;
+  customer: {
+    firstName: string;
+    lastName: string;
+  };
 }
-const InvoiceTableComponents = ({
-  onInvoiceDetailsClose,
-  isInvoiceDetailsOpen,
-  onInvoiceDetailsOpen,
-  onDeleteModal,
-}: IInvoiceTableComponents) => {
+
+interface ApiResponse {
+  data: Invoice[];
+  meta: {
+    itemsPerPage: number;
+    totalItems: number;
+    currentPage: number;
+    totalPages: number;
+  };
+}
+
+const InvoiceTable = () => {
+  const [openPopover, setOpenPopover] = useState<string | null>(null);
+  const [page, setPage] = useState(1);
+  const [limit, setLimit] = useState(20);
+  const [selectedValue, setSelectedValue] = useState<string | null>(null);
+  const [isOpen, setIsOpen] = useState(false);
+  const filter: IFilter = {
+    limit,
+    page,
+    sortOrder: 'DESC',
+    sortBy: 'createdAt',
+  };
+
+  const { data, isLoading, error } = useGetAllInvoice(filter);
+
+  const getStatusStyle = (status: string) => {
+    switch (status.toLowerCase()) {
+      case 'draft':
+        return 'text-gray-600';
+      case 'overdue':
+        return 'text-red-500';
+      case 'paid':
+        return 'text-green-500';
+      default:
+        return 'text-gray-600';
+    }
+  };
+
+  const formatDate = (date: string) => {
+    const today = new Date();
+    const inputDate = new Date(date);
+
+    if (
+      today.getDate() === inputDate.getDate() &&
+      today.getMonth() === inputDate.getMonth() &&
+      today.getFullYear() === inputDate.getFullYear()
+    ) {
+      return 'Today';
+    }
+    return inputDate.toLocaleDateString();
+  };
+  const options: IOption[] = [
+    { value: 'option1', label: 'Option 1' },
+    { value: 'option2', label: 'Option 2' },
+    { value: 'option3', label: 'Option 3' },
+  ];
+
+  
   const columns = [
     {
-      name: (
-        <>
-          <Checkbox color="success" size="lg" />
-        </>
-      ),
-      selector: (row: any) => <Checkbox color="success" size="lg" />,
-    },
-    {
       name: 'Date',
-      selector: (row: any) => row.date,
+      selector: (row: Invoice) => (
+        <div className="text-sm text-gray-600">
+          {formatDate(row.issuedDate)}
+        </div>
+      ),
     },
     {
       name: 'Customer',
-      selector: (row: { customer: any }) => row.customer,
+      selector: (row: Invoice) => (
+        <div className="text-sm font-medium">
+          {`${row.customer.firstName} ${row.customer.lastName}`}
+        </div>
+      ),
     },
     {
       name: 'ID',
-      selector: (row: { id: any }) => row.id,
+      selector: (row: Invoice) => (
+        <div className="text-sm text-gray-500">
+          {row.invoiceId}
+          <div className="text-xs text-gray-400">viewed</div>
+        </div>
+      ),
     },
     {
       name: 'Title',
-      selector: (row: { title: any }) => row.title,
+      selector: (row: Invoice) => (
+        <div className="text-sm">{row.notes || 'No title'}</div>
+      ),
     },
     {
       name: 'Status',
-      selector: (row: { status: any }) => row.status,
+      selector: (row: Invoice) => (
+        <div className={`text-sm ${getStatusStyle(row.status)}`}>
+          {row.status.toLowerCase()}
+          <div className="text-xs text-gray-400">viewed</div>
+        </div>
+      ),
     },
     {
       name: 'Amount',
-      selector: (row: { amount: any }) => row.amount,
-    },
-    {
-      name: 'Resolution',
-      selector: (row: { resolution: any }) => row.resolution,
-    },
-    {
-      name: 'Actions',
-      selector: (row: { reference: any; id: string }) => (
-        <MoreIcon
-          onInvoiceDetailsOpen={onInvoiceDetailsOpen}
-          onInvoiceDetailsClose={onInvoiceDetailsClose}
-          isInvoiceDetailsOpen={isInvoiceDetailsOpen}
-          onDeleteModal={onDeleteModal}
-        />
+      selector: (row: Invoice) => (
+        <div className="text-sm">
+          XAF {row.invoiceTotal.toLocaleString(undefined, { maximumFractionDigits: 2 })}
+        </div>
       ),
     },
-  ];
-
-  const data: IData[] = [
     {
-      date: 'Yesterday',
-      customer: 'Jonathan Major',
-      id: '009',
-      title: 'Office Cleaning',
-      status: 'Unpaid',
-      amount: '$12,000',
-      resolution: 'Pending',
-      reference: 'REF123',
-    },
-    {
-      date: 'Today',
-      customer: 'Sarah Connor',
-      id: '010',
-      title: 'Window Cleaning',
-      status: 'Paid',
-      amount: '$500',
-      resolution: 'Approved',
-      reference: 'REF124',
-    },
-  ];
-
-  type IData = {
-    date: string;
-    customer: string;
-    id: string;
-    title: string;
-    status: string;
-    amount: string;
-    resolution: 'Approved' | 'Pending';
-    reference: string;
-  };
-
-  const dataColumn = (): IColumnDef<IData>[] => {
-    return [
-      {
-        accessorKey: 'select',
-        header: () => <Checkbox />,
-        cell: ({ row }) => <Checkbox />,
-      },
-      {
-        accessorKey: 'date',
-        header: 'Date',
-      },
-      {
-        accessorKey: 'customer',
-        header: 'Customer',
-      },
-      {
-        accessorKey: 'id',
-        header: 'ID',
-        cell: ({ row }) => (
-          <div className="text-gray-400">
-            {row.original?.id}
-            <p className="text-xs ">viewed</p>
-          </div>
-        ),
-        // addBorderRight: true,
-      },
-      {
-        accessorKey: 'title',
-        header: 'Title',
-      },
-      {
-        accessorKey: 'status',
-        header: 'Status',
-        cell: ({ row }) => {
-          return (
-            <div>
-              <p
-                className={cn(
-                  `text-red-500`,
-                  row?.original?.status === 'Paid' && 'text-green-600'
-                )}
-              >
-                {row?.original?.status}
-              </p>
-              <p className="text-xs text-gray-400">viewed</p>
-            </div>
-          );
-        },
-      },
-      {
-        accessorKey: 'amount',
-        header: 'Amount',
-        addBorderRight: true,
-      },
-      {
-        // accessorKey: '',
-        header: 'Resolution',
-        cell: ({ row }) => {
-          return (
-            <div className="border-r">
-              <div className="flex items-center gap-3  w-fit px-3 py-0.5 border border-green-500 bg-green-50 text-green-700">
-                <div className="flex items-center justify-center text-white bg-green-700 rounded-full size-4">
-                  <Icon icon="material-symbols:check" width="20" height="20" />
+          name: 'Resolution',
+          selector: (row: Invoice) => {
+            const status = 'Closed';
+            return (
+              <div className="border-r pr-4 flex justify-center">
+                <div className="flex items-center gap-3  w-full px-3 py-2 border border-green-500 bg-green-50 text-green-700">
+                  <div className="flex items-center justify-center text-white bg-green-700 rounded-full size-4">
+                    <Icon icon="material-symbols:check" width="20" height="20" />
+                  </div>
+                  {status}
                 </div>
-                {row.original.resolution}
               </div>
-            </div>
-          );
+            );
+          },
+          hasBorderLeft: true,          // Left border for data cells
+      headerBorderLeft: true,       // Left border for header cell
+          width: "150px"
+    
         },
-      },
-      {
-        // accessorKey: '',
-        header: 'Actions',
-        cell: ({ row }) => {
-          return (
-            <>
-              <Icon icon="charm:menu-kebab" width="16" height="16" />
-            </>
-          );
-        },
-      },
-    ];
-  };
-
-  const newData = useMemo(() => data, []);
-  if (data?.length) {
-    return <DataGrid column={dataColumn()} data={newData} />;
+    {
+      name: '',
+      selector: (row: Invoice) => (
+        <div className="flex justify-center">
+          <button className="p-1 hover:bg-gray-100 rounded">
+            <MoreVertical size={16} />
+          </button>
+        </div>
+      ),
+      width: '50px',
+    },
+  ];
+  if (error) {
+    return (
+      <div className={'w-full py-24 flex flex-col items-center justify-center'}>
+        An Error Occured
+       
+      </div>
+    );
   }
-
   return (
     <div className="mt-10">
-      <table className="min-w-full border border-collapse border-gray-300 table-auto">
-        <thead>
-          <tr>
-            {columns.map((col, index) => (
-              <th
-                key={index}
-                className="px-4 py-4 text-left border-b bg- bg-green-50"
-              >
-                {col.name}
-              </th>
-            ))}
-          </tr>
-        </thead>
-        <tbody>
-          {data.map((row, rowIndex) => (
-            <tr key={rowIndex} className="hover:bg-gray-50">
-              {columns.map((col, colIndex) => (
-                <td key={colIndex} className={'py-4 px-4 border-b border-r'}>
-                  {col.selector(row)}
-                </td>
-              ))}
-            </tr>
-          ))}
-        </tbody>
-      </table>
+       <div className="flex justify-between w-full">
+        <div className="mt-5 w-[50%] flex items-center space-x-2">
+          <div className="w-[65%]">
+            <Search />
+          </div>
+
+          <CustomSelect
+            options={options}
+            value={selectedValue}
+            onChange={setSelectedValue}
+            placeholder="Choose an option"
+          />
+          <CustomSelect
+            options={options}
+            value={selectedValue}
+            onChange={setSelectedValue}
+            placeholder="Choose an option"
+          />
+        </div>
+        <div className="w-[50%] flex justify-end">
+          <div className="flex mt-10 space-x-2">
+            <div>
+              {/*<Link href={'/invoicing/new_invoice'}>*/}
+              <Button
+                text={'Export'}
+                icon={<i className="ri-upload-2-line"></i>}
+                theme="lightBlue"
+                type={'button'}
+                color={true}
+              />
+              {/*</Link>*/}
+            </div>
+            <div>
+
+                <Button
+                  text={'Create Invoice'}
+                  icon={<i className="ri-file-add-line"></i>}
+                  theme="default"
+                  type={'button'}
+                  onClick={() => {
+                    setIsOpen(true);
+                  }}
+                />
+
+            </div>
+            
+          </div>
+        </div>
+      </div>
+      <MyTable
+        maxHeight="50vh"
+        minHeight="50vh"
+        columns={columns}
+        selectable={true}
+        data={data?.data || []}
+        pagination
+        pending={isLoading}
+        paginationServer
+        paginationTotalRows={data?.meta?.totalItems ?? 0}
+        onChangePage={setPage}
+        onChangeRowsPerPage={setLimit}
+      />
+      <ModalInvoice
+      isOpen={isOpen}
+      setIsOpen={setIsOpen}
+    />
     </div>
   );
 };
 
-interface IMoreIcon {
-  onInvoiceDetailsClose: () => void;
-  onInvoiceDetailsOpen: () => void;
-  onDeleteModal: () => void;
-  isInvoiceDetailsOpen: boolean;
-}
-const MoreIcon: FC<IMoreIcon> = ({
-  onInvoiceDetailsOpen,
-  onInvoiceDetailsClose,
-  onDeleteModal,
-  isInvoiceDetailsOpen,
-}) => {
-  return (
-    <Popover placement="left-start" showArrow={true}>
-      <PopoverTrigger>
-        <Button className="flex items-center w-6 h-6 rounded-full justify-evenly hover:bg-gray-100">
-          <i className="text-lg cursor-pointer ri-more-line"></i>
-        </Button>
-      </PopoverTrigger>
-      <PopoverContent>
-        <div className="flex flex-col gap-2 p-1 bg-white shadow-md">
-          <div className="text-xs cursor-pointer hover:bg-gray-200 py-0.5 px-2 rounded-[2px]">
-            <Button onClick={onInvoiceDetailsOpen}>Invoice details</Button>
-            {/*{*/}
-            {/*  isInvoiceDetailsOpen ?*/}
-            {/*  <InvoiceModal open={isInvoiceDetailsOpen} onClose={onInvoiceDetailsClose} />*/}
-            {/*    : null*/}
-            {/*}*/}
-          </div>
-          {/*<div className="text-xs cursor-pointer hover:bg-gray-200 py-0.5 px-2 rounded-[2px]">*/}
-          {/*    <ModalInvoice />*/}
-          {/*</div>*/}
-
-          <div className="text-xs cursor-pointer hover:bg-red-200 py-0.5 px-2 rounded-[2px] text-red-600">
-            <h1>Delete ID</h1>
-          </div>
-        </div>
-      </PopoverContent>
-    </Popover>
-  );
-};
-
-export default InvoiceTableComponents;
+export default InvoiceTable;

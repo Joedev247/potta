@@ -203,7 +203,7 @@ const TableOPS = () => {
   return (
     <>
       <div className="mt-2">
-        <div className="h-[50vh]">
+        <div className="h-[47vh]">
           <MyTable
             columns={columns}
             pagination={false}
@@ -212,7 +212,7 @@ const TableOPS = () => {
             selectable={false}
             expanded={true}
             color
-            minHeight='48vh'
+            minHeight='47vh'
           />
         </div>
         <OrderSummary

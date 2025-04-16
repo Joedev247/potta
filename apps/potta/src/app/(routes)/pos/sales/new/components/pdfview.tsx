@@ -72,16 +72,11 @@ const PdfView = () => {
   const total = subtotal + totalTax;
 
   return (
-    <div className="flex min-h-full flex-col items-center justify-center overflow-y-auto w-full bg-[#F2F2F2]">
-      <div className="flex min-w-[45rem] justify-between w-full p-8">
+    <div className="flex  flex-col items-center justify-center overflow-y-auto w-full bg-[#F2F2F2]">
+      <div className="flex min-w-[30rem] justify-between w-full p-8">
         <h3 className="text-xl font-semibold">PDF Preview</h3>
-        <Button
-          text={'Download'}
-          icon={<i className="ri-download-line"></i>}
-          type={'submit'}
-        />
       </div>
-      <div className="max-w-[48rem] bg-white space-y-8 min-w-[45rem] w-full">
+      <div className="max-w-[48rem] bg-white space-y-4 min-w-[45rem] w-full">
         <div className="h-36 w-full flex items-center justify-between px-4 bg-green-800">
           <p className="text-3xl mt-5 font-semibold text-white">
             Sales Receipt

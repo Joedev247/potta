@@ -49,7 +49,7 @@ const ViewProductSlider: React.FC<ProductDetailsProps> = ({
       open={isOpen} // Use controlled or local state
       setOpen={setIsOpen} // Use controlled or local setter
       edit={false}
-      title={'Vendor Details'}
+      title={'Item Details'}
       buttonText="view vendor"
     >
       {isLoading && (
@@ -66,7 +66,7 @@ const ViewProductSlider: React.FC<ProductDetailsProps> = ({
 
       {!data ||
         (Object.keys(data).length === 0 && (
-          <p className="text-gray-500 text-center">No vendor data available.</p>
+          <p className="text-gray-500 text-center">No Item data available.</p>
         ))}
 
       {data && (
@@ -108,7 +108,7 @@ const ViewProductSlider: React.FC<ProductDetailsProps> = ({
           </div>
           <div className="w-full grid grid-cols-2 gap-3">
             <Text name="Created At" value={data.createdAt} height />
-            
+
           </div>
 
           {/* <div className="text-center md:text-right mt-4 md:flex md:justify-end space-x-4">

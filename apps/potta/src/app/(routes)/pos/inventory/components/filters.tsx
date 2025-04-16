@@ -8,6 +8,7 @@ import CreateProduct from './slides/components/create_product/inventory';
 import { PopoverAction } from '@potta/components/tableActionsPopover';
 import { NextPopover } from '@potta/components/popover';
 import CreateNonInventoryProduct from './slides/components/create_product/nonInventory';
+import { Proportions, SquareStack } from 'lucide-react';
 
 const Filter = () => {
   const [selectedValue, setSelectedValue] = useState('createdAt:ASC'); // Set your default value here
@@ -56,9 +57,23 @@ const Filter = () => {
           </div>
         </div>
       </div>
-      <div className=" w-[25%] mt-4 ">
+      <div className=" w-[40%] mt-4 ">
         <div className="flex justify-end">
-          <div className="w-fit justify-end flex">
+          <div className="w-fit justify-end space-x-2 flex">
+          <Button
+              type={'button'}
+              color
+              text="Adjust"
+              icon={<Proportions />}
+              theme="lightBlue"
+            />
+            <Button
+              type={'button'}
+              color
+              text="Restock"
+              icon={<SquareStack />}
+              theme="lightBlue"
+            />
             <Button
               type={'button'}
               color
@@ -75,7 +90,7 @@ const Filter = () => {
               setOpenPopover={setOpenPopover}
               triggerButton={
                 <Button
-                  text={'New Product'}
+                  text={'New Item'}
                   type={'button'}
                   icon={<i className="ri-file-add-line"></i>}
                 />

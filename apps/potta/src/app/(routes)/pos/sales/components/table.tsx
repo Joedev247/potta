@@ -87,6 +87,10 @@ const SaleTable = () => {
 
   // Fetch receipts data using the hook
   const { data, isLoading, error } = useGetAllSalesReceipts(filter);
+ const handleRowClick = (row: ResponseSalesReceipt) => {
+    setOpenViewModal(row.uuid);
+    setIsViewOpen(true);
+  };
 
   const columns = [
     {
@@ -226,6 +230,7 @@ const SaleTable = () => {
     <div className="mt-10">
       <Filter />
       <MyTable
+      maxHeight="50vh"
         minHeight="50vh"
         columns={columns}
         selectable={true}
@@ -237,6 +242,7 @@ const SaleTable = () => {
         paginationTotalRows={data?.meta?.totalItems ?? 0}
         onChangePage={handlePageChange}
         onChangeRowsPerPage={handlePerRowsChange}
+        onRowClicked={handleRowClick}
       />
 
       {/* Add your modal components here when implemented */}

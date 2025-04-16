@@ -43,6 +43,8 @@ export const PhoneFlag = ({ phoneNumber }: { phoneNumber: string }) => {
   );
 };
 
+
+
 const TableComponents = () => {
   const [openPopover, setOpenPopover] = useState<string | null>(null);
   const [openViewModal, setOpenViewModal] = useState<string | null>(null);
@@ -161,6 +163,11 @@ const TableComponents = () => {
     setPage(newPage); // Reset page when changing rows per page
   };
 
+    const handleRowClick = (row: any) => {
+      setOpenViewModal(row.uuid);
+      setIsViewOpen(true);
+    };
+
   if (error)
     return (
       <div className="mt-10">
@@ -176,6 +183,7 @@ const TableComponents = () => {
     <div className="mt-10">
       <Filter />
       <MyTable minHeight='50vh'
+      maxHeight='50vh'
         columns={columns}
         data={customer?.data || []}
         pagination
@@ -185,6 +193,7 @@ const TableComponents = () => {
         paginationTotalRows={customer?.meta?.totalItems ?? 0}
         onChangePage={handlePageChange}
         onChangeRowsPerPage={handlePerRowsChange}
+        onRowClicked={handleRowClick}
       />
       {openDeleteModal && (
         <DeleteModal

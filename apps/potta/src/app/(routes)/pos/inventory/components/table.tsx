@@ -25,6 +25,13 @@ const InventoryTable = () => {
     const [isDeleteOpen, setIsDeleteOpen] = useState(false);
     const [productDetails, setproductDetails] =
       useState<UpdateProductPayload | null>(null);
+
+  // Handle row click to view product details
+  const handleRowClick = (row: Product) => {
+    setOpenViewModal(row.uuid);
+    setIsViewOpen(true);
+  };
+
   const columns = [
     {
       name: 'Name',
@@ -126,7 +133,8 @@ const InventoryTable = () => {
     <div className="mt-10">
       <div></div>
       <Table
-      minHeight='70vh'
+        minHeight='70vh'
+        maxHeight='70vh'
         columns={columns}
         data={data?.data || []}
         ExpandableComponent={null}
@@ -137,6 +145,8 @@ const InventoryTable = () => {
         paginationTotalRows={data?.meta?.totalItems ?? 0}
         onChangePage={handlePageChange}
         onChangeRowsPerPage={handlePerRowsChange}
+        onRowClicked={handleRowClick}
+        pointerOnHover={true}
       />
       {openDeleteModal && (
         <DeleteModal

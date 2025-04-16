@@ -16,19 +16,7 @@ const SaleInvoiceTable = () => {
     <div className="w-full  h-[92.3vh] py-1 ">
       {context?.itemSelected == 'cart' && (
         <div className="h-[84vh] w-full pt-2 px-6 overflow-y-auto border-b ">
-         <div className=" flex -mt-2">
-          <div className="bg-white mt-2 justify-center items-center border-y border-[#E5E7EB] border-l w-12 flex ">
-            <i className="ri-search-line text-2xl"></i>
-          </div>
-          <input
-            id="search-input"
-            name="search"
-            type="text"
-            placeholder="Search Items"
-
-            className={`w-full py-2 px-4 border border-gray-200 rounded-[2px] outline-none mt-2 focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500`}
-          />
-        </div>
+         
           <div className="w-full">
             <div className="h-full w-full  overflow-y-auto">
               <TableOPS />

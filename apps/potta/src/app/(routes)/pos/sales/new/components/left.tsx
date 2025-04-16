@@ -331,7 +331,7 @@ const handleSaveInvoice = () => {
   const paymentMethods = ['creditCard', 'bankTransfer', 'achTransfer', 'other'];
 
   return (
-    <div className="max-w-5xl min-w-5xl px-2 overflow-y-auto css-dip3t8 ">
+    <div className="max-w-5xl min-w-5xl px-2 overflow-y-auto scroll bg-white  ">
       <div className="w-full grid grid-cols-4 gap-4">
         <div>
           <Select
@@ -379,29 +379,7 @@ const handleSaveInvoice = () => {
             <p className="text-red-500 text-sm mt-1">{errors.receiptNumber}</p>
           )}
         </div>
-        <div className={`${errors.paymentReference ? 'error-field' : ''}`}>
-          <span className="mb-3 text-gray-900 font-medium">
-            Payment Reference
-            <RequiredMark />
-          </span>
-          <input
-            name="paymentReference"
-            type="text"
-            value={paymentReference}
-            onChange={(e) =>
-              handleInputChange('paymentReference', e.target.value)
-            }
-            placeholder="Enter payment reference"
-            className={`w-full py-2.5 px-4 border ${
-              errors.paymentReference ? 'border-red-500' : 'border-gray-200'
-            } rounded-[2px] outline-none mt-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500`}
-          />
-          {errors.paymentReference && (
-            <p className="text-red-500 text-sm mt-1">
-              {errors.paymentReference}
-            </p>
-          )}
-        </div>
+       
       </div>
 
       <div className="mt-3 w-full flex">
@@ -517,7 +495,29 @@ const handleSaveInvoice = () => {
           <p className="text-red-500 text-sm mt-1">{errors.paymentMethod}</p>
         )}
       </div>
-
+      <div className={`${errors.paymentReference ? 'error-field' : ''}`}>
+          <span className="my-6 text-gray-900 font-medium">
+            Payment Reference
+            <RequiredMark />
+          </span>
+          <input
+            name="paymentReference"
+            type="text"
+            value={paymentReference}
+            onChange={(e) =>
+              handleInputChange('paymentReference', e.target.value)
+            }
+            placeholder="Enter payment reference"
+            className={`w-full py-2.5 px-4 border ${
+              errors.paymentReference ? 'border-red-500' : 'border-gray-200'
+            } rounded-[2px] outline-none mt-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500`}
+          />
+          {errors.paymentReference && (
+            <p className="text-red-500 text-sm mt-1">
+              {errors.paymentReference}
+            </p>
+          )}
+        </div>
       <hr className="my-5" />
       <h3 className="text-xl font-thin my-2">Notes</h3>
       <textarea

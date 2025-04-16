@@ -53,6 +53,7 @@ label {
 .scroll::-webkit-scrollbar,
 .css-dip3t8::-webkit-scrollbar {
   width: 4px;
+  background-color: white;
 }
 
 /* Track */

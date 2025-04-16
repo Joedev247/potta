@@ -36,7 +36,7 @@ const urlRouters = [
     label: "Reports"
   },
   {
-    value: "account",
+    value: "accounts",
     label: "Accounts"
   },
 ];
@@ -81,7 +81,7 @@ export default function Navbar() {
 
   return (
     // <div className="sticky top-0 z-30 w-full bg-white">
-    <nav className="sticky top-0 left-0 z-10 w-full bg-white border-b">
+    <nav className="sticky top-0 left-0 z-20 w-full bg-white border-b">
       {/* <div className="px-4"> */}
       <div className="flex justify-between">
         <div className="flex items-center gap-20 py-4">
