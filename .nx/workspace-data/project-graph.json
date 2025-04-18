@@ -317,7 +317,7 @@
               "{workspaceRoot}/jest.preset.js"
             ],
             "outputs": [
-              "{workspaceRoot}\\coverage\\apps\\potta"
+              "{workspaceRoot}/coverage/apps/potta"
             ],
             "executor": "nx:run-commands",
             "configurations": {},
@@ -45570,5 +45570,5 @@
   },
   "version": "6.0",
   "errors": [],
-  "computedAt": 1744976224426
+  "computedAt": 1744995602655
 }

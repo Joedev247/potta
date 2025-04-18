@@ -3,12 +3,15 @@ import { Sidebar, Menu, MenuItem, SubMenu } from 'react-pro-sidebar';
 import { usePathname } from 'next/navigation';
 import { ContextData } from '@potta/components/context';
 import Icon from '@potta/components/icon_fonts/icon';
+import { ChartPie, CircleDollarSign, Inbox, RefreshCw, Users } from 'lucide-react';
 const Sidebarsinvoicing = () => {
   const pathname = usePathname();
   const string = pathname;
   const str = string.split('/');
   const context = useContext(ContextData);
-
+  const isActive = (path: any) => {
+    return pathname.startsWith(path);
+  };
   return (
     <Sidebar
       collapsedWidth="65px"
@@ -46,24 +49,47 @@ const Sidebarsinvoicing = () => {
           {' '}
           <h3 className="text-lg mt-[2px]">Invoice</h3>{' '}
         </MenuItem>
-
         <MenuItem
-          active={str[2] == 'inbox' ? true : false}
-          className="mt-4 font-thin"
-          href="/invoice/inbox"
-          icon={
-            <Icon
-              icon="Mails"
-              size={21}
-              color={
-                str[1] == 'invoice' && str[2] == 'inbox' || str[1] == undefined || str[1] == ''
-                  ? 'white'
-                  : 'black'
-              }
-            />
-          }
+          active={isActive('/invoice/estimates')}
+          className='mt-5'
+          href='/invoice/estimates'
+          icon={<CircleDollarSign className={`h-6 w-6 ${isActive('/invoice/estimates') ? 'text-white' : 'text-gray-900'}`} />}
         >
-          <h3 className="text-lg mt-1.5">Inbox</h3>
+          <h3 className='text-lg mt-1.5'>Estimates</h3>
+        </MenuItem>
+        <MenuItem
+          active={isActive('/invoice/recurring')}
+          className='mt-5'
+          href='/invoice/recurring'
+          icon={<RefreshCw className={`h-6 w-6 ${isActive('/invoice/recurring') ? 'text-white' : 'text-gray-900'}`} />}
+        >
+          <h3 className='text-lg mt-1.5'>Reports</h3>
+        </MenuItem>
+        <MenuItem
+          active={isActive('/invoice/reports')}
+          className='mt-5'
+          href='/invoice/reports'
+          icon={<ChartPie className={`h-6 w-6 ${isActive('/invoice/reports') ? 'text-white' : 'text-gray-900'}`} />}
+        >
+          <h3 className='text-lg mt-1.5'>Reports</h3>
+        </MenuItem>
+        <MenuItem
+          active={isActive('/invoice/customers')}
+          className='mt-5'
+          href='/invoice/customers'
+          icon={<Users className={`h-6 w-6 ${isActive('/invoice/customers') ? 'text-white' : 'text-gray-900'}`} />}
+        >
+          <h3 className='text-lg mt-1.5'>Customers</h3>
+        </MenuItem>
+
+        {/* Inbox */}
+        <MenuItem
+          active={isActive('/invoice/inbox')}
+          className='mt-5'
+          href='/invoice/inbox'
+          icon={<Inbox className={`h-6 w-6 ${isActive('/invoice/inbox') ? 'text-white' : 'text-gray-900'}`} />}
+        >
+          <h3 className='text-lg mt-1.5'>Inbox</h3>
         </MenuItem>
         
       </Menu>
