@@ -14,15 +14,8 @@
             },
             "inputs": [
               "default",
-              "^default",
               "{workspaceRoot}/.eslintrc.json",
-              "{projectRoot}/.eslintrc.json",
-              "{workspaceRoot}/tools/eslint-rules/**/*",
-              {
-                "externalDependencies": [
-                  "eslint"
-                ]
-              }
+              "{workspaceRoot}/eslint.config.js"
             ],
             "outputs": [
               "{options.outputFile}"
@@ -68,15 +61,8 @@
             },
             "inputs": [
               "default",
-              "^default",
               "{workspaceRoot}/.eslintrc.json",
-              "{projectRoot}/.eslintrc.json",
-              "{workspaceRoot}/tools/eslint-rules/**/*",
-              {
-                "externalDependencies": [
-                  "eslint"
-                ]
-              }
+              "{workspaceRoot}/eslint.config.js"
             ],
             "outputs": [
               "{options.outputFile}"
@@ -125,13 +111,8 @@
             ],
             "cache": true,
             "inputs": [
-              "default",
-              "^production",
-              {
-                "externalDependencies": [
-                  "next"
-                ]
-              }
+              "production",
+              "^production"
             ],
             "outputs": [
               "{workspaceRoot}/apps/superApp/.next",
@@ -149,7 +130,8 @@
               "port": 4200
             },
             "configurations": {},
-            "parallelism": true
+            "parallelism": true,
+            "cache": true
           },
           "start": {
             "options": {
@@ -196,16 +178,11 @@
             "cache": true,
             "inputs": [
               "default",
-              "^production",
-              "{workspaceRoot}/jest.preset.js",
-              {
-                "externalDependencies": [
-                  "jest"
-                ]
-              }
+              "^default",
+              "{workspaceRoot}/jest.preset.js"
             ],
             "outputs": [
-              "{workspaceRoot}/coverage/apps/superApp"
+              "{workspaceRoot}\\coverage\\apps\\superApp"
             ],
             "executor": "nx:run-commands",
             "configurations": {},
@@ -219,15 +196,8 @@
             },
             "inputs": [
               "default",
-              "^default",
               "{workspaceRoot}/.eslintrc.json",
-              "{projectRoot}/.eslintrc.json",
-              "{workspaceRoot}/tools/eslint-rules/**/*",
-              {
-                "externalDependencies": [
-                  "eslint"
-                ]
-              }
+              "{workspaceRoot}/eslint.config.js"
             ],
             "outputs": [
               "{options.outputFile}"
@@ -276,13 +246,8 @@
             ],
             "cache": true,
             "inputs": [
-              "default",
-              "^production",
-              {
-                "externalDependencies": [
-                  "next"
-                ]
-              }
+              "production",
+              "^production"
             ],
             "outputs": [
               "{workspaceRoot}/apps/potta/.next",
@@ -300,7 +265,8 @@
               "port": 4300
             },
             "configurations": {},
-            "parallelism": true
+            "parallelism": true,
+            "cache": true
           },
           "start": {
             "options": {
@@ -347,16 +313,11 @@
             "cache": true,
             "inputs": [
               "default",
-              "^production",
-              "{workspaceRoot}/jest.preset.js",
-              {
-                "externalDependencies": [
-                  "jest"
-                ]
-              }
+              "^default",
+              "{workspaceRoot}/jest.preset.js"
             ],
             "outputs": [
-              "{workspaceRoot}/coverage/apps/potta"
+              "{workspaceRoot}\\coverage\\apps\\potta"
             ],
             "executor": "nx:run-commands",
             "configurations": {},
@@ -370,15 +331,8 @@
             },
             "inputs": [
               "default",
-              "^default",
               "{workspaceRoot}/.eslintrc.json",
-              "{projectRoot}/.eslintrc.json",
-              "{workspaceRoot}/tools/eslint-rules/**/*",
-              {
-                "externalDependencies": [
-                  "eslint"
-                ]
-              }
+              "{workspaceRoot}/eslint.config.js"
             ],
             "outputs": [
               "{options.outputFile}"
@@ -424,15 +378,8 @@
             },
             "inputs": [
               "default",
-              "^default",
               "{workspaceRoot}/.eslintrc.json",
-              "{projectRoot}/.eslintrc.json",
-              "{workspaceRoot}/tools/eslint-rules/**/*",
-              {
-                "externalDependencies": [
-                  "eslint"
-                ]
-              }
+              "{workspaceRoot}/eslint.config.js"
             ],
             "outputs": [
               "{options.outputFile}"
@@ -4589,6 +4536,15 @@
         "hash": "sha512-V3gRzhVNU1ldS5XhAPTom1fOIo4ccrjjJgmE+LI2h/WaFpHmx0MQApT+KZHnx8abG6Avtfcz4WoEciMnpFT3HQ=="
       }
     },
+    "npm:@radix-ui/number@1.1.1": {
+      "type": "npm",
+      "name": "npm:@radix-ui/number@1.1.1",
+      "data": {
+        "version": "1.1.1",
+        "packageName": "@radix-ui/number",
+        "hash": "sha512-MkKCwxlXTgz6CFoJx3pCwn07GKp36+aZyu/u2Ln2VrA5DcdyCZkASEDBTd8x5whTQQL5CiYf4prXKLcgQdv29g=="
+      }
+    },
     "npm:@radix-ui/primitive": {
       "type": "npm",
       "name": "npm:@radix-ui/primitive",
@@ -4596,6 +4552,15 @@
         "version": "1.1.1",
         "packageName": "@radix-ui/primitive",
         "hash": "sha512-SJ31y+Q/zAyShtXJc8x83i9TYdbAfHZ++tUZnvjJJqFjzsdUnKsxPL6IEtBlxKkU7yzer//GQtZSV4GbldL3YA=="
+      }
+    },
+    "npm:@radix-ui/primitive@1.1.2": {
+      "type": "npm",
+      "name": "npm:@radix-ui/primitive@1.1.2",
+      "data": {
+        "version": "1.1.2",
+        "packageName": "@radix-ui/primitive",
+        "hash": "sha512-XnbHrrprsNqZKQhStrSwgRUQzoCI1glLzdw79xiZPoofhGICeZRSQ3dIxAKH1gb3OHfNf4d6f+vAv3kil2eggA=="
       }
     },
     "npm:@radix-ui/react-arrow": {
@@ -4634,6 +4599,15 @@
         "hash": "sha512-Y9VzoRDSJtgFMUCoiZBDVo084VQ5hfpXxVE+NgkdNsjiDBByiImMZKKhxMwCbdHvhlENG6a833CbFkOQvTricw=="
       }
     },
+    "npm:@radix-ui/react-compose-refs@1.1.2": {
+      "type": "npm",
+      "name": "npm:@radix-ui/react-compose-refs@1.1.2",
+      "data": {
+        "version": "1.1.2",
+        "packageName": "@radix-ui/react-compose-refs",
+        "hash": "sha512-z4eqJvfiNnFMHIIvXP3CY57y2WJs5g2v3X0zm9mEJkrkNv4rDxu+sg9Jh8EkXyeqBkB7SOcboo9dMVqhyrACIg=="
+      }
+    },
     "npm:@radix-ui/react-context": {
       "type": "npm",
       "name": "npm:@radix-ui/react-context",
@@ -4643,6 +4617,15 @@
         "hash": "sha512-UASk9zi+crv9WteK/NU4PLvOoL3OuE6BWVKNF6hPRBtYBDXQ2u5iu3O59zUlJiTVvkyuycnqrztsHVJwcK9K+Q=="
       }
     },
+    "npm:@radix-ui/react-context@1.1.2": {
+      "type": "npm",
+      "name": "npm:@radix-ui/react-context@1.1.2",
+      "data": {
+        "version": "1.1.2",
+        "packageName": "@radix-ui/react-context",
+        "hash": "sha512-jCi/QKUM2r1Ju5a3J64TH2A5SpKAgh0LpknyqdQ4m6DCV0xJ2HG1xARRwNGPQfi1SLdLWZ1OJz6F4OMBBNiGJA=="
+      }
+    },
     "npm:@radix-ui/react-direction": {
       "type": "npm",
       "name": "npm:@radix-ui/react-direction",
@@ -4650,6 +4633,15 @@
         "version": "1.1.0",
         "packageName": "@radix-ui/react-direction",
         "hash": "sha512-BUuBvgThEiAXh2DWu93XsT+a3aWrGqolGlqqw5VU1kG7p/ZH2cuDlM1sRLNnY3QcBS69UIz2mcKhMxDsdewhjg=="
+      }
+    },
+    "npm:@radix-ui/react-direction@1.1.1": {
+      "type": "npm",
+      "name": "npm:@radix-ui/react-direction@1.1.1",
+      "data": {
+        "version": "1.1.1",
+        "packageName": "@radix-ui/react-direction",
+        "hash": "sha512-1UEWRX6jnOA2y4H5WczZ44gOOjTEmlqv1uNW4GAJEO5+bauCBhv8snY65Iw5/VOS/ghKN9gr2KjnLKxrsvoMVw=="
       }
     },
     "npm:@radix-ui/react-dismissable-layer": {
@@ -4733,6 +4725,15 @@
         "hash": "sha512-18TFr80t5EVgL9x1SwF/YGtfG+l0BS0PRAlCWBDoBEiDQjeKgnNZRVJp/oVBl24sr3Gbfwc/Qpj4OcWTQMsAEg=="
       }
     },
+    "npm:@radix-ui/react-presence@1.1.3": {
+      "type": "npm",
+      "name": "npm:@radix-ui/react-presence@1.1.3",
+      "data": {
+        "version": "1.1.3",
+        "packageName": "@radix-ui/react-presence",
+        "hash": "sha512-IrVLIhskYhH3nLvtcBLQFZr61tBG7wx7O3kEmdzcYwRGAEBmBicGGL7ATzNgruYJ3xBTbuzEEq9OXJM3PAX3tA=="
+      }
+    },
     "npm:@radix-ui/react-primitive": {
       "type": "npm",
       "name": "npm:@radix-ui/react-primitive",
@@ -4740,6 +4741,15 @@
         "version": "2.0.2",
         "packageName": "@radix-ui/react-primitive",
         "hash": "sha512-Ec/0d38EIuvDF+GZjcMU/Ze6MxntVJYO/fRlCPhCaVUyPY9WTalHJw54tp9sXeJo3tlShWpy41vQRgLRGOuz+w=="
+      }
+    },
+    "npm:@radix-ui/react-primitive@2.0.3": {
+      "type": "npm",
+      "name": "npm:@radix-ui/react-primitive@2.0.3",
+      "data": {
+        "version": "2.0.3",
+        "packageName": "@radix-ui/react-primitive",
+        "hash": "sha512-Pf/t/GkndH7CQ8wE2hbkXA+WyZ83fhQQn5DDmwDiDo6AwN/fhaH8oqZ0jRjMrO2iaMhDi6P1HRx6AZwyMinY1g=="
       }
     },
     "npm:@radix-ui/react-progress": {
@@ -4760,13 +4770,22 @@
         "hash": "sha512-zgMQWkNO169GtGqRvYrzb0Zf8NhMHS2DuEB/TiEmVnpr5OqPU3i8lfbxaAmC2J/KYuIQxyoQQ6DxepyXp61/xw=="
       }
     },
-    "npm:@radix-ui/react-select": {
+    "npm:@radix-ui/react-scroll-area": {
       "type": "npm",
-      "name": "npm:@radix-ui/react-select",
+      "name": "npm:@radix-ui/react-scroll-area",
       "data": {
-        "version": "2.1.6",
-        "packageName": "@radix-ui/react-select",
-        "hash": "sha512-T6ajELxRvTuAMWH0YmRJ1qez+x4/7Nq7QIx7zJ0VK3qaEWdnWpNbEDnmWldG1zBDwqrLy5aLMUWcoGirVj5kMg=="
+        "version": "1.2.4",
+        "packageName": "@radix-ui/react-scroll-area",
+        "hash": "sha512-G9rdWTQjOR4sk76HwSdROhPU0jZWpfozn9skU1v4N0/g9k7TmswrJn8W8WMU+aYktnLLpk5LX6fofj2bGe5NFQ=="
+      }
+    },
+    "npm:@radix-ui/react-slot@1.2.0": {
+      "type": "npm",
+      "name": "npm:@radix-ui/react-slot@1.2.0",
+      "data": {
+        "version": "1.2.0",
+        "packageName": "@radix-ui/react-slot",
+        "hash": "sha512-ujc+V6r0HNDviYqIK3rW4ffgYiZ8g5DEHrGJVk4x7kTlLXRDILnKX9vAUYeIsLOoDpDJ0ujpqMkjH4w2ofuo6w=="
       }
     },
     "npm:@radix-ui/react-slot": {
@@ -4778,6 +4797,15 @@
         "hash": "sha512-YAKxaiGsSQJ38VzKH86/BPRC4rh+b1Jpa+JneA5LRE7skmLPNAyeG8kPJj/oo4STLvlrs8vkf/iYyc3A5stYCQ=="
       }
     },
+    "npm:@radix-ui/react-use-callback-ref@1.1.1": {
+      "type": "npm",
+      "name": "npm:@radix-ui/react-use-callback-ref@1.1.1",
+      "data": {
+        "version": "1.1.1",
+        "packageName": "@radix-ui/react-use-callback-ref",
+        "hash": "sha512-FkBMwD+qbGQeMu1cOHnuGB6x4yzPjho8ap5WtbEJ26umhgqVXbhekKUQO+hZEL1vU92a3wHwdp0HAcqAUF5iDg=="
+      }
+    },
     "npm:@radix-ui/react-use-callback-ref": {
       "type": "npm",
       "name": "npm:@radix-ui/react-use-callback-ref",
@@ -4785,6 +4813,42 @@
         "version": "1.1.0",
         "packageName": "@radix-ui/react-use-callback-ref",
         "hash": "sha512-CasTfvsy+frcFkbXtSJ2Zu9JHpN8TYKxkgJGWbjiZhFivxaeW7rMeZt7QELGVLaYVfFMsKHjb7Ak0nMEe+2Vfw=="
+      }
+    },
+    "npm:@radix-ui/react-use-layout-effect@1.1.1": {
+      "type": "npm",
+      "name": "npm:@radix-ui/react-use-layout-effect@1.1.1",
+      "data": {
+        "version": "1.1.1",
+        "packageName": "@radix-ui/react-use-layout-effect",
+        "hash": "sha512-RbJRS4UWQFkzHTTwVymMTUv8EqYhOp8dOOviLj2ugtTiXRaRQS7GLGxZTLL1jWhMeoSCf5zmcZkqTl9IiYfXcQ=="
+      }
+    },
+    "npm:@radix-ui/react-use-layout-effect": {
+      "type": "npm",
+      "name": "npm:@radix-ui/react-use-layout-effect",
+      "data": {
+        "version": "1.1.0",
+        "packageName": "@radix-ui/react-use-layout-effect",
+        "hash": "sha512-+FPE0rOdziWSrH9athwI1R0HDVbWlEhd+FR+aSDk4uWGmSJ9Z54sdZVDQPZAinJhJXwfT+qnj969mCsT2gfm5w=="
+      }
+    },
+    "npm:@radix-ui/react-select": {
+      "type": "npm",
+      "name": "npm:@radix-ui/react-select",
+      "data": {
+        "version": "2.1.6",
+        "packageName": "@radix-ui/react-select",
+        "hash": "sha512-T6ajELxRvTuAMWH0YmRJ1qez+x4/7Nq7QIx7zJ0VK3qaEWdnWpNbEDnmWldG1zBDwqrLy5aLMUWcoGirVj5kMg=="
+      }
+    },
+    "npm:@radix-ui/react-separator": {
+      "type": "npm",
+      "name": "npm:@radix-ui/react-separator",
+      "data": {
+        "version": "1.1.3",
+        "packageName": "@radix-ui/react-separator",
+        "hash": "sha512-2omrWKJvxR0U/tkIXezcc1nFMwtLU0+b/rDK40gnzJqTLWQ/TD/D5IYVefp9sC3QWfeQbpSbEA6op9MQKyaALQ=="
       }
     },
     "npm:@radix-ui/react-use-controllable-state": {
@@ -4803,15 +4867,6 @@
         "version": "1.1.0",
         "packageName": "@radix-ui/react-use-escape-keydown",
         "hash": "sha512-L7vwWlR1kTTQ3oh7g1O0CBF3YCyyTj8NmhLR+phShpyA50HCfBFKVJTpshm9PzLiKmehsrQzTYTpX9HvmC9rhw=="
-      }
-    },
-    "npm:@radix-ui/react-use-layout-effect": {
-      "type": "npm",
-      "name": "npm:@radix-ui/react-use-layout-effect",
-      "data": {
-        "version": "1.1.0",
-        "packageName": "@radix-ui/react-use-layout-effect",
-        "hash": "sha512-+FPE0rOdziWSrH9athwI1R0HDVbWlEhd+FR+aSDk4uWGmSJ9Z54sdZVDQPZAinJhJXwfT+qnj969mCsT2gfm5w=="
       }
     },
     "npm:@radix-ui/react-use-previous": {
@@ -16982,7 +17037,17 @@
       },
       {
         "source": "potta",
+        "target": "npm:@radix-ui/react-scroll-area",
+        "type": "static"
+      },
+      {
+        "source": "potta",
         "target": "npm:@radix-ui/react-select",
+        "type": "static"
+      },
+      {
+        "source": "potta",
+        "target": "npm:@radix-ui/react-separator",
         "type": "static"
       },
       {
@@ -17251,7 +17316,17 @@
       },
       {
         "source": "@instanvi-global/source",
+        "target": "npm:@radix-ui/react-scroll-area",
+        "type": "static"
+      },
+      {
+        "source": "@instanvi-global/source",
         "target": "npm:@radix-ui/react-select",
+        "type": "static"
+      },
+      {
+        "source": "@instanvi-global/source",
+        "target": "npm:@radix-ui/react-separator",
         "type": "static"
       },
       {
@@ -27684,6 +27759,209 @@
         "type": "static"
       }
     ],
+    "npm:@radix-ui/react-scroll-area": [
+      {
+        "source": "npm:@radix-ui/react-scroll-area",
+        "target": "npm:@types/react",
+        "type": "static"
+      },
+      {
+        "source": "npm:@radix-ui/react-scroll-area",
+        "target": "npm:@types/react-dom",
+        "type": "static"
+      },
+      {
+        "source": "npm:@radix-ui/react-scroll-area",
+        "target": "npm:react",
+        "type": "static"
+      },
+      {
+        "source": "npm:@radix-ui/react-scroll-area",
+        "target": "npm:react-dom",
+        "type": "static"
+      },
+      {
+        "source": "npm:@radix-ui/react-scroll-area",
+        "target": "npm:@radix-ui/number@1.1.1",
+        "type": "static"
+      },
+      {
+        "source": "npm:@radix-ui/react-scroll-area",
+        "target": "npm:@radix-ui/primitive@1.1.2",
+        "type": "static"
+      },
+      {
+        "source": "npm:@radix-ui/react-scroll-area",
+        "target": "npm:@radix-ui/react-compose-refs@1.1.2",
+        "type": "static"
+      },
+      {
+        "source": "npm:@radix-ui/react-scroll-area",
+        "target": "npm:@radix-ui/react-context@1.1.2",
+        "type": "static"
+      },
+      {
+        "source": "npm:@radix-ui/react-scroll-area",
+        "target": "npm:@radix-ui/react-direction@1.1.1",
+        "type": "static"
+      },
+      {
+        "source": "npm:@radix-ui/react-scroll-area",
+        "target": "npm:@radix-ui/react-presence@1.1.3",
+        "type": "static"
+      },
+      {
+        "source": "npm:@radix-ui/react-scroll-area",
+        "target": "npm:@radix-ui/react-primitive@2.0.3",
+        "type": "static"
+      },
+      {
+        "source": "npm:@radix-ui/react-scroll-area",
+        "target": "npm:@radix-ui/react-use-callback-ref@1.1.1",
+        "type": "static"
+      },
+      {
+        "source": "npm:@radix-ui/react-scroll-area",
+        "target": "npm:@radix-ui/react-use-layout-effect@1.1.1",
+        "type": "static"
+      }
+    ],
+    "npm:@radix-ui/react-compose-refs@1.1.2": [
+      {
+        "source": "npm:@radix-ui/react-compose-refs@1.1.2",
+        "target": "npm:@types/react",
+        "type": "static"
+      },
+      {
+        "source": "npm:@radix-ui/react-compose-refs@1.1.2",
+        "target": "npm:react",
+        "type": "static"
+      }
+    ],
+    "npm:@radix-ui/react-context@1.1.2": [
+      {
+        "source": "npm:@radix-ui/react-context@1.1.2",
+        "target": "npm:@types/react",
+        "type": "static"
+      },
+      {
+        "source": "npm:@radix-ui/react-context@1.1.2",
+        "target": "npm:react",
+        "type": "static"
+      }
+    ],
+    "npm:@radix-ui/react-direction@1.1.1": [
+      {
+        "source": "npm:@radix-ui/react-direction@1.1.1",
+        "target": "npm:@types/react",
+        "type": "static"
+      },
+      {
+        "source": "npm:@radix-ui/react-direction@1.1.1",
+        "target": "npm:react",
+        "type": "static"
+      }
+    ],
+    "npm:@radix-ui/react-presence@1.1.3": [
+      {
+        "source": "npm:@radix-ui/react-presence@1.1.3",
+        "target": "npm:@types/react",
+        "type": "static"
+      },
+      {
+        "source": "npm:@radix-ui/react-presence@1.1.3",
+        "target": "npm:@types/react-dom",
+        "type": "static"
+      },
+      {
+        "source": "npm:@radix-ui/react-presence@1.1.3",
+        "target": "npm:react",
+        "type": "static"
+      },
+      {
+        "source": "npm:@radix-ui/react-presence@1.1.3",
+        "target": "npm:react-dom",
+        "type": "static"
+      },
+      {
+        "source": "npm:@radix-ui/react-presence@1.1.3",
+        "target": "npm:@radix-ui/react-compose-refs@1.1.2",
+        "type": "static"
+      },
+      {
+        "source": "npm:@radix-ui/react-presence@1.1.3",
+        "target": "npm:@radix-ui/react-use-layout-effect@1.1.1",
+        "type": "static"
+      }
+    ],
+    "npm:@radix-ui/react-primitive@2.0.3": [
+      {
+        "source": "npm:@radix-ui/react-primitive@2.0.3",
+        "target": "npm:@types/react",
+        "type": "static"
+      },
+      {
+        "source": "npm:@radix-ui/react-primitive@2.0.3",
+        "target": "npm:@types/react-dom",
+        "type": "static"
+      },
+      {
+        "source": "npm:@radix-ui/react-primitive@2.0.3",
+        "target": "npm:react",
+        "type": "static"
+      },
+      {
+        "source": "npm:@radix-ui/react-primitive@2.0.3",
+        "target": "npm:react-dom",
+        "type": "static"
+      },
+      {
+        "source": "npm:@radix-ui/react-primitive@2.0.3",
+        "target": "npm:@radix-ui/react-slot@1.2.0",
+        "type": "static"
+      }
+    ],
+    "npm:@radix-ui/react-slot@1.2.0": [
+      {
+        "source": "npm:@radix-ui/react-slot@1.2.0",
+        "target": "npm:@types/react",
+        "type": "static"
+      },
+      {
+        "source": "npm:@radix-ui/react-slot@1.2.0",
+        "target": "npm:react",
+        "type": "static"
+      },
+      {
+        "source": "npm:@radix-ui/react-slot@1.2.0",
+        "target": "npm:@radix-ui/react-compose-refs@1.1.2",
+        "type": "static"
+      }
+    ],
+    "npm:@radix-ui/react-use-callback-ref@1.1.1": [
+      {
+        "source": "npm:@radix-ui/react-use-callback-ref@1.1.1",
+        "target": "npm:@types/react",
+        "type": "static"
+      },
+      {
+        "source": "npm:@radix-ui/react-use-callback-ref@1.1.1",
+        "target": "npm:react",
+        "type": "static"
+      }
+    ],
+    "npm:@radix-ui/react-use-layout-effect@1.1.1": [
+      {
+        "source": "npm:@radix-ui/react-use-layout-effect@1.1.1",
+        "target": "npm:@types/react",
+        "type": "static"
+      },
+      {
+        "source": "npm:@radix-ui/react-use-layout-effect@1.1.1",
+        "target": "npm:react",
+        "type": "static"
+      }
+    ],
     "npm:@radix-ui/react-select": [
       {
         "source": "npm:@radix-ui/react-select",
@@ -27808,6 +28086,33 @@
       {
         "source": "npm:@radix-ui/react-select",
         "target": "npm:react-remove-scroll",
+        "type": "static"
+      }
+    ],
+    "npm:@radix-ui/react-separator": [
+      {
+        "source": "npm:@radix-ui/react-separator",
+        "target": "npm:@types/react",
+        "type": "static"
+      },
+      {
+        "source": "npm:@radix-ui/react-separator",
+        "target": "npm:@types/react-dom",
+        "type": "static"
+      },
+      {
+        "source": "npm:@radix-ui/react-separator",
+        "target": "npm:react",
+        "type": "static"
+      },
+      {
+        "source": "npm:@radix-ui/react-separator",
+        "target": "npm:react-dom",
+        "type": "static"
+      },
+      {
+        "source": "npm:@radix-ui/react-separator",
+        "target": "npm:@radix-ui/react-primitive@2.0.3",
         "type": "static"
       }
     ],
@@ -45265,5 +45570,5 @@
   },
   "version": "6.0",
   "errors": [],
-  "computedAt": 1744808087993
+  "computedAt": 1744976224426
 }

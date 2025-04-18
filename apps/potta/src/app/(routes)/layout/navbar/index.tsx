@@ -64,6 +64,10 @@ export default function Navbar() {
     return null;
   }
 
+  if (str[1] === '' && str[2] === undefined) {
+    return null;
+  }
+
 
   // Determine the title to display
   const getTitle = () => {

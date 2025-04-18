@@ -5,6 +5,7 @@ import { ContextData } from '@potta/components/context';
 import { Filter, Product } from '../../utils/types';
 import useGetAllProducts from '../../hooks/useGetAllProducts';
 import Image from 'next/image';
+import PottaLoader from '@potta/components/pottaloader';
 
 // LineItem interface as provided
 export type DiscountType = 'FlatRate' | 'Percentage' | 'PercentageWithCap';
@@ -246,9 +247,7 @@ const SaleInvoiceCard = () => {
       <div className="mt-2 w-full">
         <div className="w-full h-[80vh] p-3 overflow-y-auto">
           {isLoading ? (
-            <div className="flex justify-center items-center h-full">
-              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900"></div>
-            </div>
+           <PottaLoader/>
           ) : (
             <div className="grid grid-cols-4 gap-3">
               {filteredMenus.map((menuItem) => (
@@ -285,12 +284,12 @@ const SaleInvoiceCard = () => {
               ))}
             </div>
           )}
-          {filteredMenus.length === 0 && searchTerm !== '' && (
+          {filteredMenus.length === 0 && searchTerm !== '' && !isLoading && (
             <div className="flex justify-center items-center h-full">
               <p className="text-center text-gray-500">No matching items found.</p>
             </div>
           )}
-          {filteredMenus.length === 0 && searchTerm === '' && (
+          {filteredMenus.length === 0 && searchTerm === ''  && !isLoading && (
             <div className="flex justify-center items-center h-full">
               <p className="text-center text-gray-500">No items found.</p>
             </div>

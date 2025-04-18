@@ -12,6 +12,18 @@ const nextConfig = {
     // See: https://github.com/gregberge/svgr
     svgr: false,
   },
+  // Enable Next.js optimizations
+  poweredByHeader: false,
+  reactStrictMode: true,
+  swcMinify: true,
+  // Modern experimental options for incremental builds
+  experimental: {
+    turbotrace: {
+      logLevel: 'error',
+    },
+    optimizePackageImports: ['react', 'react-dom', 'lucide-react'],
+    optimizeCss: true,
+  },
 };
 
 const plugins = [

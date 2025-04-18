@@ -19,6 +19,24 @@
       "{workspaceRoot}/.github/workflows/ci.yml"
     ]
   },
+  "targetDefaults": {
+    "build": {
+      "dependsOn": ["^build"],
+      "inputs": ["production", "^production"],
+      "cache": true
+    },
+    "dev": {
+      "cache": true
+    },
+    "test": {
+      "inputs": ["default", "^default", "{workspaceRoot}/jest.preset.js"],
+      "cache": true
+    },
+    "lint": {
+      "inputs": ["default", "{workspaceRoot}/.eslintrc.json", "{workspaceRoot}/eslint.config.js"],
+      "cache": true
+    }
+  },
   "useNxCloud": false,
   "nxCloudAccessToken": "YzgwMzMzNWEtYjM4Ni00ZGQxLTgxNmUtOTkwMTAwZDljMGU3fHJlYWQtd3JpdGU=",
   "plugins": [
