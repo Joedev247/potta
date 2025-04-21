@@ -317,7 +317,7 @@
               "{workspaceRoot}/jest.preset.js"
             ],
             "outputs": [
-              "{workspaceRoot}/coverage/apps/potta"
+              "{workspaceRoot}\\coverage\\apps\\potta"
             ],
             "executor": "nx:run-commands",
             "configurations": {},
@@ -16862,6 +16862,16 @@
       },
       {
         "source": "potta",
+        "target": "npm:@tanstack/react-query",
+        "type": "static"
+      },
+      {
+        "source": "potta",
+        "target": "npm:yup",
+        "type": "static"
+      },
+      {
+        "source": "potta",
         "target": "npm:react-hook-form",
         "type": "static"
       },
@@ -16893,16 +16903,6 @@
       {
         "source": "potta",
         "target": "npm:@nextui-org/react",
-        "type": "static"
-      },
-      {
-        "source": "potta",
-        "target": "npm:@tanstack/react-query",
-        "type": "static"
-      },
-      {
-        "source": "potta",
-        "target": "npm:yup",
         "type": "static"
       },
       {
@@ -45570,5 +45570,5 @@
   },
   "version": "6.0",
   "errors": [],
-  "computedAt": 1744995602655
+  "computedAt": 1745245791758
 }
