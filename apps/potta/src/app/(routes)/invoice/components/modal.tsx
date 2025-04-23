@@ -46,7 +46,7 @@ const ModalInvoice: FC<IModalInvoice> = ({ isOpen, setIsOpen }) => {
       description: 'Issue credit against future purchases',
       image: '/images/invoice/credit note.svg',
       type: 'credit-note',
-      link: '/invoice/credit-note' // Unique link for credit note
+      link: '/invoice/credit' // Unique link for credit note
     },
   ];
 

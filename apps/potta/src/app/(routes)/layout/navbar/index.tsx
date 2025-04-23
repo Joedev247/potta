@@ -79,6 +79,11 @@ export default function Navbar() {
     if (str[1] === 'invoice' && str[2] === 'new') {
       return 'New Invoice';
     }
+
+    if (str[1] === 'invoice' && str[2] === 'credit' && str[3] === 'new') {
+      return 'New Credit Note';
+     
+    }
     // Default behavior
     return str[2] == undefined ? str[1] : str[2];
   };

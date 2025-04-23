@@ -14,6 +14,7 @@ type Props = {
     height?: boolean;
     required?: boolean;
     autocomplete?: boolean;
+    disabled?: boolean;
 };
 
 const Input: React.FC<Props> = ({
@@ -28,7 +29,8 @@ const Input: React.FC<Props> = ({
     value,
     height,
     onchange,
-    autocomplete
+    autocomplete,
+    disabled
 }) => {
     // Get register props if register is provided
     const registerProps = register ? register(name) : {};
@@ -42,6 +44,7 @@ const Input: React.FC<Props> = ({
         <div className={`w-full ${className}`}>
             {label && <span className="mb-3 text-gray-900 font-medium">{label}{ required && <span className=" text-red-500">*</span>}</span>}
             <input
+            disabled={disabled}
                 autoComplete={autocomplete ? 'off' : 'on'}
                 type={type}
                 value={value}
