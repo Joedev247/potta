@@ -2,7 +2,11 @@
 import React, { useState } from 'react';
 import { RiSearchLine } from 'react-icons/ri';
 
-const Search = () => {
+interface SearchProps {
+  placeholder?: string;
+}
+
+const Search = ({ placeholder }: SearchProps) => {
   const [searchTerm, setSearchTerm] = useState('');
 
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -15,7 +19,7 @@ const Search = () => {
         <RiSearchLine className="absolute left-2 text-gray-500 text-lg" />
         <input
           type="search"
-          placeholder="Search"
+          placeholder={placeholder ? placeholder : 'Search'}
           id="search"
           value={searchTerm}
           onChange={handleSearch}

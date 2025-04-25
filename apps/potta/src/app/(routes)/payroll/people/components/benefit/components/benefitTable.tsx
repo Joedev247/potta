@@ -1,7 +1,7 @@
 
 
+import MyTable from '@potta/components/table';
 import React from 'react';
-import MyTable from '@/components/table';
 
 
 const BenefitTable = () => {

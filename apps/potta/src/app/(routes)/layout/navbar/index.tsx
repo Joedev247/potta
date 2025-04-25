@@ -79,6 +79,10 @@ export default function Navbar() {
     if (str[1] === 'invoice' && str[2] === 'new') {
       return 'New Invoice';
     }
+
+    if (str[1] === 'payroll' && str[2] === 'people') {
+      return 'Add People';
+    }
     // Default behavior
     return str[2] == undefined ? str[1] : str[2];
   };
@@ -96,7 +100,7 @@ export default function Navbar() {
         </div>
         <div className="flex gap-8 px-4">
           {/* <Icon icon="Bell" size={23} /> */}
-          <div className="w-full min-w-32 ">
+          <div className="w-full mt-2 min-w-32 ">
             <Select
               options={urlRouters}
               selectedValue={selected.toString()}

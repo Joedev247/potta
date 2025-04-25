@@ -2,8 +2,8 @@
 import React, { useState } from 'react'
 import Frequent from './components/all_report'
 import AllReport from './components/all_report'
-import Search from '@/components/search'
 import RootLayout from '../../layout'
+import Search from '@potta/components/search'
 
 
 const report = () => {

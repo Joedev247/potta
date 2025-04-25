@@ -1,6 +1,6 @@
+import { Table } from '@potta/components/simpleTable';
+import MyTable from '@potta/components/table';
 import React from 'react'
-import Table from '@/components/table'
-import Button from '@/components/button';
 
 const PayrollTable = () => {
     const columns = [
@@ -78,7 +78,7 @@ const PayrollTable = () => {
     ]
     return (
         <div className='mt-10'>
-            <Table columns={columns} data={data} ExpandableComponent={null} />
+            <MyTable columns={columns} data={data} ExpandableComponent={null} />
         </div>
     )
 }

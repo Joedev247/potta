@@ -16,7 +16,7 @@ const Overview = () => {
                         <PayBreakDown />
                     </div>
                 </div>
-                {/* searhc here  */}
+                {/* search here  */}
 
                 <PayrollTable />
             </div>
