@@ -1798,7 +1798,7 @@
         },
         {
           "file": "apps/potta/config/axios.config.ts",
-          "hash": "342323254676835682",
+          "hash": "2834394247298964516",
           "deps": [
             "npm:axios"
           ]
@@ -2360,6 +2360,16 @@
           ]
         },
         {
+          "file": "apps/potta/src/app/(routes)/customers/components/bulkSlider.tsx",
+          "hash": "8925716377010800357",
+          "deps": [
+            "npm:react",
+            "npm:react-dropzone",
+            "npm:react-hot-toast",
+            "npm:lucide-react"
+          ]
+        },
+        {
           "file": "apps/potta/src/app/(routes)/customers/components/customerSlider.tsx",
           "hash": "1353127259948799967",
           "deps": [
@@ -2380,7 +2390,7 @@
         },
         {
           "file": "apps/potta/src/app/(routes)/customers/components/filters.tsx",
-          "hash": "1110010310261766326",
+          "hash": "16446605168782732919",
           "deps": [
             "npm:react"
           ]
@@ -2413,7 +2423,7 @@
         },
         {
           "file": "apps/potta/src/app/(routes)/customers/components/updateCustomerSlider.tsx",
-          "hash": "5126549226311148452",
+          "hash": "16496858817695380485",
           "deps": [
             "npm:react",
             "npm:react-hook-form",
@@ -3479,7 +3489,7 @@
         },
         {
           "file": "apps/potta/src/app/(routes)/layout/navbar/index.tsx",
-          "hash": "3705330557333094543",
+          "hash": "8185062283901764590",
           "deps": [
             "npm:react",
             "npm:next"
@@ -4100,7 +4110,7 @@
         },
         {
           "file": "apps/potta/src/app/(routes)/pos/component/saleInvoiceTable/components/cashPayment/index.tsx",
-          "hash": "1222436502054744391",
+          "hash": "13991992220776923268",
           "deps": [
             "npm:react",
             "npm:sonner"
@@ -4249,8 +4259,19 @@
           ]
         },
         {
+          "file": "apps/potta/src/app/(routes)/pos/inventory/_hooks/useUploadFile.ts",
+          "hash": "13708974716231197704",
+          "deps": [
+            "npm:react",
+            "npm:@tanstack/react-query"
+          ]
+        },
+        {
           "file": "apps/potta/src/app/(routes)/pos/inventory/_utils/api.ts",
-          "hash": "1052890499223463016"
+          "hash": "248872609261142237",
+          "deps": [
+            "npm:axios"
+          ]
         },
         {
           "file": "apps/potta/src/app/(routes)/pos/inventory/_utils/types.ts",
@@ -4277,6 +4298,15 @@
           "deps": [
             "npm:react",
             "npm:lucide-react"
+          ]
+        },
+        {
+          "file": "apps/potta/src/app/(routes)/pos/inventory/components/imageUploader.tsx",
+          "hash": "6449546335998091102",
+          "deps": [
+            "npm:react",
+            "npm:react-dropzone",
+            "npm:react-hook-form"
           ]
         },
         {
@@ -4310,7 +4340,7 @@
         },
         {
           "file": "apps/potta/src/app/(routes)/pos/inventory/components/slides/components/create_product/inventory.tsx",
-          "hash": "17367163605755613597",
+          "hash": "2868875803353383406",
           "deps": [
             "npm:react",
             "npm:@hookform/resolvers",
@@ -4515,7 +4545,7 @@
         },
         {
           "file": "apps/potta/src/app/(routes)/pos/sales/new/components/left.tsx",
-          "hash": "12145277575878060814",
+          "hash": "11450787808677768453",
           "deps": [
             "npm:react",
             "npm:yup",
@@ -4566,7 +4596,7 @@
         },
         {
           "file": "apps/potta/src/app/(routes)/pos/sales/utils/api.ts",
-          "hash": "13190629845246641813"
+          "hash": "13187398124297301886"
         },
         {
           "file": "apps/potta/src/app/(routes)/pos/sales/utils/types.ts",
@@ -5329,7 +5359,7 @@
         },
         {
           "file": "apps/potta/src/components/phoneInput.tsx",
-          "hash": "50876477793479323",
+          "hash": "2813936148336367512",
           "deps": [
             "npm:react",
             "npm:lucide-react",
@@ -5470,7 +5500,7 @@
         },
         {
           "file": "apps/potta/src/components/shared/CustomerContent.tsx",
-          "hash": "8710487256215216508",
+          "hash": "10186127599559285036",
           "deps": [
             "npm:react",
             "npm:react-hot-toast"

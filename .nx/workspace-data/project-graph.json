@@ -17039,17 +17039,22 @@
       },
       {
         "source": "potta",
+        "target": "npm:react-dropzone",
+        "type": "static"
+      },
+      {
+        "source": "potta",
+        "target": "npm:react-hot-toast",
+        "type": "static"
+      },
+      {
+        "source": "potta",
         "target": "npm:react-select",
         "type": "static"
       },
       {
         "source": "potta",
         "target": "npm:@hookform/resolvers",
-        "type": "static"
-      },
-      {
-        "source": "potta",
-        "target": "npm:react-hot-toast",
         "type": "static"
       },
       {
@@ -17155,11 +17160,6 @@
       {
         "source": "potta",
         "target": "npm:react-tailwindcss-datepicker",
-        "type": "static"
-      },
-      {
-        "source": "potta",
-        "target": "npm:react-dropzone",
         "type": "static"
       },
       {
@@ -46254,5 +46254,5 @@
   },
   "version": "6.0",
   "errors": [],
-  "computedAt": 1745669564461
+  "computedAt": 1745680339798
 }

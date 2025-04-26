@@ -88,25 +88,60 @@ const EditVendor: React.FC<EditCustomerProps> = ({
     },
   });
 
-  // Reset form when customer data changes
+  // Extract country code and phone number from the full phone number
+  const extractPhoneComponents = (fullPhoneNumber: string): { countryCode: string; phoneNumber: string } => {
+    // Common country code patterns
+    const countryCodePatterns = [
+      /^\+(\d{1,4})/, // Format: +XXX
+      /^00(\d{1,4})/, // Format: 00XXX
+    ];
+    
+    let countryCode = '+237'; // Default
+    let phoneNumber = fullPhoneNumber;
+    
+    // Try to extract country code using the patterns
+    for (const pattern of countryCodePatterns) {
+      const match = fullPhoneNumber.match(pattern);
+      if (match) {
+        if (pattern.toString().includes('00')) {
+          // Convert 00XXX format to +XXX format
+          countryCode = `+${match[1]}`;
+          phoneNumber = fullPhoneNumber.replace(match[0], '');
+        } else {
+          countryCode = match[0];
+          phoneNumber = fullPhoneNumber.replace(match[0], '');
+        }
+        break;
+      }
+    }
+    
+    return {
+      countryCode,
+      phoneNumber: phoneNumber.trim() // Remove any leading/trailing spaces
+    };
+  };
+
+  // Reset form and extract phone details when customer data changes
   useEffect(() => {
     if (customer) {
       reset(customer);
 
-      // Try to extract country code from the phone number
-      // This is a simple implementation assuming the phone number starts with a country code
-      // You may need a more sophisticated approach depending on your data format
+      // Extract country code and phone number
       if (customer.phone) {
-        const phoneNumber = customer.phone;
-        // Assuming the country code is at the beginning of the phone number
-        // This is a simplified approach - you might need a library like libphonenumber-js for more accurate parsing
-        const countryCodeMatch = phoneNumber.match(/^\+\d{1,4}/);
-        const countryCode = countryCodeMatch ? countryCodeMatch[0] : '+237';
-
+        const { countryCode, phoneNumber } = extractPhoneComponents(customer.phone);
+        
+        // Set the phone metadata with separated components
         setPhoneMetadata({
-          formattedValue: phoneNumber,
+          formattedValue: customer.phone,
           countryCode: countryCode,
-          rawInput: phoneNumber.replace(countryCode, '')
+          rawInput: phoneNumber // Just the number without country code
+        });
+        
+        // For debugging
+        console.log('Phone components extracted:', {
+          original: customer.phone,
+          countryCode,
+          phoneNumber
         });
       }
     }
@@ -140,6 +175,12 @@ const EditVendor: React.FC<EditCustomerProps> = ({
 
     // Set the combined value (country code + phone number) to the form
     setValue('phone', combinedValue);
+    
+    // For debugging
+    console.log('Phone changed:', {
+      combinedValue,
+      metadata
+    });
   };
 
   const mutation = useUpdateCustomer(customerId); // Hook for updating vendor
@@ -280,7 +321,7 @@ const EditVendor: React.FC<EditCustomerProps> = ({
           <h1 className="text-xl">Contact Information </h1>
           <div className="w-full grid mt-7 grid-cols-2 gap-3">
             <div>
-              {/* New Phone Input Component with correct props */}
+              {/* Phone Input Component with separate phone number (without country code) */}
               <Controller
                 name="phone"
                 control={control}
@@ -289,10 +330,10 @@ const EditVendor: React.FC<EditCustomerProps> = ({
                     <PhoneInput
                       label="Phone Number"
                       placeholder="Enter phone number"
-                      value={phoneMetadata.formattedValue} // Use the formatted value from metadata
+                      value={phoneMetadata.rawInput} // Only the phone number without country code
                       onChange={handlePhoneChange}
                       whatsapp={false}
-                      countryCode={phoneMetadata.countryCode} // Use the country code from metadata
+                      countryCode={phoneMetadata.countryCode} // Country code passed separately
                     />
                     {errors.phone && (
                       <small className="text-red-500">{errors.phone.message}</small>

@@ -44,11 +44,15 @@ const urlRouters = [
 
 // Routes where Box component should be displayed
 const routesWithBox = [
-  'payments',
-  'expenses',
-  'vouchers',
-  'accounts',
-  // Add other routes where Box should always appear
+  { main: 'payments', sub: '' },  // Empty string means main route
+  { main: 'expenses', sub: '' },
+  { main: 'vouchers', sub: '' },
+  { main: 'accounts', sub: '' },
+  { main: 'invoice', sub: '' }, 
+  { main: 'pos', sub: 'customers' },  // Main invoice page
+  // Add other routes where Box should appear
+  // For example, to show Box on a specific sub-route:
+  // { main: 'payments', sub: 'history' },
 ];
 
 // Routes with specific sub-routes where Box should NOT be displayed
@@ -72,27 +76,29 @@ export default function Navbar() {
     isValidRoute ? str[1] : 'payments'
   );
 
-  // Check if current route is in the exclusion list
-  const isExcludedRoute = routesWithoutBox.some(route => 
-    route.main === str[1] && 
-    (route.sub === str.slice(2).join('/') || 
-     (route.sub === '' && str[2] === undefined))
-  );
+  // Get the current route and sub-route
+  const currentMainRoute = str[1] || '';
+  const currentSubRoute = str.slice(2).join('/');
 
   // Check if Box component should be displayed for the current route
   const shouldShowBox = () => {
-    // If it's in the exclusion list, don't show Box
-    if (isExcludedRoute) {
+    // First check if the route is in the exclusion list
+    const isExcluded = routesWithoutBox.some(route => 
+      route.main === currentMainRoute && 
+      (route.sub === currentSubRoute || 
+       (route.sub === '' && currentSubRoute === ''))
+    );
+    
+    if (isExcluded) {
       return false;
     }
     
-    // Special case for invoice - show Box only on the main invoice page
-    if (str[1] === 'invoice') {
-      return str[2] === undefined;
-    }
-    
-    // For other routes, check if they're in the inclusion list
-    return routesWithBox.includes(str[1]);
+    // Then check if the route is in the inclusion list
+    return routesWithBox.some(route => 
+      route.main === currentMainRoute && 
+      (route.sub === currentSubRoute || 
+       (route.sub === '' && currentSubRoute === ''))
+    );
   };
 
   const handleSelect = (value: string) => {
@@ -137,8 +143,8 @@ export default function Navbar() {
   };
 
   return (
-    <nav className="sticky top-0 left-0 z-20 w-full bg-blue-50 space-y-10">
-      <div className="flex justify-between">
+    <nav className=" w-full bg-blue-50 space-y-10">
+      <div className="flex sticky top-0 left-0 z-20 justify-between bg-blue-50">
         <div className="flex items-center gap-20 py-4">
           <Link href={'/'} className="flex items-center ml-8 -mt-2"></Link>
           <h1 className="font-medium text-3xl -ml-14 capitalize">

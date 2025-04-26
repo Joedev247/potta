@@ -5,7 +5,7 @@ import { SalesReceiptPayload } from './validation';
 
 export const salesApi = {
   create: async (data: SalesReceiptPayload) => {
-    const result = await axios.post(`sales-receipt/create`, data);
+    const result = await axios.post(`/sales-receipt/create`, data);
     return result?.data;
   },
   getAll: async (filter:Record<string, any> = {}) => {

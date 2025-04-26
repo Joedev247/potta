@@ -6,6 +6,7 @@ import React, { useState } from 'react';
 import SliderCustomer from './customerSlider';
 import { PopoverAction } from '@potta/components/tableActionsPopover';
 import { NextPopover } from '@potta/components/popover';
+import BulkSlider from './bulkSlider';
 
 const Filter = () => {
   const [selectedValue, setSelectedValue] = useState('All Time'); // Set your default value here
@@ -18,6 +19,7 @@ const Filter = () => {
     setSelectedValue2(value);
   };
   const [isCreateOpen, setIsCreateOpen] = useState(false);
+  const [isUploadOpen, setIsUploadOpen] = useState(false);
   const [isImportOpen, setIsImportOpen] = useState(false);
   const [openPopover, setOpenPopover] = useState<string | null>(null);
   const actions: PopoverAction[] = [
@@ -31,7 +33,7 @@ const Filter = () => {
     {
       label: 'Import Customers',
       onClick: () => {
-        setIsImportOpen(true);
+        setIsUploadOpen(true);
       },
       className: 'hover:bg-gray-200',
     },
@@ -104,6 +106,7 @@ const Filter = () => {
             />
           </div>
           <SliderCustomer open={isCreateOpen} setOpen={setIsCreateOpen} />
+          <BulkSlider open={isUploadOpen} setOpen={setIsUploadOpen} />
         </div>
       </div>
     </div>

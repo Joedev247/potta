@@ -98,8 +98,8 @@ const PayCash = () => {
         paymentMethod: 'Other' as PaymentMethod,
         receiptNumber: orderNumber.toString(),
         discountAmount: context?.orderSummary?.discount || 0,
-        customerId: 'e8d58a3f-448d-4532-a449-75ddef9d0cb1',
-        salePerson: 'c9c0c3a4-353f-4907-a342-ae64e629936f',
+        customerId: '3ab17f69-0a8f-4693-a628-f6ca73977b5f',
+        salePerson: '532e5da0-204f-4417-95e0-f26a13c62e39',
         lineItems: lineItemsWithNumericPrices,
       };
 

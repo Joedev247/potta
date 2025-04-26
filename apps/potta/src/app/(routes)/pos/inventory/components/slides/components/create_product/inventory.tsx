@@ -1,43 +1,44 @@
-import MyDropzone from '@potta/components/dropzone';
-import Select from '@potta/components/select';
-import React, { useContext, useState } from 'react';
-import Inventory from './components/inventory';
-import Unit from './components/units';
+import React, { useContext, useState, useRef } from 'react';
 import { yupResolver } from '@hookform/resolvers/yup';
-
-import Notes from './components/notes';
-import Attachments from './components/attachments';
+import { useForm, Control } from 'react-hook-form';
 import Button from '@potta/components/button';
 import { ContextData } from '@potta/components/context';
 import Input from '@potta/components/input';
 import Checkbox from '@potta/components/checkbox';
-import { useForm } from 'react-hook-form';
+import TextArea from '@potta/components/textArea';
+import Slider from '@potta/components/slideover';
 import { ProductPayload, productSchema } from '../../../../_utils/validation';
 import useCreateProduct from '../../../../_hooks/useCreateProduct';
+import useUploadImage from '../../../../_hooks/useUploadFile';
 import toast from 'react-hot-toast';
-import Slider from '@potta/components/slideover';
-import TextArea from '@potta/components/textArea';
+import Inventory from './components/inventory';
+import ImageUploader, { getSelectedImageFile, clearSelectedImageFile } from '../../../imageUploader';
+import { productApi } from '../../../../_utils/api';
 
 interface CreateProductProps {
-  open?: boolean; // Optional controlled open state
-  setOpen?: (open: boolean) => void; // Optional setter from parent
+  open?: boolean;
+  setOpen?: (open: boolean) => void;
 }
-const CreateProduct:React.FC<CreateProductProps> = ({ open: controlledOpen,
-  setOpen: setControlledOpen}) => {
-    // Local state as fallback if no controlled state is provided
-    const [localOpen, setLocalOpen] = useState(false);
 
-    // Determine which open state to use
-    const isOpen = controlledOpen ?? localOpen;
-    const setIsOpen = setControlledOpen ?? setLocalOpen;
+const CreateProduct: React.FC<CreateProductProps> = ({ 
+  open: controlledOpen,
+  setOpen: setControlledOpen
+}) => {
+  const [localOpen, setLocalOpen] = useState(false);
+  const isOpen = controlledOpen ?? localOpen;
+  const setIsOpen = setControlledOpen ?? setLocalOpen;
   const [data, setData] = useState('inventory');
   const context = useContext(ContextData);
+  const [isUploading, setIsUploading] = useState(false);
+  
   const {
     register,
     handleSubmit,
     control,
     formState: { errors },
     reset,
+    getValues,
+    setValue,
   } = useForm<ProductPayload>({
     resolver: yupResolver(productSchema),
     defaultValues: {
@@ -56,24 +57,69 @@ const CreateProduct:React.FC<CreateProductProps> = ({ open: controlledOpen,
   });
 
   const mutation = useCreateProduct();
-  const onSubmit = (data: ProductPayload) => {
-    console.log('Submitted Data:', data);
-    mutation.mutate(data, {
-      onSuccess: () => {
-        toast.success('Product created successfully!');
-        reset(); // Reset the form after success
-        setIsOpen(false);
-      },
-      onError: (error) => {
-        toast.error('Failed to create product');
-      },
-    });
+  
+  const onSubmit = async (formData: ProductPayload) => {
+    try {
+      // Get the selected file
+      const selectedFile = getSelectedImageFile();
+      console.log('Selected file in onSubmit:', selectedFile);
+      
+      // Check if we have a file to upload
+      if (selectedFile) {
+        setIsUploading(true);
+        
+        try {
+          // Upload the file
+          const uploadResult = await productApi.uploadImage(selectedFile);
+          
+          // Update the form data with the actual image URL
+          if (uploadResult && uploadResult.link) {
+            formData.image = uploadResult.link;
+            console.log('Image uploaded successfully, URL:', uploadResult.link);
+          } else {
+            // If we don't get a link back, stop the submission
+            setIsUploading(false);
+            toast.error('Image upload failed: No link returned from server');
+            console.error('Upload succeeded but no link was returned:', uploadResult);
+            return; // Stop the form submission
+          }
+        } catch (uploadError) {
+          console.error('Image upload error:', uploadError);
+          setIsUploading(false);
+          toast.error('Image upload failed. Please try again.');
+          return; // Stop the form submission
+        }
+        
+        setIsUploading(false);
+      } else {
+        console.log('No file selected, continuing with form submission without image');
+      }
+      
+      // Now submit the form with the updated image URL
+      console.log('Submitting product data:', formData);
+      mutation.mutate(formData, {
+        onSuccess: () => {
+          toast.success('Product created successfully!');
+          reset();
+          setIsOpen(false);
+          // Clear the selected file
+          clearSelectedImageFile();
+        },
+        onError: (error) => {
+          console.error('Product creation error:', error);
+          toast.error('Failed to create product');
+        },
+      });
+    } catch (error) {
+      console.error('Form submission error:', error);
+      setIsUploading(false);
+      toast.error('An unexpected error occurred');
+    }
   };
-
   return (
     <Slider
-    open={isOpen}
-    setOpen={setIsOpen}
+      open={isOpen}
+      setOpen={setIsOpen}
       edit={true}
       buttonText={'Create Product'}
       title={'Inventory Item'}
@@ -82,6 +128,7 @@ const CreateProduct:React.FC<CreateProductProps> = ({ open: controlledOpen,
         onSubmit={handleSubmit(onSubmit)}
         className="relative h-screen w-full max-w-4xl"
       >
+        {/* Form fields remain the same */}
         <div className="w-full">
           <Input
             label="Product Name"
@@ -132,7 +179,10 @@ const CreateProduct:React.FC<CreateProductProps> = ({ open: controlledOpen,
               <label htmlFor="" className="mb-3 text-gray-900 font-medium">
                 Image
               </label>
-              <MyDropzone />
+              <ImageUploader 
+                control={control} 
+                name="image"
+              />
             </div>
             <div className="mt-4">
               <Input
@@ -181,14 +231,6 @@ const CreateProduct:React.FC<CreateProductProps> = ({ open: controlledOpen,
         </div>
         <div className="mt-12 pb-20">
           <div className="flex ">
-            {/* <div
-            onClick={() => setData('units')}
-            className={`px-4 py-2 bg-green-50 cursor-pointer ${
-              data == 'units' && 'border-b-2 border-green-500 text-green-500'
-            }`}
-          >
-            <p>Units</p>
-          </div> */}
             <div
               onClick={() => setData('inventory')}
               className={`px-4 py-2 bg-green-50 cursor-pointer ${
@@ -198,23 +240,6 @@ const CreateProduct:React.FC<CreateProductProps> = ({ open: controlledOpen,
             >
               <p>Inventory</p>
             </div>
-            {/* <div
-            onClick={() => setData('notes')}
-            className={`px-4 py-2 bg-green-50 cursor-pointer ${
-              data == 'notes' && 'border-b-2 border-green-500 text-green-500'
-            }`}
-          >
-            <p>Notes</p>
-          </div>
-          <div
-            onClick={() => setData('attachment')}
-            className={`px-4 py-2 bg-green-50 cursor-pointer ${
-              data == 'attachement' &&
-              'border-b-2 border-green-500 text-green-500'
-            }`}
-          >
-            <p>Attachements</p>
-          </div> */}
           </div>
           <div className="mt-8">
             {data == 'inventory' && (
@@ -224,26 +249,22 @@ const CreateProduct:React.FC<CreateProductProps> = ({ open: controlledOpen,
                 errors={errors}
               />
             )}
-            {/* {data == 'units' && <Unit />} */}
-            {/* {data == 'notes' && <Notes />} */}
-            {/* {data == 'attachement' && <Attachments />} */}
           </div>
         </div>
-        <div className="flex-grow" /> {/* This div takes up remaining space */}
-        <div className="text-center md:text-right  md:flex  space-x-4 fixed bottom-0 left-0 right-0 justify-center bg-white p-4">
+        <div className="flex-grow" />
+        <div className="text-center md:text-right md:flex space-x-4 fixed bottom-0 left-0 right-0 justify-center bg-white p-4">
           <div className="flex gap-2 w-full max-w-4xl justify-between">
-              <Button
-                text="Cancel"
-                type="button"
-                theme="danger"
-
-                onClick={() => setIsOpen(false)}
-              />
+            <Button
+              text="Cancel"
+              type="button"
+              theme="danger"
+              onClick={() => setIsOpen(false)}
+            />
             <div>
               <Button
                 text={'Add Item'}
                 type={'submit'}
-                isLoading={mutation.isPending}
+                isLoading={mutation.isPending || isUploading}
               />
             </div>
           </div>
@@ -252,4 +273,5 @@ const CreateProduct:React.FC<CreateProductProps> = ({ open: controlledOpen,
     </Slider>
   );
 };
+
 export default CreateProduct;
