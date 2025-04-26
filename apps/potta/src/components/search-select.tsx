@@ -9,7 +9,7 @@ export interface Option {
 }
 
 interface SearchSelectProps extends Omit<SelectProps<Option, false>, 'value' | 'onChange'> {
-  label?: string;
+  label?: string | React.ReactNode;
   error?: string;
   value?: Option | null;
   onChange?: (value: Option | null) => void;

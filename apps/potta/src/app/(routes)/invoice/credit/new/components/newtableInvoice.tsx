@@ -8,7 +8,7 @@ import useGetAllInvoices from '../hooks/useGetAllInvoices';
 interface Invoice {
   uuid: string;
   invoiceNumber: string;
-  totalAmount: number;
+  invoiceTotal: number;
   dueDate: string;
   id: string;
 }
@@ -50,7 +50,7 @@ export default function CreditNoteForm() {
   
   // Create invoice options
   const invoiceOptions: Option[] = invoices.map((invoice) => ({
-    label: `Invoice #${invoice.invoiceNumber} (${currencySymbol}${invoice.totalAmount})`,
+    label: `Invoice #${invoice.invoiceNumber} (${currencySymbol}${invoice.invoiceTotal})`,
     value: invoice.uuid
   }));
   
@@ -62,13 +62,13 @@ export default function CreditNoteForm() {
       const invoice = invoices.find(inv => inv.uuid === value.value);
       if (invoice) {
         // Set default credit amount to invoice total amount
-        setCreditAmount(invoice.totalAmount);
+        setCreditAmount(invoice.invoiceTotal);
         
         // Update context with invoice ID
         context?.setData((prevData: any) => ({
           ...prevData,
           invoiceId: value.value,
-          creditAmount: invoice.totalAmount
+          creditAmount: invoice.invoiceTotal
         }));
       }
     } else {

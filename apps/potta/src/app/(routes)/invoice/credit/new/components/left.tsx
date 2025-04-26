@@ -158,7 +158,7 @@ const Left = () => {
       creditAmount: contextData.creditAmount,
       reason: contextData.reason,
       invoiceId: contextData.invoiceId,
-      salesPersonId: 'c9c0c3a4-353f-4907-a342-ae64e629936f', // Add actual salesperson if available
+      salesPersonId: '532e5da0-204f-4417-95e0-f26a13c62e39', // Add actual salesperson if available
       notes: note
     };
 
@@ -291,6 +291,7 @@ const Left = () => {
           text="Save Credit Note"
           onClick={handleSaveCreditNote}
           type="button"
+          isLoading={mutation.isPending}
         />
       </div>
       <SliderCustomer

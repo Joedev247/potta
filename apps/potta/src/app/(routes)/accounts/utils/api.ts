@@ -10,7 +10,7 @@ export const accountsApi = {
     getOhada: async (name: string) => {
 
 
-        const result = await axios.post(
+        const result = await axios.get(
             `/ohada-accounts/tree-by-name/${name}`
         );
         console.log(result);
