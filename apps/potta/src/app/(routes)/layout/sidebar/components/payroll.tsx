@@ -33,10 +33,10 @@ const SidebarsPayroll = () => {
         </MenuItem>
 
         <MenuItem
-          active={str[2] == 'dashboard' ? true : false}
+          active={str[2] == 'overview' ? true : false}
           className="mt-8   font-thin"
           href="/payroll/overview"
-          icon={svgIcons.dashboard(str[2] == 'dashboard' ? 'white' : 'black')}
+          icon={svgIcons.dashboard(str[2] == 'overview' ? 'white' : 'black')}
         >
           {' '}
           <h3 className="text-lg mt-[2px]">Dashboard</h3>{' '}
@@ -67,7 +67,7 @@ const SidebarsPayroll = () => {
         >
           <h3 className="text-lg ">Benefit</h3>
         </MenuItem>
-        <MenuItem
+        {/* <MenuItem
           active={str[2] == 'overview' ? true : false}
           className="mt-4 font-thin"
           href="/payroll/overview"
@@ -75,7 +75,7 @@ const SidebarsPayroll = () => {
 
         >
           <h3 className="text-lg ">Overview</h3>
-        </MenuItem>
+        </MenuItem> */}
 
         <MenuItem
           active={str[2] == 'pto' ? true : false}

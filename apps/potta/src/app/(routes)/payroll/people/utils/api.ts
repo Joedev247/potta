@@ -15,7 +15,7 @@ import {
 export const peopleApi = {
   // Create a new person
   createPerson: async (data: PersonPayload) => {
-    const result = await axios.post('/api/persons', data);
+    const result = await axios.post('/api/employee', data);
     return result.data;
   },
 

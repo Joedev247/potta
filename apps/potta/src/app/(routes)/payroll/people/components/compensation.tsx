@@ -19,7 +19,7 @@ const paymentFrequencyOptions = [
 ];
 
 // Switch component
-const Switch = ({ checked, onChange, className, children }) => {
+const Switch = ({ checked, onChange, className, children }: any) => {
   return (
     <button
       type="button"
@@ -46,15 +46,21 @@ const Compensation: React.FC<CompensationProps> = ({
 
   // Fetch PTO options
   const { data: ptoOptions = [], isLoading: ptoLoading } = useFetchPTOs();
-  
+
   // Selected PTO items
   const [selectedPTOs, setSelectedPTOs] = useState<PaidTimeOffItem[]>([]);
-  
+
   // PTO selection state
   const [ptoSelectValue, setPtoSelectValue] = useState<string>('');
 
   // Time tracking code
-  const [trackingCode, setTrackingCode] = useState<string[]>(['7', '7', '7', '7', '7']);
+  const [trackingCode, setTrackingCode] = useState<string[]>([
+    '7',
+    '7',
+    '7',
+    '7',
+    '7',
+  ]);
 
   // Update parent component when form data changes
   useEffect(() => {
@@ -65,8 +71,12 @@ const Compensation: React.FC<CompensationProps> = ({
 
   // Initialize selected PTOs from initialData
   useEffect(() => {
-    if (initialData?.paid_time_off && initialData.paid_time_off.length > 0 && ptoOptions.length > 0) {
-      const selectedItems = ptoOptions.filter(pto => 
+    if (
+      initialData?.paid_time_off &&
+      initialData.paid_time_off.length > 0 &&
+      ptoOptions.length > 0
+    ) {
+      const selectedItems = ptoOptions.filter((pto) =>
         initialData.paid_time_off.includes(pto.id)
       );
       setSelectedPTOs(selectedItems);
@@ -75,60 +85,66 @@ const Compensation: React.FC<CompensationProps> = ({
 
   // Handle input changes for compensation schedule
   const handleScheduleChange = (value: string) => {
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      paymentFrequency: value
+      paymentFrequency: value,
     }));
   };
 
   // Handle currency input changes
   const handleHourlyRateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
-    
+
     // Convert currency string to number
     const numericValue = parseFloat(value.replace(/[^0-9.]/g, ''));
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      hourlyRate: isNaN(numericValue) ? 0 : numericValue
+      hourlyRate: isNaN(numericValue) ? 0 : numericValue,
     }));
   };
 
   const handleSalaryChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
-    
+
     // Convert currency string to number
     const numericValue = parseFloat(value.replace(/[^0-9.]/g, ''));
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      salary: isNaN(numericValue) ? 0 : numericValue
+      salary: isNaN(numericValue) ? 0 : numericValue,
     }));
   };
 
   // Handle switch changes
-  const handleSwitchChange = (field: 'eligibleForTips' | 'eligibleForOvertime', checked: boolean) => {
-    setFormData(prev => ({
+  const handleSwitchChange = (
+    field: 'eligibleForTips' | 'eligibleForOvertime',
+    checked: boolean
+  ) => {
+    setFormData((prev) => ({
       ...prev,
-      [field]: checked
+      [field]: checked,
     }));
   };
 
   // Handle PTO selection
   const handlePTOChange = (value: string) => {
     setPtoSelectValue(value);
-    
+
     // Find the selected PTO
-    const selectedPTO = ptoOptions.find(pto => pto.type === value);
-    
-    if (selectedPTO && !selectedPTOs.some(item => item.id === selectedPTO.id)) {
+    const selectedPTO = ptoOptions.find((pto) => pto.type === value);
+
+    if (
+      selectedPTO &&
+      !selectedPTOs.some((item) => item.id === selectedPTO.id)
+    ) {
       const newSelectedPTOs = [...selectedPTOs, selectedPTO];
       setSelectedPTOs(newSelectedPTOs);
-      
+
       // Update form data with PTO IDs
-      setFormData(prev => ({
+      setFormData((prev) => ({
         ...prev,
-        paid_time_off: newSelectedPTOs.map(pto => pto.id)
+        paid_time_off: newSelectedPTOs.map((pto) => pto.id),
       }));
-      
+
       // Reset select value
       setPtoSelectValue('');
     }
@@ -136,28 +152,28 @@ const Compensation: React.FC<CompensationProps> = ({
 
   // Remove a PTO from selection
   const removePTO = (ptoId: string) => {
-    const newSelectedPTOs = selectedPTOs.filter(pto => pto.id !== ptoId);
+    const newSelectedPTOs = selectedPTOs.filter((pto) => pto.id !== ptoId);
     setSelectedPTOs(newSelectedPTOs);
-    
+
     // Update form data with PTO IDs
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      paid_time_off: newSelectedPTOs.map(pto => pto.id)
+      paid_time_off: newSelectedPTOs.map((pto) => pto.id),
     }));
   };
 
   // Generate random tracking code
   const generateTrackingCode = () => {
-    const newCode = Array(5).fill(0).map(() => 
-      Math.floor(Math.random() * 10).toString()
-    );
+    const newCode = Array(5)
+      .fill(0)
+      .map(() => Math.floor(Math.random() * 10).toString());
     setTrackingCode(newCode);
   };
 
   // Convert PTO options for select component
-  const ptoSelectOptions = ptoOptions.map(pto => ({
+  const ptoSelectOptions = ptoOptions.map((pto) => ({
     label: pto.type,
-    value: pto.type
+    value: pto.type,
   }));
 
   return (
@@ -171,29 +187,31 @@ const Compensation: React.FC<CompensationProps> = ({
           bg={''}
         />
       </div>
-      
+
       <div className="mt-5 grid grid-cols-2 gap-2">
-        <CurrencyInput 
-          label="Hourly Rate" 
-          placeholder="950" 
+        <CurrencyInput
+          label="Hourly Rate"
+          placeholder="950"
           value={formData.hourlyRate.toString()}
           onChange={handleHourlyRateChange}
           inputClass="!bg-gray-50"
         />
-        <CurrencyInput 
-          label="Base Pay" 
-          placeholder="90,000" 
+        <CurrencyInput
+          label="Base Pay"
+          placeholder="90,000"
           value={formData.salary.toString()}
           onChange={handleSalaryChange}
           inputClass="!bg-gray-50"
         />
       </div>
-      
+
       <div className="my-7 flex space-x-10">
         <div className="flex items-center">
           <Switch
             checked={formData.eligibleForTips}
-            onChange={(checked) => handleSwitchChange('eligibleForTips', checked)}
+            onChange={(checked) =>
+              handleSwitchChange('eligibleForTips', checked)
+            }
             className={`${
               formData.eligibleForTips ? 'bg-green-600' : 'bg-gray-200'
             } relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2`}
@@ -206,11 +224,13 @@ const Compensation: React.FC<CompensationProps> = ({
           </Switch>
           <span className="ml-3 text-sm font-medium">Eligible for Tips</span>
         </div>
-        
+
         <div className="flex items-center">
           <Switch
             checked={formData.eligibleForOvertime}
-            onChange={(checked) => handleSwitchChange('eligibleForOvertime', checked)}
+            onChange={(checked) =>
+              handleSwitchChange('eligibleForOvertime', checked)
+            }
             className={`${
               formData.eligibleForOvertime ? 'bg-green-600' : 'bg-gray-200'
             } relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2`}
@@ -221,10 +241,12 @@ const Compensation: React.FC<CompensationProps> = ({
               } inline-block h-4 w-4 transform rounded-full bg-white transition-transform`}
             />
           </Switch>
-          <span className="ml-3 text-sm font-medium">Eligible for Overtime</span>
+          <span className="ml-3 text-sm font-medium">
+            Eligible for Overtime
+          </span>
         </div>
       </div>
-      
+
       <div className="my-5">
         <p className="text-xl font-bold">Paid Time off (PTO)</p>
         <div className="mt-5">
@@ -235,17 +257,19 @@ const Compensation: React.FC<CompensationProps> = ({
             label="PTO Type"
             bg={''}
           />
-          
+
           {/* Selected PTOs display */}
           {selectedPTOs.length > 0 && (
             <div className="mt-4 flex flex-wrap gap-2">
-              {selectedPTOs.map(pto => (
-                <div 
-                  key={pto.id} 
+              {selectedPTOs.map((pto) => (
+                <div
+                  key={pto.id}
                   className="bg-gray-100 rounded-full px-3 py-1 flex items-center text-sm"
                 >
-                  <span>{pto.type} ({pto.total_entitled_days} days)</span>
-                  <button 
+                  <span>
+                    {pto.type} ({pto.total_entitled_days} days)
+                  </span>
+                  <button
                     onClick={() => removePTO(pto.id)}
                     className="ml-2 text-gray-500 hover:text-red-500"
                   >
@@ -255,13 +279,13 @@ const Compensation: React.FC<CompensationProps> = ({
               ))}
             </div>
           )}
-          
+
           <p className="text-sm text-gray-500 mt-2">
             Select multiple PTO types to associate with this employee.
           </p>
         </div>
       </div>
-      
+
       <div className="mt-7">
         <h4 className="text-xl mb-3 font-bold">Time Tracking</h4>
         <p>
@@ -271,11 +295,14 @@ const Compensation: React.FC<CompensationProps> = ({
         </p>
         <div className="flex mt-3 gap-8 items-center">
           {trackingCode.map((digit, index) => (
-            <p key={index} className="w-10 h-12 bg-gray-100 rounded-sm grid place-content-center">
+            <p
+              key={index}
+              className="w-10 h-12 bg-gray-100 rounded-sm grid place-content-center"
+            >
               {digit}
             </p>
           ))}
-          <p 
+          <p
             className="text-green-500 cursor-pointer"
             onClick={generateTrackingCode}
           >
