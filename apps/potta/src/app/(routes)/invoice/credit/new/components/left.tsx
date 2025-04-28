@@ -198,24 +198,17 @@ const Left = () => {
           />
         </div>
         <div className={`${errors.issueDate ? 'error-field' : ''}`}>
-          <span className="mb-3 text-gray-900 font-medium">
-            Issue Date
-            <RequiredMark />
-          </span>
-          <input
+          <Input
+            type="date"
+            label={<>Issue Date<RequiredMark /></>}
             name="issueDate"
-            type={'date'}
             value={issueDate}
-            onChange={(e: any) =>
-              handleInputChange('issueDate', e.target.value)
+            onchange={(e) => 
+              handleInputChange('issueDate', typeof e === 'string' ? e : e.target.value)
             }
-            className={`w-full py-2.5 px-4 border ${
-              errors.issueDate ? 'border-red-500' : 'border-gray-200'
-            } rounded-[2px] outline-none mt-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500`}
+            placeholder="Select issue date"
+            errors={errors.issueDate ? { message: errors.issueDate } : undefined}
           />
-          {errors.issueDate && (
-            <p className="text-red-500 text-sm mt-1">{errors.issueDate}</p>
-          )}
         </div>
       </div>
 

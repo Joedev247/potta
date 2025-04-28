@@ -32,7 +32,7 @@ const Select: React.FC<SelectProps> = ({ options, selectedValue, onChange, bg, n
 
     return (
       <>
-        {label && <span className="text-gray-900 font-medium">{label}{ required && <span className=" text-red-500">*</span>}</span>}
+        {label && <span className="text-gray-900 text-lg font-medium">{label}{ required && <span className=" text-red-500">*</span>}</span>}
         <div className={`relative inline-block mt-2 ${border ? '' : 'border'} w-full md:w-full`}>
             <div
                 onClick={toggleDropdown}

@@ -21,6 +21,7 @@ interface SearchSelectProps extends Omit<SelectProps<Option, false>, 'value' | '
   minInputLength?: number;
   isAsync?: boolean;
   required?: boolean;
+  noMarginTop?: boolean; // New prop to control margin top
 }
 
 const SearchSelect: React.FC<SearchSelectProps> = ({
@@ -37,6 +38,7 @@ const SearchSelect: React.FC<SearchSelectProps> = ({
   isAsync = false,
   required = false,
   className,
+  noMarginTop = false, // Default to false to maintain backward compatibility
   ...props
 }) => {
   const [isLoading, setIsLoading] = useState(false);
@@ -98,7 +100,7 @@ const SearchSelect: React.FC<SearchSelectProps> = ({
   const customStyles = {
     container: (base: any) => ({
       ...base,
-      marginTop: '0.5rem', // mt-2
+      marginTop: noMarginTop ? 0 : '0.5rem', // Conditionally apply margin top
     }),
     control: (base: any, state: { isFocused: boolean }) => ({
       ...base,
@@ -173,13 +175,10 @@ const SearchSelect: React.FC<SearchSelectProps> = ({
 
   const SelectComponent = isAsync ? AsyncSelect : Select;
 
-  // For debugging
- 
-
   return (
     <div className={`w-full `}>
       {label && (
-        <span className="mb-3 text-gray-900 font-medium">
+        <span className="mb-3 text-gray-900 text-lg font-medium">
           {label}
           {required && <span className="text-red-500">*</span>}
         </span>

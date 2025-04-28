@@ -31,7 +31,7 @@ const Sidebarsinvoicing = () => {
           {' '}
         </MenuItem>
         <MenuItem
-          active={str[1] == 'invoice' && str[2] == undefined ? true : false}
+          active={str[1] == 'invoice' && str[2] == undefined || str[2] == 'new' ? true : false}
           className="mt-8  font-thin"
           href="/invoice"
           icon={
@@ -39,7 +39,7 @@ const Sidebarsinvoicing = () => {
               icon="file-invoice-dollar"
               size={23}
               color={
-                str[1] == 'invoice' && str[2] == undefined || str[1] == undefined || str[1] == ''
+                str[1] == 'invoice' && str[2] == undefined || str[1] == undefined || str[1] == '' || str[2] == 'new'
                   ? 'white'
                   : 'black'
               }

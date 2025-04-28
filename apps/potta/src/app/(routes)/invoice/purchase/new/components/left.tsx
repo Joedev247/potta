@@ -258,41 +258,31 @@ const Left = () => {
               
             />
             <div className={`${errors.orderDate ? 'error-field' : ''}`}>
-              <span className="mb-3 text-gray-900 font-medium">
-                Order Date
-                <RequiredMark />
-              </span>
-              <input
+              <Input
+                type="date"
+                label={<>Order Date<RequiredMark /></>}
                 name="orderDate"
-                type={'date'}
                 value={orderDate}
-                onChange={(e: any) => handleInputChange('orderDate', e.target.value)}
-                className={`w-full py-2.5 px-4 border ${
-                  errors.orderDate ? 'border-red-500' : 'border-gray-200'
-                } rounded-[2px] outline-none mt-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500`}
+                onchange={(e) => 
+                  handleInputChange('orderDate', typeof e === 'string' ? e : e.target.value)
+                }
+                placeholder="Select order date"
+                errors={errors.orderDate ? { message: errors.orderDate } : undefined}
               />
-              {errors.orderDate && (
-                <p className="text-red-500 text-sm mt-1">{errors.orderDate}</p>
-              )}
             </div>
             
             <div className={`${errors.requiredDate ? 'error-field' : ''}`}>
-              <span className="mb-3 text-gray-900 font-medium">
-                Required Date
-                <RequiredMark />
-              </span>
-              <input
+              <Input
+                type="date"
+                label={<>Required Date<RequiredMark /></>}
                 name="requiredDate"
-                type={'date'}
                 value={requiredDate}
-                onChange={(e: any) => handleInputChange('requiredDate', e.target.value)}
-                className={`w-full py-2.5 px-4 border ${
-                  errors.requiredDate ? 'border-red-500' : 'border-gray-200'
-                } rounded-[2px] outline-none mt-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500`}
+                onchange={(e) => 
+                  handleInputChange('requiredDate', typeof e === 'string' ? e : e.target.value)
+                }
+                placeholder="Select required date"
+                errors={errors.requiredDate ? { message: errors.requiredDate } : undefined}
               />
-              {errors.requiredDate && (
-                <p className="text-red-500 text-sm mt-1">{errors.requiredDate}</p>
-              )}
             </div>
           </div>
           
@@ -326,10 +316,8 @@ const Left = () => {
               name="shoppingAddress"
               value={shoppingAddress}
               onchange={(e: any) => handleInputChange('shoppingAddress', e.target.value)}
+              errors={errors.shoppingAddress ? { message: errors.shoppingAddress } : undefined}
             />
-            {errors.shoppingAddress && (
-              <p className="text-red-500 text-sm mt-1">{errors.shoppingAddress}</p>
-            )}
           </div>
           </div>
           

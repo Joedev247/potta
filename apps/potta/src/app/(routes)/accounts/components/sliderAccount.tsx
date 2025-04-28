@@ -194,7 +194,7 @@ const SliderAccount: React.FC<AccountCreateProps> = ({
       title={'Create Account'}
       buttonText="account"
     >
-      <div className="my-14 relative">
+      <div className="my-14 h-[76vh] relative">
         <div className="mb-4">
           <h3 className="text-sm font-medium mb-2">OHADA Account Hierarchy</h3>
           

@@ -1,4 +1,3 @@
-
 'use client'; // For Next.js 13+ App Directory
 import Input from '@potta/components/input';
 import SearchSelect from '@potta/components/search-select';
@@ -37,7 +36,7 @@ interface LineItemsDto {
   description: string;
   quantity: number;
   discountCap: number;
-  discountType: string ;
+  discountType: string;
   unitPrice: number;
   taxRate: number;
   discountRate: number;
@@ -128,8 +127,7 @@ const Left = () => {
         label:
           firstCustomer.firstName ||
           firstCustomer.lastName ||
-          `Customer ${
-            firstCustomer.customerId || firstCustomer.uuid.slice(0, 8)
+          `Customer ${firstCustomer.customerId || firstCustomer.uuid.slice(0, 8)
           }`,
         value: firstCustomer.uuid,
       };
@@ -259,7 +257,7 @@ const Left = () => {
       newErrors.paymentMethod = 'Payment method is required';
     if (!frequency) newErrors.frequency = 'Frequency is required';
     if (!startDate) newErrors.startDate = 'Start date is required';
-    
+
     // Validate end date or occurrences based on selection
     if (isEndDateOption) {
       if (!endDate) newErrors.endDate = 'End date is required';
@@ -280,7 +278,7 @@ const Left = () => {
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
-  
+
   const mutation = useCreateInvoice();
   const handleSaveInvoice = () => {
     setFormSubmitted(true);
@@ -384,44 +382,32 @@ const Left = () => {
             bg={''}
           />
         </div>
-        
+
         <div className={`${errors.issueDate ? 'error-field' : ''}`}>
-          <span className="mb-3 text-gray-900 font-medium">
-            Issued Date
-            <RequiredMark />
-          </span>
-          <input
+          <Input
+            type="date"
+            label={<>Issued Date<RequiredMark /></>}
             name="issueDate"
-            type={'date'}
             value={issueDate}
-            onChange={(e: any) =>
-              handleInputChange('issueDate', e.target.value)
+            onchange={(e) =>
+              handleInputChange('issueDate', typeof e === 'string' ? e : e.target.value)
             }
-            className={`w-full py-2.5 px-4 border ${
-              errors.issueDate ? 'border-red-500' : 'border-gray-200'
-            } rounded-[2px] outline-none mt-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500`}
+            placeholder="Select issue date"
+            errors={errors.issueDate ? { message: errors.issueDate } : undefined}
           />
-          {errors.issueDate && (
-            <p className="text-red-500 text-sm mt-1">{errors.issueDate}</p>
-          )}
         </div>
         <div className={`${errors.dueDate ? 'error-field' : ''}`}>
-          <span className="mb-3 text-gray-900 font-medium">
-            Due Date
-            <RequiredMark />
-          </span>
-          <input
+          <Input
+            type="date"
+            label={<>Due Date<RequiredMark /></>}
             name="dueDate"
-            type={'date'}
             value={dueDate}
-            onChange={(e: any) => handleInputChange('dueDate', e.target.value)}
-            className={`w-full py-2.5 px-4 border ${
-              errors.dueDate ? 'border-red-500' : 'border-gray-200'
-            } rounded-[2px] outline-none mt-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500`}
+            onchange={(e) =>
+              handleInputChange('dueDate', typeof e === 'string' ? e : e.target.value)
+            }
+            placeholder="Select due date"
+            errors={errors.dueDate ? { message: errors.dueDate } : undefined}
           />
-          {errors.dueDate && (
-            <p className="text-red-500 text-sm mt-1">{errors.dueDate}</p>
-          )}
         </div>
       </div>
 
@@ -442,97 +428,78 @@ const Left = () => {
             )}
           </div>
           <div className={`${errors.startDate ? 'error-field' : ''}`}>
-            <span className="mb-3 text-gray-900 font-medium">
-              Start Date
-              <RequiredMark />
-            </span>
-            <input
+            <Input
+              type="date"
+              label={<>Start Date<RequiredMark /></>}
               name="startDate"
-              type={'date'}
               value={startDate}
-              onChange={(e: any) => handleInputChange('startDate', e.target.value)}
-              className={`w-full py-2.5 px-4 border ${
-                errors.startDate ? 'border-red-500' : 'border-gray-200'
-              } rounded-[2px] outline-none mt-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500`}
+              onchange={(e) =>
+                handleInputChange('startDate', typeof e === 'string' ? e : e.target.value)
+              }
+              placeholder="Select start date"
+              errors={errors.startDate ? { message: errors.startDate } : undefined}
             />
-            {errors.startDate && (
-              <p className="text-red-500 text-sm mt-1">{errors.startDate}</p>
-            )}
           </div>
         </div>
-          <div className="col-span-2 mt-3">
-            <div className="flex items-center space-x-4 mb-2">
-              <label className="inline-flex items-center">
-                <input
-                  type="radio"
-                  className="form-radio"
-                  name="endOption"
-                  checked={isEndDateOption}
-                  onChange={() => setIsEndDateOption(true)}
-                />
-                <span className="ml-2">End Date</span>
-              </label>
-              <label className="inline-flex items-center">
-                <input
-                  type="radio"
-                  className="form-radio"
-                  name="endOption"
-                  checked={!isEndDateOption}
-                  onChange={() => setIsEndDateOption(false)}
-                />
-                <span className="ml-2">Number of Occurrences</span>
-              </label>
-            </div>
-            
-            {isEndDateOption ? (
-              <div className={`${errors.endDate ? 'error-field' : ''}`}>
-                <span className="mb-3 text-gray-900 font-medium">
-                  End Date
-                  <RequiredMark />
-                </span>
-                <input
-                  name="endDate"
-                  type={'date'}
-                  value={endDate}
-                  onChange={(e: any) => handleInputChange('endDate', e.target.value)}
-                  className={`w-full py-2.5 px-4 border ${
-                    errors.endDate ? 'border-red-500' : 'border-gray-200'
-                  } rounded-[2px] outline-none mt-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500`}
-                />
-                {errors.endDate && (
-                  <p className="text-red-500 text-sm mt-1">{errors.endDate}</p>
-                )}
-              </div>
-            ) : (
-              <div className={`${errors.occurrences ? 'error-field' : ''}`}>
-                <span className="mb-3 text-gray-900 font-medium">
-                  Number of Occurrences
-                  <RequiredMark />
-                </span>
-                <input
-                  name="occurrences"
-                  type="number"
-                  min="1"
-                  value={occurrences}
-                  onChange={(e: any) => handleInputChange('occurrences', e.target.value)}
-                  className={`w-full py-2.5 px-4 border ${
-                    errors.occurrences ? 'border-red-500' : 'border-gray-200'
-                  } rounded-[2px] outline-none mt-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500`}
-                  placeholder="e.g. 12"
-                />
-                {errors.occurrences && (
-                  <p className="text-red-500 text-sm mt-1">{errors.occurrences}</p>
-                )}
-              </div>
-            )}
+        <div className="col-span-2 mt-3">
+          <div className="flex items-center space-x-4 mb-2">
+            <label className="inline-flex items-center">
+              <input
+                type="radio"
+                className="form-radio"
+                name="endOption"
+                checked={isEndDateOption}
+                onChange={() => setIsEndDateOption(true)}
+              />
+              <span className="ml-2">End Date</span>
+            </label>
+            <label className="inline-flex items-center">
+              <input
+                type="radio"
+                className="form-radio"
+                name="endOption"
+                checked={!isEndDateOption}
+                onChange={() => setIsEndDateOption(false)}
+              />
+              <span className="ml-2">Number of Occurrences</span>
+            </label>
           </div>
+
+          {isEndDateOption ? (
+            <div className={`${errors.endDate ? 'error-field' : ''}`}>
+              <Input
+                type="date"
+                label={<>End Date<RequiredMark /></>}
+                name="endDate"
+                value={endDate}
+                onchange={(e) =>
+                  handleInputChange('endDate', typeof e === 'string' ? e : e.target.value)
+                }
+                placeholder="Select end date"
+                errors={errors.endDate ? { message: errors.endDate } : undefined}
+              />
+            </div>
+          ) : (
+            <div className={`${errors.occurrences ? 'error-field' : ''}`}>
+              <Input
+                type="number"
+                label={<>Number of Occurrences<RequiredMark /></>}
+                name="occurrences"
+                value={occurrences}
+                min={1}
+                onchange={(e: any) => handleInputChange('occurrences', e.target.value)}
+                placeholder="e.g. 12"
+                errors={errors.occurrences ? { message: errors.occurrences } : undefined}
+              />
+            </div>
+          )}
+        </div>
       </div>
 
       <div className="mt-3 w-full flex flex-col">
         <div
-          className={`w-[50%] flex items-center space-x-3 ${
-            errors.customerName ? 'error-field' : ''
-          }`}
+          className={`w-[50%] flex items-center space-x-3 ${errors.customerName ? 'error-field' : ''
+            }`}
         >
           <div className="w-full">
             <SearchSelect
@@ -590,8 +557,9 @@ const Left = () => {
       </div>
 
       <div className="my-5 pt-10">
-        <h3 className="mb-2 text-gray-900 font-medium">
+        <h3 className="text-lg mb-2 text-gray-900 font-medium">
           Line Items
+
           <RequiredMark />
         </h3>
         <DynamicTable />
@@ -602,6 +570,7 @@ const Left = () => {
 
       <hr className="my-5" />
       <h3 className="text-lg font-medium my-2">
+
         Payment Methods
         <RequiredMark />
       </h3>
@@ -612,13 +581,12 @@ const Left = () => {
               <div
                 key={option}
                 onClick={() => handlePaymentMethodClick(option)}
-                className={`p-4 border cursor-pointer ${
-                  selectedPaymentMethod === option
-                    ? 'border-green-500 text-green-500'
-                    : errors.paymentMethod && formSubmitted
+                className={`p-4 border cursor-pointer ${selectedPaymentMethod === option
+                  ? 'border-green-500 text-green-500'
+                  : errors.paymentMethod && formSubmitted
                     ? 'border-red-500'
                     : 'border-gray-300'
-                }`}
+                  }`}
               >
                 <div className="flex items-center">
                   <input

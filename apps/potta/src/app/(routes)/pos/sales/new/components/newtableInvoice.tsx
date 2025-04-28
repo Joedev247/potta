@@ -90,7 +90,7 @@ export default function DynamicTable() {
         setTax(selectedProd.tax);
       }
     } else {
-    setSelectedProduct(null);
+      setSelectedProduct(null);
       setPrice(0);
       setTax(0);
     }
@@ -181,112 +181,155 @@ export default function DynamicTable() {
     setRows(updatedRows);
   };
 
-  // Helper function to render required field marker
-  const RequiredMark = () => <span className="text-red-500 ml-1">*</span>;
+  // Calculate subtotal, tax and total
+  const calculateSubtotal = () => {
+    return rows.reduce((sum: number, row: any) => sum + (row.qty * row.price), 0);
+  };
+
+  const calculateTaxAmount = () => {
+    return rows.reduce((sum: number, row: any) => {
+      const rowTotal = row.qty * row.price;
+      const rowTax = (rowTotal * row.tax) / 100;
+      return sum + rowTax;
+    }, 0);
+  };
+
+  const calculateTotal = () => {
+    return calculateSubtotal() + calculateTaxAmount();
+  };
+
+  // Format currency
+  const formatCurrency = (amount: number) => {
+    return new Intl.NumberFormat('en-US', {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2
+    }).format(amount);
+  };
 
   return (
-    <div>
-        <table className="min-w-full border-collapse text-gray-500">
-        <thead>
-          <tr className="bg-gray-100">
-            <th colSpan={3} className=" px-10 py-2">Product</th>
-            <th colSpan={1} className="text-center px-4 py-2">Qty</th>
-            <th colSpan={1} className="text-center px-4 py-2">Price</th>
-            <th colSpan={1} className="text-center px-4 py-2">Tax</th>
-            <th colSpan={1} className="text-center px-4 py-2">Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          {rows.map((row: any) => (
-            <tr key={row.id}>
-              <td colSpan={3} className="px-10 py-2">
-                 {row.name}
+    <div className="  ">
+      <div className="">
+        <table className="min-w-full ">
+          <thead>
+            <tr className="bg-gray-50">
+              <th scope="col" className="px-6 py-3 text-left text-sm font-semibold text-gray-500 uppercase tracking-wider w-5/12">
+                Product
+              </th>
+              <th scope="col" className="px-6 py-3 text-left text-sm font-semibold text-gray-500 uppercase tracking-wider w-2/12">
+                Qty
+              </th>
+              <th scope="col" className="px-6 py-3 text-left text-sm font-semibold text-gray-500 uppercase tracking-wider w-2/12">
+                Price
+              </th>
+              <th scope="col" className="px-6 py-3 text-left text-sm font-semibold text-gray-500 uppercase tracking-wider w-2/12">
+                Tax
+              </th>
+              <th scope="col" className="px-6 py-3 text-left text-sm font-semibold text-gray-500 uppercase tracking-wider w-1/12">
+                Actions
+              </th>
+            </tr>
+          </thead>
+          <tbody className="bg-white divide-gray-200">
+             {/* Display existing items */}
+            {rows.length > 0 ? (
+              rows.map((row: any) => (
+                <tr key={row.id} className="hover:bg-gray-50 border-b">
+                  <td className="px-6 py-4 whitespace-nowrap text-base font-medium text-gray-900">
+                    {row.name}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-base text-left text-gray-500">
+                    {row.qty}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-base text-left text-gray-500">
+                    {currencySymbol} {formatCurrency(row.price)}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-base text-left text-gray-500">
+                    {row.tax}%
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-center text-base font-medium">
+                    <button
+                      onClick={() => handleRemoveRow(row.id)}
+                      className="text-red-600 hover:text-red-900 transition-colors duration-200"
+                      aria-label="Remove item"
+                    >
+                      <i className="ri-delete-bin-line text-lg"></i>
+                    </button>
+                  </td>
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td colSpan={5} className="px-6 py-8 text-center text-sm text-gray-500 italic">
+                  No items added yet. Search for a product below to add items.
+                </td>
+              </tr>
+            )}
+            {/* Input row for adding new items */}
+            <tr className="">
+              <td className="px-3 py-3 w-5/12">
+                <SearchSelect
+                  options={productOptions}
+                  value={selectedProduct ? { label: selectedProduct.label, value: selectedProduct.value } : null}
+                  onChange={handleProductSelect}
+                  isLoading={productsLoading}
+                  placeholder="Search for a product"
+                  isClearable={true}
+                  isSearchable={true}
+                  className={errors.product ? 'border-red-500' : ''}
+                  noMarginTop={true}
+                />
+                {errors.product && (
+                  <p className="text-red-500 text-xs mt-1">{errors.product}</p>
+                )}
               </td>
-              <td className="px-4 py-2 text-center">{row.qty}</td>
-              <td className="px-4 py-2 text-center">{currencySymbol} {row.price}</td>
-              <td className="px-4 py-2 text-center">{row.tax}%</td>
-              <td className="px-4 py-2 text-center">
+              <td className="px-3 py-3 text-left w-2/12">
+                <input
+                  type="number"
+                  value={qty}
+                  onChange={(e) => handleQtyChange(e.target.value)}
+                  className={`border ${errors.quantity ? 'border-red-500' : 'border-gray-300'} px-3 py-2.5 w-full focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-left`}
+                  min="1"
+                />
+                {errors.quantity && (
+                  <p className="text-red-500 text-xs mt-1">{errors.quantity}</p>
+                )}
+              </td>
+              <td className="px-3 py-3 text-left w-2/12">
+                <input
+                  type="number"
+                  value={price}
+                  onChange={(e) => setPrice(parseFloat(e.target.value))}
+                  className="border border-gray-300 px-3 py-2.5 w-full bg-gray-100 focus:outline-none text-left"
+                  disabled
+                />
+              </td>
+              <td className="px-3 py-3 text-left w-2/12">
+                <input
+                  type="number"
+                  value={tax}
+                  onChange={(e) => setTax(parseFloat(e.target.value))}
+                  className="border border-gray-300 px-3 py-2.5 w-full bg-gray-100 focus:outline-none text-left"
+                  disabled
+                />
+              </td>
+              <td className="px-3 py-3 text-left w-1/12">
                 <button
-                  onClick={() => handleRemoveRow(row.id)}
-                  className="text-red-500"
+                  onClick={handleAddRow}
+                  className={`${!selectedProduct ? 'bg-gray-400 cursor-not-allowed' : 'bg-green-600 hover:bg-green-700'} text-white px-3 py-2.5 text-sm font-medium transition-colors rounded-md duration-200 inline-flex items-center justify-center w-full`}
+                  disabled={!selectedProduct}
                 >
-                  <i className="ri-delete-bin-line"></i>
+                  <i className="ri-add-line mr-1"></i>
+                  Add
                 </button>
               </td>
             </tr>
-          ))}
-        </tbody>
-      </table>
-      <div className="py-4 grid grid-cols-8 gap-4">
-        <div className="mb-2 col-span-3">
-          <span className="mb-1 text-gray-900 font-medium block">
-            Product <RequiredMark />
-          </span>
-              <SearchSelect
-                options={productOptions}
-                value={selectedProduct ? { label: selectedProduct.label, value: selectedProduct.value } : null}
-                onChange={handleProductSelect}
-                isLoading={productsLoading}
-                placeholder="Search"
-                isClearable={true}
-                isSearchable={true}
-            className={`mt-1 ${errors.product ? 'border-red-500' : ''}`}
-              />
-          {errors.product && (
-            <p className="text-red-500 text-sm mt-1">{errors.product}</p>
-          )}
-    </div>
-        <div>
-          <span className="mb-1 text-gray-900 font-medium block">
-            Qty <RequiredMark />
-          </span>
-          <input
-            type="number"
-            value={qty}
-            onChange={(e) => handleQtyChange(e.target.value)}
-            className={`border ${
-              errors.quantity ? 'border-red-500' : 'border-gray-300'
-            } px-2 pl-3 py-2.5 w-full outline-none mt-1 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-center`}
-            min="1"
-          />
-          {errors.quantity && (
-            <p className="text-red-500 text-sm mt-1">{errors.quantity}</p>
-          )}
-        </div>
-        <div className="relative">
-          <span className="mb-1 text-gray-900 font-medium block">
-            Price
-          </span>
-          <input
-            type="number"
-            value={price}
-            onChange={(e) => setPrice(parseFloat(e.target.value))}
-            className="border border-gray-300 px-2 pl-3 py-2.5 w-full outline-none mt-1 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-center"
-            disabled
-          />
-        </div>
-        <div className="relative">
-          <span className="mb-1 text-gray-900 font-medium block">
-            Tax
-          </span>
-          <input
-            type="number"
-            value={tax}
-            onChange={(e) => setTax(parseFloat(e.target.value))}
-            className="border border-gray-300 px-2 pl-3 py-2.5 w-full outline-none mt-1 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-            disabled
-          />
-        </div>
+            
+           
+          </tbody>
+        </table>
       </div>
 
-      <button
-        onClick={handleAddRow}
-        className={`${
-          !selectedProduct ? 'bg-gray-400' : 'bg-green-600'
-        } text-white px-4 py-2 rounded-full text-sm mt-4`}
-      >
-        <i className="ri-add-line mr-2"></i>Add Item
-      </button>
+    
     </div>
   );
 }

@@ -51,7 +51,8 @@ const routesWithBox = [
   { main: 'invoice', sub: '' }, 
   { main: 'pos', sub: 'customers' },
   { main: 'invoice', sub: 'purchase' }, 
-  { main: 'invoice', sub: 'recurring' }, // Main invoice page
+  { main: 'invoice', sub: 'recurring' }, 
+  { main: 'pos', sub: 'vendors' },// Main invoice page
   // Add other routes where Box should appear
   // For example, to show Box on a specific sub-route:
   // { main: 'payments', sub: 'history' },
@@ -140,6 +141,15 @@ export default function Navbar() {
     }
     if (str[1] === 'invoice' && str[2] === 'purchase' && str[3] === undefined) {
       return 'Purchase Order';
+    }
+    if (str[1] === 'invoice' && str[2] === 'recurring' && str[3] === undefined) {
+      return 'Recurring Invoice';
+    }
+    if (str[1] === 'invoice' && str[2] === 'recurring' && str[3] === 'new') {
+      return 'New Recurring Invoice';
+    }
+    if (str[1] === 'pos' && str[2] === 'files') {
+      return 'File Manager';
     }
     // Default behavior
     return str[2] == undefined ? str[1] : str[2];
