@@ -49,7 +49,9 @@ const routesWithBox = [
   { main: 'vouchers', sub: '' },
   { main: 'accounts', sub: '' },
   { main: 'invoice', sub: '' }, 
-  { main: 'pos', sub: 'customers' },  // Main invoice page
+  { main: 'pos', sub: 'customers' },
+  { main: 'invoice', sub: 'purchase' }, 
+  { main: 'invoice', sub: 'recurring' }, // Main invoice page
   // Add other routes where Box should appear
   // For example, to show Box on a specific sub-route:
   // { main: 'payments', sub: 'history' },
@@ -60,6 +62,7 @@ const routesWithoutBox = [
   { main: 'invoice', sub: 'new' },
   { main: 'invoice', sub: 'credit/new' },
   { main: 'invoice', sub: 'purchase/new' },
+  { main: 'invoice', sub: 'recurring/new' },
   // Add other specific routes where Box should not appear
 ];
 

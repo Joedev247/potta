@@ -13,7 +13,7 @@ interface SelectProps {
     onChange: any;
     bg: string;
     name?: string;
-    label?: string;
+    label?: string | React.ReactNode;
     required?: boolean;
     outline?: boolean
 }
