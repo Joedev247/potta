@@ -93,16 +93,16 @@ export default function NewVoucherPage() {
             </div>
             
             {/* Footer Buttons */}
-            <div className="mt-auto pt-6 flex justify-end space-x-4">
+            <div className="mt-auto pt-6 flex justify-between space-x-4">
               <button 
                 type="button" 
-                className="px-4 py-2 border border-gray-300 rounded-md text-gray-600 hover:bg-gray-50"
+                className="px-4 py-2 border border-gray-300  text-gray-600 hover:bg-gray-50"
               >
                 Save Draft
               </button>
               <button 
                 type="submit" 
-                className="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-md"
+                className="px-4 py-2 bg-green-600 hover:bg-green-700 text-white "
               >
                 Publish
               </button>

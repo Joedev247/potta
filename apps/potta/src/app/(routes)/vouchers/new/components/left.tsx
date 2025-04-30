@@ -55,7 +55,7 @@ export default function VoucherTypeSelector({
           {voucherTypes.map((type) => (
             <Card 
               key={type.id}
-              className={`cursor-pointer border ${selectedType === type.id ? 'border-green-500' : 'border-gray-200'} relative]  hover:border-green-500 transition-all duration-200 ease-in-out`}
+              className={`cursor-pointer border relative ${selectedType === type.id ? 'border-green-500' : 'border-gray-200'} relative]  hover:border-green-500 transition-all duration-200 ease-in-out`}
               onClick={() => handleTypeSelect(type.id)}
             >
               {selectedType === type.id && (
