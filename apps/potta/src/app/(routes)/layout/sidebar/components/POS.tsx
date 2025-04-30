@@ -11,7 +11,8 @@ import {
   Users,
   Inbox,
   Menu as MenuIcon,
-  User
+  User,
+  BookUser
 } from 'lucide-react';
 const SidebarsExpenses = () => {
   const pathname = usePathname();
@@ -33,12 +34,13 @@ const SidebarsExpenses = () => {
       className=" relative bg-blue-500  h-[100vh] z-30  side "
     >
       <Menu className="relative h-[76vh]" closeOnClick>
-        <MenuItem
-          className="mt-4 font-thin"
+      <MenuItem
+          className="mt-4 font-thin flex justify-center"
           href="/"
-          icon={<img src="/icons/Potta.svg" className="h-10 mt-2" alt="" />}
+          icon={<img src="/icons/Potta.svg" className="h-16 w-16 mt-2" alt="logo" />}
         >
           {' '}
+         
         </MenuItem>
          {/* Dashboard */}
          <MenuItem
@@ -88,6 +90,14 @@ const SidebarsExpenses = () => {
           icon={<Users className={`h-6 w-6 ${isActive('/pos/customers') ? 'text-white' : 'text-gray-500'}`} />}
         >
           <h3 className='text-lg mt-1.5'>Customers</h3>
+        </MenuItem>
+        <MenuItem
+          active={isActive('/pos/vendor')}
+          className='mt-5'
+          href='/pos/vendors'
+          icon={<BookUser className={`h-6 w-6 ${isActive('/pos/vendors') ? 'text-white' : 'text-gray-500'}`} />}
+        >
+          <h3 className='text-lg mt-1.5'>Vendors</h3>
         </MenuItem>
 
         {/* Inbox */}

@@ -20,12 +20,13 @@ const SidebarsPayment = () => {
       className=" relative bg-blue-500  h-[100vh] z-30  side "
     >
       <Menu className="relative h-[76vh]" closeOnClick>
-        <MenuItem
-          className="mt-4 font-thin"
+      <MenuItem
+          className="mt-4 font-thin flex justify-center"
           href="/"
-          icon={<img src="/icons/Potta.svg" className="h-10 mt-2" alt="" />}
+          icon={<img src="/icons/Potta.svg" className="h-16 w-16 mt-2" alt="logo" />}
         >
           {' '}
+         
         </MenuItem>
         <MenuItem
           active={str[1] == 'dashboard' ? true : false}

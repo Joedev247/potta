@@ -26,7 +26,7 @@ const Sidebars = () => {
       {str[1] == 'invoice' && <Sidebarsinvoicing />}
       {str[1] == 'POS' || (str[1] == 'pos' && <SidebarsPOS />)}
       {str[1] == 'taxation' && <SidebarsTaxation />}
-      {str[1] == 'voucher' && <SidebarsVoucher />}
+      {str[1] == 'vouchers' && <SidebarsVoucher />}
       {str[1] == 'vendors' && <SidebarsVoucher />}
       {str[1] == 'payroll' && <SidebarsPayroll />}
       {str[1] == 'accounts' && <SidebarsAccounts />}

@@ -6,6 +6,17 @@ import { usePathname } from 'next/navigation';
 import Select from '../../../../components/select';
 import { useRouter } from 'next/navigation';
 import Box from './box';
+import PaymentsBox from './boxes/PaymentsBox';
+import AccountsBox from './boxes/AccountsBox';
+import ExpensesBox from './boxes/ExpensesBox';
+import InvoiceBox from './boxes/InvoiceBox';
+import InvoicePurchaseBox from './boxes/InvoicePurchaseBox';
+import InvoiceRecurringBox from './boxes/InvoiceRecurringBox';
+import PosCustomersBox from './boxes/PosCustomersBox';
+import VendorsBox from './boxes/PosVendorsBox';
+import VouchersBox from './boxes/VouchersBox';
+import PosSalesBox from './boxes/PosSalesBox';
+
 
 const urlRouters = [
   {
@@ -42,20 +53,16 @@ const urlRouters = [
   },
 ];
 
-// Routes where Box component should be displayed
+// Routes where Box component should be displayed with their specific box component
 const routesWithBox = [
-  { main: 'payments', sub: '' },  // Empty string means main route
-  { main: 'expenses', sub: '' },
-  { main: 'vouchers', sub: '' },
-  { main: 'accounts', sub: '' },
-  { main: 'invoice', sub: '' }, 
-  { main: 'pos', sub: 'customers' },
-  { main: 'invoice', sub: 'purchase' }, 
-  { main: 'invoice', sub: 'recurring' }, 
-  { main: 'pos', sub: 'vendors' },// Main invoice page
-  // Add other routes where Box should appear
-  // For example, to show Box on a specific sub-route:
-  // { main: 'payments', sub: 'history' },
+  { main: 'payments', sub: '', component: PaymentsBox },
+  { main: 'expenses', sub: '', component: ExpensesBox },
+  { main: 'vouchers', sub: '', component: VouchersBox },
+  { main: 'accounts', sub: '', component: AccountsBox },
+  { main: 'invoice', sub: '', component: InvoiceBox },
+  { main: 'pos', sub: 'sales', component: PosSalesBox },
+  { main: 'invoice', sub: 'purchase', component: InvoicePurchaseBox },
+  { main: 'invoice', sub: 'recurring', component: InvoiceRecurringBox },
 ];
 
 // Routes with specific sub-routes where Box should NOT be displayed
@@ -64,6 +71,7 @@ const routesWithoutBox = [
   { main: 'invoice', sub: 'credit/new' },
   { main: 'invoice', sub: 'purchase/new' },
   { main: 'invoice', sub: 'recurring/new' },
+  { main: 'pos', sub: 'sales/new' },
   // Add other specific routes where Box should not appear
 ];
 
@@ -83,9 +91,38 @@ export default function Navbar() {
   // Get the current route and sub-route
   const currentMainRoute = str[1] || '';
   const currentSubRoute = str.slice(2).join('/');
+  
+  // Check if the current path contains "customers"
+  const pathContainsCustomers = pathname.includes('customers');
+  const pathContainsVendors = pathname.includes('vendors');
+  // Get the appropriate box component for the current route
+  const getBoxComponent = () => {
+    // If the path contains "customers", return the PosCustomersBox
+    if (pathContainsCustomers) {
+      return PosCustomersBox;
+    }
+    // If the path contains "vendors", return the PosVendorsBox
+    else if (pathContainsVendors) {
+      return VendorsBox;
+    }
+   
+    // Otherwise, find the component based on the route
+    const routeConfig = routesWithBox.find(route => 
+      route.main === currentMainRoute && 
+      (route.sub === currentSubRoute || 
+       (route.sub === '' && currentSubRoute === ''))
+    );
+    
+    return routeConfig?.component || null;
+  };
 
   // Check if Box component should be displayed for the current route
   const shouldShowBox = () => {
+    // If the path contains "customers", always show the box
+    if (pathContainsCustomers) {
+      return true;
+    }
+    
     // First check if the route is in the exclusion list
     const isExcluded = routesWithoutBox.some(route => 
       route.main === currentMainRoute && 
@@ -123,7 +160,7 @@ export default function Navbar() {
   const getTitle = () => {
     // Special case for /pos/new route
     if (str[1] === 'pos' && str[2] === 'sales' && str[3] === 'new') {
-      return 'New Sales Reciept';
+      return 'New Sales Receipt';
     }
 
     if (str[1] === 'invoice' && str[2] === 'new') {
@@ -151,9 +188,15 @@ export default function Navbar() {
     if (str[1] === 'pos' && str[2] === 'files') {
       return 'File Manager';
     }
+    if (str[1] === 'vouchers' && str[2] === 'new') {
+      return 'New Voucher';
+    }
     // Default behavior
     return str[2] == undefined ? str[1] : str[2];
   };
+
+  // Render the appropriate box component
+  const BoxComponent = getBoxComponent();
 
   return (
     <nav className=" w-full bg-blue-50 space-y-10">
@@ -178,10 +221,10 @@ export default function Navbar() {
         </div>
       </div>
       
-      {/* Only render Box component for specific routes */}
-      {shouldShowBox() && (
+      {/* Render the route-specific box component */}
+      {shouldShowBox() && BoxComponent && (
         <div className='ml-14 pb-10'>
-          <Box />
+          <BoxComponent />
         </div>
       )}
     </nav>
