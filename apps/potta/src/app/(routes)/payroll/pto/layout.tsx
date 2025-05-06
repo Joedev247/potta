@@ -7,15 +7,17 @@ interface Props {
     children: ReactNode
 }
 
-const ReportsLayout: FC<Props> = ({ children }) => {
+const TaxationLayout: FC<Props> = ({ children }) => {
     return (
         <div className="w-full h-screen overflow-hidden">
+
             <div className="w-full h-screen">
                 <div className="h-[100vh] w-full overflow-hidden  relative  p-0 ">
                     {children}
                 </div>
             </div>
+
         </div>
     )
 }
-export default ReportsLayout;
+export default TaxationLayout;

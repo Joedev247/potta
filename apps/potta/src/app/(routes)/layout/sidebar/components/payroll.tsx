@@ -3,16 +3,21 @@ import { Sidebar, Menu, MenuItem, SubMenu } from 'react-pro-sidebar';
 import { usePathname } from 'next/navigation';
 import Icon from '@potta/components/icon_fonts/icon';
 import { ContextData } from '@potta/components/context';
+import { Heart, Clock } from 'lucide-react';
+import { svgIcons } from '@potta/components/svg_icons/IconsSvg';
+
 const SidebarsPayroll = () => {
   const pathname = usePathname();
   const string = pathname;
   const str = string.split('/');
+  console.log(str[1]);
+
   const context = useContext(ContextData);
 
   return (
     <Sidebar
       collapsedWidth="65px"
-      width="180px"
+      width="200px"
       transitionDuration={500}
       collapsed={context?.toggle}
       toggled={true}
@@ -28,108 +33,78 @@ const SidebarsPayroll = () => {
           {' '}
          
         </MenuItem>
-        <MenuItem
-          active={str[2] == 'dashboard' ? true : false}
-          className="mt-8  font-thin"
-          href="/dashboard"
-          icon={
-            <Icon
-              icon="Pie-Chart-2"
-              size={23}
-              color={
-                str[2] == 'dashboard' || str[2] == undefined || str[2] == ''
-                  ? 'white'
-                  : 'black'
-              }
-            />
-          }
-        >
-          {' '}
-          <h3 className="text-lg mt-[2px]">Overview</h3>{' '}
-        </MenuItem>
-        <MenuItem
-          active={str[2] == 'benefit' ? true : false}
-          className="mt-4 font-thin"
-          href="/payroll/benefit"
-          icon={
-            <Icon
-              icon="Open-Mail"
-              size={21}
-              color={str[2] == 'benefit' ? 'white' : 'black'}
-            />
-          }
-        >
-          <h3 className="text-lg mt-1.5">Benefit</h3>
-        </MenuItem>
+
         <MenuItem
           active={str[2] == 'overview' ? true : false}
-          className="mt-4 font-thin"
+          className="mt-8   font-thin"
           href="/payroll/overview"
-          icon={
-            <Icon
-              icon="Open-Mail"
-              size={21}
-              color={str[2] == 'overview' ? 'white' : 'black'}
-            />
-          }
+          icon={svgIcons.dashboard(str[2] == 'overview' ? 'white' : 'black')}
         >
-          <h3 className="text-lg mt-1.5">Overview</h3>
+          {' '}
+          <h3 className="text-md mt-[2px]">Dashboard</h3>{' '}
         </MenuItem>
         <MenuItem
           active={str[2] == 'people' ? true : false}
           className="mt-4 font-thin"
           href="/payroll/people"
+          icon={svgIcons.users(str[2] == 'people' ? 'white' : 'black')}
+        >
+          <h3 className="text-md ">People</h3>
+        </MenuItem>
+
+        {/* Time Management with submenu */}
+        <SubMenu
+          label={<h3 className="text-md">Time Management</h3>}
+          icon={svgIcons.clock(
+            str[2] == 'timesheet' || str[2] == 'shifts' ? 'black' : 'black'
+          )}
+          className={`mt-4 font-thin ${
+            str[2] == 'timesheet' || str[2] == 'shifts' ? 'active-submenu' : ''
+          }`}
+          defaultOpen={str[2] == 'timesheet' || str[2] == 'shifts'}
+        >
+          <MenuItem
+            active={str[2] == 'timesheet' ? true : false}
+            className="pl-6 font-thin"
+            href="/payroll/timesheet"
+          >
+            <h3 className="text-md">Timesheet</h3>
+          </MenuItem>
+          <MenuItem
+            active={str[2] == 'shifts' ? true : false}
+            className="pl-6 font-thin"
+            href="/payroll/shifts"
+          >
+            <h3 className="text-md">Shifts</h3>
+          </MenuItem>
+        </SubMenu>
+
+        <MenuItem
+          active={str[2] == 'benefit' ? true : false}
+          className="mt-4 font-thin"
+          href="/payroll/benefit"
           icon={
-            <Icon
-              icon="Open-Mail"
-              size={21}
-              color={str[2] == 'people' ? 'white' : 'black'}
-            />
+            <Heart size={21} color={str[2] == 'benefit' ? 'white' : 'black'} />
           }
         >
-          <h3 className="text-lg mt-1.5">People</h3>
+          <h3 className="text-md ">Benefit</h3>
+        </MenuItem>
+
+        <MenuItem
+          active={str[2] == 'pto' ? true : false}
+          className="mt-4 font-thin"
+          href="/payroll/pto"
+          icon={svgIcons.pto(str[2] == 'pto' ? 'white' : 'black')}
+        >
+          <h3 className="text-md ">PTO</h3>
         </MenuItem>
         <MenuItem
           active={str[2] == 'reports' ? true : false}
           className="mt-4 font-thin"
           href="/payroll/reports"
-          icon={
-            <Icon
-              icon="Open-Mail"
-              size={21}
-              color={str[2] == 'reports' ? 'white' : 'black'}
-            />
-          }
+          icon={svgIcons.piechart(str[2] == 'reports' ? 'white' : 'black')}
         >
-          <h3 className="text-lg mt-1.5">Report</h3>
-        </MenuItem>
-        <MenuItem
-          active={str[2] == 'taxation' ? true : false}
-          className="mt-4 font-thin"
-          href="/payroll/taxation"
-          icon={
-            <Icon
-              icon="Open-Mail"
-              size={21}
-              color={str[2] == 'taxation' ? 'white' : 'black'}
-            />
-          }
-        >
-          <h3 className="text-lg mt-1.5">Taxation</h3>
-        </MenuItem>
-        <MenuItem
-          active={str[2] == 'timesheet' ? true : false}
-          className="mt-4 font-thin"
-          href="/payroll/timesheet"
-          icon={
-            <Icon
-              icon="Open-Mail"
-              size={21}
-              color={str[2] == 'timesheet' ? 'white' : 'black'}
-            />
-          }
-        >
-          <h3 className="text-lg mt-1.5">Timesheet</h3>
+          <h3 className="text-md ">Reports</h3>
         </MenuItem>
       </Menu>
       <div className="absolute cursor-pointer mb-10 ml-6 bottom-0">
@@ -143,11 +118,12 @@ const SidebarsPayroll = () => {
           />
           <div className="flex space-x-5">
             <img src="/icons/user.svg" className="h-10 w-10 -ml-2" alt="" />
-            <p className="mt-2 text-lg ml-3 font-thin">Jamison</p>
+            <p className="mt-2 text-md ml-3 font-thin">Jamison</p>
           </div>
         </div>
       </div>
     </Sidebar>
   );
 };
+
 export default SidebarsPayroll;

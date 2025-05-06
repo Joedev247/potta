@@ -29,7 +29,8 @@ const Slider: FC<props> = ({
   const [internalOpen, setInternalOpen] = useState(false);
 
   // Determine if we're in controlled or uncontrolled mode
-  const isControlled = externalOpen !== undefined && externalSetOpen !== undefined;
+  const isControlled =
+    externalOpen !== undefined && externalSetOpen !== undefined;
 
   // Use either the external or internal state
   const open = isControlled ? externalOpen : internalOpen;
@@ -81,9 +82,9 @@ const Slider: FC<props> = ({
             icon={<i className="ri-file-add-line"></i>}
           />
         )}
-        {buttonText == 'vendor' && (
+        {buttonText == 'benefits' && (
           <Button
-            text={'New Vendor'}
+            text={'New Benefits'}
             onClick={handleToggle}
             type={'button'}
             icon={<i className="ri-file-add-line"></i>}
@@ -92,6 +93,14 @@ const Slider: FC<props> = ({
         {buttonText == 'New Sales Receipt' && (
           <Button
             text={'New Sales Receipt'}
+            onClick={handleToggle}
+            type={'button'}
+            icon={<i className="ri-file-add-line"></i>}
+          />
+        )}
+        {buttonText == 'New Schedules' && (
+          <Button
+            text={'New Policy'}
             onClick={handleToggle}
             type={'button'}
             icon={<i className="ri-file-add-line"></i>}
@@ -109,12 +118,12 @@ const Slider: FC<props> = ({
             <div className="pointer-events-none fixed inset-x-0 top-0 flex max-h-full bg-gray-500 bg-opacity-75 transition-opacity justify-center">
               <DialogPanel
                 transition
-                className="pointer-events-auto border-b max-w-screen w-full transform transition duration-500 ease-in-out data-[closed]:-translate-y-full sm:duration-500"
+                className="pointer-events-auto border-b max-w-screen h-screen w-full transform transition duration-500 ease-in-out data-[closed]:-translate-y-full sm:duration-500"
               >
                 <div className="flex h-full flex-col overflow-hidden bg-gray-50 py-6 shadow-xl">
                   <div className="flex justify-center items-center ">
                     <div className="flex py-2 px-4 w-full border-b justify-between">
-                      <DialogTitle className="text-xl leading-6 font-medium text-gray-900">
+                      <DialogTitle className="text-xl leading-6 font-bold text-gray-900">
                         {title}
                       </DialogTitle>
                       <div className="ml-3 flex h-7 items-center">
@@ -122,7 +131,7 @@ const Slider: FC<props> = ({
                           <button
                             type="button"
                             onClick={() => setOpen(false)}
-                            className="relative rounded-md bg-white text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                            className="relative rounded-md text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
                           >
                             <span className="absolute -inset-2.5" />
                             <span className="sr-only">Close panel</span>

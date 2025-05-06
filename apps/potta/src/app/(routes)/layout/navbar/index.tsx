@@ -1,4 +1,4 @@
-'use client'
+'use client';
 
 import React, { useState } from 'react';
 import Link from 'next/link';
@@ -20,8 +20,8 @@ import PosSalesBox from './boxes/PosSalesBox';
 
 const urlRouters = [
   {
-    value: 'payments',
-    label: 'Payments',
+    value: 'payroll',
+    label: 'Payroll',
   },
   {
     value: 'expenses',
@@ -32,8 +32,8 @@ const urlRouters = [
     label: 'Vouchers',
   },
   {
-    value: "pos",
-    label: "POS"
+    value: 'pos',
+    label: 'POS',
   },
   {
     value: 'invoice',
@@ -44,12 +44,12 @@ const urlRouters = [
     label: 'Taxation',
   },
   {
-    value: "reports",
-    label: "Reports"
+    value: 'reports',
+    label: 'Reports',
   },
   {
-    value: "accounts",
-    label: "Accounts"
+    value: 'accounts',
+    label: 'Accounts',
   },
 ];
 
@@ -82,11 +82,10 @@ export default function Navbar() {
   const str = string.split('/');
 
   // Check if str[1] is one of the valid route values
-  const isValidRoute = str[1] && urlRouters.some(route => route.value === str[1]);
+  const isValidRoute =
+    str[1] && urlRouters.some((route) => route.value === str[1]);
 
-  const [selected, setSeleted] = useState(
-    isValidRoute ? str[1] : 'payments'
-  );
+  const [selected, setSeleted] = useState(isValidRoute ? str[1] : 'payments');
 
   // Get the current route and sub-route
   const currentMainRoute = str[1] || '';
@@ -124,21 +123,23 @@ export default function Navbar() {
     }
     
     // First check if the route is in the exclusion list
-    const isExcluded = routesWithoutBox.some(route => 
-      route.main === currentMainRoute && 
-      (route.sub === currentSubRoute || 
-       (route.sub === '' && currentSubRoute === ''))
+    const isExcluded = routesWithoutBox.some(
+      (route) =>
+        route.main === currentMainRoute &&
+        (route.sub === currentSubRoute ||
+          (route.sub === '' && currentSubRoute === ''))
     );
-    
+
     if (isExcluded) {
       return false;
     }
-    
+
     // Then check if the route is in the inclusion list
-    return routesWithBox.some(route => 
-      route.main === currentMainRoute && 
-      (route.sub === currentSubRoute || 
-       (route.sub === '' && currentSubRoute === ''))
+    return routesWithBox.some(
+      (route) =>
+        route.main === currentMainRoute &&
+        (route.sub === currentSubRoute ||
+          (route.sub === '' && currentSubRoute === ''))
     );
   };
 
@@ -165,6 +166,10 @@ export default function Navbar() {
 
     if (str[1] === 'invoice' && str[2] === 'new') {
       return 'New Invoice';
+    }
+
+    if (str[1] === 'payroll' && str[2] === 'people') {
+      return 'Add People';
     }
     if (str[1] === 'invoice' && str[2] === undefined) {
       return 'Invoice Overview';
@@ -208,15 +213,18 @@ export default function Navbar() {
           </h1>
         </div>
         <div className="flex gap-8 px-4">
-          <div className="w-full min-w-32 ">
-            <Select
-              options={urlRouters}
-              selectedValue={selected.toString()}
-              onChange={(value: any) => {
-                handleSelect(value);
-              }}
-              bg={'bg-white'}
-            />
+          {/* <Icon icon="Bell" size={23} /> */}
+          <div className="w-full mt-2 min-w-32 ">
+            <div className="w-full min-w-32 ">
+              <Select
+                options={urlRouters}
+                selectedValue={selected.toString()}
+                onChange={(value: any) => {
+                  handleSelect(value);
+                }}
+                bg={'bg-white'}
+              />
+            </div>
           </div>
         </div>
       </div>

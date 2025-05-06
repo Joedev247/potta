@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { FieldError, UseFormRegister } from "react-hook-form";
+import React, { useState } from 'react';
+import { FieldError, UseFormRegister } from 'react-hook-form';
 import { format } from "date-fns";
 import { Calendar as CalendarIcon } from "lucide-react";
 import { cn } from "@potta/lib/utils";
@@ -19,14 +19,16 @@ type Props = {
   type: string;
   className?: string;
   name: string;
-  errors?: CustomError;
+  errors?: FieldError;
   placeholder?: string;
   register?: UseFormRegister<any>;
-  onchange?: (event: React.ChangeEvent<HTMLInputElement> | string) => void;
+  onchange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
   value?: string | number;
   height?: boolean;
   required?: boolean;
   autocomplete?: boolean;
+  labelClass?: string;
+  inputClass?: string;
   disabled?: boolean;
   min?: number;
   max?: number;
@@ -44,7 +46,9 @@ const Input: React.FC<Props> = ({
   value,
   height,
   onchange,
+  labelClass,
   autocomplete,
+  inputClass,
   disabled,
   min,
   max,
@@ -57,82 +61,25 @@ const Input: React.FC<Props> = ({
     ? { ...registerProps, onChange: onchange }
     : registerProps;
 
-  // For date picker
-  const [date, setDate] = useState<Date | undefined>(
-    value ? new Date(value.toString()) : undefined
-  );
-
-  // Handle date change
-  const handleDateChange = (newDate: Date | undefined) => {
-    setDate(newDate);
-    if (newDate && onchange) {
-      // Format the date as YYYY-MM-DD for HTML input compatibility
-      const formattedDate = format(newDate, "yyyy-MM-dd");
-      onchange(formattedDate);
-    }
-  };
-
-  // Render date picker if type is date
-  if (type === "date") {
-    return (
-      <div className={`w-full ${className}`}>
-        {label && (
-          <span className="mb-3 text-lg text-gray-900 font-medium">
-            {label}
-            {required && <span className="text-red-500">*</span>}
-          </span>
-        )}
-        <Popover>
-          <PopoverTrigger asChild>
-            <Button
-              variant="outline"
-              disabled={disabled}
-              className={`w-full justify-start shadow-none h-11 text-left font-normal mt-2 ${
-                !date && "text-gray-500"
-              } ${
-                height ? "py-1.5" : "py-2.5"
-              } hover:bg-gray-50`}
-            >
-              <CalendarIcon className="mr-2 h-4 w-4" />
-              {date ? format(date, "PPP") : placeholder || "Select date"}
-            </Button>
-          </PopoverTrigger>
-          <PopoverContent className="w-auto p-0" align="start">
-            <Calendar
-              mode="single"
-              selected={date}
-              onSelect={handleDateChange}
-              initialFocus
-            />
-          </PopoverContent>
-        </Popover>
-        {errors ? (
-          <small className="col-span-2 text-red-500">{errors?.message}</small>
-        ) : null}
-      </div>
-    );
-  }
-
-  // Render regular input for other types
   return (
     <div className={`w-full ${className}`}>
       {label && (
-        <span className="mb-3 text-lg text-gray-900 font-medium">
+        <span className={`mb-3 text-gray-900 font-medium ${labelClass}`}>
           {label}
-          {required && <span className="text-red-500">*</span>}
+          {required && <span className=" text-red-500">*</span>}
         </span>
       )}
       <input
         disabled={disabled}
-        autoComplete={autocomplete ? "off" : "on"}
+        autoComplete={autocomplete ? 'off' : 'on'}
         type={type}
         max={max}
         min={min}
         value={value}
         {...inputProps}
         placeholder={placeholder}
-        className={`w-full ${
-          height ? "py-1.5" : "py-2.5"
+        className={`w-full ${inputClass} ${
+          height ? 'py-1.5' : 'py-2.5'
         } px-4 border border-gray-200 rounded-[2px] outline-none mt-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500`}
       />
       {errors ? (

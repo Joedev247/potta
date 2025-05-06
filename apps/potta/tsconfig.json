@@ -31,7 +31,8 @@
     "../../apps/potta/.next/types/**/*.ts",
     "../../dist/apps/potta/.next/types/**/*.ts",
     "next-env.d.ts",
-    ".next/types/**/*.ts"
+    ".next/types/**/*.ts",
+    "../../voucher.tsx"
   ],
   "exclude": ["node_modules", "jest.config.ts", "**/*.spec.ts", "**/*.test.ts"]
 }

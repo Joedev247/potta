@@ -50,8 +50,8 @@ export default function RootLayout({
       </div>
       {/* <div className={`chat-ai    border-l ${show ? 'show-chat' : ''}`}>
         <ChatAI />
-      </div>
-      <div className={` w-[2.5%] z-40 fixed right-0`}>
+      </div> */}
+      {/* <div className={` w-[2.5%] z-40 fixed right-0`}>
         <div className={`  bg-white  h-screen border-l flex justify-center`}>
           <div>
             <div className="">
