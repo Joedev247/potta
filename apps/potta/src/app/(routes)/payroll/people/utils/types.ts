@@ -17,6 +17,7 @@ export interface PersonPayload {
   national_identification_number: string;
   roleId?: string;
   isActive: boolean;
+  benefits?: string[];
   address: AddressPayload;
 }
 

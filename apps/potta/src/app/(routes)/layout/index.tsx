@@ -24,9 +24,7 @@ export default function RootLayout({
   return (
     <div className="relative flex  w-full h-screen">
       <div
-        className={`transition-all flex  duration-500  ease-in-out ${
-          show ? 'w-[75%]' : 'w-[97.5%]'
-        }`}
+        className={`transition-all flex  duration-500  ease-in-out w-screen`}
       >
         <div className="w-full overflow-x-hidden overflow-y-auto scroll z-10 flex">
           <div className="fixed z-50">
@@ -45,10 +43,10 @@ export default function RootLayout({
           </div>
         </div>
       </div>
-      <div className={`chat-ai    border-l ${show ? 'show-chat' : ''}`}>
+      {/* <div className={`chat-ai    border-l ${show ? 'show-chat' : ''}`}>
         <ChatAI />
-      </div>
-      <div className={` w-[2.5%] z-40 fixed right-0`}>
+      </div> */}
+      {/* <div className={` w-[2.5%] z-40 fixed right-0`}>
         <div className={`  bg-white  h-screen border-l flex justify-center`}>
           <div>
             <div className="">
@@ -97,7 +95,7 @@ export default function RootLayout({
             </div>
           </div>
         </div>
-      </div>
+      </div> */}
     </div>
   );
 }

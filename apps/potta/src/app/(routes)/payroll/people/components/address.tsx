@@ -144,7 +144,7 @@ const Address: React.FC<AddressProps> = ({ onChange, initialData }) => {
   }, []);
 
   return (
-    <div className="w-full flex flex-col gap-4 pt-10 px-14">
+    <div className="w-full flex h-[80vh] flex-col gap-4 pt-10 px-14">
       <div>
         <Input
           type="text"

@@ -91,7 +91,7 @@ const BaseInfo: React.FC<BaseInfoProps> = ({ onChange, initialData }) => {
       setIsLoadingRoles(true);
       try {
         const response = await axios.post(
-          '/api/roles/filter',
+          '/api/potta/roles/filter',
           {},
           {
             params: {
@@ -309,7 +309,7 @@ const BaseInfo: React.FC<BaseInfoProps> = ({ onChange, initialData }) => {
   return (
     <div className="w-full flex flex-col gap-4 pt-10 px-14 ">
       <div>
-        <Select
+        <SearchableSelect
           options={[
             { label: 'Contractor', value: 'Contractor' },
             { label: 'Employee', value: 'Employee' },
@@ -320,7 +320,7 @@ const BaseInfo: React.FC<BaseInfoProps> = ({ onChange, initialData }) => {
           onChange={(value: string) =>
             handleSelectChange('employmentType', value)
           }
-          bg={''}
+         
         />
       </div>
       <div className="">
@@ -387,7 +387,8 @@ const BaseInfo: React.FC<BaseInfoProps> = ({ onChange, initialData }) => {
           isRequired
         />
         <div>
-          <Select
+          <SearchableSelect
+            
             options={maritalStatusOptions}
             label="Marital Status"
             labelClass="pb-2 !font-bold"
@@ -395,18 +396,18 @@ const BaseInfo: React.FC<BaseInfoProps> = ({ onChange, initialData }) => {
             onChange={(value: string) =>
               handleSelectChange('maritalStatus', value)
             }
-            bg={''}
+          
           />
         </div>
       </div>
       <div className="w-1/2">
-        <Select
+        <SearchableSelect
           options={genderOptions}
           label="Gender"
           labelClass="pb-2 !font-bold"
           selectedValue={formData.gender}
           onChange={(value: string) => handleSelectChange('gender', value)}
-          bg={''}
+          
         />
       </div>
       <div className="grid grid-cols-2 gap-3">

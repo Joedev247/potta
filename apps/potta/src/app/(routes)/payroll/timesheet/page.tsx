@@ -1,71 +1,119 @@
 'use client';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import RootLayout from '../../layout';
 import Boxes from './components/boxes';
 import TimesheetTable from './components/table';
+import TimesheetView from './components/TimesheetView';
+import {
+  format,
+  startOfWeek,
+  endOfWeek,
+  startOfMonth,
+  endOfMonth,
+  startOfQuarter,
+  endOfQuarter,
+  startOfYear,
+  endOfYear,
+} from 'date-fns';
+import { toast } from 'react-hot-toast';
+import Button from '@potta/components/button';
+import DateNavigation from './components/DateNavigation';
+import NewTimeEntryModal from './components/NewTimeEntryModal';
+
+// Create a client
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 5 * 60 * 1000, // 5 minutes
+      refetchOnWindowFocus: false,
+    },
+  },
+});
 
 const Timesheet = () => {
+  // State for filters
   const [cycleTab, setCycleTab] = useState('Daily');
-  const [selectedDate, setSelectedDate] = useState(11);
+  const [selectedDate, setSelectedDate] = useState(new Date());
+  const [dateRange, setDateRange] = useState({
+    start: new Date(),
+    end: new Date(),
+  });
 
-  const cycleTabs = [
-    'Daily',
-    'Weekly',
-    'Monthly',
-    'Quarterly',
-    'Yearly',
-    'Custom',
-  ];
-  const dates = Array.from({ length: 17 }, (_, i) => i + 1);
+  // State for modal forms
+  const [showNewEntryModal, setShowNewEntryModal] = useState(false);
+
+  // Handle date range changes based on cycle tab
+  useEffect(() => {
+    const today = new Date(selectedDate);
+
+    switch (cycleTab) {
+      case 'Daily':
+        setDateRange({ start: today, end: today });
+        break;
+      case 'Weekly':
+        setDateRange({
+          start: startOfWeek(today, { weekStartsOn: 1 }),
+          end: endOfWeek(today, { weekStartsOn: 1 }),
+        });
+        break;
+      case 'Monthly':
+        setDateRange({
+          start: startOfMonth(today),
+          end: endOfMonth(today),
+        });
+        break;
+      case 'Quarterly':
+        setDateRange({
+          start: startOfQuarter(today),
+          end: endOfQuarter(today),
+        });
+        break;
+      case 'Yearly':
+        setDateRange({
+          start: startOfYear(today),
+          end: endOfYear(today),
+        });
+        break;
+    }
+  }, [cycleTab, selectedDate]);
 
   return (
-    <RootLayout>
-      <div className="px-14 pt-10">
-        <h1 className="text-2xl font-medium mb-6">Time sheet</h1>
+    <QueryClientProvider client={queryClient}>
+      <RootLayout>
+        <div className="px-14 pt-2">
+          {/* Time cycle tabs and date navigation */}
+          <DateNavigation
+            cycleTab={cycleTab}
+            setCycleTab={setCycleTab}
+            selectedDate={selectedDate}
+            setSelectedDate={setSelectedDate}
+            dateRange={dateRange}
+            setDateRange={setDateRange}
+          />
 
-        <div className="flex justify-between mb-8">
-          {/* Cycle tabs */}
-          <div className="bg-green-50 rounded-md flex">
-            {cycleTabs.map((tab) => (
-              <div
-                key={tab}
-                onClick={() => setCycleTab(tab)}
-                className={`px-6 py-3 cursor-pointer transition-all ${
-                  cycleTab === tab
-                    ? 'text-green-600 border-b-2 border-green-500 font-medium'
-                    : 'text-gray-600'
-                }`}
-              >
-                {tab}
-              </div>
-            ))}
-          </div>
-
-          {/* Date selector */}
-          <div className="bg-green-50 rounded-md flex">
-            {dates.map((date) => {
-              const formattedDate = date < 10 ? `0${date}` : date;
-              return (
-                <div
-                  key={date}
-                  onClick={() => setSelectedDate(date)}
-                  className={`w-10 h-10 flex items-center justify-center cursor-pointer transition-all ${
-                    selectedDate === date
-                      ? 'bg-green-600 text-white rounded-full'
-                      : 'text-gray-600'
-                  }`}
-                >
-                  {formattedDate}
-                </div>
-              );
-            })}
-          </div>
+          {/* Summary boxes */}
+          <Boxes />
+          {/* Timesheet content */}
+          <TimesheetView
+            dateRange={dateRange}
+            buttonClick={() => setShowNewEntryModal(true)}
+          />
         </div>
 
-        <Boxes />
-        <TimesheetTable />
-      </div>
-    </RootLayout>
+        {/* Modal with smooth animation */}
+        {showNewEntryModal && (
+          <NewTimeEntryModal
+            onClose={() => setShowNewEntryModal(false)}
+            onSuccess={() => {
+              setShowNewEntryModal(false);
+            }}
+          />
+        )}
+      </RootLayout>
+      {process.env.NODE_ENV === 'development' && <ReactQueryDevtools />}
+    </QueryClientProvider>
   );
 };
 

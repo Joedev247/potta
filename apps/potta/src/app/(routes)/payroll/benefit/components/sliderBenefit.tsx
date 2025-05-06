@@ -15,7 +15,7 @@ import { toast } from 'react-hot-toast';
 const SliderBenefit = () => {
   const [benefitType, setBenefitType] = useState('Financial');
   const [rateType, setRateType] = useState('Flat Rate');
-  const [cycle, setCycle] = useState('Monthly');
+  const [cycle, setCycle] = useState('MONTHLY');
   const [isTaxable, setIsTaxable] = useState(true);
   const [expiryDate, setExpiryDate] = useState<CalendarDate | null>(null);
   const [category, setCategory] = useState('Seniority Bonus');
@@ -84,15 +84,14 @@ const SliderBenefit = () => {
     { label: 'Percentage', value: 'Percentage' },
   ];
 
-  // Cycle options
   const cycleOptions = [
-    { label: 'Daily', value: 'Daily' },
-    { label: 'Weekly', value: 'Weekly' },
-    { label: 'Monthly', value: 'Monthly' },
-    { label: 'Quarterly', value: 'Quarterly' },
-    { label: 'Annually', value: 'Annually' },
-    { label: 'One Time', value: 'OneTime' },
-    { label: 'None', value: 'None' },
+    { label: 'Daily', value: 'DAILY' },
+    { label: 'Weekly', value: 'WEEKLY' },
+    { label: 'Monthly', value: 'MONTHLY' },
+    { label: 'Quarterly', value: 'QUARTERLY' },
+    { label: 'Annually', value: 'ANNUALLY' },
+    { label: 'One Time', value: 'ONETIME' },
+    { label: 'None', value: 'NONE' },
   ];
 
   // Salary cap options for when rate type is percentage - removed Base Salary and Gross Salary
@@ -104,7 +103,7 @@ const SliderBenefit = () => {
     { label: 'Custom Cap', value: 'Custom' },
   ];
 
-  // Update constraints and defaults based on selected category
+  // Then in your useEffect for category changes:
   useEffect(() => {
     // Set default benefit name based on category
     setBenefitName(category);
@@ -120,7 +119,7 @@ const SliderBenefit = () => {
     switch (category) {
       case 'Base Salary':
         setRateType('Flat Rate');
-        setCycle('Monthly');
+        setCycle('MONTHLY'); // Using correct backend value
         setIsTaxable(true);
         setMinFlatRate(41875); // Minimum wage in Cameroon
         setMaxFlatRate(10000000);
@@ -131,7 +130,7 @@ const SliderBenefit = () => {
 
       case 'Seniority Bonus':
         setRateType('Percentage');
-        setCycle('Monthly');
+        setCycle('MONTHLY'); // Using correct backend value
         setIsTaxable(true);
         setMinPercentage(2);
         setMaxPercentage(8);
@@ -142,7 +141,7 @@ const SliderBenefit = () => {
 
       case 'Responsibility Allowance':
         setRateType('Percentage');
-        setCycle('Monthly');
+        setCycle('MONTHLY'); // Using correct backend value
         setIsTaxable(true);
         setMinPercentage(5);
         setMaxPercentage(20);
@@ -151,7 +150,7 @@ const SliderBenefit = () => {
 
       case 'Dirt Allowance':
         setRateType('Flat Rate');
-        setCycle('Monthly');
+        setCycle('MONTHLY'); // Using correct backend value
         setIsTaxable(true);
         setMinFlatRate(5000);
         setMaxFlatRate(25000);
@@ -160,7 +159,7 @@ const SliderBenefit = () => {
 
       case 'Milk Allowance':
         setRateType('Flat Rate');
-        setCycle('Monthly');
+        setCycle('MONTHLY'); // Using correct backend value
         setIsTaxable(false);
         setMinFlatRate(5000);
         setMaxFlatRate(20000);
@@ -171,7 +170,7 @@ const SliderBenefit = () => {
 
       case 'Encouragement Bonus':
         setRateType('Percentage');
-        setCycle('Monthly');
+        setCycle('MONTHLY'); // Using correct backend value
         setIsTaxable(true);
         setMinPercentage(5);
         setMaxPercentage(50);
@@ -180,7 +179,7 @@ const SliderBenefit = () => {
 
       case 'Meal Allowance':
         setRateType('Flat Rate');
-        setCycle('Daily');
+        setCycle('DAILY'); // Using correct backend value
         setIsTaxable(false);
         setMinFlatRate(1000);
         setMaxFlatRate(2500);
@@ -191,7 +190,7 @@ const SliderBenefit = () => {
 
       case 'Housing Allowance':
         setRateType('Percentage');
-        setCycle('Monthly');
+        setCycle('MONTHLY'); // Using correct backend value
         setIsTaxable(true);
         setMinPercentage(15);
         setMaxPercentage(30);
@@ -200,7 +199,7 @@ const SliderBenefit = () => {
 
       case 'Transport Allowance':
         setRateType('Flat Rate');
-        setCycle('Monthly');
+        setCycle('MONTHLY'); // Using correct backend value
         setIsTaxable(false);
         setMinFlatRate(20000);
         setMaxFlatRate(50000);
@@ -209,7 +208,7 @@ const SliderBenefit = () => {
 
       case 'Family Allowance':
         setRateType('Flat Rate');
-        setCycle('Monthly');
+        setCycle('MONTHLY'); // Using correct backend value
         setIsTaxable(false);
         setMinFlatRate(2800);
         setMaxFlatRate(2800);
@@ -218,7 +217,7 @@ const SliderBenefit = () => {
 
       case 'Risk Allowance':
         setRateType('Percentage');
-        setCycle('Monthly');
+        setCycle('MONTHLY'); // Using correct backend value
         setIsTaxable(true);
         setMinPercentage(5);
         setMaxPercentage(30);
@@ -229,7 +228,7 @@ const SliderBenefit = () => {
 
       case 'Overtime Pay':
         setRateType('Percentage');
-        setCycle('Daily');
+        setCycle('DAILY'); // Using correct backend value
         setIsTaxable(true);
         setMinPercentage(25);
         setMaxPercentage(100);
@@ -240,7 +239,7 @@ const SliderBenefit = () => {
 
       case 'Performance Bonus':
         setRateType('Percentage');
-        setCycle('Monthly');
+        setCycle('MONTHLY'); // Using correct backend value
         setIsTaxable(true);
         setMinPercentage(5);
         setMaxPercentage(50);
@@ -251,7 +250,7 @@ const SliderBenefit = () => {
 
       case 'Sales Commission':
         setRateType('Percentage');
-        setCycle('Monthly');
+        setCycle('MONTHLY'); // Using correct backend value
         setIsTaxable(true);
         setMinPercentage(1);
         setMaxPercentage(20);
@@ -260,7 +259,7 @@ const SliderBenefit = () => {
 
       case 'Hardship Allowance':
         setRateType('Percentage');
-        setCycle('Monthly');
+        setCycle('MONTHLY'); // Using correct backend value
         setIsTaxable(true);
         setMinPercentage(5);
         setMaxPercentage(25);
@@ -271,7 +270,7 @@ const SliderBenefit = () => {
 
       case '13th Month Salary':
         setRateType('Percentage');
-        setCycle('Annually');
+        setCycle('ANNUALLY'); // Using correct backend value
         setIsTaxable(true);
         setMinPercentage(100);
         setMaxPercentage(100);
@@ -282,7 +281,7 @@ const SliderBenefit = () => {
 
       default:
         setRateType('Flat Rate');
-        setCycle('Monthly');
+        setCycle('MONTHLY'); // Using correct backend value
         setIsTaxable(true);
         setMinFlatRate(0);
         setMaxFlatRate(1000000);
@@ -295,7 +294,6 @@ const SliderBenefit = () => {
     // Update description when helpText changes
     setDescription(helpText);
   }, [category]);
-
   // Update description when helpText changes outside of category change
   useEffect(() => {
     setDescription(helpText);
@@ -499,7 +497,7 @@ const SliderBenefit = () => {
     setCategory('Seniority Bonus');
     setBenefitType('Financial');
     setRateType('Flat Rate');
-    setCycle('Monthly');
+    setCycle('MONTHLY');
     setIsTaxable(true);
     setSalaryCap('100000'); // Set to a numeric value instead of 'Base Salary'
     setCustomSalaryCap('');
@@ -622,7 +620,7 @@ const SliderBenefit = () => {
     >
       <div className="flex min-w-[1100px] flex-col gap-5">
         <div>
-          <p className="mb-2">Benefit Type</p>
+          <p className="mb-2 font-bold">Benefit Type</p>
           <Select
             options={benefitTypeOptions}
             selectedValue={benefitType}
@@ -632,7 +630,7 @@ const SliderBenefit = () => {
         </div>
 
         <div>
-          <p className="mb-2">Category</p>
+          <p className="mb-2 font-bold">Category</p>
           <Select
             options={categoryOptions}
             selectedValue={category}
@@ -645,7 +643,7 @@ const SliderBenefit = () => {
         </div>
 
         <div>
-          <p className="mb-2">Provider</p>
+          <p className="mb-2 font-bold">Provider</p>
           <Select
             options={providerOptions}
             selectedValue={category === 'Family Allowance' ? 'CNPS' : 'Company'}
@@ -664,7 +662,7 @@ const SliderBenefit = () => {
         <div className="flex flex-col space-y-4">
           <div className="flex">
             <div className="w-1/3 pr-4">
-              <p className="mb-2">Rate Type</p>
+              <p className="mb-2 font-bold">Rate Type</p>
               <Select
                 options={rateTypeOptions}
                 selectedValue={rateType}
@@ -747,7 +745,7 @@ const SliderBenefit = () => {
                       )}
                     </div>
                     <div className="w-1/2">
-                      <p className="mb-2">Salary Cap</p>
+                      <p className="mb-2 font-bold">Salary Cap</p>
                       <Select
                         options={salaryCapOptions}
                         selectedValue={salaryCap}
@@ -783,11 +781,11 @@ const SliderBenefit = () => {
 
         <div className="grid grid-cols-2 gap-4">
           <div>
-            <p className="mb-2">Frequency</p>
+            <p className="mb-2 font-bold">Frequency</p>
             <Select
               options={cycleOptions}
               selectedValue={cycle}
-              onChange={(value) => setCycle(value)}
+              onchange={(value) => setCycle(value)}
               bg={''}
               isDisabled={[
                 'Meal Allowance',
@@ -795,6 +793,7 @@ const SliderBenefit = () => {
                 '13th Month Salary',
               ].includes(category)}
             />
+
             {category === 'Meal Allowance' && (
               <p className="text-xs text-gray-600 mt-1 italic">
                 Meal allowance is paid daily
@@ -916,7 +915,7 @@ const SliderBenefit = () => {
               !benefitType.includes('Redeemable') && <div></div>}
             {benefitType === 'Redeemable' && (
               <div>
-                <p className="mb-2">Expiry Date</p>
+                <p className="mb-2 font-bold">Expiry Date</p>
                 <CustomDatePicker
                   label=""
                   placeholder="Select expiry date"
@@ -957,7 +956,7 @@ const SliderBenefit = () => {
         </div> */}
 
         <div>
-          <p className="mb-2">Description</p>
+          <p className="mb-2 font-bold">Description</p>
           <textarea
             className="p-3 bg-gray-50 w-full border outline-none rounded-md"
             rows={5}

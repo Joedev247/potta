@@ -6,6 +6,7 @@ import Search from '@potta/components/search';
 import { Benefit, BenefitType } from '../utils/types';
 import moment from 'moment';
 import { useBenefits } from '../hooks/useBenefits';
+import PottaLoader from '@potta/components/pottaloader';
 
 const TableBenefit = () => {
   const { benefits, loading, meta, updateFilter } = useBenefits({
@@ -141,11 +142,39 @@ const TableBenefit = () => {
     {
       name: 'Status',
       selector: (row: Benefit) => row.status,
-      render: (row: Benefit) => (
-        <div className={getStatusColor(row.status)}>
-          {formatStatus(row.status)}
-        </div>
-      ),
+      cell: (row: Benefit) => {
+        // Normalize the status to uppercase for consistent comparison
+        const normalizedStatus = row.status?.toUpperCase() || '';
+
+        // Define styling based on status
+        let statusStyle = '';
+
+        switch (normalizedStatus) {
+          case 'ACTIVE':
+            statusStyle = ' text-green-800';
+            break;
+          case 'PENDING':
+            statusStyle = ' text-yellow-600';
+            break;
+          case 'EXPIRED':
+            statusStyle = ' text-gray-800';
+            break;
+          case 'REDEEMED':
+            statusStyle = 'text-blue-800';
+            break;
+          default:
+            statusStyle = ' text-gray-600';
+            break;
+        }
+
+        return (
+          <span
+            className={`py-1 inline-flex text-sm leading-5 font-semibold rounded-full ${statusStyle}`}
+          >
+            {row.status}
+          </span>
+        );
+      },
     },
   ];
 
@@ -219,7 +248,9 @@ const TableBenefit = () => {
       ) : (
         <div className="text-center py-10">
           {loading ? (
-            <p>Loading benefits...</p>
+            <div className="fixed z-[9999] backdrop-blur-sm top-0 left-0 h-screen w-screen grid place-content-center">
+              <PottaLoader />
+            </div>
           ) : (
             <p>No benefits found. Create a new benefit to get started.</p>
           )}

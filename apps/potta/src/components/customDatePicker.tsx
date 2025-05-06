@@ -1,25 +1,27 @@
 'use client';
 
-import React, { useEffect, useState } from "react";
-import { Calendar as CalendarIcon } from "lucide-react";
-import { format } from "date-fns";
-import { cn } from "@potta/lib/utils";
-import { Button } from "@/components/ui/button";
-import { Calendar } from "@/components/ui/calendar";
+import React, { useEffect, useState } from 'react';
+import { Calendar as CalendarIcon } from 'lucide-react';
+import { format } from 'date-fns';
+import { cn } from '@potta/lib/utils';
+import { Button } from '@potta/components/shadcn/button';
+import { Calendar } from '@potta/components/shadcn/calendar';
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from "@/components/ui/popover";
-import { FieldError, UseFormRegister } from "react-hook-form";
+} from '@potta/components/shadcn/popover';
+import { FieldError, UseFormRegister } from 'react-hook-form';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
+} from '@potta/components/shadcn/select';
+import { CalendarDate as InternationalCalendarDate } from '@internationalized/date';
 
+// Interface for the DateInput component (using native Date objects)
 interface DateInputProps {
   label?: string;
   placeholder?: string;
@@ -29,10 +31,22 @@ interface DateInputProps {
   register?: UseFormRegister<any>;
   required?: boolean;
   value?: Date;
-  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onChange?: (date: Date | undefined) => void;
   yearRange?: { start: number; end: number };
 }
 
+// Interface for the CustomDatePicker component (using CalendarDate objects)
+interface CustomDatePickerProps {
+  label: string;
+  placeholder: string;
+  value: InternationalCalendarDate | null;
+  onChange: (value: InternationalCalendarDate | null) => void;
+  isRequired?: boolean;
+  className?: string;
+  yearRange?: { start: number; end: number };
+}
+
+// Export the DateInput component for use with native Date objects
 export function DateInput({
   label,
   placeholder,
@@ -43,77 +57,80 @@ export function DateInput({
   required,
   value,
   onChange,
-  yearRange = { start: 1900, end: new Date().getFullYear() },
+  yearRange = { start: 1900, end: new Date().getFullYear() + 10 },
 }: DateInputProps) {
-  const [date, setDate] = React.useState<Date | undefined>(value);
-  const [calendarDate, setCalendarDate] = useState<Date>(date || new Date());
-  
+  // Add validation when initializing the date state
+  const [date, setDate] = useState<Date | undefined>(
+    value && value instanceof Date && !isNaN(value.getTime())
+      ? value
+      : undefined
+  );
+
+  // Initialize calendar date with a valid date
+  const [calendarDate, setCalendarDate] = useState<Date>(
+    date && date instanceof Date && !isNaN(date.getTime())
+      ? new Date(date)
+      : new Date()
+  );
+
+  // Track popover open state
+  const [open, setOpen] = useState(false);
+
   const months = [
-    "January",
-    "February",
-    "March",
-    "April",
-    "May",
-    "June",
-    "July",
-    "August",
-    "September",
-    "October",
-    "November",
-    "December",
+    'January',
+    'February',
+    'March',
+    'April',
+    'May',
+    'June',
+    'July',
+    'August',
+    'September',
+    'October',
+    'November',
+    'December',
   ];
-  
+
   // Generate years array
   const years = Array.from(
     { length: yearRange.end - yearRange.start + 1 },
-    (_, i) => yearRange.end - i
+    (_, i) => yearRange.start + i
   );
-  
+
   // Update internal state when value prop changes
   useEffect(() => {
-    if (value && (!date || value.getTime() !== date.getTime())) {
-      setDate(value);
-      setCalendarDate(value);
+    if (value && value instanceof Date && !isNaN(value.getTime())) {
+      if (!date || value.getTime() !== date.getTime()) {
+        setDate(value);
+        setCalendarDate(new Date(value));
+      }
+    } else if (value === undefined && date !== undefined) {
+      setDate(undefined);
     }
-  }, [value]);
-  
-  const createSyntheticEvent = (
-    date: Date | undefined
-  ): React.ChangeEvent<HTMLInputElement> => {
-    const inputEl = document.createElement("input");
-    inputEl.type = "date";
-    inputEl.name = name;
-    inputEl.value = date ? date.toISOString() : "";
-    
-    return {
-      target: inputEl,
-      currentTarget: inputEl,
-      nativeEvent: new Event("change"),
-      bubbles: true,
-      cancelable: true,
-      defaultPrevented: false,
-      eventPhase: 0,
-      isTrusted: true,
-      timeStamp: Date.now(),
-      type: "change",
-      preventDefault: () => {},
-      stopPropagation: () => {},
-      isPropagationStopped: () => false,
-      persist: () => {},
-      isDefaultPrevented: () => false,
-    } as React.ChangeEvent<HTMLInputElement>;
-  };
-  
+  }, [value, date]);
+
   const handleSelect = (selectedDate: Date | undefined) => {
-    setDate(selectedDate);
-    if (selectedDate) setCalendarDate(selectedDate);
-    if (onChange) {
-      // Create and dispatch a synthetic event
-      const syntheticEvent = createSyntheticEvent(selectedDate);
-      onChange(syntheticEvent);
+    // Validate the date before setting it
+    if (
+      selectedDate &&
+      selectedDate instanceof Date &&
+      !isNaN(selectedDate.getTime())
+    ) {
+      setDate(selectedDate);
+      setCalendarDate(new Date(selectedDate));
+      if (onChange) {
+        onChange(selectedDate);
+      }
+      setOpen(false); // Close the popover after selection
+    } else if (selectedDate === undefined) {
+      // Handle clearing the date
+      setDate(undefined);
+      if (onChange) {
+        onChange(undefined);
+      }
     }
   };
-  
+
   const handleMonthChange = (monthValue: string) => {
     const monthIndex = months.findIndex((m) => m === monthValue);
     if (monthIndex !== -1) {
@@ -122,46 +139,50 @@ export function DateInput({
       setCalendarDate(newDate);
     }
   };
-  
+
   const handleYearChange = (yearValue: string) => {
     const year = parseInt(yearValue, 10);
-    const newDate = new Date(calendarDate);
-    newDate.setFullYear(year);
-    setCalendarDate(newDate);
+    if (!isNaN(year)) {
+      const newDate = new Date(calendarDate);
+      newDate.setFullYear(year);
+      setCalendarDate(newDate);
+    }
   };
-  
+
+  // Helper function to check if a date is valid
+  const isValidDate = (date: any): date is Date => {
+    return date instanceof Date && !isNaN(date.getTime());
+  };
+
   return (
-    <div>
+    <div className={className}>
       {label && (
-        <span className="block mb-3 font-bold">
+        <span className="block mb-2 font-bold">
           {label}
           {required && <span className="text-red-500">*</span>}
         </span>
       )}
-      <Popover>
+      <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>
           <Button
             type="button"
             variant="outline"
             className={cn(
-              "w-full mt-2 p-5 py-8 justify-start text-left font-normal",
-              "border border-gray-200 rounded-[2px]",
-              "hover:bg-transparent focus:ring-2 focus:ring-blue-500 focus:border-blue-500",
-              !date && "text-muted-foreground"
+              'w-full p-5 py-[22px] justify-start text-left font-normal',
+              'border border-gray-300 rounded-[4px]',
+              'hover:bg-transparent focus:ring-2 focus:ring-blue-500 focus:border-blue-500',
+              !isValidDate(date) && 'text-muted-foreground'
             )}
           >
             <div className="flex items-center w-full justify-between">
-              {date ? (
-                format(date, "dd/MM/yyyy")
+              {isValidDate(date) ? (
+                format(date, 'dd/MM/yyyy')
               ) : (
                 <span className="text-gray-300">
-                  {placeholder || "Pick a date"}
+                  {placeholder || 'Pick a date'}
                 </span>
               )}
-              <CalendarIcon
-                size={60}
-                className="mr-2 text-gray-300 w-[60px] h-[60px]"
-              />
+              <CalendarIcon className="ml-2 text-gray-300 w-5 h-5" />
             </div>
           </Button>
         </PopoverTrigger>
@@ -200,12 +221,12 @@ export function DateInput({
           </div>
           <Calendar
             mode="single"
-            selected={date}
+            selected={isValidDate(date) ? date : undefined}
             onSelect={handleSelect}
             month={calendarDate}
             onMonthChange={setCalendarDate}
             initialFocus
-            className="rounded-m"
+            className="rounded-md"
           />
         </PopoverContent>
       </Popover>
@@ -215,11 +236,67 @@ export function DateInput({
         <input
           type="hidden"
           {...register(name)}
-          value={date ? date.toISOString() : ""}
+          value={isValidDate(date) ? date.toISOString() : ''}
         />
       )}
     </div>
   );
 }
 
-export default DateInput;
+// Create a CustomDatePicker component that uses the DateInput with CalendarDate
+const CustomDatePicker: React.FC<CustomDatePickerProps> = ({
+  label,
+  placeholder,
+  value,
+  onChange,
+  isRequired = false,
+  className,
+  yearRange,
+}) => {
+  // Convert CalendarDate to native Date
+  const calendarDateToDate = (
+    calendarDate: InternationalCalendarDate | null
+  ): Date | undefined => {
+    if (!calendarDate) return undefined;
+    return new Date(
+      calendarDate.year,
+      calendarDate.month - 1,
+      calendarDate.day
+    );
+  };
+
+  // Convert native Date to CalendarDate
+  const dateToCalendarDate = (
+    date: Date | undefined
+  ): InternationalCalendarDate | null => {
+    if (!date || isNaN(date.getTime())) return null;
+    return new InternationalCalendarDate(
+      date.getFullYear(),
+      date.getMonth() + 1, // Month is 0-indexed in Date but 1-indexed in CalendarDate
+      date.getDate()
+    );
+  };
+
+  // Handle date selection
+  const handleDateChange = (selectedDate: Date | undefined) => {
+    const calendarDate = dateToCalendarDate(selectedDate);
+    onChange(calendarDate);
+  };
+
+  return (
+    <DateInput
+      label={label}
+      placeholder={placeholder}
+      name={`${label.toLowerCase().replace(/\s+/g, '-')}-date-input`}
+      value={calendarDateToDate(value)}
+      onChange={handleDateChange}
+      required={isRequired}
+      className={className}
+      yearRange={yearRange}
+    />
+  );
+};
+
+// Export both components
+export { CustomDatePicker };
+export default CustomDatePicker;

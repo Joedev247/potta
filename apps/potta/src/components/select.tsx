@@ -17,6 +17,7 @@ interface SelectProps {
   required?: boolean;
   outline?: boolean;
   labelClass?: string;
+  isDisabled?: boolean;
 }
 
 const Select: React.FC<SelectProps> = ({
@@ -30,16 +31,21 @@ const Select: React.FC<SelectProps> = ({
   required,
   outline,
   labelClass,
+  isDisabled = false,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
 
   const toggleDropdown = () => {
-    setIsOpen(!isOpen);
+    if (!isDisabled) {
+      setIsOpen(!isOpen);
+    }
   };
 
   const handleOptionClick = (value: string) => {
-    onChange(value);
-    setIsOpen(false);
+    if (!isDisabled) {
+      onChange(value);
+      setIsOpen(false);
+    }
   };
 
   return (
@@ -51,18 +57,21 @@ const Select: React.FC<SelectProps> = ({
         </div>
       )}
       <div
-        className={`  relative inline-block ${
+        className={`relative inline-block ${
           border ? '' : 'border'
         } w-full md:w-full`}
       >
         <div
           onClick={toggleDropdown}
-          tabIndex={0} // Added to make it focusable
-          className={`${bg}  relative cursor-pointer px-3 py-2.5 pr-8  ${
-            !outline
+          tabIndex={isDisabled ? -1 : 0} // -1 removes from tab order when disabled
+          className={`${bg} relative ${
+            isDisabled ? 'cursor-not-allowed opacity-60' : 'cursor-pointer'
+          } px-3 py-2.5 pr-8 ${
+            !outline && !isDisabled
               ? 'focus:ring-blue-500 focus:border-blue-500 focus:outline-none focus:ring-2'
               : ''
           } w-full`}
+          aria-disabled={isDisabled}
         >
           <span className="block truncate">
             {options.find((option) => option.value === selectedValue)?.label ||
@@ -85,21 +94,23 @@ const Select: React.FC<SelectProps> = ({
           </span>
         </div>
 
-        <ul
-          className={`absolute z-10 w-full bg-white border border-gray-300 rounded-md shadow-lg mt-1 ${
-            isOpen ? 'block' : 'hidden'
-          }`}
-        >
-          {options.map((option) => (
-            <li
-              key={option.value}
-              onClick={() => handleOptionClick(option.value)}
-              className="px-3 py-2 text-gray-700 hover:bg-gray-100 cursor-pointer"
-            >
-              {option.label}
-            </li>
-          ))}
-        </ul>
+        {!isDisabled && (
+          <ul
+            className={`absolute z-10 w-full bg-white border border-gray-300 rounded-md shadow-lg mt-1 ${
+              isOpen ? 'block' : 'hidden'
+            }`}
+          >
+            {options.map((option) => (
+              <li
+                key={option.value}
+                onClick={() => handleOptionClick(option.value)}
+                className="px-3 py-2 text-gray-700 hover:bg-gray-100 cursor-pointer"
+              >
+                {option.label}
+              </li>
+            ))}
+          </ul>
+        )}
       </div>
     </>
   );

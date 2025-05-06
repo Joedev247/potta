@@ -19,21 +19,21 @@ export const useCreatePTOPolicy = () => {
   const createPTOPolicy = async (payload: PTOPolicyPayload) => {
     try {
       setIsSubmitting(true);
-      
+
       console.log('Sending PTO policy data:', payload);
 
       // Call the API
-      const response = await axios.post('/api/paid-time-off', payload);
+      const response = await axios.post('/api/potta/paid-time-off', payload);
 
       // Show success message
       toast.success('PTO policy added successfully!');
-      
+
       return { success: true, data: response.data };
     } catch (err: any) {
       // Show error message
-      toast.error(
-        err.response?.data?.message || 'Failed to create PTO policy'
-      );
+      // toast.error(
+      //   err.response?.data?.message || 'Failed to create PTO policy'
+      // );
       console.error('Error creating PTO policy:', err);
       return { success: false, error: err };
     } finally {

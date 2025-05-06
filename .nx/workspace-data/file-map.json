@@ -51,8 +51,360 @@
     }
   ],
   "fileMap": {
-    "nonProjectFiles": [],
     "projectFileMap": {
+      "ui-components": [
+        {
+          "file": "libs/ui-components/.eslintrc.json",
+          "hash": "14830867113928387670"
+        },
+        {
+          "file": "libs/ui-components/README.md",
+          "hash": "12548925782860796726"
+        },
+        {
+          "file": "libs/ui-components/project.json",
+          "hash": "12861234441171237216"
+        },
+        {
+          "file": "libs/ui-components/src/index.ts",
+          "hash": "7311442712225232873"
+        },
+        {
+          "file": "libs/ui-components/src/lib/button/button.css",
+          "hash": "3244421341483603138"
+        },
+        {
+          "file": "libs/ui-components/src/lib/button/button.spec.tsx",
+          "hash": "16405748582198240346",
+          "deps": [
+            "npm:@testing-library/react",
+            "npm:react"
+          ]
+        },
+        {
+          "file": "libs/ui-components/src/lib/button/button.tsx",
+          "hash": "9688061401021893141",
+          "deps": [
+            "npm:react"
+          ]
+        },
+        {
+          "file": "libs/ui-components/src/lib/checkbox/checkbox.spec.tsx",
+          "hash": "12143665241076207036",
+          "deps": [
+            "npm:@testing-library/react"
+          ]
+        },
+        {
+          "file": "libs/ui-components/src/lib/checkbox/checkbox.tsx",
+          "hash": "13177059662317152921",
+          "deps": [
+            "npm:react"
+          ]
+        },
+        {
+          "file": "libs/ui-components/src/lib/file-upload/file-upload.spec.tsx",
+          "hash": "7427692571351439455",
+          "deps": [
+            "npm:@testing-library/react"
+          ]
+        },
+        {
+          "file": "libs/ui-components/src/lib/file-upload/file-upload.tsx",
+          "hash": "7014415656739398063",
+          "deps": [
+            "npm:next",
+            "npm:react",
+            "npm:react-dropzone"
+          ]
+        },
+        {
+          "file": "libs/ui-components/src/lib/input/input.css",
+          "hash": "2609508176056145988"
+        },
+        {
+          "file": "libs/ui-components/src/lib/input/input.spec.tsx",
+          "hash": "8065668234874210281",
+          "deps": [
+            "npm:@testing-library/react"
+          ]
+        },
+        {
+          "file": "libs/ui-components/src/lib/input/input.tsx",
+          "hash": "9979417932373970800",
+          "deps": [
+            "npm:@heroicons/react",
+            "npm:react-hook-form",
+            "npm:react"
+          ]
+        },
+        {
+          "file": "libs/ui-components/src/lib/modal/modal.spec.tsx",
+          "hash": "17488373437170643550",
+          "deps": [
+            "npm:@testing-library/react"
+          ]
+        },
+        {
+          "file": "libs/ui-components/src/lib/modal/modal.tsx",
+          "hash": "4781547328273502994",
+          "deps": [
+            "npm:react",
+            "npm:@headlessui/react"
+          ]
+        },
+        {
+          "file": "libs/ui-components/src/lib/search/search.css",
+          "hash": "11732199923450475449"
+        },
+        {
+          "file": "libs/ui-components/src/lib/search/search.spec.tsx",
+          "hash": "17318656941869642667",
+          "deps": [
+            "npm:@testing-library/react"
+          ]
+        },
+        {
+          "file": "libs/ui-components/src/lib/search/search.tsx",
+          "hash": "16316378890538983414",
+          "deps": [
+            "npm:react",
+            "npm:next"
+          ]
+        },
+        {
+          "file": "libs/ui-components/src/lib/select/select.spec.tsx",
+          "hash": "1986614526308713117"
+        },
+        {
+          "file": "libs/ui-components/src/lib/select/select.tsx",
+          "hash": "7837526964024781488",
+          "deps": [
+            "npm:react",
+            "npm:react-select"
+          ]
+        },
+        {
+          "file": "libs/ui-components/src/lib/toast/toast.spec.tsx",
+          "hash": "4059830591021987678",
+          "deps": [
+            "npm:@testing-library/react"
+          ]
+        },
+        {
+          "file": "libs/ui-components/src/lib/toast/toast.tsx",
+          "hash": "16360318021083341716",
+          "deps": [
+            "npm:react",
+            "npm:react-hot-toast"
+          ]
+        },
+        {
+          "file": "libs/ui-components/src/server.ts",
+          "hash": "3170673500062099766"
+        },
+        {
+          "file": "libs/ui-components/tsconfig.json",
+          "hash": "13979398437825372391"
+        },
+        {
+          "file": "libs/ui-components/tsconfig.lib.json",
+          "hash": "1903080221552158959"
+        }
+      ],
+      "@instanvi-global/source": [
+        {
+          "file": ".editorconfig",
+          "hash": "11532813898455409296"
+        },
+        {
+          "file": ".eslintignore",
+          "hash": "13404745306227114823"
+        },
+        {
+          "file": ".eslintrc.json",
+          "hash": "4566917484430375526"
+        },
+        {
+          "file": ".github/workflows/staging.yaml",
+          "hash": "18316145146028091651"
+        },
+        {
+          "file": ".gitignore",
+          "hash": "2977033571702740773"
+        },
+        {
+          "file": ".prettierignore",
+          "hash": "17085498363870782104"
+        },
+        {
+          "file": ".prettierrc",
+          "hash": "6820402234827505055"
+        },
+        {
+          "file": "Dockerfile",
+          "hash": "16950462972057598991"
+        },
+        {
+          "file": "README.md",
+          "hash": "11962595963044371318"
+        },
+        {
+          "file": "components.json",
+          "hash": "10879938013438485368"
+        },
+        {
+          "file": "docker-compose-build.yml",
+          "hash": "13364252868232886533"
+        },
+        {
+          "file": "docker-compose.yml",
+          "hash": "9452489269982864339"
+        },
+        {
+          "file": "jest.config.ts",
+          "hash": "7544409015863045561",
+          "deps": [
+            "npm:@nx/jest"
+          ]
+        },
+        {
+          "file": "jest.preset.js",
+          "hash": "7473220183190921152",
+          "deps": [
+            "npm:@nx/jest"
+          ]
+        },
+        {
+          "file": "nx.json",
+          "hash": "15848503659419652236"
+        },
+        {
+          "file": "package-lock.json",
+          "hash": "9579480174323045029"
+        },
+        {
+          "file": "package.json",
+          "hash": "15708561791227740257",
+          "deps": [
+            "npm:@iconify/react",
+            "npm:@nx/eslint",
+            "npm:@nx/eslint-plugin",
+            "npm:@nx/jest",
+            "npm:@nx/js",
+            "npm:@nx/next",
+            "npm:@nx/react",
+            "npm:@nx/workspace",
+            "npm:@swc-node/register",
+            "npm:@swc/cli",
+            "npm:@swc/core",
+            "npm:@swc/helpers",
+            "npm:@tanstack/react-query-devtools",
+            "npm:@testing-library/react",
+            "npm:@types/crypto-js",
+            "npm:@types/jest",
+            "npm:@types/node",
+            "npm:@types/react",
+            "npm:@types/react-dom",
+            "npm:@types/react-world-flags",
+            "npm:@typescript-eslint/eslint-plugin",
+            "npm:@typescript-eslint/parser",
+            "npm:autoprefixer",
+            "npm:babel-jest",
+            "npm:eslint",
+            "npm:eslint-config-next",
+            "npm:eslint-config-prettier",
+            "npm:eslint-plugin-import",
+            "npm:eslint-plugin-jsx-a11y",
+            "npm:eslint-plugin-react",
+            "npm:eslint-plugin-react-hooks",
+            "npm:jest",
+            "npm:jest-environment-jsdom",
+            "npm:nx",
+            "npm:postcss",
+            "npm:prettier",
+            "npm:tailwindcss",
+            "npm:ts-jest",
+            "npm:ts-node",
+            "npm:typescript",
+            "npm:@headlessui/react",
+            "npm:@heroicons/react",
+            "npm:@heroui/date-picker",
+            "npm:@heroui/react",
+            "npm:@hookform/resolvers",
+            "npm:@internationalized/date",
+            "npm:@nextui-org/react",
+            "npm:@radix-ui/react-avatar",
+            "npm:@radix-ui/react-dropdown-menu",
+            "npm:@radix-ui/react-popover",
+            "npm:@radix-ui/react-progress",
+            "npm:@radix-ui/react-scroll-area",
+            "npm:@radix-ui/react-select",
+            "npm:@radix-ui/react-separator",
+            "npm:@radix-ui/react-slot",
+            "npm:@tanstack/react-query",
+            "npm:@tanstack/react-table",
+            "npm:@types/react-csv",
+            "npm:apexcharts",
+            "npm:axios",
+            "npm:class-variance-authority",
+            "npm:clsx",
+            "npm:country-data-list",
+            "npm:country-list-with-dial-code-and-flag",
+            "npm:country-state-city",
+            "npm:crypto-js",
+            "npm:date-fns",
+            "npm:dayjs",
+            "npm:framer-motion",
+            "npm:libphonenumber-js",
+            "npm:lucide-react",
+            "npm:moment",
+            "npm:next",
+            "npm:nookies",
+            "npm:react",
+            "npm:react-accessible-accordion",
+            "npm:react-apexcharts",
+            "npm:react-barcode",
+            "npm:react-csv",
+            "npm:react-data-table-component",
+            "npm:react-day-picker",
+            "npm:react-dom",
+            "npm:react-dropzone",
+            "npm:react-google-flight-datepicker",
+            "npm:react-hook-form",
+            "npm:react-hot-toast",
+            "npm:react-icomoon",
+            "npm:react-icons",
+            "npm:react-moment",
+            "npm:react-phone-number-input",
+            "npm:react-pro-sidebar",
+            "npm:react-resizable-panels",
+            "npm:react-select",
+            "npm:react-tailwindcss-datepicker",
+            "npm:react-verification-input",
+            "npm:react-world-flags",
+            "npm:recharts",
+            "npm:remixicon",
+            "npm:sonner",
+            "npm:styled-components",
+            "npm:tailwind-merge",
+            "npm:tailwindcss-animate",
+            "npm:timezones-list",
+            "npm:tslib",
+            "npm:tw-animate-css",
+            "npm:uuid",
+            "npm:yup"
+          ]
+        },
+        {
+          "file": "tsconfig.base.json",
+          "hash": "7686375491813479614"
+        },
+        {
+          "file": "tsconfig.json",
+          "hash": "389653799697880795"
+        }
+      ],
       "superApp": [
         {
           "file": "apps/superApp/.env.build",
@@ -1473,7 +1825,7 @@
         },
         {
           "file": "apps/superApp/src/styles/globals.css",
-          "hash": "12982007183327567973"
+          "hash": "1710705181930770383"
         },
         {
           "file": "apps/superApp/src/utils/generic.api.ts",
@@ -1507,6 +1859,51 @@
         {
           "file": "apps/superApp/tsconfig.spec.json",
           "hash": "4919308245432237962"
+        }
+      ],
+      "core": [
+        {
+          "file": "libs/core/.eslintrc.json",
+          "hash": "14830867113928387670"
+        },
+        {
+          "file": "libs/core/README.md",
+          "hash": "11300873402597911365"
+        },
+        {
+          "file": "libs/core/project.json",
+          "hash": "1446916100857442077"
+        },
+        {
+          "file": "libs/core/src/index.ts",
+          "hash": "5524972677441603841"
+        },
+        {
+          "file": "libs/core/src/lib/core.spec.tsx",
+          "hash": "16866325747913317306",
+          "deps": [
+            "npm:@testing-library/react"
+          ]
+        },
+        {
+          "file": "libs/core/src/lib/core.tsx",
+          "hash": "2172464775614385576"
+        },
+        {
+          "file": "libs/core/src/lib/hello-server.tsx",
+          "hash": "4430793549903582581"
+        },
+        {
+          "file": "libs/core/src/server.ts",
+          "hash": "358709210498179477"
+        },
+        {
+          "file": "libs/core/tsconfig.json",
+          "hash": "13979398437825372391"
+        },
+        {
+          "file": "libs/core/tsconfig.lib.json",
+          "hash": "1903080221552158959"
         }
       ],
       "utilities": [
@@ -1556,358 +1953,6 @@
         },
         {
           "file": "libs/utilities/tsconfig.lib.json",
-          "hash": "1903080221552158959"
-        }
-      ],
-      "@instanvi-global/source": [
-        {
-          "file": ".editorconfig",
-          "hash": "11532813898455409296"
-        },
-        {
-          "file": ".eslintignore",
-          "hash": "13404745306227114823"
-        },
-        {
-          "file": ".eslintrc.json",
-          "hash": "4566917484430375526"
-        },
-        {
-          "file": ".github/workflows/staging.yaml",
-          "hash": "18316145146028091651"
-        },
-        {
-          "file": ".gitignore",
-          "hash": "2977033571702740773"
-        },
-        {
-          "file": ".prettierignore",
-          "hash": "17085498363870782104"
-        },
-        {
-          "file": ".prettierrc",
-          "hash": "6820402234827505055"
-        },
-        {
-          "file": "Dockerfile",
-          "hash": "16950462972057598991"
-        },
-        {
-          "file": "README.md",
-          "hash": "11962595963044371318"
-        },
-        {
-          "file": "components.json",
-          "hash": "10879938013438485368"
-        },
-        {
-          "file": "docker-compose-build.yml",
-          "hash": "13364252868232886533"
-        },
-        {
-          "file": "docker-compose.yml",
-          "hash": "9452489269982864339"
-        },
-        {
-          "file": "jest.config.ts",
-          "hash": "7544409015863045561",
-          "deps": [
-            "npm:@nx/jest"
-          ]
-        },
-        {
-          "file": "jest.preset.js",
-          "hash": "7473220183190921152",
-          "deps": [
-            "npm:@nx/jest"
-          ]
-        },
-        {
-          "file": "nx.json",
-          "hash": "15848503659419652236"
-        },
-        {
-          "file": "package-lock.json",
-          "hash": "9579480174323045029"
-        },
-        {
-          "file": "package.json",
-          "hash": "15708561791227740257",
-          "deps": [
-            "npm:@iconify/react",
-            "npm:@nx/eslint",
-            "npm:@nx/eslint-plugin",
-            "npm:@nx/jest",
-            "npm:@nx/js",
-            "npm:@nx/next",
-            "npm:@nx/react",
-            "npm:@nx/workspace",
-            "npm:@swc-node/register",
-            "npm:@swc/cli",
-            "npm:@swc/core",
-            "npm:@swc/helpers",
-            "npm:@testing-library/react",
-            "npm:@types/crypto-js",
-            "npm:@types/jest",
-            "npm:@types/node",
-            "npm:@types/react",
-            "npm:@types/react-dom",
-            "npm:@types/react-world-flags",
-            "npm:@typescript-eslint/eslint-plugin",
-            "npm:@typescript-eslint/parser",
-            "npm:autoprefixer",
-            "npm:babel-jest",
-            "npm:eslint",
-            "npm:eslint-config-next",
-            "npm:eslint-config-prettier",
-            "npm:eslint-plugin-import",
-            "npm:eslint-plugin-jsx-a11y",
-            "npm:eslint-plugin-react",
-            "npm:eslint-plugin-react-hooks",
-            "npm:jest",
-            "npm:jest-environment-jsdom",
-            "npm:nx",
-            "npm:postcss",
-            "npm:prettier",
-            "npm:tailwindcss",
-            "npm:ts-jest",
-            "npm:ts-node",
-            "npm:typescript",
-            "npm:@headlessui/react",
-            "npm:@heroicons/react",
-            "npm:@heroui/date-picker",
-            "npm:@heroui/react",
-            "npm:@hookform/resolvers",
-            "npm:@internationalized/date",
-            "npm:@nextui-org/react",
-            "npm:@radix-ui/react-avatar",
-            "npm:@radix-ui/react-dropdown-menu",
-            "npm:@radix-ui/react-popover",
-            "npm:@radix-ui/react-progress",
-            "npm:@radix-ui/react-scroll-area",
-            "npm:@radix-ui/react-select",
-            "npm:@radix-ui/react-separator",
-            "npm:@radix-ui/react-slot",
-            "npm:@tanstack/react-query",
-            "npm:@tanstack/react-table",
-            "npm:@types/react-csv",
-            "npm:apexcharts",
-            "npm:axios",
-            "npm:class-variance-authority",
-            "npm:clsx",
-            "npm:country-data-list",
-            "npm:country-list-with-dial-code-and-flag",
-            "npm:country-state-city",
-            "npm:crypto-js",
-            "npm:date-fns",
-            "npm:dayjs",
-            "npm:framer-motion",
-            "npm:libphonenumber-js",
-            "npm:lucide-react",
-            "npm:moment",
-            "npm:next",
-            "npm:nookies",
-            "npm:react",
-            "npm:react-accessible-accordion",
-            "npm:react-apexcharts",
-            "npm:react-barcode",
-            "npm:react-csv",
-            "npm:react-data-table-component",
-            "npm:react-day-picker",
-            "npm:react-dom",
-            "npm:react-dropzone",
-            "npm:react-google-flight-datepicker",
-            "npm:react-hook-form",
-            "npm:react-hot-toast",
-            "npm:react-icomoon",
-            "npm:react-icons",
-            "npm:react-moment",
-            "npm:react-phone-number-input",
-            "npm:react-pro-sidebar",
-            "npm:react-resizable-panels",
-            "npm:react-select",
-            "npm:react-tailwindcss-datepicker",
-            "npm:react-verification-input",
-            "npm:react-world-flags",
-            "npm:recharts",
-            "npm:remixicon",
-            "npm:sonner",
-            "npm:styled-components",
-            "npm:tailwind-merge",
-            "npm:tailwindcss-animate",
-            "npm:timezones-list",
-            "npm:tslib",
-            "npm:tw-animate-css",
-            "npm:uuid",
-            "npm:yup"
-          ]
-        },
-        {
-          "file": "tsconfig.base.json",
-          "hash": "7686375491813479614"
-        },
-        {
-          "file": "tsconfig.json",
-          "hash": "389653799697880795"
-        }
-      ],
-      "ui-components": [
-        {
-          "file": "libs/ui-components/.eslintrc.json",
-          "hash": "14830867113928387670"
-        },
-        {
-          "file": "libs/ui-components/README.md",
-          "hash": "12548925782860796726"
-        },
-        {
-          "file": "libs/ui-components/project.json",
-          "hash": "12861234441171237216"
-        },
-        {
-          "file": "libs/ui-components/src/index.ts",
-          "hash": "7311442712225232873"
-        },
-        {
-          "file": "libs/ui-components/src/lib/button/button.css",
-          "hash": "3244421341483603138"
-        },
-        {
-          "file": "libs/ui-components/src/lib/button/button.spec.tsx",
-          "hash": "16405748582198240346",
-          "deps": [
-            "npm:@testing-library/react",
-            "npm:react"
-          ]
-        },
-        {
-          "file": "libs/ui-components/src/lib/button/button.tsx",
-          "hash": "9688061401021893141",
-          "deps": [
-            "npm:react"
-          ]
-        },
-        {
-          "file": "libs/ui-components/src/lib/checkbox/checkbox.spec.tsx",
-          "hash": "12143665241076207036",
-          "deps": [
-            "npm:@testing-library/react"
-          ]
-        },
-        {
-          "file": "libs/ui-components/src/lib/checkbox/checkbox.tsx",
-          "hash": "13177059662317152921",
-          "deps": [
-            "npm:react"
-          ]
-        },
-        {
-          "file": "libs/ui-components/src/lib/file-upload/file-upload.spec.tsx",
-          "hash": "7427692571351439455",
-          "deps": [
-            "npm:@testing-library/react"
-          ]
-        },
-        {
-          "file": "libs/ui-components/src/lib/file-upload/file-upload.tsx",
-          "hash": "7014415656739398063",
-          "deps": [
-            "npm:next",
-            "npm:react",
-            "npm:react-dropzone"
-          ]
-        },
-        {
-          "file": "libs/ui-components/src/lib/input/input.css",
-          "hash": "2609508176056145988"
-        },
-        {
-          "file": "libs/ui-components/src/lib/input/input.spec.tsx",
-          "hash": "8065668234874210281",
-          "deps": [
-            "npm:@testing-library/react"
-          ]
-        },
-        {
-          "file": "libs/ui-components/src/lib/input/input.tsx",
-          "hash": "9979417932373970800",
-          "deps": [
-            "npm:@heroicons/react",
-            "npm:react-hook-form",
-            "npm:react"
-          ]
-        },
-        {
-          "file": "libs/ui-components/src/lib/modal/modal.spec.tsx",
-          "hash": "17488373437170643550",
-          "deps": [
-            "npm:@testing-library/react"
-          ]
-        },
-        {
-          "file": "libs/ui-components/src/lib/modal/modal.tsx",
-          "hash": "4781547328273502994",
-          "deps": [
-            "npm:react",
-            "npm:@headlessui/react"
-          ]
-        },
-        {
-          "file": "libs/ui-components/src/lib/search/search.css",
-          "hash": "11732199923450475449"
-        },
-        {
-          "file": "libs/ui-components/src/lib/search/search.spec.tsx",
-          "hash": "17318656941869642667",
-          "deps": [
-            "npm:@testing-library/react"
-          ]
-        },
-        {
-          "file": "libs/ui-components/src/lib/search/search.tsx",
-          "hash": "16316378890538983414",
-          "deps": [
-            "npm:react",
-            "npm:next"
-          ]
-        },
-        {
-          "file": "libs/ui-components/src/lib/select/select.spec.tsx",
-          "hash": "1986614526308713117"
-        },
-        {
-          "file": "libs/ui-components/src/lib/select/select.tsx",
-          "hash": "7837526964024781488",
-          "deps": [
-            "npm:react",
-            "npm:react-select"
-          ]
-        },
-        {
-          "file": "libs/ui-components/src/lib/toast/toast.spec.tsx",
-          "hash": "4059830591021987678",
-          "deps": [
-            "npm:@testing-library/react"
-          ]
-        },
-        {
-          "file": "libs/ui-components/src/lib/toast/toast.tsx",
-          "hash": "16360318021083341716",
-          "deps": [
-            "npm:react",
-            "npm:react-hot-toast"
-          ]
-        },
-        {
-          "file": "libs/ui-components/src/server.ts",
-          "hash": "3170673500062099766"
-        },
-        {
-          "file": "libs/ui-components/tsconfig.json",
-          "hash": "13979398437825372391"
-        },
-        {
-          "file": "libs/ui-components/tsconfig.lib.json",
           "hash": "1903080221552158959"
         }
       ],
@@ -3790,7 +3835,7 @@
         },
         {
           "file": "apps/potta/src/app/(routes)/layout/index.tsx",
-          "hash": "15183662183915872652",
+          "hash": "15291326562231992466",
           "deps": [
             "npm:next",
             "npm:react",
@@ -3874,7 +3919,7 @@
         },
         {
           "file": "apps/potta/src/app/(routes)/layout/sidebar/components/payroll.tsx",
-          "hash": "5664914817820575062",
+          "hash": "54832629400709221",
           "deps": [
             "npm:react",
             "npm:react-pro-sidebar",
@@ -4163,7 +4208,7 @@
         },
         {
           "file": "apps/potta/src/app/(routes)/payroll/benefit/components/sliderBenefit.tsx",
-          "hash": "2813566005240730111",
+          "hash": "5031700325878154418",
           "deps": [
             "npm:react",
             "npm:@internationalized/date",
@@ -4235,28 +4280,34 @@
           "file": "apps/potta/src/app/(routes)/payroll/overview/components/boxes.tsx",
           "hash": "14461285943877768747",
           "deps": [
-            "npm:react"
+            "npm:react",
+            "npm:@tanstack/react-query",
+            "npm:date-fns"
           ]
         },
         {
           "file": "apps/potta/src/app/(routes)/payroll/overview/components/payBreakdown.tsx",
           "hash": "10943458884825911957",
           "deps": [
-            "npm:react"
+            "npm:react",
+            "npm:@tanstack/react-query"
           ]
         },
         {
           "file": "apps/potta/src/app/(routes)/payroll/overview/components/table.tsx",
           "hash": "11895228808617846057",
           "deps": [
-            "npm:react"
+            "npm:react",
+            "npm:@tanstack/react-query"
           ]
         },
         {
           "file": "apps/potta/src/app/(routes)/payroll/overview/page.tsx",
           "hash": "2766129238455173868",
           "deps": [
-            "npm:react"
+            "npm:react",
+            "npm:@tanstack/react-query",
+            "npm:@tanstack/react-query-devtools"
           ]
         },
         {
@@ -4269,14 +4320,14 @@
         },
         {
           "file": "apps/potta/src/app/(routes)/payroll/people/components/address.tsx",
-          "hash": "9018432678102162790",
+          "hash": "1165258955628713560",
           "deps": [
             "npm:react"
           ]
         },
         {
           "file": "apps/potta/src/app/(routes)/payroll/people/components/bankAccount.tsx",
-          "hash": "17700814008969968996",
+          "hash": "3593364744545928462",
           "deps": [
             "npm:react",
             "npm:@headlessui/react"
@@ -4284,7 +4335,7 @@
         },
         {
           "file": "apps/potta/src/app/(routes)/payroll/people/components/baseInfo.tsx",
-          "hash": "12772436278314535820",
+          "hash": "7720672339915641405",
           "deps": [
             "npm:react",
             "npm:@headlessui/react",
@@ -4293,30 +4344,55 @@
         },
         {
           "file": "apps/potta/src/app/(routes)/payroll/people/components/benefit/components/benefitTable.tsx",
-          "hash": "4012264033340830143",
+          "hash": "5390440752987871198",
           "deps": [
             "npm:react"
           ]
         },
         {
           "file": "apps/potta/src/app/(routes)/payroll/people/components/benefit/components/taxtable.tsx",
-          "hash": "12297334036921248009",
+          "hash": "4284919445830199057",
           "deps": [
             "npm:react"
+          ]
+        },
+        {
+          "file": "apps/potta/src/app/(routes)/payroll/people/components/benefit/hooks/useBenefits.ts",
+          "hash": "2794184097869947535",
+          "deps": [
+            "npm:react"
+          ]
+        },
+        {
+          "file": "apps/potta/src/app/(routes)/payroll/people/components/benefit/hooks/useEmployeeBenefits.ts",
+          "hash": "226384222660964122",
+          "deps": [
+            "npm:react",
+            "npm:react-hot-toast"
           ]
         },
         {
           "file": "apps/potta/src/app/(routes)/payroll/people/components/benefit/page.tsx",
-          "hash": "1322234031671573367",
+          "hash": "16560674324187759468",
           "deps": [
-            "npm:react"
+            "npm:react",
+            "npm:react-hot-toast"
           ]
         },
         {
+          "file": "apps/potta/src/app/(routes)/payroll/people/components/benefit/utils/api.ts",
+          "hash": "5461291875499157733"
+        },
+        {
+          "file": "apps/potta/src/app/(routes)/payroll/people/components/benefit/utils/types.ts",
+          "hash": "9323080373614021495"
+        },
+        {
           "file": "apps/potta/src/app/(routes)/payroll/people/components/compensation.tsx",
-          "hash": "9920851487275926940",
+          "hash": "2399706220371598479",
           "deps": [
-            "npm:react"
+            "npm:react",
+            "npm:react-hot-toast"
           ]
         },
         {
@@ -4349,9 +4425,11 @@
         },
         {
           "file": "apps/potta/src/app/(routes)/payroll/people/components/schedule.tsx",
-          "hash": "8059200977549404377",
+          "hash": "7659987291096574073",
           "deps": [
-            "npm:react"
+            "npm:react",
+            "npm:react-hot-toast",
+            "npm:@internationalized/date"
           ]
         },
         {
@@ -4371,15 +4449,16 @@
         },
         {
           "file": "apps/potta/src/app/(routes)/payroll/people/page.tsx",
-          "hash": "13422503347095176072",
+          "hash": "15903216696577546055",
           "deps": [
             "npm:react",
-            "npm:react-hot-toast"
+            "npm:react-hot-toast",
+            "npm:moment"
           ]
         },
         {
           "file": "apps/potta/src/app/(routes)/payroll/people/utils/api.ts",
-          "hash": "2368996802943353497"
+          "hash": "6450094586073143890"
         },
         {
           "file": "apps/potta/src/app/(routes)/payroll/people/utils/ptoApi.ts",
@@ -4387,22 +4466,46 @@
         },
         {
           "file": "apps/potta/src/app/(routes)/payroll/people/utils/types.ts",
-          "hash": "11040892683908840456"
+          "hash": "17520123386759820277"
+        },
+        {
+          "file": "apps/potta/src/app/(routes)/payroll/pto/components/PTODetailSlider.tsx",
+          "hash": "12405359449979752198",
+          "deps": [
+            "npm:react",
+            "npm:react-hot-toast",
+            "npm:@internationalized/date"
+          ]
         },
         {
           "file": "apps/potta/src/app/(routes)/payroll/pto/components/sliderSchedule.tsx",
-          "hash": "14119980723468269404",
+          "hash": "8545788084803639650",
+          "deps": [
+            "npm:react",
+            "npm:react-hot-toast",
+            "npm:@internationalized/date"
+          ]
+        },
+        {
+          "file": "apps/potta/src/app/(routes)/payroll/pto/hooks/useCreatePTOPolicy.ts",
+          "hash": "14179102074067004854",
           "deps": [
             "npm:react",
             "npm:react-hot-toast"
           ]
         },
         {
-          "file": "apps/potta/src/app/(routes)/payroll/pto/hooks/useCreatePTOPolicy.ts",
-          "hash": "9924586583784456212",
+          "file": "apps/potta/src/app/(routes)/payroll/pto/hooks/useFetchPTOPolicies.ts",
+          "hash": "17546642769034968564",
           "deps": [
-            "npm:react",
-            "npm:react-hot-toast"
+            "npm:@tanstack/react-query"
+          ]
+        },
+        {
+          "file": "apps/potta/src/app/(routes)/payroll/pto/hooks/usePTOActions.ts",
+          "hash": "12122072407402065901",
+          "deps": [
+            "npm:@tanstack/react-query"
           ]
         },
         {
@@ -4414,14 +4517,15 @@
         },
         {
           "file": "apps/potta/src/app/(routes)/payroll/pto/page.tsx",
-          "hash": "11103016397959456535",
+          "hash": "13637368356593622297",
           "deps": [
-            "npm:react"
+            "npm:react",
+            "npm:@tanstack/react-query"
           ]
         },
         {
           "file": "apps/potta/src/app/(routes)/payroll/pto/utils/ptoApi.ts",
-          "hash": "15222048466770098636"
+          "hash": "1914592342504804787"
         },
         {
           "file": "apps/potta/src/app/(routes)/payroll/pto/utils/types.ts",
@@ -4429,30 +4533,36 @@
         },
         {
           "file": "apps/potta/src/app/(routes)/payroll/reports/components/all_report.tsx",
-          "hash": "4958557245055237717",
-          "deps": [
-            "npm:react"
-          ]
+          "hash": "4958557245055237717"
         },
         {
           "file": "apps/potta/src/app/(routes)/payroll/reports/components/frequent_report.tsx",
-          "hash": "11016504566552718205",
-          "deps": [
-            "npm:react"
-          ]
+          "hash": "11016504566552718205"
         },
         {
           "file": "apps/potta/src/app/(routes)/payroll/reports/layout.tsx",
-          "hash": "8487067689531242142",
-          "deps": [
-            "npm:react"
-          ]
+          "hash": "8487067689531242142"
         },
         {
           "file": "apps/potta/src/app/(routes)/payroll/reports/page.tsx",
           "hash": "4268793832595409155",
           "deps": [
             "npm:react"
+          ]
+        },
+        {
+          "file": "apps/potta/src/app/(routes)/payroll/shifts/components/boxes.tsx",
+          "hash": "931859391835825046",
+          "deps": [
+            "npm:react"
+          ]
+        },
+        {
+          "file": "apps/potta/src/app/(routes)/payroll/shifts/page.tsx",
+          "hash": "9900698920056207142",
+          "deps": [
+            "npm:react",
+            "npm:react-hot-toast"
           ]
         },
         {
@@ -4470,18 +4580,71 @@
           ]
         },
         {
+          "file": "apps/potta/src/app/(routes)/payroll/timesheet/components/DateNavigation.tsx",
+          "hash": "15033604082319328762",
+          "deps": [
+            "npm:react",
+            "npm:date-fns",
+            "npm:lucide-react",
+            "npm:react-day-picker"
+          ]
+        },
+        {
+          "file": "apps/potta/src/app/(routes)/payroll/timesheet/components/NewShiftModal.tsx",
+          "hash": "4136141626712242981",
+          "deps": [
+            "npm:react",
+            "npm:react-hot-toast",
+            "npm:lucide-react",
+            "npm:framer-motion"
+          ]
+        },
+        {
+          "file": "apps/potta/src/app/(routes)/payroll/timesheet/components/NewTimeEntryModal.tsx",
+          "hash": "12093641686850530425",
+          "deps": [
+            "npm:react",
+            "npm:@tanstack/react-query",
+            "npm:react-hot-toast",
+            "npm:date-fns",
+            "npm:lucide-react",
+            "npm:framer-motion"
+          ]
+        },
+        {
+          "file": "apps/potta/src/app/(routes)/payroll/timesheet/components/ShiftView.tsx",
+          "hash": "5284383422427501636",
+          "deps": [
+            "npm:react",
+            "npm:react-hot-toast",
+            "npm:lucide-react",
+            "npm:date-fns"
+          ]
+        },
+        {
+          "file": "apps/potta/src/app/(routes)/payroll/timesheet/components/TimesheetView.tsx",
+          "hash": "7520584855629130707",
+          "deps": [
+            "npm:react",
+            "npm:@tanstack/react-query",
+            "npm:date-fns"
+          ]
+        },
+        {
           "file": "apps/potta/src/app/(routes)/payroll/timesheet/components/boxes.tsx",
           "hash": "12042016615565068536",
           "deps": [
-            "npm:react"
+            "npm:react",
+            "npm:@tanstack/react-query"
           ]
         },
         {
           "file": "apps/potta/src/app/(routes)/payroll/timesheet/components/table.tsx",
-          "hash": "18012670108314080745",
+          "hash": "1990758116288781006",
           "deps": [
             "npm:react",
-            "npm:lucide-react"
+            "npm:lucide-react",
+            "npm:react-hot-toast"
           ]
         },
         {
@@ -4493,9 +4656,13 @@
         },
         {
           "file": "apps/potta/src/app/(routes)/payroll/timesheet/page.tsx",
-          "hash": "10366648183883494524",
+          "hash": "11936461853764537259",
           "deps": [
-            "npm:react"
+            "npm:react",
+            "npm:@tanstack/react-query",
+            "npm:@tanstack/react-query-devtools",
+            "npm:date-fns",
+            "npm:react-hot-toast"
           ]
         },
         {
@@ -5667,7 +5834,7 @@
         },
         {
           "file": "apps/potta/src/components/button.tsx",
-          "hash": "7940175471576656162",
+          "hash": "7803707092657758751",
           "deps": [
             "npm:react"
           ]
@@ -5705,12 +5872,13 @@
         },
         {
           "file": "apps/potta/src/components/customDatePicker.tsx",
-          "hash": "14781307925795858284",
+          "hash": "4251396853826275657",
           "deps": [
             "npm:react",
             "npm:lucide-react",
             "npm:date-fns",
-            "npm:react-hook-form"
+            "npm:react-hook-form",
+            "npm:@internationalized/date"
           ]
         },
         {
@@ -5910,7 +6078,7 @@
         },
         {
           "file": "apps/potta/src/components/shadcn/calendar.tsx",
-          "hash": "3543158614375220422",
+          "hash": "16811801843142287439",
           "deps": [
             "npm:react",
             "npm:lucide-react",
@@ -6012,7 +6180,7 @@
           "hash": "8324637533420947621",
           "deps": [
             "npm:react",
-            "npm:react-data-table-component"
+            "npm:lucide-react"
           ]
         },
         {
@@ -6073,52 +6241,8 @@
           "file": "apps/potta/type/index.d.ts",
           "hash": "9950754265127537988"
         }
-      ],
-      "core": [
-        {
-          "file": "libs/core/.eslintrc.json",
-          "hash": "14830867113928387670"
-        },
-        {
-          "file": "libs/core/README.md",
-          "hash": "11300873402597911365"
-        },
-        {
-          "file": "libs/core/project.json",
-          "hash": "1446916100857442077"
-        },
-        {
-          "file": "libs/core/src/index.ts",
-          "hash": "5524972677441603841"
-        },
-        {
-          "file": "libs/core/src/lib/core.spec.tsx",
-          "hash": "16866325747913317306",
-          "deps": [
-            "npm:@testing-library/react"
-          ]
-        },
-        {
-          "file": "libs/core/src/lib/core.tsx",
-          "hash": "2172464775614385576"
-        },
-        {
-          "file": "libs/core/src/lib/hello-server.tsx",
-          "hash": "4430793549903582581"
-        },
-        {
-          "file": "libs/core/src/server.ts",
-          "hash": "358709210498179477"
-        },
-        {
-          "file": "libs/core/tsconfig.json",
-          "hash": "13979398437825372391"
-        },
-        {
-          "file": "libs/core/tsconfig.lib.json",
-          "hash": "1903080221552158959"
-        }
       ]
-    }
+    },
+    "nonProjectFiles": []
   }
 }

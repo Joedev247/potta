@@ -90,6 +90,7 @@
     "@swc/cli": "~0.3.12",
     "@swc/core": "~1.5.7",
     "@swc/helpers": "~0.5.11",
+    "@tanstack/react-query-devtools": "^5.75.1",
     "@testing-library/react": "^16.0.0",
     "@types/crypto-js": "^4.2.2",
     "@types/jest": "^29.4.0",

@@ -1,13 +1,18 @@
 'use client';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
 import CurrencyInput from '@potta/components/currencyInput';
 import Select from '@potta/components/select';
 import { CompensationPayload, PaidTimeOffItem } from '../utils/types';
 import { useFetchPTOs } from '../hooks/useFetchPTOs';
-
+import { peopleApi } from '../utils/api';
+import { toast } from 'react-hot-toast';
+import Button from '@potta/components/button';
+import SearchableSelect from '@potta/components/searchableSelect';
 interface CompensationProps {
   onChange?: (data: CompensationPayload) => void;
   initialData?: CompensationPayload | null;
+  personId?: string;
+  onComplete?: () => void; // Add this new prop
 }
 
 // Payment frequency options
@@ -17,6 +22,9 @@ const paymentFrequencyOptions = [
   { label: 'Semi-Monthly', value: 'Semi-Monthly' },
   { label: 'Monthly', value: 'Monthly' },
 ];
+
+// Default option for PTO select
+const defaultPtoOption = { label: 'Select PTO Type', value: '' };
 
 // Switch component
 const Switch = ({ checked, onChange, className, children }: any) => {
@@ -34,7 +42,12 @@ const Switch = ({ checked, onChange, className, children }: any) => {
 const Compensation: React.FC<CompensationProps> = ({
   onChange,
   initialData,
+  personId,
+  onComplete
 }) => {
+  // Use a ref to track if this is the initial render
+  const isInitialMount = useRef(true);
+
   const [formData, setFormData] = useState({
     hourlyRate: initialData?.hourlyRate || 0,
     salary: initialData?.salary || 0,
@@ -43,6 +56,10 @@ const Compensation: React.FC<CompensationProps> = ({
     eligibleForOvertime: initialData?.eligibleForOvertime || false,
     paid_time_off: initialData?.paid_time_off || [],
   });
+
+  // Add state for saving status
+  const [isSaving, setIsSaving] = useState(false);
+  const [hasChanges, setHasChanges] = useState(false);
 
   // Fetch PTO options
   const { data: ptoOptions = [], isLoading: ptoLoading } = useFetchPTOs();
@@ -55,17 +72,29 @@ const Compensation: React.FC<CompensationProps> = ({
 
   // Time tracking code
   const [trackingCode, setTrackingCode] = useState<string[]>([
-    '7',
-    '7',
-    '7',
-    '7',
-    '7',
+    '0',
+    '0',
+    '0',
+    '0',
+    '0',
   ]);
+
+  // Log PTO options for debugging
+  useEffect(() => {
+    console.log('PTO Options:', ptoOptions);
+  }, [ptoOptions]);
 
   // Update parent component when form data changes
   useEffect(() => {
+    // Skip the first render to prevent unnecessary updates
+    if (isInitialMount.current) {
+      isInitialMount.current = false;
+      return;
+    }
+
     if (onChange) {
       onChange(formData);
+      setHasChanges(true);
     }
   }, [formData, onChange]);
 
@@ -76,9 +105,14 @@ const Compensation: React.FC<CompensationProps> = ({
       initialData.paid_time_off.length > 0 &&
       ptoOptions.length > 0
     ) {
-      const selectedItems = ptoOptions.filter((pto) =>
-        initialData.paid_time_off.includes(pto.id)
-      );
+      // Filter to get only the PTOs that exist in the options
+      const selectedItems = [];
+      for (const ptoId of initialData.paid_time_off) {
+        const foundPto = ptoOptions.find((pto) => pto.uuid === ptoId);
+        if (foundPto) {
+          selectedItems.push(foundPto);
+        }
+      }
       setSelectedPTOs(selectedItems);
     }
   }, [initialData, ptoOptions]);
@@ -127,38 +161,57 @@ const Compensation: React.FC<CompensationProps> = ({
 
   // Handle PTO selection
   const handlePTOChange = (value: string) => {
+    // If empty value, do nothing
+    if (!value) {
+      return;
+    }
+
     setPtoSelectValue(value);
 
     // Find the selected PTO
     const selectedPTO = ptoOptions.find((pto) => pto.type === value);
 
-    if (
-      selectedPTO &&
-      !selectedPTOs.some((item) => item.id === selectedPTO.id)
-    ) {
-      const newSelectedPTOs = [...selectedPTOs, selectedPTO];
-      setSelectedPTOs(newSelectedPTOs);
+    if (selectedPTO) {
+      console.log('Selected PTO:', selectedPTO);
 
-      // Update form data with PTO IDs
-      setFormData((prev) => ({
-        ...prev,
-        paid_time_off: newSelectedPTOs.map((pto) => pto.id),
-      }));
+      // Check if this PTO is already selected
+      if (!selectedPTOs.some((item) => item.uuid === selectedPTO.uuid)) {
+        const newSelectedPTOs = [...selectedPTOs, selectedPTO];
+        setSelectedPTOs(newSelectedPTOs);
+
+        // Update form data with PTO IDs - make sure they're all valid IDs
+        const validPtoIds = newSelectedPTOs
+          .map((pto) => pto.uuid)
+          .filter((id) => id !== undefined && id !== null);
+
+        setFormData((prev) => ({
+          ...prev,
+          paid_time_off: validPtoIds,
+        }));
+      }
 
       // Reset select value
+      setPtoSelectValue('');
+    } else {
+      console.log('Could not find PTO with type:', value);
+      // Reset select value if not found
       setPtoSelectValue('');
     }
   };
 
   // Remove a PTO from selection
   const removePTO = (ptoId: string) => {
-    const newSelectedPTOs = selectedPTOs.filter((pto) => pto.id !== ptoId);
+    const newSelectedPTOs = selectedPTOs.filter((pto) => pto.uuid !== ptoId);
     setSelectedPTOs(newSelectedPTOs);
 
-    // Update form data with PTO IDs
+    // Update form data with PTO IDs - make sure they're all valid IDs
+    const validPtoIds = newSelectedPTOs
+      .map((pto) => pto.uuid)
+      .filter((id) => id !== undefined && id !== null);
+
     setFormData((prev) => ({
       ...prev,
-      paid_time_off: newSelectedPTOs.map((pto) => pto.id),
+      paid_time_off: validPtoIds,
     }));
   };
 
@@ -170,21 +223,79 @@ const Compensation: React.FC<CompensationProps> = ({
     setTrackingCode(newCode);
   };
 
-  // Convert PTO options for select component
-  const ptoSelectOptions = ptoOptions.map((pto) => ({
-    label: pto.type,
-    value: pto.type,
-  }));
+  // Save compensation data directly
+  const saveCompensationData = async () => {
+    if (!personId) {
+      toast.error('Cannot save compensation: Employee ID is missing');
+      return;
+    }
 
+    setIsSaving(true);
+    try {
+      // Make sure paid_time_off doesn't contain undefined values
+      const validPtoIds = formData.paid_time_off.filter(
+        (id) => id !== undefined && id !== null
+      );
+
+      // Format the payload for the API using the required structure
+      const payload = {
+        compensation_schedule: formData.paymentFrequency || null,
+        base_pay: formData.salary || null,
+        eligible_for_tips: formData.eligibleForTips || false,
+        eligible_for_overtime: formData.eligibleForOvertime || false,
+        paidTimeOff: validPtoIds.length > 0 ? validPtoIds : [],
+        hourly_rate: formData.hourlyRate || null,
+      };
+
+      console.log('Sending compensation payload:', payload);
+
+      // Call the API to update the employee
+      await peopleApi.updatePerson(personId, payload);
+      toast.success('Compensation data saved successfully');
+      setHasChanges(false);
+      // Call the onComplete callback to notify the parent component
+      if (onComplete) {
+        onComplete();
+      }
+    } catch (error) {
+      console.error('Error saving compensation data:', error);
+      toast.error('Failed to save compensation data');
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  // Convert PTO options for select component - add default option
+  const ptoSelectOptions = [
+    defaultPtoOption,
+    ...ptoOptions.map((pto) => ({
+      label: pto.type || 'Unnamed PTO',
+      value: pto.type || '',
+    })),
+  ];
+
+  const availablePtoOptions = useMemo(
+    () => [
+      defaultPtoOption,
+      ...ptoOptions
+        .filter(
+          (pto) => !selectedPTOs.some((selected) => selected.uuid === pto.uuid)
+        )
+        .map((pto) => ({
+          label: pto.type || 'Unnamed PTO',
+          value: pto.type || '',
+        })),
+    ],
+    [ptoOptions, selectedPTOs]
+  );
   return (
     <div className="w-full pt-10 px-14">
       <div className="w-full">
-        <Select
+        <SearchableSelect
           options={paymentFrequencyOptions}
           selectedValue={formData.paymentFrequency}
           onChange={handleScheduleChange}
           label="Compensation Schedule"
-          bg={''}
         />
       </div>
 
@@ -194,14 +305,14 @@ const Compensation: React.FC<CompensationProps> = ({
           placeholder="950"
           value={formData.hourlyRate.toString()}
           onChange={handleHourlyRateChange}
-          inputClass="!bg-gray-50"
+          inputClass=""
         />
         <CurrencyInput
           label="Base Pay"
           placeholder="90,000"
           value={formData.salary.toString()}
           onChange={handleSalaryChange}
-          inputClass="!bg-gray-50"
+          inputClass=""
         />
       </div>
 
@@ -250,27 +361,30 @@ const Compensation: React.FC<CompensationProps> = ({
       <div className="my-5">
         <p className="text-xl font-bold">Paid Time off (PTO)</p>
         <div className="mt-5">
-          <Select
-            options={ptoSelectOptions}
-            selectedValue={ptoSelectValue}
-            onChange={handlePTOChange}
-            label="PTO Type"
-            bg={''}
-          />
+          {ptoLoading ? (
+            <div>Loading PTO options...</div>
+          ) : (
+            <SearchableSelect
+              options={availablePtoOptions}
+              selectedValue={ptoSelectValue}
+              onChange={handlePTOChange}
+              label="PTO Type"
+            />
+          )}
 
           {/* Selected PTOs display */}
           {selectedPTOs.length > 0 && (
             <div className="mt-4 flex flex-wrap gap-2">
               {selectedPTOs.map((pto) => (
                 <div
-                  key={pto.id}
+                  key={pto.uuid}
                   className="bg-gray-100 rounded-full px-3 py-1 flex items-center text-sm"
                 >
                   <span>
                     {pto.type} ({pto.total_entitled_days} days)
                   </span>
                   <button
-                    onClick={() => removePTO(pto.id)}
+                    onClick={() => removePTO(pto.uuid)}
                     className="ml-2 text-gray-500 hover:text-red-500"
                   >
                     ×
@@ -310,8 +424,22 @@ const Compensation: React.FC<CompensationProps> = ({
           </p>
         </div>
       </div>
+
+      {/* Add Save button when we have a personId and changes */}
+      {personId && hasChanges && (
+        <div className="mt-6 flex justify-end">
+          <Button
+            type="submit"
+            text={isSaving ? 'Saving...' : 'Proceed'}
+            onClick={saveCompensationData}
+            disabled={isSaving}
+            className="mb-2"
+          />
+        </div>
+      )}
     </div>
   );
 };
 
 export default Compensation;
+

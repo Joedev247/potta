@@ -9,8 +9,8 @@ import Box from './box';
 
 const urlRouters = [
   {
-    value: 'payments',
-    label: 'Payments',
+    value: 'payroll',
+    label: 'Payroll',
   },
   {
     value: 'expenses',

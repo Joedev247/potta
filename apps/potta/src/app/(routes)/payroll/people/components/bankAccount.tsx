@@ -16,6 +16,7 @@ interface BankAccountProps {
   personId: string;
   onChange?: (data: any) => void;
   initialData?: any;
+  onSubmit?: (data: any) => void;
 }
 
 // Updated account types to match backend requirements
@@ -68,6 +69,7 @@ const BankAccount: React.FC<BankAccountProps> = ({
   personId,
   onChange,
   initialData,
+  onSubmit,
 }) => {
   const [formData, setFormData] = useState({
     person_id: personId,
@@ -133,7 +135,6 @@ const BankAccount: React.FC<BankAccountProps> = ({
             person_id: personId,
             account_holder_name: prev.account_holder_name || fullName,
             country: country,
-            country_code: countryCode || prev.country_code,
             currency: prev.currency || defaultCurrency,
           }));
         } catch (error) {
@@ -176,8 +177,8 @@ const BankAccount: React.FC<BankAccountProps> = ({
       newErrors.account_number = 'Account number is required';
     }
 
-    if (!formData.country_code) {
-      newErrors.country_code = 'Country is required';
+    if (!formData.country) {
+      newErrors.country = 'Country is required';
     }
 
     setErrors(newErrors);
@@ -199,7 +200,6 @@ const BankAccount: React.FC<BankAccountProps> = ({
         setErrors((prev) => ({ ...prev, [name]: '' }));
       }
     };
-
   // Handle select change
   const handleSelectChange = (name: string, value: string) => {
     setFormData((prev) => {
@@ -215,7 +215,15 @@ const BankAccount: React.FC<BankAccountProps> = ({
         }
       }
 
-      if (onChange) onChange(newData);
+      if (onChange) {
+        // Create a copy without country_code for the onChange callback
+        const callbackData = { ...newData };
+        if ('country_code' in callbackData) {
+          delete callbackData.country_code;
+        }
+        onChange(callbackData);
+      }
+
       return newData;
     });
 
@@ -233,14 +241,42 @@ const BankAccount: React.FC<BankAccountProps> = ({
       return newData;
     });
   };
-
   // Handle form submission
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     const isValid = validateForm();
 
-    if (isValid && onChange) {
-      onChange(formData);
+    if (isValid) {
+      // Create a copy of formData
+      const formDataCopy = { ...formData };
+
+      // Remove country_code from the payload
+      if ('country_code' in formDataCopy) {
+        delete formDataCopy.country_code;
+      }
+
+      // Prepare the exact payload structure as requested
+      const payload = {
+        person_id: formDataCopy.person_id,
+        account_holder_name: formDataCopy.account_holder_name,
+        bank_name: formDataCopy.bank_name,
+        account_number: formDataCopy.account_number,
+        routing_number: formDataCopy.routing_number,
+        currency: formDataCopy.currency,
+        account_type: formDataCopy.account_type,
+        is_primary: formDataCopy.is_primary,
+        country: formDataCopy.country,
+        verified: formDataCopy.verified,
+      };
+
+      // Submit the data
+      if (onSubmit) {
+        onSubmit(payload);
+      } else if (onChange) {
+        onChange(payload);
+      }
+
+      console.log('Submitting bank account data:', payload);
     }
   };
 
@@ -259,7 +295,7 @@ const BankAccount: React.FC<BankAccountProps> = ({
         Add bank account details for direct deposit
       </p>
 
-      {personData && (
+      {/* {personData && (
         <div className="mb-4 p-3 bg-gray-50 rounded-md">
           <p className="text-sm text-gray-600">
             Using address information from: {personData.firstName}{' '}
@@ -272,7 +308,7 @@ const BankAccount: React.FC<BankAccountProps> = ({
             </p>
           )}
         </div>
-      )}
+      )} */}
 
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
@@ -330,24 +366,22 @@ const BankAccount: React.FC<BankAccountProps> = ({
         <div className="grid grid-cols-2 gap-3">
           <div>
             <label className="block mb-2 font-bold">Currency</label>
-            <Select
+            <SearchableSelect
               options={currencies}
               selectedValue={formData.currency}
               onChange={(value: string) =>
                 handleSelectChange('currency', value)
               }
-              bg={''}
             />
           </div>
           <div>
             <label className="block mb-2 font-bold">Account Type</label>
-            <Select
+            <SearchableSelect
               options={accountTypes}
               selectedValue={formData.account_type}
               onChange={(value: string) =>
                 handleSelectChange('account_type', value)
               }
-              bg={''}
             />
           </div>
         </div>
@@ -357,9 +391,17 @@ const BankAccount: React.FC<BankAccountProps> = ({
           <SearchableSelect
             options={countryOptions}
             selectedValue={formData.country_code}
-            onChange={(value) => handleSelectChange('country_code', value)}
+            onChange={(value) => {
+              handleSelectChange('country_code', value);
+              // Also update the country field with the country name
+              const countryName = getCountryName(value) || '';
+              setFormData((prev) => ({
+                ...prev,
+                country: countryName,
+              }));
+            }}
             placeholder="Select a country"
-            error={errors.country_code}
+            error={errors.country}
           />
           {formData.country && !formData.country_code && (
             <p className="text-amber-600 text-sm mt-1">

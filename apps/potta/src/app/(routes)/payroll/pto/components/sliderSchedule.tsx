@@ -1,20 +1,27 @@
 'use client';
-import React, { useState } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import Button from '@potta/components/button';
 import Input from '@potta/components/input';
 import Select from '@potta/components/select';
 import Slider from '@potta/components/slideover';
 import { toast } from 'react-hot-toast';
 import { useCreatePTOPolicy } from '../hooks/useCreatePTOPolicy';
+import CustomDatePicker from '@potta/components/customDatePicker';
+import { CalendarDate, today, getLocalTimeZone } from '@internationalized/date';
 
 const SliderSchedule = () => {
   const [isSliderOpen, setIsSliderOpen] = useState(false);
-  const [type, setType] = useState('VACATION');
-  const [cycleType, setCycleType] = useState('MONTHLY');
-  const [accrualRate, setAccrualRate] = useState('');
-  const [totalEntitledDays, setTotalEntitledDays] = useState('');
-  const [startDate, setStartDate] = useState('');
-  const [endDate, setEndDate] = useState('');
+
+  // Use a single formData object like BaseInfo does
+  const [formData, setFormData] = useState({
+    type: 'VACATION',
+    cycleType: 'MONTHLY',
+    accrualRate: '',
+    totalEntitledDays: '',
+    startDate: '',
+    endDate: '',
+  });
+
   const [validationErrors, setValidationErrors] = useState<
     Record<string, string>
   >({});
@@ -22,13 +29,18 @@ const SliderSchedule = () => {
   // Use our custom hook for PTO policy creation
   const { createPTOPolicy, isSubmitting } = useCreatePTOPolicy();
 
+  // Debug logging for form data changes
+  useEffect(() => {
+    console.log('Form data updated:', formData);
+  }, [formData]);
+
   // Options for dropdown selects
   const typeOptions = [
     { label: 'Vacation', value: 'VACATION' },
-    { label: 'Sick Leave', value: 'SICK_LEAVE' },
-    { label: 'Personal', value: 'PERSONAL' },
+    { label: 'Sick', value: 'SICK' },
     { label: 'Maternity', value: 'MATERNITY' },
     { label: 'Paternity', value: 'PATERNITY' },
+    { label: 'Custom', value: 'CUSTOM' },
   ];
 
   const cycleTypeOptions = [
@@ -39,76 +51,149 @@ const SliderSchedule = () => {
     { label: 'Yearly', value: 'YEARLY' },
   ];
 
-  // Handle accrual rate input change
-  const handleAccrualRateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    setAccrualRate(value);
+  // Direct input change handler for the Input component
+  const handleInputChange = useCallback(
+    (name: string) => (e: React.ChangeEvent<HTMLInputElement>) => {
+      const value = e.target.value;
+      setFormData((prev) => {
+        const updated = { ...prev, [name]: value };
+        return updated;
+      });
 
-    // Clear validation error when user starts typing
-    if (validationErrors.accrualRate) {
-      setValidationErrors((prev) => ({ ...prev, accrualRate: '' }));
+      // Clear validation error when user starts typing
+      if (validationErrors[name]) {
+        setValidationErrors((prev) => ({ ...prev, [name]: '' }));
+      }
+    },
+    [validationErrors]
+  );
+
+  // Handle select change
+  const handleSelectChange = useCallback((name: string, value: string) => {
+    setFormData((prev) => {
+      const updated = { ...prev, [name]: value };
+      return updated;
+    });
+  }, []);
+
+  // Let's try a different approach for date handling
+  const handleStartDateChange = useCallback(
+    (value: CalendarDate | null) => {
+      if (value) {
+        // Format date as YYYY-MM-DD
+        const formattedDate = `${value.year}-${String(value.month).padStart(
+          2,
+          '0'
+        )}-${String(value.day).padStart(2, '0')}`;
+
+        setFormData((prev) => {
+          return { ...prev, startDate: formattedDate };
+        });
+
+        // Clear validation error
+        if (validationErrors.startDate) {
+          setValidationErrors((prev) => ({ ...prev, startDate: '' }));
+        }
+      }
+    },
+    [validationErrors]
+  );
+
+  const handleEndDateChange = useCallback(
+    (value: CalendarDate | null) => {
+      if (value) {
+        // Format date as YYYY-MM-DD
+        const formattedDate = `${value.year}-${String(value.month).padStart(
+          2,
+          '0'
+        )}-${String(value.day).padStart(2, '0')}`;
+
+        setFormData((prev) => {
+          return { ...prev, endDate: formattedDate };
+        });
+
+        // Clear validation error
+        if (validationErrors.endDate) {
+          setValidationErrors((prev) => ({ ...prev, endDate: '' }));
+        }
+      }
+    },
+    [validationErrors]
+  );
+
+  // Parse string dates to CalendarDate objects for the DatePicker
+  const getStartDate = useCallback(() => {
+    try {
+      if (formData.startDate) {
+        const [year, month, day] = formData.startDate.split('-').map(Number);
+        const calDate = new CalendarDate(year, month, day);
+        return calDate;
+      }
+      return null;
+    } catch (error) {
+      console.error('Error creating CalendarDate from startDate:', error);
+      return null;
     }
-  };
+  }, [formData.startDate]);
 
-  // Handle total entitled days input change
-  const handleTotalEntitledDaysChange = (
-    e: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    const value = e.target.value;
-    setTotalEntitledDays(value);
-
-    // Clear validation error when user starts typing
-    if (validationErrors.totalEntitledDays) {
-      setValidationErrors((prev) => ({ ...prev, totalEntitledDays: '' }));
+  const getEndDate = useCallback(() => {
+    try {
+      if (formData.endDate) {
+        const [year, month, day] = formData.endDate.split('-').map(Number);
+        const calDate = new CalendarDate(year, month, day);
+        return calDate;
+      }
+      return null;
+    } catch (error) {
+      console.error('Error creating CalendarDate from endDate:', error);
+      return null;
     }
-  };
+  }, [formData.endDate]);
 
-  // Handle date changes
-  const handleStartDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setStartDate(e.target.value);
-    if (validationErrors.startDate) {
-      setValidationErrors((prev) => ({ ...prev, startDate: '' }));
-    }
-  };
-
-  const handleEndDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setEndDate(e.target.value);
-    if (validationErrors.endDate) {
-      setValidationErrors((prev) => ({ ...prev, endDate: '' }));
-    }
-  };
+  // Let's try a simpler approach - just use today's date as default
+  const getTodayAsCalendarDate = useCallback(() => {
+    const todayDate = today(getLocalTimeZone());
+    return todayDate;
+  }, []);
 
   // Validate form inputs
   const validateForm = () => {
     const errors: Record<string, string> = {};
 
     // Validate accrual rate
-    if (!accrualRate.trim()) {
+    if (!formData.accrualRate.trim()) {
       errors.accrualRate = 'Accrual rate is required';
-    } else if (isNaN(parseFloat(accrualRate)) || parseFloat(accrualRate) <= 0) {
+    } else if (
+      isNaN(parseFloat(formData.accrualRate)) ||
+      parseFloat(formData.accrualRate) <= 0
+    ) {
       errors.accrualRate = 'Accrual rate must be a positive number';
     }
 
     // Validate total entitled days
-    if (!totalEntitledDays.trim()) {
+    if (!formData.totalEntitledDays.trim()) {
       errors.totalEntitledDays = 'Total entitled days is required';
     } else if (
-      isNaN(parseInt(totalEntitledDays)) ||
-      parseInt(totalEntitledDays) <= 0
+      isNaN(parseInt(formData.totalEntitledDays)) ||
+      parseInt(formData.totalEntitledDays) <= 0
     ) {
       errors.totalEntitledDays =
         'Total entitled days must be a positive number';
     }
 
     // Validate start date
-    if (!startDate) {
+    if (!formData.startDate) {
       errors.startDate = 'Start date is required';
     }
 
     // Validate end date
-    if (!endDate) {
+    if (!formData.endDate) {
       errors.endDate = 'End date is required';
-    } else if (startDate && new Date(endDate) <= new Date(startDate)) {
+    } else if (
+      formData.startDate &&
+      formData.endDate &&
+      formData.endDate <= formData.startDate
+    ) {
       errors.endDate = 'End date must be after start date';
     }
 
@@ -118,33 +203,40 @@ const SliderSchedule = () => {
 
   // Reset form after submission
   const resetForm = () => {
-    setType('VACATION');
-    setCycleType('MONTHLY');
-    setAccrualRate('');
-    setTotalEntitledDays('');
-    setStartDate('');
-    setEndDate('');
+    setFormData({
+      type: 'VACATION',
+      cycleType: 'MONTHLY',
+      accrualRate: '',
+      totalEntitledDays: '',
+      startDate: '',
+      endDate: '',
+    });
     setValidationErrors({});
   };
 
   // Handle form submission
   const handleSubmit = async () => {
+    console.log('Submitting form with data:', formData);
+
     if (validateForm()) {
       try {
         const result = await createPTOPolicy({
-          type,
-          cycle_type: cycleType,
-          accrual_rate: parseFloat(accrualRate),
-          total_entitled_days: parseInt(totalEntitledDays),
-          start_date: startDate,
-          end_date: endDate,
+          type: formData.type,
+          cycle_type: formData.cycleType,
+          accrual_rate: parseFloat(formData.accrualRate),
+          total_entitled_days: parseInt(formData.totalEntitledDays),
+          start_date: formData.startDate,
+          end_date: formData.endDate,
           status: 'ACTIVE',
         });
 
         if (result.success) {
+          // toast.success('PTO policy created successfully');
           // Reset form and close slider on success
           resetForm();
           setIsSliderOpen(false);
+        } else {
+          toast.error('Failed to create PTO policy');
         }
       } catch (error) {
         console.error('Error submitting form:', error);
@@ -173,33 +265,33 @@ const SliderSchedule = () => {
     >
       <div className="flex flex-col gap-5 w-full max-w-4xl">
         <div>
-          <p className="mb-2 font-medium">PTO Type</p>
+          <p className="mb-2 font-semibold">PTO Type</p>
           <Select
             options={typeOptions}
-            selectedValue={type}
-            onChange={(value) => setType(value)}
+            selectedValue={formData.type}
+            onChange={(value) => handleSelectChange('type', value)}
             bg={''}
           />
         </div>
 
         <div>
-          <p className="mb-2 font-medium">Cycle Type</p>
+          <p className="mb-2 font-semibold">Cycle Type</p>
           <Select
             options={cycleTypeOptions}
-            selectedValue={cycleType}
-            onChange={(value) => setCycleType(value)}
+            selectedValue={formData.cycleType}
+            onChange={(value) => handleSelectChange('cycleType', value)}
             bg={''}
           />
         </div>
 
         <div>
-          <p className="mb-2 font-medium">Accrual Rate</p>
+          <p className="mb-2 font-semibold">Accrual Rate</p>
           <Input
             name="accrualRate"
             type="text"
             placeholder="Enter accrual rate (e.g., 1.25)"
-            value={accrualRate}
-            onchange={handleAccrualRateChange}
+            value={formData.accrualRate}
+            onchange={handleInputChange('accrualRate')}
             errors={
               validationErrors.accrualRate
                 ? { message: validationErrors.accrualRate }
@@ -212,13 +304,13 @@ const SliderSchedule = () => {
         </div>
 
         <div>
-          <p className="mb-2 font-medium">Total Entitled Days</p>
+          <p className="mb-2 font-semibold">Total Entitled Days</p>
           <Input
             name="totalEntitledDays"
             type="text"
             placeholder="Enter total entitled days (e.g., 15)"
-            value={totalEntitledDays}
-            onchange={handleTotalEntitledDaysChange}
+            value={formData.totalEntitledDays}
+            onchange={handleInputChange('totalEntitledDays')}
             errors={
               validationErrors.totalEntitledDays
                 ? { message: validationErrors.totalEntitledDays }
@@ -232,32 +324,32 @@ const SliderSchedule = () => {
 
         <div className="grid grid-cols-2 gap-4">
           <div>
-            <p className="mb-2 font-medium">Start Date</p>
-            <Input
-              name="startDate"
-              type="date"
-              value={startDate}
-              onchange={handleStartDateChange}
-              errors={
-                validationErrors.startDate
-                  ? { message: validationErrors.startDate }
-                  : undefined
-              }
+            <CustomDatePicker
+              label="Start Date"
+              placeholder="Select start date"
+              value={getStartDate()}
+              onChange={handleStartDateChange}
+              isRequired={true}
             />
+            {validationErrors.startDate && (
+              <p className="text-red-500 text-sm mt-1">
+                {validationErrors.startDate}
+              </p>
+            )}
           </div>
           <div>
-            <p className="mb-2 font-medium">End Date</p>
-            <Input
-              name="endDate"
-              type="date"
-              value={endDate}
-              onchange={handleEndDateChange}
-              errors={
-                validationErrors.endDate
-                  ? { message: validationErrors.endDate }
-                  : undefined
-              }
+            <CustomDatePicker
+              label="End Date"
+              placeholder="Select end date"
+              value={getEndDate()}
+              onChange={handleEndDateChange}
+              isRequired={true}
             />
+            {validationErrors.endDate && (
+              <p className="text-red-500 text-sm mt-1">
+                {validationErrors.endDate}
+              </p>
+            )}
           </div>
         </div>
 
