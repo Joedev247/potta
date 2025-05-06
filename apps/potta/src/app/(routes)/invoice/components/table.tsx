@@ -176,7 +176,7 @@ const InvoiceTable = () => {
     );
   }
   return (
-    <div className="mt-10">
+    <div className="">
        <div className="flex justify-between w-full">
         <div className="mt-5 w-[50%] flex items-center space-x-2">
           <div className="w-[65%]">

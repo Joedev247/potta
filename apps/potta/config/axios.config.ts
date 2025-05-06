@@ -8,8 +8,19 @@ const axios = Axios.create({
 axios.interceptors.request.use((config: InternalAxiosRequestConfig) => {
   // Add the required headers to every request
   config.headers = config.headers || {};
-  config.headers['Content-Type'] = 'application/json',
-  config.headers['accept'] = '*/*',
+  
+  // Only set Content-Type to application/json if it's not already set
+  // This allows the uploadImage function to set its own Content-Type
+  if (!config.headers['Content-Type'] && !config.data?.toString().includes('FormData')) {
+    config.headers['Content-Type'] = 'application/json';
+  }
+  
+  // For FormData (file uploads), don't set Content-Type as the browser will set it with the boundary
+  if (config.data instanceof FormData) {
+    delete config.headers['Content-Type'];
+  }
+  
+  config.headers['accept'] = '*/*';
   config.headers['branchId'] = 'f7b1b3b0-0b1b-4b3b-8b1b-0b1b3b0b1b3b';
   config.headers['orgId'] = '8f79d19a-5319-4783-8ddc-c863d98ecc16';
   config.headers['userId'] = '8f79d19a-5319-4783-8ddc-c863d98ecc16';
@@ -19,7 +30,7 @@ axios.interceptors.request.use((config: InternalAxiosRequestConfig) => {
     url: (config.baseURL || '') + (config.url || ''),
     method: config.method,
     headers: config.headers,
-    data: config.data,
+    data: config.data instanceof FormData ? 'FormData (file upload)' : config.data,
     params: config.params
   });
 

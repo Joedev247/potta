@@ -22,13 +22,25 @@ const TableOPS = () => {
   const context = useContext(ContextData);
 
   const deleteItem = (productId: string) => {
-    context?.setData(
-      context?.data.filter((item: LineItem) => item.productId !== productId)
-    );
+    if (context?.data && Array.isArray(context.data)) {
+      context.setData(
+        context.data.filter((item: LineItem) => item.productId !== productId)
+      );
+    }
   };
 
   const calculateTotalPrice = () => {
-    if (!context?.data) return;
+    if (!context?.data || !Array.isArray(context.data) || context.data.length === 0) {
+      // Initialize with zeros if data is not available or empty
+      context?.setOrderSummary?.({
+        subtotal: 0,
+        tax: 0,
+        discount: context?.orderSummary?.discount || 0,
+        itemDiscounts: 0,
+        total: 0,
+      });
+      return;
+    }
 
     const calculatedSubtotal = context.data.reduce(
       (acc: number, item: LineItem) => {
@@ -73,7 +85,7 @@ const TableOPS = () => {
     const calculatedTotal = calculatedSubtotal + calculatedTax - totalDiscount;
 
     // Update order summary in context
-    context?.setOrderSummary({
+    context?.setOrderSummary?.({
       subtotal: calculatedSubtotal,
       tax: calculatedTax,
       discount: orderDiscount,
@@ -87,19 +99,23 @@ const TableOPS = () => {
   }, [context?.data, context?.orderSummary?.discount]);
 
   const handleQuantityChange = (productId: string, change: number) => {
-    context?.setData((prevData: LineItem[]) =>
-      prevData.map((item: LineItem) => {
-        if (item.productId === productId) {
-          const newQuantity = item.quantity + change;
-          if (newQuantity < 1) {
-            alert('Minimum quantity is 1');
-            return item;
+    if (context?.data && Array.isArray(context.data)) {
+      context.setData((prevData: LineItem[]) => {
+        if (!Array.isArray(prevData)) return prevData;
+        
+        return prevData.map((item: LineItem) => {
+          if (item.productId === productId) {
+            const newQuantity = item.quantity + change;
+            if (newQuantity < 1) {
+              alert('Minimum quantity is 1');
+              return item;
+            }
+            return { ...item, quantity: newQuantity };
           }
-          return { ...item, quantity: newQuantity };
-        }
-        return item;
-      })
-    );
+          return item;
+        });
+      });
+    }
   };
 
   const calculateItemDiscount = (item: LineItem): number => {
@@ -207,7 +223,7 @@ const TableOPS = () => {
           <MyTable
             columns={columns}
             pagination={false}
-            data={context?.data || []}
+            data={Array.isArray(context?.data) ? context.data : []}
             ExpandableComponent={null}
             selectable={false}
             expanded={true}

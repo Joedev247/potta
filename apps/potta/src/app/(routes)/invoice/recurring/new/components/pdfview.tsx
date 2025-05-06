@@ -30,6 +30,16 @@ const PdfView = () => {
     ? new Date(contextData.dueDate).toLocaleDateString()
     : 'Not set';
 
+  // Recurring invoice specific data
+  const frequency = contextData.frequency || 'Monthly';
+  const formattedStartDate = contextData.startDate
+    ? new Date(contextData.startDate).toLocaleDateString()
+    : 'Not set';
+  const formattedEndDate = contextData.endDate
+    ? new Date(contextData.endDate).toLocaleDateString()
+    : null;
+  const occurrences = contextData.occurrences || null;
+
   const invoiceType = contextData.invoiceType || 'Invoice';
   const invoiceNumber = contextData.invoiceNumber || '0025';
   const billingAddress = contextData.billing || '';
@@ -80,12 +90,11 @@ const PdfView = () => {
     <div className="flex min-h-full flex-col items-center justify-center overflow-y-auto w-full scroll bg-[#F2F2F2]">
       <div className="flex min-w-[45rem] justify-between w-full p-8">
         <h3 className="text-xl font-semibold">PDF Preview</h3>
-
       </div>
       <div className="max-w-[48rem] bg-white space-y-8 min-w-[45rem] w-full mb-10">
         <div className="h-36 w-full flex items-center justify-between px-8 bg-yellow-800">
           <div>
-            <p className="text-3xl font-semibold text-white">{invoiceType}</p>
+            <p className="text-3xl font-semibold text-white">Recurring {invoiceType}</p>
             <p className="text-white mt-2">#{invoiceNumber}</p>
           </div>
           <div className="text-right text-white">
@@ -100,6 +109,27 @@ const PdfView = () => {
             </p>
           </div>
         </div>
+        
+        {/* Recurring Information Box */}
+        <div className="px-8 py-4 bg-blue-50 border-l-4 border-blue-500">
+          <h3 className="font-bold text-blue-800 mb-2">Recurring Schedule</h3>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <p><strong>Frequency:</strong> {frequency}</p>
+              <p><strong>Start Date:</strong> {formattedStartDate}</p>
+            </div>
+            <div>
+              {formattedEndDate ? (
+                <p><strong>End Date:</strong> {formattedEndDate}</p>
+              ) : occurrences ? (
+                <p><strong>Occurrences:</strong> {occurrences}</p>
+              ) : (
+                <p><strong>End:</strong> Not specified</p>
+              )}
+            </div>
+          </div>
+        </div>
+        
         <div className="p-5 space-y-16 bg-white">
           <div className="mt-5 w-full flex space-x-5">
             <div className="flex w-[40%] space-x-2">
@@ -255,6 +285,11 @@ const PdfView = () => {
                   {currencySymbol}
                   {total.toFixed(2)}
                 </div>
+              </div>
+              
+              {/* Recurring payment information */}
+              <div className="mt-6 pt-4 border-t border-gray-300">
+                <p className="font-medium text-gray-700">This is a recurring invoice. You will be billed {frequency.toLowerCase()}.</p>
               </div>
             </div>
           </div>

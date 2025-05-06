@@ -1,5 +1,5 @@
 'use client';
-import Box from './components/box';
+import Box from '../layout/navbar/box';
 import InvoiceTableComponents from './components/table';
 
 import Link from 'next/link';
@@ -17,14 +17,14 @@ import CustomSelect, { IOption } from './components/CustomSelect';
 const Invoice = () => {
   const [detailsModal, setDetailsModal] = useState<boolean>(false);
   const [page, setPage] = useState(1);
-  
+
 
 
 
 
   return (
-    <div className="pt-10 px-14">
-      <Box />
+    <div className=" px-14">
+
 
 
 
@@ -35,7 +35,7 @@ const Invoice = () => {
         onChange={setSelectedValue}
         placeholder="Choose an option"
       /> */}
-      <div className="mt-5">
+      <div className="">
         <InvoiceTableComponents
         />
       </div>

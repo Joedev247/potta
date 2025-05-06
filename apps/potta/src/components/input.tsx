@@ -2,7 +2,7 @@ import React from 'react';
 import { FieldError, UseFormRegister } from 'react-hook-form';
 
 type Props = {
-  label?: string;
+  label?: string | React.ReactNode;
   type: string;
   className?: string;
   name: string;
@@ -16,6 +16,9 @@ type Props = {
   autocomplete?: boolean;
   labelClass?: string;
   inputClass?: string;
+  disabled?: boolean;
+  min?: number;
+  max?: number;
 };
 
 const Input: React.FC<Props> = ({
@@ -33,6 +36,9 @@ const Input: React.FC<Props> = ({
   labelClass,
   autocomplete,
   inputClass,
+  disabled,
+  min,
+  max,
 }) => {
   // Get register props if register is provided
   const registerProps = register ? register(name) : {};
@@ -51,8 +57,11 @@ const Input: React.FC<Props> = ({
         </span>
       )}
       <input
+        disabled={disabled}
         autoComplete={autocomplete ? 'off' : 'on'}
         type={type}
+        max={max}
+        min={min}
         value={value}
         {...inputProps}
         placeholder={placeholder}

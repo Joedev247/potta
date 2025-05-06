@@ -70,16 +70,19 @@ export function PhoneInput({
   whatsapp,
   countryCode = "+237",
 }: PhoneInputProps) {
-  const [selectedCountryCode, setSelectedCountryCode] = useState(countryCode);
-  const [isWhatsApp, setIsWhatsApp] = useState(false);
+  // Store the raw phone number input (without country code)
   const [phoneNumber, setPhoneNumber] = useState(value);
+  
+  // Store the selected country code separately
+  const [selectedCountryCode, setSelectedCountryCode] = useState(countryCode);
+  
+  const [isWhatsApp, setIsWhatsApp] = useState(whatsapp || false);
   const [countryCodes, setCountryCodes] = useState<CountryCodeInfo[]>([]);
-  const [selectedCountryInfo, setSelectedCountryInfo] =
-    useState<CountryCodeInfo | null>(null);
+  const [selectedCountryInfo, setSelectedCountryInfo] = useState<CountryCodeInfo | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
-  const userSelectedCountry = useRef(false);
+  const initialRender = useRef(true);
 
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -96,6 +99,20 @@ export function PhoneInput({
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
+
+  // Update the country code when the prop changes
+  useEffect(() => {
+    if (countryCode && countryCode !== selectedCountryCode) {
+      setSelectedCountryCode(countryCode);
+    }
+  }, [countryCode]);
+
+  // Update phone number when value prop changes
+  useEffect(() => {
+    if (value !== undefined && value !== null) {
+      setPhoneNumber(value);
+    }
+  }, [value]);
 
   // Load country codes on component mount
   useEffect(() => {
@@ -151,7 +168,7 @@ export function PhoneInput({
 
         // Set the initial selected country info
         const initialCountry =
-          processedCodes.find((c) => c.code === countryCode) ||
+          processedCodes.find((c) => c.code === selectedCountryCode) ||
           (processedCodes.length > 0 ? processedCodes[0] : null);
 
         if (initialCountry) {
@@ -191,7 +208,7 @@ export function PhoneInput({
 
         // Set initial country from fallback
         const initialCountry =
-          fallbackCountries.find((c) => c.code === countryCode) ||
+          fallbackCountries.find((c) => c.code === selectedCountryCode) ||
           fallbackCountries[0];
         setSelectedCountryCode(initialCountry.code);
         setSelectedCountryInfo(initialCountry);
@@ -201,19 +218,7 @@ export function PhoneInput({
     };
 
     loadCountryCodes();
-  }, [countryCode]);
-
-  // Update phone number when value prop changes
-  useEffect(() => {
-    if (value !== phoneNumber) {
-      setPhoneNumber(value);
-
-      // Only auto-detect country if the user hasn't manually selected one
-      if (!userSelectedCountry.current) {
-        detectCountryFromNumber(value);
-      }
-    }
-  }, [value]);
+  }, []); // Only run on mount, we handle countryCode changes separately
 
   // Update selected country info when country code changes
   useEffect(() => {
@@ -224,32 +229,9 @@ export function PhoneInput({
     }
   }, [selectedCountryCode, countryCodes]);
 
-  // Detect country code from phone number - only used for initial detection
-  const detectCountryFromNumber = (number: string) => {
-    if (!number || countryCodes.length === 0 || userSelectedCountry.current)
-      return;
-
-    // Remove all non-digit characters
-    const digitsOnly = number.replace(/\D/g, "");
-    if (digitsOnly.length < 4) return; // Too short to reliably detect
-
-    // Try to match the number against country codes
-    // Sort by code length (descending) to match longer codes first
-    const sortedCodes = [...countryCodes].sort(
-      (a, b) =>
-        b.code.replace(/\D/g, "").length - a.code.replace(/\D/g, "").length
-    );
-
-    for (const country of sortedCodes) {
-      const codeDigits = country.code.replace(/\D/g, "");
-      if (digitsOnly.startsWith(codeDigits)) {
-        setSelectedCountryCode(country.code);
-        return;
-      }
-    }
-  };
-
-  const formatPhoneNumber = (input: string) => {
+  // Format phone number for display
+  const formatPhoneNumber = (input: string): string => {
+    // Remove any non-digit characters from the input
     const cleaned = input.replace(/\D/g, "");
     if (cleaned.length === 0) return "";
 
@@ -258,58 +240,79 @@ export function PhoneInput({
     let formatted = "";
     let digitIndex = 0;
 
+    // Apply the format pattern
     for (let i = 0; i < format.length && digitIndex < cleaned.length; i++) {
       if (format[i] === "X") {
         formatted += cleaned[digitIndex];
         digitIndex++;
       } else {
         formatted += format[i];
+        // Don't add extra spaces at the end
         if (digitIndex < cleaned.length) {
           formatted += "";
         }
       }
     }
 
+    // Add any remaining digits that don't fit the format
+    if (digitIndex < cleaned.length) {
+      formatted += cleaned.substring(digitIndex);
+    }
+
     return formatted;
   };
 
   // Notify parent component with combined value and metadata
-  const notifyChange = (formattedValue: string) => {
+  const notifyChange = (rawInput: string) => {
     if (onChange) {
-      const rawInput = formattedValue.replace(/\D/g, "");
-      const combinedValue = `${selectedCountryCode}${rawInput}`;
+      // Get the digits-only version of the raw input
+      const digitsOnly = rawInput.replace(/\D/g, "");
+      
+      // Format the raw input for display
+      const formattedValue = formatPhoneNumber(digitsOnly);
+      
+      // The combined value includes the country code + raw digits
+      const combinedValue = `${selectedCountryCode}${digitsOnly}`;
 
       // Pass combined value and metadata to parent
       onChange(combinedValue, {
-        formattedValue,
+        formattedValue: formattedValue,
         countryCode: selectedCountryCode,
-        rawInput
+        rawInput: digitsOnly
       });
     }
   };
 
+  // Handle phone number input changes
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const input = e.target.value;
     const digitsOnly = input.replace(/\D/g, "");
     const maxLength = 15; // Standard max length for international numbers
 
     if (digitsOnly.length <= maxLength) {
+      // Format the number for display
       const formatted = formatPhoneNumber(digitsOnly);
       setPhoneNumber(formatted);
-      notifyChange(formatted);
+      
+      // Notify parent with the raw input
+      notifyChange(digitsOnly);
     }
   };
 
+  // Handle country code selection
   const handleCountryCodeChange = (country: CountryCodeInfo) => {
     setSelectedCountryCode(country.code);
     setSelectedCountryInfo(country);
     setDropdownOpen(false);
 
-    // Mark that the user has manually selected a country
-    userSelectedCountry.current = true;
+    // Notify parent with the same phone number but updated country code
+    notifyChange(phoneNumber.replace(/\D/g, ""));
+  };
 
-    // Notify parent with updated country code
-    notifyChange(phoneNumber);
+  // Handle WhatsApp toggle
+  const handleWhatsAppToggle = (checked: boolean) => {
+    setIsWhatsApp(checked);
+    // You could notify the parent component about the WhatsApp status change here if needed
   };
 
   return (
@@ -317,16 +320,18 @@ export function PhoneInput({
       <div className="flex justify-between items-center">
         <p className="font-bold mb-1 w-fit">{label}</p>
         {whatsapp && (
-          <WhatsAppToggle checked={isWhatsApp} onChange={setIsWhatsApp} />
+          <WhatsAppToggle checked={isWhatsApp} onChange={handleWhatsAppToggle} />
         )}
       </div>
       <div className="flex gap-[1px]">
+        {/* Country code dropdown */}
         <div className="relative" ref={dropdownRef}>
           <button
             type="button"
             onClick={() => setDropdownOpen(!dropdownOpen)}
             className="flex items-center py-2.5 border border-r-0 border-gray-200 px-3 bg-white cursor-pointer focus:ring-1 focus:ring-blue-500 outline-none min-w-[90px] justify-between"
             disabled={isLoading}
+            aria-label="Select country code"
           >
             <div className="flex items-center gap-2">
               {selectedCountryInfo && (
@@ -343,6 +348,7 @@ export function PhoneInput({
             <ChevronDown className="w-4 h-4 text-gray-500" />
           </button>
 
+          {/* Country dropdown menu */}
           {dropdownOpen && (
             <div className="absolute top-full left-0 z-10 bg-white border border-gray-200 shadow-lg max-h-60 overflow-y-auto w-64">
               {isLoading ? (
@@ -378,14 +384,19 @@ export function PhoneInput({
             </div>
           )}
         </div>
+        
+        {/* Phone number input */}
         <input
           type="tel"
-          placeholder={placeholder}
+          placeholder={placeholder || "Enter phone number"}
           value={phoneNumber}
           onChange={handleInputChange}
           className="outline-none focus:ring-1 focus:ring-blue-500 border border-gray-200 p-2 flex-1 py-2.5"
+          aria-label="Phone number"
         />
       </div>
+      
+      {/* Display selected country info */}
       {selectedCountryInfo && (
         <div className="text-xs text-gray-500 mt-1">
           {selectedCountryInfo.country} ({selectedCountryInfo.code})
@@ -410,6 +421,8 @@ export function WhatsAppToggle({ checked, onChange }: WhatsAppToggleProps) {
         className={`w-12 h-6 rounded-full transition-colors ${
           checked ? "bg-green-500" : "bg-gray-300"
         } relative`}
+        aria-checked={checked}
+        role="switch"
       >
         <div
           className={`w-5 h-5 rounded-full bg-white absolute top-0.5 transition-transform ${

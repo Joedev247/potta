@@ -7,9 +7,7 @@ import { toast } from 'react-hot-toast';
 const CustomerContent = () => {
   return (
     <div className="px-14 py-5">
-      <div>
-        <Boxes />
-      </div>
+      
       <div>
         <TableComponents />
       

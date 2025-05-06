@@ -295,7 +295,7 @@ const handleSaveInvoice = () => {
     receiptNumber: invoiceNumber,
     discountAmount: 0, // Add default or actual value if available
     customerId: customerName, // Using the customer UUID as customerId
-    salePerson: 'c9c0c3a4-353f-4907-a342-ae64e629936f', // Fixed sales person ID as required
+    salePerson: '532e5da0-204f-4417-95e0-f26a13c62e39',// Fixed sales person ID as required
     lineItems: lineItems,
   };
 
