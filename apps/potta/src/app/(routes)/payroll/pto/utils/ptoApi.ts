@@ -5,7 +5,7 @@ export const ptoApi = {
   // Create a new PTO policy
   createPTOPolicy: async (payload: PTOPolicyPayload) => {
     try {
-      const response = await axios.post('/api/potta/paid-time-off', payload);
+      const response = await axios.post('/paid-time-off', payload);
       return { success: true, data: response.data };
     } catch (error) {
       console.error('Error creating PTO policy:', error);
@@ -17,7 +17,7 @@ export const ptoApi = {
   getPTOPolicies: async (filters: any = {}) => {
     try {
       const response = await axios.post(
-        '/api/potta/paid-time-off/filter',
+        '/paid-time-off/filter',
         filters
       );
       return response.data;
@@ -30,7 +30,7 @@ export const ptoApi = {
   getPTOPolicy: async (id: string) => {
     try {
       console.log(`Fetching PTO policy with ID: ${id}`);
-      const response = await axios.get(`/api/potta/paid-time-off/${id}`);
+      const response = await axios.get(`/paid-time-off/${id}`);
       console.log('PTO policy response:', response.data);
       return { success: true, data: response.data };
     } catch (error) {
@@ -43,7 +43,7 @@ export const ptoApi = {
   accrueLeave: async (id: string, amount: number) => {
     try {
       const response = await axios.put(
-        `/api/potta/paid-time-off/accrue/${id}`,
+        `/paid-time-off/accrue/${id}`,
         {
           amount,
         }
@@ -73,7 +73,8 @@ export const ptoApi = {
       return { success: true, data: response.data };
     } catch (error) {
       console.error(`Error requesting leave for PTO ${id}:`, error);
-      return { success: false, error, message: error.response?.data?.message };
+      const err = error as any;
+      return { success: false, error, message: err.response?.data?.message };
     }
   },
 

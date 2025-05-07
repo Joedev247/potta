@@ -15,31 +15,31 @@ import {
 export const peopleApi = {
   // Create a new person
   createPerson: async (data: PersonPayload) => {
-    const result = await axios.post('/api/potta/employees', data);
+    const result = await axios.post('/employees', data);
     return result.data;
   },
 
   // Get filtered list of persons with pagination
   filterPersons: async (filter: FilterParams) => {
-    const result = await axios.post('/api/potta/employees/filter', filter);
+    const result = await axios.post('/employees/filter', filter);
     return result.data;
   },
 
   // Get a person by ID
   getPerson: async (personId: string) => {
-    const result = await axios.get(`/api/potta/employees/${personId}`);
+    const result = await axios.get(`/employees/${personId}`);
     return result.data;
   },
 
   // Update a person
   updatePerson: async (personId: string, data: Partial<PersonPayload>) => {
-    const result = await axios.put(`/api/potta/employees/${personId}`, data);
+    const result = await axios.put(`/employees/${personId}`, data);
     return result.data;
   },
 
   // Delete a person
   deletePerson: async (personId: string) => {
-    const result = await axios.delete(`/api/potta/employees/${personId}`);
+    const result = await axios.delete(`/employees/${personId}`);
     return result.data;
   },
 
@@ -47,7 +47,7 @@ export const peopleApi = {
   getPaySchedule: async (personId: string, date?: string) => {
     const params = date ? { date } : {};
     const result = await axios.get(
-      `/api/potta/employees/${personId}/pay-schedule`,
+      `/employees/${personId}/pay-schedule`,
       {
         params,
       }
@@ -58,7 +58,7 @@ export const peopleApi = {
   // Check if pay schedule is due today
   isPayScheduleDueToday: async (personId: string) => {
     const result = await axios.get(
-      `/api/potta/employees/${personId}/pay-schedule/due-today`
+      `/employees/${personId}/pay-schedule/due-today`
     );
     return result.data;
   },
@@ -66,7 +66,7 @@ export const peopleApi = {
   // Get pay schedule description
   getPayScheduleDescription: async (personId: string) => {
     const result = await axios.get(
-      `/api/potta/employees/${personId}/pay-schedule/description`
+      `/employees/${personId}/pay-schedule/description`
     );
     return result.data;
   },
@@ -74,7 +74,7 @@ export const peopleApi = {
   // Get full name of the person
   getFullName: async (personId: string) => {
     const result = await axios.get(
-      `/api/potta/employees/${personId}/full-name`
+      `/employees/${personId}/full-name`
     );
     return result.data;
   },
@@ -82,7 +82,7 @@ export const peopleApi = {
   // Check if the person is currently employed
   getEmploymentStatus: async (personId: string) => {
     const result = await axios.get(
-      `/api/potta/employees/${personId}/employment-status`
+      `/employees/${personId}/employment-status`
     );
     return result.data;
   },
@@ -90,7 +90,7 @@ export const peopleApi = {
   // Get compensation type of the person
   getCompensationType: async (personId: string) => {
     const result = await axios.get(
-      `/api/potta/employees/${personId}/compensation-type`
+      `/employees/${personId}/compensation-type`
     );
     return result.data;
   },
@@ -98,7 +98,7 @@ export const peopleApi = {
   // Deactivate the person
   deactivatePerson: async (personId: string) => {
     const result = await axios.put(
-      `/api/potta/employees/${personId}/deactivate`,
+      `/employees/${personId}/deactivate`,
       {}
     );
     return result.data;
@@ -108,7 +108,7 @@ export const peopleApi = {
     const personId = data.person_id;
     console.log(`Creating bank account for person ${personId}:`, data);
     const result = await axios.post(
-      `/api/potta/employees/create-bank-account`,
+      `/employees/create-bank-account`,
       data
     );
     return result.data;
@@ -116,7 +116,7 @@ export const peopleApi = {
 
   // List all bank accounts for a person
   getBankAccounts: async (personId: string) => {
-    const result = await axios.post('/api/potta/bank-accounts/filter', {
+    const result = await axios.post('/bank-accounts/filter', {
       person_id: personId,
     });
     return result.data;
@@ -124,14 +124,14 @@ export const peopleApi = {
 
   // Get a bank account by ID
   getBankAccount: async (accountId: string) => {
-    const result = await axios.get(`/api/potta/bank-accounts/${accountId}`);
+    const result = await axios.get(`/bank-accounts/${accountId}`);
     return result.data;
   },
 
   // Set a primary bank account for a person
   setPrimaryBankAccount: async (accountId: string, personId: string) => {
     const result = await axios.patch(
-      `/api/potta/bank-accounts/${accountId}/set-primary/${personId}`
+      `/bank-accounts/${accountId}/set-primary/${personId}`
     );
     return result.data;
   },

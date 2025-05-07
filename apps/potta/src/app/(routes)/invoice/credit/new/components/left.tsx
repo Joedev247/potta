@@ -207,7 +207,7 @@ const Left = () => {
               handleInputChange('issueDate', typeof e === 'string' ? e : e.target.value)
             }
             placeholder="Select issue date"
-            errors={errors.issueDate ? { message: errors.issueDate } : undefined}
+            errors={errors.issueDate ? { message: errors.issueDate } : undefined} 
           />
         </div>
       </div>

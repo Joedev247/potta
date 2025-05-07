@@ -1,5 +1,7 @@
-"use client" // pages/policies/create.tsx
-import { PolicyForm } from './components/spend-policy/policy-form';
+"use client"
+import ApprovalRuleForm  from "./all";
+
+ // pages/policies/create.tsx
 
 export default function CreatePolicyPage() {
   const handleSubmit = (policyData:any) => {
@@ -10,7 +12,10 @@ export default function CreatePolicyPage() {
   return (
     <div className="container mx-auto py-8">
       <h1 className="text-3xl font-bold mb-6">Create New Policy</h1>
-      <PolicyForm onSubmit={handleSubmit} />
+  <ApprovalRuleForm 
+    onSubmit={(data) => console.log('Form submitted:', data)} 
+    onCancel={() => console.log('Form cancelled')} 
+  />
     </div>
   );
 }
