@@ -1,6 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { PoliciesApi } from '../utils/api';
-import { Policy } from '../utils/approval-rule-utils';
 
 // Query keys for better cache management
 export const policyKeys = {
@@ -31,24 +30,14 @@ export const useGetPolicy = (policyId: string) => {
 };
 
 // Hook for creating a new policy
-export const useCreatePolicy = () => {
-  const queryClient = useQueryClient();
 
-  return useMutation({
-    mutationFn: (data: Policy) => PoliciesApi.create(data),
-    onSuccess: () => {
-      // Invalidate and refetch policies list queries
-      queryClient.invalidateQueries({ queryKey: policyKeys.lists() });
-    },
-  });
-};
 
 // Hook for updating a policy
 export const useUpdatePolicy = () => {
   const queryClient = useQueryClient();
-
+  
   return useMutation({
-    mutationFn: ({ policyId, data }: { policyId: string; data: unknown }) =>
+    mutationFn: ({ policyId, data }: { policyId: string; data: unknown }) => 
       PoliciesApi.update(policyId, data),
     onSuccess: (_, variables) => {
       // Invalidate specific policy and list queries
@@ -61,7 +50,7 @@ export const useUpdatePolicy = () => {
 // Hook for deleting a policy
 export const useDeletePolicy = () => {
   const queryClient = useQueryClient();
-
+  
   return useMutation({
     mutationFn: (policyId: string) => PoliciesApi.delete(policyId),
     onSuccess: () => {
@@ -76,6 +65,6 @@ export const useSearchEmployees = (employeeName: string) => {
   return useQuery({
     queryKey: policyKeys.employee(employeeName),
     queryFn: () => PoliciesApi.SearchAllEmployees(employeeName),
-
+    
   });
 };

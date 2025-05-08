@@ -85,7 +85,6 @@ const InvoiceTable = () => {
     { value: 'option3', label: 'Option 3' },
   ];
 
-  
   const columns = [
     {
       name: 'Date',
@@ -131,30 +130,32 @@ const InvoiceTable = () => {
       name: 'Amount',
       selector: (row: Invoice) => (
         <div className="text-sm">
-          XAF {row.invoiceTotal.toLocaleString(undefined, { maximumFractionDigits: 2 })}
+          XAF{' '}
+          {row.invoiceTotal.toLocaleString(undefined, {
+            maximumFractionDigits: 2,
+          })}
         </div>
       ),
     },
     {
-          name: 'Resolution',
-          selector: (row: Invoice) => {
-            const status = 'Closed';
-            return (
-              <div className="border-r pr-4 flex justify-center">
-                <div className="flex items-center gap-3  w-full px-3 py-2 border border-green-500 bg-green-50 text-green-700">
-                  <div className="flex items-center justify-center text-white bg-green-700 rounded-full size-4">
-                    <Icon icon="material-symbols:check" width="20" height="20" />
-                  </div>
-                  {status}
-                </div>
+      name: 'Resolution',
+      selector: (row: Invoice) => {
+        const status = 'Closed';
+        return (
+          <div className="border-r pr-4 flex justify-center">
+            <div className="flex items-center gap-3  w-full px-3 py-2 border border-green-500 bg-green-50 text-green-700">
+              <div className="flex items-center justify-center text-white bg-green-700 rounded-full size-4">
+                <Icon icon="material-symbols:check" width="20" height="20" />
               </div>
-            );
-          },
-          hasBorderLeft: true,          // Left border for data cells
-      headerBorderLeft: true,       // Left border for header cell
-          width: "150px"
-    
-        },
+              {status}
+            </div>
+          </div>
+        );
+      },
+      hasBorderLeft: true, // Left border for data cells
+      headerBorderLeft: true, // Left border for header cell
+      width: '150px',
+    },
     {
       name: '',
       selector: (row: Invoice) => (
@@ -171,13 +172,12 @@ const InvoiceTable = () => {
     return (
       <div className={'w-full py-24 flex flex-col items-center justify-center'}>
         An Error Occured
-       
       </div>
     );
   }
   return (
     <div className="">
-       <div className="flex justify-between w-full">
+      <div className="flex justify-between w-full">
         <div className="mt-5 w-[50%] flex items-center space-x-2">
           <div className="w-[65%]">
             <Search />
@@ -210,19 +210,16 @@ const InvoiceTable = () => {
               {/*</Link>*/}
             </div>
             <div>
-
-                <Button
-                  text={'Create Invoice'}
-                  icon={<i className="ri-file-add-line"></i>}
-                  theme="default"
-                  type={'button'}
-                  onClick={() => {
-                    setIsOpen(true);
-                  }}
-                />
-
+              <Button
+                text={'Create Invoice'}
+                icon={<i className="ri-file-add-line"></i>}
+                theme="default"
+                type={'button'}
+                onClick={() => {
+                  setIsOpen(true);
+                }}
+              />
             </div>
-            
           </div>
         </div>
       </div>
@@ -239,10 +236,7 @@ const InvoiceTable = () => {
         onChangePage={setPage}
         onChangeRowsPerPage={setLimit}
       />
-      <ModalInvoice
-      isOpen={isOpen}
-      setIsOpen={setIsOpen}
-    />
+      <ModalInvoice isOpen={isOpen} setIsOpen={setIsOpen} />
     </div>
   );
 };

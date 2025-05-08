@@ -6889,9 +6889,9 @@
       "type": "npm",
       "name": "npm:@radix-ui/react-separator",
       "data": {
-        "version": "1.1.3",
+        "version": "1.1.6",
         "packageName": "@radix-ui/react-separator",
-        "hash": "sha512-2omrWKJvxR0U/tkIXezcc1nFMwtLU0+b/rDK40gnzJqTLWQ/TD/D5IYVefp9sC3QWfeQbpSbEA6op9MQKyaALQ=="
+        "hash": "sha512-Izof3lPpbCfTM7WDta+LRkz31jem890VjEvpVRoWQNKpDUMMVffuyq854XPGP1KYGWWmjmYvHvPFeocWhFCy1w=="
       }
     },
     "npm:@radix-ui/react-switch": {
@@ -6901,6 +6901,15 @@
         "version": "1.2.2",
         "packageName": "@radix-ui/react-switch",
         "hash": "sha512-7Z8n6L+ifMIIYZ83f28qWSceUpkXuslI2FJ34+kDMTiyj91ENdpdQ7VCidrzj5JfwfZTeano/BnGBbu/jqa5rQ=="
+      }
+    },
+    "npm:@radix-ui/react-tabs": {
+      "type": "npm",
+      "name": "npm:@radix-ui/react-tabs",
+      "data": {
+        "version": "1.1.11",
+        "packageName": "@radix-ui/react-tabs",
+        "hash": "sha512-4FiKSVoXqPP/KfzlB7lwwqoFV6EPwkrrqGp9cUYXjwDYHhvpnqq79P+EPHKcdoTE7Rl8w/+6s9rTlsfXHES9GA=="
       }
     },
     "npm:@radix-ui/react-tooltip": {
@@ -50545,7 +50554,7 @@
     },
     {
       "source": "npm:@radix-ui/react-separator",
-      "target": "npm:@radix-ui/react-primitive@2.0.3",
+      "target": "npm:@radix-ui/react-primitive@2.1.2",
       "type": "static"
     },
     {
@@ -50559,42 +50568,42 @@
       "type": "static"
     },
     {
-      "source": "npm:@radix-ui/react-primitive@2.0.3",
+      "source": "npm:@radix-ui/react-primitive@2.1.2",
       "target": "npm:@types/react",
       "type": "static"
     },
     {
-      "source": "npm:@radix-ui/react-primitive@2.0.3",
+      "source": "npm:@radix-ui/react-primitive@2.1.2",
       "target": "npm:@types/react-dom",
       "type": "static"
     },
     {
-      "source": "npm:@radix-ui/react-primitive@2.0.3",
+      "source": "npm:@radix-ui/react-primitive@2.1.2",
       "target": "npm:react",
       "type": "static"
     },
     {
-      "source": "npm:@radix-ui/react-primitive@2.0.3",
+      "source": "npm:@radix-ui/react-primitive@2.1.2",
       "target": "npm:react-dom",
       "type": "static"
     },
     {
-      "source": "npm:@radix-ui/react-primitive@2.0.3",
-      "target": "npm:@radix-ui/react-slot@1.2.0",
+      "source": "npm:@radix-ui/react-primitive@2.1.2",
+      "target": "npm:@radix-ui/react-slot@1.2.2",
       "type": "static"
     },
     {
-      "source": "npm:@radix-ui/react-slot@1.2.0",
+      "source": "npm:@radix-ui/react-slot@1.2.2",
       "target": "npm:@types/react",
       "type": "static"
     },
     {
-      "source": "npm:@radix-ui/react-slot@1.2.0",
+      "source": "npm:@radix-ui/react-slot@1.2.2",
       "target": "npm:react",
       "type": "static"
     },
     {
-      "source": "npm:@radix-ui/react-slot@1.2.0",
+      "source": "npm:@radix-ui/react-slot@1.2.2",
       "target": "npm:@radix-ui/react-compose-refs@1.1.2",
       "type": "static"
     },
@@ -50781,6 +50790,326 @@
     {
       "source": "npm:@radix-ui/react-use-size@1.1.1",
       "target": "npm:@radix-ui/react-use-layout-effect@1.1.1",
+      "type": "static"
+    },
+    {
+      "source": "npm:@radix-ui/react-tabs",
+      "target": "npm:@types/react",
+      "type": "static"
+    },
+    {
+      "source": "npm:@radix-ui/react-tabs",
+      "target": "npm:@types/react-dom",
+      "type": "static"
+    },
+    {
+      "source": "npm:@radix-ui/react-tabs",
+      "target": "npm:react",
+      "type": "static"
+    },
+    {
+      "source": "npm:@radix-ui/react-tabs",
+      "target": "npm:react-dom",
+      "type": "static"
+    },
+    {
+      "source": "npm:@radix-ui/react-tabs",
+      "target": "npm:@radix-ui/primitive@1.1.2",
+      "type": "static"
+    },
+    {
+      "source": "npm:@radix-ui/react-tabs",
+      "target": "npm:@radix-ui/react-context@1.1.2",
+      "type": "static"
+    },
+    {
+      "source": "npm:@radix-ui/react-tabs",
+      "target": "npm:@radix-ui/react-direction@1.1.1",
+      "type": "static"
+    },
+    {
+      "source": "npm:@radix-ui/react-tabs",
+      "target": "npm:@radix-ui/react-id@1.1.1",
+      "type": "static"
+    },
+    {
+      "source": "npm:@radix-ui/react-tabs",
+      "target": "npm:@radix-ui/react-presence@1.1.4",
+      "type": "static"
+    },
+    {
+      "source": "npm:@radix-ui/react-tabs",
+      "target": "npm:@radix-ui/react-primitive@2.1.2",
+      "type": "static"
+    },
+    {
+      "source": "npm:@radix-ui/react-tabs",
+      "target": "npm:@radix-ui/react-roving-focus@1.1.9",
+      "type": "static"
+    },
+    {
+      "source": "npm:@radix-ui/react-tabs",
+      "target": "npm:@radix-ui/react-use-controllable-state@1.2.2",
+      "type": "static"
+    },
+    {
+      "source": "npm:@radix-ui/react-collection@1.1.6",
+      "target": "npm:@types/react",
+      "type": "static"
+    },
+    {
+      "source": "npm:@radix-ui/react-collection@1.1.6",
+      "target": "npm:@types/react-dom",
+      "type": "static"
+    },
+    {
+      "source": "npm:@radix-ui/react-collection@1.1.6",
+      "target": "npm:react",
+      "type": "static"
+    },
+    {
+      "source": "npm:@radix-ui/react-collection@1.1.6",
+      "target": "npm:react-dom",
+      "type": "static"
+    },
+    {
+      "source": "npm:@radix-ui/react-collection@1.1.6",
+      "target": "npm:@radix-ui/react-compose-refs@1.1.2",
+      "type": "static"
+    },
+    {
+      "source": "npm:@radix-ui/react-collection@1.1.6",
+      "target": "npm:@radix-ui/react-context@1.1.2",
+      "type": "static"
+    },
+    {
+      "source": "npm:@radix-ui/react-collection@1.1.6",
+      "target": "npm:@radix-ui/react-primitive@2.1.2",
+      "type": "static"
+    },
+    {
+      "source": "npm:@radix-ui/react-collection@1.1.6",
+      "target": "npm:@radix-ui/react-slot@1.2.2",
+      "type": "static"
+    },
+    {
+      "source": "npm:@radix-ui/react-compose-refs@1.1.2",
+      "target": "npm:@types/react",
+      "type": "static"
+    },
+    {
+      "source": "npm:@radix-ui/react-compose-refs@1.1.2",
+      "target": "npm:react",
+      "type": "static"
+    },
+    {
+      "source": "npm:@radix-ui/react-context@1.1.2",
+      "target": "npm:@types/react",
+      "type": "static"
+    },
+    {
+      "source": "npm:@radix-ui/react-context@1.1.2",
+      "target": "npm:react",
+      "type": "static"
+    },
+    {
+      "source": "npm:@radix-ui/react-direction@1.1.1",
+      "target": "npm:@types/react",
+      "type": "static"
+    },
+    {
+      "source": "npm:@radix-ui/react-direction@1.1.1",
+      "target": "npm:react",
+      "type": "static"
+    },
+    {
+      "source": "npm:@radix-ui/react-id@1.1.1",
+      "target": "npm:@types/react",
+      "type": "static"
+    },
+    {
+      "source": "npm:@radix-ui/react-id@1.1.1",
+      "target": "npm:react",
+      "type": "static"
+    },
+    {
+      "source": "npm:@radix-ui/react-id@1.1.1",
+      "target": "npm:@radix-ui/react-use-layout-effect@1.1.1",
+      "type": "static"
+    },
+    {
+      "source": "npm:@radix-ui/react-presence@1.1.4",
+      "target": "npm:@types/react",
+      "type": "static"
+    },
+    {
+      "source": "npm:@radix-ui/react-presence@1.1.4",
+      "target": "npm:@types/react-dom",
+      "type": "static"
+    },
+    {
+      "source": "npm:@radix-ui/react-presence@1.1.4",
+      "target": "npm:react",
+      "type": "static"
+    },
+    {
+      "source": "npm:@radix-ui/react-presence@1.1.4",
+      "target": "npm:react-dom",
+      "type": "static"
+    },
+    {
+      "source": "npm:@radix-ui/react-presence@1.1.4",
+      "target": "npm:@radix-ui/react-compose-refs@1.1.2",
+      "type": "static"
+    },
+    {
+      "source": "npm:@radix-ui/react-presence@1.1.4",
+      "target": "npm:@radix-ui/react-use-layout-effect@1.1.1",
+      "type": "static"
+    },
+    {
+      "source": "npm:@radix-ui/react-primitive@2.1.2",
+      "target": "npm:@types/react",
+      "type": "static"
+    },
+    {
+      "source": "npm:@radix-ui/react-primitive@2.1.2",
+      "target": "npm:@types/react-dom",
+      "type": "static"
+    },
+    {
+      "source": "npm:@radix-ui/react-primitive@2.1.2",
+      "target": "npm:react",
+      "type": "static"
+    },
+    {
+      "source": "npm:@radix-ui/react-primitive@2.1.2",
+      "target": "npm:react-dom",
+      "type": "static"
+    },
+    {
+      "source": "npm:@radix-ui/react-primitive@2.1.2",
+      "target": "npm:@radix-ui/react-slot@1.2.2",
+      "type": "static"
+    },
+    {
+      "source": "npm:@radix-ui/react-roving-focus@1.1.9",
+      "target": "npm:@types/react",
+      "type": "static"
+    },
+    {
+      "source": "npm:@radix-ui/react-roving-focus@1.1.9",
+      "target": "npm:@types/react-dom",
+      "type": "static"
+    },
+    {
+      "source": "npm:@radix-ui/react-roving-focus@1.1.9",
+      "target": "npm:react",
+      "type": "static"
+    },
+    {
+      "source": "npm:@radix-ui/react-roving-focus@1.1.9",
+      "target": "npm:react-dom",
+      "type": "static"
+    },
+    {
+      "source": "npm:@radix-ui/react-roving-focus@1.1.9",
+      "target": "npm:@radix-ui/primitive@1.1.2",
+      "type": "static"
+    },
+    {
+      "source": "npm:@radix-ui/react-roving-focus@1.1.9",
+      "target": "npm:@radix-ui/react-collection@1.1.6",
+      "type": "static"
+    },
+    {
+      "source": "npm:@radix-ui/react-roving-focus@1.1.9",
+      "target": "npm:@radix-ui/react-compose-refs@1.1.2",
+      "type": "static"
+    },
+    {
+      "source": "npm:@radix-ui/react-roving-focus@1.1.9",
+      "target": "npm:@radix-ui/react-context@1.1.2",
+      "type": "static"
+    },
+    {
+      "source": "npm:@radix-ui/react-roving-focus@1.1.9",
+      "target": "npm:@radix-ui/react-direction@1.1.1",
+      "type": "static"
+    },
+    {
+      "source": "npm:@radix-ui/react-roving-focus@1.1.9",
+      "target": "npm:@radix-ui/react-id@1.1.1",
+      "type": "static"
+    },
+    {
+      "source": "npm:@radix-ui/react-roving-focus@1.1.9",
+      "target": "npm:@radix-ui/react-primitive@2.1.2",
+      "type": "static"
+    },
+    {
+      "source": "npm:@radix-ui/react-roving-focus@1.1.9",
+      "target": "npm:@radix-ui/react-use-callback-ref@1.1.1",
+      "type": "static"
+    },
+    {
+      "source": "npm:@radix-ui/react-roving-focus@1.1.9",
+      "target": "npm:@radix-ui/react-use-controllable-state@1.2.2",
+      "type": "static"
+    },
+    {
+      "source": "npm:@radix-ui/react-slot@1.2.2",
+      "target": "npm:@types/react",
+      "type": "static"
+    },
+    {
+      "source": "npm:@radix-ui/react-slot@1.2.2",
+      "target": "npm:react",
+      "type": "static"
+    },
+    {
+      "source": "npm:@radix-ui/react-slot@1.2.2",
+      "target": "npm:@radix-ui/react-compose-refs@1.1.2",
+      "type": "static"
+    },
+    {
+      "source": "npm:@radix-ui/react-use-callback-ref@1.1.1",
+      "target": "npm:@types/react",
+      "type": "static"
+    },
+    {
+      "source": "npm:@radix-ui/react-use-callback-ref@1.1.1",
+      "target": "npm:react",
+      "type": "static"
+    },
+    {
+      "source": "npm:@radix-ui/react-use-controllable-state@1.2.2",
+      "target": "npm:@types/react",
+      "type": "static"
+    },
+    {
+      "source": "npm:@radix-ui/react-use-controllable-state@1.2.2",
+      "target": "npm:react",
+      "type": "static"
+    },
+    {
+      "source": "npm:@radix-ui/react-use-controllable-state@1.2.2",
+      "target": "npm:@radix-ui/react-use-effect-event",
+      "type": "static"
+    },
+    {
+      "source": "npm:@radix-ui/react-use-controllable-state@1.2.2",
+      "target": "npm:@radix-ui/react-use-layout-effect@1.1.1",
+      "type": "static"
+    },
+    {
+      "source": "npm:@radix-ui/react-use-layout-effect@1.1.1",
+      "target": "npm:@types/react",
+      "type": "static"
+    },
+    {
+      "source": "npm:@radix-ui/react-use-layout-effect@1.1.1",
+      "target": "npm:react",
       "type": "static"
     },
     {
