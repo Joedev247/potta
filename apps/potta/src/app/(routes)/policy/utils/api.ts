@@ -1,8 +1,9 @@
 import axios from 'config/axios.config';
-import { Policy } from './approval-rule-utils';
+import { ExtendedApprovalRule } from '../types/approval-rule';
+
 
 export const PoliciesApi = {
-  create: async (data: Policy) => {
+  create: async (data: ExtendedApprovalRule) => {
     const result = await axios.post(`/policies/create`, data);
     return result?.data;
   },
@@ -28,7 +29,20 @@ export const PoliciesApi = {
   },
 
   SearchAllEmployees: async (employeeName: string): Promise<unknown> => {
-    const result = await axios.get(`/employees/search/?name=${employeeName}`);
+    const result = await axios.get(`/employees/search?name=${employeeName}`);
+    return result?.data;
+  },
+  SearchAllCustomers: async (customerName: string): Promise<unknown> => {
+    const result = await axios.get(`/customer/search?name=${customerName}`);
+    console.log('result',result.data)
+    return result?.data;
+  },
+  SearchAllVendors: async (vendorName: string): Promise<unknown> => {
+    const result = await axios.get(`/vendor/search?name=${vendorName}`);
+    return result?.data;
+  },
+  SearchAllItems: async (itemName: string): Promise<unknown> => {
+    const result = await axios.get(`/vendor/search/product?name=${itemName}`);
     return result?.data;
   },
 };
@@ -62,12 +76,11 @@ export enum ActionType {
   // SET_CONDITION = 'set condition',
 }
 
-export enum PolicyPaymentType {
-  MO_MO = 'mo-mo',
+export enum PaymentType {
+  MobileMoney = 'mobile money',
   BANK_TRANSFER = 'bank transfer',
   CASH = 'cash',
-  CREDIT_CARD = 'credit card',
-  DEBIT_CARD = 'debit card',
+  CARD = 'card',
   CHECK = 'check',
   OTHER = 'other',
 }

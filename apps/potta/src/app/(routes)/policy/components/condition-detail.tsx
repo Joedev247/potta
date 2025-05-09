@@ -1,7 +1,6 @@
-// components/spend-policy/components/condition-detail.tsx
-import React, { useEffect } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
+import { X } from 'lucide-react';
 import { Button } from '@potta/components/shadcn/button';
-import { Input } from '@potta/components/shadcn/input';
 import {
   Select,
   SelectContent,
@@ -9,378 +8,494 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@potta/components/shadcn/select';
-import { X, Loader2 } from 'lucide-react';
-import { useQuery } from '@tanstack/react-query';
+import { Input } from '@potta/components/shadcn/input';
+import { CustomerSelect } from './customer-select';
+import { VendorSelect } from './vendor-select';
+import { InventoryItemSelect } from './inventory-item-select';
+import { ConditionDetail, FieldType, Operator } from '../types/approval-rule';
 
-import { FieldType, ConditionDetail } from '../types/approval-rule';
-import { formatFieldValue, getFieldDisplayName } from '../utils/approval-rule-utils';
-
-interface ConditionDetailProps {
+interface ConditionDetailComponentProps {
   detail: ConditionDetail;
   canRemove: boolean;
   onUpdate: (field: keyof ConditionDetail, value: any) => void;
   onRemove: () => void;
 }
 
-// Define all available operators
-export const OPERATORS = {
-  IS: 'is',
-  EQUALS: 'equals',
-  NOT_EQUALS: 'does not equal',
-  LESS_THAN: 'less than',
-  GREATER_THAN: 'greater than',
-  LESS_THAN_OR_EQUAL: 'less than or equal',
-  GREATER_THAN_OR_EQUAL: 'greater than or equal',
-  CONTAINS: 'contains',
-  IS_ONE_OF: 'is one of',
-  IS_NOT_ONE_OF: 'is not one of',
-  STARTS_WITH: 'starts_with',
-  ENDS_WITH: 'ends with'
-};
+// Define types for customer value to avoid 'never' type issues
+type CustomerObject = { name: string; uuid: string };
+type CustomerValue = CustomerObject | CustomerObject[] | null;
 
-// API functions for fetching data
-const fetchVendors = async (): Promise<Array<{ id: string; name: string }>> => {
-  const response = await fetch('/api/vendors');
-  if (!response.ok) throw new Error('Failed to fetch vendors');
-  return response.json();
-};
+// Define types for vendor value
+type VendorObject = { name: string; id: string };
+type VendorValue = VendorObject | VendorObject[] | null;
 
-const fetchCustomers = async (): Promise<Array<{ id: string; name: string }>> => {
-  const response = await fetch('/api/customers');
-  if (!response.ok) throw new Error('Failed to fetch customers');
-  return response.json();
-};
+// Define types for inventory item value
+type InventoryItemObject = { name: string; id: string };
+type InventoryItemValue = InventoryItemObject | InventoryItemObject[] | null;
 
-const fetchInventoryItems = async (): Promise<Array<{ id: string; name: string }>> => {
-  const response = await fetch('/api/inventory-items');
-  if (!response.ok) throw new Error('Failed to fetch inventory items');
-  return response.json();
-};
+export const ConditionDetailComponent: React.FC<
+  ConditionDetailComponentProps
+> = ({ detail, canRemove, onUpdate, onRemove }) => {
+  // Local state to track the selected field and operator
+  const [selectedField, setSelectedField] = useState<string>(
+    detail.field || ''
+  );
+  const [selectedOperator, setSelectedOperator] = useState<string>(
+    detail.operator || ''
+  );
 
-const fetchBranches = async (): Promise<Array<{ id: string; name: string }>> => {
-  const response = await fetch('/api/branches');
-  if (!response.ok) throw new Error('Failed to fetch branches');
-  return response.json();
-};
+  // Determine if we should use multi-select based on the operator
+  const isMultiSelect = useMemo(() => {
+    return [
+      Operator.CONTAINS,
+      Operator.IS_ONE_OF,
+      Operator.IS_NOT_ONE_OF,
+    ].includes(selectedOperator as Operator);
+  }, [selectedOperator]);
 
-// Define which operators are valid for each field type
-const getValidOperatorsForField = (field: string): string[] => {
-  switch (field) {
-    case FieldType.AMOUNT:
-      // Numerical fields
-      return [
-        OPERATORS.EQUALS,
-        OPERATORS.NOT_EQUALS,
-        OPERATORS.LESS_THAN,
-        OPERATORS.GREATER_THAN,
-        OPERATORS.LESS_THAN_OR_EQUAL,
-        OPERATORS.GREATER_THAN_OR_EQUAL,
-      ];
-      
-    case FieldType.MATCHED_TO_PURCHASE_ORDER:
-      // Boolean fields
-      return [
-        OPERATORS.IS,
-        OPERATORS.EQUALS,
-        OPERATORS.NOT_EQUALS,
-      ];
-      
-    case FieldType.VENDOR:
-    case FieldType.CUSTOMER:
-    case FieldType.INVENTORY_ITEM:
-    case FieldType.LOCATION_BRANCH:
-    case FieldType.EXPENSE_CATEGORY:
-    case FieldType.DEPARTMENT:
-      // Entity selection fields
-      return [
-        OPERATORS.IS,
-        OPERATORS.EQUALS,
-        OPERATORS.NOT_EQUALS,
-        OPERATORS.IS_ONE_OF,
-        OPERATORS.IS_NOT_ONE_OF,
-      ];
-      
-    case FieldType.PAYMENT_TYPE:
-      // Categorical fields
-      return [
-        OPERATORS.IS,
-        OPERATORS.EQUALS,
-        OPERATORS.NOT_EQUALS,
-        OPERATORS.IS_ONE_OF,
-        OPERATORS.IS_NOT_ONE_OF,
-      ];
-      
-    default:
-      // Default to text field operators
-      return [
-        OPERATORS.EQUALS,
-        OPERATORS.NOT_EQUALS,
-        OPERATORS.CONTAINS,
-        OPERATORS.STARTS_WITH,
-        OPERATORS.ENDS_WITH,
-      ];
-  }
-};
-
-export const ConditionDetailComponent: React.FC<ConditionDetailProps> = ({ 
-  detail, 
-  canRemove, 
-  onUpdate, 
-  onRemove 
-}) => {
-  // React Query hooks for fetching data
-  const { data: vendors, isLoading: isLoadingVendors } = useQuery({
-    queryKey: ['vendors'],
-    queryFn: fetchVendors,
-    enabled: detail.field === FieldType.VENDOR
-  });
-
-  const { data: customers, isLoading: isLoadingCustomers } = useQuery({
-    queryKey: ['customers'],
-    queryFn: fetchCustomers,
-    enabled: detail.field === FieldType.CUSTOMER
-  });
-
-  const { data: inventoryItems, isLoading: isLoadingInventoryItems } = useQuery({
-    queryKey: ['inventoryItems'],
-    queryFn: fetchInventoryItems,
-    enabled: detail.field === FieldType.INVENTORY_ITEM
-  });
-
-  const { data: branches, isLoading: isLoadingBranches } = useQuery({
-    queryKey: ['branches'],
-    queryFn: fetchBranches,
-    enabled: detail.field === FieldType.LOCATION_BRANCH
-  });
-
-  // Get valid operators for current field
-  const validOperators = getValidOperatorsForField(detail.field);
-
-  // Reset operator when field changes if the current operator isn't valid for the new field
+  // Update local state when props change, but only if they're different
   useEffect(() => {
-    if (detail.field && detail.operator && !validOperators.includes(detail.operator)) {
-      // Set to first valid operator if current is invalid
-      onUpdate('operator', validOperators[0] || '');
-      // Reset value as well since the type might change
-      onUpdate('value', '');
+    if (detail.field !== selectedField && detail.field) {
+      setSelectedField(detail.field);
     }
-  }, [detail.field, validOperators, detail.operator, onUpdate]);
+    if (detail.operator !== selectedOperator && detail.operator) {
+      setSelectedOperator(detail.operator);
+    }
+  }, [detail.field, detail.operator]);
 
-  // Determine if we're loading data based on the selected field
-  const isLoading = 
-    (detail.field === FieldType.VENDOR && isLoadingVendors) ||
-    (detail.field === FieldType.CUSTOMER && isLoadingCustomers) ||
-    (detail.field === FieldType.INVENTORY_ITEM && isLoadingInventoryItems) ||
-    (detail.field === FieldType.LOCATION_BRANCH && isLoadingBranches);
-
-  // Handle field change
-  const handleFieldChange = (value: string) => {
-    onUpdate('field', value);
+  // Get the display name for the field
+  const getFieldDisplayName = (field: string): string => {
+    switch (field) {
+      case FieldType.AMOUNT:
+        return 'Amount';
+      case FieldType.CUSTOMER:
+        return 'Customer';
+      case FieldType.VENDOR:
+        return 'Vendor';
+      case FieldType.INVENTORY_ITEM:
+        return 'Inventory Item';
+      case FieldType.EXPENSE_CATEGORY:
+        return 'Category';
+      case FieldType.DEPARTMENT:
+        return 'Department';
+      default:
+        return field;
+    }
   };
 
-  // Render value input based on field type
-  const renderValueInput = () => {
-    switch (detail.field) {
-      case FieldType.VENDOR:
-        return (
-          <Select
-            value={String(detail.value)}
-            onValueChange={(value) => onUpdate('value', value)}
-            disabled={isLoading}
-          >
-            <SelectTrigger>
-              {isLoading ? (
-                <div className="flex items-center">
-                  <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                  <span>Loading...</span>
-                </div>
-              ) : (
-                <SelectValue placeholder="Select vendor" />
-              )}
-            </SelectTrigger>
-            <SelectContent>
-              {vendors?.map(vendor => (
-                <SelectItem key={vendor.id} value={vendor.id}>
-                  {vendor.name}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        );
-      
+  // Get valid operators based on the field type
+  const validOperators = useMemo(() => {
+    switch (selectedField) {
+      case FieldType.AMOUNT:
+        return [
+          Operator.LESS_THAN,
+          Operator.LESS_THAN_OR_EQUAL,
+          Operator.GREATER_THAN,
+          Operator.GREATER_THAN_OR_EQUAL,
+          Operator.EQUALS,
+          Operator.NOT_EQUALS,
+        ];
       case FieldType.CUSTOMER:
-        return (
-          <Select
-            value={String(detail.value)}
-            onValueChange={(value) => onUpdate('value', value)}
-            disabled={isLoading}
-          >
-            <SelectTrigger>
-              {isLoading ? (
-                <div className="flex items-center">
-                  <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                  <span>Loading...</span>
-                </div>
-              ) : (
-                <SelectValue placeholder="Select customer" />
-              )}
-            </SelectTrigger>
-            <SelectContent>
-              {customers?.map(customer => (
-                <SelectItem key={customer.id} value={customer.id}>
-                  {customer.name}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        );
-      
+        return [
+          Operator.CONTAINS,
+          Operator.IS_ONE_OF,
+          Operator.IS_NOT_ONE_OF,
+          Operator.IS,
+          Operator.IS_NOT,
+        ];
+      case FieldType.VENDOR:
+        return [
+          Operator.CONTAINS,
+          Operator.IS_ONE_OF,
+          Operator.IS_NOT_ONE_OF,
+          Operator.IS,
+          Operator.IS_NOT,
+        ];
       case FieldType.INVENTORY_ITEM:
-        return (
-          <Select
-            value={String(detail.value)}
-            onValueChange={(value) => onUpdate('value', value)}
-            disabled={isLoading}
-          >
-            <SelectTrigger>
-              {isLoading ? (
-                <div className="flex items-center">
-                  <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                  <span>Loading...</span>
-                </div>
-              ) : (
-                <SelectValue placeholder="Select inventory item" />
-              )}
-            </SelectTrigger>
-            <SelectContent>
-              {inventoryItems?.map(item => (
-                <SelectItem key={item.id} value={item.id}>
-                  {item.name}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        );
-      
-      case FieldType.LOCATION_BRANCH:
-        return (
-          <Select
-            value={String(detail.value)}
-            onValueChange={(value) => onUpdate('value', value)}
-            disabled={isLoading}
-          >
-            <SelectTrigger>
-              {isLoading ? (
-                <div className="flex items-center">
-                  <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                  <span>Loading...</span>
-                </div>
-              ) : (
-                <SelectValue placeholder="Select branch" />
-              )}
-            </SelectTrigger>
-            <SelectContent>
-              {branches?.map(branch => (
-                <SelectItem key={branch.id} value={branch.id}>
-                  {branch.name}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        );
-      
-      case FieldType.MATCHED_TO_PURCHASE_ORDER:
-        return (
-          <Select
-            value={String(detail.value)}
-            onValueChange={(value) => onUpdate('value', value)}
-          >
-            <SelectTrigger>
-              <SelectValue placeholder="Select value" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="true">Yes</SelectItem>
-              <SelectItem value="false">No</SelectItem>
-            </SelectContent>
-          </Select>
-        );
-      
+        return [
+          Operator.CONTAINS,
+          Operator.IS_ONE_OF,
+          Operator.IS_NOT_ONE_OF,
+          Operator.IS,
+          Operator.IS_NOT,
+        ];
+      case FieldType.EXPENSE_CATEGORY:
+      case FieldType.PAYMENT_TYPE:
+        return [
+          Operator.CONTAINS,
+          Operator.IS_ONE_OF,
+          Operator.IS_NOT_ONE_OF,
+          Operator.IS,
+          Operator.IS_NOT,
+        ];
+      case FieldType.DEPARTMENT:
+        return [
+          Operator.EQUALS,
+          Operator.NOT_EQUALS,
+          Operator.IS_ONE_OF,
+          Operator.IS_NOT_ONE_OF,
+        ];
       default:
-        // Different value input based on operator type
-        if ([OPERATORS.IS_ONE_OF, OPERATORS.IS_NOT_ONE_OF].includes(detail.operator)) {
-          // For multi-select operators, we should have a comma-separated input
-          return (
-            <Input
-              placeholder="Comma separated values"
-              value={formatFieldValue(detail.value)}
-              onChange={(e) => {
-                // Split by comma and trim whitespace
-                const values = e.target.value.split(',').map(v => v.trim());
-                onUpdate('value', values);
-              }}
-            />
-          );
-        } else {
-          return (
-            <Input
-              placeholder="Value"
-              value={formatFieldValue(detail.value)}
-              onChange={(e) => onUpdate('value', e.target.value)}
-            />
-          );
-        }
+        return [Operator.EQUALS, Operator.NOT_EQUALS];
     }
+  }, [selectedField]);
+
+  // Helper function to convert any value to a CustomerObject
+  const toCustomerObject = (value: any): CustomerObject => {
+    if (typeof value === 'string') {
+      return { name: '', uuid: value };
+    } else if (value && typeof value === 'object') {
+      return {
+        name: value.name || '',
+        uuid: value.uuid || value.id || '',
+      };
+    }
+    return { name: '', uuid: '' };
+  };
+
+  // Helper function to convert any value to a VendorObject
+  const toVendorObject = (value: any): VendorObject => {
+    if (typeof value === 'string') {
+      return { name: '', id: value };
+    } else if (value && typeof value === 'object') {
+      return {
+        name: value.name || '',
+        id: value.id || value.uuid || '',
+      };
+    }
+    return { name: '', id: '' };
+  };
+
+  // Helper function to convert any value to an InventoryItemObject
+  const toInventoryItemObject = (value: any): InventoryItemObject => {
+    if (typeof value === 'string') {
+      return { name: '', id: value };
+    } else if (value && typeof value === 'object') {
+      return {
+        name: value.name || '',
+        id: value.id || value.uuid || '',
+      };
+    }
+    return { name: '', id: '' };
+  };
+
+  // Handle field change and reset operator and value
+  const handleFieldChange = (fieldValue: string) => {
+    console.log('Field selected:', fieldValue);
+
+    // Update local state
+    setSelectedField(fieldValue);
+
+    // Update parent component state
+    onUpdate('field', fieldValue);
+
+    // Reset operator when field changes
+    setSelectedOperator('');
+    onUpdate('operator', '');
+
+    // Initialize value based on field type
+    if ([FieldType.CUSTOMER, FieldType.VENDOR, FieldType.INVENTORY_ITEM].includes(fieldValue as FieldType)) {
+      onUpdate('value', isMultiSelect ? [] : null);
+    } else {
+      onUpdate('value', isMultiSelect ? [] : '');
+    }
+  };
+
+  // Handle operator change with proper multi-select handling
+  const handleOperatorChange = (operatorValue: string) => {
+    console.log('Operator selected:', operatorValue);
+
+    // Update local state
+    setSelectedOperator(operatorValue);
+
+    // Update parent component state
+    onUpdate('operator', operatorValue);
+
+    // Check if multi-select status is changing
+    const newIsMultiSelect = [
+      Operator.CONTAINS,
+      Operator.IS_ONE_OF,
+      Operator.IS_NOT_ONE_OF,
+    ].includes(operatorValue as Operator);
+
+    if (newIsMultiSelect !== isMultiSelect) {
+      // Convert value format based on multi-select change
+      if (selectedField === FieldType.CUSTOMER) {
+        if (newIsMultiSelect) {
+          // Convert single value to array for multi-select
+          if (detail.value && !Array.isArray(detail.value)) {
+            onUpdate('value', [toCustomerObject(detail.value)]);
+          } else {
+            onUpdate('value', []);
+          }
+        } else {
+          // Convert array to single value for single-select
+          if (Array.isArray(detail.value) && detail.value.length > 0) {
+            onUpdate('value', toCustomerObject(detail.value[0]));
+          } else {
+            onUpdate('value', null);
+          }
+        }
+      } else if (selectedField === FieldType.VENDOR) {
+        if (newIsMultiSelect) {
+          // Convert single value to array for multi-select
+          if (detail.value && !Array.isArray(detail.value)) {
+            onUpdate('value', [toVendorObject(detail.value)]);
+          } else {
+            onUpdate('value', []);
+          }
+        } else {
+          // Convert array to single value for single-select
+          if (Array.isArray(detail.value) && detail.value.length > 0) {
+            onUpdate('value', toVendorObject(detail.value[0]));
+          } else {
+            onUpdate('value', null);
+          }
+        }
+      } else if (selectedField === FieldType.INVENTORY_ITEM) {
+        if (newIsMultiSelect) {
+          // Convert single value to array for multi-select
+          if (detail.value && !Array.isArray(detail.value)) {
+            onUpdate('value', [toInventoryItemObject(detail.value)]);
+          } else {
+            onUpdate('value', []);
+          }
+        } else {
+          // Convert array to single value for single-select
+          if (Array.isArray(detail.value) && detail.value.length > 0) {
+            onUpdate('value', toInventoryItemObject(detail.value[0]));
+          } else {
+            onUpdate('value', null);
+          }
+        }
+      } else {
+        // For other field types
+        if (newIsMultiSelect) {
+          // Convert single value to array
+          if (
+            detail.value !== null &&
+            detail.value !== undefined &&
+            detail.value !== ''
+          ) {
+            onUpdate('value', [String(detail.value)]);
+          } else {
+            onUpdate('value', []);
+          }
+        } else {
+          // Convert array to single value
+          if (Array.isArray(detail.value) && detail.value.length > 0) {
+            onUpdate('value', String(detail.value[0]));
+          } else {
+            onUpdate('value', '');
+          }
+        }
+      }
+    }
+  };
+
+  // Handle value update with type conversion for numerical fields
+  const handleValueUpdate = (value: any) => {
+    if (selectedField === FieldType.AMOUNT && !isMultiSelect) {
+      // Convert to number for amount fields
+      const numValue = parseFloat(value);
+      onUpdate('value', isNaN(numValue) ? '' : numValue);
+    } else {
+      onUpdate('value', value);
+    }
+  };
+
+  // Render the appropriate input based on field type and operator
+  const renderValueInput = () => {
+    // If no field or operator is selected, return empty input
+    if (!selectedField || !selectedOperator) {
+      return <Input disabled placeholder="Select field and operator first" />;
+    }
+
+    // For amount field, render a number input
+    if (selectedField === FieldType.AMOUNT) {
+      return (
+        <Input
+          type="number"
+          step="0.01"
+          placeholder="Enter amount"
+          value={typeof detail.value === 'number' ? detail.value : ''}
+          onChange={(e) => handleValueUpdate(e.target.value)}
+        />
+      );
+    }
+
+    // For customer field, render CustomerSelect with object format
+    if (selectedField === FieldType.CUSTOMER) {
+      let customerValue: CustomerValue;
+
+      if (isMultiSelect) {
+        // Multi-select mode - ensure we have an array of customer objects
+        if (Array.isArray(detail.value)) {
+          customerValue = detail.value.map(toCustomerObject);
+        } else if (detail.value !== null && detail.value !== undefined) {
+          // If we have a single value but need an array
+          customerValue = [toCustomerObject(detail.value)];
+        } else {
+          customerValue = [];
+        }
+      } else {
+        // Single-select mode - ensure we have a single customer object or null
+        if (Array.isArray(detail.value) && detail.value.length > 0) {
+          customerValue = toCustomerObject(detail.value[0]);
+        } else if (detail.value !== null && detail.value !== undefined) {
+          customerValue = toCustomerObject(detail.value);
+        } else {
+          customerValue = null;
+        }
+      }
+
+      return (
+        <CustomerSelect
+          value={customerValue}
+          onChange={handleValueUpdate}
+          isMultiSelect={isMultiSelect}
+          placeholder={isMultiSelect ? 'Select customers' : 'Select customer'}
+        />
+      );
+    }
+
+    // For vendor field, render VendorSelect with object format
+    if (selectedField === FieldType.VENDOR) {
+      let vendorValue: VendorValue;
+
+      if (isMultiSelect) {
+        // Multi-select mode - ensure we have an array of vendor objects
+        if (Array.isArray(detail.value)) {
+          vendorValue = detail.value.map(toVendorObject);
+        } else if (detail.value !== null && detail.value !== undefined) {
+          // If we have a single value but need an array
+          vendorValue = [toVendorObject(detail.value)];
+        } else {
+          vendorValue = [];
+        }
+      } else {
+        // Single-select mode - ensure we have a single vendor object or null
+        if (Array.isArray(detail.value) && detail.value.length > 0) {
+          vendorValue = toVendorObject(detail.value[0]);
+        } else if (detail.value !== null && detail.value !== undefined) {
+          vendorValue = toVendorObject(detail.value);
+        } else {
+          vendorValue = null;
+        }
+      }
+
+      return (
+        <VendorSelect
+          value={vendorValue}
+          onChange={handleValueUpdate}
+          isMultiSelect={isMultiSelect}
+          placeholder={isMultiSelect ? 'Select vendors' : 'Select vendor'}
+        />
+      );
+    }
+
+    // For inventory item field, render InventoryItemSelect with object format
+    if (selectedField === FieldType.INVENTORY_ITEM) {
+      let itemValue: InventoryItemValue;
+
+      if (isMultiSelect) {
+        // Multi-select mode - ensure we have an array of item objects
+        if (Array.isArray(detail.value)) {
+          itemValue = detail.value.map(toInventoryItemObject);
+        } else if (detail.value !== null && detail.value !== undefined) {
+          // If we have a single value but need an array
+          itemValue = [toInventoryItemObject(detail.value)];
+        } else {
+          itemValue = [];
+        }
+      } else {
+        // Single-select mode - ensure we have a single item object or null
+        if (Array.isArray(detail.value) && detail.value.length > 0) {
+          itemValue = toInventoryItemObject(detail.value[0]);
+        } else if (detail.value !== null && detail.value !== undefined) {
+          itemValue = toInventoryItemObject(detail.value);
+        } else {
+          itemValue = null;
+        }
+      }
+
+      return (
+        <InventoryItemSelect
+          value={itemValue}
+          onChange={handleValueUpdate}
+          isMultiSelect={isMultiSelect}
+          placeholder={isMultiSelect ? 'Select inventory items' : 'Select inventory item'}
+        />
+      );
+    }
+
+    // For category and department fields, render a simple text input
+    return (
+      <Input
+        placeholder={`Enter ${selectedField.toLowerCase()}`}
+        value={
+          typeof detail.value === 'string'
+            ? detail.value
+            : typeof detail.value === 'number'
+            ? String(detail.value)
+            : Array.isArray(detail.value)
+            ? detail.value.join(', ')
+            : detail.value === true
+            ? 'true'
+            : detail.value === false
+            ? 'false'
+            : ''
+        }
+        onChange={(e) => handleValueUpdate(e.target.value)}
+      />
+    );
   };
 
   return (
     <div className="border rounded-md p-3 space-y-2">
+      {/* Header with condition detail title and remove button */}
       <div className="flex justify-between items-center">
         <span className="text-sm font-medium">Condition Detail</span>
         {canRemove && (
-          <Button
-            type="button"
-            variant="ghost"
-            size="sm"
-            onClick={onRemove}
-          >
+          <Button type="button" variant="ghost" size="sm" onClick={onRemove}>
             <X className="h-4 w-4" />
           </Button>
         )}
       </div>
-      
+
+      {/* Field, operator and value inputs */}
       <div className="grid grid-cols-3 gap-2">
-        <Select
-          value={detail.field}
-          onValueChange={handleFieldChange}
-        >
-          <SelectTrigger>
+        <Select value={selectedField} onValueChange={handleFieldChange}>
+          <SelectTrigger className="w-full">
             <SelectValue placeholder="Field" />
           </SelectTrigger>
           <SelectContent>
-            {Object.values(FieldType).map(field => (
+            {Object.values(FieldType).map((field) => (
               <SelectItem key={field} value={field}>
                 {getFieldDisplayName(field)}
               </SelectItem>
             ))}
           </SelectContent>
         </Select>
-        
+
         <Select
-          value={detail.operator}
-          onValueChange={(value) => onUpdate('operator', value)}
+          value={selectedOperator}
+          onValueChange={handleOperatorChange}
+          disabled={!selectedField}
         >
-          <SelectTrigger>
+          <SelectTrigger className="w-full">
             <SelectValue placeholder="Operator" />
           </SelectTrigger>
           <SelectContent>
-            {validOperators.map(operator => (
+            {validOperators.map((operator) => (
               <SelectItem key={operator} value={operator}>
-                {operator.charAt(0).toUpperCase() + operator.slice(1)}
+                {operator.charAt(0).toUpperCase() +
+                  operator.slice(1).replace(/_/g, ' ')}
               </SelectItem>
             ))}
           </SelectContent>
         </Select>
-        
+
         {renderValueInput()}
       </div>
     </div>

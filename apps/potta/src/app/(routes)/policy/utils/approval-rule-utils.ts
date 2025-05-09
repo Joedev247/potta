@@ -12,10 +12,16 @@ export const AVAILABLE_OPERATORS = [
 ];
 
 // Format field value for display
-export const formatFieldValue = (value: string | number | boolean | string[]): string => {
+// Add or update the formatFieldValue function
+export const formatFieldValue = (value: any): string => {
+  if (value === null || value === undefined) {
+    return '';
+  }
+  
   if (Array.isArray(value)) {
     return value.join(', ');
   }
+  
   return String(value);
 };
 
