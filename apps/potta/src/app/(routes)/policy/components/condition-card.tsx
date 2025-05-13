@@ -3,17 +3,22 @@ import { Button } from '@potta/components/shadcn/button';
 import { Label } from '@potta/components/shadcn/label';
 import { Checkbox } from '@potta/components/shadcn/checkbox';
 
-import { Card, CardContent, CardHeader, CardTitle } from '@potta/components/shadcn/card';
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from '@potta/components/shadcn/card';
 import { X, PlusCircle } from 'lucide-react';
 
-import { 
-  ExtendedCondition, 
-  ConditionDetail, 
-  ConditionAction, 
-  ApproverActionType, 
-  ApprovalMode, 
+import {
+  ExtendedCondition,
+  ConditionDetail,
+  ConditionAction,
+  ApproverActionType,
+  ApprovalMode,
   User,
-  EntityReference // Added EntityReference type
+  EntityReference, // Added EntityReference type
 } from '../types/approval-rule';
 import { generateId } from '../utils/approval-rule-utils';
 import { ConditionDetailComponent } from './condition-detail';
@@ -29,7 +34,7 @@ const isEntityField = (field: string): boolean => {
     'expense category',
     'inventory item',
     'location branch',
-    'payment type'
+    'payment type',
   ].includes(field.toLowerCase());
 };
 
@@ -48,22 +53,23 @@ export const ConditionCard: React.FC<ConditionCardProps> = ({
   users,
   canRemove,
   onRemove,
-  onUpdate
+  onUpdate,
 }) => {
   // State for user selection in actions
-  const [actionUserSelectionState, setActionUserSelectionState] = React.useState<{
-    actionId: string;
-    isOpen: boolean;
-    searchQuery: string;
-  }>({
-    actionId: '',
-    isOpen: false,
-    searchQuery: '',
-  });
+  const [actionUserSelectionState, setActionUserSelectionState] =
+    React.useState<{
+      actionId: string;
+      isOpen: boolean;
+      searchQuery: string;
+    }>({
+      actionId: '',
+      isOpen: false,
+      searchQuery: '',
+    });
 
   // Check if an action type already exists in the condition
   const hasActionType = (type: ApproverActionType): boolean => {
-    return (condition.actions || []).some(action => action.type === type);
+    return (condition.actions || []).some((action) => action.type === type);
   };
 
   // Check if we've reached the maximum number of actions (2)
@@ -79,9 +85,9 @@ export const ConditionCard: React.FC<ConditionCardProps> = ({
           id: generateId('cd'),
           field: '',
           operator: '',
-          value: ''
-        }
-      ]
+          value: '',
+        },
+      ],
     };
     onUpdate(updatedCondition);
   };
@@ -92,62 +98,73 @@ export const ConditionCard: React.FC<ConditionCardProps> = ({
     if ((condition.conditions || []).length <= 1) {
       return;
     }
-    
+
     const updatedCondition = {
       ...condition,
-      conditions: (condition.conditions || []).filter(detail => detail.id !== detailId)
+      conditions: (condition.conditions || []).filter(
+        (detail) => detail.id !== detailId
+      ),
     };
     onUpdate(updatedCondition);
   };
 
   // Update a condition detail with type safety
   // MODIFIED: Added handling for entity reference values
-  const updateConditionDetail = (detailId: string, field: keyof ConditionDetail, value: any) => {
+  const updateConditionDetail = (
+    detailId: string,
+    field: keyof ConditionDetail,
+    value: any
+  ) => {
     const updatedCondition = {
       ...condition,
-      conditions: (condition.conditions || []).map(detail => {
+      conditions: (condition.conditions || []).map((detail) => {
         if (detail.id === detailId) {
           // If updating the field, check if we need to reset the value based on field type
           if (field === 'field') {
             const isNewFieldEntity = isEntityField(value);
-            const isOldFieldEntity = isEntityField(detail.field);
-            
-            // If changing between entity and non-entity fields, reset the value
-            if (isNewFieldEntity !== isOldFieldEntity) {
+            const isOldFieldEntity = detail.field
+              ? isEntityField(detail.field)
+              : false;
+
+            // If changing between entity and non-entity fields OR if field was previously empty
+            if (isNewFieldEntity !== isOldFieldEntity || !detail.field) {
               return {
                 ...detail,
                 [field]: value,
-                value: isNewFieldEntity ? null : ''
+                value: isNewFieldEntity ? null : '',
               };
             }
           }
-          
+
           // If updating the operator and it's an entity field
           if (field === 'operator' && isEntityField(detail.field)) {
-            const isMultiSelect = value === 'is one of' || value === 'is not one of';
-            const isCurrentMultiSelect = detail.operator === 'is one of' || detail.operator === 'is not one of';
-            
+            const isMultiSelect =
+              value === 'is one of' || value === 'is not one of';
+            const isCurrentMultiSelect =
+              detail.operator === 'is one of' ||
+              detail.operator === 'is not one of';
+
             // If changing between single and multi-select operators, reset the value
             if (isMultiSelect !== isCurrentMultiSelect) {
               return {
                 ...detail,
                 [field]: value,
-                value: isMultiSelect ? [] : null
+                value: isMultiSelect ? [] : null,
               };
             }
           }
-          
+
           // If updating the value and it's an entity field
           if (field === 'value' && isEntityField(detail.field)) {
             // Ensure entity values have consistent structure
             if (Array.isArray(value)) {
               // For multi-select, ensure each item has id and name
-              const normalizedValue = value.map(item => {
+              const normalizedValue = value.map((item) => {
                 if (typeof item === 'object' && item !== null) {
                   // Extract just id and name for consistency
                   return {
                     id: item.id || item.value || '',
-                    name: item.name || item.label || ''
+                    name: item.name || item.label || '',
                   };
                 }
                 return item; // Fallback for non-object items
@@ -157,17 +174,17 @@ export const ConditionCard: React.FC<ConditionCardProps> = ({
               // For single-select, ensure it has id and name
               const normalizedValue = {
                 id: value.id || value.value || '',
-                name: value.name || value.label || ''
+                name: value.name || value.label || '',
               };
               return { ...detail, [field]: normalizedValue };
             }
           }
-          
+
           // Default case - no special handling needed
           return { ...detail, [field]: value };
         }
         return detail;
-      })
+      }),
     };
     onUpdate(updatedCondition);
   };
@@ -178,7 +195,7 @@ export const ConditionCard: React.FC<ConditionCardProps> = ({
     if (hasMaxActions || hasActionType(actionType)) {
       return;
     }
-    
+
     const updatedCondition = {
       ...condition,
       actions: [
@@ -186,11 +203,14 @@ export const ConditionCard: React.FC<ConditionCardProps> = ({
         {
           id: generateId('action'),
           type: actionType,
-          mode: actionType === ApproverActionType.APPROVAL ? ApprovalMode.ALL : ApprovalMode.ALL,
-          users: [],  // Empty users array
-          userIds: [] // Empty userIds array
-        }
-      ]
+          mode:
+            actionType === ApproverActionType.APPROVAL
+              ? ApprovalMode.ALL
+              : ApprovalMode.ALL,
+          users: [], // Empty users array
+          userIds: [], // Empty userIds array
+        },
+      ],
     };
     onUpdate(updatedCondition);
   };
@@ -202,13 +222,15 @@ export const ConditionCard: React.FC<ConditionCardProps> = ({
       setActionUserSelectionState({
         actionId: '',
         isOpen: false,
-        searchQuery: ''
+        searchQuery: '',
       });
     }
-    
+
     const updatedCondition = {
       ...condition,
-      actions: (condition.actions || []).filter(action => action.id !== actionId)
+      actions: (condition.actions || []).filter(
+        (action) => action.id !== actionId
+      ),
     };
     onUpdate(updatedCondition);
   };
@@ -217,15 +239,15 @@ export const ConditionCard: React.FC<ConditionCardProps> = ({
   const updateActionMode = (actionId: string, mode: ApprovalMode) => {
     const updatedCondition = {
       ...condition,
-      actions: (condition.actions || []).map(action => {
+      actions: (condition.actions || []).map((action) => {
         if (action.id === actionId) {
           return {
             ...action,
-            mode
+            mode,
           };
         }
         return action;
-      })
+      }),
     };
     onUpdate(updatedCondition);
   };
@@ -235,7 +257,7 @@ export const ConditionCard: React.FC<ConditionCardProps> = ({
     setActionUserSelectionState({
       actionId,
       isOpen: true,
-      searchQuery: ''
+      searchQuery: '',
     });
   };
 
@@ -244,21 +266,24 @@ export const ConditionCard: React.FC<ConditionCardProps> = ({
     // Ensure we don't add duplicate users
     const updatedCondition = {
       ...condition,
-      actions: (condition.actions || []).map(action => {
-        if (action.id === actionId && !action.users?.some(u => u.id === user.id)) {
+      actions: (condition.actions || []).map((action) => {
+        if (
+          action.id === actionId &&
+          !action.users?.some((u) => u.id === user.id)
+        ) {
           return {
             ...action,
-            users: [...(action.users || []), user],  // Store full user object
-            userIds: [...(action.userIds || []), user.id]  // Keep userIds for backward compatibility
+            users: [...(action.users || []), user], // Store full user object
+            userIds: [...(action.userIds || []), user.id], // Keep userIds for backward compatibility
           };
         }
         return action;
-      })
+      }),
     };
     onUpdate(updatedCondition);
     setActionUserSelectionState({
       ...actionUserSelectionState,
-      isOpen: false
+      isOpen: false,
     });
   };
 
@@ -266,16 +291,16 @@ export const ConditionCard: React.FC<ConditionCardProps> = ({
   const removeUserFromAction = (actionId: string, user: User) => {
     const updatedCondition = {
       ...condition,
-      actions: (condition.actions || []).map(action => {
+      actions: (condition.actions || []).map((action) => {
         if (action.id === actionId) {
           return {
             ...action,
-            users: (action.users || []).filter(u => u.id !== user.id),  // Filter full user objects
-            userIds: (action.userIds || []).filter(id => id !== user.id)  // Keep userIds for backward compatibility
+            users: (action.users || []).filter((u) => u.id !== user.id), // Filter full user objects
+            userIds: (action.userIds || []).filter((id) => id !== user.id), // Keep userIds for backward compatibility
           };
         }
         return action;
-      })
+      }),
     };
     onUpdate(updatedCondition);
   };
@@ -292,12 +317,12 @@ export const ConditionCard: React.FC<ConditionCardProps> = ({
       businessPurpose: false,
       requireBeforeAfterScreenshots: false,
       ...(condition.requirements || {}),
-      [field]: checked
+      [field]: checked,
     };
-    
+
     const updatedCondition = {
       ...condition,
-      requirements
+      requirements,
     };
     onUpdate(updatedCondition);
   };
@@ -314,57 +339,62 @@ export const ConditionCard: React.FC<ConditionCardProps> = ({
   // ADDED: Helper function to ensure actions have both users and userIds
   const ensureActionsHaveUsers = () => {
     if (!condition.actions) return;
-    
+
     // Check if we need to populate users array from userIds or vice versa
-    const needsUpdate = condition.actions.some(action => 
-      (action.userIds?.length > 0 && (!action.users || (action.users?.length ?? 0) !== action.userIds.length)) ||
-      ((action.users?.length ?? 0) > 0 && (!action.userIds || action.userIds.length !== (action.users?.length ?? 0)))
+    const needsUpdate = condition.actions.some(
+      (action) =>
+        (action.userIds?.length > 0 &&
+          (!action.users ||
+            (action.users?.length ?? 0) !== action.userIds.length)) ||
+        ((action.users?.length ?? 0) > 0 &&
+          (!action.userIds ||
+            action.userIds.length !== (action.users?.length ?? 0)))
     );
-    
+
     if (needsUpdate) {
-      const updatedActions = condition.actions.map(action => {
+      const updatedActions = condition.actions.map((action) => {
         // Initialize empty arrays if they don't exist
         const userIds = action.userIds || [];
         const actionUsers = action.users || [];
-        
+
         // If userIds has values but users doesn't match, populate users
         if (userIds.length > 0 && actionUsers.length !== userIds.length) {
-          const newUsers = userIds.map(userId => {
-            const user = users.find(u => u.id === userId);
+          const newUsers = userIds.map((userId) => {
+            const user = users.find((u) => u.id === userId);
             return user || { id: userId, name: 'Unknown User', email: '' }; // Fallback if user not found
           });
-          
+
           return {
             ...action,
             users: newUsers,
-            userIds: userIds
+            userIds: userIds,
           };
         }
-        
+
         // If users has values but userIds doesn't match, populate userIds
         if (actionUsers.length > 0 && userIds.length !== actionUsers.length) {
-          const newUserIds = actionUsers.map(user => user.id);
-          
+          const newUserIds = actionUsers.map((user) => user.id);
+
           return {
             ...action,
             users: actionUsers,
-            userIds: newUserIds
+            userIds: newUserIds,
           };
         }
-        
+
         // Ensure both arrays exist even if empty
         return {
           ...action,
           users: actionUsers,
-          userIds: userIds
+          userIds: userIds,
         };
       });
-      
+
       const updatedCondition = {
         ...condition,
-        actions: updatedActions
+        actions: updatedActions,
       };
-      
+
       onUpdate(updatedCondition);
     }
   };
@@ -372,41 +402,39 @@ export const ConditionCard: React.FC<ConditionCardProps> = ({
   // ADDED: Helper function to normalize entity values in conditions
   const normalizeEntityValues = () => {
     if (!condition.conditions) return;
-    
-    const needsUpdate = condition.conditions.some(detail => {
+
+    const needsUpdate = condition.conditions.some((detail) => {
       if (!isEntityField(detail.field)) return false;
-      
+
       // Check if value needs normalization
       if (Array.isArray(detail.value)) {
         // Check if any array item is missing id or name, or has extra properties
-        return detail.value.some(item => 
-          typeof item === 'object' && (
-            !item.id || 
-            !item.name || 
-            Object.keys(item).length > 2
-          )
+        return detail.value.some(
+          (item) =>
+            typeof item === 'object' &&
+            (!item.id || !item.name || Object.keys(item).length > 2)
         );
       } else if (detail.value && typeof detail.value === 'object') {
         // Check if single object is missing id or name, or has extra properties
         const val = detail.value as any;
         return !val.id || !val.name || Object.keys(val).length > 2;
       }
-      
+
       return false;
     });
-    
+
     if (needsUpdate) {
-      const updatedConditions = condition.conditions.map(detail => {
+      const updatedConditions = condition.conditions.map((detail) => {
         if (!isEntityField(detail.field)) return detail;
-        
+
         let normalizedValue = detail.value;
-        
+
         if (Array.isArray(detail.value)) {
-          normalizedValue = detail.value.map(item => {
+          normalizedValue = detail.value.map((item) => {
             if (typeof item === 'object' && item !== null) {
               return {
                 id: item.id || item.value || '',
-                name: item.name || item.label || ''
+                name: item.name || item.label || '',
               };
             }
             return item;
@@ -415,21 +443,21 @@ export const ConditionCard: React.FC<ConditionCardProps> = ({
           const val = detail.value as any;
           normalizedValue = {
             id: val.id || val.value || '',
-            name: val.name || val.label || ''
+            name: val.name || val.label || '',
           };
         }
-        
+
         return {
           ...detail,
-          value: normalizedValue
+          value: normalizedValue,
         };
       });
-      
+
       const updatedCondition = {
         ...condition,
-        conditions: updatedConditions
+        conditions: updatedConditions,
       };
-      
+
       onUpdate(updatedCondition);
     }
   };
@@ -446,12 +474,7 @@ export const ConditionCard: React.FC<ConditionCardProps> = ({
         <CardTitle className="text-sm font-medium flex justify-between">
           <span>Rule {index + 1}</span>
           {canRemove && (
-            <Button
-              type="button"
-              variant="ghost"
-              size="sm"
-              onClick={onRemove}
-            >
+            <Button type="button" variant="ghost" size="sm" onClick={onRemove}>
               <X className="h-4 w-4" />
             </Button>
           )}
@@ -459,13 +482,15 @@ export const ConditionCard: React.FC<ConditionCardProps> = ({
       </CardHeader>
       <CardContent className="space-y-4">
         {/* Condition Details Section */}
-        <div className="space-y-2">          
+        <div className="space-y-2">
           {(condition.conditions || []).map((detail) => (
             <ConditionDetailComponent
               key={detail.id}
               detail={detail}
               canRemove={(condition.conditions || []).length > 1}
-              onUpdate={(field, value) => updateConditionDetail(detail.id, field, value)}
+              onUpdate={(field, value) =>
+                updateConditionDetail(detail.id, field, value)
+              }
               onRemove={() => removeConditionDetail(detail.id)}
             />
           ))}
@@ -480,16 +505,18 @@ export const ConditionCard: React.FC<ConditionCardProps> = ({
           <PlusCircle className="h-4 w-4 mr-1" />
           Add Condition
         </Button>
-        
+
         <Separator />
-        
+
         {/* Actions Section */}
         <div className="space-y-4">
           <Label>Actions</Label>
           {(condition.actions || []).length === 0 && (
-            <div className="text-sm text-muted-foreground">No actions added yet</div>
+            <div className="text-sm text-muted-foreground">
+              No actions added yet
+            </div>
           )}
-          
+
           {(condition.actions || []).map((action) => (
             <ActionItem
               key={action.id}
@@ -500,7 +527,7 @@ export const ConditionCard: React.FC<ConditionCardProps> = ({
               onAddUser={(user) => addUserToAction(action.id, user)}
               onRemoveUser={(user) => removeUserFromAction(action.id, user)}
               isUserSelectionOpen={
-                actionUserSelectionState.isOpen && 
+                actionUserSelectionState.isOpen &&
                 actionUserSelectionState.actionId === action.id
               }
               onUserSelectionOpenChange={(isOpen) => {
@@ -509,15 +536,17 @@ export const ConditionCard: React.FC<ConditionCardProps> = ({
                 } else {
                   setActionUserSelectionState({
                     ...actionUserSelectionState,
-                    isOpen: false
+                    isOpen: false,
                   });
                 }
               }}
               userSearchQuery={actionUserSelectionState.searchQuery}
-              onUserSearchQueryChange={(query) => setActionUserSelectionState({
-                ...actionUserSelectionState,
-                searchQuery: query
-              })}
+              onUserSearchQueryChange={(query) =>
+                setActionUserSelectionState({
+                  ...actionUserSelectionState,
+                  searchQuery: query,
+                })
+              }
             />
           ))}
 
@@ -528,7 +557,9 @@ export const ConditionCard: React.FC<ConditionCardProps> = ({
               size="sm"
               className="flex items-center"
               onClick={() => addAction(ApproverActionType.APPROVAL)}
-              disabled={hasMaxActions || hasActionType(ApproverActionType.APPROVAL)}
+              disabled={
+                hasMaxActions || hasActionType(ApproverActionType.APPROVAL)
+              }
             >
               <PlusCircle className="h-4 w-4 mr-1" />
               Add Approval
@@ -539,7 +570,9 @@ export const ConditionCard: React.FC<ConditionCardProps> = ({
               size="sm"
               className="flex items-center"
               onClick={() => addAction(ApproverActionType.NOTIFICATION)}
-              disabled={hasMaxActions || hasActionType(ApproverActionType.NOTIFICATION)}
+              disabled={
+                hasMaxActions || hasActionType(ApproverActionType.NOTIFICATION)
+              }
             >
               <PlusCircle className="h-4 w-4 mr-1" />
               Add Notification
@@ -548,72 +581,100 @@ export const ConditionCard: React.FC<ConditionCardProps> = ({
         </div>
 
         <Separator />
-        
+
         {/* Requirements Section */}
         <div className="space-y-2">
           <Label>Requirements</Label>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
             <div className="flex items-center space-x-2">
-              <Checkbox 
-                id={`requireReceipt-${condition.id}`} 
+              <Checkbox
+                id={`requireReceipt-${condition.id}`}
                 checked={getRequirementValue('requireReceipt')}
-                onCheckedChange={(checked) => updateRequirement('requireReceipt', !!checked)}
+                onCheckedChange={(checked) =>
+                  updateRequirement('requireReceipt', !!checked)
+                }
               />
-              <Label htmlFor={`requireReceipt-${condition.id}`}>Require Receipt</Label>
+              <Label htmlFor={`requireReceipt-${condition.id}`}>
+                Require Receipt
+              </Label>
             </div>
-            
+
             <div className="flex items-center space-x-2">
-              <Checkbox 
-                id={`requireMemo-${condition.id}`} 
+              <Checkbox
+                id={`requireMemo-${condition.id}`}
                 checked={getRequirementValue('requireMemo')}
-                onCheckedChange={(checked) => updateRequirement('requireMemo', !!checked)}
+                onCheckedChange={(checked) =>
+                  updateRequirement('requireMemo', !!checked)
+                }
               />
-              <Label htmlFor={`requireMemo-${condition.id}`}>Require Memo</Label>
+              <Label htmlFor={`requireMemo-${condition.id}`}>
+                Require Memo
+              </Label>
             </div>
-            
+
             <div className="flex items-center space-x-2">
-              <Checkbox 
-                id={`requireScreenshots-${condition.id}`} 
+              <Checkbox
+                id={`requireScreenshots-${condition.id}`}
                 checked={getRequirementValue('requireScreenshots')}
-                onCheckedChange={(checked) => updateRequirement('requireScreenshots', !!checked)}
+                onCheckedChange={(checked) =>
+                  updateRequirement('requireScreenshots', !!checked)
+                }
               />
-              <Label htmlFor={`requireScreenshots-${condition.id}`}>Require Screenshots</Label>
+              <Label htmlFor={`requireScreenshots-${condition.id}`}>
+                Require Screenshots
+              </Label>
             </div>
-            
+
             <div className="flex items-center space-x-2">
-              <Checkbox 
-                id={`requireNetSuiteCustomerJob-${condition.id}`} 
+              <Checkbox
+                id={`requireNetSuiteCustomerJob-${condition.id}`}
                 checked={getRequirementValue('requireNetSuiteCustomerJob')}
-                onCheckedChange={(checked) => updateRequirement('requireNetSuiteCustomerJob', !!checked)}
+                onCheckedChange={(checked) =>
+                  updateRequirement('requireNetSuiteCustomerJob', !!checked)
+                }
               />
-              <Label htmlFor={`requireNetSuiteCustomerJob-${condition.id}`}>Require NetSuite Customer Job</Label>
+              <Label htmlFor={`requireNetSuiteCustomerJob-${condition.id}`}>
+                Require NetSuite Customer Job
+              </Label>
             </div>
-            
+
             <div className="flex items-center space-x-2">
-              <Checkbox 
-                id={`requireGpsCoordinates-${condition.id}`} 
+              <Checkbox
+                id={`requireGpsCoordinates-${condition.id}`}
                 checked={getRequirementValue('requireGpsCoordinates')}
-                onCheckedChange={(checked) => updateRequirement('requireGpsCoordinates', !!checked)}
+                onCheckedChange={(checked) =>
+                  updateRequirement('requireGpsCoordinates', !!checked)
+                }
               />
-              <Label htmlFor={`requireGpsCoordinates-${condition.id}`}>Require GPS Coordinates</Label>
+              <Label htmlFor={`requireGpsCoordinates-${condition.id}`}>
+                Require GPS Coordinates
+              </Label>
             </div>
-            
+
             <div className="flex items-center space-x-2">
-              <Checkbox 
-                id={`businessPurpose-${condition.id}`} 
+              <Checkbox
+                id={`businessPurpose-${condition.id}`}
                 checked={getRequirementValue('businessPurpose')}
-                onCheckedChange={(checked) => updateRequirement('businessPurpose', !!checked)}
+                onCheckedChange={(checked) =>
+                  updateRequirement('businessPurpose', !!checked)
+                }
               />
-              <Label htmlFor={`businessPurpose-${condition.id}`}>Business Purpose</Label>
+              <Label htmlFor={`businessPurpose-${condition.id}`}>
+                Business Purpose
+              </Label>
             </div>
-            
+
             <div className="flex items-center space-x-2">
-              <Checkbox 
-                id={`requireBeforeAfterScreenshots-${condition.id}`} 
+              <Checkbox
+                id={`requireBeforeAfterScreenshots-${condition.id}`}
                 checked={getRequirementValue('requireBeforeAfterScreenshots')}
-                onCheckedChange={(checked) => updateRequirement('requireBeforeAfterScreenshots', !!checked)}
+                onCheckedChange={(checked) =>
+                  updateRequirement('requireBeforeAfterScreenshots', !!checked)
+                }
               />
-              <Label htmlFor={`requireBeforeAfterScreenshots-${condition.id}`}>Require Before/After Screenshots</Label>
+              <Label htmlFor={`requireBeforeAfterScreenshots-${condition.id}`}>
+                Require Before/After Screenshots
+              </Label>
             </div>
           </div>
         </div>

@@ -1,9 +1,11 @@
 // pages/spend-policy/create-rule.tsx
 'use client';
-import React from 'react';
+import React, { use } from 'react';
 import { ApprovalRuleForm } from './all';
 import { ExtendedApprovalRule, User } from './types/approval-rule';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { useCreatePolicy } from './hooks/policyHooks';
+import toast from 'react-hot-toast';
 
 // Create a client
 const queryClient = new QueryClient({
@@ -25,19 +27,22 @@ const mockUsers: User[] = [
 ];
 
 export default function CreateRulePage() {
+  const mutation = useCreatePolicy();
   const handleSubmit = async (data: ExtendedApprovalRule) => {
-    try {
-      // Call API to save the rule
-      console.log('Submitting rule:', data);
-      // Navigate to rules list or show success message
-      alert('Rule saved successfully!');
-      // In a real app, you would use a router to navigate
-      // router.push('/spend-policy/rules');
-    } catch (error) {
-      console.error('Error saving rule:', error);
-      // Show error message
-      alert('Error saving rule. Please try again.');
-    }
+    mutation.mutate(data,{
+      onSuccess: () => {
+              toast.success(`Rule created successfully`);
+              // You can add navigation or other actions here after successful creation
+              // For example: router.push('/pos/sales');
+            },
+            onError: (error: any) => {
+              toast.error(
+                `Failed to create Rule: ${error.message || 'Unknown error'}`
+              );
+              console.error('Error creating Rule Please Try again later:', error);
+            },
+    });
+   
   };
 
   const handleCancel = () => {

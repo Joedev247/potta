@@ -339,6 +339,8 @@ export function ApprovalRuleForm({
     return summaryData;
   };
 
+
+  console.log('Data passed to RuleSummaryView:', summaryData || formData);
   // Update summary data whenever formData changes
   useEffect(() => {
     // Extract entity lists from the current form data
@@ -408,7 +410,7 @@ export function ApprovalRuleForm({
       ...formData,
       rules: newRules
     });
-    
+    console.log('Updated rules:', newRules);
     // Validate the updated rule for field uniqueness
     validateRuleFields(updatedRule);
   };
@@ -545,7 +547,7 @@ const prepareFormDataForSubmit = (data: ExtendedApprovalRule): any => {
           return {
             actionType: action.type,
             approvalMode: action.mode,
-            userIds: action.userIds,
+            selectedUserIds: action.userIds,
             approverType: "user"
           };
         }),

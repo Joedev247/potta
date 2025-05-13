@@ -189,16 +189,21 @@ export const ConditionDetailComponent: React.FC<
     // Update parent component state
     onUpdate('field', fieldValue);
 
-    // Reset operator when field changes
-    setSelectedOperator('');
-    onUpdate('operator', '');
 
-    // Initialize value based on field type
-    if ([FieldType.CUSTOMER, FieldType.VENDOR, FieldType.INVENTORY_ITEM].includes(fieldValue as FieldType)) {
-      onUpdate('value', isMultiSelect ? [] : null);
-    } else {
-      onUpdate('value', isMultiSelect ? [] : '');
-    }
+    //DO NOT UNCOMMENT
+    // // Reset operator when field changes
+    // setSelectedOperator('');
+    // onUpdate('operator', '');
+
+    // // Initialize value based on field type
+    // if ([FieldType.CUSTOMER, FieldType.VENDOR, FieldType.INVENTORY_ITEM].includes(fieldValue as FieldType)) {
+    //   onUpdate('field', fieldValue);
+    //   onUpdate('value', isMultiSelect ? [] : '');
+    // } else {
+    //   onUpdate('field', fieldValue);
+    //   onUpdate('value', isMultiSelect ? [] : '');
+    // }
+
   };
 
   // Handle operator change with proper multi-select handling
@@ -300,6 +305,7 @@ export const ConditionDetailComponent: React.FC<
       const numValue = parseFloat(value);
       onUpdate('value', isNaN(numValue) ? '' : numValue);
     } else {
+      console.log('Value updated:', value);
       onUpdate('value', value);
     }
   };

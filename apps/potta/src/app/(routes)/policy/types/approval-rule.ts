@@ -11,8 +11,8 @@ export enum FieldType {
 }
 
 export enum ApproverActionType {
-  APPROVAL = 'approval',
-  NOTIFICATION = 'notification',
+  APPROVAL = 'require approval',
+  NOTIFICATION = 'notify',
 }
 
 export enum ApprovalMode {
@@ -93,16 +93,16 @@ export interface SelectOption extends EntityReference {
 export enum Operator {
   IS = 'is',
   EQUALS = 'equals',
-  NOT_EQUALS = 'does not equal',
+  NOT_EQUALS = 'not_equal',
   LESS_THAN = 'less than',
-  GREATER_THAN = 'greater than',
-  LESS_THAN_OR_EQUAL = 'less than or equal',
-  GREATER_THAN_OR_EQUAL = 'greater than or equal',
+  GREATER_THAN = 'greater_than',
+  LESS_THAN_OR_EQUAL = 'less_than_equal',
+  GREATER_THAN_OR_EQUAL = 'greater_than_equal',
   CONTAINS = 'contains',
-  IS_ONE_OF = 'is one of',
-  IS_NOT_ONE_OF = 'is not one of',
+  IS_ONE_OF = 'is_one_of',
+  IS_NOT_ONE_OF = 'is_not_one_of',
   STARTS_WITH = 'starts_with',
-  ENDS_WITH = 'ends with',
+  ENDS_WITH = 'ends_with',
   IS_NOT = 'is not',
 }
 

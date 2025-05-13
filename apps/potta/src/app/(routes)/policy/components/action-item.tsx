@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo, useEffect } from 'react';
 import { Button } from '@potta/components/shadcn/button';
 import {
   Command,
@@ -19,10 +19,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@potta/components/shadcn/select';
-import { Check, X, PlusCircle, UserPlus } from 'lucide-react';
+import { Check, X, UserPlus } from 'lucide-react';
 import { Badge } from '@potta/components/shadcn/badge';
 import { ScrollArea } from '@potta/components/shadcn/scroll-area';
 import { Avatar, AvatarImage, AvatarFallback } from '@potta/components/avatar';
+import { useSearchEmployees } from '../hooks/policyHooks';
 
 import { 
   ConditionAction, 
@@ -31,12 +32,21 @@ import {
   User 
 } from '../types/approval-rule';
 
+// Define the employee data structure from the API
+interface EmployeeData {
+  uuid: string;
+  firstName: string;
+  lastName: string;
+  email?: string;
+  profilePicture?: string;
+  // Add any other fields that might be in the API response
+}
+
 interface ActionItemProps {
   action: ConditionAction;
   users: User[];
   onRemove: () => void;
   onUpdateMode: (mode: ApprovalMode) => void;
-  // Modified to accept full user object instead of just ID
   onAddUser: (user: User) => void;
   onRemoveUser: (user: User) => void;
   isUserSelectionOpen: boolean;
@@ -57,18 +67,65 @@ export const ActionItem: React.FC<ActionItemProps> = ({
   userSearchQuery,
   onUserSearchQueryChange
 }) => {
+  // Fetch employees from backend using the hook
+  const { data: employeesData, isLoading } = useSearchEmployees(userSearchQuery);
+
+  // Debug log whenever employeesData changes
+  useEffect(() => {
+    console.log('Search query:', userSearchQuery);
+    console.log('Raw employeesData:', employeesData);
+  }, [employeesData, userSearchQuery]);
+
+  // Transform employee data to our normalized User format
+  const availableUsers = useMemo(() => {
+    if (!employeesData) return [];
+    
+    // Check if employeesData is an array or has a nested data structure
+    let dataArray;
+    
+    if (Array.isArray(employeesData)) {
+      dataArray = employeesData;
+    }  else {
+      dataArray = [];
+    }
+    
+    console.log('Extracted data array:', dataArray);
+    
+    // Ensure we're working with an array
+    if (!Array.isArray(dataArray)) {
+      console.error('Expected array of employees, got:', typeof dataArray);
+      return [];
+    }
+    
+    const mappedUsers = dataArray.map((employee: any) => {
+      // Handle different possible structures
+      const uuid = employee.uuid || employee.id;
+      const firstName = employee.firstName || employee.first_name || '';
+      const lastName = employee.lastName || employee.last_name || '';
+      
+      const user = {
+        id: uuid || `temp-${Math.random()}`,
+        name: `${firstName} ${lastName}`.trim() || employee.name || employee.fullName || 'Unknown',
+        email: employee.email || '',
+        initials: `${firstName?.[0] || ''}${lastName?.[0] || ''}`,
+        profilePicture: employee.profilePicture || employee.avatar || '',
+      };
+      
+      console.log('Mapped user:', user);
+      return user;
+    });
+    
+    console.log('Final mapped users:', mappedUsers);
+    return mappedUsers;
+  }, [employeesData]);
+
+  // Get selected users from the action's userIds
+  const selectedUsers = users.filter(user => action.userIds.includes(user.id));
+
   // Get action type display name
   const getActionTypeDisplay = () => {
     return action.type === ApproverActionType.APPROVAL ? 'Approval' : 'Notification';
   };
-
-  // Get selected users
-  const selectedUsers = users.filter(user => action.userIds.includes(user.id));
-
-  // Filter users based on search query
-  const filteredUsers = users.filter(user =>
-    user.name.toLowerCase().includes(userSearchQuery.toLowerCase())
-  );
 
   return (
     <div className="border rounded-md p-3 space-y-2">
@@ -109,7 +166,6 @@ export const ActionItem: React.FC<ActionItemProps> = ({
               className="flex items-center gap-1 pl-1 pr-1.5"
               variant="secondary"
             >
-              {/* Add avatar with profile picture or initials */}
               <Avatar className="h-5 w-5">
                 {user.profilePicture ? (
                   <AvatarImage src={user.profilePicture} alt={user.name} />
@@ -123,7 +179,7 @@ export const ActionItem: React.FC<ActionItemProps> = ({
                 variant="ghost" 
                 size="sm" 
                 className="h-4 w-4 p-0 ml-1"
-                onClick={() => onRemoveUser(user)} // Pass the full user object
+                onClick={() => onRemoveUser(user)}
               >
                 <X className="h-3 w-3" />
               </Button>
@@ -145,38 +201,57 @@ export const ActionItem: React.FC<ActionItemProps> = ({
                 Add User
               </Button>
             </PopoverTrigger>
-            <PopoverContent className="p-0" align="start">
+            <PopoverContent className="p-0" align="start" side="top">
               <Command>
                 <CommandInput 
                   placeholder="Search users..." 
                   value={userSearchQuery}
                   onValueChange={onUserSearchQueryChange}
+                  autoFocus
                 />
-                <CommandEmpty>No users found.</CommandEmpty>
+                
                 <CommandGroup>
                   <ScrollArea className="h-[200px]">
-                    {filteredUsers.map(user => (
-                      <CommandItem
-                        key={user.id}
-                        value={user.id}
-                        onSelect={() => onAddUser(user)} // Pass the full user object
-                        disabled={action.userIds.includes(user.id)}
-                        className="flex items-center gap-2"
-                      >
-                        {/* Add avatar with profile picture or initials */}
-                        <Avatar className="h-6 w-6">
-                          {user.profilePicture ? (
-                            <AvatarImage src={user.profilePicture} alt={user.name} />
-                          ) : (
-                            <AvatarFallback>{user.initials || user.name.charAt(0)}</AvatarFallback>
+                    {isLoading ? (
+                      <div className="py-6 text-center text-sm text-muted-foreground">
+                        <div className="animate-pulse flex justify-center">
+                          <div className="h-4 bg-slate-200 rounded w-24"></div>
+                        </div>
+                      </div>
+                    ) : availableUsers && availableUsers.length > 0 ? (
+                      availableUsers.map(user => (
+                        <CommandItem
+                          key={user.id}
+                          value={user.name}
+                          onSelect={() => {
+                            console.log('User selected:', user);
+                            onAddUser(user);
+                          }}
+                          disabled={action.userIds.includes(user.id)}
+                          className="flex items-center gap-2"
+                        >
+                          <Avatar className="h-6 w-6">
+                            {user.profilePicture ? (
+                              <AvatarImage src={user.profilePicture} alt={user.name} />
+                            ) : (
+                              <AvatarFallback>{user.initials || user.name.charAt(0)}</AvatarFallback>
+                            )}
+                          </Avatar>
+                          <span>{user.name}</span>
+                          {action.userIds.includes(user.id) && (
+                            <Check className="h-4 w-4 ml-auto opacity-70" />
                           )}
-                        </Avatar>
-                        {user.name}
-                        {action.userIds.includes(user.id) && (
-                          <Check className="h-4 w-4 ml-auto opacity-70" />
-                        )}
-                      </CommandItem>
-                    ))}
+                        </CommandItem>
+                      ))
+                    ) : userSearchQuery ? (
+                      <CommandEmpty className="py-6 text-center text-sm text-muted-foreground">
+                        No users found
+                      </CommandEmpty>
+                    ) : (
+                      <div className="py-6 text-center text-sm text-muted-foreground">
+                        Start typing to search for users
+                      </div>
+                    )}
                   </ScrollArea>
                 </CommandGroup>
               </Command>

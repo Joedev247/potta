@@ -13,6 +13,7 @@ import Button from '@potta/components/button';
 import { Icon } from '@iconify/react';
 import { IFilter, IOption } from '../utils/types';
 import CustomSelect from '@potta/components/react-select';
+import Link from 'next/link';
 
 // Define types based on the API response
 interface MileageRequirements {
@@ -87,16 +88,7 @@ const PolicyTable = () => {
 
   const { data, isLoading, error } = useGetPolicies(filter);
 
-  const getPolicyTypeStyle = (type: string) => {
-    switch (type.toLowerCase()) {
-      case 'mileage':
-        return 'text-blue-600';
-      case 'out-of-pocket':
-        return 'text-purple-500';
-      default:
-        return 'text-gray-600';
-    }
-  };
+
 
   const getRequirementsText = (policy: Policy) => {
     const requirements = [];
@@ -135,22 +127,8 @@ const PolicyTable = () => {
         </div>
       ),
     },
-    {
-      name: 'Type',
-      selector: (row: Policy) => (
-        <div className={`text-sm ${getPolicyTypeStyle(row.type)}`}>
-          {row.type}
-        </div>
-      ),
-    },
-    {
-      name: 'Transaction Type',
-      selector: (row: Policy) => (
-        <div className="text-sm text-gray-600">
-          {row.transactionType}
-        </div>
-      ),
-    },
+   
+    
     {
       name: 'Requirements',
       selector: (row: Policy) => (
@@ -229,15 +207,16 @@ const PolicyTable = () => {
               />
             </div>
             <div>
+              <Link href="/policy">
+              
               <Button
-                text={'Create Policy'}
+                text={'Create Rule'}
                 icon={<i className="ri-file-add-line"></i>}
                 theme="default"
                 type={'button'}
-                onClick={() => {
-                  setIsOpen(true);
-                }}
-              />
+                
+                />
+                </Link>
             </div>
           </div>
         </div>

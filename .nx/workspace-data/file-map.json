@@ -53,1717 +53,6 @@
   "fileMap": {
     "nonProjectFiles": [],
     "projectFileMap": {
-      "utilities": [
-        {
-          "file": "libs/utilities/.eslintrc.json",
-          "hash": "11012487992710232822"
-        },
-        {
-          "file": "libs/utilities/README.md",
-          "hash": "13228732804139331838"
-        },
-        {
-          "file": "libs/utilities/project.json",
-          "hash": "699343638286385166"
-        },
-        {
-          "file": "libs/utilities/src/index.ts",
-          "hash": "4979336273987222930"
-        },
-        {
-          "file": "libs/utilities/src/lib/configs/axios.ts",
-          "hash": "3794232511606065549",
-          "deps": [
-            "npm:crypto-js",
-            "npm:axios"
-          ]
-        },
-        {
-          "file": "libs/utilities/src/lib/configs/env.ts",
-          "hash": "12101586654834214904"
-        },
-        {
-          "file": "libs/utilities/src/lib/helpers/index.ts",
-          "hash": "10922730425443113868",
-          "deps": [
-            "npm:crypto-js",
-            "npm:country-list-with-dial-code-and-flag"
-          ]
-        },
-        {
-          "file": "libs/utilities/src/server.ts",
-          "hash": "5519843671682787663"
-        },
-        {
-          "file": "libs/utilities/tsconfig.json",
-          "hash": "14088618039610991405"
-        },
-        {
-          "file": "libs/utilities/tsconfig.lib.json",
-          "hash": "1536859351713546153"
-        }
-      ],
-      "ui-components": [
-        {
-          "file": "libs/ui-components/.eslintrc.json",
-          "hash": "11012487992710232822"
-        },
-        {
-          "file": "libs/ui-components/README.md",
-          "hash": "9995608240359739017"
-        },
-        {
-          "file": "libs/ui-components/project.json",
-          "hash": "14073386014989480526"
-        },
-        {
-          "file": "libs/ui-components/src/index.ts",
-          "hash": "3890638239984739746"
-        },
-        {
-          "file": "libs/ui-components/src/lib/button/button.css",
-          "hash": "3244421341483603138"
-        },
-        {
-          "file": "libs/ui-components/src/lib/button/button.spec.tsx",
-          "hash": "6024628988384396619",
-          "deps": [
-            "npm:@testing-library/react",
-            "npm:react"
-          ]
-        },
-        {
-          "file": "libs/ui-components/src/lib/button/button.tsx",
-          "hash": "14294175664207578953",
-          "deps": [
-            "npm:react"
-          ]
-        },
-        {
-          "file": "libs/ui-components/src/lib/checkbox/checkbox.spec.tsx",
-          "hash": "16773171947338653164",
-          "deps": [
-            "npm:@testing-library/react"
-          ]
-        },
-        {
-          "file": "libs/ui-components/src/lib/checkbox/checkbox.tsx",
-          "hash": "9330927587529167350",
-          "deps": [
-            "npm:react"
-          ]
-        },
-        {
-          "file": "libs/ui-components/src/lib/file-upload/file-upload.spec.tsx",
-          "hash": "13729243159011131943",
-          "deps": [
-            "npm:@testing-library/react"
-          ]
-        },
-        {
-          "file": "libs/ui-components/src/lib/file-upload/file-upload.tsx",
-          "hash": "15745855549206970964",
-          "deps": [
-            "npm:next",
-            "npm:react",
-            "npm:react-dropzone"
-          ]
-        },
-        {
-          "file": "libs/ui-components/src/lib/input/input.css",
-          "hash": "10999915296015192048"
-        },
-        {
-          "file": "libs/ui-components/src/lib/input/input.spec.tsx",
-          "hash": "1956756580387732921",
-          "deps": [
-            "npm:@testing-library/react"
-          ]
-        },
-        {
-          "file": "libs/ui-components/src/lib/input/input.tsx",
-          "hash": "4109157862373855892",
-          "deps": [
-            "npm:@heroicons/react",
-            "npm:react-hook-form",
-            "npm:react"
-          ]
-        },
-        {
-          "file": "libs/ui-components/src/lib/modal/modal.spec.tsx",
-          "hash": "6472563329112809072",
-          "deps": [
-            "npm:@testing-library/react"
-          ]
-        },
-        {
-          "file": "libs/ui-components/src/lib/modal/modal.tsx",
-          "hash": "14108573289638167965",
-          "deps": [
-            "npm:react",
-            "npm:@headlessui/react"
-          ]
-        },
-        {
-          "file": "libs/ui-components/src/lib/search/search.css",
-          "hash": "10172889319337957757"
-        },
-        {
-          "file": "libs/ui-components/src/lib/search/search.spec.tsx",
-          "hash": "1172712103285773831",
-          "deps": [
-            "npm:@testing-library/react"
-          ]
-        },
-        {
-          "file": "libs/ui-components/src/lib/search/search.tsx",
-          "hash": "16498275226319806576",
-          "deps": [
-            "npm:react",
-            "npm:next"
-          ]
-        },
-        {
-          "file": "libs/ui-components/src/lib/select/select.spec.tsx",
-          "hash": "16176134918512818464"
-        },
-        {
-          "file": "libs/ui-components/src/lib/select/select.tsx",
-          "hash": "15616048433895510667",
-          "deps": [
-            "npm:react",
-            "npm:react-select"
-          ]
-        },
-        {
-          "file": "libs/ui-components/src/lib/toast/toast.spec.tsx",
-          "hash": "17609396385370758005",
-          "deps": [
-            "npm:@testing-library/react"
-          ]
-        },
-        {
-          "file": "libs/ui-components/src/lib/toast/toast.tsx",
-          "hash": "9392764110185592652",
-          "deps": [
-            "npm:react",
-            "npm:react-hot-toast"
-          ]
-        },
-        {
-          "file": "libs/ui-components/src/server.ts",
-          "hash": "5519843671682787663"
-        },
-        {
-          "file": "libs/ui-components/tsconfig.json",
-          "hash": "14088618039610991405"
-        },
-        {
-          "file": "libs/ui-components/tsconfig.lib.json",
-          "hash": "1536859351713546153"
-        }
-      ],
-      "core": [
-        {
-          "file": "libs/core/.eslintrc.json",
-          "hash": "11012487992710232822"
-        },
-        {
-          "file": "libs/core/README.md",
-          "hash": "862743182427189852"
-        },
-        {
-          "file": "libs/core/project.json",
-          "hash": "8215491323991500792"
-        },
-        {
-          "file": "libs/core/src/index.ts",
-          "hash": "1391443467439822800"
-        },
-        {
-          "file": "libs/core/src/lib/core.spec.tsx",
-          "hash": "10083302775005561580",
-          "deps": [
-            "npm:@testing-library/react"
-          ]
-        },
-        {
-          "file": "libs/core/src/lib/core.tsx",
-          "hash": "12083220179364162819"
-        },
-        {
-          "file": "libs/core/src/lib/hello-server.tsx",
-          "hash": "2397568674684759047"
-        },
-        {
-          "file": "libs/core/src/server.ts",
-          "hash": "8912437808649717296"
-        },
-        {
-          "file": "libs/core/tsconfig.json",
-          "hash": "14088618039610991405"
-        },
-        {
-          "file": "libs/core/tsconfig.lib.json",
-          "hash": "1536859351713546153"
-        }
-      ],
-      "superApp": [
-        {
-          "file": "apps/superApp/.env.build",
-          "hash": "3244421341483603138"
-        },
-        {
-          "file": "apps/superApp/.eslintrc.json",
-          "hash": "15793019959857301786"
-        },
-        {
-          "file": "apps/superApp/Dockerfile",
-          "hash": "5456846178283852788"
-        },
-        {
-          "file": "apps/superApp/index.d.ts",
-          "hash": "5498222895072842432"
-        },
-        {
-          "file": "apps/superApp/jest.config.ts",
-          "hash": "16097350261828787465"
-        },
-        {
-          "file": "apps/superApp/next-env.d.ts",
-          "hash": "5909181270615354023"
-        },
-        {
-          "file": "apps/superApp/next.config.js",
-          "hash": "10181067523288589861",
-          "deps": [
-            "npm:@nx/next"
-          ]
-        },
-        {
-          "file": "apps/superApp/postcss.config.js",
-          "hash": "2759402739052110475"
-        },
-        {
-          "file": "apps/superApp/project.json",
-          "hash": "7543845952198001626"
-        },
-        {
-          "file": "apps/superApp/public/.gitkeep",
-          "hash": "3244421341483603138"
-        },
-        {
-          "file": "apps/superApp/public/favicon.ico",
-          "hash": "9157999678830540297"
-        },
-        {
-          "file": "apps/superApp/public/fonts/Outfit-Light.otf",
-          "hash": "4756798201002966247"
-        },
-        {
-          "file": "apps/superApp/public/fonts/Outfit-Regular.otf",
-          "hash": "8473250679200849023"
-        },
-        {
-          "file": "apps/superApp/public/fonts/Outfit-SemiBold.otf",
-          "hash": "6388168232264881097"
-        },
-        {
-          "file": "apps/superApp/public/fonts/SherpaRegular.otf",
-          "hash": "17172602198588170848"
-        },
-        {
-          "file": "apps/superApp/public/icons/Potta.svg",
-          "hash": "1479266405784448627"
-        },
-        {
-          "file": "apps/superApp/public/icons/Tribu.svg",
-          "hash": "10128652146921475405"
-        },
-        {
-          "file": "apps/superApp/public/icons/add.svg",
-          "hash": "16752212222608102916"
-        },
-        {
-          "file": "apps/superApp/public/icons/bg.svg",
-          "hash": "5144022568728260432"
-        },
-        {
-          "file": "apps/superApp/public/icons/cog.svg",
-          "hash": "1059932398149830599"
-        },
-        {
-          "file": "apps/superApp/public/icons/copy.svg",
-          "hash": "15260122544950410555"
-        },
-        {
-          "file": "apps/superApp/public/icons/dashboard-boxes.svg",
-          "hash": "10045374191789866791"
-        },
-        {
-          "file": "apps/superApp/public/icons/dashboard.svg",
-          "hash": "5920485964508127673"
-        },
-        {
-          "file": "apps/superApp/public/icons/db-icon.svg",
-          "hash": "9690318657838681023"
-        },
-        {
-          "file": "apps/superApp/public/icons/download.svg",
-          "hash": "17683834353834406053"
-        },
-        {
-          "file": "apps/superApp/public/icons/dropzone.svg",
-          "hash": "14289197065402605796"
-        },
-        {
-          "file": "apps/superApp/public/icons/facebook.svg",
-          "hash": "8401814789474679256"
-        },
-        {
-          "file": "apps/superApp/public/icons/flows.svg",
-          "hash": "6623266273994584474"
-        },
-        {
-          "file": "apps/superApp/public/icons/instagrams.svg",
-          "hash": "9012127058238463458"
-        },
-        {
-          "file": "apps/superApp/public/icons/instanvi.svg",
-          "hash": "8206957637817645040"
-        },
-        {
-          "file": "apps/superApp/public/icons/linkedin.svg",
-          "hash": "749634526890924781"
-        },
-        {
-          "file": "apps/superApp/public/icons/plus.svg",
-          "hash": "13595607751849673875"
-        },
-        {
-          "file": "apps/superApp/public/icons/settings-outline.svg",
-          "hash": "7530317820273528434"
-        },
-        {
-          "file": "apps/superApp/public/icons/snapchat.svg",
-          "hash": "5673193644116308833"
-        },
-        {
-          "file": "apps/superApp/public/icons/talk.svg",
-          "hash": "10127150127445808454"
-        },
-        {
-          "file": "apps/superApp/public/icons/telegram.svg",
-          "hash": "16669591176190603320"
-        },
-        {
-          "file": "apps/superApp/public/icons/tiktoks.svg",
-          "hash": "9166526212673586493"
-        },
-        {
-          "file": "apps/superApp/public/icons/top-menu-bell.svg",
-          "hash": "13167333176282325014"
-        },
-        {
-          "file": "apps/superApp/public/icons/twiters.svg",
-          "hash": "17156714051598273005"
-        },
-        {
-          "file": "apps/superApp/public/icons/youtubes.svg",
-          "hash": "13437771844721524993"
-        },
-        {
-          "file": "apps/superApp/public/img/profile-pic.jpeg",
-          "hash": "18412928317935371087"
-        },
-        {
-          "file": "apps/superApp/public/next.svg",
-          "hash": "8300767200008744458"
-        },
-        {
-          "file": "apps/superApp/public/vercel.svg",
-          "hash": "2376673330454856631"
-        },
-        {
-          "file": "apps/superApp/specs/index.spec.tsx",
-          "hash": "9752062192437246914",
-          "deps": [
-            "npm:react",
-            "npm:@testing-library/react"
-          ]
-        },
-        {
-          "file": "apps/superApp/src/Arrays/Business/index.ts",
-          "hash": "14499321590303012168"
-        },
-        {
-          "file": "apps/superApp/src/Arrays/SocialChannels/index.tsx",
-          "hash": "15248014337847208465"
-        },
-        {
-          "file": "apps/superApp/src/Arrays/countries/index.ts",
-          "hash": "15798198196314280633"
-        },
-        {
-          "file": "apps/superApp/src/Arrays/notifications/index.ts",
-          "hash": "9639099895876080636"
-        },
-        {
-          "file": "apps/superApp/src/components/app-card/index.tsx",
-          "hash": "2142919944086758904",
-          "deps": [
-            "npm:react",
-            "npm:next"
-          ]
-        },
-        {
-          "file": "apps/superApp/src/components/app-delete/index.tsx",
-          "hash": "7995980614690153008",
-          "deps": [
-            "npm:@heroicons/react",
-            "ui-components",
-            "npm:react"
-          ]
-        },
-        {
-          "file": "apps/superApp/src/components/button/customButton/index.tsx",
-          "hash": "15842488040680886917",
-          "deps": [
-            "npm:react"
-          ]
-        },
-        {
-          "file": "apps/superApp/src/components/button/submitButton/index.tsx",
-          "hash": "11254609934137741073",
-          "deps": [
-            "npm:react"
-          ]
-        },
-        {
-          "file": "apps/superApp/src/components/checkbox/index.tsx",
-          "hash": "17705485811093650764",
-          "deps": [
-            "npm:react"
-          ]
-        },
-        {
-          "file": "apps/superApp/src/components/dropzone/index.tsx",
-          "hash": "7968491855966331068",
-          "deps": [
-            "npm:next",
-            "npm:react",
-            "npm:react-dropzone"
-          ]
-        },
-        {
-          "file": "apps/superApp/src/components/icons/copyIcon/index.tsx",
-          "hash": "14450760174165533741",
-          "deps": [
-            "npm:react"
-          ]
-        },
-        {
-          "file": "apps/superApp/src/components/icons/sideMenuIcon/index.tsx",
-          "hash": "9500309628415578649",
-          "deps": [
-            "npm:react"
-          ]
-        },
-        {
-          "file": "apps/superApp/src/components/icons/sucessIcon/verification.tsx",
-          "hash": "4468417135882094913",
-          "deps": [
-            "npm:react"
-          ]
-        },
-        {
-          "file": "apps/superApp/src/components/icons/walletIcon/index.tsx",
-          "hash": "12557199113556142288",
-          "deps": [
-            "npm:react"
-          ]
-        },
-        {
-          "file": "apps/superApp/src/components/input/index.tsx",
-          "hash": "14941415153177823038",
-          "deps": [
-            "npm:react",
-            "npm:react-hook-form"
-          ]
-        },
-        {
-          "file": "apps/superApp/src/components/inputs/customInput/index.tsx",
-          "hash": "11118019915870961190",
-          "deps": [
-            "npm:react"
-          ]
-        },
-        {
-          "file": "apps/superApp/src/components/inputs/customInput/selectInputText.tsx",
-          "hash": "7103767535633089874",
-          "deps": [
-            "npm:react"
-          ]
-        },
-        {
-          "file": "apps/superApp/src/components/inputs/email/index.tsx",
-          "hash": "3179298853601456198",
-          "deps": [
-            "npm:react",
-            "npm:@heroicons/react",
-            "npm:react-hook-form"
-          ]
-        },
-        {
-          "file": "apps/superApp/src/components/inputs/password/index.tsx",
-          "hash": "9799524782299472945",
-          "deps": [
-            "npm:react",
-            "npm:react-hook-form"
-          ]
-        },
-        {
-          "file": "apps/superApp/src/components/inputs/search/normalSearch.tsx",
-          "hash": "2911878221909461595",
-          "deps": [
-            "npm:react"
-          ]
-        },
-        {
-          "file": "apps/superApp/src/components/inputs/search/roundedSearch.tsx",
-          "hash": "8473784285935962319",
-          "deps": [
-            "npm:react"
-          ]
-        },
-        {
-          "file": "apps/superApp/src/components/inputs/search/search.tsx",
-          "hash": "16253699214963497390",
-          "deps": [
-            "npm:react"
-          ]
-        },
-        {
-          "file": "apps/superApp/src/components/inputs/text/index.tsx",
-          "hash": "10113816693803618484",
-          "deps": [
-            "npm:react"
-          ]
-        },
-        {
-          "file": "apps/superApp/src/components/inputs/textarea/index.tsx",
-          "hash": "6755943499904241696",
-          "deps": [
-            "npm:react"
-          ]
-        },
-        {
-          "file": "apps/superApp/src/components/modals/walletModal/components/bankPayment.tsx",
-          "hash": "18238978749405156384",
-          "deps": [
-            "npm:react",
-            "npm:react-select",
-            "ui-components"
-          ]
-        },
-        {
-          "file": "apps/superApp/src/components/modals/walletModal/components/completePayment.tsx",
-          "hash": "9214657775198846412",
-          "deps": [
-            "npm:react"
-          ]
-        },
-        {
-          "file": "apps/superApp/src/components/modals/walletModal/components/paymentDetail.tsx",
-          "hash": "16490919881707695061",
-          "deps": [
-            "npm:react",
-            "ui-components"
-          ]
-        },
-        {
-          "file": "apps/superApp/src/components/modals/walletModal/index.tsx",
-          "hash": "12914960122265609676",
-          "deps": [
-            "npm:react",
-            "npm:@headlessui/react",
-            "ui-components"
-          ]
-        },
-        {
-          "file": "apps/superApp/src/components/more/index.tsx",
-          "hash": "16017533973846692048",
-          "deps": [
-            "npm:react",
-            "npm:@nextui-org/react"
-          ]
-        },
-        {
-          "file": "apps/superApp/src/components/switch/index.tsx",
-          "hash": "4762446606598002456",
-          "deps": [
-            "npm:react",
-            "npm:@headlessui/react"
-          ]
-        },
-        {
-          "file": "apps/superApp/src/components/tables/APPS/data.tsx",
-          "hash": "18375897949619351332",
-          "deps": [
-            "npm:react"
-          ]
-        },
-        {
-          "file": "apps/superApp/src/components/tables/APPS/index.tsx",
-          "hash": "18170796000657641073",
-          "deps": [
-            "npm:react",
-            "npm:react-data-table-component"
-          ]
-        },
-        {
-          "file": "apps/superApp/src/components/tables/Ads/data.tsx",
-          "hash": "8660878351488975987",
-          "deps": [
-            "npm:react"
-          ]
-        },
-        {
-          "file": "apps/superApp/src/components/tables/Ads/index.tsx",
-          "hash": "13757795473426245240",
-          "deps": [
-            "npm:react",
-            "npm:react-data-table-component"
-          ]
-        },
-        {
-          "file": "apps/superApp/src/components/tables/Airtime/data.tsx",
-          "hash": "13045921923481091449",
-          "deps": [
-            "npm:react"
-          ]
-        },
-        {
-          "file": "apps/superApp/src/components/tables/Airtime/index.tsx",
-          "hash": "6116409534522900347",
-          "deps": [
-            "npm:react",
-            "npm:react-data-table-component"
-          ]
-        },
-        {
-          "file": "apps/superApp/src/components/tables/Converstions/data.tsx",
-          "hash": "17950164219656986205",
-          "deps": [
-            "npm:react"
-          ]
-        },
-        {
-          "file": "apps/superApp/src/components/tables/Converstions/index.tsx",
-          "hash": "7518970774645075476",
-          "deps": [
-            "npm:react",
-            "npm:react-data-table-component"
-          ]
-        },
-        {
-          "file": "apps/superApp/src/components/tables/Email/data.tsx",
-          "hash": "12205622461759672555",
-          "deps": [
-            "npm:react"
-          ]
-        },
-        {
-          "file": "apps/superApp/src/components/tables/Email/index.tsx",
-          "hash": "17113367739224686291",
-          "deps": [
-            "npm:react",
-            "npm:react-data-table-component"
-          ]
-        },
-        {
-          "file": "apps/superApp/src/components/tables/Incomming_sms/data.tsx",
-          "hash": "2809316125538452408",
-          "deps": [
-            "npm:react"
-          ]
-        },
-        {
-          "file": "apps/superApp/src/components/tables/Incomming_sms/index.tsx",
-          "hash": "14643058008300655144",
-          "deps": [
-            "npm:react",
-            "npm:react-data-table-component"
-          ]
-        },
-        {
-          "file": "apps/superApp/src/components/tables/Loader/index.tsx",
-          "hash": "18223567250238711210",
-          "deps": [
-            "npm:react"
-          ]
-        },
-        {
-          "file": "apps/superApp/src/components/tables/Logs/data.tsx",
-          "hash": "758397838276768177",
-          "deps": [
-            "npm:react"
-          ]
-        },
-        {
-          "file": "apps/superApp/src/components/tables/Logs/index.tsx",
-          "hash": "4679005602585881094",
-          "deps": [
-            "npm:react",
-            "npm:react-data-table-component"
-          ]
-        },
-        {
-          "file": "apps/superApp/src/components/tables/OutgoingSMS/data.tsx",
-          "hash": "11143703787368037078",
-          "deps": [
-            "npm:react"
-          ]
-        },
-        {
-          "file": "apps/superApp/src/components/tables/OutgoingSMS/index.tsx",
-          "hash": "2033612273401189804",
-          "deps": [
-            "npm:react",
-            "npm:react-data-table-component"
-          ]
-        },
-        {
-          "file": "apps/superApp/src/components/tables/PublishingCost/data.tsx",
-          "hash": "13924505868100859228",
-          "deps": [
-            "npm:react"
-          ]
-        },
-        {
-          "file": "apps/superApp/src/components/tables/PublishingCost/index.tsx",
-          "hash": "4847315648630407249",
-          "deps": [
-            "npm:react",
-            "npm:react-data-table-component"
-          ]
-        },
-        {
-          "file": "apps/superApp/src/components/tables/Transactions/data.tsx",
-          "hash": "18235513870614884510",
-          "deps": [
-            "npm:react"
-          ]
-        },
-        {
-          "file": "apps/superApp/src/components/tables/Transactions/index.tsx",
-          "hash": "9377020189729233479",
-          "deps": [
-            "npm:react",
-            "npm:react-data-table-component"
-          ]
-        },
-        {
-          "file": "apps/superApp/src/components/tables/USSD/data.tsx",
-          "hash": "4509240594987792398",
-          "deps": [
-            "npm:react"
-          ]
-        },
-        {
-          "file": "apps/superApp/src/components/tables/USSD/index.tsx",
-          "hash": "6831080343172105865",
-          "deps": [
-            "npm:react",
-            "npm:react-data-table-component"
-          ]
-        },
-        {
-          "file": "apps/superApp/src/components/tables/Voice/data.tsx",
-          "hash": "14366974668642740074",
-          "deps": [
-            "npm:react"
-          ]
-        },
-        {
-          "file": "apps/superApp/src/components/tables/Voice/index.tsx",
-          "hash": "8233867727788012802",
-          "deps": [
-            "npm:react",
-            "npm:react-data-table-component"
-          ]
-        },
-        {
-          "file": "apps/superApp/src/components/tables/Wallet/index.tsx",
-          "hash": "7734100530088902310"
-        },
-        {
-          "file": "apps/superApp/src/components/tables/Whatsapp/data.tsx",
-          "hash": "9644648382576377764",
-          "deps": [
-            "npm:react"
-          ]
-        },
-        {
-          "file": "apps/superApp/src/components/tables/Whatsapp/index.tsx",
-          "hash": "436721749184423743",
-          "deps": [
-            "npm:react",
-            "npm:react-data-table-component"
-          ]
-        },
-        {
-          "file": "apps/superApp/src/components/tables/table/Loader/index.tsx",
-          "hash": "18223567250238711210",
-          "deps": [
-            "npm:react"
-          ]
-        },
-        {
-          "file": "apps/superApp/src/components/tables/table/OutgoingSMS/data.tsx",
-          "hash": "11143703787368037078",
-          "deps": [
-            "npm:react"
-          ]
-        },
-        {
-          "file": "apps/superApp/src/components/tables/table/OutgoingSMS/index.tsx",
-          "hash": "12369531132318841641",
-          "deps": [
-            "npm:react",
-            "npm:react-data-table-component"
-          ]
-        },
-        {
-          "file": "apps/superApp/src/components/toast/index.tsx",
-          "hash": "14823432580185132247",
-          "deps": [
-            "npm:react",
-            "npm:react-hot-toast"
-          ]
-        },
-        {
-          "file": "apps/superApp/src/contexts/authContext/index.tsx",
-          "hash": "13083478778253211405",
-          "deps": [
-            "npm:react",
-            "npm:axios",
-            "npm:react-hot-toast"
-          ]
-        },
-        {
-          "file": "apps/superApp/src/contexts/reactQueryContext/index.tsx",
-          "hash": "5384276141551532289",
-          "deps": [
-            "npm:react",
-            "npm:@tanstack/react-query"
-          ]
-        },
-        {
-          "file": "apps/superApp/src/contexts/verificationContext/index.tsx",
-          "hash": "779750819594714838",
-          "deps": [
-            "npm:react"
-          ]
-        },
-        {
-          "file": "apps/superApp/src/hooks/useDelete.ts",
-          "hash": "16832242813694037307",
-          "deps": [
-            "npm:@tanstack/react-query"
-          ]
-        },
-        {
-          "file": "apps/superApp/src/hooks/useGetUploadFile.ts",
-          "hash": "16302951872140366122",
-          "deps": [
-            "npm:@tanstack/react-query"
-          ]
-        },
-        {
-          "file": "apps/superApp/src/hooks/useMessage.ts",
-          "hash": "4055606894390288348"
-        },
-        {
-          "file": "apps/superApp/src/hooks/useUploadFile.ts",
-          "hash": "17189592159982125420",
-          "deps": [
-            "npm:@tanstack/react-query"
-          ]
-        },
-        {
-          "file": "apps/superApp/src/index.css",
-          "hash": "3244421341483603138"
-        },
-        {
-          "file": "apps/superApp/src/layouts/index.tsx",
-          "hash": "17942042088089613774",
-          "deps": [
-            "npm:react",
-            "npm:next"
-          ]
-        },
-        {
-          "file": "apps/superApp/src/layouts/navbar/index.tsx",
-          "hash": "10482951111311639969",
-          "deps": [
-            "npm:react",
-            "npm:next",
-            "ui-components"
-          ]
-        },
-        {
-          "file": "apps/superApp/src/layouts/sidebar/components/content/components/ads.tsx",
-          "hash": "11769647753742152626",
-          "deps": [
-            "npm:react"
-          ]
-        },
-        {
-          "file": "apps/superApp/src/layouts/sidebar/components/content/components/potta.tsx",
-          "hash": "6607045064250806829",
-          "deps": [
-            "npm:react"
-          ]
-        },
-        {
-          "file": "apps/superApp/src/layouts/sidebar/components/content/components/talk.tsx",
-          "hash": "7316059007715401178",
-          "deps": [
-            "npm:react"
-          ]
-        },
-        {
-          "file": "apps/superApp/src/layouts/sidebar/components/content/components/tribu.tsx",
-          "hash": "6103549346271901972",
-          "deps": [
-            "npm:react"
-          ]
-        },
-        {
-          "file": "apps/superApp/src/layouts/sidebar/components/content/index.tsx",
-          "hash": "11221292582473367892",
-          "deps": [
-            "npm:react",
-            "npm:next"
-          ]
-        },
-        {
-          "file": "apps/superApp/src/layouts/sidebar/components/custom-link/index.tsx",
-          "hash": "5707233246276028702",
-          "deps": [
-            "npm:react",
-            "npm:next"
-          ]
-        },
-        {
-          "file": "apps/superApp/src/layouts/sidebar/components/index.tsx",
-          "hash": "13384291704473358238",
-          "deps": [
-            "npm:react",
-            "npm:@nextui-org/react"
-          ]
-        },
-        {
-          "file": "apps/superApp/src/layouts/sidebar/index.tsx",
-          "hash": "4906945412967004128",
-          "deps": [
-            "npm:react",
-            "npm:next",
-            "npm:@heroicons/react"
-          ]
-        },
-        {
-          "file": "apps/superApp/src/middleware.ts",
-          "hash": "13833223075149764102",
-          "deps": [
-            "npm:next"
-          ]
-        },
-        {
-          "file": "apps/superApp/src/modules/auth/components/accountVerification/address-info.tsx",
-          "hash": "2797536342189035131",
-          "deps": [
-            "npm:react",
-            "ui-components",
-            "npm:react-hook-form",
-            "utilities"
-          ]
-        },
-        {
-          "file": "apps/superApp/src/modules/auth/components/accountVerification/business-info.tsx",
-          "hash": "7028119696303731951",
-          "deps": [
-            "npm:react",
-            "ui-components",
-            "npm:react-hook-form"
-          ]
-        },
-        {
-          "file": "apps/superApp/src/modules/auth/components/accountVerification/identity-info.tsx",
-          "hash": "8429366163694876164",
-          "deps": [
-            "npm:react",
-            "npm:react-hook-form",
-            "ui-components"
-          ]
-        },
-        {
-          "file": "apps/superApp/src/modules/auth/components/sideMenu/index.tsx",
-          "hash": "5749069330387163590",
-          "deps": [
-            "npm:react"
-          ]
-        },
-        {
-          "file": "apps/superApp/src/modules/auth/hooks/useAuth.ts",
-          "hash": "3218764692329357779",
-          "deps": [
-            "npm:react"
-          ]
-        },
-        {
-          "file": "apps/superApp/src/modules/auth/hooks/useChangePasswordConfirm.ts",
-          "hash": "7289860747425197663",
-          "deps": [
-            "npm:@tanstack/react-query"
-          ]
-        },
-        {
-          "file": "apps/superApp/src/modules/auth/hooks/useConfirmRegister.ts",
-          "hash": "6070911768232863699",
-          "deps": [
-            "npm:@tanstack/react-query",
-            "utilities"
-          ]
-        },
-        {
-          "file": "apps/superApp/src/modules/auth/hooks/useForgotPassword.ts",
-          "hash": "14992280685080213805",
-          "deps": [
-            "npm:@tanstack/react-query"
-          ]
-        },
-        {
-          "file": "apps/superApp/src/modules/auth/hooks/useLogin.ts",
-          "hash": "599320776863809647",
-          "deps": [
-            "npm:crypto-js",
-            "npm:@tanstack/react-query",
-            "utilities"
-          ]
-        },
-        {
-          "file": "apps/superApp/src/modules/auth/hooks/useLogout.ts",
-          "hash": "17451785280681428",
-          "deps": [
-            "npm:@tanstack/react-query"
-          ]
-        },
-        {
-          "file": "apps/superApp/src/modules/auth/hooks/useRegister.ts",
-          "hash": "15151284264372943591",
-          "deps": [
-            "npm:@tanstack/react-query"
-          ]
-        },
-        {
-          "file": "apps/superApp/src/modules/auth/hooks/useResetPassword.ts",
-          "hash": "10323880433652748802",
-          "deps": [
-            "npm:@tanstack/react-query"
-          ]
-        },
-        {
-          "file": "apps/superApp/src/modules/auth/hooks/useResetPasswordConfirm.ts",
-          "hash": "5441409342400686576",
-          "deps": [
-            "npm:@tanstack/react-query"
-          ]
-        },
-        {
-          "file": "apps/superApp/src/modules/auth/hooks/useUpdateOrganization.ts",
-          "hash": "10645216763583191932",
-          "deps": [
-            "npm:@tanstack/react-query"
-          ]
-        },
-        {
-          "file": "apps/superApp/src/modules/auth/hooks/useUpdatePassword.ts",
-          "hash": "7524248072974471384",
-          "deps": [
-            "npm:@tanstack/react-query"
-          ]
-        },
-        {
-          "file": "apps/superApp/src/modules/auth/hooks/useUpdateProfile.ts",
-          "hash": "11276351084338363674",
-          "deps": [
-            "npm:@tanstack/react-query"
-          ]
-        },
-        {
-          "file": "apps/superApp/src/modules/auth/hooks/useVerification.ts",
-          "hash": "11409266203196091135",
-          "deps": [
-            "npm:react"
-          ]
-        },
-        {
-          "file": "apps/superApp/src/modules/auth/layout/components/TestimonialSlider/TestimonialSlider.module.css",
-          "hash": "3693991448544035602"
-        },
-        {
-          "file": "apps/superApp/src/modules/auth/layout/components/TestimonialSlider/index.tsx",
-          "hash": "6393539722318947296",
-          "deps": [
-            "npm:react"
-          ]
-        },
-        {
-          "file": "apps/superApp/src/modules/auth/layout/components/sideMenu/index.tsx",
-          "hash": "5072786811488873664",
-          "deps": [
-            "npm:react"
-          ]
-        },
-        {
-          "file": "apps/superApp/src/modules/auth/layout/index.tsx",
-          "hash": "6461082985671562857",
-          "deps": [
-            "npm:react",
-            "npm:next"
-          ]
-        },
-        {
-          "file": "apps/superApp/src/modules/auth/utils/api.ts",
-          "hash": "4223306921313873650",
-          "deps": [
-            "utilities"
-          ]
-        },
-        {
-          "file": "apps/superApp/src/modules/auth/utils/auth.axios.ts",
-          "hash": "5266454666460801110",
-          "deps": [
-            "npm:crypto-js",
-            "npm:axios",
-            "utilities"
-          ]
-        },
-        {
-          "file": "apps/superApp/src/modules/auth/utils/types.ts",
-          "hash": "7472513622886917128"
-        },
-        {
-          "file": "apps/superApp/src/modules/auth/utils/validations.ts",
-          "hash": "7161963643417440989",
-          "deps": [
-            "npm:yup"
-          ]
-        },
-        {
-          "file": "apps/superApp/src/modules/settings/components/api/index.tsx",
-          "hash": "11296226155158739762",
-          "deps": [
-            "npm:react",
-            "npm:react-hot-toast"
-          ]
-        },
-        {
-          "file": "apps/superApp/src/modules/settings/components/apps/index.tsx",
-          "hash": "11518669860226518626",
-          "deps": [
-            "npm:react",
-            "npm:next",
-            "ui-components"
-          ]
-        },
-        {
-          "file": "apps/superApp/src/modules/settings/components/billing/component/ads/index.tsx",
-          "hash": "15826274611653491230",
-          "deps": [
-            "npm:react"
-          ]
-        },
-        {
-          "file": "apps/superApp/src/modules/settings/components/billing/component/polls/index.tsx",
-          "hash": "3114795604826297110",
-          "deps": [
-            "npm:react"
-          ]
-        },
-        {
-          "file": "apps/superApp/src/modules/settings/components/billing/component/potta/index.tsx",
-          "hash": "15895458590805412982",
-          "deps": [
-            "npm:react",
-            "ui-components"
-          ]
-        },
-        {
-          "file": "apps/superApp/src/modules/settings/components/billing/component/talk/index.tsx",
-          "hash": "14443455873386765152",
-          "deps": [
-            "npm:react"
-          ]
-        },
-        {
-          "file": "apps/superApp/src/modules/settings/components/billing/component/wallet/index.tsx",
-          "hash": "10335134820522870996",
-          "deps": [
-            "npm:react",
-            "npm:next",
-            "ui-components",
-            "npm:@heroicons/react"
-          ]
-        },
-        {
-          "file": "apps/superApp/src/modules/settings/components/billing/index.tsx",
-          "hash": "5220587265817098065",
-          "deps": [
-            "npm:react",
-            "ui-components",
-            "utilities"
-          ]
-        },
-        {
-          "file": "apps/superApp/src/modules/settings/components/general/index.tsx",
-          "hash": "18213991933018986762",
-          "deps": [
-            "ui-components",
-            "npm:axios",
-            "npm:react-hot-toast",
-            "npm:timezones-list",
-            "npm:react",
-            "npm:@hookform/resolvers",
-            "npm:react-hook-form",
-            "utilities"
-          ]
-        },
-        {
-          "file": "apps/superApp/src/modules/settings/components/logs/index.tsx",
-          "hash": "2185996216947147066",
-          "deps": [
-            "npm:react",
-            "npm:next",
-            "npm:react-csv",
-            "ui-components"
-          ]
-        },
-        {
-          "file": "apps/superApp/src/modules/settings/components/notification/index.tsx",
-          "hash": "2716396721861444752",
-          "deps": [
-            "npm:react"
-          ]
-        },
-        {
-          "file": "apps/superApp/src/modules/settings/components/security/components/2FA/index.tsx",
-          "hash": "649848402459295568",
-          "deps": [
-            "npm:react"
-          ]
-        },
-        {
-          "file": "apps/superApp/src/modules/settings/components/security/components/Restriction/index.tsx",
-          "hash": "1708067728546981516",
-          "deps": [
-            "npm:react",
-            "ui-components"
-          ]
-        },
-        {
-          "file": "apps/superApp/src/modules/settings/components/security/components/UpdatePassword/index.tsx",
-          "hash": "11178072840961093033",
-          "deps": [
-            "npm:react",
-            "npm:axios",
-            "npm:react-hot-toast",
-            "npm:@hookform/resolvers",
-            "npm:react-verification-input",
-            "npm:react-hook-form",
-            "ui-components",
-            "npm:next"
-          ]
-        },
-        {
-          "file": "apps/superApp/src/modules/settings/components/security/index.tsx",
-          "hash": "3478742070198955107",
-          "deps": [
-            "npm:react"
-          ]
-        },
-        {
-          "file": "apps/superApp/src/modules/settings/components/tabs/index.tsx",
-          "hash": "17907674005372297709",
-          "deps": [
-            "npm:react",
-            "npm:next"
-          ]
-        },
-        {
-          "file": "apps/superApp/src/modules/settings/components/team/member-chip.tsx",
-          "hash": "14803127527132080189",
-          "deps": [
-            "npm:react"
-          ]
-        },
-        {
-          "file": "apps/superApp/src/modules/settings/components/team/member-details.tsx",
-          "hash": "5215320778705999551",
-          "deps": [
-            "ui-components",
-            "npm:react"
-          ]
-        },
-        {
-          "file": "apps/superApp/src/modules/settings/components/team/member-form.tsx",
-          "hash": "7677895256312744533",
-          "deps": [
-            "npm:react",
-            "npm:axios",
-            "npm:react-hot-toast",
-            "npm:@hookform/resolvers",
-            "npm:react-hook-form",
-            "npm:@headlessui/react",
-            "ui-components",
-            "npm:react-select"
-          ]
-        },
-        {
-          "file": "apps/superApp/src/modules/settings/components/team/reset-member-form.tsx",
-          "hash": "17198890095372861269",
-          "deps": [
-            "npm:react",
-            "npm:axios",
-            "npm:react-hot-toast",
-            "npm:@hookform/resolvers",
-            "npm:react-hook-form",
-            "ui-components"
-          ]
-        },
-        {
-          "file": "apps/superApp/src/modules/settings/components/team/team-permission.tsx",
-          "hash": "2305419058344751662",
-          "deps": [
-            "npm:react"
-          ]
-        },
-        {
-          "file": "apps/superApp/src/modules/settings/hooks/team/useCreateMember.ts",
-          "hash": "12495736735019817613",
-          "deps": [
-            "npm:@tanstack/react-query"
-          ]
-        },
-        {
-          "file": "apps/superApp/src/modules/settings/hooks/team/useGetMembers.ts",
-          "hash": "8664457644451324759",
-          "deps": [
-            "npm:@tanstack/react-query"
-          ]
-        },
-        {
-          "file": "apps/superApp/src/modules/settings/hooks/team/useResetMemberPassword.ts",
-          "hash": "13572976678013504974",
-          "deps": [
-            "npm:@tanstack/react-query"
-          ]
-        },
-        {
-          "file": "apps/superApp/src/modules/settings/hooks/team/useSingleMember.ts",
-          "hash": "17194583730329678538",
-          "deps": [
-            "npm:@tanstack/react-query"
-          ]
-        },
-        {
-          "file": "apps/superApp/src/modules/settings/hooks/team/useUpdateMember.ts",
-          "hash": "8603610131641683672",
-          "deps": [
-            "npm:@tanstack/react-query"
-          ]
-        },
-        {
-          "file": "apps/superApp/src/modules/settings/layout/setting-layout.tsx",
-          "hash": "12539879945419104277",
-          "deps": [
-            "npm:react"
-          ]
-        },
-        {
-          "file": "apps/superApp/src/modules/settings/utils/logs/api.ts",
-          "hash": "3244421341483603138"
-        },
-        {
-          "file": "apps/superApp/src/modules/settings/utils/team/api.ts",
-          "hash": "3298836837274064138",
-          "deps": [
-            "utilities"
-          ]
-        },
-        {
-          "file": "apps/superApp/src/modules/settings/utils/team/column.tsx",
-          "hash": "14730157744498689803",
-          "deps": [
-            "npm:react-data-table-component",
-            "npm:@nextui-org/react"
-          ]
-        },
-        {
-          "file": "apps/superApp/src/modules/settings/utils/team/types.ts",
-          "hash": "5700722835142839059"
-        },
-        {
-          "file": "apps/superApp/src/modules/settings/utils/team/validations.ts",
-          "hash": "14672593517057990126",
-          "deps": [
-            "npm:yup"
-          ]
-        },
-        {
-          "file": "apps/superApp/src/pages/_app.tsx",
-          "hash": "12271939666644297516",
-          "deps": [
-            "npm:next",
-            "npm:remixicon",
-            "ui-components"
-          ]
-        },
-        {
-          "file": "apps/superApp/src/pages/auth/codeVerification/index.tsx",
-          "hash": "11578398434405614088",
-          "deps": [
-            "npm:react",
-            "npm:axios",
-            "npm:react-hot-toast",
-            "npm:next",
-            "npm:react-verification-input"
-          ]
-        },
-        {
-          "file": "apps/superApp/src/pages/auth/confirm-register/index.tsx",
-          "hash": "5508412395232569165",
-          "deps": [
-            "npm:react",
-            "npm:axios",
-            "npm:react-hot-toast",
-            "npm:next",
-            "npm:react-verification-input",
-            "ui-components"
-          ]
-        },
-        {
-          "file": "apps/superApp/src/pages/auth/login/index.tsx",
-          "hash": "15738356254548182619",
-          "deps": [
-            "npm:react",
-            "npm:next",
-            "npm:axios",
-            "npm:react-hot-toast",
-            "npm:@hookform/resolvers",
-            "npm:react-hook-form",
-            "ui-components"
-          ]
-        },
-        {
-          "file": "apps/superApp/src/pages/auth/register/index.tsx",
-          "hash": "730186453063343175",
-          "deps": [
-            "npm:react",
-            "npm:next",
-            "npm:react-hot-toast",
-            "npm:@hookform/resolvers",
-            "npm:react-hook-form",
-            "utilities",
-            "ui-components"
-          ]
-        },
-        {
-          "file": "apps/superApp/src/pages/auth/renewPassword/index.tsx",
-          "hash": "7161713183252060715",
-          "deps": [
-            "npm:react",
-            "npm:next",
-            "npm:axios",
-            "npm:react-hot-toast",
-            "npm:@hookform/resolvers",
-            "npm:react-hook-form",
-            "ui-components"
-          ]
-        },
-        {
-          "file": "apps/superApp/src/pages/auth/reset-password/index.tsx",
-          "hash": "16747496911541378391",
-          "deps": [
-            "npm:react",
-            "npm:next",
-            "npm:axios",
-            "npm:react-hot-toast",
-            "npm:@hookform/resolvers",
-            "npm:react-hook-form",
-            "ui-components"
-          ]
-        },
-        {
-          "file": "apps/superApp/src/pages/auth/verificationNumber/index.tsx",
-          "hash": "4001195247549020802",
-          "deps": [
-            "npm:react",
-            "ui-components"
-          ]
-        },
-        {
-          "file": "apps/superApp/src/pages/index.tsx",
-          "hash": "12843113144650236374",
-          "deps": [
-            "npm:react"
-          ]
-        },
-        {
-          "file": "apps/superApp/src/pages/newApp/components/basicInformation/index.tsx",
-          "hash": "5677161183455399384",
-          "deps": [
-            "npm:react",
-            "ui-components"
-          ]
-        },
-        {
-          "file": "apps/superApp/src/pages/newApp/components/channels/index.tsx",
-          "hash": "14798343478347571501",
-          "deps": [
-            "npm:react"
-          ]
-        },
-        {
-          "file": "apps/superApp/src/pages/newApp/index.tsx",
-          "hash": "5051953801609454876",
-          "deps": [
-            "npm:react",
-            "ui-components",
-            "npm:next"
-          ]
-        },
-        {
-          "file": "apps/superApp/src/pages/organisation/index.tsx",
-          "hash": "6727865499092348184",
-          "deps": [
-            "npm:react",
-            "npm:axios",
-            "npm:react-hot-toast",
-            "npm:next",
-            "npm:@hookform/resolvers",
-            "npm:react-hook-form"
-          ]
-        },
-        {
-          "file": "apps/superApp/src/pages/organisation/success-verification/index.tsx",
-          "hash": "12887182583082520840",
-          "deps": [
-            "npm:react",
-            "npm:next",
-            "ui-components"
-          ]
-        },
-        {
-          "file": "apps/superApp/src/pages/settings/api/index.tsx",
-          "hash": "17688574062768908568",
-          "deps": [
-            "npm:react"
-          ]
-        },
-        {
-          "file": "apps/superApp/src/pages/settings/billing/index.tsx",
-          "hash": "10122043947004814900",
-          "deps": [
-            "npm:react"
-          ]
-        },
-        {
-          "file": "apps/superApp/src/pages/settings/general/index.tsx",
-          "hash": "11243385123140420027",
-          "deps": [
-            "ui-components",
-            "npm:axios",
-            "npm:react-hot-toast",
-            "npm:timezones-list",
-            "npm:react",
-            "npm:@hookform/resolvers",
-            "npm:react-hook-form",
-            "utilities"
-          ]
-        },
-        {
-          "file": "apps/superApp/src/pages/settings/logs/index.tsx",
-          "hash": "17401339147238854145",
-          "deps": [
-            "npm:react"
-          ]
-        },
-        {
-          "file": "apps/superApp/src/pages/settings/notification/index.tsx",
-          "hash": "3446729392632203979",
-          "deps": [
-            "npm:react"
-          ]
-        },
-        {
-          "file": "apps/superApp/src/pages/settings/security/index.tsx",
-          "hash": "14294859758526601501",
-          "deps": [
-            "npm:react"
-          ]
-        },
-        {
-          "file": "apps/superApp/src/pages/settings/team/index.tsx",
-          "hash": "5380857503790316222",
-          "deps": [
-            "npm:react",
-            "npm:react-data-table-component",
-            "ui-components",
-            "npm:react-hot-toast",
-            "npm:axios"
-          ]
-        },
-        {
-          "file": "apps/superApp/src/styles/globals.css",
-          "hash": "6428318957136515045"
-        },
-        {
-          "file": "apps/superApp/src/utils/generic.api.ts",
-          "hash": "10933325822938054809",
-          "deps": [
-            "utilities"
-          ]
-        },
-        {
-          "file": "apps/superApp/src/utils/index.ts",
-          "hash": "4607243677188254374"
-        },
-        {
-          "file": "apps/superApp/src/utils/types.ts",
-          "hash": "3544420948118021351",
-          "deps": [
-            "npm:react-select"
-          ]
-        },
-        {
-          "file": "apps/superApp/tailwind.config.js",
-          "hash": "13090734457927965885",
-          "deps": [
-            "npm:@nx/react"
-          ]
-        },
-        {
-          "file": "apps/superApp/tsconfig.json",
-          "hash": "5898040497251807795"
-        },
-        {
-          "file": "apps/superApp/tsconfig.spec.json",
-          "hash": "6922413205408300107"
-        }
-      ],
       "@instanvi-global/source": [
         {
           "file": ".editorconfig",
@@ -1963,6 +252,166 @@
         {
           "file": "tsconfig.json",
           "hash": "14674814969464877296"
+        }
+      ],
+      "ui-components": [
+        {
+          "file": "libs/ui-components/.eslintrc.json",
+          "hash": "11012487992710232822"
+        },
+        {
+          "file": "libs/ui-components/README.md",
+          "hash": "9995608240359739017"
+        },
+        {
+          "file": "libs/ui-components/project.json",
+          "hash": "14073386014989480526"
+        },
+        {
+          "file": "libs/ui-components/src/index.ts",
+          "hash": "3890638239984739746"
+        },
+        {
+          "file": "libs/ui-components/src/lib/button/button.css",
+          "hash": "3244421341483603138"
+        },
+        {
+          "file": "libs/ui-components/src/lib/button/button.spec.tsx",
+          "hash": "6024628988384396619",
+          "deps": [
+            "npm:@testing-library/react",
+            "npm:react"
+          ]
+        },
+        {
+          "file": "libs/ui-components/src/lib/button/button.tsx",
+          "hash": "14294175664207578953",
+          "deps": [
+            "npm:react"
+          ]
+        },
+        {
+          "file": "libs/ui-components/src/lib/checkbox/checkbox.spec.tsx",
+          "hash": "16773171947338653164",
+          "deps": [
+            "npm:@testing-library/react"
+          ]
+        },
+        {
+          "file": "libs/ui-components/src/lib/checkbox/checkbox.tsx",
+          "hash": "9330927587529167350",
+          "deps": [
+            "npm:react"
+          ]
+        },
+        {
+          "file": "libs/ui-components/src/lib/file-upload/file-upload.spec.tsx",
+          "hash": "13729243159011131943",
+          "deps": [
+            "npm:@testing-library/react"
+          ]
+        },
+        {
+          "file": "libs/ui-components/src/lib/file-upload/file-upload.tsx",
+          "hash": "15745855549206970964",
+          "deps": [
+            "npm:next",
+            "npm:react",
+            "npm:react-dropzone"
+          ]
+        },
+        {
+          "file": "libs/ui-components/src/lib/input/input.css",
+          "hash": "10999915296015192048"
+        },
+        {
+          "file": "libs/ui-components/src/lib/input/input.spec.tsx",
+          "hash": "1956756580387732921",
+          "deps": [
+            "npm:@testing-library/react"
+          ]
+        },
+        {
+          "file": "libs/ui-components/src/lib/input/input.tsx",
+          "hash": "4109157862373855892",
+          "deps": [
+            "npm:@heroicons/react",
+            "npm:react-hook-form",
+            "npm:react"
+          ]
+        },
+        {
+          "file": "libs/ui-components/src/lib/modal/modal.spec.tsx",
+          "hash": "6472563329112809072",
+          "deps": [
+            "npm:@testing-library/react"
+          ]
+        },
+        {
+          "file": "libs/ui-components/src/lib/modal/modal.tsx",
+          "hash": "14108573289638167965",
+          "deps": [
+            "npm:react",
+            "npm:@headlessui/react"
+          ]
+        },
+        {
+          "file": "libs/ui-components/src/lib/search/search.css",
+          "hash": "10172889319337957757"
+        },
+        {
+          "file": "libs/ui-components/src/lib/search/search.spec.tsx",
+          "hash": "1172712103285773831",
+          "deps": [
+            "npm:@testing-library/react"
+          ]
+        },
+        {
+          "file": "libs/ui-components/src/lib/search/search.tsx",
+          "hash": "16498275226319806576",
+          "deps": [
+            "npm:react",
+            "npm:next"
+          ]
+        },
+        {
+          "file": "libs/ui-components/src/lib/select/select.spec.tsx",
+          "hash": "16176134918512818464"
+        },
+        {
+          "file": "libs/ui-components/src/lib/select/select.tsx",
+          "hash": "15616048433895510667",
+          "deps": [
+            "npm:react",
+            "npm:react-select"
+          ]
+        },
+        {
+          "file": "libs/ui-components/src/lib/toast/toast.spec.tsx",
+          "hash": "17609396385370758005",
+          "deps": [
+            "npm:@testing-library/react"
+          ]
+        },
+        {
+          "file": "libs/ui-components/src/lib/toast/toast.tsx",
+          "hash": "9392764110185592652",
+          "deps": [
+            "npm:react",
+            "npm:react-hot-toast"
+          ]
+        },
+        {
+          "file": "libs/ui-components/src/server.ts",
+          "hash": "5519843671682787663"
+        },
+        {
+          "file": "libs/ui-components/tsconfig.json",
+          "hash": "14088618039610991405"
+        },
+        {
+          "file": "libs/ui-components/tsconfig.lib.json",
+          "hash": "1536859351713546153"
         }
       ],
       "potta": [
@@ -4755,11 +3204,12 @@
         },
         {
           "file": "apps/potta/src/app/(routes)/policies/components/table.tsx",
-          "hash": "8484365023817009033",
+          "hash": "17049182803975990788",
           "deps": [
             "npm:react",
             "npm:lucide-react",
-            "npm:@iconify/react"
+            "npm:@iconify/react",
+            "npm:next"
           ]
         },
         {
@@ -4787,7 +3237,7 @@
         },
         {
           "file": "apps/potta/src/app/(routes)/policy/all.tsx",
-          "hash": "10774761798781424520",
+          "hash": "6696550796574651294",
           "deps": [
             "npm:react",
             "npm:lucide-react",
@@ -4796,7 +3246,7 @@
         },
         {
           "file": "apps/potta/src/app/(routes)/policy/components/action-item.tsx",
-          "hash": "12006755992513397724",
+          "hash": "10477385859852688187",
           "deps": [
             "npm:react",
             "npm:lucide-react"
@@ -4804,7 +3254,7 @@
         },
         {
           "file": "apps/potta/src/app/(routes)/policy/components/condition-card.tsx",
-          "hash": "12358409221458672183",
+          "hash": "18220203042461272832",
           "deps": [
             "npm:react",
             "npm:lucide-react"
@@ -4812,7 +3262,7 @@
         },
         {
           "file": "apps/potta/src/app/(routes)/policy/components/condition-detail.tsx",
-          "hash": "6805686653592915090",
+          "hash": "13841839449049816336",
           "deps": [
             "npm:react",
             "npm:lucide-react"
@@ -4836,7 +3286,7 @@
         },
         {
           "file": "apps/potta/src/app/(routes)/policy/components/rule-summary-view.tsx",
-          "hash": "5977843690035923667",
+          "hash": "12316882957448243854",
           "deps": [
             "npm:react",
             "npm:lucide-react"
@@ -4874,15 +3324,16 @@
         },
         {
           "file": "apps/potta/src/app/(routes)/policy/page.tsx",
-          "hash": "13139796380657046713",
+          "hash": "9217921917751964654",
           "deps": [
             "npm:react",
-            "npm:@tanstack/react-query"
+            "npm:@tanstack/react-query",
+            "npm:react-hot-toast"
           ]
         },
         {
           "file": "apps/potta/src/app/(routes)/policy/types/approval-rule.ts",
-          "hash": "10376796299533949902"
+          "hash": "1643879254725514464"
         },
         {
           "file": "apps/potta/src/app/(routes)/policy/utils/api.ts",
@@ -7327,6 +5778,1557 @@
         {
           "file": "apps/potta/type/index.d.ts",
           "hash": "9950754265127537988"
+        }
+      ],
+      "utilities": [
+        {
+          "file": "libs/utilities/.eslintrc.json",
+          "hash": "11012487992710232822"
+        },
+        {
+          "file": "libs/utilities/README.md",
+          "hash": "13228732804139331838"
+        },
+        {
+          "file": "libs/utilities/project.json",
+          "hash": "699343638286385166"
+        },
+        {
+          "file": "libs/utilities/src/index.ts",
+          "hash": "4979336273987222930"
+        },
+        {
+          "file": "libs/utilities/src/lib/configs/axios.ts",
+          "hash": "3794232511606065549",
+          "deps": [
+            "npm:crypto-js",
+            "npm:axios"
+          ]
+        },
+        {
+          "file": "libs/utilities/src/lib/configs/env.ts",
+          "hash": "12101586654834214904"
+        },
+        {
+          "file": "libs/utilities/src/lib/helpers/index.ts",
+          "hash": "10922730425443113868",
+          "deps": [
+            "npm:crypto-js",
+            "npm:country-list-with-dial-code-and-flag"
+          ]
+        },
+        {
+          "file": "libs/utilities/src/server.ts",
+          "hash": "5519843671682787663"
+        },
+        {
+          "file": "libs/utilities/tsconfig.json",
+          "hash": "14088618039610991405"
+        },
+        {
+          "file": "libs/utilities/tsconfig.lib.json",
+          "hash": "1536859351713546153"
+        }
+      ],
+      "superApp": [
+        {
+          "file": "apps/superApp/.env.build",
+          "hash": "3244421341483603138"
+        },
+        {
+          "file": "apps/superApp/.eslintrc.json",
+          "hash": "15793019959857301786"
+        },
+        {
+          "file": "apps/superApp/Dockerfile",
+          "hash": "5456846178283852788"
+        },
+        {
+          "file": "apps/superApp/index.d.ts",
+          "hash": "5498222895072842432"
+        },
+        {
+          "file": "apps/superApp/jest.config.ts",
+          "hash": "16097350261828787465"
+        },
+        {
+          "file": "apps/superApp/next-env.d.ts",
+          "hash": "5909181270615354023"
+        },
+        {
+          "file": "apps/superApp/next.config.js",
+          "hash": "10181067523288589861",
+          "deps": [
+            "npm:@nx/next"
+          ]
+        },
+        {
+          "file": "apps/superApp/postcss.config.js",
+          "hash": "2759402739052110475"
+        },
+        {
+          "file": "apps/superApp/project.json",
+          "hash": "7543845952198001626"
+        },
+        {
+          "file": "apps/superApp/public/.gitkeep",
+          "hash": "3244421341483603138"
+        },
+        {
+          "file": "apps/superApp/public/favicon.ico",
+          "hash": "9157999678830540297"
+        },
+        {
+          "file": "apps/superApp/public/fonts/Outfit-Light.otf",
+          "hash": "4756798201002966247"
+        },
+        {
+          "file": "apps/superApp/public/fonts/Outfit-Regular.otf",
+          "hash": "8473250679200849023"
+        },
+        {
+          "file": "apps/superApp/public/fonts/Outfit-SemiBold.otf",
+          "hash": "6388168232264881097"
+        },
+        {
+          "file": "apps/superApp/public/fonts/SherpaRegular.otf",
+          "hash": "17172602198588170848"
+        },
+        {
+          "file": "apps/superApp/public/icons/Potta.svg",
+          "hash": "1479266405784448627"
+        },
+        {
+          "file": "apps/superApp/public/icons/Tribu.svg",
+          "hash": "10128652146921475405"
+        },
+        {
+          "file": "apps/superApp/public/icons/add.svg",
+          "hash": "16752212222608102916"
+        },
+        {
+          "file": "apps/superApp/public/icons/bg.svg",
+          "hash": "5144022568728260432"
+        },
+        {
+          "file": "apps/superApp/public/icons/cog.svg",
+          "hash": "1059932398149830599"
+        },
+        {
+          "file": "apps/superApp/public/icons/copy.svg",
+          "hash": "15260122544950410555"
+        },
+        {
+          "file": "apps/superApp/public/icons/dashboard-boxes.svg",
+          "hash": "10045374191789866791"
+        },
+        {
+          "file": "apps/superApp/public/icons/dashboard.svg",
+          "hash": "5920485964508127673"
+        },
+        {
+          "file": "apps/superApp/public/icons/db-icon.svg",
+          "hash": "9690318657838681023"
+        },
+        {
+          "file": "apps/superApp/public/icons/download.svg",
+          "hash": "17683834353834406053"
+        },
+        {
+          "file": "apps/superApp/public/icons/dropzone.svg",
+          "hash": "14289197065402605796"
+        },
+        {
+          "file": "apps/superApp/public/icons/facebook.svg",
+          "hash": "8401814789474679256"
+        },
+        {
+          "file": "apps/superApp/public/icons/flows.svg",
+          "hash": "6623266273994584474"
+        },
+        {
+          "file": "apps/superApp/public/icons/instagrams.svg",
+          "hash": "9012127058238463458"
+        },
+        {
+          "file": "apps/superApp/public/icons/instanvi.svg",
+          "hash": "8206957637817645040"
+        },
+        {
+          "file": "apps/superApp/public/icons/linkedin.svg",
+          "hash": "749634526890924781"
+        },
+        {
+          "file": "apps/superApp/public/icons/plus.svg",
+          "hash": "13595607751849673875"
+        },
+        {
+          "file": "apps/superApp/public/icons/settings-outline.svg",
+          "hash": "7530317820273528434"
+        },
+        {
+          "file": "apps/superApp/public/icons/snapchat.svg",
+          "hash": "5673193644116308833"
+        },
+        {
+          "file": "apps/superApp/public/icons/talk.svg",
+          "hash": "10127150127445808454"
+        },
+        {
+          "file": "apps/superApp/public/icons/telegram.svg",
+          "hash": "16669591176190603320"
+        },
+        {
+          "file": "apps/superApp/public/icons/tiktoks.svg",
+          "hash": "9166526212673586493"
+        },
+        {
+          "file": "apps/superApp/public/icons/top-menu-bell.svg",
+          "hash": "13167333176282325014"
+        },
+        {
+          "file": "apps/superApp/public/icons/twiters.svg",
+          "hash": "17156714051598273005"
+        },
+        {
+          "file": "apps/superApp/public/icons/youtubes.svg",
+          "hash": "13437771844721524993"
+        },
+        {
+          "file": "apps/superApp/public/img/profile-pic.jpeg",
+          "hash": "18412928317935371087"
+        },
+        {
+          "file": "apps/superApp/public/next.svg",
+          "hash": "8300767200008744458"
+        },
+        {
+          "file": "apps/superApp/public/vercel.svg",
+          "hash": "2376673330454856631"
+        },
+        {
+          "file": "apps/superApp/specs/index.spec.tsx",
+          "hash": "9752062192437246914",
+          "deps": [
+            "npm:react",
+            "npm:@testing-library/react"
+          ]
+        },
+        {
+          "file": "apps/superApp/src/Arrays/Business/index.ts",
+          "hash": "14499321590303012168"
+        },
+        {
+          "file": "apps/superApp/src/Arrays/SocialChannels/index.tsx",
+          "hash": "15248014337847208465"
+        },
+        {
+          "file": "apps/superApp/src/Arrays/countries/index.ts",
+          "hash": "15798198196314280633"
+        },
+        {
+          "file": "apps/superApp/src/Arrays/notifications/index.ts",
+          "hash": "9639099895876080636"
+        },
+        {
+          "file": "apps/superApp/src/components/app-card/index.tsx",
+          "hash": "2142919944086758904",
+          "deps": [
+            "npm:react",
+            "npm:next"
+          ]
+        },
+        {
+          "file": "apps/superApp/src/components/app-delete/index.tsx",
+          "hash": "7995980614690153008",
+          "deps": [
+            "npm:@heroicons/react",
+            "ui-components",
+            "npm:react"
+          ]
+        },
+        {
+          "file": "apps/superApp/src/components/button/customButton/index.tsx",
+          "hash": "15842488040680886917",
+          "deps": [
+            "npm:react"
+          ]
+        },
+        {
+          "file": "apps/superApp/src/components/button/submitButton/index.tsx",
+          "hash": "11254609934137741073",
+          "deps": [
+            "npm:react"
+          ]
+        },
+        {
+          "file": "apps/superApp/src/components/checkbox/index.tsx",
+          "hash": "17705485811093650764",
+          "deps": [
+            "npm:react"
+          ]
+        },
+        {
+          "file": "apps/superApp/src/components/dropzone/index.tsx",
+          "hash": "7968491855966331068",
+          "deps": [
+            "npm:next",
+            "npm:react",
+            "npm:react-dropzone"
+          ]
+        },
+        {
+          "file": "apps/superApp/src/components/icons/copyIcon/index.tsx",
+          "hash": "14450760174165533741",
+          "deps": [
+            "npm:react"
+          ]
+        },
+        {
+          "file": "apps/superApp/src/components/icons/sideMenuIcon/index.tsx",
+          "hash": "9500309628415578649",
+          "deps": [
+            "npm:react"
+          ]
+        },
+        {
+          "file": "apps/superApp/src/components/icons/sucessIcon/verification.tsx",
+          "hash": "4468417135882094913",
+          "deps": [
+            "npm:react"
+          ]
+        },
+        {
+          "file": "apps/superApp/src/components/icons/walletIcon/index.tsx",
+          "hash": "12557199113556142288",
+          "deps": [
+            "npm:react"
+          ]
+        },
+        {
+          "file": "apps/superApp/src/components/input/index.tsx",
+          "hash": "14941415153177823038",
+          "deps": [
+            "npm:react",
+            "npm:react-hook-form"
+          ]
+        },
+        {
+          "file": "apps/superApp/src/components/inputs/customInput/index.tsx",
+          "hash": "11118019915870961190",
+          "deps": [
+            "npm:react"
+          ]
+        },
+        {
+          "file": "apps/superApp/src/components/inputs/customInput/selectInputText.tsx",
+          "hash": "7103767535633089874",
+          "deps": [
+            "npm:react"
+          ]
+        },
+        {
+          "file": "apps/superApp/src/components/inputs/email/index.tsx",
+          "hash": "3179298853601456198",
+          "deps": [
+            "npm:react",
+            "npm:@heroicons/react",
+            "npm:react-hook-form"
+          ]
+        },
+        {
+          "file": "apps/superApp/src/components/inputs/password/index.tsx",
+          "hash": "9799524782299472945",
+          "deps": [
+            "npm:react",
+            "npm:react-hook-form"
+          ]
+        },
+        {
+          "file": "apps/superApp/src/components/inputs/search/normalSearch.tsx",
+          "hash": "2911878221909461595",
+          "deps": [
+            "npm:react"
+          ]
+        },
+        {
+          "file": "apps/superApp/src/components/inputs/search/roundedSearch.tsx",
+          "hash": "8473784285935962319",
+          "deps": [
+            "npm:react"
+          ]
+        },
+        {
+          "file": "apps/superApp/src/components/inputs/search/search.tsx",
+          "hash": "16253699214963497390",
+          "deps": [
+            "npm:react"
+          ]
+        },
+        {
+          "file": "apps/superApp/src/components/inputs/text/index.tsx",
+          "hash": "10113816693803618484",
+          "deps": [
+            "npm:react"
+          ]
+        },
+        {
+          "file": "apps/superApp/src/components/inputs/textarea/index.tsx",
+          "hash": "6755943499904241696",
+          "deps": [
+            "npm:react"
+          ]
+        },
+        {
+          "file": "apps/superApp/src/components/modals/walletModal/components/bankPayment.tsx",
+          "hash": "18238978749405156384",
+          "deps": [
+            "npm:react",
+            "npm:react-select",
+            "ui-components"
+          ]
+        },
+        {
+          "file": "apps/superApp/src/components/modals/walletModal/components/completePayment.tsx",
+          "hash": "9214657775198846412",
+          "deps": [
+            "npm:react"
+          ]
+        },
+        {
+          "file": "apps/superApp/src/components/modals/walletModal/components/paymentDetail.tsx",
+          "hash": "16490919881707695061",
+          "deps": [
+            "npm:react",
+            "ui-components"
+          ]
+        },
+        {
+          "file": "apps/superApp/src/components/modals/walletModal/index.tsx",
+          "hash": "12914960122265609676",
+          "deps": [
+            "npm:react",
+            "npm:@headlessui/react",
+            "ui-components"
+          ]
+        },
+        {
+          "file": "apps/superApp/src/components/more/index.tsx",
+          "hash": "16017533973846692048",
+          "deps": [
+            "npm:react",
+            "npm:@nextui-org/react"
+          ]
+        },
+        {
+          "file": "apps/superApp/src/components/switch/index.tsx",
+          "hash": "4762446606598002456",
+          "deps": [
+            "npm:react",
+            "npm:@headlessui/react"
+          ]
+        },
+        {
+          "file": "apps/superApp/src/components/tables/APPS/data.tsx",
+          "hash": "18375897949619351332",
+          "deps": [
+            "npm:react"
+          ]
+        },
+        {
+          "file": "apps/superApp/src/components/tables/APPS/index.tsx",
+          "hash": "18170796000657641073",
+          "deps": [
+            "npm:react",
+            "npm:react-data-table-component"
+          ]
+        },
+        {
+          "file": "apps/superApp/src/components/tables/Ads/data.tsx",
+          "hash": "8660878351488975987",
+          "deps": [
+            "npm:react"
+          ]
+        },
+        {
+          "file": "apps/superApp/src/components/tables/Ads/index.tsx",
+          "hash": "13757795473426245240",
+          "deps": [
+            "npm:react",
+            "npm:react-data-table-component"
+          ]
+        },
+        {
+          "file": "apps/superApp/src/components/tables/Airtime/data.tsx",
+          "hash": "13045921923481091449",
+          "deps": [
+            "npm:react"
+          ]
+        },
+        {
+          "file": "apps/superApp/src/components/tables/Airtime/index.tsx",
+          "hash": "6116409534522900347",
+          "deps": [
+            "npm:react",
+            "npm:react-data-table-component"
+          ]
+        },
+        {
+          "file": "apps/superApp/src/components/tables/Converstions/data.tsx",
+          "hash": "17950164219656986205",
+          "deps": [
+            "npm:react"
+          ]
+        },
+        {
+          "file": "apps/superApp/src/components/tables/Converstions/index.tsx",
+          "hash": "7518970774645075476",
+          "deps": [
+            "npm:react",
+            "npm:react-data-table-component"
+          ]
+        },
+        {
+          "file": "apps/superApp/src/components/tables/Email/data.tsx",
+          "hash": "12205622461759672555",
+          "deps": [
+            "npm:react"
+          ]
+        },
+        {
+          "file": "apps/superApp/src/components/tables/Email/index.tsx",
+          "hash": "17113367739224686291",
+          "deps": [
+            "npm:react",
+            "npm:react-data-table-component"
+          ]
+        },
+        {
+          "file": "apps/superApp/src/components/tables/Incomming_sms/data.tsx",
+          "hash": "2809316125538452408",
+          "deps": [
+            "npm:react"
+          ]
+        },
+        {
+          "file": "apps/superApp/src/components/tables/Incomming_sms/index.tsx",
+          "hash": "14643058008300655144",
+          "deps": [
+            "npm:react",
+            "npm:react-data-table-component"
+          ]
+        },
+        {
+          "file": "apps/superApp/src/components/tables/Loader/index.tsx",
+          "hash": "18223567250238711210",
+          "deps": [
+            "npm:react"
+          ]
+        },
+        {
+          "file": "apps/superApp/src/components/tables/Logs/data.tsx",
+          "hash": "758397838276768177",
+          "deps": [
+            "npm:react"
+          ]
+        },
+        {
+          "file": "apps/superApp/src/components/tables/Logs/index.tsx",
+          "hash": "4679005602585881094",
+          "deps": [
+            "npm:react",
+            "npm:react-data-table-component"
+          ]
+        },
+        {
+          "file": "apps/superApp/src/components/tables/OutgoingSMS/data.tsx",
+          "hash": "11143703787368037078",
+          "deps": [
+            "npm:react"
+          ]
+        },
+        {
+          "file": "apps/superApp/src/components/tables/OutgoingSMS/index.tsx",
+          "hash": "2033612273401189804",
+          "deps": [
+            "npm:react",
+            "npm:react-data-table-component"
+          ]
+        },
+        {
+          "file": "apps/superApp/src/components/tables/PublishingCost/data.tsx",
+          "hash": "13924505868100859228",
+          "deps": [
+            "npm:react"
+          ]
+        },
+        {
+          "file": "apps/superApp/src/components/tables/PublishingCost/index.tsx",
+          "hash": "4847315648630407249",
+          "deps": [
+            "npm:react",
+            "npm:react-data-table-component"
+          ]
+        },
+        {
+          "file": "apps/superApp/src/components/tables/Transactions/data.tsx",
+          "hash": "18235513870614884510",
+          "deps": [
+            "npm:react"
+          ]
+        },
+        {
+          "file": "apps/superApp/src/components/tables/Transactions/index.tsx",
+          "hash": "9377020189729233479",
+          "deps": [
+            "npm:react",
+            "npm:react-data-table-component"
+          ]
+        },
+        {
+          "file": "apps/superApp/src/components/tables/USSD/data.tsx",
+          "hash": "4509240594987792398",
+          "deps": [
+            "npm:react"
+          ]
+        },
+        {
+          "file": "apps/superApp/src/components/tables/USSD/index.tsx",
+          "hash": "6831080343172105865",
+          "deps": [
+            "npm:react",
+            "npm:react-data-table-component"
+          ]
+        },
+        {
+          "file": "apps/superApp/src/components/tables/Voice/data.tsx",
+          "hash": "14366974668642740074",
+          "deps": [
+            "npm:react"
+          ]
+        },
+        {
+          "file": "apps/superApp/src/components/tables/Voice/index.tsx",
+          "hash": "8233867727788012802",
+          "deps": [
+            "npm:react",
+            "npm:react-data-table-component"
+          ]
+        },
+        {
+          "file": "apps/superApp/src/components/tables/Wallet/index.tsx",
+          "hash": "7734100530088902310"
+        },
+        {
+          "file": "apps/superApp/src/components/tables/Whatsapp/data.tsx",
+          "hash": "9644648382576377764",
+          "deps": [
+            "npm:react"
+          ]
+        },
+        {
+          "file": "apps/superApp/src/components/tables/Whatsapp/index.tsx",
+          "hash": "436721749184423743",
+          "deps": [
+            "npm:react",
+            "npm:react-data-table-component"
+          ]
+        },
+        {
+          "file": "apps/superApp/src/components/tables/table/Loader/index.tsx",
+          "hash": "18223567250238711210",
+          "deps": [
+            "npm:react"
+          ]
+        },
+        {
+          "file": "apps/superApp/src/components/tables/table/OutgoingSMS/data.tsx",
+          "hash": "11143703787368037078",
+          "deps": [
+            "npm:react"
+          ]
+        },
+        {
+          "file": "apps/superApp/src/components/tables/table/OutgoingSMS/index.tsx",
+          "hash": "12369531132318841641",
+          "deps": [
+            "npm:react",
+            "npm:react-data-table-component"
+          ]
+        },
+        {
+          "file": "apps/superApp/src/components/toast/index.tsx",
+          "hash": "14823432580185132247",
+          "deps": [
+            "npm:react",
+            "npm:react-hot-toast"
+          ]
+        },
+        {
+          "file": "apps/superApp/src/contexts/authContext/index.tsx",
+          "hash": "13083478778253211405",
+          "deps": [
+            "npm:react",
+            "npm:axios",
+            "npm:react-hot-toast"
+          ]
+        },
+        {
+          "file": "apps/superApp/src/contexts/reactQueryContext/index.tsx",
+          "hash": "5384276141551532289",
+          "deps": [
+            "npm:react",
+            "npm:@tanstack/react-query"
+          ]
+        },
+        {
+          "file": "apps/superApp/src/contexts/verificationContext/index.tsx",
+          "hash": "779750819594714838",
+          "deps": [
+            "npm:react"
+          ]
+        },
+        {
+          "file": "apps/superApp/src/hooks/useDelete.ts",
+          "hash": "16832242813694037307",
+          "deps": [
+            "npm:@tanstack/react-query"
+          ]
+        },
+        {
+          "file": "apps/superApp/src/hooks/useGetUploadFile.ts",
+          "hash": "16302951872140366122",
+          "deps": [
+            "npm:@tanstack/react-query"
+          ]
+        },
+        {
+          "file": "apps/superApp/src/hooks/useMessage.ts",
+          "hash": "4055606894390288348"
+        },
+        {
+          "file": "apps/superApp/src/hooks/useUploadFile.ts",
+          "hash": "17189592159982125420",
+          "deps": [
+            "npm:@tanstack/react-query"
+          ]
+        },
+        {
+          "file": "apps/superApp/src/index.css",
+          "hash": "3244421341483603138"
+        },
+        {
+          "file": "apps/superApp/src/layouts/index.tsx",
+          "hash": "17942042088089613774",
+          "deps": [
+            "npm:react",
+            "npm:next"
+          ]
+        },
+        {
+          "file": "apps/superApp/src/layouts/navbar/index.tsx",
+          "hash": "10482951111311639969",
+          "deps": [
+            "npm:react",
+            "npm:next",
+            "ui-components"
+          ]
+        },
+        {
+          "file": "apps/superApp/src/layouts/sidebar/components/content/components/ads.tsx",
+          "hash": "11769647753742152626",
+          "deps": [
+            "npm:react"
+          ]
+        },
+        {
+          "file": "apps/superApp/src/layouts/sidebar/components/content/components/potta.tsx",
+          "hash": "6607045064250806829",
+          "deps": [
+            "npm:react"
+          ]
+        },
+        {
+          "file": "apps/superApp/src/layouts/sidebar/components/content/components/talk.tsx",
+          "hash": "7316059007715401178",
+          "deps": [
+            "npm:react"
+          ]
+        },
+        {
+          "file": "apps/superApp/src/layouts/sidebar/components/content/components/tribu.tsx",
+          "hash": "6103549346271901972",
+          "deps": [
+            "npm:react"
+          ]
+        },
+        {
+          "file": "apps/superApp/src/layouts/sidebar/components/content/index.tsx",
+          "hash": "11221292582473367892",
+          "deps": [
+            "npm:react",
+            "npm:next"
+          ]
+        },
+        {
+          "file": "apps/superApp/src/layouts/sidebar/components/custom-link/index.tsx",
+          "hash": "5707233246276028702",
+          "deps": [
+            "npm:react",
+            "npm:next"
+          ]
+        },
+        {
+          "file": "apps/superApp/src/layouts/sidebar/components/index.tsx",
+          "hash": "13384291704473358238",
+          "deps": [
+            "npm:react",
+            "npm:@nextui-org/react"
+          ]
+        },
+        {
+          "file": "apps/superApp/src/layouts/sidebar/index.tsx",
+          "hash": "4906945412967004128",
+          "deps": [
+            "npm:react",
+            "npm:next",
+            "npm:@heroicons/react"
+          ]
+        },
+        {
+          "file": "apps/superApp/src/middleware.ts",
+          "hash": "13833223075149764102",
+          "deps": [
+            "npm:next"
+          ]
+        },
+        {
+          "file": "apps/superApp/src/modules/auth/components/accountVerification/address-info.tsx",
+          "hash": "2797536342189035131",
+          "deps": [
+            "npm:react",
+            "ui-components",
+            "npm:react-hook-form",
+            "utilities"
+          ]
+        },
+        {
+          "file": "apps/superApp/src/modules/auth/components/accountVerification/business-info.tsx",
+          "hash": "7028119696303731951",
+          "deps": [
+            "npm:react",
+            "ui-components",
+            "npm:react-hook-form"
+          ]
+        },
+        {
+          "file": "apps/superApp/src/modules/auth/components/accountVerification/identity-info.tsx",
+          "hash": "8429366163694876164",
+          "deps": [
+            "npm:react",
+            "npm:react-hook-form",
+            "ui-components"
+          ]
+        },
+        {
+          "file": "apps/superApp/src/modules/auth/components/sideMenu/index.tsx",
+          "hash": "5749069330387163590",
+          "deps": [
+            "npm:react"
+          ]
+        },
+        {
+          "file": "apps/superApp/src/modules/auth/hooks/useAuth.ts",
+          "hash": "3218764692329357779",
+          "deps": [
+            "npm:react"
+          ]
+        },
+        {
+          "file": "apps/superApp/src/modules/auth/hooks/useChangePasswordConfirm.ts",
+          "hash": "7289860747425197663",
+          "deps": [
+            "npm:@tanstack/react-query"
+          ]
+        },
+        {
+          "file": "apps/superApp/src/modules/auth/hooks/useConfirmRegister.ts",
+          "hash": "6070911768232863699",
+          "deps": [
+            "npm:@tanstack/react-query",
+            "utilities"
+          ]
+        },
+        {
+          "file": "apps/superApp/src/modules/auth/hooks/useForgotPassword.ts",
+          "hash": "14992280685080213805",
+          "deps": [
+            "npm:@tanstack/react-query"
+          ]
+        },
+        {
+          "file": "apps/superApp/src/modules/auth/hooks/useLogin.ts",
+          "hash": "599320776863809647",
+          "deps": [
+            "npm:crypto-js",
+            "npm:@tanstack/react-query",
+            "utilities"
+          ]
+        },
+        {
+          "file": "apps/superApp/src/modules/auth/hooks/useLogout.ts",
+          "hash": "17451785280681428",
+          "deps": [
+            "npm:@tanstack/react-query"
+          ]
+        },
+        {
+          "file": "apps/superApp/src/modules/auth/hooks/useRegister.ts",
+          "hash": "15151284264372943591",
+          "deps": [
+            "npm:@tanstack/react-query"
+          ]
+        },
+        {
+          "file": "apps/superApp/src/modules/auth/hooks/useResetPassword.ts",
+          "hash": "10323880433652748802",
+          "deps": [
+            "npm:@tanstack/react-query"
+          ]
+        },
+        {
+          "file": "apps/superApp/src/modules/auth/hooks/useResetPasswordConfirm.ts",
+          "hash": "5441409342400686576",
+          "deps": [
+            "npm:@tanstack/react-query"
+          ]
+        },
+        {
+          "file": "apps/superApp/src/modules/auth/hooks/useUpdateOrganization.ts",
+          "hash": "10645216763583191932",
+          "deps": [
+            "npm:@tanstack/react-query"
+          ]
+        },
+        {
+          "file": "apps/superApp/src/modules/auth/hooks/useUpdatePassword.ts",
+          "hash": "7524248072974471384",
+          "deps": [
+            "npm:@tanstack/react-query"
+          ]
+        },
+        {
+          "file": "apps/superApp/src/modules/auth/hooks/useUpdateProfile.ts",
+          "hash": "11276351084338363674",
+          "deps": [
+            "npm:@tanstack/react-query"
+          ]
+        },
+        {
+          "file": "apps/superApp/src/modules/auth/hooks/useVerification.ts",
+          "hash": "11409266203196091135",
+          "deps": [
+            "npm:react"
+          ]
+        },
+        {
+          "file": "apps/superApp/src/modules/auth/layout/components/TestimonialSlider/TestimonialSlider.module.css",
+          "hash": "3693991448544035602"
+        },
+        {
+          "file": "apps/superApp/src/modules/auth/layout/components/TestimonialSlider/index.tsx",
+          "hash": "6393539722318947296",
+          "deps": [
+            "npm:react"
+          ]
+        },
+        {
+          "file": "apps/superApp/src/modules/auth/layout/components/sideMenu/index.tsx",
+          "hash": "5072786811488873664",
+          "deps": [
+            "npm:react"
+          ]
+        },
+        {
+          "file": "apps/superApp/src/modules/auth/layout/index.tsx",
+          "hash": "6461082985671562857",
+          "deps": [
+            "npm:react",
+            "npm:next"
+          ]
+        },
+        {
+          "file": "apps/superApp/src/modules/auth/utils/api.ts",
+          "hash": "4223306921313873650",
+          "deps": [
+            "utilities"
+          ]
+        },
+        {
+          "file": "apps/superApp/src/modules/auth/utils/auth.axios.ts",
+          "hash": "5266454666460801110",
+          "deps": [
+            "npm:crypto-js",
+            "npm:axios",
+            "utilities"
+          ]
+        },
+        {
+          "file": "apps/superApp/src/modules/auth/utils/types.ts",
+          "hash": "7472513622886917128"
+        },
+        {
+          "file": "apps/superApp/src/modules/auth/utils/validations.ts",
+          "hash": "7161963643417440989",
+          "deps": [
+            "npm:yup"
+          ]
+        },
+        {
+          "file": "apps/superApp/src/modules/settings/components/api/index.tsx",
+          "hash": "11296226155158739762",
+          "deps": [
+            "npm:react",
+            "npm:react-hot-toast"
+          ]
+        },
+        {
+          "file": "apps/superApp/src/modules/settings/components/apps/index.tsx",
+          "hash": "11518669860226518626",
+          "deps": [
+            "npm:react",
+            "npm:next",
+            "ui-components"
+          ]
+        },
+        {
+          "file": "apps/superApp/src/modules/settings/components/billing/component/ads/index.tsx",
+          "hash": "15826274611653491230",
+          "deps": [
+            "npm:react"
+          ]
+        },
+        {
+          "file": "apps/superApp/src/modules/settings/components/billing/component/polls/index.tsx",
+          "hash": "3114795604826297110",
+          "deps": [
+            "npm:react"
+          ]
+        },
+        {
+          "file": "apps/superApp/src/modules/settings/components/billing/component/potta/index.tsx",
+          "hash": "15895458590805412982",
+          "deps": [
+            "npm:react",
+            "ui-components"
+          ]
+        },
+        {
+          "file": "apps/superApp/src/modules/settings/components/billing/component/talk/index.tsx",
+          "hash": "14443455873386765152",
+          "deps": [
+            "npm:react"
+          ]
+        },
+        {
+          "file": "apps/superApp/src/modules/settings/components/billing/component/wallet/index.tsx",
+          "hash": "10335134820522870996",
+          "deps": [
+            "npm:react",
+            "npm:next",
+            "ui-components",
+            "npm:@heroicons/react"
+          ]
+        },
+        {
+          "file": "apps/superApp/src/modules/settings/components/billing/index.tsx",
+          "hash": "5220587265817098065",
+          "deps": [
+            "npm:react",
+            "ui-components",
+            "utilities"
+          ]
+        },
+        {
+          "file": "apps/superApp/src/modules/settings/components/general/index.tsx",
+          "hash": "18213991933018986762",
+          "deps": [
+            "ui-components",
+            "npm:axios",
+            "npm:react-hot-toast",
+            "npm:timezones-list",
+            "npm:react",
+            "npm:@hookform/resolvers",
+            "npm:react-hook-form",
+            "utilities"
+          ]
+        },
+        {
+          "file": "apps/superApp/src/modules/settings/components/logs/index.tsx",
+          "hash": "2185996216947147066",
+          "deps": [
+            "npm:react",
+            "npm:next",
+            "npm:react-csv",
+            "ui-components"
+          ]
+        },
+        {
+          "file": "apps/superApp/src/modules/settings/components/notification/index.tsx",
+          "hash": "2716396721861444752",
+          "deps": [
+            "npm:react"
+          ]
+        },
+        {
+          "file": "apps/superApp/src/modules/settings/components/security/components/2FA/index.tsx",
+          "hash": "649848402459295568",
+          "deps": [
+            "npm:react"
+          ]
+        },
+        {
+          "file": "apps/superApp/src/modules/settings/components/security/components/Restriction/index.tsx",
+          "hash": "1708067728546981516",
+          "deps": [
+            "npm:react",
+            "ui-components"
+          ]
+        },
+        {
+          "file": "apps/superApp/src/modules/settings/components/security/components/UpdatePassword/index.tsx",
+          "hash": "11178072840961093033",
+          "deps": [
+            "npm:react",
+            "npm:axios",
+            "npm:react-hot-toast",
+            "npm:@hookform/resolvers",
+            "npm:react-verification-input",
+            "npm:react-hook-form",
+            "ui-components",
+            "npm:next"
+          ]
+        },
+        {
+          "file": "apps/superApp/src/modules/settings/components/security/index.tsx",
+          "hash": "3478742070198955107",
+          "deps": [
+            "npm:react"
+          ]
+        },
+        {
+          "file": "apps/superApp/src/modules/settings/components/tabs/index.tsx",
+          "hash": "17907674005372297709",
+          "deps": [
+            "npm:react",
+            "npm:next"
+          ]
+        },
+        {
+          "file": "apps/superApp/src/modules/settings/components/team/member-chip.tsx",
+          "hash": "14803127527132080189",
+          "deps": [
+            "npm:react"
+          ]
+        },
+        {
+          "file": "apps/superApp/src/modules/settings/components/team/member-details.tsx",
+          "hash": "5215320778705999551",
+          "deps": [
+            "ui-components",
+            "npm:react"
+          ]
+        },
+        {
+          "file": "apps/superApp/src/modules/settings/components/team/member-form.tsx",
+          "hash": "7677895256312744533",
+          "deps": [
+            "npm:react",
+            "npm:axios",
+            "npm:react-hot-toast",
+            "npm:@hookform/resolvers",
+            "npm:react-hook-form",
+            "npm:@headlessui/react",
+            "ui-components",
+            "npm:react-select"
+          ]
+        },
+        {
+          "file": "apps/superApp/src/modules/settings/components/team/reset-member-form.tsx",
+          "hash": "17198890095372861269",
+          "deps": [
+            "npm:react",
+            "npm:axios",
+            "npm:react-hot-toast",
+            "npm:@hookform/resolvers",
+            "npm:react-hook-form",
+            "ui-components"
+          ]
+        },
+        {
+          "file": "apps/superApp/src/modules/settings/components/team/team-permission.tsx",
+          "hash": "2305419058344751662",
+          "deps": [
+            "npm:react"
+          ]
+        },
+        {
+          "file": "apps/superApp/src/modules/settings/hooks/team/useCreateMember.ts",
+          "hash": "12495736735019817613",
+          "deps": [
+            "npm:@tanstack/react-query"
+          ]
+        },
+        {
+          "file": "apps/superApp/src/modules/settings/hooks/team/useGetMembers.ts",
+          "hash": "8664457644451324759",
+          "deps": [
+            "npm:@tanstack/react-query"
+          ]
+        },
+        {
+          "file": "apps/superApp/src/modules/settings/hooks/team/useResetMemberPassword.ts",
+          "hash": "13572976678013504974",
+          "deps": [
+            "npm:@tanstack/react-query"
+          ]
+        },
+        {
+          "file": "apps/superApp/src/modules/settings/hooks/team/useSingleMember.ts",
+          "hash": "17194583730329678538",
+          "deps": [
+            "npm:@tanstack/react-query"
+          ]
+        },
+        {
+          "file": "apps/superApp/src/modules/settings/hooks/team/useUpdateMember.ts",
+          "hash": "8603610131641683672",
+          "deps": [
+            "npm:@tanstack/react-query"
+          ]
+        },
+        {
+          "file": "apps/superApp/src/modules/settings/layout/setting-layout.tsx",
+          "hash": "12539879945419104277",
+          "deps": [
+            "npm:react"
+          ]
+        },
+        {
+          "file": "apps/superApp/src/modules/settings/utils/logs/api.ts",
+          "hash": "3244421341483603138"
+        },
+        {
+          "file": "apps/superApp/src/modules/settings/utils/team/api.ts",
+          "hash": "3298836837274064138",
+          "deps": [
+            "utilities"
+          ]
+        },
+        {
+          "file": "apps/superApp/src/modules/settings/utils/team/column.tsx",
+          "hash": "14730157744498689803",
+          "deps": [
+            "npm:react-data-table-component",
+            "npm:@nextui-org/react"
+          ]
+        },
+        {
+          "file": "apps/superApp/src/modules/settings/utils/team/types.ts",
+          "hash": "5700722835142839059"
+        },
+        {
+          "file": "apps/superApp/src/modules/settings/utils/team/validations.ts",
+          "hash": "14672593517057990126",
+          "deps": [
+            "npm:yup"
+          ]
+        },
+        {
+          "file": "apps/superApp/src/pages/_app.tsx",
+          "hash": "12271939666644297516",
+          "deps": [
+            "npm:next",
+            "npm:remixicon",
+            "ui-components"
+          ]
+        },
+        {
+          "file": "apps/superApp/src/pages/auth/codeVerification/index.tsx",
+          "hash": "11578398434405614088",
+          "deps": [
+            "npm:react",
+            "npm:axios",
+            "npm:react-hot-toast",
+            "npm:next",
+            "npm:react-verification-input"
+          ]
+        },
+        {
+          "file": "apps/superApp/src/pages/auth/confirm-register/index.tsx",
+          "hash": "5508412395232569165",
+          "deps": [
+            "npm:react",
+            "npm:axios",
+            "npm:react-hot-toast",
+            "npm:next",
+            "npm:react-verification-input",
+            "ui-components"
+          ]
+        },
+        {
+          "file": "apps/superApp/src/pages/auth/login/index.tsx",
+          "hash": "15738356254548182619",
+          "deps": [
+            "npm:react",
+            "npm:next",
+            "npm:axios",
+            "npm:react-hot-toast",
+            "npm:@hookform/resolvers",
+            "npm:react-hook-form",
+            "ui-components"
+          ]
+        },
+        {
+          "file": "apps/superApp/src/pages/auth/register/index.tsx",
+          "hash": "730186453063343175",
+          "deps": [
+            "npm:react",
+            "npm:next",
+            "npm:react-hot-toast",
+            "npm:@hookform/resolvers",
+            "npm:react-hook-form",
+            "utilities",
+            "ui-components"
+          ]
+        },
+        {
+          "file": "apps/superApp/src/pages/auth/renewPassword/index.tsx",
+          "hash": "7161713183252060715",
+          "deps": [
+            "npm:react",
+            "npm:next",
+            "npm:axios",
+            "npm:react-hot-toast",
+            "npm:@hookform/resolvers",
+            "npm:react-hook-form",
+            "ui-components"
+          ]
+        },
+        {
+          "file": "apps/superApp/src/pages/auth/reset-password/index.tsx",
+          "hash": "16747496911541378391",
+          "deps": [
+            "npm:react",
+            "npm:next",
+            "npm:axios",
+            "npm:react-hot-toast",
+            "npm:@hookform/resolvers",
+            "npm:react-hook-form",
+            "ui-components"
+          ]
+        },
+        {
+          "file": "apps/superApp/src/pages/auth/verificationNumber/index.tsx",
+          "hash": "4001195247549020802",
+          "deps": [
+            "npm:react",
+            "ui-components"
+          ]
+        },
+        {
+          "file": "apps/superApp/src/pages/index.tsx",
+          "hash": "12843113144650236374",
+          "deps": [
+            "npm:react"
+          ]
+        },
+        {
+          "file": "apps/superApp/src/pages/newApp/components/basicInformation/index.tsx",
+          "hash": "5677161183455399384",
+          "deps": [
+            "npm:react",
+            "ui-components"
+          ]
+        },
+        {
+          "file": "apps/superApp/src/pages/newApp/components/channels/index.tsx",
+          "hash": "14798343478347571501",
+          "deps": [
+            "npm:react"
+          ]
+        },
+        {
+          "file": "apps/superApp/src/pages/newApp/index.tsx",
+          "hash": "5051953801609454876",
+          "deps": [
+            "npm:react",
+            "ui-components",
+            "npm:next"
+          ]
+        },
+        {
+          "file": "apps/superApp/src/pages/organisation/index.tsx",
+          "hash": "6727865499092348184",
+          "deps": [
+            "npm:react",
+            "npm:axios",
+            "npm:react-hot-toast",
+            "npm:next",
+            "npm:@hookform/resolvers",
+            "npm:react-hook-form"
+          ]
+        },
+        {
+          "file": "apps/superApp/src/pages/organisation/success-verification/index.tsx",
+          "hash": "12887182583082520840",
+          "deps": [
+            "npm:react",
+            "npm:next",
+            "ui-components"
+          ]
+        },
+        {
+          "file": "apps/superApp/src/pages/settings/api/index.tsx",
+          "hash": "17688574062768908568",
+          "deps": [
+            "npm:react"
+          ]
+        },
+        {
+          "file": "apps/superApp/src/pages/settings/billing/index.tsx",
+          "hash": "10122043947004814900",
+          "deps": [
+            "npm:react"
+          ]
+        },
+        {
+          "file": "apps/superApp/src/pages/settings/general/index.tsx",
+          "hash": "11243385123140420027",
+          "deps": [
+            "ui-components",
+            "npm:axios",
+            "npm:react-hot-toast",
+            "npm:timezones-list",
+            "npm:react",
+            "npm:@hookform/resolvers",
+            "npm:react-hook-form",
+            "utilities"
+          ]
+        },
+        {
+          "file": "apps/superApp/src/pages/settings/logs/index.tsx",
+          "hash": "17401339147238854145",
+          "deps": [
+            "npm:react"
+          ]
+        },
+        {
+          "file": "apps/superApp/src/pages/settings/notification/index.tsx",
+          "hash": "3446729392632203979",
+          "deps": [
+            "npm:react"
+          ]
+        },
+        {
+          "file": "apps/superApp/src/pages/settings/security/index.tsx",
+          "hash": "14294859758526601501",
+          "deps": [
+            "npm:react"
+          ]
+        },
+        {
+          "file": "apps/superApp/src/pages/settings/team/index.tsx",
+          "hash": "5380857503790316222",
+          "deps": [
+            "npm:react",
+            "npm:react-data-table-component",
+            "ui-components",
+            "npm:react-hot-toast",
+            "npm:axios"
+          ]
+        },
+        {
+          "file": "apps/superApp/src/styles/globals.css",
+          "hash": "6428318957136515045"
+        },
+        {
+          "file": "apps/superApp/src/utils/generic.api.ts",
+          "hash": "10933325822938054809",
+          "deps": [
+            "utilities"
+          ]
+        },
+        {
+          "file": "apps/superApp/src/utils/index.ts",
+          "hash": "4607243677188254374"
+        },
+        {
+          "file": "apps/superApp/src/utils/types.ts",
+          "hash": "3544420948118021351",
+          "deps": [
+            "npm:react-select"
+          ]
+        },
+        {
+          "file": "apps/superApp/tailwind.config.js",
+          "hash": "13090734457927965885",
+          "deps": [
+            "npm:@nx/react"
+          ]
+        },
+        {
+          "file": "apps/superApp/tsconfig.json",
+          "hash": "5898040497251807795"
+        },
+        {
+          "file": "apps/superApp/tsconfig.spec.json",
+          "hash": "6922413205408300107"
+        }
+      ],
+      "core": [
+        {
+          "file": "libs/core/.eslintrc.json",
+          "hash": "11012487992710232822"
+        },
+        {
+          "file": "libs/core/README.md",
+          "hash": "862743182427189852"
+        },
+        {
+          "file": "libs/core/project.json",
+          "hash": "8215491323991500792"
+        },
+        {
+          "file": "libs/core/src/index.ts",
+          "hash": "1391443467439822800"
+        },
+        {
+          "file": "libs/core/src/lib/core.spec.tsx",
+          "hash": "10083302775005561580",
+          "deps": [
+            "npm:@testing-library/react"
+          ]
+        },
+        {
+          "file": "libs/core/src/lib/core.tsx",
+          "hash": "12083220179364162819"
+        },
+        {
+          "file": "libs/core/src/lib/hello-server.tsx",
+          "hash": "2397568674684759047"
+        },
+        {
+          "file": "libs/core/src/server.ts",
+          "hash": "8912437808649717296"
+        },
+        {
+          "file": "libs/core/tsconfig.json",
+          "hash": "14088618039610991405"
+        },
+        {
+          "file": "libs/core/tsconfig.lib.json",
+          "hash": "1536859351713546153"
         }
       ]
     }
