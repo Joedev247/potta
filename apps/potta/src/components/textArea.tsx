@@ -1,44 +1,47 @@
-import React from "react";
-import { FieldError, UseFormRegister } from "react-hook-form";
+import React from 'react';
+import { FieldError, UseFormRegister } from 'react-hook-form';
 
 type Props = {
-    label?: string;
-    className?: string;
-    name: string;
-    errors?: FieldError;
-    placeholder?: string;
-    register?: UseFormRegister<any>;
-    onchange?: (event: React.ChangeEvent<HTMLTextAreaElement>) => void;
-    value?: string | number;
-    height?: boolean;
+  label?: string;
+  className?: string;
+  name: string;
+  errors?: FieldError;
+  placeholder?: string;
+  register?: UseFormRegister<any>;
+  onchange?: (event: React.ChangeEvent<HTMLTextAreaElement>) => void;
+  value?: string | number;
+  height?: boolean;
 };
 
 const TextArea: React.FC<Props> = ({
-    label,
-    className,
-    name,
-    placeholder,
-    errors,
-    register,
-    value,
-    height,
-    onchange
+  label,
+  className,
+  name,
+  placeholder,
+  errors,
+  register,
+  value,
+  height,
+  onchange,
 }) => {
-    return (
-        <div className={`w-full ${className}`}>
-            {label && <span className="mb-3 text-gray-900 font-medium">{label}</span>}
-            <textarea
-                value={value}
-                placeholder={placeholder}
-                {...(register ? register(name) : {})}
-                onChange={onchange}
-                className={`w-full ${height ? 'py-1.5' : 'py-2.5'} px-4 border border-gray-200 rounded-[2px] outline-none mt-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500`}
-            />
-            {errors ? (
-                <small className="col-span-2 text-red-500">{errors?.message}</small>
-            ) : null}
-        </div>
-    );
+  return (
+    <div className={`w-full ${className}`}>
+      {label && <span className="mb-3 text-gray-900 font-medium">{label}</span>}
+      <textarea
+        value={value}
+        placeholder={placeholder}
+        {...(register ? register(name) : {})}
+        onChange={onchange}
+        className={`w-full ${
+          height ? 'py-1.5' : 'py-2.5'
+        } px-4 border border-gray-200 rounded-[2px] outline-none mt-2 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500
+   `}
+      />
+      {errors ? (
+        <small className="col-span-2 text-red-500">{errors?.message}</small>
+      ) : null}
+    </div>
+  );
 };
 
 export default TextArea;

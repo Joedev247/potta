@@ -24,8 +24,14 @@ import { log } from 'console';
 import { UpdateCustomerPayload, updateCustomerSchema } from '../utils/validations';
 import TableActionPopover, { PopoverAction } from '@potta/components/tableActionsPopover';
 
-export const PhoneFlag = ({ phoneNumber }: { phoneNumber: string }) => {
-  const phoneNumberObj = parsePhoneNumberFromString(phoneNumber);
+export const PhoneFlag = ({ phoneNumber }: { phoneNumber: string | number }) => {
+ const convertToE164 = (phoneNumber: string | number) => {
+  if(typeof phoneNumber === 'number') {
+   return phoneNumber.toString();
+  }
+  return phoneNumber;
+ }
+  const phoneNumberObj = parsePhoneNumberFromString(convertToE164(phoneNumber)) 
   const countryCode = phoneNumberObj?.country;
   const number = phoneNumberObj?.number;
   return countryCode ? (

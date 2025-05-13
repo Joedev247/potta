@@ -35,7 +35,7 @@ interface LineItemsDto {
   description: string;
   quantity: number;
   discountCap: number;
-  discountType: "FlatRate" | "Percentage" | "PercentageWithCap"; // Use literal types here
+  discountType: 'FlatRate' | 'Percentage' | 'PercentageWithCap'; // Use literal types here
   unitPrice: number;
   taxRate: number;
   discountRate: number;
@@ -119,7 +119,8 @@ const Left = () => {
         label:
           firstCustomer.firstName ||
           firstCustomer.lastName ||
-          `Customer ${firstCustomer.customerId || firstCustomer.uuid.slice(0, 8)
+          `Customer ${
+            firstCustomer.customerId || firstCustomer.uuid.slice(0, 8)
           }`,
         value: firstCustomer.uuid,
       };
@@ -253,7 +254,7 @@ const Left = () => {
       description: item.name,
       quantity: item.qty,
       discountCap: 0,
-      discountType: "FlatRate", // Use the literal string without 'as const'
+      discountType: 'FlatRate', // Use the literal string without 'as const'
       unitPrice: Number(item.price),
       taxRate: item.tax,
       discountRate: 0,
@@ -268,7 +269,11 @@ const Left = () => {
     }, 0);
 
     // Map the internal payment method values to the exact string literals required by the schema
-    let paymentMethod: 'Credit Card' | 'Bank Transfer' | 'ACH Transfer' | 'Other';
+    let paymentMethod:
+      | 'Credit Card'
+      | 'Bank Transfer'
+      | 'ACH Transfer'
+      | 'Other';
 
     switch (selectedPaymentMethod) {
       case 'creditCard':
@@ -294,7 +299,7 @@ const Left = () => {
       receiptNumber: invoiceNumber,
       discountAmount: 0, // Add default or actual value if available
       customerId: customerName, // Using the customer UUID as customerId
-      salePerson: '532e5da0-204f-4417-95e0-f26a13c62e39',// Fixed sales person ID as required
+      salePerson: '532e5da0-204f-4417-95e0-f26a13c62e39', // Fixed sales person ID as required
       lineItems: lineItems,
     };
 
@@ -348,11 +353,19 @@ const Left = () => {
         <div className={`${errors.saleDate ? 'error-field' : ''}`}>
           <Input
             type="date"
-            label={<>Sale Date<RequiredMark /></>}
+            label={
+              <>
+                Sale Date
+                <RequiredMark />
+              </>
+            }
             name="saleDate"
             value={date}
             onchange={(e) =>
-              handleInputChange('saleDate', typeof e === 'string' ? e : e.target.value)
+              handleInputChange(
+                'saleDate',
+                typeof e === 'string' ? e : e.target.value
+              )
             }
             placeholder="Select sale date"
             errors={errors.saleDate ? { message: errors.saleDate } : undefined}
@@ -364,17 +377,23 @@ const Left = () => {
             label="Receipt Number"
             name="receiptNumber"
             value={invoiceNumber}
-            onchange={(e: any) => handleInputChange('receiptNumber', e.target.value)}
-            errors={errors.receiptNumber ? { message: errors.receiptNumber } : undefined}
+            onchange={(e: any) =>
+              handleInputChange('receiptNumber', e.target.value)
+            }
+            errors={
+              errors.receiptNumber
+                ? { message: errors.receiptNumber }
+                : undefined
+            }
           />
         </div>
-
       </div>
 
       <div className="mt-3 w-full flex">
         <div
-          className={`w-[50%] flex items-center space-x-3 ${errors.customerId ? 'error-field' : ''
-            }`}
+          className={`w-[50%] flex items-center space-x-3 ${
+            errors.customerId ? 'error-field' : ''
+          }`}
         >
           <div className="w-full">
             <span className="mb-3 text-lg text-gray-900 font-medium">
@@ -431,7 +450,6 @@ const Left = () => {
       <div className="my-5 pt-10">
         <h3 className="text-lg mb-2 text-gray-900 font-medium">
           Line Items
-
           <RequiredMark />
         </h3>
         <DynamicTable />
@@ -442,7 +460,6 @@ const Left = () => {
 
       <hr className="my-5" />
       <h3 className="text-lg font-medium my-2">
-
         Payment Methods
         <RequiredMark />
       </h3>
@@ -452,12 +469,13 @@ const Left = () => {
             <div
               key={option}
               onClick={() => handlePaymentMethodClick(option)}
-              className={`p-4 border cursor-pointer hover:border-green-500 hover:text-green-500 ${selectedPaymentMethod === option
-                ? 'border-green-500 text-green-500'
-                : errors.paymentMethod && formSubmitted
+              className={`p-4 border cursor-pointer hover:border-green-500 hover:text-green-500 ${
+                selectedPaymentMethod === option
+                  ? 'border-green-500 text-green-500'
+                  : errors.paymentMethod && formSubmitted
                   ? 'border-red-500'
                   : 'border-gray-300'
-                }`}
+              }`}
             >
               <div className="flex items-center">
                 <input
@@ -471,10 +489,10 @@ const Left = () => {
                   {option === 'creditCard'
                     ? 'Credit Card'
                     : option === 'bankTransfer'
-                      ? 'Bank Transfer'
-                      : option === 'achTransfer'
-                        ? 'ACH Transfer'
-                        : 'Other'}
+                    ? 'Bank Transfer'
+                    : option === 'achTransfer'
+                    ? 'ACH Transfer'
+                    : 'Other'}
                 </span>
               </div>
             </div>
@@ -487,12 +505,23 @@ const Left = () => {
       <div className={`${errors.paymentReference ? 'error-field' : ''}`}>
         <Input
           type="text"
-          label={<>Payment Reference<RequiredMark /></>}
+          label={
+            <>
+              Payment Reference
+              <RequiredMark />
+            </>
+          }
           name="paymentReference"
           value={paymentReference}
-          onchange={(e: any) => handleInputChange('paymentReference', e.target.value)}
+          onchange={(e: any) =>
+            handleInputChange('paymentReference', e.target.value)
+          }
           placeholder="Enter payment reference"
-          errors={errors.paymentReference ? { message: errors.paymentReference } : undefined}
+          errors={
+            errors.paymentReference
+              ? { message: errors.paymentReference }
+              : undefined
+          }
         />
       </div>
       <hr className="my-5" />
@@ -500,7 +529,8 @@ const Left = () => {
       <textarea
         value={note}
         onChange={(e) => handleInputChange('notes', e.target.value)}
-        className="h-36 border p-2 w-full outline-none mt-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+        className="h-36 border p-2 w-full outline-none mt-2 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500
+   "
       ></textarea>
       {errors.notes && (
         <p className="text-red-500 text-sm mt-1">{errors.notes}</p>

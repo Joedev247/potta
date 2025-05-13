@@ -25,7 +25,7 @@ const Audience: React.FC<AudienceProps> = () => {
             Select Audience segment
           </label>
           <select
-            {...register('audienceSegment')}
+            {...register('audience.segment')}
             className="w-1/3 border border-gray-300  px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500"
           >
             <option value="">Select Audience segment</option>
@@ -93,12 +93,23 @@ const Audience: React.FC<AudienceProps> = () => {
           </label>
           <input
             type="number"
-            {...register('maximumEntries')}
+            {...register('UsageLimit')}
             className="w-1/2 border border-gray-300  px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500"
             placeholder="55"
           />
         </div>
-
+        {/* Name */}
+        <div className="mb-6">
+          <label className="block text-sm font-medium text-gray-700 mb-2">
+            Code
+          </label>
+          <input
+            type="text"
+            {...register('code')}
+            className="w-1/2 border border-gray-300  px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500"
+            placeholder="SAVE20"
+          />
+        </div>
         {/* Advanced Code Settings */}
         <div className="mb-6">
           <div className="flex items-center justify-between">

@@ -3,7 +3,7 @@
 import { Check, Percent, Gift, CreditCard, Coins } from 'lucide-react';
 import { Card, CardContent } from '@potta/components/card';
 
-export type VoucherType = 'discount' | 'cashback' | 'giftcard' | 'loyalty';
+export type VoucherType = 'DISCOUNT' | 'CASHBACK' | 'GIFT_CARD' | 'ROYALTY_POINTS';
 export type TabType = 'Policy' | 'Audience' | 'Scheduling' | 'Eligibility';
 
 interface VoucherTypeSelectorProps {
@@ -13,30 +13,30 @@ interface VoucherTypeSelectorProps {
 
 export default function VoucherTypeSelector({ 
   onVoucherTypeChange, 
-  selectedType = 'loyalty'
+  selectedType = 'ROYALTY_POINTS'
 }: VoucherTypeSelectorProps) {
   
   const voucherTypes = [
     {
-      id: 'cashback' as VoucherType,
+      id: 'CASHBACK' as VoucherType,
       title: 'Cash backs',
       description: 'Customers get actual cashback which can be spent in your business or any other business',
       icon: <CreditCard className="h-6 w-6 text-gray-500" />
     },
     {
-      id: 'loyalty' as VoucherType,
+      id: 'ROYALTY_POINTS' as VoucherType,
       title: 'Loyalty Points',
       description: 'Customers get redeemable points which can be converted to cash equivalent on your business',
       icon: <Coins className="h-6 w-6 text-gray-500" />
     },
     {
-      id: 'discount' as VoucherType,
+      id: 'DISCOUNT' as VoucherType,
       title: 'Discounts',
       description: 'These are flat rate or percentage discounts applied when shopping in your business',
       icon: <Percent className="h-6 w-6 text-gray-500" />
     },
     {
-      id: 'giftcard' as VoucherType,
+      id: 'GIFT_CARD' as VoucherType,
       title: 'Gift cards',
       description: 'Enhance loyalty to your brand by offering gift cards which can only be spent in your store',
       icon: <Gift className="h-6 w-6 text-gray-500" />

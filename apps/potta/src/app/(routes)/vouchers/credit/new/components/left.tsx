@@ -127,7 +127,7 @@ const Left = () => {
     if (!issueDate) newErrors.issueDate = 'Issue date is required';
     if (!customerName) newErrors.customerName = 'Customer is required';
     if (!contextData.invoiceId) newErrors.invoiceId = 'Invoice is required';
-    if (!contextData.creditAmount || contextData.creditAmount <= 0) 
+    if (!contextData.creditAmount || contextData.creditAmount <= 0)
       newErrors.creditAmount = 'Valid credit amount is required';
     if (!contextData.reason) newErrors.reason = 'Reason is required';
 
@@ -159,7 +159,7 @@ const Left = () => {
       reason: contextData.reason,
       invoiceId: contextData.invoiceId,
       salesPersonId: '532e5da0-204f-4417-95e0-f26a13c62e39', // Add actual salesperson if available
-      notes: note
+      notes: note,
     };
 
     console.log('Credit Note Data:', creditNoteData);
@@ -200,14 +200,24 @@ const Left = () => {
         <div className={`${errors.issueDate ? 'error-field' : ''}`}>
           <Input
             type="date"
-            label={<>Issue Date<RequiredMark /></>}
+            label={
+              <>
+                Issue Date
+                <RequiredMark />
+              </>
+            }
             name="issueDate"
             value={issueDate}
-            onchange={(e) => 
-              handleInputChange('issueDate', typeof e === 'string' ? e : e.target.value)
+            onchange={(e) =>
+              handleInputChange(
+                'issueDate',
+                typeof e === 'string' ? e : e.target.value
+              )
             }
             placeholder="Select issue date"
-            errors={errors.issueDate ? { message: errors.issueDate } : undefined}
+            errors={
+              errors.issueDate ? { message: errors.issueDate } : undefined
+            }
           />
         </div>
       </div>
@@ -275,7 +285,8 @@ const Left = () => {
       <textarea
         value={note}
         onChange={(e) => handleInputChange('note', e.target.value)}
-        className="h-36 border p-2 w-full outline-none mt-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+        className="h-36 border p-2 w-full outline-none mt-2 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500
+   "
         placeholder="Add any additional notes about this credit note"
       ></textarea>
 

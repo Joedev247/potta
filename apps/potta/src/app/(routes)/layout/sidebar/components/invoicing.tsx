@@ -24,7 +24,7 @@ const Sidebarsinvoicing = () => {
     >
       <Menu className="relative h-[76vh]" closeOnClick>
       <MenuItem
-          className="mt-4 font-thin flex justify-center"
+          className="mt-4 font-thin"
           href="/"
           icon={<img src="/icons/Potta.svg" className="h-16 w-16 mt-2" alt="logo" />}
         >

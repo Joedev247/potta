@@ -3,7 +3,6 @@ import { ContextData } from '@potta/components/context';
 import SearchSelect, { Option } from '@potta/components/search-select'; // Import Option type
 import useGetAllProducts from '../../../inventory/_hooks/useGetAllProducts';
 
-
 interface Product {
   uuid: string;
   name: string;
@@ -37,7 +36,9 @@ const getCurrencySymbol = (currencyCode: string): string => {
 export default function DynamicTable() {
   const context = useContext(ContextData);
   const [rows, setRows] = useState<any>(context?.data?.table || []);
-  const [selectedProduct, setSelectedProduct] = useState<ProductOption | null>(null);
+  const [selectedProduct, setSelectedProduct] = useState<ProductOption | null>(
+    null
+  );
   const [qty, setQty] = useState(1);
   const [price, setPrice] = useState(0);
   const [tax, setTax] = useState(0);
@@ -53,36 +54,36 @@ export default function DynamicTable() {
   });
 
   // Replace this line:
-  const products: Product[] = (productsData?.data || []).map(product => ({
+  const products: Product[] = (productsData?.data || []).map((product) => ({
     uuid: product.uuid,
     name: product.name,
     price: product.salesPrice,
     tax: product.taxRate,
-    productId: product.productId
+    productId: product.productId,
   }));
 
   // Create product options as regular Options instead of ProductOptions
   const productOptions: Option[] = products.map((product) => ({
     label: `${product.name} `,
-    value: product.uuid
+    value: product.uuid,
   }));
 
   // Update handler to accept Option instead of ProductOption
   const handleProductSelect = (value: Option | null) => {
     if (value) {
-      const selectedProd = products.find(p => p.uuid === value.value);
+      const selectedProd = products.find((p) => p.uuid === value.value);
       if (selectedProd) {
         const productOption: ProductOption = {
           label: value.label,
           value: value.value as string,
-          product: selectedProd
+          product: selectedProd,
         };
         setSelectedProduct(productOption);
         setPrice(selectedProd.price);
         setTax(selectedProd.tax);
       }
     } else {
-    setSelectedProduct(null);
+      setSelectedProduct(null);
       setPrice(0);
       setTax(0);
     }
@@ -99,7 +100,7 @@ export default function DynamicTable() {
       price,
       tax,
       uuid: selectedProduct.product.uuid,
-  };
+    };
 
     // Append new row to local state and context
     const updatedRows = [...rows, newRow];
@@ -133,25 +134,36 @@ export default function DynamicTable() {
 
   return (
     <div>
-        <table className="min-w-full border-collapse text-gray-500">
+      <table className="min-w-full border-collapse text-gray-500">
         <thead>
           <tr className="bg-gray-100">
-            <th colSpan={3} className="text-center px-10 py-2">Product</th>
-            <th colSpan={1} className="text-center px-4 py-2">Qty</th>
-            <th colSpan={1}className="text-center px-4 py-2">Price</th>
-            <th colSpan={1}className="text-center px-4 py-2">Tax</th>
-            <th colSpan={1}className="text-center px-4 py-2">Actions</th>
-
+            <th colSpan={3} className="text-center px-10 py-2">
+              Product
+            </th>
+            <th colSpan={1} className="text-center px-4 py-2">
+              Qty
+            </th>
+            <th colSpan={1} className="text-center px-4 py-2">
+              Price
+            </th>
+            <th colSpan={1} className="text-center px-4 py-2">
+              Tax
+            </th>
+            <th colSpan={1} className="text-center px-4 py-2">
+              Actions
+            </th>
           </tr>
         </thead>
         <tbody>
           {rows.map((row: any) => (
             <tr key={row.id}>
               <td colSpan={3} className="px-10 py-2">
-                 {row.name}
+                {row.name}
               </td>
               <td className="px-4 py-2 text-center">{row.qty}</td>
-              <td className="px-4 py-2 text-center">{currencySymbol} {row.price}</td>
+              <td className="px-4 py-2 text-center">
+                {currencySymbol} {row.price}
+              </td>
               <td className="px-4 py-2 text-center">{row.tax}%</td>
               <td className="px-4 py-2 text-center">
                 <button
@@ -165,49 +177,53 @@ export default function DynamicTable() {
           ))}
         </tbody>
       </table>
-          <tr className="py-4 grid grid-cols-8 gap-4">
-            <td className="mb-2 col-span-3">
-              <SearchSelect
-                options={productOptions}
-                value={selectedProduct ? { label: selectedProduct.label, value: selectedProduct.value } : null}
-                onChange={handleProductSelect}
-                isLoading={productsLoading}
-                placeholder="Search"
-                isClearable={true}
-                isSearchable={true}
-                className="mt-2"
-              />
-            </td>
-            <td className="">
-              <input
-                type="number"
-                value={qty}
-                onChange={(e) => setQty(parseInt(e.target.value))}
-                className="border border-gray-300 px-2 pl-3 py-2.5 w-full outline-none mt-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-center"
-              />
-            </td>
-            <td className="relative">
-
-              <input
-                type="number"
-                value={price}
-                onChange={(e) => setPrice(parseFloat(e.target.value))}
-                className="border border-gray-300 px-2 pl-3 py-2.5 w-full outline-none mt-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-center"
-                disabled
-              />
-            </td>
-            <td className="relative">
-
-              <input
-                type="number"
-                value={tax}
-                onChange={(e) => setTax(parseFloat(e.target.value))}
-                className="border border-gray-300 px-2 pl-3 py-2.5 w-full outline-none mt-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                disabled
-              />
-            </td>
-          </tr>
-
+      <tr className="py-4 grid grid-cols-8 gap-4">
+        <td className="mb-2 col-span-3">
+          <SearchSelect
+            options={productOptions}
+            value={
+              selectedProduct
+                ? { label: selectedProduct.label, value: selectedProduct.value }
+                : null
+            }
+            onChange={handleProductSelect}
+            isLoading={productsLoading}
+            placeholder="Search"
+            isClearable={true}
+            isSearchable={true}
+            className="mt-2"
+          />
+        </td>
+        <td className="">
+          <input
+            type="number"
+            value={qty}
+            onChange={(e) => setQty(parseInt(e.target.value))}
+            className="border border-gray-300 px-2 pl-3 py-2.5 w-full outline-none mt-2 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500
+    text-center"
+          />
+        </td>
+        <td className="relative">
+          <input
+            type="number"
+            value={price}
+            onChange={(e) => setPrice(parseFloat(e.target.value))}
+            className="border border-gray-300 px-2 pl-3 py-2.5 w-full outline-none mt-2 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500
+    text-center"
+            disabled
+          />
+        </td>
+        <td className="relative">
+          <input
+            type="number"
+            value={tax}
+            onChange={(e) => setTax(parseFloat(e.target.value))}
+            className="border border-gray-300 px-2 pl-3 py-2.5 w-full outline-none mt-2 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500
+   "
+            disabled
+          />
+        </td>
+      </tr>
 
       <button
         onClick={handleAddRow}

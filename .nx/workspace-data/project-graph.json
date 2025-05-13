@@ -18778,6 +18778,11 @@
       },
       {
         "source": "potta",
+        "target": "npm:date-fns",
+        "type": "static"
+      },
+      {
+        "source": "potta",
         "target": "npm:libphonenumber-js",
         "type": "static"
       },
@@ -18834,11 +18839,6 @@
       {
         "source": "potta",
         "target": "npm:sonner",
-        "type": "static"
-      },
-      {
-        "source": "potta",
-        "target": "npm:date-fns",
         "type": "static"
       },
       {
@@ -56562,5 +56562,5 @@
   },
   "version": "6.0",
   "errors": [],
-  "computedAt": 1747069407741
+  "computedAt": 1747154180817
 }

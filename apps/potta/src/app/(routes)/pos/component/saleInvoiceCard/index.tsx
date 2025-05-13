@@ -43,7 +43,7 @@ interface MenuItem {
   price: number;
   sku?: string;
   stock?: number;
-  tax: number
+  tax: number;
 }
 
 interface Category {
@@ -132,7 +132,7 @@ const SaleInvoiceCard = () => {
     quantity: 1,
     discountCap: 0,
     discountType: 'FlatRate',
-    unitPrice:menuItem.price,
+    unitPrice: menuItem.price,
     taxRate: menuItem.tax,
     discountRate: 0,
     productId: menuItem.id,
@@ -145,7 +145,9 @@ const SaleInvoiceCard = () => {
     }
 
     context?.setData((prevData: LineItem[]) => {
-      const existingItem = prevData?.find((item) => item.productId === itemToAdd.id);
+      const existingItem = prevData?.find(
+        (item) => item.productId === itemToAdd.id
+      );
 
       if (existingItem) {
         if (itemToAdd.stock && existingItem.quantity >= itemToAdd.stock) {
@@ -161,9 +163,7 @@ const SaleInvoiceCard = () => {
       // Convert to LineItem when adding new item
       const lineItem = convertToLineItem(itemToAdd);
 
-      return prevData?.length > 0
-        ? [...prevData, lineItem]
-        : [lineItem];
+      return prevData?.length > 0 ? [...prevData, lineItem] : [lineItem];
     });
   };
 
@@ -207,7 +207,8 @@ const SaleInvoiceCard = () => {
             placeholder="Search Items (F2)"
             value={searchTerm}
             onChange={handleSearch}
-            className={`w-full py-2 px-4 border border-gray-200 rounded-[2px] outline-none mt-2 focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500`}
+            className={`w-full py-2 px-4 border border-gray-200 rounded-[2px] outline-none mt-2 focus:outline-none focus:ring-1 focus:ring-green-500 focus:border-green-500
+   `}
           />
         </div>
         <div className="w-[50%] flex -mt-2">
@@ -221,7 +222,8 @@ const SaleInvoiceCard = () => {
             value={barcodeInput}
             onChange={handleBarcodeInput}
             autoComplete="off"
-            className={`w-full py-2 px-4 border border-gray-200 rounded-[2px] outline-none mt-2 focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500`}
+            className={`w-full py-2 px-4 border border-gray-200 rounded-[2px] outline-none mt-2 focus:outline-none focus:ring-1 focus:ring-green-500 focus:border-green-500
+   `}
           />
         </div>
       </div>
@@ -247,7 +249,7 @@ const SaleInvoiceCard = () => {
       <div className="mt-2 w-full">
         <div className="w-full h-[80vh] p-3 overflow-y-auto">
           {isLoading ? (
-           <PottaLoader/>
+            <PottaLoader />
           ) : (
             <div className="grid grid-cols-4 gap-3">
               {filteredMenus.map((menuItem) => (
@@ -269,9 +271,7 @@ const SaleInvoiceCard = () => {
                       target.src = '/images/placeholder.png'; // Fallback image path
                     }}
                   />
-                  <p className=" text-gray-500 font-thin">
-                    {menuItem.name}
-                  </p>
+                  <p className=" text-gray-500 font-thin">{menuItem.name}</p>
                   {menuItem.stock === 0 && (
                     <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-30 text-white">
                       Out of Stock
@@ -286,10 +286,12 @@ const SaleInvoiceCard = () => {
           )}
           {filteredMenus.length === 0 && searchTerm !== '' && !isLoading && (
             <div className="flex justify-center items-center h-full">
-              <p className="text-center text-gray-500">No matching items found.</p>
+              <p className="text-center text-gray-500">
+                No matching items found.
+              </p>
             </div>
           )}
-          {filteredMenus.length === 0 && searchTerm === ''  && !isLoading && (
+          {filteredMenus.length === 0 && searchTerm === '' && !isLoading && (
             <div className="flex justify-center items-center h-full">
               <p className="text-center text-gray-500">No items found.</p>
             </div>

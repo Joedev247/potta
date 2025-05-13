@@ -50,3 +50,6 @@ out
 .idea
 .nx/workspace-data/d/daemon.log
 .nx/workspace-data/d/daemon.log
+
+.cursor/rules/nx-rules.mdc
+.github/instructions/nx.instructions.md

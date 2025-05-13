@@ -1,15 +1,15 @@
 import React, { useState } from 'react';
 import { FieldError, UseFormRegister } from 'react-hook-form';
-import { format } from "date-fns";
-import { Calendar as CalendarIcon } from "lucide-react";
-import { cn } from "@potta/lib/utils";
-import { Button } from "@potta/components/shadcn/button";
-import { Calendar } from "@potta/components/shadcn/calendar";
+import { format } from 'date-fns';
+import { Calendar as CalendarIcon } from 'lucide-react';
+import { cn } from '@potta/lib/utils';
+import { Button } from '@potta/components/shadcn/button';
+import { Calendar } from '@potta/components/shadcn/calendar';
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from "@potta/components/shadcn/popover";
+} from '@potta/components/shadcn/popover';
 
 // Create a custom error type that can handle both FieldError and simple message objects
 type CustomError = FieldError | { message: string };
@@ -80,7 +80,8 @@ const Input: React.FC<Props> = ({
         placeholder={placeholder}
         className={`w-full ${inputClass} ${
           height ? 'py-1.5' : 'py-2.5'
-        } px-4 border border-gray-200 rounded-[2px] outline-none mt-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500`}
+        } px-4 border border-gray-200 rounded-[2px] outline-none mt-2 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500
+   `}
       />
       {errors ? (
         <small className="col-span-2 text-red-500">{errors?.message}</small>

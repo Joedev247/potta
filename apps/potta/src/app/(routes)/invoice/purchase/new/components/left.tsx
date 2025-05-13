@@ -13,7 +13,7 @@ import TextArea from '@potta/components/textArea';
 import useCreatePurchaseOrder from '../hooks/useCreatePurchase';
 
 // Define Option interface to match the one in SearchSelect component
-interface Option { 
+interface Option {
   label: string;
   value: string | number;
 }
@@ -45,22 +45,22 @@ interface ValidationErrors {
 
 const Left = () => {
   const context = useContext(ContextData);
-  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<string>('');
-  
+  const [selectedPaymentMethod, setSelectedPaymentMethod] =
+    useState<string>('');
+
   // Vendor data fetch
   const { data: vendorData, isLoading: vendorsLoading } = useGetAllVendors({
     page: 1,
     limit: 100,
   });
   const vendors = vendorData?.data || [];
-  
+
   // Form state variables
   const [orderDate, setOrderDate] = useState('');
   const [requiredDate, setRequiredDate] = useState('');
   const [vendorId, setVendorId] = useState('');
   const [selectedVendor, setSelectedVendor] = useState<Option | null>(null);
-  const [orderNumber, setOrderNumber] = useState(
-  );
+  const [orderNumber, setOrderNumber] = useState();
   const [shoppingAddress, setShoppingAddress] = useState('');
   const [note, setNote] = useState('');
   const [paymentTerms, setPaymentTerms] = useState('');
@@ -72,7 +72,8 @@ const Left = () => {
 
   // Create vendor options
   const vendorOptions: Option[] = vendors.map((vendor: any) => ({
-    label: vendor.name || `Vendor ${vendor.vendorId || vendor.uuid.slice(0, 8)}`,
+    label:
+      vendor.name || `Vendor ${vendor.vendorId || vendor.uuid.slice(0, 8)}`,
     value: vendor.uuid,
   }));
 
@@ -86,14 +87,16 @@ const Left = () => {
     ) {
       const firstVendor = vendors[0];
       const firstOption = {
-        label: firstVendor.name || `Vendor ${firstVendor.vendorId || firstVendor.uuid.slice(0, 8)}`,
+        label:
+          firstVendor.name ||
+          `Vendor ${firstVendor.vendorId || firstVendor.uuid.slice(0, 8)}`,
         value: firstVendor.uuid,
       };
 
       initialVendorSelectionMade.current = true;
       setVendorId(firstVendor.uuid);
       setSelectedVendor(firstOption);
-      
+
       // Update context data
       context?.setData((prevData: any) => ({
         ...prevData,
@@ -136,7 +139,7 @@ const Left = () => {
       default:
         break;
     }
-    
+
     // Update context data
     context?.setData((prevData: any) => ({
       ...prevData,
@@ -171,8 +174,10 @@ const Left = () => {
     if (!orderDate) newErrors.orderDate = 'Order date is required';
     if (!requiredDate) newErrors.requiredDate = 'Required date is required';
     if (!vendorId) newErrors.vendorId = 'Vendor is required';
-    if (!shoppingAddress) newErrors.shoppingAddress = 'Shipping address is required';
-    if (!selectedPaymentMethod) newErrors.paymentMethod = 'Payment method is required';
+    if (!shoppingAddress)
+      newErrors.shoppingAddress = 'Shipping address is required';
+    if (!selectedPaymentMethod)
+      newErrors.paymentMethod = 'Payment method is required';
 
     // Check if there are line items
     const tableData = context?.data?.table || [];
@@ -244,59 +249,87 @@ const Left = () => {
 
   return (
     <>
-       <div className="max-w-5xl min-w-5xl px-2 bg-transparent overflow-y-auto scroll bg-white ">
-       <div className="w-full  gap-4">
-        
-          
+      <div className="max-w-5xl min-w-5xl px-2 bg-transparent overflow-y-auto scroll bg-white ">
+        <div className="w-full  gap-4">
           <div className="grid grid-cols-3 gap-4 mb-6">
             <Input
               type="text"
               label="Order Number"
               name="orderNumber"
               value={orderNumber}
-              onchange={(e: any) => handleInputChange('orderNumber', e.target.value)}
-              
+              onchange={(e: any) =>
+                handleInputChange('orderNumber', e.target.value)
+              }
             />
             <div className={`${errors.orderDate ? 'error-field' : ''}`}>
               <Input
                 type="date"
-                label={<>Order Date<RequiredMark /></>}
+                label={
+                  <>
+                    Order Date
+                    <RequiredMark />
+                  </>
+                }
                 name="orderDate"
                 value={orderDate}
-                onchange={(e) => 
-                  handleInputChange('orderDate', typeof e === 'string' ? e : e.target.value)
+                onchange={(e) =>
+                  handleInputChange(
+                    'orderDate',
+                    typeof e === 'string' ? e : e.target.value
+                  )
                 }
                 placeholder="Select order date"
-                errors={errors.orderDate ? { message: errors.orderDate } : undefined}
+                errors={
+                  errors.orderDate ? { message: errors.orderDate } : undefined
+                }
               />
             </div>
-            
+
             <div className={`${errors.requiredDate ? 'error-field' : ''}`}>
               <Input
                 type="date"
-                label={<>Required Date<RequiredMark /></>}
+                label={
+                  <>
+                    Required Date
+                    <RequiredMark />
+                  </>
+                }
                 name="requiredDate"
                 value={requiredDate}
-                onchange={(e) => 
-                  handleInputChange('requiredDate', typeof e === 'string' ? e : e.target.value)
+                onchange={(e) =>
+                  handleInputChange(
+                    'requiredDate',
+                    typeof e === 'string' ? e : e.target.value
+                  )
                 }
                 placeholder="Select required date"
-                errors={errors.requiredDate ? { message: errors.requiredDate } : undefined}
+                errors={
+                  errors.requiredDate
+                    ? { message: errors.requiredDate }
+                    : undefined
+                }
               />
             </div>
           </div>
-          
-          <div className="grid grid-cols-2 gap-4">
-          </div>
+
+          <div className="grid grid-cols-2 gap-4"></div>
 
           <div className="mt-6 grid grid-cols-2 gap-4">
             <div className={`${errors.vendorId ? 'error-field' : ''}`}>
               <SearchSelect
-                label={<>Vendor<RequiredMark /></>}
+                label={
+                  <>
+                    Vendor
+                    <RequiredMark />
+                  </>
+                }
                 options={vendorOptions}
                 value={selectedVendor}
                 onChange={(option: Option | null) => {
-                  console.log('Vendor SearchSelect onChange called with:', option);
+                  console.log(
+                    'Vendor SearchSelect onChange called with:',
+                    option
+                  );
                   setSelectedVendor(option);
                   handleInputChange('vendorId', option?.value || '');
                 }}
@@ -309,18 +342,28 @@ const Left = () => {
                 <p className="text-red-500 text-sm mt-1">{errors.vendorId}</p>
               )}
             </div>
-          <div className={` ${errors.shoppingAddress ? 'error-field' : ''}`}>
-            <Input
-              type="text"
-              label={<>Shipping Address<RequiredMark /></>}
-              name="shoppingAddress"
-              value={shoppingAddress}
-              onchange={(e: any) => handleInputChange('shoppingAddress', e.target.value)}
-              errors={errors.shoppingAddress ? { message: errors.shoppingAddress } : undefined}
-            />
+            <div className={` ${errors.shoppingAddress ? 'error-field' : ''}`}>
+              <Input
+                type="text"
+                label={
+                  <>
+                    Shipping Address
+                    <RequiredMark />
+                  </>
+                }
+                name="shoppingAddress"
+                value={shoppingAddress}
+                onchange={(e: any) =>
+                  handleInputChange('shoppingAddress', e.target.value)
+                }
+                errors={
+                  errors.shoppingAddress
+                    ? { message: errors.shoppingAddress }
+                    : undefined
+                }
+              />
+            </div>
           </div>
-          </div>
-          
         </div>
 
         <div className="my-6">
@@ -362,7 +405,9 @@ const Left = () => {
                       className="mr-2 text-xl"
                       name="paymentMethod"
                     />
-                    <span>{option.replace(/([A-Z])/g, ' $1').toUpperCase()}</span>
+                    <span>
+                      {option.replace(/([A-Z])/g, ' $1').toUpperCase()}
+                    </span>
                   </div>
                 </div>
               )
@@ -373,13 +418,15 @@ const Left = () => {
               </p>
             )}
           </div>
-          
+
           <div className="mt-4">
             <TextArea
               label="Payment Terms"
               name="paymentTerms"
               value={paymentTerms}
-              onchange={(e: any) => handleInputChange('paymentTerms', e.target.value)}
+              onchange={(e: any) =>
+                handleInputChange('paymentTerms', e.target.value)
+              }
               placeholder="Specify payment terms and conditions"
             />
           </div>
@@ -390,7 +437,8 @@ const Left = () => {
         <textarea
           value={note}
           onChange={(e) => handleInputChange('note', e.target.value)}
-          className="h-36 border p-2 w-full outline-none mt-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+          className="h-36 border p-2 w-full outline-none mt-2 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500
+   "
           placeholder="Add any notes or special instructions for this purchase order"
         ></textarea>
 

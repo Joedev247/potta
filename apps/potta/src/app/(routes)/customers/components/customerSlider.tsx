@@ -1,7 +1,6 @@
 'use client';
 import React, { useContext, useState, useEffect } from 'react';
 import Input from '@potta/components/input';
-
 import Slider from '@potta/components/slideover';
 import { SingleValue } from 'react-select';
 import Select from '@potta/components/select';
@@ -16,7 +15,13 @@ import Tax from './tax';
 import useCreateCustomer from '../hooks/useCreateCustomer';
 import toast from 'react-hot-toast';
 import { PhoneInput } from '@potta/components/phoneInput';
-// Import the new PhoneInput component
+// Import shadcn date picker components
+import { Calendar } from "@potta/components/shadcn/calendar";
+import { Popover, PopoverContent, PopoverTrigger } from "@potta/components/shadcn/popover";
+import { Button as ShadcnButton } from "@potta/components/shadcn/button";
+import { CalendarIcon } from "lucide-react";
+import { format } from "date-fns";
+import { cn } from "@potta/lib/utils";
 
 interface CustomerCreateProps {
   open?: boolean; // Optional controlled open state
@@ -37,7 +42,6 @@ const SliderCustomer: React.FC<CustomerCreateProps> = ({
   const [tabs, setTabs] = useState<string>('Address');
   // Local state as fallback if no controlled state is provided
   const [localOpen, setLocalOpen] = useState(false);
-
   // Track phone metadata separately to maintain all parts of the phone number
   const [phoneMetadata, setPhoneMetadata] = useState<PhoneMetadata>({
     formattedValue: '',
@@ -78,6 +82,7 @@ const SliderCustomer: React.FC<CustomerCreateProps> = ({
       taxId: '',
       creditLimit: 0,
       gender: undefined,
+      date_of_birth: undefined, // Add default value for dateOfBirth
     },
   });
 
@@ -223,11 +228,52 @@ const SliderCustomer: React.FC<CustomerCreateProps> = ({
                 />
               )}
             />
-            {errors.type && (
-              <small className="text-red-500">{errors.type.message}</small>
+            {errors.gender && (
+              <small className="text-red-500">{errors.gender.message}</small>
             )}
           </div>
         </div>
+        
+        {/* Date of Birth Field */}
+        <div className="w-full mb-5">
+          <div>
+            <label className="block text-sm font-medium mb-1">
+              Date of Birth
+            </label>
+            <Controller
+              control={control}
+              name="date_of_birth"
+              render={({ field }) => (
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <ShadcnButton
+                      variant="outline"
+                      className={cn(
+                        "w-1/2 py-5  justify-start text-left font-normal",
+                        !field.value && "text-muted-foreground"
+                      )}
+                    >
+                      <CalendarIcon className="mr-2 h-4 w-4" />
+                      {field.value ? format(field.value, "PPP") : <span>Pick a date</span>}
+                    </ShadcnButton>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-auto p-0">
+                    <Calendar
+                      mode="single"
+                      selected={field.value}
+                      onSelect={field.onChange}
+                      initialFocus
+                    />
+                  </PopoverContent>
+                </Popover>
+              )}
+            />
+            {errors.date_of_birth && (
+              <small className="text-red-500">{errors.date_of_birth.message}</small>
+            )}
+          </div>
+        </div>
+        
         <hr />
         <div className="mt-2">
           <h1 className="text-xl">Contact Information </h1>

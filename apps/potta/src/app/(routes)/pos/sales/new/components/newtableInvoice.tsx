@@ -41,7 +41,9 @@ const getCurrencySymbol = (currencyCode: string): string => {
 export default function DynamicTable() {
   const context = useContext(ContextData);
   const [rows, setRows] = useState<any>(context?.data?.table || []);
-  const [selectedProduct, setSelectedProduct] = useState<ProductOption | null>(null);
+  const [selectedProduct, setSelectedProduct] = useState<ProductOption | null>(
+    null
+  );
   const [qty, setQty] = useState(1);
   const [price, setPrice] = useState(0);
   const [tax, setTax] = useState(0);
@@ -58,32 +60,32 @@ export default function DynamicTable() {
   });
 
   // Replace this line:
-  const products: Product[] = (productsData?.data || []).map(product => ({
+  const products: Product[] = (productsData?.data || []).map((product) => ({
     uuid: product.uuid,
     name: product.name,
     price: product.salesPrice,
     tax: product.taxRate,
-    productId: product.productId
+    productId: product.productId,
   }));
 
   // Create product options as regular Options instead of ProductOptions
   const productOptions: Option[] = products.map((product) => ({
     label: `${product.name} `,
-    value: product.uuid
+    value: product.uuid,
   }));
 
   // Update handler to accept Option instead of ProductOption
   const handleProductSelect = (value: Option | null) => {
     // Clear product error when selection changes
-    setErrors(prev => ({ ...prev, product: undefined }));
+    setErrors((prev) => ({ ...prev, product: undefined }));
 
     if (value) {
-      const selectedProd = products.find(p => p.uuid === value.value);
+      const selectedProd = products.find((p) => p.uuid === value.value);
       if (selectedProd) {
         const productOption: ProductOption = {
           label: value.label,
           value: value.value as string,
-          product: selectedProd
+          product: selectedProd,
         };
         setSelectedProduct(productOption);
         setPrice(selectedProd.price);
@@ -98,7 +100,7 @@ export default function DynamicTable() {
 
   const handleQtyChange = (value: string) => {
     // Clear quantity error when value changes
-    setErrors(prev => ({ ...prev, quantity: undefined }));
+    setErrors((prev) => ({ ...prev, quantity: undefined }));
 
     const numValue = parseInt(value);
     if (!isNaN(numValue) && numValue > 0) {
@@ -127,7 +129,9 @@ export default function DynamicTable() {
     if (!validateItemInput()) return;
 
     // Check if the product already exists in the table
-    const existingProductIndex = rows.findIndex((row: any) => row.uuid === selectedProduct!.product.uuid);
+    const existingProductIndex = rows.findIndex(
+      (row: any) => row.uuid === selectedProduct!.product.uuid
+    );
 
     let updatedRows;
 
@@ -136,7 +140,7 @@ export default function DynamicTable() {
       updatedRows = [...rows];
       updatedRows[existingProductIndex] = {
         ...updatedRows[existingProductIndex],
-        qty: updatedRows[existingProductIndex].qty + qty
+        qty: updatedRows[existingProductIndex].qty + qty,
       };
     } else {
       // If product doesn't exist, add a new row
@@ -183,7 +187,7 @@ export default function DynamicTable() {
 
   // Calculate subtotal, tax and total
   const calculateSubtotal = () => {
-    return rows.reduce((sum: number, row: any) => sum + (row.qty * row.price), 0);
+    return rows.reduce((sum: number, row: any) => sum + row.qty * row.price, 0);
   };
 
   const calculateTaxAmount = () => {
@@ -202,7 +206,7 @@ export default function DynamicTable() {
   const formatCurrency = (amount: number) => {
     return new Intl.NumberFormat('en-US', {
       minimumFractionDigits: 2,
-      maximumFractionDigits: 2
+      maximumFractionDigits: 2,
     }).format(amount);
   };
 
@@ -212,25 +216,40 @@ export default function DynamicTable() {
         <table className="min-w-full ">
           <thead>
             <tr className="bg-gray-50">
-              <th scope="col" className="px-6 py-3 text-left text-sm font-semibold text-gray-500 uppercase tracking-wider w-5/12">
+              <th
+                scope="col"
+                className="px-6 py-3 text-left text-sm font-semibold text-gray-500 uppercase tracking-wider w-5/12"
+              >
                 Product
               </th>
-              <th scope="col" className="px-6 py-3 text-left text-sm font-semibold text-gray-500 uppercase tracking-wider w-2/12">
+              <th
+                scope="col"
+                className="px-6 py-3 text-left text-sm font-semibold text-gray-500 uppercase tracking-wider w-2/12"
+              >
                 Qty
               </th>
-              <th scope="col" className="px-6 py-3 text-left text-sm font-semibold text-gray-500 uppercase tracking-wider w-2/12">
+              <th
+                scope="col"
+                className="px-6 py-3 text-left text-sm font-semibold text-gray-500 uppercase tracking-wider w-2/12"
+              >
                 Price
               </th>
-              <th scope="col" className="px-6 py-3 text-left text-sm font-semibold text-gray-500 uppercase tracking-wider w-2/12">
+              <th
+                scope="col"
+                className="px-6 py-3 text-left text-sm font-semibold text-gray-500 uppercase tracking-wider w-2/12"
+              >
                 Tax
               </th>
-              <th scope="col" className="px-6 py-3 text-left text-sm font-semibold text-gray-500 uppercase tracking-wider w-1/12">
+              <th
+                scope="col"
+                className="px-6 py-3 text-left text-sm font-semibold text-gray-500 uppercase tracking-wider w-1/12"
+              >
                 Actions
               </th>
             </tr>
           </thead>
           <tbody className="bg-white divide-gray-200">
-             {/* Display existing items */}
+            {/* Display existing items */}
             {rows.length > 0 ? (
               rows.map((row: any) => (
                 <tr key={row.id} className="hover:bg-gray-50 border-b">
@@ -259,7 +278,10 @@ export default function DynamicTable() {
               ))
             ) : (
               <tr>
-                <td colSpan={5} className="px-6 py-8 text-center text-sm text-gray-500 italic">
+                <td
+                  colSpan={5}
+                  className="px-6 py-8 text-center text-sm text-gray-500 italic"
+                >
                   No items added yet. Search for a product below to add items.
                 </td>
               </tr>
@@ -269,7 +291,14 @@ export default function DynamicTable() {
               <td className="px-3 py-3 w-5/12">
                 <SearchSelect
                   options={productOptions}
-                  value={selectedProduct ? { label: selectedProduct.label, value: selectedProduct.value } : null}
+                  value={
+                    selectedProduct
+                      ? {
+                          label: selectedProduct.label,
+                          value: selectedProduct.value,
+                        }
+                      : null
+                  }
                   onChange={handleProductSelect}
                   isLoading={productsLoading}
                   placeholder="Search for a product"
@@ -287,7 +316,10 @@ export default function DynamicTable() {
                   type="number"
                   value={qty}
                   onChange={(e) => handleQtyChange(e.target.value)}
-                  className={`border ${errors.quantity ? 'border-red-500' : 'border-gray-300'} px-3 py-2.5 w-full focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-left`}
+                  className={`border ${
+                    errors.quantity ? 'border-red-500' : 'border-gray-300'
+                  } px-3 py-2.5 w-full focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500
+    text-left`}
                   min="1"
                 />
                 {errors.quantity && (
@@ -315,7 +347,11 @@ export default function DynamicTable() {
               <td className="px-3 py-3 text-left w-1/12">
                 <button
                   onClick={handleAddRow}
-                  className={`${!selectedProduct ? 'bg-gray-400 cursor-not-allowed' : 'bg-green-600 hover:bg-green-700'} text-white px-3 py-2.5 text-sm font-medium transition-colors rounded-md duration-200 inline-flex items-center justify-center w-full`}
+                  className={`${
+                    !selectedProduct
+                      ? 'bg-gray-400 cursor-not-allowed'
+                      : 'bg-green-600 hover:bg-green-700'
+                  } text-white px-3 py-2.5 text-sm font-medium transition-colors rounded-md duration-200 inline-flex items-center justify-center w-full`}
                   disabled={!selectedProduct}
                 >
                   <i className="ri-add-line mr-1"></i>
@@ -323,13 +359,9 @@ export default function DynamicTable() {
                 </button>
               </td>
             </tr>
-            
-           
           </tbody>
         </table>
       </div>
-
-    
     </div>
   );
 }

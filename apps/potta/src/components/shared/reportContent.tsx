@@ -1,4 +1,3 @@
-
 'use client';
 import React, { useState, useEffect } from 'react';
 import {
@@ -37,13 +36,10 @@ import {
 } from '@potta/components/card';
 import { ScrollShadow } from '@nextui-org/react';
 
-
 import Slider from '@potta/components/slideover';
 import PaymentSummaryReport from '@potta/app/(routes)/reports/components/disbursementReports/paymentSummaryReport';
 import BudgetUtilizationReport from '@potta/app/(routes)/reports/components/disbursementReports/budgetUtilizationReport';
 import RootLayout from '@potta/app/(routes)/layout';
-
-
 
 // Define TypeScript interfaces for our data structures
 interface Report {
@@ -502,30 +498,44 @@ const formatDate = (dateString: string): string => {
 
 // Payment Summary Report Component
 
-
 // Report View Content Component
-const ReportViewContent: React.FC<{ report: Report | null; data: ReportData }> = ({ report, data }) => {
+const ReportViewContent: React.FC<{
+  report: Report | null;
+  data: ReportData;
+}> = ({ report, data }) => {
   if (!report) return null;
 
-  const categoryInfo = reportCategories.find(cat => cat.id === report.category);
+  const categoryInfo = reportCategories.find(
+    (cat) => cat.id === report.category
+  );
   const icon = categoryInfo?.icon || <FileText className="h-5 w-5" />;
 
   // Determine which report component to render based on the report dataType
   const renderReportContent = () => {
     if (report.dataType === 'payment') {
-      return <PaymentSummaryReport reportPeriod={data.reportPeriod} payments={data.payments} kpis={data.paymentKpis} />;
+      return (
+        <PaymentSummaryReport
+          reportPeriod={data.reportPeriod}
+          payments={data.payments}
+          kpis={data.paymentKpis}
+        />
+      );
     } else if (report.dataType === 'budget') {
       // Use the imported BudgetUtilizationReport component
-      return <BudgetUtilizationReport
-        reportPeriod={data.reportPeriod}
-        budgets={data.budgets}
-        kpis={data.budgetKpis}
-      />;
+      return (
+        <BudgetUtilizationReport
+          reportPeriod={data.reportPeriod}
+          budgets={data.budgets}
+          kpis={data.budgetKpis}
+        />
+      );
     } else {
       // Default placeholder for other report types
       return (
         <div className="border rounded-lg p-4 bg-gray-50 min-h-[300px] flex items-center justify-center">
-          <p className="text-gray-400">Report content would be displayed here</p>
+          <p className="text-gray-400">
+            Report content would be displayed here
+          </p>
         </div>
       );
     }
@@ -533,15 +543,9 @@ const ReportViewContent: React.FC<{ report: Report | null; data: ReportData }> =
 
   return (
     <div className="w-full min-h-[87.5vh] max-w-5xl ">
-      <div className="flex items-center mb-6">
-       
-      </div>
+      <div className="flex items-center mb-6"></div>
 
-      <div className="mb-6">
-        {renderReportContent()}
-      </div>
-
-
+      <div className="mb-6">{renderReportContent()}</div>
     </div>
   );
 };
@@ -669,7 +673,9 @@ const ReportsContent: React.FC = () => {
             </button>
           </div>
           <div className="flex items-center text-green-600 text-sm font-medium">
-            <span className="opacity-0 group-hover:opacity-100 transition-opacity">View Report</span>
+            <span className="opacity-0 group-hover:opacity-100 transition-opacity">
+              View Report
+            </span>
             <ChevronRight className="h-4 w-4 ml-1" />
           </div>
         </CardFooter>
@@ -687,202 +693,203 @@ const ReportsContent: React.FC = () => {
   const additionalTabs = reportCategories.slice(5);
 
   return (
-    
-      <div className="px-14">
-        {/* Custom tab styling as per your example */}
-        <div className="flex w-fit bg-[#F3FBFB] mt-7">
-          {/* Initial tabs that are always visible */}
-          {initialTabs.map((tab) => (
-            <div
-              key={tab.id}
-              onClick={() => setActiveTab(tab.id)}
-              className={`px-4 py-2.5 text-gray-500 duration-500 ease-in-out ${
-                activeTab === tab.id &&
-                'border-b border-green-900 text-green-900 font-thin'
-              } cursor-pointer flex items-center`}
-            >
-              <p>{tab.label.replace(' Reports', '')}</p>
-            </div>
-          ))}
-
-          {/* Additional tabs - these could be in a dropdown */}
-          {additionalTabs.length > 0 && (
-            <div className="relative group">
-              <div className="px-4 py-2.5 text-gray-500 cursor-pointer flex items-center">
-                <p>More</p>
-              </div>
-              <div className="absolute hidden group-hover:block bg-white shadow-md z-10 min-w-[200px]">
-                {additionalTabs.map((tab) => (
-                  <div
-                    key={tab.id}
-                    onClick={() => setActiveTab(tab.id)}
-                    className={`px-4 py-4 text-gray-500 hover:bg-[#F3FBFB] cursor-pointer flex items-center ${
-                      activeTab === tab.id && 'text-green-900 font-thin'
-                    }`}
-                  >
-                    {tab.icon}
-                    <p>{tab.label.replace(' Reports', '')}</p>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-        </div>
-
-        {/* Search bar with global search toggle */}
-        <div className="mt-6 mb-6">
-          <div className="flex flex-col md:flex-row gap-4 w-1/2">
-            <div className="relative flex-1 ">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-6 w-6 text-gray-400" />
-              <input
-                type="text"
-                placeholder="Search reports..."
-                value={searchQuery}
-                onChange={(e: any) => setSearchQuery(e.target.value)}
-                className="pl-10 pr-10 py-4 w-full border border-gray-200 rounded-[2px] outline-none focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-              />
-              {searchQuery && (
-                <button
-                  onClick={handleClearSearch}
-                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
-                >
-                  <X className="h-6 w-6" />
-                </button>
-              )}
-            </div>
-            <div className="flex items-center">
-              <label className="flex items-center cursor-pointer">
-                <div className="relative">
-                  <input
-                    type="checkbox"
-                    className="sr-only"
-                    checked={isGlobalSearch}
-                    onChange={() => setIsGlobalSearch(!isGlobalSearch)}
-                  />
-                  <div
-                    className={`block w-10 h-6 rounded-full ${
-                      isGlobalSearch ? 'bg-green-400' : 'bg-gray-300'
-                    }`}
-                  ></div>
-                  <div
-                    className={`dot absolute left-1 top-1 bg-white w-4 h-4 rounded-full transition ${
-                      isGlobalSearch ? 'transform translate-x-4' : ''
-                    }`}
-                  ></div>
-                </div>
-                <div className="ml-3 text-sm font-medium text-gray-700">
-                  {isGlobalSearch
-                    ? 'Search all reports'
-                    : 'Search current tab only'}
-                </div>
-              </label>
-            </div>
-          </div>
-        </div>
-
-        {/* Search results count when searching */}
-        {searchQuery.trim() !== '' && (
-          <div className="mb-4 text-sm text-gray-500">
-            Found {filteredReports.length} report
-            {filteredReports.length !== 1 ? 's' : ''} matching &apos;{searchQuery}
-            &apos;
-            {isGlobalSearch && ` across all categories`}
-            {!isGlobalSearch &&
-              ` in ${
-                reportCategories.find((cat) => cat.id === activeTab)?.label ||
-                'selected category'
-              }`}
-          </div>
-        )}
-
-        {/* Tab title heading */}
-        <div className="mb-6 mt-8">
-          <div className="flex items-center">
-            <h1 className="text-2xl font-medium text-gray-800">
-              {activeTabInfo?.label || 'Reports'}
-            </h1>
-          </div>
-          {activeTab === 'frequent' && (
-            <p className="text-sm text-gray-500 mt-1">Your most commonly used reports</p>
-          )}
-          {activeTab === 'all' && (
-            <p className="text-sm text-gray-500 mt-1">All available reports across categories</p>
-          )}
-        </div>
-
-        {/* Custom ScrollShadow with CSS to hide scrollbar */}
-        <div className="custom-scroll-container">
-          <ScrollShadow
-            className="h-[600px] custom-scrollbar"
-            hideScrollBar
-            size={100}
-            orientation="vertical"
+    <div className="px-14">
+      {/* Custom tab styling as per your example */}
+      <div className="flex w-fit bg-[#F3FBFB] mt-7">
+        {/* Initial tabs that are always visible */}
+        {initialTabs.map((tab) => (
+          <div
+            key={tab.id}
+            onClick={() => setActiveTab(tab.id)}
+            className={`px-4 py-2.5 text-gray-500 duration-500 ease-in-out ${
+              activeTab === tab.id &&
+              'border-b border-green-900 text-green-900 font-thin'
+            } cursor-pointer flex items-center`}
           >
-            {/* No results message */}
-            {filteredReports.length === 0 && (
-              <div className="py-8 text-center">
-                <FileText className="mx-auto h-12 w-12 text-gray-300" />
-                <h3 className="mt-2 text-lg font-medium">No reports found</h3>
-                <p className="mt-1 text-gray-500">
-                  {searchQuery.trim() !== ''
-                    ? `Try adjusting your search or ${
-                        isGlobalSearch
-                          ? 'use different keywords'
-                          : 'enable "Search all reports"'
-                      }`
-                    : 'No reports available in this category'}
-                </p>
-              </div>
-            )}
+            <p>{tab.label.replace(' Reports', '')}</p>
+          </div>
+        ))}
 
-            {/* Reports grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-              {filteredReports.map((report, index) => (
-                <div key={report.id}>
-                  {renderReportCard(report)}
+        {/* Additional tabs - these could be in a dropdown */}
+        {additionalTabs.length > 0 && (
+          <div className="relative group">
+            <div className="px-4 py-2.5 text-gray-500 cursor-pointer flex items-center">
+              <p>More</p>
+            </div>
+            <div className="absolute hidden group-hover:block bg-white shadow-md z-10 min-w-[200px]">
+              {additionalTabs.map((tab) => (
+                <div
+                  key={tab.id}
+                  onClick={() => setActiveTab(tab.id)}
+                  className={`px-4 py-4 text-gray-500 hover:bg-[#F3FBFB] cursor-pointer flex items-center ${
+                    activeTab === tab.id && 'text-green-900 font-thin'
+                  }`}
+                >
+                  {tab.icon}
+                  <p>{tab.label.replace(' Reports', '')}</p>
                 </div>
               ))}
             </div>
-          </ScrollShadow>
-        </div>
-
-        {/* Using the existing Slider component instead of a custom modal */}
-        {selectedReport && (
-          <Slider
-            edit={false}
-            title={selectedReport.title}
-            open={isReportModalOpen}
-            setOpen={setIsReportModalOpen}
-            closeButton={false}
-            onOpen={() => {
-              console.log(`Opening report: ${selectedReport.id}`);
-            }}
-          >
-            <ReportViewContent report={selectedReport} data={sampleData} />
-          </Slider>
+          </div>
         )}
-
-        {/* CSS to hide scrollbar */}
-        <style jsx global>{`
-          .custom-scroll-container {
-            position: relative;
-            width: 100%;
-          }
-
-          .custom-scrollbar::-webkit-scrollbar {
-            display: none;
-            width: 0;
-            height: 0;
-            background: transparent;
-          }
-
-          .custom-scrollbar {
-            -ms-overflow-style: none;  /* IE and Edge */
-            scrollbar-width: none;  /* Firefox */
-          }
-        `}</style>
       </div>
-    
+
+      {/* Search bar with global search toggle */}
+      <div className="mt-6 mb-6">
+        <div className="flex flex-col md:flex-row gap-4 w-1/2">
+          <div className="relative flex-1 ">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-6 w-6 text-gray-400" />
+            <input
+              type="text"
+              placeholder="Search reports..."
+              value={searchQuery}
+              onChange={(e: any) => setSearchQuery(e.target.value)}
+              className="pl-10 pr-10 py-4 w-full border border-gray-200 rounded-[2px] outline-none focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500
+   "
+            />
+            {searchQuery && (
+              <button
+                onClick={handleClearSearch}
+                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+              >
+                <X className="h-6 w-6" />
+              </button>
+            )}
+          </div>
+          <div className="flex items-center">
+            <label className="flex items-center cursor-pointer">
+              <div className="relative">
+                <input
+                  type="checkbox"
+                  className="sr-only"
+                  checked={isGlobalSearch}
+                  onChange={() => setIsGlobalSearch(!isGlobalSearch)}
+                />
+                <div
+                  className={`block w-10 h-6 rounded-full ${
+                    isGlobalSearch ? 'bg-green-400' : 'bg-gray-300'
+                  }`}
+                ></div>
+                <div
+                  className={`dot absolute left-1 top-1 bg-white w-4 h-4 rounded-full transition ${
+                    isGlobalSearch ? 'transform translate-x-4' : ''
+                  }`}
+                ></div>
+              </div>
+              <div className="ml-3 text-sm font-medium text-gray-700">
+                {isGlobalSearch
+                  ? 'Search all reports'
+                  : 'Search current tab only'}
+              </div>
+            </label>
+          </div>
+        </div>
+      </div>
+
+      {/* Search results count when searching */}
+      {searchQuery.trim() !== '' && (
+        <div className="mb-4 text-sm text-gray-500">
+          Found {filteredReports.length} report
+          {filteredReports.length !== 1 ? 's' : ''} matching &apos;{searchQuery}
+          &apos;
+          {isGlobalSearch && ` across all categories`}
+          {!isGlobalSearch &&
+            ` in ${
+              reportCategories.find((cat) => cat.id === activeTab)?.label ||
+              'selected category'
+            }`}
+        </div>
+      )}
+
+      {/* Tab title heading */}
+      <div className="mb-6 mt-8">
+        <div className="flex items-center">
+          <h1 className="text-2xl font-medium text-gray-800">
+            {activeTabInfo?.label || 'Reports'}
+          </h1>
+        </div>
+        {activeTab === 'frequent' && (
+          <p className="text-sm text-gray-500 mt-1">
+            Your most commonly used reports
+          </p>
+        )}
+        {activeTab === 'all' && (
+          <p className="text-sm text-gray-500 mt-1">
+            All available reports across categories
+          </p>
+        )}
+      </div>
+
+      {/* Custom ScrollShadow with CSS to hide scrollbar */}
+      <div className="custom-scroll-container">
+        <ScrollShadow
+          className="h-[600px] custom-scrollbar"
+          hideScrollBar
+          size={100}
+          orientation="vertical"
+        >
+          {/* No results message */}
+          {filteredReports.length === 0 && (
+            <div className="py-8 text-center">
+              <FileText className="mx-auto h-12 w-12 text-gray-300" />
+              <h3 className="mt-2 text-lg font-medium">No reports found</h3>
+              <p className="mt-1 text-gray-500">
+                {searchQuery.trim() !== ''
+                  ? `Try adjusting your search or ${
+                      isGlobalSearch
+                        ? 'use different keywords'
+                        : 'enable "Search all reports"'
+                    }`
+                  : 'No reports available in this category'}
+              </p>
+            </div>
+          )}
+
+          {/* Reports grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            {filteredReports.map((report, index) => (
+              <div key={report.id}>{renderReportCard(report)}</div>
+            ))}
+          </div>
+        </ScrollShadow>
+      </div>
+
+      {/* Using the existing Slider component instead of a custom modal */}
+      {selectedReport && (
+        <Slider
+          edit={false}
+          title={selectedReport.title}
+          open={isReportModalOpen}
+          setOpen={setIsReportModalOpen}
+          closeButton={false}
+          onOpen={() => {
+            console.log(`Opening report: ${selectedReport.id}`);
+          }}
+        >
+          <ReportViewContent report={selectedReport} data={sampleData} />
+        </Slider>
+      )}
+
+      {/* CSS to hide scrollbar */}
+      <style jsx global>{`
+        .custom-scroll-container {
+          position: relative;
+          width: 100%;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar {
+          display: none;
+          width: 0;
+          height: 0;
+          background: transparent;
+        }
+
+        .custom-scrollbar {
+          -ms-overflow-style: none; /* IE and Edge */
+          scrollbar-width: none; /* Firefox */
+        }
+      `}</style>
+    </div>
   );
 };
 

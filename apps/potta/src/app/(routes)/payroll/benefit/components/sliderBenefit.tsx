@@ -723,11 +723,8 @@ const SliderBenefit = () => {
                       </label>
                       <input
                         type="number"
-                        className={`w-full p-2 py-[10px] bg-gray-50 border outline-none focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500 ${
-                          validationErrors.percentageValue
-                            ? 'border-red-500'
-                            : ''
-                        }`}
+                        className={`w-full p-2 py-[10px] bg-gray-50 border outline-none focus:outline-none focus:ring-1 focus:ring-green-500 focus:border-green-500
+    ${validationErrors.percentageValue ? 'border-red-500' : ''}`}
                         placeholder={minPercentage.toString()}
                         value={percentageValue}
                         onChange={handlePercentageChange}

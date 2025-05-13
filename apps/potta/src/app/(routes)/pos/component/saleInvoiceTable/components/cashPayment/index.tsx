@@ -173,7 +173,8 @@ const PayCash = () => {
             name="cashAmount"
             value={cashAmount || ''}
             onChange={handleCashInput}
-            className="w-full py-2.5 px-4 border border-gray-200 rounded-[2px] outline-none mt-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            className="w-full py-2.5 px-4 border border-gray-200 rounded-[2px] outline-none mt-2 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500
+   "
           />
           {error ? (
             <small className="col-span-2 text-red-500">{error}</small>

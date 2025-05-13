@@ -244,33 +244,32 @@ const Left = () => {
         </div>
         <div className="">
           <Input
-          label='Date'
+            label="Date"
             name="date"
             type={'date'}
             value={date}
             onchange={(e: any) => handleInputChange('date', e.target.value)}
-
           />
         </div>
       </div>
 
       <div className="mt-3 w-full flex">
         <div className="w-[50%] flex items-center space-x-3">
-        <div className="w-full">
-          <SearchSelect
-          label='Customer'
-            options={customerOptions}
-            value={selectedCustomer}
-            onChange={(option: Option | null) => {
-              console.log('SearchSelect onChange called with:', option);
-              setSelectedCustomer(option);
-              handleInputChange('customerName', option?.value || '');
-            }}
-            isLoading={customersLoading}
-            placeholder="Select a customer..."
-            isClearable={true}
-            isSearchable={true}
-          />
+          <div className="w-full">
+            <SearchSelect
+              label="Customer"
+              options={customerOptions}
+              value={selectedCustomer}
+              onChange={(option: Option | null) => {
+                console.log('SearchSelect onChange called with:', option);
+                setSelectedCustomer(option);
+                handleInputChange('customerName', option?.value || '');
+              }}
+              isLoading={customersLoading}
+              placeholder="Select a customer..."
+              isClearable={true}
+              isSearchable={true}
+            />
           </div>
           <div className="h-full mt-8 flex items-center">
             <button
@@ -323,7 +322,8 @@ const Left = () => {
       <textarea
         value={note}
         onChange={(e) => handleInputChange('note', e.target.value)}
-        className="h-36 border p-2 w-full outline-none mt-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+        className="h-36 border p-2 w-full outline-none mt-2 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500
+   "
       ></textarea>
 
       <div className="mt-5 w-full flex justify-end">

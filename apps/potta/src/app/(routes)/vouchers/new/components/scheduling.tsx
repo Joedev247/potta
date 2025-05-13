@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useFormContext } from 'react-hook-form';
 import { Check, X, CalendarIcon } from 'lucide-react';
 import { format } from 'date-fns';
@@ -31,37 +31,70 @@ const daysOfWeek = [
 ];
 
 const Scheduling: React.FC<SchedulingProps> = () => {
-  const { register, watch, setValue } = useFormContext();
-  const programNeverEnds = watch('programNeverEnds') || false;
-  const validDuringSpecificDays = watch('validDuringSpecificDays') || false;
-  const [selectedDays, setSelectedDays] = useState<DaySchedule[]>([
-    { day: 'Fridays', startTime: '11:50 AM', endTime: '05:30', allDay: false },
-    { day: 'Saturdays', startTime: '11:50 AM', endTime: '10:30', allDay: true }
-  ]);
+  const { register, watch, setValue, getValues } = useFormContext();
+  const programNeverEnds = watch('scheduling.neverEnds') || false;
+  const validDuringSpecificDays = watch('scheduling.specificDaysOnly') || false;
+  
+  // Initialize selectedDays from form data or with default empty array
+  const [selectedDays, setSelectedDays] = useState<DaySchedule[]>([]);
   const [selectedDay, setSelectedDay] = useState<string>('');
   
   // Date state for date pickers
-  const startDate = watch('programStartsDatetime') || undefined;
-  const endDate = watch('programEndsDatetime') || undefined;
+  const startDate = watch('scheduling.programStartDate') || undefined;
+  const endDate = watch('scheduling.programEndDate') || undefined;
+
+  // Initialize selectedDays from form data on component mount
+  useEffect(() => {
+    const formValidDays = getValues('scheduling.validDays') || [];
+    if (formValidDays.length > 0) {
+      setSelectedDays(formValidDays);
+    }
+  }, [getValues]);
+
+  // Update form data whenever selectedDays changes
+  useEffect(() => {
+    setValue('scheduling.validDays', selectedDays);
+  }, [selectedDays, setValue]);
 
   const addDaySchedule = () => {
     if (!selectedDay || selectedDays.some(schedule => schedule.day === selectedDay)) return;
     
-    setSelectedDays([
-      ...selectedDays,
-      { day: selectedDay, startTime: '09:00 AM', endTime: '05:00 PM', allDay: false }
-    ]);
+    const newSchedule = { 
+      day: selectedDay, 
+      startTime: '09:00 AM', 
+      endTime: '05:00 PM', 
+      allDay: false 
+    };
+    
+    // Update local state
+    setSelectedDays([...selectedDays, newSchedule]);
+    
+    // Update form data
+    const currentValidDays = getValues('scheduling.validDays') || [];
+    setValue('scheduling.validDays', [...currentValidDays, newSchedule]);
+    
     setSelectedDay('');
   };
 
   const removeDaySchedule = (day: string) => {
-    setSelectedDays(selectedDays.filter(schedule => schedule.day !== day));
+    const updatedDays = selectedDays.filter(schedule => schedule.day !== day);
+    
+    // Update local state
+    setSelectedDays(updatedDays);
+    
+    // Update form data
+    setValue('scheduling.validDays', updatedDays);
   };
 
   const updateDaySchedule = (index: number, field: keyof DaySchedule, value: string | boolean) => {
     const updatedSchedules = [...selectedDays];
     updatedSchedules[index] = { ...updatedSchedules[index], [field]: value };
+    
+    // Update local state
     setSelectedDays(updatedSchedules);
+    
+    // Update form data
+    setValue('scheduling.validDays', updatedSchedules);
   };
 
   const toggleAllDay = (index: number) => {
@@ -70,7 +103,35 @@ const Scheduling: React.FC<SchedulingProps> = () => {
       ...updatedSchedules[index], 
       allDay: !updatedSchedules[index].allDay 
     };
+    
+    // Update local state
     setSelectedDays(updatedSchedules);
+    
+    // Update form data
+    setValue('scheduling.validDays', updatedSchedules);
+  };
+
+  // Handle toggle for program never ends
+  const handleProgramNeverEndsToggle = () => {
+    const newValue = !programNeverEnds;
+    setValue('scheduling.neverEnds', newValue);
+    
+    // If program never ends is true, clear the end date
+    if (newValue) {
+      setValue('scheduling.programEndDate', null);
+    }
+  };
+
+  // Handle toggle for valid during specific days
+  const handleValidDuringSpecificDaysToggle = () => {
+    const newValue = !validDuringSpecificDays;
+    setValue('scheduling.specificDaysOnly', newValue);
+    
+    // If specific days is false, clear the valid days
+    if (!newValue) {
+      setValue('scheduling.validDays', []);
+      setSelectedDays([]);
+    }
   };
 
   return (
@@ -94,14 +155,14 @@ const Scheduling: React.FC<SchedulingProps> = () => {
                   )}
                 >
                   <CalendarIcon className="mr-2 h-4 w-4" />
-                  {startDate ? format(startDate, "PPP") : "1- 15 - 2025"}
+                  {startDate ? format(new Date(startDate), "PPP") : "1- 15 - 2025"}
                 </Button>
               </PopoverTrigger>
               <PopoverContent className="w-auto p-0" align="start">
                 <Calendar
                   mode="single"
-                  selected={startDate}
-                  onSelect={(date) => setValue('programStartsDatetime', date)}
+                  selected={startDate ? new Date(startDate) : undefined}
+                  onSelect={(date) => setValue('scheduling.programStartDate', date ? date.toISOString() : null)}
                   initialFocus
                 />
               </PopoverContent>
@@ -124,14 +185,14 @@ const Scheduling: React.FC<SchedulingProps> = () => {
                     disabled={programNeverEnds}
                   >
                     <CalendarIcon className="mr-2 h-4 w-4" />
-                    {endDate && !programNeverEnds ? format(endDate, "PPP") : "never"}
+                    {endDate && !programNeverEnds ? format(new Date(endDate), "PPP") : "never"}
                   </Button>
                 </PopoverTrigger>
                 <PopoverContent className="w-auto p-0" align="start">
                   <Calendar
                     mode="single"
-                    selected={endDate}
-                    onSelect={(date) => setValue('programEndsDatetime', date)}
+                    selected={endDate ? new Date(endDate) : undefined}
+                    onSelect={(date) => setValue('scheduling.programEndDate', date ? date.toISOString() : null)}
                     initialFocus
                     disabled={programNeverEnds}
                   />
@@ -142,7 +203,7 @@ const Scheduling: React.FC<SchedulingProps> = () => {
               <label className="mr-2 text-sm text-gray-700">Program Never ends</label>
               <div 
                 className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none ${programNeverEnds ? 'bg-green-500' : 'bg-gray-200'}`}
-                onClick={() => setValue('programNeverEnds', !programNeverEnds)}
+                onClick={handleProgramNeverEndsToggle}
               >
                 <span 
                   className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${programNeverEnds ? 'translate-x-6' : 'translate-x-1'}`} 
@@ -150,7 +211,7 @@ const Scheduling: React.FC<SchedulingProps> = () => {
               </div>
               <input
                 type="checkbox"
-                {...register('programNeverEnds')}
+                {...register('scheduling.neverEnds')}
                 className="hidden"
               />
             </div>
@@ -162,16 +223,16 @@ const Scheduling: React.FC<SchedulingProps> = () => {
           <div className="flex items-center mb-4">
             <div 
               className={`w-5 h-5 border rounded flex items-center justify-center cursor-pointer ${validDuringSpecificDays ? 'bg-green-500 border-green-500' : 'border-gray-300'}`}
-              onClick={() => setValue('validDuringSpecificDays', !validDuringSpecificDays)}
+              onClick={handleValidDuringSpecificDaysToggle}
             >
               {validDuringSpecificDays && <Check className="h-4 w-4 text-white" />}
             </div>
             <input
               type="checkbox"
-              {...register('validDuringSpecificDays')}
+              {...register('scheduling.specificDaysOnly')}
               className="hidden"
             />
-            <label className="ml-2 text-sm text-gray-700 cursor-pointer" onClick={() => setValue('validDuringSpecificDays', !validDuringSpecificDays)}>
+            <label className="ml-2 text-sm text-gray-700 cursor-pointer" onClick={handleValidDuringSpecificDaysToggle}>
               Valid during specific days
             </label>
           </div>

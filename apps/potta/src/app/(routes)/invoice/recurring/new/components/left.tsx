@@ -69,9 +69,8 @@ const frequencyOptions = [
 
 const Left = () => {
   const context = useContext(ContextData);
-  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<
-    string
-  >('');
+  const [selectedPaymentMethod, setSelectedPaymentMethod] =
+    useState<string>('');
   const { data, isLoading: customersLoading } = useGetAllCustomers({
     page: 1,
     limit: 100,
@@ -127,7 +126,8 @@ const Left = () => {
         label:
           firstCustomer.firstName ||
           firstCustomer.lastName ||
-          `Customer ${firstCustomer.customerId || firstCustomer.uuid.slice(0, 8)
+          `Customer ${
+            firstCustomer.customerId || firstCustomer.uuid.slice(0, 8)
           }`,
         value: firstCustomer.uuid,
       };
@@ -351,14 +351,21 @@ const Left = () => {
     console.log('Raw Recurring Invoice Data:', InvoiceData);
     mutation.mutate(InvoiceData, {
       onSuccess: () => {
-        toast.success(`Recurring ${InvoiceData.invoiceType} created successfully`);
+        toast.success(
+          `Recurring ${InvoiceData.invoiceType} created successfully`
+        );
         // You can add navigation or other actions here after successful creation
       },
       onError: (error: any) => {
         toast.error(
-          `Failed to create Recurring Invoice: ${error.message || 'Unknown error'}`
+          `Failed to create Recurring Invoice: ${
+            error.message || 'Unknown error'
+          }`
         );
-        console.error('Error creating Recurring Invoice Please Try again later:', error);
+        console.error(
+          'Error creating Recurring Invoice Please Try again later:',
+          error
+        );
       },
     });
   };
@@ -386,24 +393,42 @@ const Left = () => {
         <div className={`${errors.issueDate ? 'error-field' : ''}`}>
           <Input
             type="date"
-            label={<>Issued Date<RequiredMark /></>}
+            label={
+              <>
+                Issued Date
+                <RequiredMark />
+              </>
+            }
             name="issueDate"
             value={issueDate}
             onchange={(e) =>
-              handleInputChange('issueDate', typeof e === 'string' ? e : e.target.value)
+              handleInputChange(
+                'issueDate',
+                typeof e === 'string' ? e : e.target.value
+              )
             }
             placeholder="Select issue date"
-            errors={errors.issueDate ? { message: errors.issueDate } : undefined}
+            errors={
+              errors.issueDate ? { message: errors.issueDate } : undefined
+            }
           />
         </div>
         <div className={`${errors.dueDate ? 'error-field' : ''}`}>
           <Input
             type="date"
-            label={<>Due Date<RequiredMark /></>}
+            label={
+              <>
+                Due Date
+                <RequiredMark />
+              </>
+            }
             name="dueDate"
             value={dueDate}
             onchange={(e) =>
-              handleInputChange('dueDate', typeof e === 'string' ? e : e.target.value)
+              handleInputChange(
+                'dueDate',
+                typeof e === 'string' ? e : e.target.value
+              )
             }
             placeholder="Select due date"
             errors={errors.dueDate ? { message: errors.dueDate } : undefined}
@@ -417,7 +442,12 @@ const Left = () => {
         <div className="grid grid-cols-4 gap-4">
           <div className={`${errors.frequency ? 'error-field' : ''}`}>
             <Select
-              label={<>Frequency<RequiredMark /></>}
+              label={
+                <>
+                  Frequency
+                  <RequiredMark />
+                </>
+              }
               options={frequencyOptions}
               selectedValue={frequency}
               onChange={(value: any) => handleInputChange('frequency', value)}
@@ -430,14 +460,24 @@ const Left = () => {
           <div className={`${errors.startDate ? 'error-field' : ''}`}>
             <Input
               type="date"
-              label={<>Start Date<RequiredMark /></>}
+              label={
+                <>
+                  Start Date
+                  <RequiredMark />
+                </>
+              }
               name="startDate"
               value={startDate}
               onchange={(e) =>
-                handleInputChange('startDate', typeof e === 'string' ? e : e.target.value)
+                handleInputChange(
+                  'startDate',
+                  typeof e === 'string' ? e : e.target.value
+                )
               }
               placeholder="Select start date"
-              errors={errors.startDate ? { message: errors.startDate } : undefined}
+              errors={
+                errors.startDate ? { message: errors.startDate } : undefined
+              }
             />
           </div>
         </div>
@@ -469,27 +509,48 @@ const Left = () => {
             <div className={`${errors.endDate ? 'error-field' : ''}`}>
               <Input
                 type="date"
-                label={<>End Date<RequiredMark /></>}
+                label={
+                  <>
+                    End Date
+                    <RequiredMark />
+                  </>
+                }
                 name="endDate"
                 value={endDate}
                 onchange={(e) =>
-                  handleInputChange('endDate', typeof e === 'string' ? e : e.target.value)
+                  handleInputChange(
+                    'endDate',
+                    typeof e === 'string' ? e : e.target.value
+                  )
                 }
                 placeholder="Select end date"
-                errors={errors.endDate ? { message: errors.endDate } : undefined}
+                errors={
+                  errors.endDate ? { message: errors.endDate } : undefined
+                }
               />
             </div>
           ) : (
             <div className={`${errors.occurrences ? 'error-field' : ''}`}>
               <Input
                 type="number"
-                label={<>Number of Occurrences<RequiredMark /></>}
+                label={
+                  <>
+                    Number of Occurrences
+                    <RequiredMark />
+                  </>
+                }
                 name="occurrences"
                 value={occurrences}
                 min={1}
-                onchange={(e: any) => handleInputChange('occurrences', e.target.value)}
+                onchange={(e: any) =>
+                  handleInputChange('occurrences', e.target.value)
+                }
                 placeholder="e.g. 12"
-                errors={errors.occurrences ? { message: errors.occurrences } : undefined}
+                errors={
+                  errors.occurrences
+                    ? { message: errors.occurrences }
+                    : undefined
+                }
               />
             </div>
           )}
@@ -498,8 +559,9 @@ const Left = () => {
 
       <div className="mt-3 w-full flex flex-col">
         <div
-          className={`w-[50%] flex items-center space-x-3 ${errors.customerName ? 'error-field' : ''
-            }`}
+          className={`w-[50%] flex items-center space-x-3 ${
+            errors.customerName ? 'error-field' : ''
+          }`}
         >
           <div className="w-full">
             <SearchSelect
@@ -559,7 +621,6 @@ const Left = () => {
       <div className="my-5 pt-10">
         <h3 className="text-lg mb-2 text-gray-900 font-medium">
           Line Items
-
           <RequiredMark />
         </h3>
         <DynamicTable />
@@ -570,7 +631,6 @@ const Left = () => {
 
       <hr className="my-5" />
       <h3 className="text-lg font-medium my-2">
-
         Payment Methods
         <RequiredMark />
       </h3>
@@ -581,12 +641,13 @@ const Left = () => {
               <div
                 key={option}
                 onClick={() => handlePaymentMethodClick(option)}
-                className={`p-4 border cursor-pointer ${selectedPaymentMethod === option
-                  ? 'border-green-500 text-green-500'
-                  : errors.paymentMethod && formSubmitted
+                className={`p-4 border cursor-pointer ${
+                  selectedPaymentMethod === option
+                    ? 'border-green-500 text-green-500'
+                    : errors.paymentMethod && formSubmitted
                     ? 'border-red-500'
                     : 'border-gray-300'
-                  }`}
+                }`}
               >
                 <div className="flex items-center">
                   <input
@@ -639,7 +700,8 @@ const Left = () => {
       <textarea
         value={note}
         onChange={(e) => handleInputChange('note', e.target.value)}
-        className="h-36 border p-2 w-full outline-none mt-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+        className="h-36 border p-2 w-full outline-none mt-2 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500
+   "
       ></textarea>
 
       <div className="mt-5 w-full flex justify-end">
