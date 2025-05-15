@@ -7,11 +7,13 @@ import {
   FieldPath,
   UnpackNestedValue,
 } from 'react-hook-form';
+import { toast, Toaster } from 'react-hot-toast';
 import VoucherTypeSelector, { VoucherType, TabType } from './components/left';
 import Policy from './components/policy.';
 import Audience from './components/audience';
 import Scheduling from './components/scheduling';
 import Code from './components/code';
+import { useCreateVoucher } from '../_hooks/hooks'; // Import the hook
 
 // Define a new type that includes all possible tab values
 type AllTabTypes = TabType | 'VoucherType';
@@ -32,28 +34,26 @@ type FormData = {
     programStartDate: string;
     programEndDate?: string;
     specificDaysOnly: boolean;
-    specificDays?: [{
-      day: string;
-      startTime?: string;
-      endTime?: string;
-      allDay: boolean;
-    }]
+    specificDays?: [
+      {
+        day: string;
+        startTime?: string;
+        endTime?: string;
+        allDay: boolean;
+      }
+    ];
   };
   audience: {
     segment: string;
     autoAddUsers: boolean;
     canJoinOnce: boolean;
-    programCardPrefix: string;
-
   };
   // Discount fields
   discountAmount?: number;
   discountPercent?: number;
-  
 
   // Gift Card fields
   balance?: number;
- 
 
   // Royalty Points fields
   loyaltyPoints?: number;
@@ -62,18 +62,18 @@ type FormData = {
 
   // Cashback fields
   cashbackPercent?: number;
-  CashbackAmount?: number;
+  cashbackAmount?: number;
 
   // Code fields
   code?: string;
-  advancedCodeSettings?: boolean;
+  programCardPrefix: string;
   codeSettings?: {
     length: number;
     prefix: string;
     postfix: string;
     pattern: string;
     characterSet: string;
-  }
+  };
 
   // Other fields can be added as needed
   [key: string]: any;
@@ -84,7 +84,38 @@ const voucherTypeSpecificFields: Record<VoucherType, Array<keyof FormData>> = {
   DISCOUNT: ['discountPercent', 'discountAmount'],
   GIFT_CARD: ['balance'],
   ROYALTY_POINTS: ['loyaltyPoints', 'loyaltyAmount', 'loyaltyPointsValue'],
-  CASHBACK: ['cashbackPercent', 'CashbackAmount'],
+  CASHBACK: ['cashbackPercent', 'cashbackAmount'],
+};
+
+// Define required fields for each tab
+const requiredFieldsByTab: Record<AllTabTypes, Array<string>> = {
+  VoucherType: [], // No required fields on voucher type selection
+  Policy: [], // Will be dynamically determined based on voucher type
+  Audience: ['audience.segment'],
+  Scheduling: ['scheduling.programStartDate'],
+  Code: [], // Special validation for Code tab
+};
+
+// Define required fields for each voucher type in the Policy tab
+const policyRequiredFieldsByType: Record<
+  VoucherType,
+  Record<string, Array<string>>
+> = {
+  DISCOUNT: {
+    fixed: ['discountAmount'],
+    proportional: ['discountPercent'],
+  },
+  GIFT_CARD: {
+    fixed: ['balance'],
+  },
+  ROYALTY_POINTS: {
+    fixed: ['loyaltyPoints'],
+    proportional: ['loyaltyAmount', 'loyaltyPointsValue'],
+  },
+  CASHBACK: {
+    fixed: ['cashbackAmount'],
+    proportional: ['cashbackAmount', 'cashbackPercent'],
+  },
 };
 
 // Define common fields that should be kept for all voucher types
@@ -99,15 +130,34 @@ const commonFields: Array<keyof FormData> = [
 export default function NewVoucherPage() {
   const [activeTab, setActiveTab] = useState<AllTabTypes>('VoucherType');
   const [voucherType, setVoucherType] = useState<VoucherType>('ROYALTY_POINTS');
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [validationErrors, setValidationErrors] = useState<
+    Record<string, string>
+  >({});
+  const [tabsWithErrors, setTabsWithErrors] = useState<AllTabTypes[]>([]);
+
+  // Initialize the create voucher mutation hook
+  const createVoucherMutation = useCreateVoucher();
 
   // Update form structure to match your desired payload
   const methods = useForm<FormData>({
     defaultValues: {
       type: VoucherTypeEnum.ROYALTY_POINTS, // Default to ROYALTY_POINTS
     },
+    mode: 'onBlur', // Validate on blur
   });
 
-  const { unregister, setValue, getValues } = methods;
+  const {
+    unregister,
+    setValue,
+    getValues,
+    trigger,
+    watch,
+    formState: { errors },
+  } = methods;
+
+  // Watch for valueType changes
+  const valueType = watch('valueType') || 'fixed';
 
   // Function to unregister fields not applicable to the current voucher type
   const unregisterIrrelevantFields = (newType: VoucherType) => {
@@ -158,11 +208,13 @@ export default function NewVoucherPage() {
     // Unregister fields not applicable to the new voucher type
     unregisterIrrelevantFields(type);
 
-    // You can also set default values for the new voucher type if needed
-    
+    // Clear validation errors
+    setValidationErrors({});
+    setTabsWithErrors([]);
   };
 
   const handleTabChange = (tab: AllTabTypes) => {
+    // Allow free navigation between tabs
     setActiveTab(tab);
   };
 
@@ -200,14 +252,177 @@ export default function NewVoucherPage() {
     return obj === '' ? undefined : obj;
   };
 
-  const onSubmit = (data: FormData) => {
-    // Filter out empty values before submission
-    const filteredData = removeEmptyValues(data);
-    console.log('Raw form data:', data);
-    console.log('Filtered form data:', filteredData);
+  // Validate the current tab
+  const validateCurrentTab = async (tab: AllTabTypes): Promise<boolean> => {
+    let isValid = true;
+    const newErrors: Record<string, string> = {};
+    
+    // Get required fields for the current tab
+    let requiredFields: string[] = [...(requiredFieldsByTab[tab] || [])];
+    
+    // For Policy tab, get required fields based on voucher type and value type
+    if (tab === 'Policy') {
+      const currentValueType = getValues('valueType') || 'fixed';
+      const typeSpecificFields = policyRequiredFieldsByType[voucherType]?.[currentValueType] || [];
+      requiredFields = [...requiredFields, ...typeSpecificFields];
+    }
+    
+    // For Code tab, validate that either code or code settings are provided
+    if (tab === 'Code') {
+      const code = getValues('code');
+      const useAdvancedSettings = getValues('advancedCodeSettings');
+      
+      if (!code && !useAdvancedSettings) {
+        newErrors['code'] = 'Either a code or code settings must be provided';
+        isValid = false;
+      }
+      
+      if (useAdvancedSettings) {
+        const codeSettings = getValues('codeSettings');
+        if (!codeSettings || !codeSettings.length) {
+          newErrors['codeSettings.length'] = 'Code length is required when using advanced settings';
+          isValid = false;
+        }
+      }
+      
+      // Check for programCardPrefix which is required in all cases
+      const programCardPrefix = getValues('programCardPrefix');
+      if (!programCardPrefix) {
+        newErrors['programCardPrefix'] = 'Program card prefix is required';
+        isValid = false;
+      }
+    } else {
+      // For other tabs, validate each required field
+      for (const field of requiredFields) {
+        const value = getValues(field as any);
+        if (!value && value !== 0) { // Allow 0 as a valid value
+          // Get human-readable field name
+          const fieldName = field.split('.').pop() || field;
+          const readableFieldName = fieldName
+            .replace(/([A-Z])/g, ' $1')
+            .toLowerCase()
+            .replace(/^\w/, c => c.toUpperCase());
+            
+          newErrors[field] = `${readableFieldName} is required`;
+          isValid = false;
+        }
+      }
+    }
+    
+    // Update validation errors
+    setValidationErrors(prev => ({ ...prev, ...newErrors }));
+    
+    // Update tabs with errors
+    if (!isValid) {
+      setTabsWithErrors(prev => 
+        prev.includes(tab) ? prev : [...prev, tab]
+      );
+    } else {
+      setTabsWithErrors(prev => 
+        prev.filter(t => t !== tab)
+      );
+    }
+    
+    return isValid;
+  };
 
-    // Here you would send filteredData to your API
-    // api.createVoucher(filteredData);
+  // Validate all tabs before submission
+  const validateAllTabs = async (): Promise<boolean> => {
+    // Validate each tab
+    const tabs: AllTabTypes[] = [
+      'Code',
+      'Policy',
+      'Audience',
+      'Scheduling',
+      
+    ];
+    
+    let isValid = true;
+    const allErrors: Record<string, string> = {};
+    const tabsWithErrorsFound: AllTabTypes[] = [];
+
+    for (const tab of tabs) {
+      const tabValid = await validateCurrentTab(tab);
+      if (!tabValid) {
+        isValid = false;
+        tabsWithErrorsFound.push(tab);
+        
+        // Collect errors from this tab
+        Object.assign(allErrors, validationErrors);
+      }
+    }
+
+    // Update validation errors with all collected errors
+    setValidationErrors(allErrors);
+    setTabsWithErrors(tabsWithErrorsFound);
+
+    // If there are errors, navigate to the first tab with errors
+    if (tabsWithErrorsFound.length > 0) {
+      setActiveTab(tabsWithErrorsFound[0]);
+      
+      // Show toast with error message
+      const errorCount = Object.keys(allErrors).length;
+      const errorMessage = errorCount === 1 
+        ? "There is 1 error in the form. Navigating to the tab with the error."
+        : `There are errors in the form. Navigating to the first tab with errors.`;
+      
+      toast.error(errorMessage);
+    }
+
+    return isValid;
+  };
+
+  // Submit handler
+  const onSubmit = async (data: FormData) => {
+    try {
+      // Clear previous validation errors
+      setValidationErrors({});
+      
+      // Validate all tabs first
+      const isValid = await validateAllTabs();
+      if (!isValid) {
+        return;
+      }
+
+      // Set submitting state to show loading indicator
+      setIsSubmitting(true);
+
+      // Filter out empty values before submission
+      let filteredData = removeEmptyValues(data);
+      
+      // Fix the API error by ensuring voucherType is not sent
+      // The type field is already set correctly as VoucherTypeEnum
+      const { voucherType, ...dataWithoutVoucherType } = filteredData;
+      filteredData = dataWithoutVoucherType;
+      
+      console.log('Raw form data:', data);
+      console.log('Filtered form data:', filteredData);
+
+      // Show loading toast
+      const loadingToast = toast.loading('Creating voucher...');
+
+      // Call the mutation to create the voucher
+      await createVoucherMutation.mutateAsync(filteredData);
+
+      // Dismiss loading toast and show success message
+      toast.dismiss(loadingToast);
+      toast.success('Voucher created successfully!');
+
+      // You can add navigation here if needed
+      // router.push('/vouchers');
+    } catch (error) {
+      // Show error message
+      console.error('Error creating voucher:', error);
+
+      // Show different error messages based on error type
+      if (error instanceof Error) {
+        toast.error(`Failed to create voucher: ${error.message}`);
+      } else {
+        toast.error('Failed to create voucher. Please try again.');
+      }
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   // Effect to handle tab-specific field unregistration
@@ -221,12 +436,7 @@ export default function NewVoucherPage() {
     }
   }, [activeTab, unregister, getValues]);
 
-  const tabs: TabType[] = [
-    'Code',
-    'Policy',
-    'Audience',
-    'Scheduling',
-  ];
+  const tabs: TabType[] = ['Code', 'Policy', 'Audience', 'Scheduling'];
 
   return (
     <div className="px-10 h-[92.7vh] overflow-y-auto flex">
@@ -252,12 +462,14 @@ export default function NewVoucherPage() {
                   className={`py-2 text-left ${
                     activeTab === tab
                       ? 'text-green-600 font-medium border-l-2 border-green-600 pl-2'
+                      : tabsWithErrors.includes(tab)
+                      ? 'text-red-600 font-medium pl-2'
                       : 'text-gray-700 pl-2'
                   } hover:text-green-600 transition-colors`}
                   onClick={() => handleTabChange(tab)}
                   type="button"
                 >
-                  {tab}
+                  {tab} {tabsWithErrors.includes(tab) && '⚠️'}
                 </button>
               ))}
             </nav>
@@ -272,18 +484,32 @@ export default function NewVoucherPage() {
                   selectedType={voucherType}
                   onVoucherTypeChange={handleVoucherTypeChange}
                 />
+              ) : activeTab === 'Code' ? (
+                <Code  />
               ) : activeTab === 'Policy' ? (
-                <Policy voucherType={voucherType} />
+                <Policy voucherType={voucherType}/>
               ) : activeTab === 'Audience' ? (
                 <Audience />
               ) : activeTab === 'Scheduling' ? (
                 <Scheduling />
-              ) : activeTab === 'Code' ? (
-                <Code />
               ) : (
                 <div>Eligibility Content</div>
               )}
             </div>
+
+            {/* Validation Error Summary */}
+            {Object.keys(validationErrors).length > 0 && (
+              <div className="mt-4 p-3 bg-red-50 border border-red-200 rounded-md">
+                <h4 className="text-red-600 font-medium mb-2">
+                  Please fix the following errors:
+                </h4>
+                <ul className="list-disc pl-5 text-red-500 text-sm">
+                  {Object.values(validationErrors).map((error, index) => (
+                    <li key={index}>{error}</li>
+                  ))}
+                </ul>
+              </div>
+            )}
 
             {/* Footer Buttons */}
             <div className="mt-auto pt-6 flex justify-between space-x-4">
@@ -293,12 +519,59 @@ export default function NewVoucherPage() {
               >
                 Cancel
               </button>
-              <button
-                type="submit"
-                className="px-4 py-2 bg-green-600 hover:bg-green-700 text-white"
-              >
-                Publish
-              </button>
+              <div className="flex space-x-2">
+                <button
+                  type="button"
+                  onClick={async () => {
+                    const isValid = await validateCurrentTab(activeTab);
+                    if (!isValid) {
+                      toast.error(`There are errors in the ${activeTab} tab. Please fix them.`);
+                    } else {
+                      toast.success(`${activeTab} tab is valid!`);
+                    }
+                  }}
+                  className="px-4 py-2 bg-gray-200 text-gray-700 hover:bg-gray-300"
+                >
+                  Validate Current Tab
+                </button>
+                <button
+                  type="submit"
+                  disabled={isSubmitting}
+                  className={`px-4 py-2 ${
+                    isSubmitting
+                      ? 'bg-gray-400 cursor-not-allowed'
+                      : 'bg-green-600 hover:bg-green-700'
+                  } text-white flex items-center justify-center`}
+                >
+                  {isSubmitting ? (
+                    <>
+                      <svg
+                        className="animate-spin -ml-1 mr-2 h-4 w-4 text-white"
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                      >
+                        <circle
+                          className="opacity-25"
+                          cx="12"
+                          cy="12"
+                          r="10"
+                          stroke="currentColor"
+                          strokeWidth="4"
+                        ></circle>
+                        <path
+                          className="opacity-75"
+                          fill="currentColor"
+                          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                        ></path>
+                      </svg>
+                      Publishing...
+                    </>
+                  ) : (
+                    'Publish'
+                  )}
+                </button>
+              </div>
             </div>
           </div>
         </form>

@@ -423,7 +423,8 @@ const Scheduling: React.FC<SchedulingProps> = () => {
                 </p>
               )}
             </div>
-            <div className="flex items-center mt-8">
+          </div>
+            <div className="flex items-center ">
               <label className="mr-2 text-sm text-gray-700">
                 Program Never ends
               </label>
@@ -445,7 +446,6 @@ const Scheduling: React.FC<SchedulingProps> = () => {
                 className="hidden"
               />
             </div>
-          </div>
         </div>
 
         {/* Valid during specific days */}

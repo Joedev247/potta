@@ -2,15 +2,17 @@
 import React, { useState } from 'react';
 import MyTable from '@potta/components/table';
 
-import { IFilter } from '../_utils/types';
+import { Filter } from '../_utils/types';
 import TableActionPopover from '@potta/components/tableActionsPopover';
 import { MoreVertical } from 'lucide-react';
-import useGetAllInvoice from '../_hooks/useGetAllInvoice';
+
 import Search from '@potta/components/search';
 import CustomSelect, { IOption } from './CustomSelect';
 import Button from '@potta/components/button';
 import ModalInvoice from './modal';
 import { Icon } from '@iconify/react';
+import Link from 'next/link';
+import { useGetAllVouchers } from '../_hooks/hooks';
 
 // Define types based on the API response
 interface Invoice {
@@ -38,20 +40,20 @@ interface ApiResponse {
   };
 }
 
-const InvoiceTable = () => {
+const VoucherTable = () => {
   const [openPopover, setOpenPopover] = useState<string | null>(null);
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(20);
   const [selectedValue, setSelectedValue] = useState<string | null>(null);
   const [isOpen, setIsOpen] = useState(false);
-  const filter: IFilter = {
+  const filter: Filter = {
     limit,
     page,
     sortOrder: 'DESC',
     sortBy: 'createdAt',
   };
 
-  const { data, isLoading, error } = useGetAllInvoice(filter);
+  const { data, isLoading, error } = useGetAllVouchers(filter);
 
   const getStatusStyle = (status: string) => {
     switch (status.toLowerCase()) {
@@ -85,10 +87,9 @@ const InvoiceTable = () => {
     { value: 'option3', label: 'Option 3' },
   ];
 
-  
   const columns = [
     {
-      name: 'Date',
+      name: 'Code',
       selector: (row: Invoice) => (
         <div className="text-sm text-gray-600">
           {formatDate(row.issuedDate)}
@@ -96,7 +97,7 @@ const InvoiceTable = () => {
       ),
     },
     {
-      name: 'Title',
+      name: 'Type',
       selector: (row: Invoice) => (
         <div className="text-sm font-medium">
           {`${row.customer.firstName} ${row.customer.lastName}`}
@@ -104,62 +105,43 @@ const InvoiceTable = () => {
       ),
     },
     {
-      name: 'Commissioned',
+      name: 'Start Date',
       selector: (row: Invoice) => (
-        <div className="text-sm text-gray-500">
-          {row.invoiceId}
-        </div>
+        <div className="text-sm text-gray-500">{row.invoiceId}</div>
       ),
     },
     {
-      name: 'Published',
+      name: 'End Date',
       selector: (row: Invoice) => (
         <div className="text-sm">{row.notes || 'No title'}</div>
       ),
     },
     {
-      name: 'Redeemed',
+      name: '',
       selector: (row: Invoice) => (
         <div className="text-sm">{row.notes || 'No title'}</div>
       ),
     },
+   
     {
       name: 'Status',
-      selector: (row: Invoice) => (
-        <div className={`text-sm ${getStatusStyle(row.status)}`}>
-          {row.status.toLowerCase()}
-          <div className="text-xs text-gray-400">viewed</div>
-        </div>
-      ),
-    },
-    {
-      name: 'Value',
-      selector: (row: Invoice) => (
-        <div className="text-sm">
-          XAF {row.invoiceTotal.toLocaleString(undefined, { maximumFractionDigits: 2 })}
-        </div>
-      ),
-    },
-    {
-          name: 'Resolution',
-          selector: (row: Invoice) => {
-            const status = 'Closed';
-            return (
-              <div className="border-r pr-4 flex justify-center">
-                <div className="flex items-center gap-3  w-full px-3 py-2 border border-green-500 bg-green-50 text-green-700">
-                  <div className="flex items-center justify-center text-white bg-green-700 rounded-full size-4">
-                    <Icon icon="material-symbols:check" width="20" height="20" />
-                  </div>
-                  {status}
-                </div>
+      selector: (row: Invoice) => {
+        const status = 'Closed';
+        return (
+          <div className="border-r pr-4 flex justify-center">
+            <div className="flex items-center gap-3  w-full px-3 py-2 border border-green-500 bg-green-50 text-green-700">
+              <div className="flex items-center justify-center text-white bg-green-700 rounded-full size-4">
+                <Icon icon="material-symbols:check" width="20" height="20" />
               </div>
-            );
-          },
-          hasBorderLeft: true,          // Left border for data cells
-      headerBorderLeft: true,       // Left border for header cell
-          width: "150px"
-    
-        },
+              {status}
+            </div>
+          </div>
+        );
+      },
+      hasBorderLeft: true, // Left border for data cells
+      headerBorderLeft: true, // Left border for header cell
+      width: '150px',
+    },
     {
       name: '',
       selector: (row: Invoice) => (
@@ -176,13 +158,12 @@ const InvoiceTable = () => {
     return (
       <div className={'w-full py-24 flex flex-col items-center justify-center'}>
         An Error Occured
-       
       </div>
     );
   }
   return (
     <div className="">
-       <div className="flex justify-between w-full">
+      <div className="flex justify-between w-full">
         <div className="mt-5 w-[50%] flex items-center space-x-2">
           <div className="w-[65%]">
             <Search />
@@ -215,19 +196,15 @@ const InvoiceTable = () => {
               {/*</Link>*/}
             </div>
             <div>
-
+              <Link href={'/vouchers/new'}>
                 <Button
                   text={'Create Voucher'}
                   icon={<i className="ri-file-add-line"></i>}
                   theme="default"
                   type={'button'}
-                  onClick={() => {
-                    setIsOpen(true);
-                  }}
                 />
-
+              </Link>
             </div>
-            
           </div>
         </div>
       </div>
@@ -244,12 +221,8 @@ const InvoiceTable = () => {
         onChangePage={setPage}
         onChangeRowsPerPage={setLimit}
       />
-      <ModalInvoice
-      isOpen={isOpen}
-      setIsOpen={setIsOpen}
-    />
     </div>
   );
 };
 
-export default InvoiceTable;
+export default VoucherTable;

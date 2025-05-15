@@ -1,6 +1,6 @@
 import { ColumnDef } from "@tanstack/react-table";
 
-export type IFilter = {
+export type Filter = {
   limit: number;
   page: number;
   sortOrder: string,

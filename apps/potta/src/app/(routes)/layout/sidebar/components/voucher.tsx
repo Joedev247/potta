@@ -53,16 +53,7 @@ const SidebarsVoucher = () => {
         >
           <h3 className="text-lg mt-1.5">Tickets</h3>
         </MenuItem>
-        <MenuItem
-          active={str[1] == 'inbox' ? true : false}
-          className="mt-4 font-thin"
-          href="/vouchers/royalty"
-          icon={
-            <Coins className={`h-6 w-6 ${str[1] == 'vouchers' && str[2] == 'coupons' ? 'text-white' : 'text-black'}`} />
-          }
-        >
-          <h3 className="text-lg mt-1.5">Royalty Points</h3>
-        </MenuItem>
+       
         <MenuItem
           active={isActive('/pos/customers')}
           className='mt-5'
