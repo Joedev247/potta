@@ -12,7 +12,7 @@ interface PolicyProps {
 }
 
 const Policy: React.FC<PolicyProps> = ({ voucherType, onValueTypeChange }) => {
-  const { register, watch, setValue } = useFormContext();
+  const { register, watch, setValue, unregister } = useFormContext();
   const valueType = (watch('valueType') as ValueType) || 'fixed';
 
   // Set default value type if not set
@@ -34,6 +34,21 @@ const Policy: React.FC<PolicyProps> = ({ voucherType, onValueTypeChange }) => {
   const handleValueTypeChange = (type: ValueType) => {
     setValue('valueType', type);
     onValueTypeChange?.(type);
+    if (type === 'fixed') {
+      register('cashbackPercent');
+      register('discountPercent');
+      register('loyaltyPointsValue');
+      register('loyaltyAmount');
+      unregister('cashbackPercent');
+      unregister('discountPercent');
+      unregister('loyaltyPointsValue');
+      unregister('loyaltyAmount');
+      register('loyaltypoints')
+      unregister('loyaltypoints');
+    } else {
+      register('loyaltypoints')
+      unregister('loyaltypoints');
+    }
   };
 
   return (
@@ -257,7 +272,7 @@ const Policy: React.FC<PolicyProps> = ({ voucherType, onValueTypeChange }) => {
                   <div className="flex items-center">
                     <input
                       type="number"
-                {...register('loyaltyAmount')}
+                      {...register('loyaltyAmount')}
                       className="border border-gray-300  px-3 py-2  focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500
    "
                       placeholder="1000"

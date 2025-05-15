@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { useFormContext } from 'react-hook-form';
-import { Check } from 'lucide-react';
+import { Check, ChevronDown } from 'lucide-react';
 
 interface AudienceProps {
   // Add any props if needed
@@ -12,7 +12,6 @@ const Audience: React.FC<AudienceProps> = () => {
   const { register, watch, setValue } = useFormContext();
   const autoAddUsers = watch('autoAddUsers') || false;
   const canJoinOnce = watch('canJoinOnce') || false;
-  const advancedCodeSettings = watch('advancedCodeSettings') || false;
 
   return (
     <div className="bg-white p-6">
@@ -24,9 +23,10 @@ const Audience: React.FC<AudienceProps> = () => {
           <label className="block text-sm font-medium text-gray-700 mb-2">
             Select Audience segment
           </label>
+          <div className="relative flex-1 w-1/2">
           <select
             {...register('audience.segment')}
-            className="w-1/3 border border-gray-300  px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500"
+            className="w-full appearance-none border bg-white border-gray-300 px-3 py-2 pr-10 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500"
           >
             <option value="">Select Audience segment</option>
             <option value="all">All Customers</option>
@@ -34,13 +34,21 @@ const Audience: React.FC<AudienceProps> = () => {
             <option value="returning">Returning Customers</option>
             <option value="vip">VIP Customers</option>
           </select>
+          <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2">
+            <ChevronDown className="h-5 w-5 text-gray-400" />
+          </div>
+        </div>
         </div>
 
         {/* Checkboxes */}
         <div className="flex space-x-4">
           <div className="flex items-center">
             <div
-              className={`w-5 h-5 border rounded flex items-center justify-center cursor-pointer ${autoAddUsers ? 'bg-green-500 border-green-500' : 'border-gray-300'}`}
+              className={`w-5 h-5 border rounded flex items-center justify-center cursor-pointer ${
+                autoAddUsers
+                  ? 'bg-green-500 border-green-500'
+                  : 'border-gray-300'
+              }`}
               onClick={() => setValue('autoAddUsers', !autoAddUsers)}
             >
               {autoAddUsers && <Check className="h-4 w-4 text-white" />}
@@ -50,14 +58,21 @@ const Audience: React.FC<AudienceProps> = () => {
               {...register('autoAddUsers')}
               className="hidden"
             />
-            <label className="ml-2 text-sm text-gray-700 cursor-pointer" onClick={() => setValue('autoAddUsers', !autoAddUsers)}>
+            <label
+              className="ml-2 text-sm text-gray-700 cursor-pointer"
+              onClick={() => setValue('autoAddUsers', !autoAddUsers)}
+            >
               Automatically Add new users to this program
             </label>
           </div>
 
           <div className="flex items-center">
             <div
-              className={`w-5 h-5 border rounded flex items-center justify-center cursor-pointer ${canJoinOnce ? 'bg-green-500 border-green-500' : 'border-gray-300'}`}
+              className={`w-5 h-5 border rounded flex items-center justify-center cursor-pointer ${
+                canJoinOnce
+                  ? 'bg-green-500 border-green-500'
+                  : 'border-gray-300'
+              }`}
               onClick={() => setValue('canJoinOnce', !canJoinOnce)}
             >
               {canJoinOnce && <Check className="h-4 w-4 text-white" />}
@@ -67,152 +82,14 @@ const Audience: React.FC<AudienceProps> = () => {
               {...register('canJoinOnce')}
               className="hidden"
             />
-            <label className="ml-2 text-sm text-gray-700 cursor-pointer" onClick={() => setValue('canJoinOnce', !canJoinOnce)}>
+            <label
+              className="ml-2 text-sm text-gray-700 cursor-pointer"
+              onClick={() => setValue('canJoinOnce', !canJoinOnce)}
+            >
               Can only join campaigns once
             </label>
           </div>
         </div>
-
-        {/* Program Card Prefix */}
-        <div className="mb-6">
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            Program Card Prefix
-          </label>
-          <input
-            type="text"
-            {...register('programCardPrefix')}
-            className="w-1/2 border border-gray-300  px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500"
-            placeholder="Program-02152"
-          />
-        </div>
-
-        {/* Maximum Entries */}
-        <div className="mb-6">
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            Maximum Entries
-          </label>
-          <input
-            type="number"
-            {...register('UsageLimit')}
-            className="w-1/2 border border-gray-300  px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500"
-            placeholder="55"
-          />
-        </div>
-        {/* Name */}
-        <div className="mb-6">
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            Code
-          </label>
-          <input
-            type="text"
-            {...register('code')}
-            className="w-1/2 border border-gray-300  px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500"
-            placeholder="SAVE20"
-          />
-        </div>
-        {/* Advanced Code Settings */}
-        <div className="mb-6">
-          <div className="flex items-center justify-between">
-            <label className="text-sm font-medium text-gray-700">
-              Advanced code settings
-            </label>
-            <div
-              className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none ${advancedCodeSettings ? 'bg-green-500' : 'bg-gray-200'}`}
-              onClick={() => setValue('advancedCodeSettings', !advancedCodeSettings)}
-            >
-              <span
-                className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${advancedCodeSettings ? 'translate-x-6' : 'translate-x-1'}`}
-              />
-            </div>
-            <input
-              type="checkbox"
-              {...register('advancedCodeSettings')}
-              className="hidden"
-            />
-          </div>
-        </div>
-
-        {/* Advanced Code Settings Fields */}
-        {advancedCodeSettings && (
-          <div className="border-dotted border border-gray-200  p-6 space-y-6">
-            <div className="grid grid-cols-2 gap-6">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Code Prefix
-                </label>
-                <input
-                  type="text"
-                  {...register('codePrefix')}
-                  className="w-full border border-gray-300  px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500"
-                  placeholder="ABC"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Code Postfix
-                </label>
-                <input
-                  type="text"
-                  {...register('codePostfix')}
-                  className="w-full border border-gray-300  px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500"
-                  placeholder="XYZ"
-                />
-              </div>
-            </div>
-
-            <div className="grid grid-cols-2 gap-6">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Code length
-                </label>
-                <input
-                  type="number"
-                  {...register('codeLength')}
-                  className="w-full border border-gray-300  px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500"
-                  placeholder="11"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  pattern (# is replaced with a random number)
-                </label>
-                <input
-                  type="text"
-                  {...register('codePattern')}
-                  className="w-full border border-gray-300  px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500"
-                  placeholder="#125###120"
-                />
-              </div>
-            </div>
-
-            <div className="grid grid-cols-2 gap-6">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Code Type
-                </label>
-                <select
-                  {...register('codeType')}
-                  className="w-full border border-gray-300  px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500"
-                >
-                  <option value="alphanumeric">AlphaNumeric</option>
-                  <option value="numeric">Numeric</option>
-                  <option value="alpha">Alphabetic</option>
-                </select>
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Character Set
-                </label>
-                <input
-                  type="text"
-                  {...register('characterSet')}
-                  className="w-full border border-gray-300  px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500"
-                  placeholder="01223456789abcdefghijklmnopirstuvwxyz"
-                />
-              </div>
-            </div>
-          </div>
-        )}
       </div>
     </div>
   );

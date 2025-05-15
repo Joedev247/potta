@@ -4,7 +4,7 @@ import { Check, Percent, Gift, CreditCard, Coins } from 'lucide-react';
 import { Card, CardContent } from '@potta/components/card';
 
 export type VoucherType = 'DISCOUNT' | 'CASHBACK' | 'GIFT_CARD' | 'ROYALTY_POINTS';
-export type TabType = 'Policy' | 'Audience' | 'Scheduling' | 'Eligibility';
+export type TabType = 'Code' |'Policy' | 'Audience' | 'Scheduling' | 'Eligibility';
 
 interface VoucherTypeSelectorProps {
   onVoucherTypeChange?: (type: VoucherType) => void;
