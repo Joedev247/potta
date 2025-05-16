@@ -8,13 +8,14 @@ export const vouchersApi = {
   },
   getAll: async (filter: Filter) => {
     const data = {}
-    const result = await axios.get('/vouchers', {
+    const result = await axios.get('/vouchers/all', {
       params: { ...filter },
     });
+    console.log('result',result)
     return result?.data;
   },
   getOne: async (voucher_id: string) => {
-    const result = await axios.get(`/vouchers/details/${voucher_id}`);
+    const result = await axios.get(`/vouchers/${voucher_id}`);
     return result?.data;
   },
 

@@ -33,10 +33,10 @@ const TableActionPopover: React.FC<{
         if (!isOpen) setOpenPopover(null);
       }}
     >
-      <PopoverTrigger>
+      <PopoverTrigger className='z-10'>
         {triggerButton || (
           <Button onClick={() => setOpenPopover(rowUuid)}>
-            <i className="ri-more-2-fill"></i>
+            <i className="ri-more-2-fill z-0"></i>
           </Button>
         )}
       </PopoverTrigger>

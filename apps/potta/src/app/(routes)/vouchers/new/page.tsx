@@ -399,13 +399,12 @@ export default function NewVoucherPage() {
       console.log('Filtered form data:', filteredData);
 
       // Show loading toast
-      const loadingToast = toast.loading('Creating voucher...');
-
+   
       // Call the mutation to create the voucher
       await createVoucherMutation.mutateAsync(filteredData);
 
       // Dismiss loading toast and show success message
-      toast.dismiss(loadingToast);
+      
       toast.success('Voucher created successfully!');
 
       // You can add navigation here if needed
