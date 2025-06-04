@@ -23,7 +23,7 @@ export const useCreatePTOPolicy = () => {
       console.log('Sending PTO policy data:', payload);
 
       // Call the API
-      const response = await axios.post('/api/potta/paid-time-off', payload);
+      const response = await axios.post('/api/paid-time-off', payload);
 
       // Show success message
       toast.success('PTO policy added successfully!');

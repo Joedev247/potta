@@ -91,7 +91,7 @@ const BaseInfo: React.FC<BaseInfoProps> = ({ onChange, initialData }) => {
       setIsLoadingRoles(true);
       try {
         const response = await axios.post(
-          '/api/potta/roles/filter',
+          '/roles/filter',
           {},
           {
             params: {
@@ -320,7 +320,6 @@ const BaseInfo: React.FC<BaseInfoProps> = ({ onChange, initialData }) => {
           onChange={(value: string) =>
             handleSelectChange('employmentType', value)
           }
-         
         />
       </div>
       <div className="">
@@ -388,7 +387,6 @@ const BaseInfo: React.FC<BaseInfoProps> = ({ onChange, initialData }) => {
         />
         <div>
           <SearchableSelect
-            
             options={maritalStatusOptions}
             label="Marital Status"
             labelClass="pb-2 !font-bold"
@@ -396,7 +394,6 @@ const BaseInfo: React.FC<BaseInfoProps> = ({ onChange, initialData }) => {
             onChange={(value: string) =>
               handleSelectChange('maritalStatus', value)
             }
-          
           />
         </div>
       </div>
@@ -407,7 +404,6 @@ const BaseInfo: React.FC<BaseInfoProps> = ({ onChange, initialData }) => {
           labelClass="pb-2 !font-bold"
           selectedValue={formData.gender}
           onChange={(value: string) => handleSelectChange('gender', value)}
-          
         />
       </div>
       <div className="grid grid-cols-2 gap-3">

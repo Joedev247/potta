@@ -11,7 +11,7 @@ const Boxes = () => {
       queryKey: ['timesheets-summary'],
       queryFn: async () => {
         try {
-          const response = await axios.post('/api/potta/timesheets/filter', {
+          const response = await axios.post('/api/timesheets/filter', {
             limit: 100,
             sortBy: ['createdAt:DESC'],
           });
@@ -29,7 +29,7 @@ const Boxes = () => {
     queryKey: ['employees-summary'],
     queryFn: async () => {
       try {
-        const response = await axios.post('/api/potta/employees/filter', {
+        const response = await axios.post('/employees/filter', {
           limit: 100,
           sortBy: ['firstName:ASC'],
         });

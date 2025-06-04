@@ -3,7 +3,7 @@ import Axios, { AxiosRequestConfig, AxiosResponse } from "axios";
 
 // import { API_URL, SECRET } from "./env";
 
-const axios = Axios.create({ baseURL: 'https://staging.instanvi.com/api/potta' })
+const axios = Axios.create({ baseURL: 'https://staging.instanvi.com/api' })
 
 export const refreshTokenAPI = async (refresh_token:string):Promise<{access_token:string,refresh_token:string}> =>{
   const response = await axios.post(`/auth/refresh_token/`, {refresh_token})

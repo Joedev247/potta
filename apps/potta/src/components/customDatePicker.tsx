@@ -170,8 +170,7 @@ export function DateInput({
             className={cn(
               'w-full p-5 py-[22px] justify-start text-left font-normal',
               'border border-gray-300 rounded-[4px]',
-              'hover:bg-transparent focus:ring-2 focus:ring-green-500 focus:border-green-500
-   ',
+              'hover:bg-transparent focus:ring-2 focus:ring-green-500 focus:border-green-500',
               !isValidDate(date) && 'text-muted-foreground'
             )}
           >

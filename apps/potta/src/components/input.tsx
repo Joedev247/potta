@@ -19,7 +19,7 @@ type Props = {
   type: string;
   className?: string;
   name: string;
-  errors?: FieldError;
+  errors?: FieldError | CustomError;
   placeholder?: string;
   register?: UseFormRegister<any>;
   onchange?: (event: React.ChangeEvent<HTMLInputElement>) => void;

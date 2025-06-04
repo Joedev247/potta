@@ -2,7 +2,7 @@
 import MyTable from '@potta/components/table';
 import React, { useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { employeeApi, roleApi } from '../../utils/api';
+import { employeeApi } from '../../utils/api';
 import CustomLoader from '@potta/components/loader';
 import axios from '@/config/axios.config';
 
@@ -30,7 +30,7 @@ const PayrollTable = () => {
     queryFn: async () => {
       try {
         // Use axios directly to ensure we're using the correct endpoint
-        const response = await axios.post('/api/potta/roles/filter', {
+        const response = await axios.post('/roles/filter', {
           limit: 100,
           sortBy: ['name:ASC'],
         });

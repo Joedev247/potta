@@ -3,44 +3,44 @@ import axios from '@/config/axios.config';
 // Employee API
 export const employeeApi = {
   filterEmployees: (params = {}) => {
-    return axios.post('/api/potta/employees/filter', params);
+    return axios.post('/employees/filter', params);
   },
   getEmployeeById: (id) => {
-    return axios.get(`/api/potta/employees/${id}`);
+    return axios.get(`/employees/${id}`);
   },
 };
 
 // Timesheet API
 export const timesheetApi = {
   filterTimesheets: (params = {}) => {
-    return axios.post('/api/potta/timesheets/filter', params);
+    return axios.post('/api/timesheets/filter', params);
   },
   createTimesheet: (data = {}) => {
-    return axios.post('/api/potta/timesheets', data);
+    return axios.post('/api/timesheets', data);
   },
   updateTimesheet: (id, data = {}) => {
-    return axios.patch(`/api/potta/timesheets/${id}`, data);
+    return axios.patch(`/api/timesheets/${id}`, data);
   },
   approveTimesheet: (id) => {
-    return axios.put(`/api/potta/timesheets/approve/${id}`);
+    return axios.put(`/api/timesheets/approve/${id}`);
   },
   rejectTimesheet: (id) => {
-    return axios.put(`/api/potta/timesheets/reject/${id}`);
+    return axios.put(`/api/timesheets/reject/${id}`);
   },
 };
 
 // Shift API
 export const shiftApi = {
   filterShifts: (params = {}) => {
-    return axios.post('/api/potta/shifts/filter', params);
+    return axios.post('/api/shifts/filter', params);
   },
   createShift: (data = {}) => {
-    return axios.post('/api/potta/shifts', data);
+    return axios.post('/api/shifts', data);
   },
   updateShift: (id, data = {}) => {
-    return axios.patch(`/api/potta/shifts/${id}`, data);
+    return axios.patch(`/api/shifts/${id}`, data);
   },
   deleteShift: (id) => {
-    return axios.delete(`/api/potta/shifts/${id}`);
+    return axios.delete(`/api/shifts/${id}`);
   },
 };

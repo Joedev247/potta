@@ -47,15 +47,12 @@ const Shifts = () => {
   const fetchRoles = async () => {
     setIsLoadingRoles(true);
     try {
-      const response = await axios.post<RolesResponse>(
-        '/api/potta/roles/filter',
-        {
-          page: 1,
-          limit: 100,
-          sortBy: ['name:ASC'],
-          is_active: true,
-        }
-      );
+      const response = await axios.post<RolesResponse>('/roles/filter', {
+        page: 1,
+        limit: 100,
+        sortBy: ['name:ASC'],
+        is_active: true,
+      });
 
       if (response.data && response.data.data) {
         // Transform roles to the format expected by the Select component

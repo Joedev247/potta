@@ -21,7 +21,7 @@ export const useBenefits = () => {
       setLoading(true);
       try {
         // Try with POST method instead of GET, and use the correct endpoint
-        const response = await axios.post('/api/potta/benefits/filter', {
+        const response = await axios.post('/api/benefits/filter', {
           page: 1,
           limit: 50,
           sortBy: ['createdAt:DESC'],

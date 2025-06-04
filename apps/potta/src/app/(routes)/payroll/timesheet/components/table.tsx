@@ -48,7 +48,7 @@ const TimesheetTable = ({
 
       // Send the timesheet ID in the request body
       const response = await axios.put(
-        `/api/potta/timesheets/approve/${timesheetId}`,
+        `/api/timesheets/approve/${timesheetId}`,
         {
           id: timesheetId,
         }
@@ -83,7 +83,7 @@ const TimesheetTable = ({
 
       // Send the timesheet ID in the request body
       const response = await axios.put(
-        `/api/potta/timesheets/reject/${timesheetId}`,
+        `/api/timesheets/reject/${timesheetId}`,
         {
           id: timesheetId,
         }

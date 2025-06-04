@@ -41,17 +41,17 @@ const BudgetTable = () => {
       ),
       sortable: true,
     },
-    {
-      name: 'Resolution',
-      selector: (row: { Date: any }) => (
-        <div className="">
-          <button className="space-x-2 px-4 py-1 border border-green-400 text-green-400">
-            <i className="ri-checkbox-circle-fill"></i> Approved
-          </button>
-        </div>
-      ),
-      sortable: true,
-    },
+    // {
+    //   name: 'Resolution',
+    //   selector: (row: { Date: any }) => (
+    //     <div className="">
+    //       <button className="space-x-2 px-4 py-1 border border-green-400 text-green-400">
+    //         <i className="ri-checkbox-circle-fill"></i> Approved
+    //       </button>
+    //     </div>
+    //   ),
+    //   sortable: true,
+    // },
   ];
   const data = [
     {

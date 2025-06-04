@@ -20,13 +20,14 @@ const SidebarsExpenses = () => {
       className=" relative bg-blue-500  h-[100vh] z-30  side "
     >
       <Menu className="relative h-[76vh]" closeOnClick>
-      <MenuItem
+        <MenuItem
           className="mt-4 font-thin "
           href="/"
-          icon={<img src="/icons/Potta.svg" className="h-16 w-16 mt-2" alt="logo" />}
+          icon={
+            <img src="/icons/Potta.svg" className="h-16 w-16 mt-2" alt="logo" />
+          }
         >
           {' '}
-         
         </MenuItem>
         <MenuItem
           active={str[1] == 'expenses' && str[2] == undefined ? true : false}
@@ -45,7 +46,7 @@ const SidebarsExpenses = () => {
         </MenuItem>
         <MenuItem
           active={str[2] == 'budgets' ? true : false}
-          className="mt-5 "
+          className=""
           href="/expenses/budgets"
           icon={
             str[2] == 'budgets' ? (
@@ -59,23 +60,23 @@ const SidebarsExpenses = () => {
         </MenuItem>
         <MenuItem
           active={str[2] == 'transactions' ? true : false}
-          className={`mt-5 ${str[2] == 'transactions' ? "text-white" : "text-black"}`}
+          className={` ${
+            str[2] == 'transactions' ? 'text-white' : 'text-black'
+          }`}
           href="/expenses/transactions"
           icon={
-
             str[2] == 'transactions' ? (
               <img src="/images/sideExpensesIcons/white/4.svg" />
             ) : (
               <img src="/images/sideExpensesIcons/transact.svg" />
             )
-
           }
         >
           <h3 className="text-lg mt-1.5">Transaction</h3>
         </MenuItem>
         <MenuItem
           active={str[1] == 'inbox' ? true : false}
-          className="mt-5 "
+          className=" "
           href="/terminals"
           icon={
             str[2] == 'terminals' ? (
@@ -89,7 +90,7 @@ const SidebarsExpenses = () => {
         </MenuItem>
         <MenuItem
           active={str[2] == 're-imbursements' ? true : false}
-          className="mt-5 "
+          className=" "
           href="/expenses/re-imbursements"
           icon={
             str[2] == 're-imbursements' ? (
@@ -103,7 +104,7 @@ const SidebarsExpenses = () => {
         </MenuItem>
         <MenuItem
           active={str[2] == 'bills' ? true : false}
-          className="mt-5 "
+          className=" "
           href="/expenses/bills"
           icon={
             str[2] == 'bills' ? (
@@ -117,7 +118,7 @@ const SidebarsExpenses = () => {
         </MenuItem>
         <MenuItem
           active={str[1] == 'inbox' ? true : false}
-          className="mt-5 "
+          className=" "
           href="/procurement"
           icon={
             str[2] == 'procurement' ? (
@@ -131,7 +132,7 @@ const SidebarsExpenses = () => {
         </MenuItem>
         <MenuItem
           active={str[1] == 'inbox' ? true : false}
-          className="mt-5 "
+          className=" "
           href="/reports"
           icon={
             str[2] == 'reports' ? (

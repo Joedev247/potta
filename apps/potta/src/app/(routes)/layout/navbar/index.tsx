@@ -17,7 +17,6 @@ import VendorsBox from './boxes/PosVendorsBox';
 import VouchersBox from './boxes/VouchersBox';
 import PosSalesBox from './boxes/PosSalesBox';
 
-
 const urlRouters = [
   {
     value: 'payroll',
@@ -75,6 +74,14 @@ const routesWithoutBox = [
   // Add other specific routes where Box should not appear
 ];
 
+// Routes that should not have the blue background
+const routesWithoutBlueBackground = [
+  { main: 'pos', sub: 'files' },
+  { main: 'payroll', sub: 'people' },
+  { main: 'expenses', sub: 'budget' }, // Added the expenses/budget route
+  // Add more routes here that don't need the blue background
+];
+
 export default function Navbar() {
   const router = useRouter();
   const pathname = usePathname();
@@ -90,7 +97,7 @@ export default function Navbar() {
   // Get the current route and sub-route
   const currentMainRoute = str[1] || '';
   const currentSubRoute = str.slice(2).join('/');
-  
+
   // Check if the current path contains "customers"
   const pathContainsCustomers = pathname.includes('customers');
   const pathContainsVendors = pathname.includes('vendors');
@@ -104,14 +111,15 @@ export default function Navbar() {
     else if (pathContainsVendors) {
       return VendorsBox;
     }
-   
+
     // Otherwise, find the component based on the route
-    const routeConfig = routesWithBox.find(route => 
-      route.main === currentMainRoute && 
-      (route.sub === currentSubRoute || 
-       (route.sub === '' && currentSubRoute === ''))
+    const routeConfig = routesWithBox.find(
+      (route) =>
+        route.main === currentMainRoute &&
+        (route.sub === currentSubRoute ||
+          (route.sub === '' && currentSubRoute === ''))
     );
-    
+
     return routeConfig?.component || null;
   };
 
@@ -121,7 +129,7 @@ export default function Navbar() {
     if (pathContainsCustomers) {
       return true;
     }
-    
+
     // First check if the route is in the exclusion list
     const isExcluded = routesWithoutBox.some(
       (route) =>
@@ -141,6 +149,23 @@ export default function Navbar() {
         (route.sub === currentSubRoute ||
           (route.sub === '' && currentSubRoute === ''))
     );
+  };
+
+  // Check if the current route should have the blue background
+  const shouldHaveBlueBackground = () => {
+    // Check if the route is in the exclusion list for blue background
+    return !routesWithoutBlueBackground.some(
+      (route) =>
+        route.main === currentMainRoute &&
+        (route.sub === currentSubRoute ||
+          (route.sub === '' && currentSubRoute === '') ||
+          currentSubRoute.startsWith(route.sub))
+    );
+  };
+
+  // Get the background color class based on the current route
+  const getBackgroundColorClass = () => {
+    return shouldHaveBlueBackground() ? 'bg-blue-50' : 'bg-white';
   };
 
   const handleSelect = (value: string) => {
@@ -184,7 +209,11 @@ export default function Navbar() {
     if (str[1] === 'invoice' && str[2] === 'purchase' && str[3] === undefined) {
       return 'Purchase Order';
     }
-    if (str[1] === 'invoice' && str[2] === 'recurring' && str[3] === undefined) {
+    if (
+      str[1] === 'invoice' &&
+      str[2] === 'recurring' &&
+      str[3] === undefined
+    ) {
       return 'Recurring Invoice';
     }
     if (str[1] === 'invoice' && str[2] === 'recurring' && str[3] === 'new') {
@@ -196,6 +225,9 @@ export default function Navbar() {
     if (str[1] === 'vouchers' && str[2] === 'new') {
       return 'New Voucher';
     }
+    if (str[1] === 'expenses' && str[2] === 'budget') {
+      return 'Budget Planning';
+    }
     // Default behavior
     return str[2] == undefined ? str[1] : str[2];
   };
@@ -203,9 +235,14 @@ export default function Navbar() {
   // Render the appropriate box component
   const BoxComponent = getBoxComponent();
 
+  // Get the background color class
+  const bgColorClass = getBackgroundColorClass();
+
   return (
-    <nav className=" w-full bg-blue-50 space-y-10">
-      <div className="flex sticky top-0 left-0 z-20 justify-between bg-blue-50">
+    <nav className={`w-full ${bgColorClass} space-y-10`}>
+      <div
+        className={`flex sticky top-0 left-0 z-20 justify-between ${bgColorClass}`}
+      >
         <div className="flex items-center gap-20 py-4">
           <Link href={'/'} className="flex items-center ml-8 -mt-2"></Link>
           <h1 className="font-medium text-3xl -ml-14 capitalize">
@@ -228,10 +265,10 @@ export default function Navbar() {
           </div>
         </div>
       </div>
-      
+
       {/* Render the route-specific box component */}
       {shouldShowBox() && BoxComponent && (
-        <div className='ml-14 pb-10'>
+        <div className="ml-14 pb-10">
           <BoxComponent />
         </div>
       )}

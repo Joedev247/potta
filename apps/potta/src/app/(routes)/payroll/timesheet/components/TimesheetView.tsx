@@ -30,7 +30,7 @@ const TimesheetView: React.FC<TimesheetViewProps> = ({
     ],
     queryFn: async () => {
       try {
-        const response = await axios.post('/api/potta/timesheets/filter', {
+        const response = await axios.post('/api/timesheets/filter', {
           limit: 100,
           sortBy: ['date:DESC'],
           filter: {

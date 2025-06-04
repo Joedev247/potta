@@ -55,7 +55,7 @@ export default function DashboardPage() {
         {/* Top Row Cards (same as before) */}
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-6 xl:grid-cols-6">
           <div className="col-span-2">
-            <BudgetCard budget={mockBudget} />
+            <BudgetCard budget={mockBudget}  />
           </div>
           <TerminalsCard count={9} />
           <TeamCard teamMembers={mockTeam} />

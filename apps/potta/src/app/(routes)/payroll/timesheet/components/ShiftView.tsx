@@ -139,7 +139,7 @@ const ShiftView: React.FC = () => {
     setIsLoadingRoles(true);
     try {
       // Fetch roles from the API
-      const rolesResponse = await axios.post('/api/potta/roles/filter', {
+      const rolesResponse = await axios.post('/roles/filter', {
         page: 1,
         limit: 100,
       });
@@ -176,14 +176,11 @@ const ShiftView: React.FC = () => {
     setLoading(true);
     try {
       // Fetch employees
-      const employeesResponse = await axios.post(
-        '/api/potta/employees/filter',
-        {
-          page: 1,
-          limit: 100,
-          status: 'active',
-        }
-      );
+      const employeesResponse = await axios.post('/employees/filter', {
+        page: 1,
+        limit: 100,
+        status: 'active',
+      });
 
       let employeeData: Employee[] = [];
 
@@ -212,7 +209,7 @@ const ShiftView: React.FC = () => {
 
       // Fetch shifts
       try {
-        const shiftsResponse = await axios.post('/api/potta/shifts/filter', {
+        const shiftsResponse = await axios.post('/api/shifts/filter', {
           // You can add filter parameters here if needed
         });
 
@@ -791,7 +788,6 @@ const ShiftView: React.FC = () => {
           onClose={toggleNewShiftModal}
           onSuccess={handleShiftCreated}
           roles={roles}
-          
           isLoadingRoles={isLoadingRoles}
         />
       )}
