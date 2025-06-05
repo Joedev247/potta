@@ -1,32 +1,32 @@
 'use client';
 
 import { FC, ReactNode, useEffect, useRef } from 'react';
-import DataTable from 'react-data-table-component';
+import DataTable, { TableStyles } from 'react-data-table-component';
 import CustomLoader from './loader';
 
 // Define a type for column with border options
 interface ColumnWithBorder {
-  name: string | ReactNode;  // Updated to accept both string and ReactNode
+  name: string | ReactNode; // Updated to accept both string and ReactNode
   selector: (row: any) => any;
   sortable?: boolean;
   cell?: (row: any, index?: number, column?: any) => ReactNode;
   width?: string;
   // Cell border options
-  hasBorder?: boolean;      // General border on all sides
+  hasBorder?: boolean; // General border on all sides
   hasBorderRight?: boolean; // Border only on the right
-  hasBorderLeft?: boolean;  // Border only on the left
-  borderStyle?: string;     // Custom border style for this column
+  hasBorderLeft?: boolean; // Border only on the left
+  borderStyle?: string; // Custom border style for this column
   // Header border options
-  headerBorder?: boolean;   // Border for header cell (all sides)
+  headerBorder?: boolean; // Border for header cell (all sides)
   headerBorderRight?: boolean; // Border only on the right of header
-  headerBorderLeft?: boolean;  // Border only on the left of header
+  headerBorderLeft?: boolean; // Border only on the left of header
   headerBorderBottom?: boolean; // Border only on the bottom of header
   headerBorderStyle?: string; // Custom border style for header
-  [key: string]: any;       // For other column properties
+  [key: string]: any; // For other column properties
 }
 
 interface TableProps {
-  columns: ColumnWithBorder[];  // Updated to use our new column type
+  columns: ColumnWithBorder[]; // Updated to use our new column type
   data: any;
   expanded?: boolean;
   pagination?: boolean;
@@ -40,8 +40,8 @@ interface TableProps {
   paginationTotalRows?: number;
   onChangePage?: (page: number) => void;
   onChangeRowsPerPage?: (perPage: number, page: number) => void;
-  defaultBorderStyle?: string;  // Default border style to use
-  headerRowBorder?: boolean;    // Border for the entire header row
+  defaultBorderStyle?: string; // Default border style to use
+  headerRowBorder?: boolean; // Border for the entire header row
   headerRowBorderStyle?: string; // Custom border style for header row
   onRowClicked?: (row: any) => void; // Add row click handler
   pointerOnHover?: boolean; // Control cursor style on hover
@@ -64,8 +64,8 @@ const MyTable: FC<TableProps & { pending?: boolean }> = ({
   color,
   minHeight = '400px',
   maxHeight = '400px', // Default maxHeight if not provided
-  defaultBorderStyle = '1px solid #e0e0e0',  // Default border style
-  headerRowBorder = false,                   // Default no header row border
+  defaultBorderStyle = '1px solid #e0e0e0', // Default border style
+  headerRowBorder = false, // Default no header row border
   headerRowBorderStyle = '1px solid #cccccc', // Default header border style
   onRowClicked, // Row click handler
   pointerOnHover = false, // Default no pointer cursor
@@ -73,7 +73,7 @@ const MyTable: FC<TableProps & { pending?: boolean }> = ({
 }) => {
   // Reference to the table container
   const tableRef = useRef<HTMLDivElement>(null);
-  
+
   // Effect to apply scrollbar styles directly to the table body element
   useEffect(() => {
     if (tableRef.current) {
@@ -90,7 +90,7 @@ const MyTable: FC<TableProps & { pending?: boolean }> = ({
   }, []);
 
   // Process columns to add cell styling for borders
-  const processedColumns = columns.map(column => {
+  const processedColumns = columns.map((column) => {
     // Create a new column with appropriate styling
     const newColumn = { ...column };
 
@@ -101,7 +101,8 @@ const MyTable: FC<TableProps & { pending?: boolean }> = ({
     // Check for header border options
     const hasHeaderLeft = column.headerBorder || column.headerBorderLeft;
     const hasHeaderRight = column.headerBorder || column.headerBorderRight;
-    const hasHeaderBottom = column.headerBorder || column.headerBorderBottom || headerRowBorder;
+    const hasHeaderBottom =
+      column.headerBorder || column.headerBorderBottom || headerRowBorder;
 
     // Check for cell border options
     const hasCellLeft = column.hasBorder || column.hasBorderLeft;
@@ -214,7 +215,7 @@ const MyTable: FC<TableProps & { pending?: boolean }> = ({
     }
   `;
 
-  const customStyles = {
+  const customStyles: TableStyles = {
     headCells: {
       style: {
         paddingLeft: '7px',
@@ -229,7 +230,7 @@ const MyTable: FC<TableProps & { pending?: boolean }> = ({
         fontSize: size ? '15px' : '18px',
         color: color ? '#EBF0F0' : '#000',
         border: '1px solid #e0e0e0',
-        position: 'sticky' as const, // Fix: Use 'as const' to specify literal type
+        position: 'sticky',
         top: 0,
         zIndex: 50,
       },
@@ -265,7 +266,7 @@ const MyTable: FC<TableProps & { pending?: boolean }> = ({
     },
     tableWrapper: {
       style: {
-        overflowY: 'auto' as 'auto', // Explicitly cast to the expected type
+        overflowY: 'auto',
       },
     },
   };
@@ -274,7 +275,7 @@ const MyTable: FC<TableProps & { pending?: boolean }> = ({
     <div style={{ minHeight: minHeight }} ref={tableRef}>
       {/* Add global style for scrollbars */}
       <style>{globalScrollbarStyles}</style>
-      
+
       <DataTable
         customStyles={customStyles}
         columns={processedColumns}
@@ -290,7 +291,13 @@ const MyTable: FC<TableProps & { pending?: boolean }> = ({
         progressPending={pending}
         progressComponent={<CustomLoader />}
         noDataComponent={
-          <div style={{ padding: '24px', minHeight: minHeight, maxHeight: maxHeight}}>
+          <div
+            style={{
+              padding: '24px',
+              minHeight: minHeight,
+              maxHeight: maxHeight,
+            }}
+          >
             No records to display
           </div>
         }

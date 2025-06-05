@@ -2,7 +2,11 @@
 import React from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { employeeApi } from '../../utils/api';
-import PottaLoader from '@potta/components/pottaloader';
+
+// Skeleton loader component
+const SkeletonLoader = ({ className = '' }) => (
+  <div className={`h-6 bg-gray-200 animate-pulse rounded ${className}`}></div>
+);
 
 const PayBreakDown = () => {
   // Fetch employees with all details
@@ -324,86 +328,78 @@ const PayBreakDown = () => {
       </div>
       <div className="w-full text-center grid grid-cols-4 border max-h-[126px] min-h-[126px]">
         <div className="h-full w-full py-5 flex justify-center">
-          <div
-            className={`${
-              isLoading && 'grid place-content-center'
-            } pl-4 border-r pr-3 w-full`}
-          >
-            {!isLoading && <p className="font-semibold">Total Off hours</p>}{' '}
+          <div className="pl-4 border-r pr-3 w-full">
+            {!isLoading && <p className="font-semibold">Total Off hours</p>}
             <h3 className="mt-1 text-green-700 text-xl">
               {isLoading ? (
-                <PottaLoader size="sm" />
+                <SkeletonLoader className="w-20 mx-auto" />
               ) : (
                 formatHours(offHours.hours)
               )}
             </h3>
-            {!isLoading && (
-              <p className="mt-2 text-sm ">
+            {!isLoading ? (
+              <p className="mt-2 text-sm">
                 {offHours.count} {personOrPeople(offHours.count)}
               </p>
+            ) : (
+              <SkeletonLoader className="w-16 h-4 mx-auto mt-2" />
             )}
           </div>
         </div>
         <div className="h-full w-full py-5 flex justify-center">
-          <div
-            className={`${
-              isLoading && 'grid place-content-center'
-            } pl-4 border-r pr-3 w-full`}
-          >
-            {!isLoading && <p className="font-semibold">Total hours worked</p>}{' '}
+          <div className="pl-4 border-r pr-3 w-full">
+            {!isLoading && <p className="font-semibold">Total hours worked</p>}
             <h3 className="mt-1 text-green-700 text-xl">
               {isLoading ? (
-                <PottaLoader size="sm" />
+                <SkeletonLoader className="w-20 mx-auto" />
               ) : (
                 formatHours(hoursWorked.hours)
               )}
             </h3>
-            {!isLoading && (
+            {!isLoading ? (
               <p className="mt-2 text-sm">
                 {hoursWorked.count} {personOrPeople(hoursWorked.count)}
               </p>
+            ) : (
+              <SkeletonLoader className="w-16 h-4 mx-auto mt-2" />
             )}
           </div>
         </div>
         <div className="h-full w-full py-5 flex justify-center">
-          <div
-            className={`${
-              isLoading && 'grid place-content-center'
-            } pl-4 border-r pr-3 w-full`}
-          >
-            {!isLoading && <p className="font-semibold">Total Overtime</p>}{' '}
+          <div className="pl-4 border-r pr-3 w-full">
+            {!isLoading && <p className="font-semibold">Total Overtime</p>}
             <h3 className="mt-1 text-green-700 text-xl">
               {isLoading ? (
-                <PottaLoader size="sm" />
+                <SkeletonLoader className="w-20 mx-auto" />
               ) : (
                 formatHours(overtime.hours)
               )}
             </h3>
-            {!isLoading && (
+            {!isLoading ? (
               <p className="mt-2 text-sm">
                 {overtime.count} {personOrPeople(overtime.count)}
               </p>
+            ) : (
+              <SkeletonLoader className="w-16 h-4 mx-auto mt-2" />
             )}
           </div>
         </div>
         <div className="h-full w-full py-5 flex justify-center">
-          <div
-            className={`${
-              isLoading && 'grid place-content-center'
-            } pl-4 pr-3 w-full`}
-          >
-            {!isLoading && <p className="font-semibold">Total Benefits</p>}{' '}
+          <div className="pl-4 pr-3 w-full">
+            {!isLoading && <p className="font-semibold">Total Benefits</p>}
             <h3 className="mt-1 text-green-700 text-xl">
               {isLoading ? (
-                <PottaLoader size="sm" />
+                <SkeletonLoader className="w-20 mx-auto" />
               ) : (
                 formatCurrency(benefits.amount)
               )}
             </h3>
-            {!isLoading && (
+            {!isLoading ? (
               <p className="mt-2 text-sm">
                 {benefits.count} {personOrPeople(benefits.count)}
               </p>
+            ) : (
+              <SkeletonLoader className="w-16 h-4 mx-auto mt-2" />
             )}
           </div>
         </div>

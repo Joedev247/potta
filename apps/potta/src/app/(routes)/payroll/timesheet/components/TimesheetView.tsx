@@ -95,8 +95,8 @@ const TimesheetView: React.FC<TimesheetViewProps> = ({
     return timesheetsData.data.map((timesheet) => {
       // Calculate total hours for this timesheet
       let totalHours = 0;
-      let checkInTime = timesheet.check_in_time || '';
-      let checkOutTime = timesheet.check_out_time || '';
+      const checkInTime = timesheet.check_in_time || '';
+      const checkOutTime = timesheet.check_out_time || '';
 
       // Get employee data
       const employee = timesheet.employee || {};

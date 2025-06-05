@@ -20,7 +20,7 @@ const MyDropzone: React.FC<Props> = ({ onDrop }) => {
         <div className="flex justify-center">
           <div className="text-center mt-14">
             <center>
-              <Image src={"/icons/dropzone.svg"} height={50} width={50} alt="" />
+              <img src={"/icons/dropzone.svg"} height={50} width={50} alt="" />
             </center>
             <br />
             <p className="text-green-400 -mt-1">Max (50px 50px)</p>

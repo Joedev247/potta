@@ -24,7 +24,7 @@ const FileUpload: React.FC<Props> = ({ files, setFiles }) => {
         <div className="flex justify-center">
           <div className="text-center mt-14">
             <center>
-              <Image src="/icons/dropzone.svg" height={16} width={16} alt="" />
+              <img src="/icons/dropzone.svg" height={16} width={16} alt="" />
             </center>
             <br />
             <p className="text-green-400 -mt-1">Max (50px 50px)</p>

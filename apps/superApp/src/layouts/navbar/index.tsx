@@ -27,7 +27,7 @@ export default function Navbar() {
               </div>
               <span className="px-5 py-1 min-w-fit flex font-semibold rounded-full border-2 border-[#4563f985] text-[#4564F9] hover:bg-[#4563f915] cursor-pointer">XAF 35000</span>
               <div className=' hover:bg-gray-200 rounded-full p-1.5'>
-                <Image src={"/icons/top-menu-bell.svg"} alt='notifiations' className='cursor-pointer' width={26} height={26} />
+                <img src={"/icons/top-menu-bell.svg"} alt='notifiations' className='cursor-pointer' width={26} height={26} />
               </div>
             </div>
           </div>

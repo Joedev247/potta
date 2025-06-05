@@ -4,7 +4,7 @@ import { ContextData } from '@potta/components/context';
 import Input from '@potta/components/input';
 import Modal from '@potta/components/modal';
 import Select from '@potta/components/select';
-import React, { FC, useState, useContext, Fragment } from 'react';
+import React, { FC, useState, useContext } from 'react';
 
 const NewBudget: FC = () => {
   const context = useContext(ContextData);
@@ -22,9 +22,8 @@ const NewBudget: FC = () => {
     budget_recurrence: 'One time',
   });
 
-  // Check if context is null
   if (!context) {
-    return <div>Error: Context not available</div>;
+    return null;
   }
 
   const HandleNewBudgetChange = (
@@ -46,16 +45,21 @@ const NewBudget: FC = () => {
     const newBudgetData = {
       id: newId,
       budget_name: newBudget.budget_name,
-      budget_goal: newBudget.budget_goal,
+      budget_goal: Number(newBudget.budget_goal),
       currency: newBudget.currency,
       amount_spent: 0,
-      amount_allocated: 0,
-      amount_available: 0,
+      amount_allocated: Number(newBudget.budget_goal),
+      amount_available: Number(newBudget.budget_goal),
     };
 
     context.setPayouts((current: any) => [...current, newBudgetData]);
     setOpen(false);
-    console.log('newBudget', newBudget);
+    setNewBudget({
+      budget_name: '',
+      budget_goal: '',
+      currency: 'XAF',
+      budget_recurrence: 'One time',
+    });
   };
 
   return (
@@ -63,19 +67,22 @@ const NewBudget: FC = () => {
       icon={<i className="ri-add-line"></i>}
       title="New Budget"
       text="Add New Budget"
+      open={open}
+      setOpen={setOpen}
     >
       <div className="bg-white transform overflow-hidden rounded-md py-4">
-        <div className="flex flex-col  px-4 border-b"></div>
+        <div className="flex flex-col px-4 border-b"></div>
 
-        <form action="" onSubmit={CreateNewBudget}>
+        <form onSubmit={CreateNewBudget}>
           <div className="flex flex-col mt-6 px-8">
             <div className="w-full mb-3">
               <p className="mb-2 text-gray-900 font-medium">Budget Name</p>
               <Input
-                type={'text'}
-                name={'budget_name'}
+                type="text"
+                name="budget_name"
                 onchange={HandleNewBudgetChange}
                 value={newBudget.budget_name}
+                required
               />
             </div>
 
@@ -83,21 +90,23 @@ const NewBudget: FC = () => {
               <span className="mb-3 text-gray-900 font-medium">
                 Budget Goal
               </span>
-              <div className="flex w-full  rounded-md divide-x">
+              <div className="flex w-full rounded-md divide-x">
                 <div className="w-[90%]">
                   <Input
-                    type={'number'}
-                    name={'budget_goal'}
-                    onchange={() => HandleNewBudgetChange}
+                    type="number"
+                    name="budget_goal"
+                    onchange={HandleNewBudgetChange}
                     value={newBudget.budget_goal}
+                    required
+                    min="0"
                   />
                 </div>
                 <div className="mt-2">
                   <Select
                     options={[{ value: 'XAF', label: 'XAF' }]}
-                    selectedValue={'XAF'}
-                    onChange={() => {}}
-                    bg={'border'}
+                    selectedValue={newBudget.currency}
+                    onChange={(e) => HandleNewBudgetChange(e as any)}
+                    bg="border"
                   />
                 </div>
               </div>
@@ -109,15 +118,15 @@ const NewBudget: FC = () => {
               </p>
               <Select
                 options={[{ value: 'One time', label: 'One time' }]}
-                selectedValue={'One time'}
-                onChange={() => {}}
-                bg={'border'}
+                selectedValue={newBudget.budget_recurrence}
+                onChange={(e) => HandleNewBudgetChange(e as any)}
+                bg="border"
               />
             </div>
           </div>
 
           <div className="flex justify-end mt-8 border-t pt-4 px-8">
-            <Button type={'submit'} text="Next" />
+            <Button type="submit" text="Create Budget" />
           </div>
         </form>
       </div>

@@ -2,7 +2,11 @@
 import React from 'react';
 import { useQuery } from '@tanstack/react-query';
 import axios from '@/config/axios.config';
-import PottaLoader from '@potta/components/pottaloader';
+
+// Skeleton loader component (same as first example)
+const SkeletonLoader = ({ className = '' }) => (
+  <div className={`h-6 bg-gray-200 animate-pulse rounded ${className}`}></div>
+);
 
 const Boxes = () => {
   // Fetch timesheets data
@@ -11,7 +15,7 @@ const Boxes = () => {
       queryKey: ['timesheets-summary'],
       queryFn: async () => {
         try {
-          const response = await axios.post('/api/timesheets/filter', {
+          const response = await axios.post('/timesheets/filter', {
             limit: 100,
             sortBy: ['createdAt:DESC'],
           });
@@ -127,7 +131,7 @@ const Boxes = () => {
       id: 1,
       title: 'Total Hours',
       amount: isLoading ? (
-        <PottaLoader size="sm" />
+        <SkeletonLoader className="w-20" />
       ) : (
         `${calculateTotalHours()} hrs`
       ),
@@ -137,7 +141,11 @@ const Boxes = () => {
     {
       id: 2,
       title: 'Total Employees',
-      amount: isLoading ? <PottaLoader size="sm" /> : calculateTotalEmployees(),
+      amount: isLoading ? (
+        <SkeletonLoader className="w-16" />
+      ) : (
+        calculateTotalEmployees()
+      ),
       color: '#000',
       percentage: '100%',
     },

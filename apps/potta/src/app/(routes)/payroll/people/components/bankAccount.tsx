@@ -5,10 +5,10 @@ import Select from '@potta/components/select';
 import SearchableSelect from '@potta/components/searchableSelect';
 import { Switch } from '@headlessui/react';
 import { peopleApi } from '../utils/api';
+import { Country } from 'country-state-city';
 import {
   getCountries,
   getCountryName,
-  getCountryCode,
   LocationOption,
 } from '@potta/services/locationService';
 
@@ -114,16 +114,8 @@ const BankAccount: React.FC<BankAccountProps> = ({
           const country = data.address?.country || '';
           let countryCode = '';
 
-          // Try to get country code using the locationService
-          if (country) {
-            // First try direct lookup by country code (if country is already a code)
-            if (country.length === 2) {
-              countryCode = country;
-            } else {
-              // Try to get code from country name
-              countryCode = getCountryCode(country);
-            }
-          }
+          // Try to get code from country name
+          countryCode = Country.getCountryByCode(country)?.isoCode || '';
 
           // Set default currency based on country
           const defaultCurrency = countryCode

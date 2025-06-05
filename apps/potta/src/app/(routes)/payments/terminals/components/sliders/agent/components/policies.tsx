@@ -1,4 +1,4 @@
-import Select from '@/components/select';
+import Select from '@potta/components/select';
 import react from 'react'
 
 const Policies = () => {

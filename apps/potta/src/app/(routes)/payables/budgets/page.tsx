@@ -1,11 +1,16 @@
 'use client';
 import React, { FC, ChangeEvent } from 'react';
-import { useState, useContext } from 'react';
+import { useState, useContext, useEffect } from 'react';
 import Link from 'next/link';
 import NewBudget from './component/modal';
 import FilterComponent from './component/filterComponent';
 import RootLayout from '../../layout';
 import { ContextData } from '@potta/components/context';
+
+// Force dynamic rendering
+export const dynamic = 'force-dynamic';
+export const fetchCache = 'force-no-store';
+export const revalidate = false;
 
 interface Payout {
   id: number;
@@ -17,15 +22,19 @@ interface Payout {
   amount_available: number;
 }
 
-const Budgets: FC = () => {
+const BudgetsContent: FC = () => {
   const context = useContext(ContextData);
+  const [filteredPayouts, setFilteredPayouts] = useState<Payout[]>([]);
 
-  const [filteredPayouts, setFilteredPayouts] = useState<Payout[]>(
-    context?.payouts
-  );
+  useEffect(() => {
+    if (context?.payouts && Array.isArray(context.payouts)) {
+      setFilteredPayouts(context.payouts);
+    }
+  }, [context?.payouts]);
 
   const handleSearchPayoutChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const filteredResults = context?.payouts.filter((payout: Payout) =>
+    if (!context?.payouts) return;
+    const filteredResults = context.payouts.filter((payout: Payout) =>
       payout.budget_name.toLowerCase().includes(e.target.value.toLowerCase())
     );
     setFilteredPayouts(filteredResults);
@@ -35,33 +44,40 @@ const Budgets: FC = () => {
 
   const handleSortData = (isSorted: boolean) => {
     setDataIsSorted(isSorted);
-    setFilteredPayouts(filteredPayouts.reverse());
+    setFilteredPayouts([...filteredPayouts].reverse());
   };
 
-  return (
-    <RootLayout>
-      <div className="pl-16 pr-5 mt-10">
-        <div className="flex justify-between mt-10">
-          <FilterComponent
-            includeSearch={true}
-            handleSearchChange={handleSearchPayoutChange}
-            includeSort={true}
-            activeSort={handleSortData}
-            includeDatePicker={true}
-            placeholder={''}
-            includePopover={false}
-            children={undefined}
-          />
+  if (!context) {
+    return (
+      <div className="flex min-h-screen items-center justify-center">
+        <p>Loading...</p>
+      </div>
+    );
+  }
 
-          <NewBudget />
-        </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 mt-8 gap-4">
-          {filteredPayouts.map((payout: Payout) => (
+  return (
+    <div className="pl-16 pr-5 mt-10">
+      <div className="flex justify-between mt-10">
+        <FilterComponent
+          includeSearch={true}
+          handleSearchChange={handleSearchPayoutChange}
+          includeSort={true}
+          activeSort={handleSortData}
+          includeDatePicker={true}
+          placeholder={'Search budgets...'}
+          includePopover={false}
+        />
+
+        <NewBudget />
+      </div>
+      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 mt-8 gap-4">
+        {filteredPayouts && filteredPayouts.length > 0 ? (
+          filteredPayouts.map((payout: Payout) => (
             <Link
               key={payout.id}
               href={`/dashboard/payouts/budgetDetail/${payout.id}`}
             >
-              <div className="flex flex-col border  py-4 px-4 cursor-pointer">
+              <div className="flex flex-col border py-4 px-4 cursor-pointer hover:shadow-lg transition-shadow">
                 <div className="flex justify-between px-3">
                   <div className="flex flex-col gap-2">
                     <h1 className="text-lg font-semibold">
@@ -70,8 +86,7 @@ const Budgets: FC = () => {
                     <p className="text-xs">
                       Budget goal:{' '}
                       <span className="font-semibold">
-                        {' '}
-                        {payout.currency} {payout.budget_goal}
+                        {payout.currency} {payout.budget_goal.toLocaleString()}
                       </span>
                     </p>
                   </div>
@@ -93,8 +108,8 @@ const Budgets: FC = () => {
                     <div className="flex w-3 h-3 mt-1.5 bg-orange-500 rounded-full"></div>
                     <div className="flex flex-col">
                       <p className="font-semibold text-balse">Spent</p>
-                      <p className="text-sm ">
-                        {payout.currency} {payout.amount_spent}
+                      <p className="text-sm">
+                        {payout.currency} {payout.amount_spent.toLocaleString()}
                       </p>
                     </div>
                   </div>
@@ -102,8 +117,9 @@ const Budgets: FC = () => {
                     <div className="flex w-3 h-3 mt-1.5 bg-green-300 rounded-full"></div>
                     <div className="flex flex-col">
                       <p className="font-semibold text-balse">Allocated</p>
-                      <p className="text-sm ">
-                        {payout.currency} {payout.amount_allocated}
+                      <p className="text-sm">
+                        {payout.currency}{' '}
+                        {payout.amount_allocated.toLocaleString()}
                       </p>
                     </div>
                   </div>
@@ -111,24 +127,30 @@ const Budgets: FC = () => {
                     <div className="flex w-3 h-3 mt-1.5 bg-[brown] rounded-full"></div>
                     <div className="flex flex-col">
                       <p className="font-semibold text-balse">Available</p>
-                      <p className="text-sm ">
-                        {payout.currency} {payout.amount_available}
+                      <p className="text-sm">
+                        {payout.currency}{' '}
+                        {payout.amount_available.toLocaleString()}
                       </p>
                     </div>
                   </div>
                 </div>
               </div>
             </Link>
-          ))}
-        </div>
-        <div
-          className={`p-4 w-full mt-8 flex justify-evenly items-center ${
-            filteredPayouts.length < 1 ? '' : 'hidden'
-          }`}
-        >
-          <h1 className="font-medium text-xl">Sorry, No data</h1>
-        </div>
+          ))
+        ) : (
+          <div className="col-span-full p-4 w-full mt-8 flex justify-evenly items-center">
+            <h1 className="font-medium text-xl">Sorry, No data</h1>
+          </div>
+        )}
       </div>
+    </div>
+  );
+};
+
+const Budgets: FC = () => {
+  return (
+    <RootLayout>
+      <BudgetsContent />
     </RootLayout>
   );
 };

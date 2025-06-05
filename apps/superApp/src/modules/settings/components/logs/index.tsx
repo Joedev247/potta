@@ -29,7 +29,7 @@ const Log: FC = () => {
         </div>
         <CSVLink data={data}>
           <div className="flex gap-2 btn items-center text-white bg-[#237804] hover:bg-[#3a9918] px-6 py-2 rounded-[2px] h-full">
-            <Image width={24} height={24} src="/icons/db-icon.svg" alt="" />
+            <img width={24} height={24} src="/icons/db-icon.svg" alt="" />
             Export CSV
           </div>
         </CSVLink>

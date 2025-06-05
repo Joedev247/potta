@@ -8,6 +8,11 @@ import ChatAI from '../../../app/chatai';
 import { ContextData } from '../../../components/context';
 import { Toaster } from 'sonner';
 
+// Force dynamic rendering
+export const dynamic = 'force-dynamic';
+export const fetchCache = 'force-no-store';
+export const revalidate = false;
+
 const inter = Inter({ subsets: ['latin'] });
 
 export default function RootLayout({
@@ -28,9 +33,7 @@ export default function RootLayout({
           show ? 'w-[75%]' : 'w-[97.5%]'
         }`}
       > */}
-      <div
-        className={`transition-all flex  duration-500  ease-in-out w-full`}
-      > 
+      <div className={`transition-all flex  duration-500  ease-in-out w-full`}>
         <div className="w-full overflow-x-hidden overflow-y-auto scroll z-10 flex">
           <div className="fixed z-50">
             <Sidebars />

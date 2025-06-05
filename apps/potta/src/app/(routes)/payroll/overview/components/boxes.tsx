@@ -3,7 +3,11 @@ import React from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { employeeApi } from '../../utils/api';
 import { format } from 'date-fns';
-import PottaLoader from '@potta/components/pottaloader';
+
+// Skeleton loader component
+const SkeletonLoader = ({ className = '' }) => (
+  <div className={`h-6 bg-gray-200 animate-pulse rounded ${className}`}></div>
+);
 
 const Boxes = () => {
   // Fetch employees with all their details
@@ -99,7 +103,11 @@ const Boxes = () => {
     {
       id: 1,
       title: 'Total Due Payroll',
-      amount: isLoading ? <PottaLoader /> : calculateTotalDuePayroll(),
+      amount: isLoading ? (
+        <SkeletonLoader className="w-32" />
+      ) : (
+        calculateTotalDuePayroll()
+      ),
       color: '#000',
       percentage: '37.9',
     },
@@ -107,7 +115,11 @@ const Boxes = () => {
     {
       id: 2,
       title: 'Active Employees',
-      amount: isLoading ? <PottaLoader /> : calculateActiveEmployees(),
+      amount: isLoading ? (
+        <SkeletonLoader className="w-16" />
+      ) : (
+        calculateActiveEmployees()
+      ),
       color: '#000',
       percentage: '100%',
     },
@@ -123,7 +135,7 @@ const Boxes = () => {
             </p>
           </div>
 
-          <div className="mb-4 mt-10 text-left font-semibold text-xl ">
+          <div className="mb-4 mt-10 text-left font-medium text-xl ">
             {item.amount}
           </div>
         </div>

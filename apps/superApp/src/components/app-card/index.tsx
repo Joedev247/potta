@@ -12,7 +12,7 @@ const AppCard: React.FC<Props> = ({ image, title }) => {
     <div className='w-full flex hover:bg-green-100 cursor-pointer mt-20 justify-center primary p-5 '>
       <div>
         <div className='my-10 flex justify-center h-[7vh]'>
-          <Image src={image} height={80} width={80} alt="" />
+          <img src={image} height={80} width={80} alt="" />
         </div>
         <div className='w-full flex justify-center '>
           <p className='text-lg capitalize'>{title}</p>

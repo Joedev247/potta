@@ -1,6 +1,6 @@
 import React from 'react'
-import Table from '@/components/table'
-import Button from '@/components/button';
+import Table from '@potta/components/table'
+import Button from '@potta/components/button';
 
 const InvoiceDatatable = () => {
     const columns = [
