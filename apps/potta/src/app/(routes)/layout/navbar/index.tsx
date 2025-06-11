@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import Select from '../../../../components/select';
 import { useRouter } from 'next/navigation';
+import { Bell, Inbox } from 'lucide-react'; // Import the icons
 import Box from './box';
 import PaymentsBox from './boxes/PaymentsBox';
 import AccountsBox from './boxes/AccountsBox';
@@ -249,10 +250,19 @@ export default function Navbar() {
             {getTitle()}
           </h1>
         </div>
-        <div className="flex gap-8 px-4">
-          {/* <Icon icon="Bell" size={23} /> */}
-          <div className="w-full mt-2 min-w-32 ">
-            <div className="w-full min-w-32 ">
+        <div className="flex items-center gap-4 px-4">
+          {/* Inbox Icon */}
+          <button className="p-2 rounded-full transition-colors">
+            <Inbox size={20} className="text-gray-600 hover:text-gray-800" />
+          </button>
+          {/* Notification Icon */}
+          <button className="p-2 rounded-full transition-colors">
+            <Bell size={20} className="text-gray-600 hover:text-gray-800" />
+          </button>
+
+          {/* Select Component */}
+          <div className="w-full mt-2 min-w-32">
+            <div className="w-full min-w-32">
               <Select
                 options={urlRouters}
                 selectedValue={selected.toString()}

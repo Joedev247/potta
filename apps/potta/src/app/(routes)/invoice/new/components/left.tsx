@@ -264,13 +264,13 @@ const Left = () => {
       invoiceType: invoiceType,
       currency: currency,
       taxRate: Number(taxRate),
-      totalAmount: totalAmount,
+      // totalAmount: totalAmount,
       paymentTerms: paymentTerms,
       paymentReference: paymentReference, // or generate a unique reference
       notes: note,
       paymentMethod: selectedPaymentMethod,
       invoiceNumber: invoiceNumber,
-      discountAmount: 0, // Add default or actual value if available
+      // discountAmount: 0, // Add default or actual value if available
       customerId: customerName, // Using the customer UUID as customerId
       salePersonId: 'c9c0c3a4-353f-4907-a342-ae64e629936f', // Add actual salesperson if available
       lineItems: lineItems,

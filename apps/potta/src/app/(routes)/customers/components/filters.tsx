@@ -7,6 +7,7 @@ import SliderCustomer from './customerSlider';
 import { PopoverAction } from '@potta/components/tableActionsPopover';
 import { NextPopover } from '@potta/components/popover';
 import BulkSlider from './bulkSlider';
+import Image from 'next/image';
 
 const Filter = () => {
   const [selectedValue, setSelectedValue] = useState('All Time'); // Set your default value here
@@ -86,7 +87,14 @@ const Filter = () => {
               type={'button'}
               text="Export"
               color
-              icon={<img src="/images/export.svg" />}
+              icon={
+                <Image
+                  width={200}
+                  height={200}
+                  className="w-full h-full object-cover"
+                  src="/images/export.svg"
+                />
+              }
               theme="lightBlue"
             />
           </div>

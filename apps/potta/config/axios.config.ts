@@ -22,7 +22,7 @@ axios.interceptors.request.use((config: InternalAxiosRequestConfig) => {
   
   config.headers['accept'] = '*/*';
   config.headers['branchId'] = 'f7b1b3b0-0b1b-4b3b-8b1b-0b1b3b0b1b3b';
-  config.headers['orgId'] = '8f79d19a-5319-4783-8ddc-c863d98ecc16';
+  config.headers['orgId'] = 'f7b1b3b0-0b1b-4b3b-8b1b-0b1b3b0b1b3c';
   config.headers['userId'] = '8f79d19a-5319-4783-8ddc-c863d98ecc16';
 
   // Log the outgoing request

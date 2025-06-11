@@ -62,7 +62,7 @@ const Filter = () => {
             <Button
               type={'button'}
               color
-              text="Export"
+              text="Exports"
               icon={<img src="/images/export.svg" />}
               theme="lightBlue"
             />

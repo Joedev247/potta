@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, ChangeEvent } from 'react';
 import {
   ChevronDown,
   ChevronRight,
@@ -20,6 +20,7 @@ import {
   DropdownMenuTrigger,
   DropdownMenuSeparator,
 } from '@potta/components/shadcn/dropdown';
+import Image from 'next/image';
 
 interface AccountNode {
   uuid: string;
@@ -427,7 +428,9 @@ const TableAccount = () => {
           <div className="relative w-1/3">
             <Search
               value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
+              onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                setSearchTerm(e.target.value)
+              }
               placeholder="Search accounts by name, code or type..."
             />
           </div>
@@ -450,7 +453,15 @@ const TableAccount = () => {
               <Button
                 type="button"
                 text="Export"
-                icon={<img src="/images/export.svg" alt="Export" />}
+                icon={
+                  <Image
+                    width={200}
+                    height={200}
+                    className="w-full h-full object-cover"
+                    src="/images/export.svg"
+                    alt="Export"
+                  />
+                }
                 theme="lightBlue"
                 className="!text-black"
               />

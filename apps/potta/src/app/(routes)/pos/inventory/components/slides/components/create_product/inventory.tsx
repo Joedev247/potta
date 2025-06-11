@@ -12,7 +12,10 @@ import useCreateProduct from '../../../../_hooks/useCreateProduct';
 import useUploadImage from '../../../../_hooks/useUploadFile';
 import toast from 'react-hot-toast';
 import Inventory from './components/inventory';
-import ImageUploader, { getSelectedImageFile, clearSelectedImageFile } from '../../../imageUploader';
+import ImageUploader, {
+  getSelectedImageFile,
+  clearSelectedImageFile,
+} from '../../../imageUploader';
 import { productApi } from '../../../../_utils/api';
 
 interface CreateProductProps {
@@ -20,9 +23,9 @@ interface CreateProductProps {
   setOpen?: (open: boolean) => void;
 }
 
-const CreateProduct: React.FC<CreateProductProps> = ({ 
+const CreateProduct: React.FC<CreateProductProps> = ({
   open: controlledOpen,
-  setOpen: setControlledOpen
+  setOpen: setControlledOpen,
 }) => {
   const [localOpen, setLocalOpen] = useState(false);
   const isOpen = controlledOpen ?? localOpen;
@@ -30,7 +33,7 @@ const CreateProduct: React.FC<CreateProductProps> = ({
   const [data, setData] = useState('inventory');
   const context = useContext(ContextData);
   const [isUploading, setIsUploading] = useState(false);
-  
+
   const {
     register,
     handleSubmit,
@@ -52,57 +55,66 @@ const CreateProduct: React.FC<CreateProductProps> = ({
       taxable: false,
       taxRate: 0,
       category: '',
-      image: '',
+      images: [],
     },
   });
 
   const mutation = useCreateProduct();
-  
+
   const onSubmit = async (formData: ProductPayload) => {
     try {
+      console.log('Form submitted with data:', formData);
+
       // Get the selected file
       const selectedFile = getSelectedImageFile();
       console.log('Selected file in onSubmit:', selectedFile);
-      
+
       // Check if we have a file to upload
       if (selectedFile) {
         setIsUploading(true);
-        
+
         try {
           // Upload the file
           const uploadResult = await productApi.uploadImage(selectedFile);
-          
+
           // Update the form data with the actual image URL
           if (uploadResult && uploadResult.link) {
-            formData.image = uploadResult.link;
+            formData.images = [uploadResult.link];
             console.log('Image uploaded successfully, URL:', uploadResult.link);
           } else {
-            // If we don't get a link back, stop the submission
             setIsUploading(false);
             toast.error('Image upload failed: No link returned from server');
-            console.error('Upload succeeded but no link was returned:', uploadResult);
-            return; // Stop the form submission
+            return;
           }
         } catch (uploadError) {
           console.error('Image upload error:', uploadError);
           setIsUploading(false);
           toast.error('Image upload failed. Please try again.');
-          return; // Stop the form submission
+          return;
         }
-        
+
         setIsUploading(false);
       } else {
-        console.log('No file selected, continuing with form submission without image');
+        formData.images = [];
       }
-      
-      // Now submit the form with the updated image URL
+
+      // Validate required fields
+      if (
+        !formData.name ||
+        !formData.sku ||
+        !formData.cost ||
+        !formData.salesPrice
+      ) {
+        toast.error('Please fill in all required fields');
+        return;
+      }
+
       console.log('Submitting product data:', formData);
       mutation.mutate(formData, {
         onSuccess: () => {
           toast.success('Product created successfully!');
           reset();
           setIsOpen(false);
-          // Clear the selected file
           clearSelectedImageFile();
         },
         onError: (error) => {
@@ -179,10 +191,7 @@ const CreateProduct: React.FC<CreateProductProps> = ({
               <label htmlFor="" className="mb-3 text-gray-900 font-medium">
                 Image
               </label>
-              <ImageUploader 
-                control={control} 
-                name="image"
-              />
+              <ImageUploader control={control} name="images" />
             </div>
             <div className="mt-4">
               <Input

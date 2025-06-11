@@ -23,6 +23,7 @@ import toast from 'react-hot-toast';
 import useUpdateProduct from '../../../../_hooks/useUpdateProduct';
 import Slider from '@potta/components/slideover';
 import TextArea from '@potta/components/textArea';
+import * as yup from 'yup';
 
 interface EditProductProps {
   product: ProductPayload | null; // Existing product data
@@ -30,6 +31,7 @@ interface EditProductProps {
   open?: boolean; // Optional controlled open state
   setOpen?: (open: boolean) => void; // Optional setter from parent
 }
+
 const EditProduct: React.FC<EditProductProps> = ({
   product,
   productId,
@@ -50,22 +52,37 @@ const EditProduct: React.FC<EditProductProps> = ({
     control,
     formState: { errors },
     reset,
-  } = useForm<UpdateProductPayload>({
+  } = useForm<yup.InferType<typeof UpdateProductSchema>>({
     resolver: yupResolver(UpdateProductSchema),
-    defaultValues: product || {
-      name: '',
-      description: '',
-      unitOfMeasure: undefined,
-      cost: 0,
-      sku: '',
-      inventoryLevel: 0,
-      salesPrice: 0,
-      taxable: false,
-      taxRate: 0,
-      category: '',
-      image: '',
-      status: undefined,
-    },
+    defaultValues: product
+      ? {
+          name: product.name,
+          description: product.description,
+          unitOfMeasure: product.unitOfMeasure,
+          cost: product.cost,
+          sku: product.sku,
+          inventoryLevel: product.inventoryLevel,
+          salesPrice: product.salesPrice,
+          taxable: product.taxable,
+          taxRate: product.taxRate,
+          category: product.category,
+          images: product.images || [],
+          status: product.status || 'disabled',
+        }
+      : {
+          name: '',
+          description: '',
+          unitOfMeasure: '',
+          cost: 0,
+          sku: '',
+          inventoryLevel: 0,
+          salesPrice: 0,
+          taxable: false,
+          taxRate: 0,
+          category: '',
+          images: [],
+          status: 'disabled',
+        },
   });
   const ProductStatusEnum = [
     { value: 'pending', label: 'Pending' },
@@ -79,12 +96,18 @@ const EditProduct: React.FC<EditProductProps> = ({
   ];
 
   const mutation = useUpdateProduct(productId);
-  const onSubmit = (data: UpdateProductPayload) => {
-    console.log('Submitted Data:', data);
-    mutation.mutate(data, {
+  const onSubmit = (data: yup.InferType<typeof UpdateProductSchema>) => {
+    const cleanPayload = {
+      ...data,
+      images: data.images || [],
+      status: data.status || 'disabled',
+    };
+
+    console.log('Submitted Data:', cleanPayload);
+    mutation.mutate(cleanPayload, {
       onSuccess: () => {
         toast.success('Product Updated successfully!');
-        reset(); // Reset the form after success
+        reset();
         setIsOpen(false);
       },
       onError: (error) => {
@@ -271,21 +294,19 @@ const EditProduct: React.FC<EditProductProps> = ({
         </div>
         <div className="flex-grow" /> {/* This div takes up remaining space */}
         <div className="text-center md:text-right  md:flex  space-x-4 fixed bottom-0 left-0 right-0 justify-center bg-white p-4">
-        <div className="flex gap-2 w-full max-w-4xl justify-between">
-          <Button
-            text="Cancel"
-            type="button"
-            theme="danger"
-
-            onClick={() => setIsOpen(false)}
-          />
-          <Button
-            text={'Update Item'}
-
-            type={'submit'}
-            isLoading={mutation.isPending}
-          />
-        </div>
+          <div className="flex gap-2 w-full max-w-4xl justify-between">
+            <Button
+              text="Cancel"
+              type="button"
+              theme="danger"
+              onClick={() => setIsOpen(false)}
+            />
+            <Button
+              text={'Update Item'}
+              type={'submit'}
+              isLoading={mutation.isPending}
+            />
+          </div>
         </div>
       </form>
     </Slider>

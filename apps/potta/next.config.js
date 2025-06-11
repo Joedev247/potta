@@ -24,6 +24,18 @@ const nextConfig = {
     optimizePackageImports: ['react', 'react-dom', 'lucide-react'],
     optimizeCss: true,
   },
+  images: {
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: '**',
+      },
+      {
+        protocol: 'http',
+        hostname: '**',
+      },
+    ],
+  },
 };
 
 const plugins = [

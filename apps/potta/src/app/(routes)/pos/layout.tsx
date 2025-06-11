@@ -1,27 +1,19 @@
-'use client'
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import React, { FC, ReactNode, useState } from "react";
+'use client';
+import React, { FC, ReactNode } from 'react';
 
 interface Props {
-    children: ReactNode
+  children: ReactNode;
 }
 
 const POSLayout: FC<Props> = ({ children }) => {
-   const [queryClient] = useState(() => new QueryClient());
-    return (
-      <QueryClientProvider client={queryClient}>
-
-        <div className="w-full h-screen overflow-hidden">
-
-            <div className="w-full h-screen">
-                <div className="h-[100vh] w-full overflow-hidden  relative  p-0 ">
-                    {children}
-                </div>
-            </div>
-
+  return (
+    <div className="w-full h-screen overflow-hidden">
+      <div className="w-full h-screen">
+        <div className="h-[100vh] w-full overflow-hidden relative p-0">
+          {children}
         </div>
-      </QueryClientProvider>
-
-    )
-}
+      </div>
+    </div>
+  );
+};
 export default POSLayout;

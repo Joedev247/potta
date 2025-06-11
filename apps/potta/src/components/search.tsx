@@ -1,18 +1,14 @@
 'use client';
-import React, { useState } from 'react';
+import React from 'react';
 import { RiSearchLine } from 'react-icons/ri';
 
 interface SearchProps {
   placeholder?: string;
+  value?: string;
+  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
-const Search = ({ placeholder }: SearchProps) => {
-  const [searchTerm, setSearchTerm] = useState('');
-
-  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchTerm(e.target.value);
-  };
-
+const Search = ({ placeholder, value, onChange }: SearchProps) => {
   return (
     <div className="flex justify-center my-4">
       <div className="relative flex items-center w-full">
@@ -21,9 +17,9 @@ const Search = ({ placeholder }: SearchProps) => {
           type="search"
           placeholder={placeholder ? placeholder : 'Search'}
           id="search"
-          value={searchTerm}
-          onChange={handleSearch}
-          className="block w-full  py-2.5 pl-10 text-gray-900 outline-none border"
+          value={value}
+          onChange={onChange}
+          className="block w-full py-2.5 pl-10 text-gray-900 outline-none border"
         />
       </div>
     </div>
