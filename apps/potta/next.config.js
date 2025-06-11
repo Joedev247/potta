@@ -25,6 +25,18 @@ const nextConfig = {
     optimizePackageImports: ['react', 'react-dom', 'lucide-react'],
     optimizeCss: true,
   },
+  images: {
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: '**',
+      },
+      {
+        protocol: 'http',
+        hostname: '**',
+      },
+    ],
+  },
 
   // Add error page configuration
   async redirects() {
@@ -71,3 +83,4 @@ const nextConfig = {
 };
 
 module.exports = nextConfig;
+

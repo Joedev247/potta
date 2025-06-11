@@ -60,6 +60,9 @@ export default function DynamicTable() {
     limit: 100,
   });
 
+  console.log('Products Loading:', productsLoading);
+  console.log('Products Data:', productsData);
+
   // Replace this line:
   const products: Product[] = (productsData?.data || []).map((product) => ({
     uuid: product.uuid,

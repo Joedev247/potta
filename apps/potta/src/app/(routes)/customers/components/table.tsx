@@ -21,23 +21,36 @@ import EditCustomer from './updateCustomerSlider';
 import DeleteModal from './deleteModal';
 import { CustomerFilter } from '../utils/types';
 import { log } from 'console';
-import { UpdateCustomerPayload, updateCustomerSchema } from '../utils/validations';
-import TableActionPopover, { PopoverAction } from '@potta/components/tableActionsPopover';
+import {
+  UpdateCustomerPayload,
+  updateCustomerSchema,
+} from '../utils/validations';
+import TableActionPopover, {
+  PopoverAction,
+} from '@potta/components/tableActionsPopover';
+import Image from 'next/image';
 
-export const PhoneFlag = ({ phoneNumber }: { phoneNumber: string | number }) => {
- const convertToE164 = (phoneNumber: string | number) => {
-  if(typeof phoneNumber === 'number') {
-   return phoneNumber.toString();
-  }
-  return phoneNumber;
- }
-  const phoneNumberObj = parsePhoneNumberFromString(convertToE164(phoneNumber)) 
+export const PhoneFlag = ({
+  phoneNumber,
+}: {
+  phoneNumber: string | number;
+}) => {
+  const convertToE164 = (phoneNumber: string | number) => {
+    if (typeof phoneNumber === 'number') {
+      return phoneNumber.toString();
+    }
+    return phoneNumber;
+  };
+  const phoneNumberObj = parsePhoneNumberFromString(convertToE164(phoneNumber));
   const countryCode = phoneNumberObj?.country;
   const number = phoneNumberObj?.number;
   return countryCode ? (
     <div className="flex items-center">
       <div className="">
-        <img
+        <Image
+          width={200}
+          height={200}
+          className="w-full h-full object-cover"
           src={`https://flagcdn.com/w20/${countryCode.toLowerCase()}.png`}
           alt={countryCode}
         />
@@ -48,8 +61,6 @@ export const PhoneFlag = ({ phoneNumber }: { phoneNumber: string | number }) => 
     <p>Invalid Number</p>
   );
 };
-
-
 
 const TableComponents = () => {
   const [openPopover, setOpenPopover] = useState<string | null>(null);
@@ -64,8 +75,11 @@ const TableComponents = () => {
   const columns = [
     {
       name: 'Customer Name',
-      selector: (row: any) => <div className="">{row.firstName} {row.lastName}</div>,
-
+      selector: (row: any) => (
+        <div className="">
+          {row.firstName} {row.lastName}
+        </div>
+      ),
     },
     {
       name: 'Telephone ',
@@ -77,11 +91,7 @@ const TableComponents = () => {
     },
     {
       name: 'Type',
-      selector: (row: any) => (
-        <div>
-         {row.type}
-        </div>
-      ),
+      selector: (row: any) => <div>{row.type}</div>,
     },
     {
       name: 'Status',
@@ -90,20 +100,24 @@ const TableComponents = () => {
 
         // Status color mapping based on the specific status values from validations.ts
         const statusColorMap: Record<string, string> = {
-          'pending': 'bg-yellow-100 text-yellow-800',
-          'schedule': 'bg-blue-100 text-blue-800',
-          'complete': 'bg-green-100 text-green-800',
-          'enabled': 'bg-green-100 text-green-800',
-          'disabled': 'bg-red-100 text-red-800',
-          'available': 'bg-teal-100 text-teal-800',
-          'expired': 'bg-gray-100 text-gray-800',
-          'taken': 'bg-purple-100 text-purple-800'
+          pending: 'bg-yellow-100 text-yellow-800',
+          schedule: 'bg-blue-100 text-blue-800',
+          complete: 'bg-green-100 text-green-800',
+          enabled: 'bg-green-100 text-green-800',
+          disabled: 'bg-red-100 text-red-800',
+          available: 'bg-teal-100 text-teal-800',
+          expired: 'bg-gray-100 text-gray-800',
+          taken: 'bg-purple-100 text-purple-800',
         };
 
-        const colorClass = statusColorMap[status.toLowerCase()] || 'bg-gray-100 text-gray-800'; // Default styling
+        const colorClass =
+          statusColorMap[status.toLowerCase()] || 'bg-gray-100 text-gray-800'; // Default styling
         return (
-          <div className={`px-3 py-1 rounded-full text-xs font-medium ${colorClass}`}>
-            {status.charAt(0).toUpperCase() + status.slice(1)} {/* Capitalize first letter */}
+          <div
+            className={`px-3 py-1 rounded-full text-xs font-medium ${colorClass}`}
+          >
+            {status.charAt(0).toUpperCase() + status.slice(1)}{' '}
+            {/* Capitalize first letter */}
           </div>
         );
       },
@@ -119,7 +133,7 @@ const TableComponents = () => {
               setIsViewOpen(true);
             },
             className: 'hover:bg-gray-200',
-            icon: <i className="ri-eye-line" />
+            icon: <i className="ri-eye-line" />,
           },
           {
             label: 'Edit',
@@ -129,7 +143,7 @@ const TableComponents = () => {
               setIsEditOpen(true);
             },
             className: 'hover:bg-gray-200',
-            icon: <i className="ri-edit-line" />
+            icon: <i className="ri-edit-line" />,
           },
           {
             label: 'Delete',
@@ -138,8 +152,8 @@ const TableComponents = () => {
               setIsDeleteOpen(true);
             },
             className: 'hover:bg-red-200 text-red-600',
-            icon: <i className="ri-delete-bin-line" />
-          }
+            icon: <i className="ri-delete-bin-line" />,
+          },
         ];
 
         return (
@@ -169,27 +183,29 @@ const TableComponents = () => {
     setPage(newPage); // Reset page when changing rows per page
   };
 
-    const handleRowClick = (row: any) => {
-      setOpenViewModal(row.uuid);
-      setIsViewOpen(true);
-    };
+  const handleRowClick = (row: any) => {
+    setOpenViewModal(row.uuid);
+    setIsViewOpen(true);
+  };
 
   if (error)
     return (
       <div className="mt-10">
-      <Filter />
-      <div className="min-h-60 items-center flex justify-center">
-
-      <p className="text-red-600  text-center">An Error occured while fetching customers please try again later</p>
+        <Filter />
+        <div className="min-h-60 items-center flex justify-center">
+          <p className="text-red-600  text-center">
+            An Error occured while fetching customers please try again later
+          </p>
+        </div>
       </div>
-  </div>
     );
 
   return (
     <div className="mt-10">
       <Filter />
-      <MyTable minHeight='50vh'
-      maxHeight='50vh'
+      <MyTable
+        minHeight="50vh"
+        maxHeight="50vh"
         columns={columns}
         data={customer?.data || []}
         pagination

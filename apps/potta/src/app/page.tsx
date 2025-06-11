@@ -21,7 +21,7 @@ import {
   Shield,
   ChartPie,
   Wallet,
-  Banknote
+  Banknote,
 } from 'lucide-react';
 import RootLayout from '../app/(routes)/layout';
 
@@ -68,7 +68,7 @@ const inboxItems: ListItem[] = [
     description: 'Planning team lunch for Friday.',
     icon: Mail,
     read: true,
-  }
+  },
 ];
 
 const notificationItems: ListItem[] = [
@@ -106,7 +106,7 @@ const notificationItems: ListItem[] = [
     description: 'You were assigned a new task: Review PR #42.',
     icon: AlertCircle,
     read: true,
-  }
+  },
 ];
 
 const gridItems: GridItem[] = [
@@ -128,17 +128,17 @@ const gridItems: GridItem[] = [
     icon: Ticket,
     colorClass: 'black',
   },
-  { 
-    value: 'pos', 
-    label: 'POS', 
-    icon: ShoppingCart, 
-    colorClass: 'black' 
+  {
+    value: 'pos',
+    label: 'POS',
+    icon: ShoppingCart,
+    colorClass: 'black',
   },
-  { 
-    value: 'invoice', 
-    label: 'Invoice', 
-    icon: FileText, 
-    colorClass: 'black' 
+  {
+    value: 'invoice',
+    label: 'Invoice',
+    icon: FileText,
+    colorClass: 'black',
   },
   {
     value: 'taxation',
@@ -157,7 +157,7 @@ const gridItems: GridItem[] = [
     label: 'Accounts',
     icon: Wallet,
     colorClass: 'black',
-  }
+  },
 ];
 
 const colorMap: {
@@ -168,7 +168,6 @@ const colorMap: {
     text: 'text-black',
     readIndicator: 'bg-green-50',
   },
- 
 };
 
 const WelcomePage = () => {
@@ -253,7 +252,7 @@ const WelcomePage = () => {
               </div>
             </CardContent>
           </Card>
-          
+
           {/* Notifications Card */}
           <Card className="shadow overflow-hidden flex flex-col bg-white border border-slate-200">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3 pt-4 px-4 border-b border-slate-100">

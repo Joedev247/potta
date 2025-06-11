@@ -16,9 +16,6 @@ import Tax from './tax';
 import useCreateVendor from '../hooks/useCreateVendor';
 import toast from 'react-hot-toast';
 
-
-
-
 const SliderVendor = () => {
   const [tabs, setTabs] = useState<string>('Address');
   const [isSliderOpen, setIsSliderOpen] = useState(false);
@@ -27,7 +24,8 @@ const SliderVendor = () => {
     register,
     handleSubmit,
     control,
-    formState: { errors }, reset
+    formState: { errors },
+    reset,
   } = useForm<VendorPayload>({
     resolver: yupResolver(vendorSchema),
     defaultValues: {
@@ -45,7 +43,6 @@ const SliderVendor = () => {
         latitude: 0,
         longitude: 0,
       },
-      taxID: '',
       paymentTerms: '',
       paymentMethod: '',
       website: '',
@@ -75,11 +72,11 @@ const SliderVendor = () => {
   const mutation = useCreateVendor();
   const onSubmit = (data: VendorPayload) => {
     console.log('Submitted Data:', data);
-    mutation.mutate(data,{
+    mutation.mutate(data, {
       onSuccess: () => {
         toast.success('Vendor created successfully!');
         reset();
-        setIsSliderOpen(false)
+        setIsSliderOpen(false);
       },
       onError: (error) => {
         toast.error('Failed to create vendor');
@@ -87,8 +84,13 @@ const SliderVendor = () => {
     });
   };
   return (
-    <Slider open={isSliderOpen}
-    setOpen={setIsSliderOpen} edit={false} title={'Create New Vendor'} buttonText="vendor">
+    <Slider
+      open={isSliderOpen}
+      setOpen={setIsSliderOpen}
+      edit={false}
+      title={'Create New Vendor'}
+      buttonText="vendor"
+    >
       <form
         onSubmit={handleSubmit(onSubmit)}
         className="relative h-screen w-full max-w-4xl"
@@ -166,7 +168,7 @@ const SliderVendor = () => {
           <div className="w-full grid mt-7 grid-cols-2 gap-3">
             <div>
               <Input
-              type='tel'
+                type="tel"
                 label={'Phone Number'}
                 name={'phone'}
                 placeholder="(555) 123-4567"
@@ -306,20 +308,19 @@ const SliderVendor = () => {
         </div>
         <div className="flex-grow" /> {/* This div takes up remaining space */}
         <div className="text-center md:text-right  md:flex  space-x-4 fixed bottom-0 left-0 right-0 justify-center bg-white p-4">
-        <div className="flex gap-2 w-full max-w-4xl justify-between">
-          <Button
+          <div className="flex gap-2 w-full max-w-4xl justify-between">
+            <Button
               text="Cancel"
               type="button"
               theme="danger"
-
               onClick={() => setIsSliderOpen(false)}
             />
-          <Button
-            isLoading={mutation.isPending}
-            text={'Save Vendor'}
-            type={'submit'}
-          />
-        </div>
+            <Button
+              isLoading={mutation.isPending}
+              text={'Save Vendor'}
+              type={'submit'}
+            />
+          </div>
         </div>
       </form>
     </Slider>

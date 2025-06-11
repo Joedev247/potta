@@ -13,23 +13,26 @@ import DeleteModal from './deleteModal';
 import CustomPopover from '@potta/components/popover';
 import EditProduct from './slides/components/update_product';
 import { UpdateProductPayload } from '../_utils/validation';
-import TableActionPopover, { PopoverAction } from '@potta/components/tableActionsPopover';
+import TableActionPopover, {
+  PopoverAction,
+} from '@potta/components/tableActionsPopover';
 import ViewProductSlider from './slides/components/viewProduct';
+import { useInventory } from '../_utils/context';
+
 const InventoryTable = () => {
-   const [openPopover, setOpenPopover] = useState<string | null>(null);
-    const [openViewModal, setOpenViewModal] = useState<string | null>(null);
-    const [openDeleteModal, setOpenDeleteModal] = useState<string | null>(null);
-    const [openUpdateModal, setOpenUpdateModal] = useState<string | null>(null);
-    const [isViewOpen, setIsViewOpen] = useState(false);
-    const [isEditOpen, setIsEditOpen] = useState(false);
-    const [isDeleteOpen, setIsDeleteOpen] = useState(false);
-    const [productDetails, setproductDetails] =
-      useState<UpdateProductPayload | null>(null);
+  const [openPopover, setOpenPopover] = useState<string | null>(null);
+  const [openViewModal, setOpenViewModal] = useState<string | null>(null);
+  const [openDeleteModal, setOpenDeleteModal] = useState<string | null>(null);
+  const [openUpdateModal, setOpenUpdateModal] = useState<string | null>(null);
+  const [isViewOpen, setIsViewOpen] = useState(false);
+  const [isEditOpen, setIsEditOpen] = useState(false);
+  const [isDeleteOpen, setIsDeleteOpen] = useState(false);
+  const [productDetails, setproductDetails] = useState<Product | null>(null);
+  const { setSelectedProduct } = useInventory();
 
   // Handle row click to view product details
   const handleRowClick = (row: Product) => {
-    setOpenViewModal(row.uuid);
-    setIsViewOpen(true);
+    setSelectedProduct(row);
   };
 
   const columns = [
@@ -37,7 +40,12 @@ const InventoryTable = () => {
       name: 'Name',
       selector: (row: Product) => (
         <div className="flex items-center space-x-3">
-          <img src="https://static.nike.com/a/images/t_prod_ss/w_960,c_limit,f_auto/df31fd61-2df7-4c21-9326-94b45f799994/air-jordan-6-university-blue-ct8529-410-release-date.jpg" alt="" width={60} height={60} />
+          <img
+            src="https://static.nike.com/a/images/t_prod_ss/w_960,c_limit,f_auto/df31fd61-2df7-4c21-9326-94b45f799994/air-jordan-6-university-blue-ct8529-410-release-date.jpg"
+            alt=""
+            width={60}
+            height={60}
+          />
           <p className="mt-0.5">{row.name}</p>
         </div>
       ),
@@ -52,7 +60,7 @@ const InventoryTable = () => {
     },
     {
       name: 'Cost',
-      selector: (row: Product) =>  <div> {row.cost}</div>,
+      selector: (row: Product) => <div> {row.cost}</div>,
     },
     {
       name: 'Sale Price',
@@ -77,7 +85,7 @@ const InventoryTable = () => {
               setIsViewOpen(true);
             },
             className: 'hover:bg-gray-200',
-            icon: <i className="ri-eye-line" />
+            icon: <i className="ri-eye-line" />,
           },
           {
             label: 'Edit',
@@ -87,7 +95,7 @@ const InventoryTable = () => {
               setIsEditOpen(true);
             },
             className: 'hover:bg-gray-200',
-            icon: <i className="ri-edit-line" />
+            icon: <i className="ri-edit-line" />,
           },
           {
             label: 'Delete',
@@ -96,8 +104,8 @@ const InventoryTable = () => {
               setIsDeleteOpen(true);
             },
             className: 'hover:bg-red-200 text-red-600',
-            icon: <i className="ri-delete-bin-line" />
-          }
+            icon: <i className="ri-delete-bin-line" />,
+          },
         ];
 
         return (
@@ -116,12 +124,7 @@ const InventoryTable = () => {
   const [limit, setLimit] = useState(10);
 
   const filter: Filter = { page, limit };
-  const {
-    data,
-    isLoading,
-    error,
-    refetch,
-  } = useGetAllProducts(filter);
+  const { data, isLoading, error, refetch } = useGetAllProducts(filter);
   const handlePageChange = (newPage: number) => {
     setPage(newPage);
   };
@@ -133,8 +136,8 @@ const InventoryTable = () => {
     <div className="mt-10">
       <div></div>
       <Table
-        minHeight='70vh'
-        maxHeight='70vh'
+        minHeight="70vh"
+        maxHeight="70vh"
         columns={columns}
         data={data?.data || []}
         ExpandableComponent={null}
@@ -173,6 +176,5 @@ const InventoryTable = () => {
     </div>
   );
 };
-
 
 export default InventoryTable;
