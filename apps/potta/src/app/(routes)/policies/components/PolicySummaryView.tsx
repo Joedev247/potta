@@ -25,7 +25,12 @@ export const PolicySummaryView: React.FC<PolicySummaryViewProps> = ({
     const userIds = new Set<string>();
     policy.rules.forEach((rule) => {
       rule.actions.forEach((action) => {
-        const ids = action.parameters?.users || action.selectedUserIds || [];
+        const ids =
+          action.parameters?.users ||
+          (action.parameters && 'selectedUserIds' in action.parameters
+            ? action.parameters.selectedUserIds
+            : []) ||
+          [];
         ids.forEach((id: string) => userIds.add(id));
       });
     });
@@ -33,7 +38,7 @@ export const PolicySummaryView: React.FC<PolicySummaryViewProps> = ({
     setLoading(true);
     // Fetch employee details in bulk using peopleApi
     peopleApi
-      .filterPersons({ uuids: Array.from(userIds) })
+      .filterPersons({ ids: Array.from(userIds) })
       .then((res) => {
         const employees: Employee[] = res.data || [];
         const map: Record<string, Employee> = {};
@@ -54,108 +59,110 @@ export const PolicySummaryView: React.FC<PolicySummaryViewProps> = ({
   }
 
   return (
-    <div className="space-y-8  mx-auto">
-      {policy.rules.map((rule, ruleIndex) => (
+    <div className="space-y-6 max-w-3xl mx-auto">
+      {policy.rules.map((rule, idx) => (
         <div
-          key={rule.uuid || ruleIndex}
-          className="rounded-xl p-6 bg-white"
+          key={rule.uuid || rule.id || idx}
+          className="bg-gray-50 border p-6"
         >
-          <div className="flex items-center mb-4">
-            <ChevronRight className="text-blue-400 mr-2" size={22} />
-            <h4 className="text-xl font-semibold text-blue-700">
-              Rule {ruleIndex + 1}
-            </h4>
+          <div className="flex items-center gap-2 mb-4">
+            <span className="text-blue-600 font-bold">Rule {idx + 1}</span>
+            <span className="text-xs text-gray-400">
+              ({rule.conditionOperator?.toUpperCase()})
+            </span>
           </div>
-
           {/* Conditions */}
-          <div className="mb-4">
-            <div className="font-medium text-gray-700 mb-1 flex items-center">
-              <span className="inline-block w-2 h-2 rounded-full bg-blue-400 mr-2"></span>
-              Conditions
-            </div>
-            <ul className="list-disc ml-8 space-y-1">
-              {rule.conditions.map((condition, condIdx) => (
-                <li key={condition.id || condIdx} className="text-gray-800">
-                  <span className="font-semibold capitalize">
-                    {condition.criterionType || condition.field}
+          <div className="mb-2">
+            <div className="font-semibold text-gray-700 mb-1">Conditions</div>
+            <ul className="ml-4 list-disc text-gray-800">
+              {rule.conditions.map((cond) => (
+                <li key={cond.id}>
+                  <span className="capitalize font-medium">
+                    {cond.criterionType}
                   </span>{' '}
                   <span className="text-gray-500">
-                    {condition.comparisonOperator || condition.operator}
+                    {cond.comparisonOperator}
                   </span>{' '}
-                  <span className="text-blue-700 font-medium">
-                    {String(condition.value)}
+                  <span className="text-blue-700 font-semibold">
+                    {cond.value}
                   </span>
                 </li>
               ))}
             </ul>
           </div>
-
           {/* Requirements */}
           {rule.requirements &&
             Object.values(rule.requirements).some(Boolean) && (
-              <div className="mb-4">
-                <div className="font-medium text-gray-700 mb-1 flex items-center">
-                  <CheckCircle2 className="text-green-500 mr-2" size={18} />
+              <div className="mb-2">
+                <div className="font-semibold text-gray-700 mb-1">
                   Requirements
                 </div>
-                <div className="flex flex-wrap gap-2 ml-6 mt-1">
-                  {Object.entries(rule.requirements).map(
-                    ([key, value]) =>
-                      value && (
-                        <span
-                          key={key}
-                          className="bg-gray-100 border border-gray-200 text-gray-700 px-2 py-0.5 rounded text-xs capitalize"
-                        >
-                          {key.replace(/([A-Z])/g, ' $1').trim()}
-                        </span>
-                      )
+                <div className="flex flex-wrap gap-2">
+                  {Object.entries(rule.requirements).map(([key, value]) =>
+                    value ? (
+                      <span
+                        key={key}
+                        className="bg-gray-200 text-xs px-2 py-0.5 rounded"
+                      >
+                        {key
+                          .replace(/([A-Z])/g, ' $1')
+                          .replace(/^./, (s) => s.toUpperCase())}
+                      </span>
+                    ) : null
                   )}
                 </div>
               </div>
             )}
-
           {/* Actions */}
           <div>
-            <div className="font-medium text-gray-700 mb-1 flex items-center">
-              <UserCheck className="text-indigo-500 mr-2" size={18} />
-              Actions
-            </div>
-            <ul className="ml-8 space-y-1">
-              {rule.actions.map((action, actionIdx) => {
-                const userIds =
-                  action.parameters?.users || action.selectedUserIds || [];
-                return (
-                  <li key={action.id || actionIdx} className="text-gray-800">
-                    <span className="font-semibold capitalize">
-                      {action.type}
-                    </span>{' '}
-                    <span className="text-gray-500">
-                      (Approval Mode:{' '}
-                      {action.parameters?.approvalMode || action.mode})
-                    </span>
-                    {loading ? (
-                      <span className="ml-2 text-gray-400">
-                        Loading users...
-                      </span>
-                    ) : userIds.length > 0 ? (
-                      <span className="flex flex-wrap gap-2 items-center">
+            <div className="font-semibold text-gray-700 mb-1">Actions</div>
+            {rule.actions.map((action, actionIdx) => {
+              const userIds =
+                action.parameters?.users ||
+                (action.parameters && 'selectedUserIds' in action.parameters
+                  ? action.parameters.selectedUserIds
+                  : []) ||
+                [];
+              return (
+                <div
+                  key={action.id || actionIdx}
+                  className="flex items-center gap-2 text-sm"
+                >
+                  <span className="font-medium capitalize">{action.type}</span>
+                  <span className="text-gray-500">
+                    (Approval Mode: {action.parameters?.approvalMode})
+                  </span>
+                  {/* Approvers */}
+                  {loading ? (
+                    <span className="ml-2 text-gray-400">Loading users...</span>
+                  ) : (
+                    Array.isArray(userIds) &&
+                    userIds.length > 0 && (
+                      <span className="flex flex-wrap gap-1">
                         {userIds.map((id: string) => {
                           const emp = employeeMap[id];
                           return emp ? (
                             <span
                               key={id}
-                              className="inline-flex items-center bg-gray-200 px-2 py-0.5 text-xs"
+                              className="bg-indigo-100 text-indigo-700 px-2 py-0.5 rounded text-xs"
                             >
                               {emp.firstName} {emp.lastName}
                             </span>
-                          ) : null;
+                          ) : (
+                            <span
+                              key={id}
+                              className="bg-gray-200 text-gray-700 px-2 py-0.5 rounded text-xs"
+                            >
+                              {id}
+                            </span>
+                          );
                         })}
                       </span>
-                    ) : null}
-                  </li>
-                );
-              })}
-            </ul>
+                    )
+                  )}
+                </div>
+              );
+            })}
           </div>
         </div>
       ))}

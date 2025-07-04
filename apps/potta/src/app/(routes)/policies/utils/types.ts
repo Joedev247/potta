@@ -15,34 +15,42 @@ export interface Action {
   id: string;
   type: string;
   parameters: {
-    originalActionType: string;
-    approverType: string;
-    selectedUserIds: string[];
-    approvalMode: string;
+    originalActionType?: string;
+    approverType?: string;
+    selectedUserIds?: string[];
+    approvalMode?: string;
+    users?: string[];
+    [key: string]: any;
   };
 }
 
 export interface Rule {
-  id: string;
-  conditionOperator: string;
+  uuid?: string;
+  id?: string;
+  conditionOperator?: string;
   conditions: Condition[];
   actions: Action[];
+  requirements?: Record<string, boolean>;
 }
 
 export interface Policy {
   uuid: string;
   name: string;
-  documentUrl: string | null;
-  requireReceipt: boolean;
-  requireMemo: boolean;
-  requireScreenshots: boolean;
-  requireNetSuiteCustomerJob: boolean;
-  additionalRequirements: string | null;
-  transactionType: string;
-  type: string;
-  mileageRequirements: MileageRequirements | null;
-  branchId: string;
+  documentUrl?: string | null;
+  requireReceipt?: boolean;
+  requireMemo?: boolean;
+  requireScreenshots?: boolean;
+  requireNetSuiteCustomerJob?: boolean;
+  additionalRequirements?: string | null;
+  transactionType?: string;
+  type?: string;
+  mileageRequirements?: MileageRequirements | null;
+  branchId?: string;
   rules: Rule[];
+  status?: string;
+  createdAt?: string;
+  updatedAt?: string;
+  [key: string]: any;
 }
 
 export interface ApiResponse {
