@@ -6,6 +6,7 @@ import { Filter, Product } from '../../utils/types';
 import useGetAllProducts from '../../hooks/useGetAllProducts';
 import Image from 'next/image';
 import PottaLoader from '@potta/components/pottaloader';
+import { documentsApi } from '../../inventory/_utils/api';
 
 // LineItem interface as provided
 export type DiscountType = 'FlatRate' | 'Percentage' | 'PercentageWithCap';
@@ -27,7 +28,10 @@ const convertProductToMenuItem = (product: Product): MenuItem => ({
   name: product.name,
   image: product.images || '/images/placeholder.png',
   tax: product.taxRate,
-  category: product.category,
+  category:
+    typeof product.category === 'object' && product.category !== null
+      ? product.category.name
+      : product.category,
   quantity: 0,
   price: product.salesPrice,
   sku: product.sku,
@@ -57,6 +61,9 @@ const SaleInvoiceCard = () => {
   const [searchTerm, setSearchTerm] = useState<string>('');
   const [barcodeInput, setBarcodeInput] = useState<string>('');
   const [currentPage, setCurrentPage] = useState(1);
+  const [imageUrls, setImageUrls] = useState<{ [productId: string]: string }>(
+    {}
+  );
 
   const context = useContext(ContextData);
 
@@ -72,14 +79,69 @@ const SaleInvoiceCard = () => {
   // Fetch products using the hook
   const { data: productData, isLoading, error } = useGetAllProducts(filter);
 
+  // Fetch signed URLs for product images
+  useEffect(() => {
+    const fetchSignedUrls = async () => {
+      if (!productData?.data) return;
+      // Collect all document IDs for products with images
+      const docIdMap: { [productId: string]: string } = {};
+      productData.data.forEach((product: any) => {
+        if (
+          Array.isArray(product.documents) &&
+          product.documents.length > 0 &&
+          product.documents[0]?.uuid
+        ) {
+          docIdMap[product.uuid] = product.documents[0].uuid;
+        }
+      });
+      const docIds = Object.values(docIdMap);
+      if (docIds.length === 0) return;
+      try {
+        const res = await documentsApi.bulkDownload(docIds);
+        // Map productId to signed URL
+        const urlMap: { [productId: string]: string } = {};
+        let i = 0;
+        for (const [productId, docId] of Object.entries(docIdMap)) {
+          urlMap[productId] = res.urls[i] || '';
+          i++;
+        }
+        setImageUrls(urlMap);
+      } catch (e) {
+        // ignore
+      }
+    };
+    fetchSignedUrls();
+  }, [productData?.data]);
+
   // Convert API products to MenuItems
-  const menus = productData?.data.map(convertProductToMenuItem) || [];
+  const menus =
+    productData?.data.map((product: any) => ({
+      id: product.uuid,
+      name: product.name,
+      image:
+        imageUrls[product.uuid] || product.images || '/images/placeholder.png',
+      tax: product.taxRate,
+      category:
+        typeof product.category === 'object' && product.category !== null
+          ? product.category.name
+          : product.category,
+      quantity: 0,
+      price: product.salesPrice,
+      sku: product.sku,
+      stock: product.inventoryLevel,
+    })) || [];
 
   // Extract unique categories from products
   useEffect(() => {
     if (productData?.data) {
       const categories = Array.from(
-        new Set(productData.data.map((product) => product.category))
+        new Set(
+          productData.data.map((product) =>
+            typeof product.category === 'object' && product.category !== null
+              ? product.category.name
+              : product.category
+          )
+        )
       ).map((categoryName) => ({
         id: categoryName,
         name: categoryName,

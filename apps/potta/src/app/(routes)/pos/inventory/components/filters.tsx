@@ -5,7 +5,7 @@ import Select from '@potta/components/select';
 import React, { useState } from 'react';
 import { createPortal } from 'react-dom';
 
-import CreateProduct from './slides/components/create_product/inventory';
+import ProductStepperModal from './ProductStepperModal';
 import { PopoverAction } from '@potta/components/tableActionsPopover';
 import { NextPopover } from '@potta/components/popover';
 import CreateNonInventoryProduct from './slides/components/create_product/nonInventory';
@@ -65,6 +65,7 @@ const Filter = () => {
                 selectedValue={selectedValue}
                 onChange={handleChange}
                 bg=" "
+                SelectClass="mt-2"
               />
             </div>
           </div>
@@ -114,7 +115,7 @@ const Filter = () => {
           </div>
         </div>
       </div>
-      <CreateProduct open={isCreateOpen} setOpen={setIsCreateOpen} />
+      <ProductStepperModal open={isCreateOpen} setOpen={setIsCreateOpen} />
       <CreateNonInventoryProduct
         open={isImportOpen}
         setOpen={setIsImportOpen}

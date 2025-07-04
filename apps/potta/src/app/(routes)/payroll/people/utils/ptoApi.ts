@@ -4,25 +4,25 @@ import { PaidTimeOffFilterParams, PaidTimeOffPayload } from './types';
 export const ptoApi = {
   // Get all PTO records with pagination and filtering
   filterPTOs: async (filters: PaidTimeOffFilterParams = {}) => {
-    const result = await axios.post('/api/paid-time-off/filter', filters);
+    const result = await axios.post('/paid-time-off/filter', filters);
     return result.data;
   },
 
   // Get a specific PTO by ID
   getPTO: async (id: string) => {
-    const result = await axios.get(`/api/paid-time-off/${id}`);
+    const result = await axios.get(`/paid-time-off/${id}`);
     return result.data;
   },
 
   // Create a new PTO
   createPTO: async (data: PaidTimeOffPayload) => {
-    const result = await axios.post('/api/paid-time-off', data);
+    const result = await axios.post('/paid-time-off', data);
     return result.data;
   },
 
   // Accrue leave for a PTO record
   accrueLeave: async (id: string, amount: number) => {
-    const result = await axios.put(`/api/paid-time-off/accrue/${id}`, {
+    const result = await axios.put(`/paid-time-off/accrue/${id}`, {
       amount,
     });
     return result.data;
@@ -36,7 +36,7 @@ export const ptoApi = {
     endDate: string,
     reason: string
   ) => {
-    const result = await axios.put(`/api/paid-time-off/request-leave/${id}`, {
+    const result = await axios.put(`/paid-time-off/request-leave/${id}`, {
       days,
       startDate,
       endDate,
@@ -48,7 +48,7 @@ export const ptoApi = {
   // Approve a PTO leave request
   approveLeave: async (requestId: string) => {
     const result = await axios.put(
-      `/api/paid-time-off/approve-leave/${requestId}`,
+      `/paid-time-off/approve-leave/${requestId}`,
       {}
     );
     return result.data;
@@ -57,7 +57,7 @@ export const ptoApi = {
   // Reject a PTO leave request
   rejectLeave: async (requestId: string, reason: string) => {
     const result = await axios.put(
-      `/api/paid-time-off/reject-leave/${requestId}`,
+      `/paid-time-off/reject-leave/${requestId}`,
       { reason }
     );
     return result.data;
@@ -65,7 +65,7 @@ export const ptoApi = {
 
   // Reset the PTO tracking for a new cycle
   resetCycle: async (id: string) => {
-    const result = await axios.put(`/api/paid-time-off/reset-cycle/${id}`, {});
+    const result = await axios.put(`/paid-time-off/reset-cycle/${id}`, {});
     return result.data;
   },
 };

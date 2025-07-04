@@ -1,6 +1,6 @@
 import React, { useContext, useState, useRef } from 'react';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { useForm, Control } from 'react-hook-form';
+import { useForm, Control, Controller } from 'react-hook-form';
 import Button from '@potta/components/button';
 import { ContextData } from '@potta/components/context';
 import Input from '@potta/components/input';
@@ -17,6 +17,8 @@ import ImageUploader, {
   clearSelectedImageFile,
 } from '../../../imageUploader';
 import { productApi } from '../../../../_utils/api';
+import useGetAllProductCategories from '../../../../_hooks/useGetAllProductCategories';
+import Select from '@potta/components/select';
 
 interface CreateProductProps {
   open?: boolean;
@@ -60,6 +62,15 @@ const CreateProduct: React.FC<CreateProductProps> = ({
   });
 
   const mutation = useCreateProduct();
+
+  const { data: categoriesData, isLoading: categoriesLoading } =
+    useGetAllProductCategories();
+  const categoryOptions = (categoriesData?.data || []).map(
+    (cat: { uuid: string; name: string }) => ({
+      label: cat.name,
+      value: cat.uuid,
+    })
+  );
 
   const onSubmit = async (formData: ProductPayload) => {
     try {
@@ -109,6 +120,18 @@ const CreateProduct: React.FC<CreateProductProps> = ({
         return;
       }
 
+      // Set category_id to the selected category uuid
+      const selectedCategory =
+        (categoriesData?.data || []).find(
+          (cat: { uuid: string }) => cat.uuid === formData.category
+        ) || null;
+      (formData as any).categoryId = selectedCategory
+        ? selectedCategory.uuid
+        : '';
+      // Remove category and taxRate from payload
+      delete formData.category;
+      delete formData.taxRate;
+
       console.log('Submitting product data:', formData);
       mutation.mutate(formData, {
         onSuccess: () => {
@@ -154,13 +177,20 @@ const CreateProduct: React.FC<CreateProductProps> = ({
         </div>
         <div className="w-full grid mt-5 grid-cols-2 gap-2">
           <div className="w-full">
-            <Input
-              label="Category"
-              type="text"
+            <Controller
               name="category"
-              placeholder="Enter Category"
-              register={register}
-              errors={errors.category}
+              control={control}
+              render={({ field }) => (
+                <Select
+                  label="Category"
+                  options={categoryOptions}
+                  selectedValue={field.value || ''}
+                  onChange={field.onChange}
+                  bg="bg-white"
+                  name="category"
+                  required
+                />
+              )}
             />
           </div>
           <div className="w-full">
@@ -226,16 +256,6 @@ const CreateProduct: React.FC<CreateProductProps> = ({
                 required
               />
             </div>
-            <div className="mt-6">
-              <Input
-                type={'number'}
-                label={'Tax Rate'}
-                placeholder="Enter tax rate"
-                name={'taxRate'}
-                register={register}
-                errors={errors.taxRate}
-              />
-            </div>
           </div>
         </div>
         <div className="mt-12 pb-20">
@@ -263,12 +283,6 @@ const CreateProduct: React.FC<CreateProductProps> = ({
         <div className="flex-grow" />
         <div className="text-center md:text-right md:flex space-x-4 fixed bottom-0 left-0 right-0 justify-center bg-white p-4">
           <div className="flex gap-2 w-full max-w-4xl justify-between">
-            <Button
-              text="Cancel"
-              type="button"
-              theme="danger"
-              onClick={() => setIsOpen(false)}
-            />
             <div>
               <Button
                 text={'Add Item'}

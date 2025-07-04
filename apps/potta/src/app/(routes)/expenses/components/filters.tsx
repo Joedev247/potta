@@ -38,60 +38,58 @@ const Filter = () => {
           <div className=" w-[50%]">
             <Search />
           </div>
-          <div className="flex mt-4 w-[50%] space-x-2">
-            <div className="flex h-[47px] pt-3 w-full px-2 border">
-              <p className="text-[17px] -mt-1">Filter&nbsp;: </p>
-              <div className="-mt-3">
-                <Select
-                  border={true}
-                  options={[
-                    { label: 'All', value: 'all' },
-                    { label: 'Pending', value: 'pending' },
-                    { label: 'Paid', value: 'paid' },
-                  ]}
-                  selectedValue={selectedValue2}
-                  onChange={handleChange2}
-                  bg=" " // Add your desired background class here
-                />
-              </div>
+          <div className="flex w-[50%] space-x-2">
+            <div className="flex items-center gap-2 ">
+              <label className="text-sm font-medium whitespace-nowrap">
+                Filter:
+              </label>
+              <Select
+                options={[
+                  { label: 'All', value: 'all' },
+                  { label: 'Pending', value: 'pending' },
+                  { label: 'Paid', value: 'paid' },
+                ]}
+                selectedValue={selectedValue2}
+                onChange={handleChange2}
+                bg=""
+              />
             </div>
-            <div className="flex h-[47px] py-3.5  w-full px-2 border">
-              <p className="text-[17px] -mt-1">Date&nbsp;: </p>
-              <div className="-mt-3">
-                <Select
-                  border={true}
-                  options={[
-                    { label: 'All Time', value: 'All Time' },
-                    { label: 'Yesterday', value: 'Yesterday' },
-                  ]}
-                  selectedValue={selectedValue}
-                  onChange={handleChange}
-                  bg=" " // Add your desired background class here
-                />
-              </div>
+
+            <div className="flex items-center gap-2">
+              <label className="text-sm font-medium whitespace-nowrap">
+                Date:
+              </label>
+              <Select
+                options={[
+                  { label: 'All Time', value: 'All Time' },
+                  { label: 'Yesterday', value: 'Yesterday' },
+                  { label: 'Last 7 Days', value: 'Last 7 Days' },
+                  { label: 'Last 30 Days', value: 'Last 30 Days' },
+                ]}
+                selectedValue={selectedValue}
+                onChange={handleChange}
+                bg=""
+              />
             </div>
           </div>
         </div>
-        <div className=" w-[30%] mt-4 ">
-          <div className="flex w-full ">
-            <div className="w-full  flex justify-end ">
-              <Button
-                type={'button'}
-                color
-                text="Export"
-                icon={<img src="/images/export.svg" />}
-                theme="lightBlue"
-              />
-            </div>
-            <div className="w-full flex justify-end">
-              <Button
-                type={'button'}
-                text="Create Budget"
-                icon={<i className="ri-add-line text-white text-xl "></i>}
-                theme="default"
-                onClick={() => setIsBudgetModalOpen(true)}
-              />
-            </div>
+        <div className=" w-[30%] flex justify-end">
+          <div className="flex w-fit gap-4 items-center  ">
+            <Button
+              type={'button'}
+              color
+              text="Export"
+              icon={<img src="/images/export.svg" />}
+              theme="lightBlue"
+            />
+
+            <Button
+              type={'button'}
+              text="Create Budget"
+              icon={<i className="ri-add-line text-white text-xl "></i>}
+              theme="default"
+              onClick={() => setIsBudgetModalOpen(true)}
+            />
           </div>
         </div>
       </div>

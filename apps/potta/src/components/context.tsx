@@ -1,6 +1,12 @@
-'use client'
+'use client';
 import React, { createContext, ReactNode, useState } from 'react';
-import { accountList, allBranches, allUsers, payoutsList, TerminalList } from '../app/arrays/usecontextData';
+import {
+  accountList,
+  allBranches,
+  allUsers,
+  payoutsList,
+  TerminalList,
+} from '../app/arrays/usecontextData';
 
 interface InvoiceItem {
   id: number;
@@ -58,7 +64,10 @@ interface ContextType {
     startDate: Date | null;
     endDate: Date | null;
   };
-  setDateRangeValue: (value: { startDate: Date | null; endDate: Date | null }) => void;
+  setDateRangeValue: (value: {
+    startDate: Date | null;
+    endDate: Date | null;
+  }) => void;
   invoiceItems: InvoiceItem[];
   setInvoiceItems: React.Dispatch<React.SetStateAction<InvoiceItem[]>>;
   orderSummary: OrderSummary;
@@ -81,7 +90,7 @@ const DataProvider: React.FC<Children> = ({ children }) => {
   const [link, setLinks] = useState<string>('');
   const [programs, setPrograms] = useState<any>([]);
   const [programDays, setProgramDays] = useState<any>([]);
-  const [itemSelected, setItemSelected] = useState<any>("cart");
+  const [itemSelected, setItemSelected] = useState<any>('cart');
   const [data, setData] = useState<any>([]);
   const [savedItems, setSavedItems] = useState<any>([]);
   const [isCashBack, setIsCashBack] = useState<boolean>(true);
@@ -93,7 +102,8 @@ const DataProvider: React.FC<Children> = ({ children }) => {
   const [branches, setBranches] = useState(allBranches);
   const [users, setUsers] = useState(allUsers);
   const [payouts, setPayouts] = useState(payoutsList);
-  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<string>('cash');
+  const [selectedPaymentMethod, setSelectedPaymentMethod] =
+    useState<string>('cash');
   const [paymentAmount, setPaymentAmount] = useState<number>(0);
 
   const [orderSummary, setOrderSummary] = useState<OrderSummary>({
@@ -101,7 +111,7 @@ const DataProvider: React.FC<Children> = ({ children }) => {
     discount: 0,
     itemDiscounts: 0,
     tax: 0,
-    total: 0
+    total: 0,
   });
 
   const [dateRangeValue, setDateRangeValue] = useState<{
@@ -123,52 +133,54 @@ const DataProvider: React.FC<Children> = ({ children }) => {
   ]);
 
   return (
-    <ContextData.Provider value={{
-      toggle,
-      setToggle,
-      sidebarOpen,
-      setSidebarOpen,
-      link,
-      setLinks,
-      programs,
-      setPrograms,
-      programDays,
-      setProgramDays,
-      isCashBack,
-      setIsCashBack,
-      isLoyaltyPoints,
-      setIsLoyaltyPoints,
-      terminals,
-      setTerminals,
-      accounts,
-      setAccounts,
-      branches,
-      setBranches,
-      users,
-      setUsers,
-      payouts,
-      setPayouts,
-      dateRangeValue,
-      setDateRangeValue,
-      invoiceItems,
-      setInvoiceItems,
-      isDiscounts,
-      setIsDiscounts,
-      isGiftCards,
-      setIsGiftCards,
-      data,
-      setData,
-      savedItems,
-      setSavedItems,
-      itemSelected,
-      setItemSelected,
-      orderSummary,
-      setOrderSummary,
-      selectedPaymentMethod,
-      setSelectedPaymentMethod,
-      paymentAmount,
-      setPaymentAmount
-    }}>
+    <ContextData.Provider
+      value={{
+        toggle,
+        setToggle,
+        sidebarOpen,
+        setSidebarOpen,
+        link,
+        setLinks,
+        programs,
+        setPrograms,
+        programDays,
+        setProgramDays,
+        isCashBack,
+        setIsCashBack,
+        isLoyaltyPoints,
+        setIsLoyaltyPoints,
+        terminals,
+        setTerminals,
+        accounts,
+        setAccounts,
+        branches,
+        setBranches,
+        users,
+        setUsers,
+        payouts,
+        setPayouts,
+        dateRangeValue,
+        setDateRangeValue,
+        invoiceItems,
+        setInvoiceItems,
+        isDiscounts,
+        setIsDiscounts,
+        isGiftCards,
+        setIsGiftCards,
+        data,
+        setData,
+        savedItems,
+        setSavedItems,
+        itemSelected,
+        setItemSelected,
+        orderSummary,
+        setOrderSummary,
+        selectedPaymentMethod,
+        setSelectedPaymentMethod,
+        paymentAmount,
+        setPaymentAmount,
+      }}
+    >
       {children}
     </ContextData.Provider>
   );

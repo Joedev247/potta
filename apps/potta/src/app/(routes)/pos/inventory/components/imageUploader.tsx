@@ -1,135 +1,188 @@
-'use client'
-import React, { useCallback, useState, useEffect } from "react";
-import { useDropzone } from "react-dropzone";
-import { Controller, Control } from "react-hook-form";
-import { ProductPayload } from "../_utils/validation";
-
-// Define a type that restricts the name prop to only valid keys of ProductPayload
-type ProductPayloadKey = keyof ProductPayload;
+'use client';
+import React, { useCallback, useState, useEffect } from 'react';
+import { useDropzone } from 'react-dropzone';
+import { Controller, Control } from 'react-hook-form';
 
 interface ImageUploaderProps {
-  control: Control<ProductPayload>;
-  name?: ProductPayloadKey;
+  control?: Control<any>;
+  name?: string;
+  accept?: { [key: string]: string[] };
+  maxSize?: number;
+  maxFiles?: number;
+  multiple?: boolean;
+  onFilesChange?: (files: File[]) => void;
 }
 
-// Create a global variable to store the selected file
-// We need to use a global variable because the component may be re-rendered
-let _selectedImageFile: File | null = null;
-
-const ImageUploader: React.FC<ImageUploaderProps> = ({ 
-  control, 
-  name = "image"
+const ImageUploader: React.FC<ImageUploaderProps> = ({
+  control,
+  name = 'files',
+  accept = { 'image/*': ['.jpeg', '.jpg', '.png', '.gif'] },
+  maxSize = 5242880, // 5MB
+  maxFiles = 10,
+  multiple = true,
+  onFilesChange,
 }) => {
-  const [preview, setPreview] = useState<string | null>(null);
+  const [previews, setPreviews] = useState<string[]>([]);
 
-  // This useEffect ensures the global variable is cleared when the component unmounts
+  // Standalone drop handler
+  const onDropStandalone = useCallback(
+    (acceptedFiles: File[]) => {
+      if (acceptedFiles.length > 0) {
+        const objectUrls = acceptedFiles.map((file) =>
+          URL.createObjectURL(file)
+        );
+        setPreviews(objectUrls);
+        if (onFilesChange) onFilesChange(acceptedFiles);
+      }
+    },
+    [onFilesChange]
+  );
+
   useEffect(() => {
     return () => {
-      _selectedImageFile = null;
+      setPreviews([]);
     };
   }, []);
 
-  return (
-    <Controller
-      control={control}
-      name={name}
-      render={({ field: { onChange, value } }) => {
-        const onDrop = useCallback((acceptedFiles: File[]) => {
-          if (acceptedFiles.length > 0) {
-            const file = acceptedFiles[0];
-            
-            // Create a preview
-            const objectUrl = URL.createObjectURL(file);
-            setPreview(objectUrl);
-            
-            // Store the file reference in the global variable
-            _selectedImageFile = file;
-            
-            // Store a temporary value in the form
-            onChange(`__file__:${objectUrl}`);
-            
-            console.log('File selected in ImageUploader:', file.name, file.type, file.size);
-            console.log('_selectedImageFile after selection:', _selectedImageFile);
-          }
-        }, [onChange]);
+  if (control) {
+    return (
+      <Controller
+        control={control}
+        name={name}
+        render={({ field: { onChange, value } }) => {
+          const onDrop = useCallback(
+            (acceptedFiles: File[]) => {
+              if (acceptedFiles.length > 0) {
+                const objectUrls = acceptedFiles.map((file) =>
+                  URL.createObjectURL(file)
+                );
+                setPreviews(objectUrls);
+                onChange(objectUrls.map((url) => `__file__:${url}`));
+                if (onFilesChange) onFilesChange(acceptedFiles);
+              }
+            },
+            [onChange, onFilesChange]
+          );
 
-        const { getRootProps, getInputProps, isDragActive } = useDropzone({ 
-          onDrop,
-          accept: {
-            'image/*': ['.jpeg', '.jpg', '.png', '.gif']
-          },
-          maxSize: 5242880, // 5MB
-          maxFiles: 1
-        });
+          const { getRootProps, getInputProps, isDragActive } = useDropzone({
+            onDrop,
+            accept,
+            maxSize,
+            maxFiles,
+            multiple,
+          });
 
-        // Clean up preview URL when component unmounts
-        useEffect(() => {
-          return () => {
-            if (preview) {
-              URL.revokeObjectURL(preview);
-            }
-          };
-        }, [preview]);
+          useEffect(() => {
+            return () => {
+              previews.forEach((url) => URL.revokeObjectURL(url));
+            };
+          }, [previews]);
 
-        // Helper function to ensure we have a valid string for the src attribute
-        const getImageSrc = (): string | undefined => {
-          if (preview) return preview;
-          if (typeof value === 'string' && !value.startsWith('__file__:')) return value;
-          if (typeof value === 'string' && value.startsWith('__file__:')) {
-            return value.substring(8); // Remove the __file__: prefix to get the object URL
-          }
-          return undefined;
-        };
-
-        const imageSrc = getImageSrc();
-
-        return (
-          <div className="w-full mt-5 drop border-dashed border-2 h-[20vh] relative">
-            <div
-              className="w-full h-full flex justify-center items-center rounded cursor-pointer"
-              {...getRootProps()}
-            >
-              <input {...getInputProps()} />
-              
-              {imageSrc ? (
-                <div className="h-full w-full flex items-center justify-center">
-                  <img 
-                    src={imageSrc}
-                    alt="Preview" 
-                    className="max-h-full max-w-full object-contain p-2" 
-                  />
-                </div>
-              ) : (
-                <div className="flex justify-center">
-                  <div className="text-center">
-                    <center><img src="/icons/dropzone.svg" className="h-16 w-16" alt="" /></center><br />
-                    <p className="text-green-400 -mt-1">Max 5MB</p>
-                    {isDragActive ? (
-                      <p>Drop the image here ...</p>
-                    ) : (
-                      <p>or Drag and Drop here</p>
-                    )}
+          return (
+            <div className="w-full mt-5 drop border-dashed border-2 min-h-[20vh] relative">
+              <div
+                className="w-full h-full flex flex-col justify-center items-center rounded cursor-pointer"
+                {...getRootProps()}
+              >
+                <input {...getInputProps()} />
+                {previews.length > 0 ? (
+                  <div className="flex flex-wrap gap-4 justify-center items-center w-full p-2">
+                    {previews.map((src, idx) => (
+                      <div key={idx} className="relative group">
+                        <img
+                          src={src}
+                          alt={`Preview ${idx + 1}`}
+                          className="h-24 w-24 object-cover rounded border"
+                        />
+                      </div>
+                    ))}
                   </div>
-                </div>
+                ) : (
+                  <div className="flex justify-center">
+                    <div className="text-center">
+                      <center>
+                        <img
+                          src="/icons/dropzone.svg"
+                          className="h-16 w-16"
+                          alt=""
+                        />
+                      </center>
+                      <br />
+                      <p className="text-green-400 -mt-1">
+                        Max {maxSize / 1024 / 1024}MB each, up to {maxFiles}{' '}
+                        files
+                      </p>
+                      {isDragActive ? (
+                        <p>Drop the files here ...</p>
+                      ) : (
+                        <p>or Drag and Drop here</p>
+                      )}
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+          );
+        }}
+      />
+    );
+  }
+
+  // Standalone mode (no control)
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({
+    onDrop: onDropStandalone,
+    accept,
+    maxSize,
+    maxFiles,
+    multiple,
+  });
+
+  useEffect(() => {
+    return () => {
+      previews.forEach((url) => URL.revokeObjectURL(url));
+    };
+  }, [previews]);
+
+  return (
+    <div className="w-full mt-5 drop border-dashed border-2 min-h-[20vh] relative">
+      <div
+        className="w-full h-full flex flex-col justify-center items-center rounded cursor-pointer"
+        {...getRootProps()}
+      >
+        <input {...getInputProps()} />
+        {previews.length > 0 ? (
+          <div className="flex flex-wrap gap-4 justify-center items-center w-full p-2">
+            {previews.map((src, idx) => (
+              <div key={idx} className="relative group">
+                <img
+                  src={src}
+                  alt={`Preview ${idx + 1}`}
+                  className="h-24 w-24 object-cover rounded border"
+                />
+              </div>
+            ))}
+          </div>
+        ) : (
+          <div className="flex justify-center">
+            <div className="text-center">
+              <center>
+                <img src="/icons/dropzone.svg" className="h-16 w-16" alt="" />
+              </center>
+              <br />
+              <p className="text-green-400 -mt-1">
+                Max {maxSize / 1024 / 1024}MB each, up to {maxFiles} files
+              </p>
+              {isDragActive ? (
+                <p>Drop the files here ...</p>
+              ) : (
+                <p>or Drag and Drop here</p>
               )}
             </div>
           </div>
-        );
-      }}
-    />
+        )}
+      </div>
+    </div>
   );
 };
 
 export default ImageUploader;
-
-// Helper function to get the selected file from anywhere in the application
-export const getSelectedImageFile = (): File | null => {
-  console.log('getSelectedImageFile called, current value:', _selectedImageFile);
-  return _selectedImageFile;
-};
-
-// Helper function to clear the selected file
-export const clearSelectedImageFile = (): void => {
-  console.log('clearSelectedImageFile called');
-  _selectedImageFile = null;
-};

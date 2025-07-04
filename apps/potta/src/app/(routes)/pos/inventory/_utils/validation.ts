@@ -9,8 +9,7 @@ export const productSchema = yup.object().shape({
   inventoryLevel: yup.number(),
   salesPrice: yup.number().required('sales price is required'),
   taxable: yup.boolean().required(),
-  taxRate: yup.number().typeError('Must be a number'),
-  category: yup.string(),
+  categoryId: yup.string(),
   images: yup.array().of(yup.string()).default([]),
 });
 
@@ -23,11 +22,18 @@ export const UpdateProductSchema = yup.object().shape({
   inventoryLevel: yup.number(),
   salesPrice: yup.number().required('sales price is required'),
   taxable: yup.boolean().required(),
-  taxRate: yup.number().typeError('Must be a number'),
-  category: yup.string(),
+  categoryId: yup.string(),
   images: yup.array().of(yup.string()).default([]),
   status: yup.string().required('status is required'),
 });
 
+export const productCategorySchema = yup.object().shape({
+  name: yup.string().required('Name is required'),
+  description: yup.string().default(''),
+});
+
 export type UpdateProductPayload = yup.InferType<typeof UpdateProductSchema>;
 export type ProductPayload = yup.InferType<typeof productSchema>;
+export type ProductCategoryPayload = yup.InferType<
+  typeof productCategorySchema
+>;

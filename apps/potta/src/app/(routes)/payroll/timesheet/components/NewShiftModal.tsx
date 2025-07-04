@@ -279,7 +279,7 @@ const NewShiftModal: React.FC<NewShiftModalProps> = ({
       console.log('Creating shift:', shiftData);
       // Call the API to create the shift
       try {
-        await axios.post('/api/shifts', shiftData);
+        await axios.post('/shifts', shiftData);
         toast.success('Shift added successfully!');
         setIsVisible(false);
         // Delay actual success callback to allow animation to complete

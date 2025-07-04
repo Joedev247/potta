@@ -13,6 +13,7 @@ interface props {
   open?: boolean; // Made optional
   setOpen?: (value: boolean) => void; // Made optional
   closeButton?: boolean;
+  noPanelScroll?: boolean;
 }
 
 const Slider: FC<props> = ({
@@ -24,6 +25,7 @@ const Slider: FC<props> = ({
   open: externalOpen,
   setOpen: externalSetOpen,
   closeButton,
+  noPanelScroll,
 }) => {
   // Internal state for when open/setOpen aren't provided
   const [internalOpen, setInternalOpen] = useState(false);
@@ -114,6 +116,14 @@ const Slider: FC<props> = ({
             icon={<i className="ri-file-add-line"></i>}
           />
         )}
+        {buttonText == 'journal' && (
+          <Button
+            text={'New Journal Entry'}
+            onClick={handleToggle}
+            type={'button'}
+            icon={<i className="ri-file-add-line"></i>}
+          />
+        )}
       </div>
       <Dialog
         open={open}
@@ -127,8 +137,13 @@ const Slider: FC<props> = ({
               <DialogPanel
                 transition
                 className="pointer-events-auto border-b max-w-screen h-screen w-full transform transition duration-500 ease-in-out data-[closed]:-translate-y-full sm:duration-500"
+                style={noPanelScroll ? { overflowY: 'visible' } : {}}
               >
-                <div className="flex h-full flex-col overflow-hidden bg-gray-50 py-6 shadow-xl">
+                <div
+                  className={`flex h-full flex-col bg-gray-50 py-6 shadow-xl${
+                    noPanelScroll ? '' : ' overflow-y-auto'
+                  }`}
+                >
                   <div className="flex justify-center items-center ">
                     <div className="flex py-2 px-4 w-full border-b justify-between">
                       <DialogTitle className="text-xl leading-6 font-bold text-gray-900">

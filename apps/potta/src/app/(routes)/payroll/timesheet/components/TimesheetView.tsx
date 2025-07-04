@@ -30,7 +30,7 @@ const TimesheetView: React.FC<TimesheetViewProps> = ({
     ],
     queryFn: async () => {
       try {
-        const response = await axios.post('/api/timesheets/filter', {
+        const response = await axios.post('/timesheets/filter', {
           limit: 100,
           sortBy: ['date:DESC'],
           filter: {
@@ -148,7 +148,7 @@ const TimesheetView: React.FC<TimesheetViewProps> = ({
           <CustomLoader />
         </div>
       ) : !timesheetsData?.data || timesheetsData.data.length === 0 ? (
-        <div className="text-center py-10 border bg-gray-50 mt-4">
+        <div className="text-center py-10  mt-4">
           <p className="text-gray-500">
             No timesheet entries found for this period.
           </p>

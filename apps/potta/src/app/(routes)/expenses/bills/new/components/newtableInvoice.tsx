@@ -1,7 +1,7 @@
 import { useContext, useState } from 'react';
 import { ContextData } from '@potta/components/context';
 import SearchSelect, { Option } from '@potta/components/search-select'; // Import Option type
-import useGetAllProducts from '../../../inventory/_hooks/useGetAllProducts';
+import useGetAllProducts from '@potta/app/(routes)/pos/hooks/useGetAllProducts';
 
 interface Product {
   uuid: string;

@@ -131,7 +131,7 @@ const PayCash = () => {
         },
         onError: (error: any) => {
           toast.error(
-            `Failed to create receipt: ${error.message || 'Unknown error'}`
+            `Failed to create receissssspt: ${error.message || 'Unknown error'}`
           );
           console.error('Error creating sales receipt:', error);
         },

@@ -5,7 +5,7 @@ export const employeeApi = {
   filterEmployees: (params = {}) => {
     return axios.post('/employees/filter', params);
   },
-  getEmployeeById: (id) => {
+  getEmployeeById: (id: number) => {
     return axios.get(`/employees/${id}`);
   },
 };
@@ -13,34 +13,34 @@ export const employeeApi = {
 // Timesheet API
 export const timesheetApi = {
   filterTimesheets: (params = {}) => {
-    return axios.post('/api/timesheets/filter', params);
+    return axios.post('/timesheets/filter', params);
   },
   createTimesheet: (data = {}) => {
-    return axios.post('/api/timesheets', data);
+    return axios.post('/timesheets', data);
   },
-  updateTimesheet: (id, data = {}) => {
-    return axios.patch(`/api/timesheets/${id}`, data);
+  updateTimesheet: (id: number, data = {}) => {
+    return axios.patch(`/timesheets/${id}`, data);
   },
-  approveTimesheet: (id) => {
-    return axios.put(`/api/timesheets/approve/${id}`);
+  approveTimesheet: (id: number) => {
+    return axios.put(`/timesheets/approve/${id}`);
   },
-  rejectTimesheet: (id) => {
-    return axios.put(`/api/timesheets/reject/${id}`);
+  rejectTimesheet: (id: number) => {
+    return axios.put(`/timesheets/reject/${id}`);
   },
 };
 
 // Shift API
 export const shiftApi = {
   filterShifts: (params = {}) => {
-    return axios.post('/api/shifts/filter', params);
+    return axios.post('/shifts/filter', params);
   },
   createShift: (data = {}) => {
-    return axios.post('/api/shifts', data);
+    return axios.post('/shifts', data);
   },
-  updateShift: (id, data = {}) => {
-    return axios.patch(`/api/shifts/${id}`, data);
+  updateShift: (id: number, data = {}) => {
+    return axios.patch(`/shifts/${id}`, data);
   },
-  deleteShift: (id) => {
-    return axios.delete(`/api/shifts/${id}`);
+  deleteShift: (id: number) => {
+    return axios.delete(`/shifts/${id}`);
   },
 };

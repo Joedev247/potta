@@ -47,12 +47,9 @@ const TimesheetTable = ({
       setLoading((prev) => ({ ...prev, [timesheetId]: 'approving' }));
 
       // Send the timesheet ID in the request body
-      const response = await axios.put(
-        `/api/timesheets/approve/${timesheetId}`,
-        {
-          id: timesheetId,
-        }
-      );
+      const response = await axios.put(`/timesheets/approve/${timesheetId}`, {
+        id: timesheetId,
+      });
 
       setLoading((prev) => ({ ...prev, [timesheetId]: false }));
       toast.success('Timesheet approved successfully');
@@ -82,12 +79,9 @@ const TimesheetTable = ({
       setLoading((prev) => ({ ...prev, [timesheetId]: 'rejecting' }));
 
       // Send the timesheet ID in the request body
-      const response = await axios.put(
-        `/api/timesheets/reject/${timesheetId}`,
-        {
-          id: timesheetId,
-        }
-      );
+      const response = await axios.put(`/timesheets/reject/${timesheetId}`, {
+        id: timesheetId,
+      });
 
       setLoading((prev) => ({ ...prev, [timesheetId]: false }));
       toast.success('Timesheet rejected successfully');

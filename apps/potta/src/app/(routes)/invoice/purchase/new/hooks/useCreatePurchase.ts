@@ -1,6 +1,5 @@
+import axios from '@/config/axios.config';
 import { useMutation } from '@tanstack/react-query';
-import axios from 'axios';
-
 
 interface PurchaseOrderData {
   orderNumber: string;
@@ -27,10 +26,16 @@ interface PurchaseOrderData {
   }>;
 }
 
+interface CreatePurchaseOrderArgs {
+  data: PurchaseOrderData;
+  userId: string;
+  branchId: string;
+}
+
 export default function useCreatePurchaseOrder() {
   return useMutation({
-    mutationFn: async (data:any) => {
-      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_BASE_URL}/purchase-orders`, data);
+    mutationFn: async ({ data, userId, branchId }: CreatePurchaseOrderArgs) => {
+      const response = await axios.post('/purchase-order/create', data, {});
       return response.data;
     },
   });

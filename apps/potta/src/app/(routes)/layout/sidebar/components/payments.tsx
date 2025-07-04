@@ -2,12 +2,15 @@ import { useContext, useState } from 'react';
 import { Sidebar, Menu, MenuItem, SubMenu } from 'react-pro-sidebar';
 import { usePathname } from 'next/navigation';
 import Icon from '@potta/components/icon_fonts/icon';
+import { IoMdCard } from 'react-icons/io';
 import { ContextData } from '@potta/components/context';
+import { svgIcons } from '@potta/components/svg_icons/IconsSvg';
 const SidebarsPayment = () => {
   const pathname = usePathname();
   const string = pathname;
   const str = string.split('/');
   const context = useContext(ContextData);
+  console.log(str[1]);
 
   return (
     <Sidebar
@@ -20,104 +23,67 @@ const SidebarsPayment = () => {
       className=" relative bg-blue-500  h-[100vh] z-30  side "
     >
       <Menu className="relative h-[76vh]" closeOnClick>
-      <MenuItem
-          className="mt-4 font-thin "
+        <MenuItem
+          className=" font-thin "
           href="/"
-          icon={<img src="/icons/Potta.svg" className="h-16 w-16 mt-2" alt="logo" />}
+          icon={
+            <img src="/icons/Potta.svg" className="h-16 w-16 mt-2" alt="logo" />
+          }
         >
           {' '}
-         
         </MenuItem>
         <MenuItem
-          active={str[1] == 'dashboard' ? true : false}
+          active={str[1] == 'payments' && str[2] == undefined ? true : false}
           className="mt-8  font-thin"
-          href="/dashboard"
-          icon={
-            <Icon
-              icon="Pie-Chart-2"
-              size={23}
-              color={
-                str[1] == 'analytics' || str[1] == undefined || str[1] == ''
-                  ? 'white'
-                  : 'black'
-              }
-            />
-          }
+          href="/payments"
+          icon={svgIcons.dashboard(
+            str[1] === 'payments' && str[2] == undefined ? 'white' : 'black'
+          )}
         >
           {' '}
-          <h3 className="text-lg mt-[2px]">Payments</h3>{' '}
+          <h3 className="text-md mt-[2px]">Payments</h3>{' '}
         </MenuItem>
         <MenuItem
-          active={str[1] == 'inbox' ? true : false}
-          className="mt-4 font-thin"
-          href="/inbox"
+          active={str[2] == 'transactions' ? true : false}
+          className=" font-thin"
+          href="/payments/transactions"
           icon={
-            <Icon
-              icon="Open-Mail"
+            <IoMdCard
               size={21}
-              color={
-                str[1] == 'analytics' || str[1] == undefined || str[1] == ''
-                  ? 'white'
-                  : 'black'
-              }
+              color={str[2] == 'transactions' ? 'white' : 'black'}
             />
           }
         >
-          <h3 className="text-lg mt-1.5">Cancelled</h3>
+          <h3 className="text-md mt-1.5">Transactions</h3>
         </MenuItem>
         <MenuItem
-          active={str[1] == 'inbox' ? true : false}
-          className="mt-4 font-thin"
-          href="/inbox"
+          active={str[2] == 'terminals' ? true : false}
+          className=" font-thin"
+          href="/payments/terminals"
           icon={
-            <Icon
-              icon="Open-Mail"
-              size={21}
-              color={
-                str[1] == 'analytics' || str[1] == undefined || str[1] == ''
-                  ? 'white'
-                  : 'black'
-              }
-            />
+            str[2] == 'terminals' ? (
+              <img src="/images/sideExpensesIcons/white/flow.svg" />
+            ) : (
+              <img src="/images/sideExpensesIcons/flow.svg" />
+            )
           }
         >
-          <h3 className="text-lg mt-1.5">Failed</h3>
+          <h3 className="text-md mt-1.5">Terminals</h3>
         </MenuItem>
+
         <MenuItem
           active={str[1] == 'inbox' ? true : false}
-          className="mt-4 font-thin"
-          href="/inbox"
+          className=" font-thin"
+          href="/reports"
           icon={
-            <Icon
-              icon="Open-Mail"
-              size={21}
-              color={
-                str[1] == 'analytics' || str[1] == undefined || str[1] == ''
-                  ? 'white'
-                  : 'black'
-              }
-            />
+            str[2] == 'reports' ? (
+              <img src="/images/sideExpensesIcons/white/2.svg" />
+            ) : (
+              <img src="/images/sideDashboardIcons/dahsboard.svg" />
+            )
           }
         >
-          <h3 className="text-lg mt-1.5">Terminals</h3>
-        </MenuItem>
-        <MenuItem
-          active={str[1] == 'inbox' ? true : false}
-          className="mt-4 font-thin"
-          href="/inbox"
-          icon={
-            <Icon
-              icon="Open-Mail"
-              size={21}
-              color={
-                str[1] == 'analytics' || str[1] == undefined || str[1] == ''
-                  ? 'white'
-                  : 'black'
-              }
-            />
-          }
-        >
-          <h3 className="text-lg mt-1.5">Report</h3>
+          <h3 className="text-md mt-1.5">Reports</h3>
         </MenuItem>
       </Menu>
       <div className="absolute cursor-pointer mb-10 ml-6 bottom-0">
@@ -131,7 +97,7 @@ const SidebarsPayment = () => {
           />
           <div className="flex space-x-5">
             <img src="/icons/user.svg" className="h-10 w-10 -ml-2" alt="" />
-            <p className="mt-2 text-lg ml-3 font-thin">Jamison</p>
+            <p className="mt-2 text-md ml-3 font-thin">Jamison</p>
           </div>
         </div>
       </div>

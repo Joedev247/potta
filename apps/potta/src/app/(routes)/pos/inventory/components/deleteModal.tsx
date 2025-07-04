@@ -45,7 +45,7 @@ const DeleteModal: React.FC<DeleteProps> = ({
       open={isOpen}
       setOpen={setIsOpen}
     >
-      <div className="p-4">
+      <div className="p-4 rounded-none !rounded-none">
         <div>
           <p>Are you sure you want to delete this product?</p>
         </div>

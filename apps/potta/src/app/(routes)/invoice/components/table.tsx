@@ -168,13 +168,13 @@ const InvoiceTable = () => {
       width: '50px',
     },
   ];
-  if (error) {
-    return (
-      <div className={'w-full py-24 flex flex-col items-center justify-center'}>
-        An Error Occured
-      </div>
-    );
-  }
+  // if (error) {
+  //   return (
+  //     <div className={'w-full py-24 flex flex-col items-center justify-center'}>
+  //       An Error Occured
+  //     </div>
+  //   );
+  // }
   return (
     <div className="">
       <div className="flex justify-between w-full">

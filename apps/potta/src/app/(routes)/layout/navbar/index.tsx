@@ -44,6 +44,10 @@ const urlRouters = [
     label: 'Taxation',
   },
   {
+    value: 'payments',
+    label: 'Payments',
+  },
+  {
     value: 'reports',
     label: 'Reports',
   },
@@ -55,14 +59,14 @@ const urlRouters = [
 
 // Routes where Box component should be displayed with their specific box component
 const routesWithBox = [
-  { main: 'payments', sub: '', component: PaymentsBox },
-  { main: 'expenses', sub: '', component: ExpensesBox },
+  { main: 'payments', sub: '', component: '' },
+  { main: 'expenses', sub: '', component: '' },
   { main: 'vouchers', sub: '', component: VouchersBox },
-  { main: 'accounts', sub: '', component: AccountsBox },
+  { main: 'accounts', sub: '', component: '' },
   { main: 'invoice', sub: '', component: InvoiceBox },
   { main: 'pos', sub: 'sales', component: PosSalesBox },
-  { main: 'invoice', sub: 'purchase', component: InvoicePurchaseBox },
-  { main: 'invoice', sub: 'recurring', component: InvoiceRecurringBox },
+  { main: 'invoice', sub: 'purchase', component: '' },
+  { main: 'invoice', sub: 'recurring', component: '' },
 ];
 
 // Routes with specific sub-routes where Box should NOT be displayed
@@ -72,14 +76,23 @@ const routesWithoutBox = [
   { main: 'invoice', sub: 'purchase/new' },
   { main: 'invoice', sub: 'recurring/new' },
   { main: 'pos', sub: 'sales/new' },
+
   // Add other specific routes where Box should not appear
 ];
 
 // Routes that should not have the blue background
 const routesWithoutBlueBackground = [
+  { main: 'payroll' }, // Exclude all payroll pages
+  { main: 'payments' },
+  { main: 'expenses' },
+  { main: 'expenses' },
   { main: 'pos', sub: 'files' },
-  { main: 'payroll', sub: 'people' },
-  { main: 'expenses', sub: 'budget' }, // Added the expenses/budget route
+  { main: 'pos', sub: 'inventory' },
+  { main: 'invoice', sub: 'new' },
+  { main: 'invoice', sub: 'recurring' },
+  { main: 'invoice', sub: 'purchase' },
+  { main: 'expenses', sub: 'budget' },
+  { main: 'invoice', sub: 'paynow' },
   // Add more routes here that don't need the blue background
 ];
 
@@ -155,13 +168,21 @@ export default function Navbar() {
   // Check if the current route should have the blue background
   const shouldHaveBlueBackground = () => {
     // Check if the route is in the exclusion list for blue background
-    return !routesWithoutBlueBackground.some(
-      (route) =>
-        route.main === currentMainRoute &&
-        (route.sub === currentSubRoute ||
-          (route.sub === '' && currentSubRoute === '') ||
-          currentSubRoute.startsWith(route.sub))
-    );
+    return !routesWithoutBlueBackground.some((route) => {
+      if (route.main && !route.sub) {
+        // Exclude all subroutes under this main route
+        return currentMainRoute === route.main;
+      }
+      if (route.main && route.sub) {
+        // Exclude only this specific subroute or its children
+        return (
+          currentMainRoute === route.main &&
+          (currentSubRoute === route.sub ||
+            currentSubRoute.startsWith(route.sub + '/'))
+        );
+      }
+      return false;
+    });
   };
 
   // Get the background color class based on the current route
@@ -188,6 +209,9 @@ export default function Navbar() {
     // Special case for /pos/new route
     if (str[1] === 'pos' && str[2] === 'sales' && str[3] === 'new') {
       return 'New Sales Receipt';
+    }
+    if (str[1] === 'expenses' && str[2] === 'bills' && str[3] === 'new') {
+      return 'New Bill';
     }
 
     if (str[1] === 'invoice' && str[2] === 'new') {

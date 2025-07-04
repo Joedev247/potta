@@ -1,86 +1,90 @@
 'use client';
+import React from 'react';
 import Button from '@potta/components/button';
-import Search from '@potta/components/search';
 import Select from '@potta/components/select';
-import React, { useState } from 'react';
-
+import Search from '@potta/components/search';
 import Link from 'next/link';
 
-const Filter = () => {
-  const [selectedValue, setSelectedValue] = useState('All Time'); // Set your default value here
-  const [selectedValue2, setSelectedValue2] = useState('pending'); // Set your default value here
+interface FilterProps {
+  search: string;
+  onSearchChange: (value: string) => void;
+  status: string;
+  onStatusChange: (value: string) => void;
+  paymentMethod: string;
+  onPaymentMethodChange: (value: string) => void;
+}
 
-  const handleChange = (value: string) => {
-    setSelectedValue(value);
-  };
-  const handleChange2 = (value: string) => {
-    setSelectedValue2(value);
-  };
+const paymentMethodOptions = [
+  { label: 'All', value: 'all' },
+  { label: 'Credit Card', value: 'Credit Card' },
+  { label: 'Bank Transfer', value: 'Bank Transfer' },
+  { label: 'ACH Transfer', value: 'ACH Transfer' },
+  { label: 'Mobile Money', value: 'Mobile Money' },
+  { label: 'Cash', value: 'Cash' },
+  { label: 'Credit', value: 'Credit' },
+  { label: 'Other', value: 'Other' },
+];
+const statusOptions = [
+  { label: 'All', value: 'all' },
+  { label: 'Draft', value: 'Draft' },
+  { label: 'Issued', value: 'Issued' },
+  { label: 'Paid', value: 'Paid' },
+  { label: 'Overdue', value: 'Overdue' },
+];
 
+const Filter: React.FC<FilterProps> = ({
+  search,
+  onSearchChange,
+  status,
+  onStatusChange,
+  paymentMethod,
+  onPaymentMethodChange,
+}) => {
   return (
-    <div className="w-full flex justify-between ">
-      <div className="flex space-x-2 ">
-        <div className=" ">
-          <Search />
+    <div className="w-full flex flex-col md:flex-row md:justify-between md:items-center gap-4 whitespace-normal break-words">
+      <div className="flex flex-row gap-3 items-center flex-nowrap flex-1 min-w-0">
+        <div className="w-full min-w-[120px] max-w-xs">
+          <Search
+            value={search}
+            onChange={(e) => onSearchChange(e.target.value)}
+            placeholder="Search bills..."
+          />
         </div>
-        <div className="flex mt-4  space-x-2 ">
-          <div className="flex h-[47px]  w-full px-2 border items-center">
-            <p className="text-[17px] -mt-1">Filter&nbsp;: </p>
-            <div className="-mt-3">
-              <Select
-              outline
-                border={true}
-                options={[
-                  { label: 'All', value: 'all' },
-                  { label: 'Pending', value: 'pending' },
-                  { label: 'Paid', value: 'paid' },
-                ]}
-                selectedValue={selectedValue2}
-                onChange={handleChange2}
-                bg=" " // Add your desired background class here
-              />
-            </div>
-          </div>
-          <div className="flex h-[47px] py-3.5 items-center space-x-1 w-full px-2 border">
-            <p className="text-[17px] -mt-1">Date&nbsp;: </p>
-            <div className="-mt-3">
-              <Select
-              outline
-                border={true}
-                options={[
-                  { label: 'All Time', value: 'All Time' },
-                  { label: 'Yesterday', value: 'Yesterday' },
-                ]}
-                selectedValue={selectedValue}
-                onChange={handleChange}
-                bg=" " // Add your desired background class here
-              />
-            </div>
-          </div>
-        </div>
+        <Select
+          outline
+          border={false}
+          options={statusOptions}
+          selectedValue={status}
+          onChange={onStatusChange}
+          bg="bg-white"
+          SelectClass="min-w-[90px] max-w-[140px]"
+        />
+        <Select
+          outline
+          border={false}
+          options={paymentMethodOptions}
+          selectedValue={paymentMethod || 'all'}
+          onChange={onPaymentMethodChange}
+          bg="bg-white"
+          SelectClass="min-w-[90px] max-w-[140px]"
+        />
       </div>
-      <div className="  mt-4  ">
-        <div className="flex  space-x-2">
-          <div className=" flex justify-end ">
-            <Button
-              type={'button'}
-              color
-              text="Export"
-              icon={<img src="/images/export.svg" />}
-              theme="lightBlue"
-            />
-          </div>
-          <div className="">
-          <Link className='flex justify-end' href={'/pos/sales/new'}>
-                <Button
-                  text={'Create New'}
-                  icon={<i className="ri-file-add-line"></i>}
-                  theme="default"
-                  type={'button'}
-                />
-              </Link>
-          </div>
-        </div>
+      <div className="flex flex-row gap-2 justify-end items-center mt-2 md:mt-0">
+        <Button
+          type={'button'}
+          color
+          text="Export"
+          icon={<img src="/images/export.svg" />}
+          theme="lightBlue"
+        />
+        <Link className="flex justify-end" href={'/expenses/bills/new'}>
+          <Button
+            text={'Create New'}
+            icon={<i className="ri-file-add-line"></i>}
+            theme="default"
+            type={'button'}
+          />
+        </Link>
       </div>
     </div>
   );

@@ -782,7 +782,7 @@ const SliderBenefit = () => {
             <Select
               options={cycleOptions}
               selectedValue={cycle}
-              onchange={(value) => setCycle(value)}
+              onChange={(value) => setCycle(value)}
               bg={''}
               isDisabled={[
                 'Meal Allowance',

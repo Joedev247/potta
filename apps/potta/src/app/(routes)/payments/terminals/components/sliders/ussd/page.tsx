@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
-import Input from '@/components/input';
-import CustomSelect from '@/components/react-select';
-import Slider from '@/components/slideover';
+import Input from '@potta/components/input';
+import CustomSelect from '@potta/components/react-select';
+import Slider from '@potta/components/slideover';
 import { SingleValue } from 'react-select';
-import Select from '@/components/select';
+import Select from '@potta/components/select';
 
-import Button from '@/components/button';
+import Button from '@potta/components/button';
 
 interface Cat {
     value: string;

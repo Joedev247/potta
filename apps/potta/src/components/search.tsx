@@ -19,7 +19,7 @@ const Search = ({ placeholder, value, onChange }: SearchProps) => {
           id="search"
           value={value}
           onChange={onChange}
-          className="block w-full py-2.5 pl-10 text-gray-900 outline-none border"
+          className="block w-full py-2.5 pl-10 pr-2 text-gray-900 outline-none border"
         />
       </div>
     </div>

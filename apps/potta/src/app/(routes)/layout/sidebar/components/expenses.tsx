@@ -3,6 +3,8 @@ import { Sidebar, Menu, MenuItem, SubMenu } from 'react-pro-sidebar';
 import { usePathname } from 'next/navigation';
 import { ContextData } from '@potta/components/context';
 import Icon from '@potta/components/icon_fonts/icon';
+import { MdPolicy } from 'react-icons/md';
+
 const SidebarsExpenses = () => {
   const pathname = usePathname();
   const string = pathname;
@@ -45,6 +47,20 @@ const SidebarsExpenses = () => {
           <h3 className="text-lg mt-[2px]">Dashboard</h3>{' '}
         </MenuItem>
         <MenuItem
+          active={str[2] == 'policies' ? true : false}
+          className=" "
+          href="/expenses/policies"
+          icon={
+            str[2] == 'policies' ? (
+              <MdPolicy size={24} className="text-white" />
+            ) : (
+              <MdPolicy size={24} className="text-gray-600" />
+            )
+          }
+        >
+          <h3 className="text-lg mt-1.5">Policies</h3>
+        </MenuItem>
+        <MenuItem
           active={str[2] == 'budgets' ? true : false}
           className=""
           href="/expenses/budgets"
@@ -58,7 +74,7 @@ const SidebarsExpenses = () => {
         >
           <h3 className="text-lg mt-1.5">Budget</h3>
         </MenuItem>
-        <MenuItem
+        {/* <MenuItem
           active={str[2] == 'transactions' ? true : false}
           className={` ${
             str[2] == 'transactions' ? 'text-white' : 'text-black'
@@ -73,21 +89,8 @@ const SidebarsExpenses = () => {
           }
         >
           <h3 className="text-lg mt-1.5">Transaction</h3>
-        </MenuItem>
-        <MenuItem
-          active={str[1] == 'inbox' ? true : false}
-          className=" "
-          href="/terminals"
-          icon={
-            str[2] == 'terminals' ? (
-              <img src="/images/sideExpensesIcons/white/3.svg" />
-            ) : (
-              <img src="/images/sideExpensesIcons/flow.svg" />
-            )
-          }
-        >
-          <h3 className="text-lg mt-1.5">Procurement</h3>
-        </MenuItem>
+        </MenuItem> */}
+
         <MenuItem
           active={str[2] == 're-imbursements' ? true : false}
           className=" "
@@ -114,22 +117,22 @@ const SidebarsExpenses = () => {
             )
           }
         >
-          <h3 className="text-lg mt-1.5">Cards </h3>
+          <h3 className="text-lg mt-1.5">Biils </h3>
         </MenuItem>
-        <MenuItem
+        {/* <MenuItem
           active={str[1] == 'inbox' ? true : false}
           className=" "
-          href="/procurement"
+          href="/terminals"
           icon={
-            str[2] == 'procurement' ? (
-              <img src="/images/sideExpensesIcons/white/7.svg" />
+            str[2] == 'terminals' ? (
+              <img src="/images/sideExpensesIcons/white/3.svg" />
             ) : (
-              <img src="/images/sideExpensesIcons/shopping.svg" />
+              <img src="/images/sideExpensesIcons/flow.svg" />
             )
           }
         >
           <h3 className="text-lg mt-1.5">Terminals</h3>
-        </MenuItem>
+        </MenuItem> */}
         <MenuItem
           active={str[1] == 'inbox' ? true : false}
           className=" "

@@ -83,7 +83,7 @@ const PdfView = () => {
 
       </div>
       <div className="max-w-[48rem] bg-white space-y-8 min-w-[45rem] w-full mb-10">
-        <div className="h-36 w-full flex items-center justify-between px-8 bg-yellow-800">
+        <div className="h-36 w-full flex items-center justify-between px-8 bg-green-700">
           <div>
             <p className="text-3xl font-semibold text-white">{invoiceType}</p>
             <p className="text-white mt-2">#{invoiceNumber}</p>

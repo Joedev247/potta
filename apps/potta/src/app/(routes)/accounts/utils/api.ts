@@ -66,15 +66,12 @@ export const accountsApi = {
     const queryParams = new URLSearchParams();
 
     // Add filter for account type
-    queryParams.append('filter', 'type');
-
-    // Add search parameter for the account type value
-    queryParams.append('search', type);
+    queryParams.append('filter', `type:${type}`);
 
     // Add additional search term if provided
     if (search && search.trim() !== '') {
       queryParams.append('searchBy', 'name,code');
-      queryParams.append('additionalSearch', search);
+      queryParams.append('search', search);
     }
 
     // Set default limit and page

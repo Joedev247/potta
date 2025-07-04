@@ -53,3 +53,33 @@ export const productApi = {
     }
   },
 };
+
+export const productCategoryApi = {
+  create: async (data: { name: string; description: string }) => {
+    const result = await axios.post(`/product-category`, data);
+    return result?.data;
+  },
+  getAll: async (params = {}) => {
+    const result = await axios.get(`/product-category`, { params });
+    return result?.data;
+  },
+  getOne: async (uuid: string) => {
+    const result = await axios.get(`/product-category/${uuid}`);
+    return result?.data;
+  },
+  update: async (uuid: string, data: { name: string; description: string }) => {
+    const result = await axios.put(`/product-category/${uuid}`, data);
+    return result?.data;
+  },
+  delete: async (uuid: string) => {
+    const result = await axios.delete(`/product-category/${uuid}`);
+    return result?.data;
+  },
+};
+
+export const documentsApi = {
+  bulkDownload: async (ids: string[]) => {
+    const result = await axios.post('/documents/bulk-download', { ids });
+    return result.data;
+  },
+};

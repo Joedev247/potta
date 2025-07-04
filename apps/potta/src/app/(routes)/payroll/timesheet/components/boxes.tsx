@@ -11,7 +11,7 @@ const Boxes = () => {
       queryKey: ['timesheets-summary'],
       queryFn: async () => {
         try {
-          const response = await axios.post('/api/timesheets/filter', {
+          const response = await axios.post('/timesheets/filter', {
             limit: 100,
             sortBy: ['createdAt:DESC'],
           });

@@ -1,4 +1,5 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { budgetsApi } from '../utils/api';
 import { Budget } from '../utils/types';
 
@@ -30,41 +31,31 @@ export const useBudgets = (initialFilter: BudgetFilter = {}) => {
   };
 
   const [filter, setFilter] = useState<BudgetFilter>(defaultFilter);
-  const [budgets, setBudgets] = useState<Budget[]>([]);
-  const [meta, setMeta] = useState<any>(null);
-  const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<Error | null>(null);
+  const queryClient = useQueryClient();
 
-  const fetchBudgets = async () => {
-    try {
-      setLoading(true);
-      setError(null);
-      const response = await budgetsApi.getBudgets(filter);
-      setBudgets(response.data);
-      setMeta(response.meta);
-    } catch (err) {
-      console.error('Error fetching budgets:', err);
-      setError(err as Error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    fetchBudgets();
-  }, [filter]);
+  const {
+    data,
+    isLoading: loading,
+    error,
+    refetch,
+  } = useQuery({
+    queryKey: ['budgets', filter],
+    queryFn: async () => {
+      // Use the archived endpoint if status is 'archived'
+      if (filter.status === 'archived') {
+        return await budgetsApi.getArchivedBudgets(filter);
+      }
+      return await budgetsApi.getBudgets(filter);
+    },
+  });
 
   const updateFilter = (newFilter: Partial<BudgetFilter>) => {
     setFilter((prev) => ({ ...prev, ...newFilter }));
   };
 
-  const refetch = () => {
-    fetchBudgets();
-  };
-
   return {
-    budgets,
-    meta,
+    budgets: data?.data || [],
+    meta: data?.meta,
     loading,
     error,
     filter,

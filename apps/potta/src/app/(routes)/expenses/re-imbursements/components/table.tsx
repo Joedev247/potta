@@ -1,13 +1,14 @@
 // src/components/PaymentRequestDataTableWrapper.tsx (New File)
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 
 import {
   MoreHorizontal,
   Check as CheckIcon,
   Briefcase,
   Landmark,
+  MoreVertical,
 } from 'lucide-react'; // Import necessary icons
 
 import { cn } from '@potta/lib/utils';
@@ -19,8 +20,15 @@ import {
 } from '@potta/components/shadcn/dropdown';
 import { Button } from '@potta/components/shadcn/button';
 import MyTable from '@potta/components/table';
-import { PaymentMethod, PaymentRequest } from '../../budgets/details/utils/types';
+import {
+  PaymentMethod,
+  PaymentRequest,
+} from '../../budgets/details/utils/types';
 import { Icon } from '@iconify/react';
+import RightSideModal from './RightSideModal';
+import ReimbursementDetails from './ReimbursementDetails';
+import ReimbursementForm from './ReimbursementForm';
+import Slider from '@potta/components/slideover';
 
 interface PaymentRequestDataTableWrapperProps {
   requests: PaymentRequest[];
@@ -73,101 +81,102 @@ export function PaymentRequestDataTableWrapper({
   requests,
   isLoading = false,
 }: PaymentRequestDataTableWrapperProps) {
+  const [detailsOpen, setDetailsOpen] = useState(false);
+  const [editOpen, setEditOpen] = useState(false);
+  const [selectedRow, setSelectedRow] = useState<any>(null);
+
   // Define columns for react-data-table-component
   const columns = React.useMemo(
     () => [
       {
-        name: 'Ref',
-        selector: (row: PaymentRequest) =>
-          row.ref === 'Today' ? row.date : row.ref, // Use date if ref is 'Today' for sorting potentially
+        name: 'Employee',
+        selector: (row: any) => row.madeBy,
         sortable: true,
-        cell: (row: PaymentRequest) =>
-          row.ref === 'Today' ? (
-            <span className="italic text-gray-600">Today</span>
-          ) : (
-            row.date
-          ),
-        minWidth: '100px',
-      },
-      {
-        name: 'Made By',
-        selector: (row: PaymentRequest) => row.madeBy,
-        sortable: true,
-        cell: (row: PaymentRequest) => (
-          <span className="font-semibold">{row.madeBy}</span>
-        ),
+        cell: (row: any) => <span className="font-semibold">{row.madeBy}</span>,
         minWidth: '120px',
       },
       {
-        name: 'Made To',
-        selector: (row: PaymentRequest) => row.madeTo,
+        name: 'Merchant',
+        selector: (row: any) => row.merchant,
         sortable: true,
-        minWidth: '100px',
-      },
-      {
-        name: 'Category',
-        selector: (row: PaymentRequest) => row.category,
-        sortable: true,
-        minWidth: '100px',
+        minWidth: '120px',
       },
       {
         name: 'Amount',
-        selector: (row: PaymentRequest) => row.amount,
+        selector: (row: any) => row.amount,
         sortable: true,
-
-        cell: (row: PaymentRequest) => (
+        cell: (row: any) => (
           <span className="font-medium">
-            {row.currency} {formatTableCurrency(row.amount)}
+            {row.currency} {row.amount?.toLocaleString()}
           </span>
         ),
         minWidth: '100px',
       },
       {
-        name: 'Method',
-        cell: (row: PaymentRequest) => (
-          <PaymentMethodIcon method={row.method} />
-        ),
-        center: true,
-        width: '100px', // Fixed width for icon column
+        name: 'Memo',
+        selector: (row: any) => row.memo,
+        sortable: false,
+        minWidth: '120px',
       },
       {
-        name: 'Request Status',
-        center: true,
-        cell: (row: PaymentRequest) => (
-          <div className="border-r pr-8 border-black">
-                                <div className="flex items-center gap-3  w-fit px-3 py-0.5 border border-green-500 bg-green-50 text-green-700">
-                                  <div className="flex items-center justify-center text-white bg-green-700 rounded-full size-4">
-                                    <Icon icon="material-symbols:check" width="20" height="20" />
-                                  </div>
-                                  Approved
-                                </div>
-                              </div>
-        ),
+        name: 'Status',
+        selector: (row: any) => row.status,
+        sortable: true,
+        cell: (row: any) => {
+          let color = 'text-yellow-700';
+          if (row.status?.toLowerCase() === 'approved')
+            color = 'text-green-700';
+          if (row.status?.toLowerCase() === 'rejected') color = 'text-red-700';
+          return (
+            <span className={`text-sm font-bold ${color}`}>
+              {row.status?.charAt(0).toUpperCase() + row.status?.slice(1)}
+            </span>
+          );
+        },
         minWidth: '100px',
       },
       {
+        name: 'Category',
+        selector: (row: any) => row.type,
+        sortable: true,
+        cell: (row: any) => (
+          <span className="capitalize">{row.type?.replace(/_/g, ' ')}</span>
+        ),
+        minWidth: '120px',
+      },
+      {
         name: 'Actions',
-        button: true, // Important for click events on elements within the cell
-        allowOverflow: true, // Important for dropdown menus
-        ignoreRowClick: true, // Prevent row click when clicking the button/menu
-        width: '100px', // Fixed width
-        cell: (row: PaymentRequest) => (
+        button: true,
+        allowOverflow: true,
+        ignoreRowClick: true,
+        width: '80px',
+        cell: (row: any) => (
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button
                 variant="ghost"
-                className="h-8 w-8 p-0 text-gray-500 hover:text-gray-800"
+                className="h-8 w-8 p-0 text-gray-500 hover:text-gray-800 hover:bg-transparent focus:bg-transparent active:bg-transparent"
               >
                 <span className="sr-only">Open menu</span>
-                <MoreHorizontal className="h-4 w-4" />
+                <MoreVertical className="h-4 w-4" />
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
-              <DropdownMenuItem onClick={() => alert(`Viewing ${row.id}`)}>
+              <DropdownMenuItem
+                onClick={() => {
+                  setSelectedRow(row);
+                  setDetailsOpen(true);
+                }}
+              >
                 View Details
               </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => alert(`Editing ${row.id}`)}>
-                Edit Request
+              <DropdownMenuItem
+                onClick={() => {
+                  setSelectedRow(row);
+                  setEditOpen(true);
+                }}
+              >
+                Edit
               </DropdownMenuItem>
               <DropdownMenuItem onClick={() => alert(`Rejecting ${row.id}`)}>
                 Reject
@@ -176,7 +185,7 @@ export function PaymentRequestDataTableWrapper({
                 className="text-red-600"
                 onClick={() => alert(`Deleting ${row.id}`)}
               >
-                Delete Request
+                Delete
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
@@ -184,25 +193,42 @@ export function PaymentRequestDataTableWrapper({
       },
     ],
     []
-  ); // Empty dependency array ensures columns are defined only once
+  );
 
   return (
-    <MyTable
-      columns={columns}
-      data={requests}
-      selectable={true} // Enable checkboxes as per design
-      pagination={false} // Disable pagination as per design
-      pending={isLoading} // Pass loading state
-      color={false} // Use the default light header color
-      size={false} // Use the default size
-      expanded={true} // Not needed
-      ExpandableComponent={null} // Not needed
-      minHeight='600px'
-      // --- Add these if/when implementing server-side pagination ---
-      // paginationServer={true}
-      // paginationTotalRows={totalRowCount}
-      // onChangePage={handlePageChange}
-      // onChangeRowsPerPage={handlePerRowsChange}
-    />
+    <>
+      <MyTable
+        columns={columns}
+        data={requests}
+        selectable={true}
+        pagination={false}
+        pending={isLoading}
+        color={false}
+        size={false}
+        expanded={true}
+        ExpandableComponent={null}
+      />
+      <RightSideModal
+        open={detailsOpen}
+        setOpen={setDetailsOpen}
+        title="Reimbursement Details"
+      >
+        {selectedRow && <ReimbursementDetails data={selectedRow} />}
+      </RightSideModal>
+      <Slider
+        edit={true}
+        title="Edit Reimbursement"
+        open={editOpen}
+        setOpen={setEditOpen}
+      >
+        {selectedRow && (
+          <ReimbursementForm
+            onSubmit={() => setEditOpen(false)}
+            onClose={() => setEditOpen(false)}
+            initialData={selectedRow}
+          />
+        )}
+      </Slider>
+    </>
   );
 }

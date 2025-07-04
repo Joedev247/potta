@@ -11,6 +11,10 @@ import Select from '@potta/components/select';
 import toast from 'react-hot-toast';
 import TextArea from '@potta/components/textArea';
 import useCreatePurchaseOrder from '../hooks/useCreatePurchase';
+import { DateInput } from '@potta/components/customDatePicker';
+import useGetAllCustomers from '@potta/app/(routes)/customers/hooks/useGetAllCustomers';
+import { Customer } from '@potta/app/(routes)/customers/utils/types';
+import { useRouter } from 'next/navigation';
 
 // Define Option interface to match the one in SearchSelect component
 interface Option {
@@ -41,10 +45,12 @@ interface ValidationErrors {
   shoppingAddress?: string;
   lineItems?: string;
   paymentMethod?: string;
+  customerId?: string;
 }
 
 const Left = () => {
   const context = useContext(ContextData);
+  const router = useRouter();
   const [selectedPaymentMethod, setSelectedPaymentMethod] =
     useState<string>('');
 
@@ -55,12 +61,29 @@ const Left = () => {
   });
   const vendors = vendorData?.data || [];
 
+  // Customer data fetch
+  const { data: customerData, isLoading: customersLoading } =
+    useGetAllCustomers({ page: 1, limit: 100 });
+  const customers: Customer[] = customerData?.data || [];
+  const customerOptions: Option[] = customers.map((customer: Customer) => ({
+    label:
+      `${customer.firstName || ''} ${customer.lastName || ''}`.trim() ||
+      customer.email ||
+      customer.phone ||
+      customer.uuid,
+    value: customer.uuid,
+  }));
+  const [selectedCustomer, setSelectedCustomer] = useState<Option | null>(null);
+
   // Form state variables
   const [orderDate, setOrderDate] = useState('');
   const [requiredDate, setRequiredDate] = useState('');
   const [vendorId, setVendorId] = useState('');
   const [selectedVendor, setSelectedVendor] = useState<Option | null>(null);
-  const [orderNumber, setOrderNumber] = useState();
+  const [orderNumber, setOrderNumber] = useState('');
+  const [shipDate, setShipDate] = useState('');
+  const [status, setStatus] = useState('Pending');
+  const [customerId, setCustomerId] = useState(''); // Placeholder, update as needed
   const [shoppingAddress, setShoppingAddress] = useState('');
   const [note, setNote] = useState('');
   const [paymentTerms, setPaymentTerms] = useState('');
@@ -136,6 +159,15 @@ const Left = () => {
       case 'paymentTerms':
         setPaymentTerms(value);
         break;
+      case 'shipDate':
+        setShipDate(value);
+        break;
+      case 'status':
+        setStatus(value);
+        break;
+      case 'customerId':
+        setCustomerId(value);
+        break;
       default:
         break;
     }
@@ -178,6 +210,7 @@ const Left = () => {
       newErrors.shoppingAddress = 'Shipping address is required';
     if (!selectedPaymentMethod)
       newErrors.paymentMethod = 'Payment method is required';
+    if (!customerId) newErrors.customerId = 'Customer is required';
 
     // Check if there are line items
     const tableData = context?.data?.table || [];
@@ -189,6 +222,8 @@ const Left = () => {
   };
 
   const mutation = useCreatePurchaseOrder();
+  const userId = 'f7b1b3b0-0b1b-4b3b-8b1b-0b1b3b0b1b3t'; // TODO: Replace with real userId from session
+  const branchId = 'f7b1b3b0-0b1b-4b3b-8b1b-0b1b3b0b1b3b'; // TODO: Replace with real branchId from session
   const handleSavePurchaseOrder = () => {
     setFormSubmitted(true);
 
@@ -206,20 +241,32 @@ const Left = () => {
     // Get table data from context with type annotation
     const tableData: TableItem[] = context?.data?.table || [];
 
-    // Format line items according to LineItemsDto structure with proper typing
-    const lineItems: LineItemsDto[] = tableData.map((item: TableItem) => ({
+    // Format line items according to API structure
+    const lineItems = tableData.map((item: TableItem) => ({
       description: item.name,
       quantity: item.qty,
+      discountCap: 0,
+      discountType: 'PercentageWithCap',
+      unitPrice: 0, // TODO: Add price if available
+      taxRate: 0, // TODO: Add tax if available
+      discountRate: 0,
       productId: item.uuid,
     }));
+
+    // Calculate orderTotal
+    const orderTotal = 0; // TODO: Calculate from tableData if needed
 
     const purchaseOrderData = {
       orderNumber: orderNumber,
       orderDate: orderDate,
       requiredDate: requiredDate,
+      shipDate: shipDate || new Date().toISOString(),
+      orderTotal: orderTotal,
       shoppingAddress: shoppingAddress,
       paymentTerms: paymentTerms,
       paymentMethod: selectedPaymentMethod,
+      status: status,
+      customerId: customerId || '45634988-ecb0-463d-ac02-2abd1f65df9b', // Placeholder
       vendorId: vendorId,
       notes: note,
       lineItems: lineItems,
@@ -232,16 +279,22 @@ const Left = () => {
     }));
 
     console.log('Purchase Order Data:', purchaseOrderData);
-    mutation.mutate(purchaseOrderData, {
-      onSuccess: () => {
-        toast.success(`Purchase Order created successfully`);
-      },
-      onError: (error: any) => {
-        toast.error(
-          `Failed to create Purchase Order: ${error.message || 'Unknown error'}`
-        );
-      },
-    });
+    mutation.mutate(
+      { data: purchaseOrderData, userId, branchId },
+      {
+        onSuccess: () => {
+          toast.success(`Purchase Order created successfully`);
+          router.push('/invoice/purchase'); // Redirect to invoice page
+        },
+        onError: (error: any) => {
+          toast.error(
+            `Failed to create Purchase Order: ${
+              error.message || 'Unknown error'
+            }`
+          );
+        },
+      }
+    );
   };
 
   // Helper function to render required field marker
@@ -249,7 +302,7 @@ const Left = () => {
 
   return (
     <>
-      <div className="max-w-5xl min-w-5xl px-2 bg-transparent overflow-y-auto scroll bg-white ">
+      <div className="max-w-5xl min-w-5xl px-2 bg-transparent overflow-y-auto scroll bg-gray-50 ">
         <div className="w-full  gap-4">
           <div className="grid grid-cols-3 gap-4 mb-6">
             <Input
@@ -262,52 +315,33 @@ const Left = () => {
               }
             />
             <div className={`${errors.orderDate ? 'error-field' : ''}`}>
-              <Input
-                type="date"
-                label={
-                  <>
-                    Order Date
-                    <RequiredMark />
-                  </>
-                }
+              <DateInput
+                label={'Order Date'}
                 name="orderDate"
-                value={orderDate}
-                onchange={(e) =>
-                  handleInputChange(
-                    'orderDate',
-                    typeof e === 'string' ? e : e.target.value
-                  )
+                value={orderDate ? new Date(orderDate) : undefined}
+                onChange={(date) =>
+                  handleInputChange('orderDate', date ? date.toISOString() : '')
                 }
                 placeholder="Select order date"
-                errors={
-                  errors.orderDate ? { message: errors.orderDate } : undefined
-                }
+                required
+                errors={errors.orderDate as any}
               />
             </div>
 
             <div className={`${errors.requiredDate ? 'error-field' : ''}`}>
-              <Input
-                type="date"
-                label={
-                  <>
-                    Required Date
-                    <RequiredMark />
-                  </>
-                }
+              <DateInput
+                label={'Required Date'}
                 name="requiredDate"
-                value={requiredDate}
-                onchange={(e) =>
+                value={requiredDate ? new Date(requiredDate) : undefined}
+                onChange={(date) =>
                   handleInputChange(
                     'requiredDate',
-                    typeof e === 'string' ? e : e.target.value
+                    date ? date.toISOString() : ''
                   )
                 }
                 placeholder="Select required date"
-                errors={
-                  errors.requiredDate
-                    ? { message: errors.requiredDate }
-                    : undefined
-                }
+                required
+                errors={errors.requiredDate as any}
               />
             </div>
           </div>
@@ -363,6 +397,27 @@ const Left = () => {
                 }
               />
             </div>
+          </div>
+
+          <div
+            className={`w-1/2 mt-4 ${errors.customerId ? 'error-field' : ''}`}
+          >
+            <SearchSelect
+              label="Customer"
+              options={customerOptions}
+              value={selectedCustomer}
+              onChange={(option: Option | null) => {
+                setSelectedCustomer(option);
+                handleInputChange('customerId', option?.value || '');
+              }}
+              isLoading={customersLoading}
+              placeholder="Select a customer..."
+              isClearable={true}
+              isSearchable={true}
+            />
+            {errors.customerId && (
+              <p className="text-red-500 text-sm mt-1">{errors.customerId}</p>
+            )}
           </div>
         </div>
 

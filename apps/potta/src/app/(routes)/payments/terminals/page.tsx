@@ -93,9 +93,6 @@ const Terminals = () => {
         </div>
         <div className="w-full duration-500 ease-in">
           <div className="duration-500 ease-in">
-            {active == 'card' && <Card />}
-          </div>
-          <div className="duration-500 ease-in">
             {active == 'USSD' && <USSD />}
           </div>
           <div className="duration-500 ease-in">
@@ -103,6 +100,9 @@ const Terminals = () => {
           </div>
           <div className="duration-500 ease-in">
             {active == 'pages' && <Pages />}
+          </div>
+          <div className="duration-500 ease-in">
+            {active == 'card' && <Card />}
           </div>
         </div>
       </div>

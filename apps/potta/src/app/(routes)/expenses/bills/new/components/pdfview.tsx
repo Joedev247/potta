@@ -4,6 +4,7 @@ import { ContextData } from '@potta/components/context';
 import React, { useContext, useEffect, useState } from 'react';
 import { Customer } from '../../../../customers/utils/types';
 import useGetOneCustomer from '../../../../customers/hooks/useGetOneCustomer';
+import useGetOneVendor from '../../../../vendors/hooks/useGetOneVendor';
 
 interface TableItem {
   name: string;
@@ -19,7 +20,7 @@ const PdfView = () => {
   const context = useContext(ContextData);
   const contextData = context?.data || {};
   const tableData: TableItem[] = contextData.table || [];
-  const customerId = contextData.customerName; // Get customer ID from context
+  const vendorId = contextData.vendorId; // Get vendor ID from context
 
   const getCurrencySymbol = (currencyCode: string): string => {
     switch (currencyCode) {
@@ -36,12 +37,12 @@ const PdfView = () => {
     }
   };
   const currencySymbol = getCurrencySymbol(contextData.currency || '');
-  // Use the getOneCustomer hook with the customer ID
-  const { data: customerData, isLoading: customerLoading } = useGetOneCustomer(
-    customerId || ''
+  // Use the getOneVendor hook with the vendor ID
+  const { data: vendorData, isLoading: vendorLoading } = useGetOneVendor(
+    vendorId || ''
   );
-  const customerDetails: Customer | null = customerData || null;
-  console.log(customerDetails);
+  const vendorDetails = vendorData || null;
+
   // Calculate totals
   const subtotal = tableData.reduce((sum: number, item: TableItem) => {
     const price = Number(item.price);
@@ -70,12 +71,12 @@ const PdfView = () => {
       </div>
       <div className=" max-w-[48rem] bg-white space-y-8 min-w-[45rem] w-full">
         <div className=" h-36 w-full flex items-center justify-between px-4 bg-green-800">
-          <p className="text-3xl mt-5 font-semibold text-white">
-            Sales Receipt
-          </p>
+          <p className="text-3xl mt-5 font-semibold text-white">Bill</p>
           <div className="text-right text-white">
-            <p>Date: {contextData.date || 'Not set'}</p>
+            <p>Date: {contextData.saleDate || 'Not set'}</p>
             <p>Currency: {contextData.currency || 'USD'}</p>
+            <p>Bill Number: {contextData.invoiceNumber || 'Not set'}</p>
+            <p>Payment Terms: {contextData.paymentTerms || 'Not set'}</p>
           </div>
         </div>
         <div className="p-5 space-y-16 bg-white">
@@ -92,19 +93,17 @@ const PdfView = () => {
             <div className="flex space-x-2">
               <h3>To : </h3>
               <div className="space-y-2 text-sm text-gray-400 flex-col">
-                {customerLoading ? (
-                  <p>Loading customer details...</p>
-                ) : customerDetails ? (
+                {vendorLoading ? (
+                  <p>Loading vendor details...</p>
+                ) : vendorDetails ? (
                   <>
-                    <p>
-                      {customerDetails.firstName} {customerDetails.lastName}
-                    </p>
-                    <p>{customerDetails.email || 'No email'}</p>
-                    <p>{customerDetails.address.address || 'No address'}</p>
-                    <p>{customerDetails.phone || 'No phone'}</p>
+                    <p>{vendorDetails.name || 'No name'}</p>
+                    <p>{vendorDetails.email || 'No email'}</p>
+                    <p>{vendorDetails.address?.address || 'No address'}</p>
+                    <p>{vendorDetails.phone || 'No phone'}</p>
                   </>
                 ) : (
-                  <p>No customer selected</p>
+                  <p>No vendor selected</p>
                 )}
               </div>
             </div>
@@ -148,13 +147,13 @@ const PdfView = () => {
                     <td className="border-b px-4 py-2">{item.name}</td>
                     <td className="border-b px-4 py-2">{qty}</td>
                     <td className="border-b px-4 py-2">
-                      {price.toFixed(2)}
-                      {currencySymbol}
+                      {price.toLocaleString()} {currencySymbol}
                     </td>
-                    <td className="border-b px-4 py-2">{itemTax.toFixed(2)}</td>
                     <td className="border-b px-4 py-2">
-                      {totalWithTax.toFixed(2)}
-                      {currencySymbol}
+                      {itemTax.toLocaleString()} {currencySymbol}
+                    </td>
+                    <td className="border-b px-4 py-2">
+                      {totalWithTax.toLocaleString()} {currencySymbol}
                     </td>
                   </tr>
                 );
@@ -169,7 +168,9 @@ const PdfView = () => {
               <div className="pl-4">
                 <p>
                   <strong>Payment Method:</strong>{' '}
-                  {contextData.payment_method?.[0] || 'Not selected'}
+                  {contextData.payment_method?.[0] ||
+                    contextData.paymentMethod ||
+                    'Not selected'}
                 </p>
                 {contextData.note && (
                   <div className="mt-4">
@@ -183,16 +184,14 @@ const PdfView = () => {
               <div className="mt-4 flex justify-between ">
                 <div className="w-1/2">Sub Total:</div>
                 <div className="w-1/2 text-right pr-20">
-                  {subtotal.toFixed(2)}
-                  {currencySymbol}
+                  {subtotal.toLocaleString()} {currencySymbol}
                 </div>
               </div>
 
               <div className="mt-2 flex justify-between ">
                 <div className="w-1/2">Tax:</div>
                 <div className="w-1/2 text-right pr-20">
-                  {totalTax.toFixed(2)}
-                  {currencySymbol}
+                  {totalTax.toLocaleString()} {currencySymbol}
                 </div>
               </div>
               {/* Horizontal Line */}
@@ -200,8 +199,7 @@ const PdfView = () => {
               <div className="flex justify-between font-bold">
                 <div className="w-1/2">Total:</div>
                 <div className="w-1/2 text-right pr-20">
-                  {total.toFixed(2)}
-                  {currencySymbol}
+                  {total.toLocaleString()} {currencySymbol}
                 </div>
               </div>
             </div>

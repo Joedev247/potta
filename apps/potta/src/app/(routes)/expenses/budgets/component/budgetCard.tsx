@@ -141,12 +141,6 @@ export function BudgetCard({
   const availableAmount = parseFloat(budget.availableAmount);
   const spentAmount = totalAmount - availableAmount;
 
-  // For display purposes, we'll treat:
-  // - totalAmount as budgetGoal
-  // - spentAmount as spent
-  // - availableAmount as available
-  // - totalAmount as allocated (since that's the total allocation)
-
   const users = approversToUsers(budget);
   const visibleUsers = users.slice(0, maxAvatars);
   const hiddenUsersCount = Math.max(0, users.length - visibleUsers.length);
@@ -154,19 +148,15 @@ export function BudgetCard({
   const statusInfo = getStatusInfo(budget.status);
 
   // --- Calculate percentages for the multi-segment bar ---
-  // Base the percentages on the totalAmount as the total (100%)
   const totalForBar = totalAmount;
 
   let spentPercent = 0;
   let availablePercent = 0;
-  let remainingPercent = 0; // The green part
+  let remainingPercent = 0;
 
   if (totalForBar > 0) {
     spentPercent = (spentAmount / totalForBar) * 100;
     availablePercent = (availableAmount / totalForBar) * 100;
-
-    // Calculate the remainder (green segment)
-    // Ensure it doesn't go below zero if spent + available exceeds allocated
     remainingPercent = Math.max(0, 100 - spentPercent - availablePercent);
   }
   // --- End percentage calculation ---
@@ -231,13 +221,7 @@ export function BudgetCard({
       console.error('Error archiving budget:', error);
 
       // Error toast
-      toast.error(
-        'There was an error archiving the budget. Please try again.',
-        {
-          duration: 4000,
-          position: 'top-right',
-        }
-      );
+      toast.error('There was an error archiving the budget. Please try again.');
     } finally {
       setIsLoading(null);
     }
@@ -245,7 +229,7 @@ export function BudgetCard({
 
   return (
     <Link href={`/expenses/budgets/${budget.uuid}`}>
-      <Card className="bg-white shadow-sm hover:shadow-md transition-shadow duration-200 cursor-pointer">
+      <Card className="bg-white shadow-sm hover:shadow-md transition-shadow duration-200 cursor-pointer relative overflow-hidden">
         <CardHeader className="pb-6">
           <div className="flex justify-between items-start gap-2">
             <div>
@@ -341,61 +325,47 @@ export function BudgetCard({
           </div>
         </CardHeader>
         <CardContent>
-          {/* --- Custom Multi-Segment Progress Bar --- */}
-          <div className="flex h-2 w-full overflow-hidden rounded-full bg-gray-200">
-            {/* Spent Segment (Orange) */}
+          {/* Progress Bar */}
+          <div className="relative h-2 w-full bg-gray-100 rounded-full overflow-hidden">
+            {/* Initial/Allocated (Green) */}
             <div
-              className="h-full bg-orange-400 transition-all duration-300 ease-in-out"
+              className="absolute left-0 top-0 h-full bg-yellow-500"
+              style={{ width: `${totalAmount > 0 ? 100 : 0}%` }}
+            />
+            {/* Spent (Red) */}
+            <div
+              className="absolute left-0 top-0 h-full bg-red-500"
               style={{ width: `${spentPercent}%` }}
-              title={`Spent: XAF ${formatCurrency(
-                spentAmount
-              )} (${spentPercent.toFixed(1)}%)`}
-            ></div>
-            {/* Available Segment (Red) */}
+            />
+            {/* Available (Yellow) */}
             <div
-              className="h-full bg-red-500 transition-all duration-300 ease-in-out"
-              style={{ width: `${availablePercent}%` }}
-              title={`Available: XAF ${formatCurrency(
-                availableAmount
-              )} (${availablePercent.toFixed(1)}%)`}
-            ></div>
-            {/* Remaining/Allocated Segment (Green) */}
-            <div
-              className="h-full bg-green-500 transition-all duration-300 ease-in-out"
-              style={{ width: `${remainingPercent}%` }}
-              title={`Remaining Allocated: (${remainingPercent.toFixed(1)}%)`}
-            ></div>
+              className="absolute h-full bg-green-500"
+              style={{
+                left: `${spentPercent}%`,
+                width: `${availablePercent}%`,
+              }}
+            />
           </div>
-          {/* --- End Custom Progress Bar --- */}
 
-          {/* Legend */}
-          <div className="mt-6 flex justify-between items-center text-sm">
-            <div className="flex flex-col items-start">
-              <div className="flex items-center mb-1">
-                <span className="h-2 w-2 bg-orange-400 rounded-full mr-1.5"></span>
-                <span className="text-gray-600">Spent</span>
-              </div>
-              <span className="font-medium text-gray-800">
-                XAF {formatCurrency(spentAmount)}
-              </span>
+          {/* Budget Details */}
+          <div className="mt-4 grid grid-cols-3 gap-4 text-sm">
+            <div>
+              <p className="text-gray-500">Allocated</p>
+              <p className="font-medium text-yellow-600">
+                {formatCurrency(totalAmount)}
+              </p>
             </div>
-            <div className="flex flex-col items-start">
-              <div className="flex items-center mb-1">
-                <span className="h-2 w-2 bg-green-500 rounded-full mr-1.5"></span>
-                <span className="text-gray-600">Allocated</span>
-              </div>
-              <span className="font-medium text-gray-800">
-                XAF {formatCurrency(totalAmount)}
-              </span>
+            <div>
+              <p className="text-gray-500">Spent</p>
+              <p className="font-medium text-red-600">
+                {formatCurrency(spentAmount)}
+              </p>
             </div>
-            <div className="flex flex-col items-start">
-              <div className="flex items-center mb-1">
-                <span className="h-2 w-2 bg-red-500 rounded-full mr-1.5"></span>
-                <span className="text-gray-600">Available</span>
-              </div>
-              <span className="font-medium text-gray-800">
-                XAF {formatCurrency(availableAmount)}
-              </span>
+            <div>
+              <p className="text-gray-500">Available</p>
+              <p className="font-medium text-green-600">
+                {formatCurrency(availableAmount)}
+              </p>
             </div>
           </div>
 

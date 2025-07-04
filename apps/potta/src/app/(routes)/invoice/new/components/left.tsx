@@ -1,7 +1,7 @@
 'use client'; // For Next.js 13+ App Directory
 import Input from '@potta/components/input';
 import SearchSelect from '@potta/components/search-select';
-import { useContext, useState, useEffect, useRef } from 'react';
+import { useContext, useState, useEffect, useRef, useCallback } from 'react';
 import DynamicTable from './newtableInvoice';
 import Button from '@potta/components/button';
 import { ContextData } from '@potta/components/context';
@@ -13,6 +13,11 @@ import { set } from 'react-hook-form';
 import TextArea from '@potta/components/textArea';
 import useCreateInvoice from '../../_hooks/useCreateInvoice';
 import toast from 'react-hot-toast';
+import { DateInput } from '@potta/components/customDatePicker';
+import { useEffect as useIsomorphicLayoutEffect } from 'react';
+import { useCreatePurchaseOrder } from '../hooks/useCreatePurchaseOrder';
+import { CreatePurchaseOrderPayload } from '../api/purchaseOrder';
+import { useRouter } from 'next/navigation';
 
 // Define Option interface to match the one in SearchSelect component
 interface Option {
@@ -52,8 +57,13 @@ interface ValidationErrors {
   paymentMethod?: string;
 }
 
-const Left = () => {
+interface LeftProps {
+  initialInvoiceType?: string | null;
+}
+
+const Left = ({ initialInvoiceType }: LeftProps) => {
   const context = useContext(ContextData);
+  const router = useRouter();
   const [selectedPaymentMethod, setSelectedPaymentMethod] =
     useState<string>('');
   const { data, isLoading: customersLoading } = useGetAllCustomers({
@@ -68,7 +78,12 @@ const Left = () => {
   const [selectedCustomer, setSelectedCustomer] = useState<Option | null>(null);
   const [invoiceNumber, setInvoiceNumber] = useState('0025');
   const [currency, setCurrency] = useState('USD');
-  const [invoiceType, setInvioceType] = useState('Invoice');
+  const [invoiceType, setInvioceType] = useState(
+    initialInvoiceType ? mapTypeToLabel(initialInvoiceType) : 'Invoice'
+  );
+  const [invoiceTypeDisabled, setInvoiceTypeDisabled] = useState(
+    !!initialInvoiceType
+  );
   const [billingAddress, setBillingAddress] = useState('');
   const [shippingAddress, setShippingAddress] = useState('');
   const [note, setNote] = useState('');
@@ -120,6 +135,48 @@ const Left = () => {
       }));
     }
   }, [customers, customerName, context, selectedCustomer]);
+
+  // Map URL type param to select label
+  function mapTypeToLabel(type: string) {
+    switch (type.toLowerCase()) {
+      case 'invoice':
+        return 'Invoice';
+      case 'proforma':
+      case 'proformainvoice':
+        return 'Performa Invoice';
+      case 'prepayment':
+      case 'prepaymentinvoice':
+        return 'Prepayment Invoice';
+      default:
+        return 'Invoice';
+    }
+  }
+
+  // If the initialInvoiceType changes (shouldn't, but for safety), update state
+  useEffect(() => {
+    if (initialInvoiceType) {
+      setInvioceType(mapTypeToLabel(initialInvoiceType));
+      setInvoiceTypeDisabled(true);
+    }
+  }, [initialInvoiceType]);
+
+  // Sync local state with context.data when it changes (for dummy data fill)
+  useEffect(() => {
+    if (context?.data) {
+      setIssueDate(context.data.issueDate || '');
+      setDueDate(context.data.dueDate || '');
+      setBillingAddress(context.data.billing || '');
+      setShippingAddress(context.data.shipping || '');
+      setNote(context.data.note || '');
+      setPaymentTerms(context.data.paymentTerms || '');
+      setPaymentReference(context.data.paymentReference || '');
+      setTaxRate(context.data.taxRate || 0);
+      setInvoiceNumber(context.data.invoiceNumber || '');
+      setCurrency(context.data.currency || 'USD');
+      setInvioceType(context.data.invoiceType || 'Invoice');
+      // Add more fields as needed
+    }
+  }, [context?.data]);
 
   const handleInputChange = (key: string, value: any) => {
     console.log(`Changing ${key} to:`, value);
@@ -272,7 +329,7 @@ const Left = () => {
       invoiceNumber: invoiceNumber,
       // discountAmount: 0, // Add default or actual value if available
       customerId: customerName, // Using the customer UUID as customerId
-      salePersonId: 'c9c0c3a4-353f-4907-a342-ae64e629936f', // Add actual salesperson if available
+      // salePersonId: 'c9c0c3a4-353f-4907-a342-ae64e629936f', // property salePersonId should not exist
       lineItems: lineItems,
     };
 
@@ -286,6 +343,7 @@ const Left = () => {
     mutation.mutate(InvoiceData, {
       onSuccess: () => {
         toast.success(`${InvoiceData.invoiceType} created successfully`);
+        router.push('/invoice');
         // You can add navigation or other actions here after successful creation
         // For example: router.push('/pos/sales');
       },
@@ -301,11 +359,6 @@ const Left = () => {
 
   // Helper function to render required field marker
   const RequiredMark = () => <span className="text-red-500 ml-1">*</span>;
-
-  // Debug logs
-  console.log('Customer options:', customerOptions);
-  console.log('Selected customer value:', customerName);
-  console.log('Selected customer option:', selectedCustomer);
 
   return (
     <div className="max-w-5xl min-w-5xl px-2 bg-transparent overflow-y-auto scroll bg-white ">
@@ -323,61 +376,36 @@ const Left = () => {
             bg={''}
           />
         </div>
-        <div>
-          <Select
-            label="Invoice Type"
-            options={[
-              { label: 'Invoice', value: 'Invoice' },
-              { label: 'Performa Invoice', value: 'PerformaInvoice' },
-              { label: 'Prepayment Invoice', value: 'PrepaymentInvoice' },
-            ]}
-            selectedValue={invoiceType}
-            onChange={(value: any) => handleInputChange('invoiceType', value)}
-            bg={''}
-          />
-        </div>
         <div className={`${errors.issueDate ? 'error-field' : ''}`}>
-          <Input
-            type="date"
-            label={
-              <>
-                Issued Date
-                <RequiredMark />
-              </>
-            }
+          <DateInput
+            label="Issued Date"
             name="issueDate"
-            value={issueDate}
-            onchange={(e) =>
+            value={issueDate ? new Date(issueDate) : undefined}
+            onChange={(date) =>
               handleInputChange(
                 'issueDate',
-                typeof e === 'string' ? e : e.target.value
+                date ? date.toISOString().slice(0, 10) : ''
               )
             }
             placeholder="Select issue date"
-            errors={
-              errors.issueDate ? { message: errors.issueDate } : undefined
-            }
+            required
+            errors={errors.issueDate as any}
           />
         </div>
         <div className={`${errors.dueDate ? 'error-field' : ''}`}>
-          <Input
-            type="date"
-            label={
-              <>
-                Due Date
-                <RequiredMark />
-              </>
-            }
+          <DateInput
+            label="Due Date"
             name="dueDate"
-            value={dueDate}
-            onchange={(e) =>
+            value={dueDate ? new Date(dueDate) : undefined}
+            onChange={(date) =>
               handleInputChange(
                 'dueDate',
-                typeof e === 'string' ? e : e.target.value
+                date ? date.toISOString().slice(0, 10) : ''
               )
             }
             placeholder="Select due date"
-            errors={errors.dueDate ? { message: errors.dueDate } : undefined}
+            required
+            errors={errors.dueDate as any}
           />
         </div>
       </div>
@@ -492,24 +520,23 @@ const Left = () => {
               {errors.paymentMethod}
             </p>
           )}
-
-          <Input
-            type="text"
-            label="Payment Reference"
-            name="paymentReference"
-            value={paymentReference}
-            onchange={(e: any) =>
-              handleInputChange('paymentReference', e.target.value)
-            }
-          />
-          <Input
-            type="number"
-            label="Tax Rate"
-            name="taxRate"
-            value={taxRate}
-            onchange={(e: any) => handleInputChange('taxRate', e.target.value)}
-          />
         </div>
+        <Input
+          type="text"
+          label="Payment Reference"
+          name="paymentReference"
+          value={paymentReference}
+          onchange={(e: any) =>
+            handleInputChange('paymentReference', e.target.value)
+          }
+        />
+        <Input
+          type="number"
+          label="Tax Rate"
+          name="taxRate"
+          value={taxRate}
+          onchange={(e: any) => handleInputChange('taxRate', e.target.value)}
+        />
         <TextArea
           label="Payment Terms"
           name="paymentTerms"
@@ -525,8 +552,7 @@ const Left = () => {
       <textarea
         value={note}
         onChange={(e) => handleInputChange('note', e.target.value)}
-        className="h-36 border p-2 w-full outline-none mt-2 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500
-   "
+        className="h-36 border p-2 w-full outline-none mt-2 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500"
       ></textarea>
 
       <div className="mt-5 w-full flex justify-end">
