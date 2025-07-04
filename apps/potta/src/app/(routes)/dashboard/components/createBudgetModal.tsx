@@ -1,6 +1,7 @@
 'use client';
 import React, { useState, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
+import * as yup from 'yup';
 import Input from '../../../../components/input';
 import Select from '../../../../components/select';
 import CurrencyInput from '../../../../components/currencyInput';
@@ -14,6 +15,10 @@ import { CalendarDate } from '@internationalized/date';
 import { useCreateBudget } from '../../expenses/budgets/hooks/useCreateBudget';
 import { useAccountingAccounts } from '../../expenses/budgets/hooks/useAccountingAccounts';
 import axios from '@/config/axios.config';
+import toast from 'react-hot-toast';
+
+type ApprovalRequirement = 'one' | 'at_least' | 'all';
+type RecurrenceType = 'DAILY' | 'WEEKLY' | 'MONTHLY' | 'QUARTERLY' | 'ANNUALLY';
 
 interface Role {
   id: string;
@@ -36,16 +41,42 @@ interface CreateBudgetModalProps {
   onSave: (budgetData: {
     name: string;
     description?: string;
-    goal: string;
-    recurrence: string;
-    approvalRequirement: string;
-    atLeastCount?: number;
-    startDate?: string;
-    endDate?: string;
-    approvers: string[];
-    budgetedAccountId?: string;
+    totalAmount: number;
+    startDate: string;
+    endDate: string;
+    organizationId: string;
+    branchId: string;
+    policies: string[];
+    recurrenceType?: string;
+    recurrenceInterval?: number;
+    recurrenceEndDate?: string;
   }) => void;
 }
+
+const validationSchema = yup.object().shape({
+  name: yup.string().required('Budget name is required'),
+  description: yup.string(),
+  goal: yup.string().required('Budget goal is required'),
+  startDate: yup.date().required('Start date is required'),
+  endDate: yup
+    .date()
+    .required('End date is required')
+    .min(yup.ref('startDate'), 'End date must be after start date'),
+  policies: yup
+    .array()
+    .of(
+      yup
+        .string()
+        .matches(
+          /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i,
+          'Invalid policy UUID format'
+        )
+    )
+    .min(1, 'At least one policy is required')
+    .required('Policy selection is required'),
+});
+
+type FormData = yup.InferType<typeof validationSchema>;
 
 const CreateBudgetModal: React.FC<CreateBudgetModalProps> = ({
   open,
@@ -55,31 +86,28 @@ const CreateBudgetModal: React.FC<CreateBudgetModalProps> = ({
   const [budgetName, setBudgetName] = useState('');
   const [budgetDescription, setBudgetDescription] = useState('');
   const [budgetGoal, setBudgetGoal] = useState('');
-  const [budgetRecurrence, setBudgetRecurrence] = useState('MONTHLY');
-  const [approvalRequirement, setApprovalRequirement] = useState('ONE');
-  const [atLeastCount, setAtLeastCount] = useState<number>(2);
+  const [budgetRecurrence, setBudgetRecurrence] =
+    useState<RecurrenceType>('MONTHLY');
+  const [isRecurring, setIsRecurring] = useState(false);
   const [isAnimating, setIsAnimating] = useState(false);
-  const [isVisible, setIsVisible] = useState(false); // Control actual visibility
-  const [selectedRoleId, setSelectedRoleId] = useState<string>('');
-  const [selectedApprovers, setSelectedApprovers] = useState<string>('');
-  const [selectedApproversList, setSelectedApproversList] = useState<string[]>(
-    []
-  );
+  const [isVisible, setIsVisible] = useState(false);
   const [startDate, setStartDate] = useState<Date>(new Date());
   const [endDate, setEndDate] = useState<Date>(
     new Date(new Date().setFullYear(new Date().getFullYear() + 1))
   );
-  const [budgetedAccountId, setBudgetedAccountId] = useState<string>('');
+  const [selectedPolicyIds, setSelectedPolicyIds] = useState<string[]>([]);
+
+  // Hardcoded IDs
+  const organizationId = 'f7b1b3b0-0b1b-4b3b-8b1b-0b1b3b0b1b3c';
+  const branchId = 'f7b1b3b0-0b1b-4b3b-8b1b-0b1b3b0b1b3b';
 
   // Form errors
   const [errors, setErrors] = useState<{
     name?: string;
     goal?: string;
-    atLeastCount?: string;
-    approvers?: string;
     startDate?: string;
     endDate?: string;
-    budgetedAccountId?: string;
+    policies?: string;
   }>({});
 
   // Use our custom hooks
@@ -88,57 +116,25 @@ const CreateBudgetModal: React.FC<CreateBudgetModalProps> = ({
     loading: createBudgetLoading,
     error: createBudgetError,
   } = useCreateBudget();
-  const {
-    accounts,
-    loading: accountsLoading,
-    error: accountsError,
-    updateFilter: updateAccountFilter,
-  } = useAccountingAccounts({
-    type: 'Expense', // Default to expense accounts for budgeting
-    limit: 100,
-  });
 
-  // Fetch roles
+  // Fetch policies
   const {
-    data: rolesData,
-    isLoading: rolesLoading,
-    error: rolesError,
+    data: policiesData,
+    isLoading: policiesLoading,
+    error: policiesError,
   } = useQuery({
-    queryKey: ['roles'],
+    queryKey: ['policies'],
     queryFn: async () => {
-      const response = await axios.post('/roles/filter', {
-        page: 1,
-        limit: 100,
-        sortBy: ['name:ASC'],
+      const response = await axios.get('/policies/all', {
+        params: {
+          page: 1,
+          limit: 100,
+          sortBy: ['name:ASC'],
+          branchId,
+        },
       });
       return response.data.data || [];
     },
-  });
-
-  // Fetch employees based on selected role
-  const {
-    data: employeesData,
-    isLoading: employeesLoading,
-    error: employeesError,
-  } = useQuery({
-    queryKey: ['employees', selectedRoleId],
-    queryFn: async () => {
-      const params: any = {
-        limit: 100,
-        sortBy: ['firstName:ASC'],
-      };
-
-      // Add role filter if a role is selected
-      if (selectedRoleId) {
-        params.filters = {
-          roleId: selectedRoleId,
-        };
-      }
-
-      const response = await axios.post('/employees/filter', params);
-      return response.data.data || [];
-    },
-    enabled: isVisible, // Only fetch when modal is visible
   });
 
   // Handle animation when modal opens or closes
@@ -169,133 +165,86 @@ const CreateBudgetModal: React.FC<CreateBudgetModalProps> = ({
     };
   }, [open]);
 
-  // Update selectedApproversList when an approver is selected
-  useEffect(() => {
-    if (selectedApprovers) {
-      // If it's not already in the list, add it
-      if (!selectedApproversList.includes(selectedApprovers)) {
-        setSelectedApproversList([...selectedApproversList, selectedApprovers]);
-        // Clear the selection after adding to list
-        setSelectedApprovers('');
-      }
-    }
-  }, [selectedApprovers]);
-
-  // Validate approvers count when approval requirement changes
-  useEffect(() => {
-    if (
-      approvalRequirement === 'AT_LEAST' &&
-      selectedApproversList.length < atLeastCount
-    ) {
-      setErrors((prev) => ({
-        ...prev,
-        approvers: `At least ${atLeastCount} approvers required`,
-      }));
-    } else {
-      // Clear approvers error if requirement is met
-      if (errors.approvers) {
-        setErrors((prev) => ({
-          ...prev,
-          approvers: undefined,
-        }));
-      }
-    }
-  }, [approvalRequirement, atLeastCount, selectedApproversList.length]);
-
   const handleClose = () => {
     // Just set open to false, the useEffect will handle the animation
     setOpen(false);
   };
 
-  const validateForm = () => {
-    const newErrors: {
-      name?: string;
-      goal?: string;
-      atLeastCount?: string;
-      approvers?: string;
-      startDate?: string;
-      endDate?: string;
-      budgetedAccountId?: string;
-    } = {};
+  const validateForm = async () => {
+    try {
+      const formData: FormData = {
+        name: budgetName,
+        description: budgetDescription,
+        goal: budgetGoal,
+        startDate,
+        endDate,
+        policies: selectedPolicyIds,
+      };
 
-    // Validate budget name
-    if (!budgetName.trim()) {
-      newErrors.name = 'Budget name is required';
-    }
-
-    // Validate budget goal
-    if (!budgetGoal) {
-      newErrors.goal = 'Budget goal is required';
-    }
-
-    // Validate approvers based on approval requirement
-    if (selectedApproversList.length === 0) {
-      newErrors.approvers = 'At least one approver is required';
-    } else if (
-      approvalRequirement === 'AT_LEAST' &&
-      selectedApproversList.length < atLeastCount
-    ) {
-      newErrors.approvers = `At least ${atLeastCount} approvers required`;
-    }
-
-    // Validate at least count if applicable
-    if (approvalRequirement === 'AT_LEAST') {
-      if (!atLeastCount || atLeastCount < 1) {
-        newErrors.atLeastCount = 'Please enter a valid number of approvers';
+      await validationSchema.validate(formData, { abortEarly: false });
+      setErrors({});
+      return true;
+    } catch (err) {
+      if (err instanceof yup.ValidationError) {
+        const validationErrors: { [key: string]: string } = {};
+        err.inner.forEach((error) => {
+          if (error.path) {
+            validationErrors[error.path] = error.message;
+          }
+        });
+        setErrors(validationErrors);
       }
+      return false;
     }
-
-    // Validate that end date is after start date
-    if (endDate <= startDate) {
-      newErrors.endDate = 'End date must be after start date';
-    }
-
-    // Validate budgeted account ID
-    if (!budgetedAccountId) {
-      newErrors.budgetedAccountId = 'Budgeted account is required';
-    }
-
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
   };
 
   const handleSave = async () => {
-    // Validate form
-    if (!validateForm()) {
+    const isValid = await validateForm();
+    if (!isValid) {
       return;
     }
 
-    // Format the budget goal as a number
     const numericGoal = parseFloat(budgetGoal.replace(/[^0-9.]/g, ''));
 
     try {
-      // Use the createBudget hook to create the budget
-      await createBudget({
+      const basePayload = {
         name: budgetName,
         description: budgetDescription,
         totalAmount: numericGoal,
         startDate: startDate.toISOString(),
         endDate: endDate.toISOString(),
-        approvalRequirement: approvalRequirement.toLowerCase() as any,
-        requiredApprovals:
-          approvalRequirement === 'AT_LEAST' ? atLeastCount : undefined,
-        budgetedAccountId: budgetedAccountId,
-        recurrenceType: budgetRecurrence,
-        approvers: selectedApproversList,
-      });
+        organizationId,
+        branchId,
+        policies: selectedPolicyIds,
+      };
 
-      // Call the onSave callback for backward compatibility
+      const payload = isRecurring
+        ? {
+            ...basePayload,
+            recurrenceType: budgetRecurrence,
+            recurrenceInterval: 1,
+            recurrenceEndDate: endDate.toISOString(),
+          }
+        : basePayload;
+
+      await createBudget(payload);
+
+      toast.success('Budget created successfully!');
+
       onSave({
         name: budgetName,
         description: budgetDescription,
-        goal: numericGoal.toString(),
-        recurrence: budgetRecurrence,
-        approvalRequirement,
-        ...(approvalRequirement === 'AT_LEAST' && { atLeastCount }),
+        totalAmount: numericGoal,
         startDate: startDate.toISOString(),
         endDate: endDate.toISOString(),
-        approvers: selectedApproversList,
-        budgetedAccountId,
+        organizationId,
+        branchId,
+        policies: selectedPolicyIds,
+        ...(isRecurring && {
+          recurrenceType: budgetRecurrence,
+          recurrenceInterval: 1,
+          recurrenceEndDate: endDate.toISOString(),
+        }),
       });
 
       // Reset form
@@ -303,90 +252,25 @@ const CreateBudgetModal: React.FC<CreateBudgetModalProps> = ({
       setBudgetDescription('');
       setBudgetGoal('');
       setBudgetRecurrence('MONTHLY');
-      setApprovalRequirement('ONE');
-      setAtLeastCount(2);
-      setSelectedRoleId('');
-      setSelectedApprovers('');
-      setSelectedApproversList([]);
-      setBudgetedAccountId('');
+      setIsRecurring(false);
+      setSelectedPolicyIds([]);
       setErrors({});
 
-      // Close modal with animation
       handleClose();
     } catch (err) {
       console.error('Error creating budget:', err);
-      // Handle error - you could set a form-level error here if needed
+      toast.error('Failed to create budget. Please try again.');
     }
   };
 
-  // Function to remove an approver from the list
-  const removeApprover = (approverId: string) => {
-    setSelectedApproversList(
-      selectedApproversList.filter((id) => id !== approverId)
-    );
-  };
-
-  // Prepare role options for the select component
-  const roleOptions = React.useMemo(() => {
-    if (!rolesData) return [];
-
-    return [
-      { value: '', label: 'All Roles' },
-      ...rolesData.map((role: Role) => ({
-        value: role.id,
-        label: role.name,
-      })),
-    ];
-  }, [rolesData]);
-
-  // Prepare employee options for the searchable select component
-  const employeeOptions = React.useMemo(() => {
-    if (!employeesData) return [];
-
-    return employeesData.map((employee: Employee) => ({
-      value: employee.id,
-      label: `${employee.firstName} ${employee.lastName}${
-        employee.role ? ` (${employee.role.name})` : ''
-      }`,
+  // Prepare policy options
+  const policyOptions = React.useMemo(() => {
+    if (!policiesData) return [];
+    return policiesData.map((policy: any) => ({
+      value: policy.uuid,
+      label: policy.name,
     }));
-  }, [employeesData]);
-
-  // Prepare account options for the searchable select component
-  const accountOptions = React.useMemo(() => {
-    if (!accounts) return [];
-
-    return accounts.map((account) => ({
-      value: account.uuid,
-      label: `${account.name} (${account.code})`,
-    }));
-  }, [accounts]);
-
-  // Function to search accounts
-  const handleAccountSearch = (searchTerm: string) => {
-    if (searchTerm.length > 2) {
-      updateAccountFilter({ search: searchTerm });
-    }
-  };
-
-  // Get employee names for the selected approvers
-  const getEmployeeName = (id: string) => {
-    const employee = employeesData?.find((emp: Employee) => emp.id === id);
-    return employee ? `${employee.firstName} ${employee.lastName}` : id;
-  };
-
-  // Get approval requirement help text
-  const getApprovalHelpText = () => {
-    switch (approvalRequirement) {
-      case 'ONE':
-        return 'Any one of the selected approvers can approve this budget';
-      case 'AT_LEAST':
-        return `At least ${atLeastCount} of the selected approvers must approve this budget`;
-      case 'ALL':
-        return 'All selected approvers must approve this budget';
-      default:
-        return '';
-    }
-  };
+  }, [policiesData]);
 
   const recurrenceOptions = [
     { value: 'DAILY', label: 'Daily' },
@@ -394,12 +278,6 @@ const CreateBudgetModal: React.FC<CreateBudgetModalProps> = ({
     { value: 'MONTHLY', label: 'Monthly' },
     { value: 'QUARTERLY', label: 'Quarterly' },
     { value: 'ANNUALLY', label: 'Yearly' },
-  ];
-
-  const approvalOptions = [
-    { value: 'ONE', label: 'One Approver' },
-    { value: 'AT_LEAST', label: 'At Least' },
-    { value: 'ALL', label: 'All Approvers' },
   ];
 
   if (!isVisible) return null;
@@ -564,176 +442,55 @@ const CreateBudgetModal: React.FC<CreateBudgetModalProps> = ({
             </div>
 
             <div className="w-full">
-              <label className="mb-3 text-gray-900 font-medium block">
-                Recurrence
-                <span className="text-red-500">*</span>
-              </label>
-              <Select
-                options={recurrenceOptions}
-                selectedValue={budgetRecurrence}
-                onChange={(value: string) => setBudgetRecurrence(value)}
-                bg="bg-white border border-gray-200"
-                name="Select recurrence"
-              />
-            </div>
-
-            <div className="w-full">
-              <label className="mb-3 text-gray-900 font-medium block">
-                Approval Requirement
-                <span className="text-red-500">*</span>
-              </label>
-              <Select
-                options={approvalOptions}
-                selectedValue={approvalRequirement}
-                onChange={(value: string) => {
-                  setApprovalRequirement(value);
-                  // Clear at least count error if we're not using at least anymore
-                  if (value !== 'AT_LEAST' && errors.atLeastCount) {
-                    setErrors({ ...errors, atLeastCount: undefined });
-                  }
-                }}
-                bg="bg-white border border-gray-200"
-                name="Select approval requirement"
-              />
-              <p className="mt-1 text-sm text-gray-500 flex items-center">
-                <Info className="w-4 h-4 mr-1" />
-                {getApprovalHelpText()}
-              </p>
-            </div>
-
-            {approvalRequirement === 'AT_LEAST' && (
-              <div className="w-full">
-                <label className="mb-3 text-gray-900 font-medium block">
-                  Minimum Approvers
-                  <span className="text-red-500">*</span>
-                </label>
-                <Input
-                  type="number"
-                  name="atLeastCount"
-                  placeholder="Enter minimum number of approvers"
-                  value={atLeastCount.toString()}
-                  onchange={(e) => {
-                    const newValue = parseInt(e.target.value) || 0;
-                    setAtLeastCount(newValue);
-
-                    // Update approvers error based on new value
-                    if (newValue > selectedApproversList.length) {
-                      setErrors({
-                        ...errors,
-                        atLeastCount: undefined,
-                        approvers: `At least ${newValue} approvers required`,
-                      });
-                    } else {
-                      setErrors({
-                        ...errors,
-                        atLeastCount: undefined,
-                        approvers: undefined,
-                      });
-                    }
-                  }}
-                  min={1}
-                  required
-                  errors={
-                    errors.atLeastCount
-                      ? { message: errors.atLeastCount }
-                      : undefined
-                  }
+              <div className="flex items-center mb-3">
+                <input
+                  type="checkbox"
+                  id="recurring"
+                  checked={isRecurring}
+                  onChange={(e) => setIsRecurring(e.target.checked)}
+                  className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
                 />
-              </div>
-            )}
-
-            <div className="w-full">
-              <label className="mb-3 text-gray-900 font-medium block">
-                Filter by Role
-              </label>
-              <SearchableSelect
-                options={roleOptions}
-                selectedValue={selectedRoleId}
-                onChange={(value: string) => setSelectedRoleId(value)}
-                // bg="bg-white border border-gray-200"
-                name="Select role"
-                isLoading={rolesLoading}
-              />
-            </div>
-
-            <div className="w-full">
-              <label className="mb-3 text-gray-900 font-medium block">
-                Add Approvers
-                <span className="text-red-500">*</span>
-                {approvalRequirement === 'AT_LEAST' && (
-                  <span className="text-sm font-normal ml-2 text-gray-500">
-                    (Minimum {atLeastCount} required)
-                  </span>
-                )}
-              </label>
-              <SearchableSelect
-                options={employeeOptions}
-                selectedValue={selectedApprovers}
-                onChange={(value: string) => {
-                  setSelectedApprovers(value);
-                }}
-                placeholder="Select an approver"
-                isLoading={employeesLoading}
-                className="w-full"
-                error={errors.approvers}
-              />
-
-              {/* Display selected approvers */}
-              <div className="mt-4">
-                <label className="mb-2 text-gray-900 font-medium block">
-                  Selected Approvers:
-                  <span className="text-sm font-normal ml-2 text-gray-500">
-                    {selectedApproversList.length} selected
-                  </span>
+                <label
+                  htmlFor="recurring"
+                  className="ml-2 text-gray-900 font-medium"
+                >
+                  Recurring Budget
                 </label>
-                {selectedApproversList.length > 0 ? (
-                  <div className="flex flex-wrap gap-2">
-                    {selectedApproversList.map((approverId) => (
-                      <div
-                        key={approverId}
-                        className="bg-gray-100 rounded-full px-3 py-1 flex items-center gap-2"
-                      >
-                        <span>{getEmployeeName(approverId)}</span>
-                        <button
-                          type="button"
-                          onClick={() => removeApprover(approverId)}
-                          className="text-gray-500 hover:text-red-500"
-                        >
-                          ×
-                        </button>
-                      </div>
-                    ))}
-                  </div>
-                ) : (
-                  <p className="text-sm text-gray-500">No approvers selected</p>
-                )}
               </div>
+              {isRecurring && (
+                <Select
+                  options={recurrenceOptions}
+                  selectedValue={budgetRecurrence}
+                  onChange={(value: string) =>
+                    setBudgetRecurrence(value as RecurrenceType)
+                  }
+                  bg="bg-white border border-gray-200"
+                  name="Select recurrence"
+                />
+              )}
             </div>
 
             <div className="w-full">
               <label className="mb-3 text-gray-900 font-medium block">
-                Budgeted Account
+                Policies
                 <span className="text-red-500">*</span>
               </label>
-              <SearchableSelect
-                options={accountOptions}
-                selectedValue={budgetedAccountId}
+              <Select
+                options={policyOptions}
+                selectedValue={selectedPolicyIds[0] || ''}
                 onChange={(value: string) => {
-                  setBudgetedAccountId(value);
-                  if (errors.budgetedAccountId) {
-                    setErrors({ ...errors, budgetedAccountId: undefined });
+                  if (value) {
+                    setSelectedPolicyIds([value]);
+                    if (errors.policies) {
+                      setErrors({ ...errors, policies: undefined });
+                    }
                   }
                 }}
-                onSearch={handleAccountSearch}
-                placeholder="Search for an account"
-                isLoading={accountsLoading}
-                className="w-full"
-                error={errors.budgetedAccountId}
+                bg="bg-white border border-gray-200"
+                name="Select policy"
               />
-              {accountsError && (
-                <p className="mt-1 text-sm text-red-500">
-                  Error loading accounts. Please try again.
-                </p>
+              {errors.policies && (
+                <p className="mt-1 text-sm text-red-500">{errors.policies}</p>
               )}
             </div>
           </div>

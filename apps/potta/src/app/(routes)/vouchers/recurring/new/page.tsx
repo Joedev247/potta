@@ -41,28 +41,31 @@ const NewInvoice = () => {
       {/* Preview toggle button with fade transition */}
       <div
         className={`absolute top-4 right-4 z-10 transition-opacity duration-300 ease-in-out ${
-          shouldShowPreviewButton ? 'opacity-100' : 'opacity-0 pointer-events-none'
+          shouldShowPreviewButton
+            ? 'opacity-100'
+            : 'opacity-0 pointer-events-none'
         }`}
       >
         <button
           onClick={togglePreview}
-          className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded flex items-center shadow-md"
+          className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 flex items-center "
         >
-          <i className={`${showPreview ? 'ri-eye-off-line' : 'ri-eye-line'} mr-2`}></i>
+          <i
+            className={`${
+              showPreview ? 'ri-eye-off-line' : 'ri-eye-line'
+            } mr-2`}
+          ></i>
           {showPreview ? 'Hide Preview' : 'Show Preview'}
         </button>
       </div>
 
       {/* Use a wrapper div with transition for the entire panel group */}
       <div className="transition-all duration-300 ease-in-out">
-        <ResizablePanelGroup
-          direction="horizontal"
-          onLayout={handleLayout}
-        >
+        <ResizablePanelGroup direction="horizontal" onLayout={handleLayout}>
           <ResizablePanel
             minSize={50}
             defaultSize={showPreview ? 50 : 100}
-            style={{transition: 'flex-basis 300ms ease-in-out'}}
+            style={{ transition: 'flex-basis 300ms ease-in-out' }}
           >
             <div className="py-8 px-14 h-[92.7vh] overflow-y-auto flex justify-center">
               <Left />
@@ -80,7 +83,8 @@ const NewInvoice = () => {
             minSize={0}
             defaultSize={showPreview ? 50 : 0}
             style={{
-              transition: 'flex-basis 300ms ease-in-out, opacity 300ms ease-in-out',
+              transition:
+                'flex-basis 300ms ease-in-out, opacity 300ms ease-in-out',
               flexBasis: showPreview ? '50%' : '0%',
               opacity: showPreview ? 1 : 0,
             }}

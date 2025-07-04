@@ -18,6 +18,7 @@ interface SelectProps {
   outline?: boolean;
   labelClass?: string;
   isDisabled?: boolean;
+  SelectClass?: string;
 }
 
 const Select: React.FC<SelectProps> = ({
@@ -30,6 +31,7 @@ const Select: React.FC<SelectProps> = ({
   label,
   required,
   outline,
+  SelectClass,
   labelClass,
   isDisabled = false,
 }) => {
@@ -51,15 +53,15 @@ const Select: React.FC<SelectProps> = ({
   return (
     <>
       {label && (
-        <div className={`text-gray-900 text-lg font-medium ${labelClass}`}>
+        <div className={`text-gray-900 text-lg font-medium mb-[4px] ${labelClass}`}>
           {label}
           {required && <span className=" text-red-500">*</span>}
         </div>
       )}
       <div
-        className={`relative inline-block ${
+        className={`relative  inline-block ${
           border ? '' : 'border'
-        } w-full md:w-full`}
+        } w-full md:w-full ${SelectClass}`}
       >
         <div
           onClick={toggleDropdown}

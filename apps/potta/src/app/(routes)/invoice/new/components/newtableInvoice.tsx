@@ -58,15 +58,36 @@ export default function DynamicTable() {
     page: 1,
     limit: 100,
   });
+  console.log('[DEBUG] productsData from API:', productsData);
 
   // Replace this line:
-  const products: Product[] = (productsData?.data || []).map((product) => ({
-    uuid: product.uuid,
-    name: product.name,
-    price: product.salesPrice,
-    tax: product.taxRate,
-    productId: product.productId,
-  }));
+  const products: Product[] = (productsData?.data || []).map((product) => {
+    const taxObj = (product as any).tax;
+    let taxValue = 0;
+    if (taxObj && typeof taxObj.rate !== 'undefined') {
+      taxValue = Number(taxObj.rate);
+    }
+    console.log('[DEBUG] Full product:', product);
+    console.log('[DEBUG] Raw tax object:', taxObj);
+    console.log(
+      '[DEBUG] Extracted tax rate:',
+      taxObj ? taxObj.rate : undefined
+    );
+    console.log('[DEBUG] Final mapped product:', {
+      uuid: product.uuid,
+      name: product.name,
+      price: Number(product.salesPrice),
+      tax: taxValue,
+      productId: product.productId,
+    });
+    return {
+      uuid: product.uuid,
+      name: product.name,
+      price: Number(product.salesPrice),
+      tax: taxValue,
+      productId: product.productId,
+    };
+  });
 
   // Create product options as regular Options instead of ProductOptions
   const productOptions: Option[] = products.map((product) => ({
@@ -220,7 +241,7 @@ export default function DynamicTable() {
                 scope="col"
                 className="px-6 py-3 text-left text-sm font-semibold text-gray-500 uppercase tracking-wider w-5/12"
               >
-                Product
+                Products
               </th>
               <th
                 scope="col"
@@ -351,7 +372,7 @@ export default function DynamicTable() {
                     !selectedProduct
                       ? 'bg-gray-400 cursor-not-allowed'
                       : 'bg-green-600 hover:bg-green-700'
-                  } text-white px-3 py-2.5 text-sm font-medium transition-colors rounded-md duration-200 inline-flex items-center justify-center w-full`}
+                  } text-white px-3 py-2.5 text-sm font-medium transition-colors duration-200 inline-flex items-center justify-center w-full`}
                   disabled={!selectedProduct}
                 >
                   <i className="ri-add-line mr-1"></i>

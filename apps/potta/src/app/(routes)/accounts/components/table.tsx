@@ -8,6 +8,7 @@ import {
   Trash2,
   BarChart3,
   Plus,
+  FileDown,
 } from 'lucide-react';
 import Button from '@potta/components/button';
 import Search from '@potta/components/search';
@@ -441,6 +442,7 @@ const TableAccount = () => {
                 text="Expand All"
                 icon={<ChevronDown className="h-4 w-4" />}
                 theme="lightBlue"
+                className="!text-black whitespace-nowrap"
                 onClick={expandAllRows}
               />
               <Button
@@ -448,28 +450,22 @@ const TableAccount = () => {
                 text="Collapse All"
                 icon={<ChevronRight className="h-4 w-4" />}
                 theme="lightBlue"
+                className="!text-black whitespace-nowrap"
                 onClick={collapseAllRows}
               />
               <Button
                 type="button"
                 text="Export"
-                icon={
-                  <Image
-                    width={200}
-                    height={200}
-                    className="w-full h-full object-cover"
-                    src="/images/export.svg"
-                    alt="Export"
-                  />
-                }
+                icon={<FileDown className="h-4 w-4" />}
                 theme="lightBlue"
-                className="!text-black"
+                className="!text-black whitespace-nowrap"
               />
               <Button
                 type="button"
                 text="Create Account"
-                icon={<i className="ri-file-add-line"></i>}
+                icon={<Plus className="h-4 w-4" />}
                 theme="default"
+                className="whitespace-nowrap"
                 onClick={() => {
                   setSelectedAccount(null);
                   setCreateDrawer(true);

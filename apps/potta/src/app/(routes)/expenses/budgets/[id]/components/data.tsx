@@ -9,6 +9,7 @@ import {
   AlertCircle,
   Loader2,
   DollarSign,
+  MoreVertical,
 } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@potta/components/avatar';
 import { budgetsApi } from '../../utils/api';
@@ -31,6 +32,13 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@potta/components/shadcn/select';
+import { Skeleton } from '@potta/components/shadcn/skeleton';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@potta/components/shadcn/dropdown';
 
 const SingleBudget = () => {
   const { id } = useParams();
@@ -68,10 +76,7 @@ const SingleBudget = () => {
         setBudget(data);
       } catch (error) {
         console.error('Error fetching budget:', error);
-        toast.error('Failed to load budget details. Please try again.', {
-          duration: 4000,
-          position: 'top-right',
-        });
+        toast.error('Failed to load budget details. Please try again.');
       } finally {
         setLoading(false);
       }
@@ -81,42 +86,6 @@ const SingleBudget = () => {
       fetchBudget();
     }
   }, [id]);
-
-  const handleApproveBudget = async () => {
-    if (!budget) return;
-
-    try {
-      setActionLoading('approve');
-
-      // Use the approver ID from the budget approvers list
-      const approverId = budget.approvers?.[0]?.approverId || currentUserId;
-
-      await budgetsApi.approveBudget(budget.uuid, approverId, {
-        organizationId: budget.organizationId,
-        branchId: budget.branchId,
-      });
-
-      toast.success(`Budget "${budget.name}" has been approved successfully.`, {
-        duration: 4000,
-        position: 'top-right',
-      });
-
-      // Refresh the budget data
-      const updatedBudget = await budgetsApi.getBudget(id as string);
-      setBudget(updatedBudget);
-    } catch (error) {
-      console.error('Error approving budget:', error);
-      toast.error(
-        'There was an error approving the budget. Please try again.',
-        {
-          duration: 4000,
-          position: 'top-right',
-        }
-      );
-    } finally {
-      setActionLoading(null);
-    }
-  };
 
   const handleArchiveBudget = async () => {
     if (!budget) return;
@@ -128,23 +97,14 @@ const SingleBudget = () => {
         branchId: budget.branchId,
       });
 
-      toast.success(`Budget "${budget.name}" has been archived successfully.`, {
-        duration: 4000,
-        position: 'top-right',
-      });
+      toast.success(`Budget "${budget.name}" has been archived successfully.`);
 
       // Refresh the budget data
       const updatedBudget = await budgetsApi.getBudget(id as string);
       setBudget(updatedBudget);
     } catch (error) {
       console.error('Error archiving budget:', error);
-      toast.error(
-        'There was an error archiving the budget. Please try again.',
-        {
-          duration: 4000,
-          position: 'top-right',
-        }
-      );
+      toast.error('There was an error archiving the budget. Please try again.');
     } finally {
       setActionLoading(null);
     }
@@ -152,19 +112,13 @@ const SingleBudget = () => {
 
   const handleFundBudget = async () => {
     if (!budget || !fundingAmount || !cashAccountId || !equityAccountId) {
-      toast.error('Please fill in all required fields', {
-        duration: 4000,
-        position: 'top-right',
-      });
+      toast.error('Please fill in all required fields');
       return;
     }
 
     const amount = parseFloat(fundingAmount);
     if (isNaN(amount) || amount <= 0) {
-      toast.error('Please enter a valid amount greater than zero', {
-        duration: 4000,
-        position: 'top-right',
-      });
+      toast.error('Please enter a valid amount greater than zero');
       return;
     }
 
@@ -186,11 +140,7 @@ const SingleBudget = () => {
       toast.success(
         `Budget "${
           budget.name
-        }" has been funded successfully with XAF ${formatCurrency(amount)}.`,
-        {
-          duration: 4000,
-          position: 'top-right',
-        }
+        }" has been funded successfully with XAF ${formatCurrency(amount)}.`
       );
 
       // Close the dialog
@@ -206,10 +156,7 @@ const SingleBudget = () => {
       setBudget(updatedBudget);
     } catch (error) {
       console.error('Error funding budget:', error);
-      toast.error('There was an error funding the budget. Please try again.', {
-        duration: 4000,
-        position: 'top-right',
-      });
+      toast.error('There was an error funding the budget. Please try again.');
     } finally {
       setActionLoading(null);
     }
@@ -217,9 +164,51 @@ const SingleBudget = () => {
 
   if (loading) {
     return (
-      <div className="flex justify-center items-center py-20">
-        <Loader2 className="h-8 w-8 animate-spin text-gray-500" />
-        <span className="ml-2">Loading budget details...</span>
+      <div className="flex mb-5 flex-col md:flex-row justify-between gap-6">
+        <div className="flex flex-col border py-4 px-4 w-full md:w-3/4">
+          <div className="flex justify-between px-3">
+            <div className="flex flex-col gap-2">
+              <Skeleton className="h-6 w-48" />
+              <Skeleton className="h-4 w-32" />
+            </div>
+          </div>
+          <div className="mt-5">
+            <Skeleton className="h-2 w-full" />
+          </div>
+          <div className="flex justify-between px-3 mt-5">
+            <div className="flex gap-3 w-1/3">
+              <Skeleton className="h-3 w-3 rounded-full" />
+              <div className="flex flex-col">
+                <Skeleton className="h-4 w-16" />
+                <Skeleton className="h-4 w-24" />
+              </div>
+            </div>
+            <div className="flex gap-3 w-1/3">
+              <Skeleton className="h-3 w-3 rounded-full" />
+              <div className="flex flex-col">
+                <Skeleton className="h-4 w-16" />
+                <Skeleton className="h-4 w-24" />
+              </div>
+            </div>
+            <div className="flex gap-3 w-1/3">
+              <Skeleton className="h-3 w-3 rounded-full" />
+              <div className="flex flex-col">
+                <Skeleton className="h-4 w-16" />
+                <Skeleton className="h-4 w-24" />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Policies section skeleton */}
+        <div className="flex border flex-col w-full md:w-1/4 h-full py-2.5 px-6">
+          <div className="flex justify-between">
+            <Skeleton className="h-6 w-24" />
+          </div>
+          <div className="flex grow justify-center items-center">
+            <Skeleton className="h-32 w-full" />
+          </div>
+        </div>
       </div>
     );
   }
@@ -348,7 +337,7 @@ const SingleBudget = () => {
   return (
     <>
       <div className="flex mb-5 flex-col md:flex-row justify-between gap-6">
-        <div className="flex flex-col border py-4 px-4 w-full md:w-2/4">
+        <div className="flex flex-col border py-4 px-4 w-full md:w-3/4">
           <div className="flex justify-between px-3">
             <div className="flex flex-col gap-2">
               <div className="flex items-center gap-2">
@@ -360,127 +349,69 @@ const SingleBudget = () => {
                   <span className="text-sm">{statusInfo.text}</span>
                 </div>
               </div>
-              {/* <p className="text-xs">
-                Budget goal:{' '}
-                <span className="font-medium">
-                  XAF {formatCurrency(totalAmount)}
-                </span>
-              </p>
-              <p className="text-xs text-gray-500">{budget.description}</p>
-              <p className="text-xs text-gray-500">
-                Account: {budget.budgetedAccount?.name} (
-                {budget.budgetedAccount?.code})
-              </p>
-              <p className="text-xs text-gray-500">
-                Account Balance: XAF {formatCurrency(accountBalance)}
-              </p>
-              <p className="text-xs text-gray-500">
-                Period: {new Date(budget.startDate).toLocaleDateString()} -{' '}
-                {new Date(budget.endDate).toLocaleDateString()}
-              </p> */}
-
-              {/* Recurrence information */}
-              {/* {(budget.recurrenceType !== 'NONE' || isRecurringInstance) && (
-                <p className="text-xs text-gray-500">
-                  Recurrence: {getRecurrenceInfo()}
-                  {isRecurringInstance && ' (recurring instance)'}
-                </p>
-              )} */}
             </div>
-            <div className="flex flex-col gap-2">
-              {needsFunding && (
-                <Button
-                  size="sm"
-                  onClick={() => setFundDialogOpen(true)}
-                  disabled={actionLoading === 'fund'}
-                  className="flex items-center gap-1"
-                >
-                  {actionLoading === 'fund' ? (
-                    <>
-                      <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                      Funding...
-                    </>
-                  ) : (
-                    <>
-                      <DollarSign className="h-4 w-4" />
-                      Fund Budget
-                    </>
-                  )}
-                </Button>
-              )}
-              {budget.status === 'PENDING' && (
-                <Button
-                  size="sm"
-                  onClick={handleApproveBudget}
-                  disabled={actionLoading === 'approve'}
-                >
-                  {actionLoading === 'approve' ? (
-                    <>
-                      <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                      Approving...
-                    </>
-                  ) : (
-                    'Approve Budget'
-                  )}
-                </Button>
-              )}
-              {budget.status !== 'ARCHIVED' && (
-                <Button
-                  size="sm"
-                  variant="outline"
-                  onClick={handleArchiveBudget}
-                  disabled={actionLoading === 'archive'}
-                >
-                  {actionLoading === 'archive' ? (
-                    <>
-                      <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                      Archiving...
-                    </>
-                  ) : (
-                    'Archive Budget'
-                  )}
-                </Button>
-              )}
-            </div>
+            {budget.status !== 'ARCHIVED' && (
+              <Button
+                variant="outline"
+                size="sm"
+                disabled={actionLoading === 'archive'}
+                onClick={handleArchiveBudget}
+                className="flex items-center gap-2"
+              >
+                {actionLoading === 'archive' ? (
+                  <>
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                    Archiving...
+                  </>
+                ) : (
+                  <>
+                    <Archive className="h-4 w-4" />
+                    Archive Budget
+                  </>
+                )}
+              </Button>
+            )}
           </div>
 
-          {/* Progress bar */}
-          <div className="flex h-2 w-full overflow-hidden rounded-full bg-gray-200 mt-5">
-            {/* Spent Segment (Orange) */}
+          {/* Progress Bar */}
+          <div className="relative h-2 w-full bg-gray-100 rounded-full overflow-hidden mt-5">
+            {/* Initial/Allocated (Yellow) */}
             <div
-              className="h-full bg-orange-400 transition-all duration-300 ease-in-out"
+              className="absolute left-0 top-0 h-full bg-yellow-500"
+              style={{ width: `${totalAmount > 0 ? 100 : 0}%` }}
+            />
+            {/* Spent (Red) */}
+            <div
+              className="absolute left-0 top-0 h-full bg-red-500"
               style={{ width: `${spentPercent}%` }}
-            ></div>
-            {/* Available Segment (Red) */}
+            />
+            {/* Available (Green) */}
             <div
-              className="h-full bg-red-500 transition-all duration-300 ease-in-out"
-              style={{ width: `${availablePercent}%` }}
-            ></div>
-            {/* Remaining/Allocated Segment (Green) */}
-            <div
-              className="h-full bg-green-500 transition-all duration-300 ease-in-out"
-              style={{ width: `${remainingPercent}%` }}
-            ></div>
+              className="absolute h-full bg-green-500"
+              style={{
+                left: `${spentPercent}%`,
+                width: `${availablePercent}%`,
+              }}
+            />
           </div>
 
-          {/* Legend */}
           <div className="flex justify-between px-3 mt-5">
             <div className="flex gap-3 w-1/3">
-              <div className="flex w-3 h-3 mt-1.5 bg-orange-400 rounded-full"></div>
+              <div className="flex w-3 h-3 mt-1.5 bg-red-500 rounded-full"></div>
               <div className="flex flex-col">
                 <p className="font-medium text-balse">Spent</p>
                 <p className="text-sm">XAF {formatCurrency(spentAmount)}</p>
               </div>
             </div>
             <div className="flex gap-3 w-1/3">
-              <div className="flex w-3 h-3 mt-1.5 bg-green-500 rounded-full"></div>
+              <div className="flex w-3 h-3 mt-1.5 bg-yellow-500 rounded-full"></div>
               <div className="flex flex-col">
                 <p className="font-medium text-balse">Allocated</p>
                 <p className="text-sm">XAF {formatCurrency(totalAmount)}</p>
               </div>
             </div>
             <div className="flex gap-3 w-1/3">
-              <div className="flex w-3 h-3 mt-1.5 bg-red-500 rounded-full"></div>
+              <div className="flex w-3 h-3 mt-1.5 bg-green-500 rounded-full"></div>
               <div className="flex flex-col">
                 <p className="font-medium text-balse">Available</p>
                 <p className="text-sm">XAF {formatCurrency(availableAmount)}</p>
@@ -489,66 +420,26 @@ const SingleBudget = () => {
           </div>
         </div>
 
-        <div className="flex gap-6 justify-between w-full md:w-2/4">
-          {/* Policies section */}
-          <div className="flex border flex-col w-full h-full py-2.5 px-6">
-            <div className="flex justify-between">
-              <h1>Policies</h1>
-            </div>
-            <div className="flex grow justify-center items-center">
-              {budget.policies && budget.policies.length > 0 ? (
-                <div className="w-full">
-                  {budget.policies.map((policy) => (
-                    <div key={policy.uuid} className="py-2 border-b">
-                      <p className="font-medium">{policy.name}</p>
-                      <p className="text-xs text-gray-500">
-                        Status: {policy.status}
-                      </p>
-                    </div>
-                  ))}
-                </div>
-              ) : (
-                <p className="text-gray-500">No policies attached</p>
-              )}
-            </div>
+        {/* Policies section */}
+        <div className="flex border flex-col w-full md:w-1/4 min-h-full py-2.5 px-6">
+          <div className="flex justify-between">
+            <h1>Policies</h1>
           </div>
-
-          {/* Approvers section */}
-          <div className="flex border flex-col w-full h-full py-2.5 px-6">
-            <div className="flex justify-between">
-              <h1>Approvers</h1>
-            </div>
-            <div className="flex flex-col grow gap-2 mt-2">
-              {budget.approvers && budget.approvers.length > 0 ? (
-                budget.approvers.map((approver) => (
-                  <div key={approver.uuid} className="flex gap-2 items-center">
-                    <Avatar className="h-7 w-7">
-                      {approver.approver?.profile_url ? (
-                        <AvatarImage
-                          src={
-                            approver.approver.profile_url ||
-                            'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_640.png'
-                          }
-                        />
-                      ) : (
-                        <AvatarFallback className="text-xs bg-gray-200">
-                          {getInitialsFromId(approver.approverId)}
-                        </AvatarFallback>
-                      )}
-                    </Avatar>
-                    <div>
-                      <p className="text-sm">{getApproverName(approver)}</p>
-                      <p className="text-xs text-gray-500">
-                        {approver.approved ? 'Approved' : 'Pending'}
-                        {approver.approverId === currentUserId && ' (You)'}
-                      </p>
-                    </div>
+          <div className="flex grow justify-center items-center">
+            {budget.policies && budget.policies.length > 0 ? (
+              <div className="w-full">
+                {budget.policies.map((policy) => (
+                  <div key={policy.uuid} className="py-2 border-b">
+                    <p className="font-medium">{policy.name}</p>
+                    <p className="text-xs text-gray-500">
+                      Status: {policy.status}
+                    </p>
                   </div>
-                ))
-              ) : (
-                <p className="text-gray-500">No approvers assigned</p>
-              )}
-            </div>
+                ))}
+              </div>
+            ) : (
+              <p className="text-gray-500">No policies attached</p>
+            )}
           </div>
         </div>
       </div>

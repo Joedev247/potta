@@ -2,7 +2,6 @@
 import React, { useState } from 'react';
 import MyTable from '@potta/components/table';
 
-
 import TableActionPopover from '@potta/components/tableActionsPopover';
 import { MoreVertical } from 'lucide-react';
 
@@ -12,27 +11,26 @@ import Button from '@potta/components/button';
 
 import { Icon } from '@iconify/react';
 import { IFilter } from '../../_utils/types';
-import useGetAllInvoice from '../../_hooks/useGetAllInvoice';
+import useGetAllPurchaseOrders from '../hooks/useGetAllPurchaseOrders';
 import CustomSelect, { IOption } from '../../components/CustomSelect';
+import Slider from '@potta/components/slideover';
+import PurchaseOrderPage from '../new/page';
 
-// Define types based on the API response
-interface Invoice {
+// Define types for purchase order
+interface PurchaseOrder {
   uuid: string;
-  invoiceId: string;
-  issuedDate: string;
-  dueDate: string;
-  invoiceType: string;
-  invoiceTotal: number;
+  orderNumber: string;
+  orderDate: string;
+  requiredDate: string;
   status: string;
-  notes: string;
-  customer: {
-    firstName: string;
-    lastName: string;
+  orderTotal: number;
+  salePerson: {
+    name: string;
   };
 }
 
 interface ApiResponse {
-  data: Invoice[];
+  data: PurchaseOrder[];
   meta: {
     itemsPerPage: number;
     totalItems: number;
@@ -47,14 +45,13 @@ const InvoiceTable = () => {
   const [limit, setLimit] = useState(20);
   const [selectedValue, setSelectedValue] = useState<string | null>(null);
   const [isOpen, setIsOpen] = useState(false);
-  const filter: IFilter = {
+  const filter = {
     limit,
     page,
-    sortOrder: 'DESC',
-    sortBy: 'createdAt',
+    sortBy: ['createdAt:DESC'],
   };
 
-  const { data, isLoading, error } = useGetAllInvoice(filter);
+  const { data, isLoading, error } = useGetAllPurchaseOrders(filter);
 
   const getStatusStyle = (status: string) => {
     switch (status.toLowerCase()) {
@@ -88,79 +85,55 @@ const InvoiceTable = () => {
     { value: 'option3', label: 'Option 3' },
   ];
 
-  
   const columns = [
     {
-      name: 'Date',
-      selector: (row: Invoice) => (
+      name: 'Order Number',
+      selector: (row: PurchaseOrder) => (
+        <div className="text-sm font-medium">{row.orderNumber}</div>
+      ),
+    },
+    {
+      name: 'Vendor',
+      selector: (row: PurchaseOrder) => (
+        <div className="text-sm">{row.salePerson?.name || '-'}</div>
+      ),
+    },
+    {
+      name: 'Order Date',
+      selector: (row: PurchaseOrder) => (
+        <div className="text-sm text-gray-600">{formatDate(row.orderDate)}</div>
+      ),
+    },
+    {
+      name: 'Required Date',
+      selector: (row: PurchaseOrder) => (
         <div className="text-sm text-gray-600">
-          {formatDate(row.issuedDate)}
+          {formatDate(row.requiredDate)}
         </div>
-      ),
-    },
-    {
-      name: 'Customer',
-      selector: (row: Invoice) => (
-        <div className="text-sm font-medium">
-          {`${row.customer.firstName} ${row.customer.lastName}`}
-        </div>
-      ),
-    },
-    {
-      name: 'ID',
-      selector: (row: Invoice) => (
-        <div className="text-sm text-gray-500">
-          {row.invoiceId}
-          <div className="text-xs text-gray-400">viewed</div>
-        </div>
-      ),
-    },
-    {
-      name: 'Title',
-      selector: (row: Invoice) => (
-        <div className="text-sm">{row.notes || 'No title'}</div>
       ),
     },
     {
       name: 'Status',
-      selector: (row: Invoice) => (
+      selector: (row: PurchaseOrder) => (
         <div className={`text-sm ${getStatusStyle(row.status)}`}>
-          {row.status.toLowerCase()}
-          <div className="text-xs text-gray-400">viewed</div>
+          {row.status}
         </div>
       ),
     },
     {
-      name: 'Amount',
-      selector: (row: Invoice) => (
+      name: 'Total',
+      selector: (row: PurchaseOrder) => (
         <div className="text-sm">
-          XAF {row.invoiceTotal.toLocaleString(undefined, { maximumFractionDigits: 2 })}
+          XAF{' '}
+          {row.orderTotal?.toLocaleString(undefined, {
+            maximumFractionDigits: 2,
+          })}
         </div>
       ),
     },
-    {
-          name: 'Resolution',
-          selector: (row: Invoice) => {
-            const status = 'Closed';
-            return (
-              <div className="border-r pr-4 flex justify-center">
-                <div className="flex items-center gap-3  w-full px-3 py-2 border border-green-500 bg-green-50 text-green-700">
-                  <div className="flex items-center justify-center text-white bg-green-700 rounded-full size-4">
-                    <Icon icon="material-symbols:check" width="20" height="20" />
-                  </div>
-                  {status}
-                </div>
-              </div>
-            );
-          },
-          hasBorderLeft: true,          // Left border for data cells
-      headerBorderLeft: true,       // Left border for header cell
-          width: "150px"
-    
-        },
     {
       name: '',
-      selector: (row: Invoice) => (
+      selector: (row: PurchaseOrder) => (
         <div className="flex justify-center">
           <button className="p-1 hover:bg-gray-100 rounded">
             <MoreVertical size={16} />
@@ -174,13 +147,12 @@ const InvoiceTable = () => {
     return (
       <div className={'w-full py-24 flex flex-col items-center justify-center'}>
         An Error Occured
-       
       </div>
     );
   }
   return (
-    <div className="mt-10">
-       <div className="flex justify-between w-full">
+    <div className="">
+      <div className="flex justify-between w-full">
         <div className="mt-5 w-[50%] flex items-center space-x-2">
           <div className="w-[65%]">
             <Search />
@@ -200,7 +172,7 @@ const InvoiceTable = () => {
           />
         </div>
         <div className="w-[50%] flex justify-end">
-          <div className="flex mt-10 space-x-2">
+          <div className="flex space-x-2">
             <div>
               {/*<Link href={'/invoicing/new_invoice'}>*/}
               <Button
@@ -213,19 +185,26 @@ const InvoiceTable = () => {
               {/*</Link>*/}
             </div>
             <div>
-
-                <Button
-                  text={'Create Invoice'}
-                  icon={<i className="ri-file-add-line"></i>}
-                  theme="default"
-                  type={'button'}
-                  onClick={() => {
-                    setIsOpen(true);
-                  }}
-                />
-
+              <Button
+                text={'Create PurchaseOrder'}
+                icon={<i className="ri-file-add-line"></i>}
+                theme="default"
+                type={'button'}
+                onClick={() => {
+                  setIsOpen(true);
+                }}
+              />
+              <Slider
+                open={isOpen}
+                setOpen={setIsOpen}
+                edit={false}
+                title="Create Purchase Order"
+              >
+                <div className="w-full  mx-auto">
+                  <PurchaseOrderPage />
+                </div>
+              </Slider>
             </div>
-            
           </div>
         </div>
       </div>
@@ -242,7 +221,6 @@ const InvoiceTable = () => {
         onChangePage={setPage}
         onChangeRowsPerPage={setLimit}
       />
-     
     </div>
   );
 };

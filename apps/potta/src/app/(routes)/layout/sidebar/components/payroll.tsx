@@ -25,13 +25,14 @@ const SidebarsPayroll = () => {
       className=" relative bg-blue-500  h-[100vh] z-30  side "
     >
       <Menu className="relative h-[76vh]" closeOnClick>
-      <MenuItem
-          className="mt-4 font-thin "
+        <MenuItem
+          className=" font-thin "
           href="/"
-          icon={<img src="/icons/Potta.svg" className="h-16 w-16 mt-2" alt="logo" />}
+          icon={
+            <img src="/icons/Potta.svg" className="h-16 w-16 mt-2" alt="logo" />
+          }
         >
           {' '}
-         
         </MenuItem>
 
         <MenuItem
@@ -45,7 +46,7 @@ const SidebarsPayroll = () => {
         </MenuItem>
         <MenuItem
           active={str[2] == 'people' ? true : false}
-          className="mt-4 font-thin"
+          className=" font-thin"
           href="/payroll/people"
           icon={svgIcons.users(str[2] == 'people' ? 'white' : 'black')}
         >
@@ -54,24 +55,32 @@ const SidebarsPayroll = () => {
 
         {/* Time Management with submenu */}
         <SubMenu
-          label={<h3 className="text-md">Time Management</h3>}
+          label={
+            <h3
+              className={`text-md ${
+                str[2] == 'timesheet' || str[2] == 'shifts'
+                  ? 'active-submenu'
+                  : ''
+              }`}
+            >
+              Time Management
+            </h3>
+          }
           icon={svgIcons.clock(
-            str[2] == 'timesheet' || str[2] == 'shifts' ? 'black' : 'black'
+            str[2] == 'timesheet' || str[2] == 'shifts' ? 'white' : 'black'
           )}
-          className={`mt-4 font-thin ${
-            str[2] == 'timesheet' || str[2] == 'shifts' ? 'active-submenu' : ''
-          }`}
+          className=" font-thin"
           defaultOpen={str[2] == 'timesheet' || str[2] == 'shifts'}
         >
           <MenuItem
-            active={str[2] == 'timesheet' ? true : false}
+            active={str[2] == 'timesheet'}
             className="pl-6 font-thin"
             href="/payroll/timesheet"
           >
             <h3 className="text-md">Timesheet</h3>
           </MenuItem>
           <MenuItem
-            active={str[2] == 'shifts' ? true : false}
+            active={str[2] == 'shifts'}
             className="pl-6 font-thin"
             href="/payroll/shifts"
           >
@@ -81,7 +90,7 @@ const SidebarsPayroll = () => {
 
         <MenuItem
           active={str[2] == 'benefit' ? true : false}
-          className="mt-4 font-thin"
+          className=" font-thin"
           href="/payroll/benefit"
           icon={
             <Heart size={21} color={str[2] == 'benefit' ? 'white' : 'black'} />
@@ -92,7 +101,7 @@ const SidebarsPayroll = () => {
 
         <MenuItem
           active={str[2] == 'pto' ? true : false}
-          className="mt-4 font-thin"
+          className=" font-thin"
           href="/payroll/pto"
           icon={svgIcons.pto(str[2] == 'pto' ? 'white' : 'black')}
         >
@@ -100,7 +109,7 @@ const SidebarsPayroll = () => {
         </MenuItem>
         <MenuItem
           active={str[2] == 'reports' ? true : false}
-          className="mt-4 font-thin"
+          className=" font-thin"
           href="/payroll/reports"
           icon={svgIcons.piechart(str[2] == 'reports' ? 'white' : 'black')}
         >

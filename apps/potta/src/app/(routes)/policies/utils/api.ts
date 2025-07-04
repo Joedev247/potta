@@ -1,10 +1,8 @@
 import axios from 'config/axios.config';
 
-
 export const PoliciesApi = {
-  
   getAll: async (filter: any) => {
-    const data = {}
+    const data = {};
     const result = await axios.get('/policies/all', {
       params: { ...filter },
     });
@@ -20,11 +18,11 @@ export const PoliciesApi = {
     const result = await axios.put(`/policies/${policies_id}`, data);
     return result?.data;
   },
-  delete: async (policies_id: string) => {
-    const result = await axios.delete(`/policies/${policies_id}`);
+  delete: async (policyId: string) => {
+    const result = await axios.delete(`/policies/${policyId}`);
     return result?.data;
   },
-  
+
   SearchAllEmployees: async (employeeName: string): Promise<unknown> => {
     const result = await axios.get(`/employees/search/?name=${employeeName}`);
     return result?.data;

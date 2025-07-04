@@ -179,7 +179,7 @@ const TableBenefit = () => {
   ];
 
   return (
-    <div className="mt-10 px-14 pt-10">
+    <div className="mt-5 px-14">
       <div className="my-2 items-center flex justify-between">
         <div className="relative w-1/3">
           <Search

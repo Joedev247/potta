@@ -27,6 +27,18 @@ import {
 import CustomLoader from '@potta/components/loader';
 import PottaLoader from '@potta/components/pottaloader';
 import Search from '@potta/components/search';
+import Slider from '@potta/components/slideover';
+import dynamic from 'next/dynamic';
+import {
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuItem,
+} from '@potta/components/shadcn/dropdown';
+
+const EmployeeDetailsPage = dynamic(() => import('./[id]/page'), {
+  ssr: false,
+});
 
 // Define employee type for table
 interface Employee {
@@ -70,6 +82,11 @@ const People = () => {
 
   // Add a key to force re-render of child components when data changes
   const [formKey, setFormKey] = useState(0);
+
+  const [detailsOpen, setDetailsOpen] = useState(false);
+  const [selectedEmployeeId, setSelectedEmployeeId] = useState<string | null>(
+    null
+  );
 
   // Define table columns
   const columns = [
@@ -138,23 +155,37 @@ const People = () => {
       name: 'Actions',
       selector: (row: Employee) => '',
       cell: (row: Employee) => (
-        <div className="flex space-x-3">
-          <button
-            className="text-indigo-600 hover:text-indigo-900"
-            onClick={() => {
-              setPersonId(row.uuid);
-              handleOpenModal();
-            }}
-          >
-            Edit
-          </button>
-          <button
-            className="text-red-600 hover:text-red-900"
-            onClick={() => handleDeleteEmployee(row.uuid)}
-          >
-            Delete
-          </button>
-        </div>
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <button className="p-2 border-gray-200">
+              <i className="ri-more-2-fill text-xl"></i>
+            </button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end" className="w-40">
+            <DropdownMenuItem
+              onClick={() => {
+                setSelectedEmployeeId(row.uuid);
+                setDetailsOpen(true);
+              }}
+            >
+              <i className="ri-eye-line mr-2"></i> View
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              onClick={() => {
+                setPersonId(row.uuid);
+                handleOpenModal();
+              }}
+            >
+              <i className="ri-edit-line mr-2"></i> Edit
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              onClick={() => handleDeleteEmployee(row.uuid)}
+              className="text-red-600"
+            >
+              <i className="ri-delete-bin-line mr-2"></i> Delete
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
       ),
     },
   ];
@@ -837,6 +868,11 @@ const People = () => {
               pagination={employees.length > 9}
               paginationTotalRows={totalPages * pageSize}
               onChangePage={handlePageChange}
+              onRowClicked={(row) => {
+                setSelectedEmployeeId(row.uuid);
+                setDetailsOpen(true);
+              }}
+              pointerOnHover={true}
             />
           </div>
         )}
@@ -1047,6 +1083,22 @@ const People = () => {
           </div>
         </div>
       )}
+
+      {/* Slideover for employee details */}
+      <Slider
+        edit={false}
+        title="Employee Details"
+        open={detailsOpen}
+        setOpen={setDetailsOpen}
+        noPanelScroll={true}
+      >
+        {selectedEmployeeId && (
+          <EmployeeDetailsPage
+            key={selectedEmployeeId}
+            employeeId={selectedEmployeeId}
+          />
+        )}
+      </Slider>
 
       {/* Add these animations to your global CSS or in a style tag */}
       <style jsx global>{`

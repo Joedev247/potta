@@ -26,6 +26,7 @@ export interface Account {
 
     description: string | null;
     status: string;
+    code?: any;
     parentAccountId: string | null;
     subAccounts?: Account[];
 }

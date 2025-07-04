@@ -1,19 +1,42 @@
 'use client';
-import React, { useState } from 'react';
-import MyTable from '@potta/components/table';
-
-
-import TableActionPopover from '@potta/components/tableActionsPopover';
-import { MoreVertical } from 'lucide-react';
+import React, { useState, useMemo } from 'react';
+import { MoreVertical, Eye, Trash2, BookOpen } from 'lucide-react';
 import { useGetPolicies } from '../hooks/policyHooks';
 import Search from '@potta/components/search';
-
 import Button from '@potta/components/button';
-
 import { Icon } from '@iconify/react';
-import { IFilter, IOption } from '../utils/types';
-import CustomSelect from '@potta/components/react-select';
-import Link from 'next/link';
+import { IFilter } from '../utils/types';
+import CreateRuleModal from './createRuleModal';
+import ViewPolicyModal from './viewPolicyModal';
+import DeletePolicyModal from './deletePolicyModal';
+import { ExtendedApprovalRule } from '../../policy/types/approval-rule';
+import DataGrid from '../../invoice/components/DataGrid';
+import { IColumnDef } from '../../invoice/_utils/types';
+import { HeaderContext } from '@tanstack/react-table';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@potta/components/shadcn/dropdown';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from '@potta/components/shadcn/dialog';
+import toast from 'react-hot-toast';
+import CustomLoader from '@potta/components/loader';
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from '@potta/components/card';
+import { Progress } from '@potta/components/progress';
+import { Avatar, AvatarFallback, AvatarImage } from '@potta/components/avatar';
 
 // Define types based on the API response
 interface MileageRequirements {
@@ -73,12 +96,135 @@ interface ApiResponse {
   };
 }
 
+const PolicyCard = ({
+  policy,
+  onView,
+  onDelete,
+}: {
+  policy: Policy;
+  onView: (policy: Policy) => void;
+  onDelete: (policy: Policy) => void;
+}) => {
+  // Get requirements from the first rule (assuming all rules have the same requirements)
+  const requirements = policy.rules[0]?.requirements || {
+    requireReceipt: false,
+    requireMemo: false,
+    requireScreenshots: false,
+    requireNetSuiteCustomerJob: false,
+    requireGpsCoordinates: false,
+    businessPurpose: false,
+    requireBeforeAfterScreenshots: false,
+  };
+
+  // Format requirements for display
+  const requirementsList = [
+    requirements.requireReceipt && 'Receipt',
+    requirements.requireMemo && 'Memo',
+    requirements.requireScreenshots && 'Screenshots',
+    requirements.requireNetSuiteCustomerJob && 'NetSuite Customer/Job',
+    requirements.requireGpsCoordinates && 'GPS Coordinates',
+    requirements.businessPurpose && 'Business Purpose',
+    requirements.requireBeforeAfterScreenshots && 'Before/After Screenshots',
+  ]
+    .filter(Boolean)
+    .join(' • ');
+
+  return (
+    <Card className="bg-white shadow-sm hover:shadow-md transition-shadow duration-200 cursor-pointer relative overflow-hidden">
+      <CardHeader className="pb-6">
+        <div className="flex justify-between items-start gap-2">
+          <div>
+            <div className="flex items-center gap-2 mb-1">
+              <CardTitle className="text-lg font-semibold">
+                {policy.name}
+              </CardTitle>
+              <div className="flex items-center gap-1.5 px-2.5 py-1 bg-green-50 text-green-700 rounded-full text-sm">
+                <div className="w-1.5 h-1.5 bg-green-500 rounded-full" />
+                {policy.status}
+              </div>
+            </div>
+            <p className="text-gray-500">
+              {policy.rules.length}{' '}
+              {policy.rules.length === 1 ? 'Rule' : 'Rules'}
+            </p>
+          </div>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <button className="p-1 hover:bg-gray-100 rounded">
+                <MoreVertical size={16} />
+              </button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuItem onClick={() => onView(policy)}>
+                <Icon
+                  icon="material-symbols:visibility-outline"
+                  className="mr-2 h-4 w-4"
+                />
+                <span>View Policy</span>
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                onClick={() => onDelete(policy)}
+                className="text-red-600"
+              >
+                <Icon
+                  icon="material-symbols:delete-outline"
+                  className="mr-2 h-4 w-4"
+                />
+                <span>Delete Policy</span>
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
+      </CardHeader>
+      <CardContent>
+        <div className="space-y-4">
+          <div>
+            <p className="text-sm font-medium text-gray-500 mb-2">
+              Requirements
+            </p>
+            <div className="bg-gray-50 p-2 rounded-lg">
+              <p
+                className="text-sm text-gray-600 truncate"
+                title={requirementsList}
+              >
+                {requirementsList || 'No requirements'}
+              </p>
+            </div>
+          </div>
+
+          <div>
+            <p className="text-sm font-medium text-gray-500 mb-2">
+              Rules Overview
+            </p>
+            <div className="space-y-2">
+              {policy.rules.map((rule, index) => (
+                <div key={rule.uuid} className="bg-gray-50 p-2 rounded-lg">
+                  <p className="text-sm font-medium">Rule {index + 1}</p>
+                  <p className="text-xs text-gray-500">
+                    {rule.conditions.length} conditions • {rule.actions.length}{' '}
+                    actions
+                  </p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </CardContent>
+    </Card>
+  );
+};
+
 const PolicyTable = () => {
   const [openPopover, setOpenPopover] = useState<string | null>(null);
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(20);
   const [selectedValue, setSelectedValue] = useState<string | null>(null);
   const [isOpen, setIsOpen] = useState(false);
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+  const [isViewModalOpen, setIsViewModalOpen] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [isStudyModalOpen, setIsStudyModalOpen] = useState(false);
+  const [selectedPolicy, setSelectedPolicy] = useState<Policy | null>(null);
   const filter: IFilter = {
     limit,
     page,
@@ -86,97 +232,141 @@ const PolicyTable = () => {
     sortBy: 'createdAt',
   };
 
-  const { data, isLoading, error } = useGetPolicies(filter);
-
-
+  const { data, isLoading, error, refetch } = useGetPolicies(filter);
 
   const getRequirementsText = (policy: Policy) => {
     const requirements = [];
     if (policy.requireReceipt) requirements.push('Receipt');
     if (policy.requireMemo) requirements.push('Memo');
     if (policy.requireScreenshots) requirements.push('Screenshots');
-    if (policy.requireNetSuiteCustomerJob) requirements.push('NetSuite Customer/Job');
-    
+    if (policy.requireNetSuiteCustomerJob)
+      requirements.push('NetSuite Customer/Job');
+
     return requirements.join(', ') || 'None';
   };
 
   const getRulesSummary = (rules: Rule[]) => {
     if (!rules || rules.length === 0) return 'No rules';
-    
+
     return `${rules.length} rule${rules.length > 1 ? 's' : ''}`;
   };
 
-  const options: IOption[] = [
-    { value: 'all', label: 'All Types' },
-    { value: 'mileage', label: 'Mileage' },
-    { value: 'out-of-pocket', label: 'Out-of-Pocket' },
-  ];
+  const handleViewPolicy = (policy: Policy) => {
+    setSelectedPolicy(policy);
+    setIsViewModalOpen(true);
+  };
 
-  const transactionOptions: IOption[] = [
-    { value: 'all', label: 'All Transactions' },
-    { value: 'expenses', label: 'Expenses' },
-    { value: 'invoices', label: 'Invoices' },
-  ];
-  
-  const columns = [
-    {
-      name: 'Policy Name',
-      selector: (row: Policy) => (
-        <div className="text-sm font-medium">
-          {row.name}
-        </div>
-      ),
-    },
-   
-    
-    {
-      name: 'Requirements',
-      selector: (row: Policy) => (
-        <div className="text-sm text-gray-500">
-          {getRequirementsText(row)}
-        </div>
-      ),
-    },
-    {
-      name: 'Rules',
-      selector: (row: Policy) => (
-        <div className="text-sm">
-          {getRulesSummary(row.rules)}
-        </div>
-      ),
-    },
-    {
-      name: 'Status',
-      selector: (row: Policy) => {
-        const status = 'Active';
-        return (
-          <div className="border-r pr-4 flex justify-center">
-            <div className="flex items-center gap-3 w-full px-3 py-2 border border-green-500 bg-green-50 text-green-700">
-              <div className="flex items-center justify-center text-white bg-green-700 rounded-full size-4">
-                <Icon icon="material-symbols:check" width="20" height="20" />
-              </div>
-              {status}
-            </div>
-          </div>
-        );
+  const handleDeletePolicy = (policy: Policy) => {
+    setSelectedPolicy(policy);
+    setIsDeleteModalOpen(true);
+  };
+
+  const handleStudyPolicy = (policy: Policy) => {
+    setSelectedPolicy(policy);
+    setIsStudyModalOpen(true);
+  };
+
+  const confirmDeletePolicy = async () => {
+    if (!selectedPolicy) return;
+
+    try {
+      // TODO: Implement delete policy API call
+      await new Promise((resolve) => setTimeout(resolve, 1000)); // Simulated API call
+      toast.success('Policy deleted successfully');
+      setIsDeleteModalOpen(false);
+      refetch();
+    } catch (error) {
+      toast.error('Failed to delete policy');
+    }
+  };
+
+  const columns = useMemo<IColumnDef<Policy>[]>(
+    () => [
+      {
+        header: (_: HeaderContext<Policy, unknown>) => 'Policy Name',
+        accessorKey: 'name',
+        cell: ({ row }) => (
+          <div className="text-sm font-medium">{row.original.name}</div>
+        ),
       },
-      hasBorderLeft: true,
-      headerBorderLeft: true,
-      width: "150px"
-    },
-    {
-      name: '',
-      selector: (row: Policy) => (
-        <div className="flex justify-center">
-          <button className="p-1 hover:bg-gray-100 rounded">
-            <MoreVertical size={16} />
-          </button>
-        </div>
-      ),
-      width: '50px',
-    },
-  ];
-  
+      {
+        header: (_: HeaderContext<Policy, unknown>) => 'Requirements',
+        accessorKey: 'requirements',
+        cell: ({ row }) => (
+          <div className="text-sm text-gray-500">
+            {getRequirementsText(row.original)}
+          </div>
+        ),
+      },
+      {
+        header: (_: HeaderContext<Policy, unknown>) => 'Rules',
+        accessorKey: 'rules',
+        cell: ({ row }) => (
+          <div className="text-sm">{getRulesSummary(row.original.rules)}</div>
+        ),
+      },
+      {
+        header: (_: HeaderContext<Policy, unknown>) => 'Status',
+        accessorKey: 'status',
+        cell: ({ row }) => {
+          const status = 'Active';
+          return (
+            <div className="flex justify-">
+              <div className="flex items- gap-3 w-[120px] px-3 py-2 border border-green-500 bg-green-50 text-green-700">
+                <div className="flex items-center justify-center text-white bg-green-700 rounded-full size-4">
+                  <Icon icon="material-symbols:check" width="20" height="20" />
+                </div>
+                {status}
+              </div>
+            </div>
+          );
+        },
+      },
+      {
+        header: (_: HeaderContext<Policy, unknown>) => '',
+        accessorKey: 'actions',
+        cell: ({ row }) => (
+          <div className="flex justify-center">
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <button className="p-1 hover:bg-gray-100 rounded">
+                  <MoreVertical size={16} />
+                </button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuItem
+                  onClick={() => handleViewPolicy(row.original)}
+                >
+                  <Icon
+                    icon="material-symbols:visibility-outline"
+                    className="mr-2 h-4 w-4"
+                  />
+                  <span>View Policy</span>
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  onClick={() => handleDeletePolicy(row.original)}
+                  className="text-red-600"
+                >
+                  <Icon
+                    icon="material-symbols:delete-outline"
+                    className="mr-2 h-4 w-4"
+                  />
+                  <span>Delete Policy</span>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
+        ),
+      },
+    ],
+    []
+  );
+
+  const handleCreateRule = async (ruleData: ExtendedApprovalRule) => {
+    // After successful creation, refetch the policies
+    await refetch();
+  };
+
   if (error) {
     return (
       <div className={'w-full py-24 flex flex-col items-center justify-center'}>
@@ -184,7 +374,7 @@ const PolicyTable = () => {
       </div>
     );
   }
-  
+
   return (
     <div className="">
       <div className="flex justify-between w-full">
@@ -192,8 +382,6 @@ const PolicyTable = () => {
           <div className="w-[65%]">
             <Search />
           </div>
-
-
         </div>
         <div className="w-[50%] flex justify-end">
           <div className="flex mt-10 space-x-2">
@@ -207,34 +395,162 @@ const PolicyTable = () => {
               />
             </div>
             <div>
-              <Link href="/policy">
-              
               <Button
                 text={'Create Rule'}
                 icon={<i className="ri-file-add-line"></i>}
                 theme="default"
                 type={'button'}
-                
-                />
-                </Link>
+                onClick={() => setIsCreateModalOpen(true)}
+              />
             </div>
           </div>
         </div>
       </div>
-      <MyTable
-        maxHeight="50vh"
-        minHeight="50vh"
-        columns={columns}
-        selectable={true}
-        data={data?.data || []}
-        pagination
-        pending={isLoading}
-        paginationServer
-        paginationTotalRows={data?.length ?? 0}
-        onChangePage={setPage}
-        onChangeRowsPerPage={setLimit}
+
+      {isLoading ? (
+        <div className="mt-10 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {[...Array(3)].map((_, index) => (
+            <div key={index} className="animate-pulse">
+              <Card className="bg-white">
+                <CardHeader className="pb-6">
+                  <div className="flex justify-between items-start gap-2">
+                    <div className="space-y-2">
+                      <div className="h-6 bg-gray-200 rounded w-3/4" />
+                      <div className="h-4 bg-gray-200 rounded w-1/4" />
+                    </div>
+                    <div className="h-8 w-8 bg-gray-200 rounded" />
+                  </div>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-4">
+                    <div>
+                      <div className="h-4 bg-gray-200 rounded w-1/4 mb-2" />
+                      <div className="flex gap-2">
+                        <div className="h-6 bg-gray-200 rounded w-20" />
+                        <div className="h-6 bg-gray-200 rounded w-20" />
+                      </div>
+                    </div>
+                    <div>
+                      <div className="h-4 bg-gray-200 rounded w-1/4 mb-2" />
+                      <div className="space-y-2">
+                        <div className="h-12 bg-gray-200 rounded" />
+                        <div className="h-12 bg-gray-200 rounded" />
+                      </div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+          ))}
+        </div>
+      ) : data?.data && data.data.length > 0 ? (
+        <div className="mt-10 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {data.data.map((policy) => (
+            <PolicyCard
+              key={policy.uuid}
+              policy={policy}
+              onView={handleViewPolicy}
+              onDelete={handleDeletePolicy}
+            />
+          ))}
+        </div>
+      ) : (
+        <div className="mt-10 flex items-center justify-center h-48 ">
+          <p className="text-gray-500">No policies found</p>
+        </div>
+      )}
+
+      <CreateRuleModal
+        open={isCreateModalOpen}
+        setOpen={setIsCreateModalOpen}
+        onSave={handleCreateRule}
       />
-      
+
+      <ViewPolicyModal
+        open={isViewModalOpen}
+        setOpen={setIsViewModalOpen}
+        policy={selectedPolicy}
+      />
+
+      <DeletePolicyModal
+        open={isDeleteModalOpen}
+        setOpen={setIsDeleteModalOpen}
+        policy={selectedPolicy}
+        onDelete={refetch}
+      />
+
+      {/* Study Policy Modal */}
+      <Dialog open={isStudyModalOpen} onOpenChange={setIsStudyModalOpen}>
+        <DialogContent className="max-w-4xl">
+          <DialogHeader>
+            <DialogTitle>Study Policy</DialogTitle>
+            <DialogDescription>
+              Review and understand the policy details
+            </DialogDescription>
+          </DialogHeader>
+          {selectedPolicy && (
+            <div className="space-y-6">
+              <div className="bg-gray-50 p-4 rounded-lg">
+                <h3 className="font-medium text-lg mb-2">Policy Overview</h3>
+                <p className="text-gray-600">{selectedPolicy.name}</p>
+              </div>
+
+              <div className="bg-gray-50 p-4 rounded-lg">
+                <h3 className="font-medium text-lg mb-2">Requirements</h3>
+                <ul className="list-disc list-inside text-gray-600">
+                  {selectedPolicy.requireReceipt && <li>Receipt Required</li>}
+                  {selectedPolicy.requireMemo && <li>Memo Required</li>}
+                  {selectedPolicy.requireScreenshots && (
+                    <li>Screenshots Required</li>
+                  )}
+                  {selectedPolicy.requireNetSuiteCustomerJob && (
+                    <li>NetSuite Customer/Job Required</li>
+                  )}
+                </ul>
+              </div>
+
+              <div className="bg-gray-50 p-4 rounded-lg">
+                <h3 className="font-medium text-lg mb-2">Rules</h3>
+                {selectedPolicy.rules.map((rule, index) => (
+                  <div key={rule.id} className="mb-4 last:mb-0">
+                    <h4 className="font-medium mb-2">Rule {index + 1}</h4>
+                    <div className="pl-4">
+                      <p className="text-gray-600">Conditions:</p>
+                      <ul className="list-disc list-inside text-gray-600">
+                        {rule.conditions.map((condition) => (
+                          <li key={condition.id}>
+                            {condition.criterionType}{' '}
+                            {condition.comparisonOperator} {condition.value}
+                          </li>
+                        ))}
+                      </ul>
+                      <p className="text-gray-600 mt-2">Actions:</p>
+                      <ul className="list-disc list-inside text-gray-600">
+                        {rule.actions.map((action) => (
+                          <li key={action.id}>
+                            {action.type} - {action.parameters.approvalMode}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              {selectedPolicy.additionalRequirements && (
+                <div className="bg-gray-50 p-4 rounded-lg">
+                  <h3 className="font-medium text-lg mb-2">
+                    Additional Requirements
+                  </h3>
+                  <p className="text-gray-600">
+                    {selectedPolicy.additionalRequirements}
+                  </p>
+                </div>
+              )}
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };

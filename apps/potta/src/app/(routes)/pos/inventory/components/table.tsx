@@ -1,5 +1,5 @@
 'use client';
-import React, { FC, useState } from 'react';
+import React, { FC, useState, useEffect } from 'react';
 import Table from '@potta/components/table';
 import {
   Popover,
@@ -18,6 +18,9 @@ import TableActionPopover, {
 } from '@potta/components/tableActionsPopover';
 import ViewProductSlider from './slides/components/viewProduct';
 import { useInventory } from '../_utils/context';
+import { documentsApi } from '../_utils/api';
+import Image from 'next/image';
+import ProductEditStepperModal from './ProductEditStepperModal';
 
 const InventoryTable = () => {
   const [openPopover, setOpenPopover] = useState<string | null>(null);
@@ -29,6 +32,9 @@ const InventoryTable = () => {
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
   const [productDetails, setproductDetails] = useState<Product | null>(null);
   const { setSelectedProduct } = useInventory();
+  const [imageUrls, setImageUrls] = useState<{ [productId: string]: string }>(
+    {}
+  );
 
   // Handle row click to view product details
   const handleRowClick = (row: Product) => {
@@ -40,12 +46,22 @@ const InventoryTable = () => {
       name: 'Name',
       selector: (row: Product) => (
         <div className="flex items-center space-x-3">
-          <img
-            src="https://static.nike.com/a/images/t_prod_ss/w_960,c_limit,f_auto/df31fd61-2df7-4c21-9326-94b45f799994/air-jordan-6-university-blue-ct8529-410-release-date.jpg"
-            alt=""
-            width={60}
-            height={60}
-          />
+          <div className="w-10 h-10 grid content-center ">
+            {/* <Image
+              src={
+                imageUrls[row.uuid] ||
+                (Array.isArray(row.documents) &&
+                row.documents.length > 0 &&
+                row.documents[0]?.url
+                  ? row.documents[0].url
+                  : '/images/placeholder.png')
+              }
+              alt=""
+              width={60}
+              height={60}
+              className="w-full h-full object-cover"
+            /> */}
+          </div>
           <p className="mt-0.5">{row.name}</p>
         </div>
       ),
@@ -56,7 +72,15 @@ const InventoryTable = () => {
     },
     {
       name: 'Type',
-      selector: (row: Product) => row.category,
+      selector: (row: Product) =>
+        row.category && typeof row.category === 'object'
+          ? row.category.name
+          : row.category || '',
+    },
+    {
+      name: 'Tax',
+      selector: (row: Product) =>
+        row.tax && typeof row.tax === 'object' ? row.tax.name : row.tax || '',
     },
     {
       name: 'Cost',
@@ -91,7 +115,19 @@ const InventoryTable = () => {
             label: 'Edit',
             onClick: () => {
               setOpenUpdateModal(row.uuid);
-              setproductDetails(row);
+              setproductDetails({
+                ...row,
+                cost: Number(row.cost),
+                salesPrice: Number(row.salesPrice),
+                images: Array.isArray(row.documents)
+                  ? row.documents
+                      .filter(
+                        (doc: any) =>
+                          doc.mimeType && doc.mimeType.startsWith('image')
+                      )
+                      .map((doc: any) => doc.url)
+                  : [],
+              });
               setIsEditOpen(true);
             },
             className: 'hover:bg-gray-200',
@@ -125,6 +161,41 @@ const InventoryTable = () => {
 
   const filter: Filter = { page, limit };
   const { data, isLoading, error, refetch } = useGetAllProducts(filter);
+
+  // Fetch signed URLs for product images
+  useEffect(() => {
+    const fetchSignedUrls = async () => {
+      if (!data?.data) return;
+      // Collect all document IDs for products with images
+      const docIdMap: { [productId: string]: string } = {};
+      data.data.forEach((product: Product) => {
+        if (
+          Array.isArray(product.documents) &&
+          product.documents.length > 0 &&
+          product.documents[0]?.uuid
+        ) {
+          docIdMap[product.uuid] = product.documents[0].uuid;
+        }
+      });
+      const docIds = Object.values(docIdMap);
+      if (docIds.length === 0) return;
+      try {
+        const res = await documentsApi.bulkDownload(docIds);
+        // Map productId to signed URL
+        const urlMap: { [productId: string]: string } = {};
+        let i = 0;
+        for (const [productId, docId] of Object.entries(docIdMap)) {
+          urlMap[productId] = res.urls[i] || '';
+          i++;
+        }
+        setImageUrls(urlMap);
+      } catch (e) {
+        // ignore
+      }
+    };
+    fetchSignedUrls();
+  }, [data?.data]);
+
   const handlePageChange = (newPage: number) => {
     setPage(newPage);
   };
@@ -158,14 +229,13 @@ const InventoryTable = () => {
           setOpen={setIsDeleteOpen}
         />
       )}
-      {openUpdateModal && (
-        <EditProduct
-          product={productDetails}
-          productId={openUpdateModal}
-          open={isEditOpen}
-          setOpen={setIsEditOpen}
-        />
-      )}
+      <ProductEditStepperModal
+        open={isEditOpen}
+        setOpen={setIsEditOpen}
+        product={productDetails}
+        productId={productDetails?.uuid || ''}
+        onComplete={refetch}
+      />
       {openViewModal && (
         <ViewProductSlider
           productId={openViewModal}

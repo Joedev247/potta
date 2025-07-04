@@ -140,7 +140,7 @@ const SidebarsExpenses = () => {
         </MenuItem>
 
         {/* Inbox */}
-        <MenuItem
+        {/* <MenuItem
           active={isActive('/pos/inbox')}
           className=""
           href="/pos/inbox"
@@ -153,7 +153,7 @@ const SidebarsExpenses = () => {
           }
         >
           <h3 className="text-lg mt-1.5">Inbox</h3>
-        </MenuItem>
+        </MenuItem> */}
       </Menu>
       <div className="absolute cursor-pointer mb-10 ml-6 bottom-0">
         <div className="flex-1 space-y-7 flex-col">

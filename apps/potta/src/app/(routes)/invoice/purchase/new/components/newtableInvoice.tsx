@@ -60,13 +60,27 @@ export default function DynamicTable() {
   });
 
   // Replace this line:
-  const products: Product[] = (productsData?.data || []).map((product) => ({
-    uuid: product.uuid,
-    name: product.name,
-    price: product.salesPrice,
-    tax: product.taxRate,
-    productId: product.productId,
-  }));
+  const products: Product[] = (productsData?.data || []).map((product) => {
+    const taxObj = (product as any).tax;
+    let taxValue = 0;
+    if (taxObj && typeof taxObj.rate !== 'undefined') {
+      taxValue = Number(taxObj.rate);
+    }
+    console.log('Product mapping:', {
+      name: product.name,
+      salesPrice: product.salesPrice,
+      taxRaw: taxObj,
+      extractedTaxRate: taxObj ? taxObj.rate : undefined,
+      mappedTax: taxValue,
+    });
+    return {
+      uuid: product.uuid,
+      name: product.name,
+      price: Number(product.salesPrice),
+      tax: taxValue,
+      productId: product.productId,
+    };
+  });
 
   // Create product options as regular Options instead of ProductOptions
   const productOptions: Option[] = products.map((product) => ({

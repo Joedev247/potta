@@ -20,27 +20,51 @@ interface SearchableSelectProps
   error?: string;
 }
 
-// Custom styles for react-select
+// ✅ Custom styles for react-select
 const customStyles = {
   control: (provided: any, state: any) => ({
     ...provided,
-    borderColor: state.isFocused ? '#3b82f6' : '#e5e7eb',
-    boxShadow: state.isFocused ? '0 0 0 1px #3b82f6' : 'none',
+    borderColor: state.isFocused ? '#22c55e' : '#e5e7eb',
+    boxShadow: state.isFocused ? '0 0 0 2px #22c55e' : 'none',
+    borderRadius: '2px',
+    paddingTop: '0.25rem',
+    paddingBottom: '0.25rem',
+    paddingLeft: '0.5rem',
+    paddingRight: '0.5rem',
+    backgroundColor: state.isDisabled ? '#f9fafb' : 'white',
+    minHeight: '40px',
+    outline: 'none',
     '&:hover': {
-      borderColor: state.isFocused ? '#3b82f6' : '#d1d5db',
+      borderColor: state.isFocused ? '#22c55e' : '#d1d5db',
     },
   }),
   option: (provided: any, state: any) => ({
     ...provided,
     backgroundColor: state.isSelected
-      ? '#3b82f6'
+      ? '#22c55e'
       : state.isFocused
-      ? '#bfdbfe '
+      ? '#bbf7d0'
       : undefined,
     color: state.isSelected ? 'white' : '#374151',
     '&:active': {
-      backgroundColor: '#3b82f6',
+      backgroundColor: '#22c55e',
     },
+  }),
+  placeholder: (provided: any) => ({
+    ...provided,
+    color: '#9ca3af',
+    fontSize: '1rem',
+  }),
+  singleValue: (provided: any) => ({
+    ...provided,
+    color: '#374151',
+    fontSize: '1rem',
+  }),
+  menu: (provided: any) => ({
+    ...provided,
+    borderRadius: '2px',
+    boxShadow: '0 2px 8px rgba(0,0,0,0.08)',
+    zIndex: 20,
   }),
 };
 

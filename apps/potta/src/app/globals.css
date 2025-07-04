@@ -197,3 +197,7 @@ label {
     transform: translate(24px, 0);
   }
 }
+[data-testid='ps-sidebar-backdrop-test-id'] {
+  display: none !important;
+  background-color: transparent !important;
+}

@@ -67,7 +67,7 @@ export const ptoApi = {
   ) => {
     try {
       const response = await axios.put(
-        `/api/paid-time-off/request-leave/${id}`,
+        `/paid-time-off/request-leave/${id}`,
         payload
       );
       return { success: true, data: response.data };
@@ -82,7 +82,7 @@ export const ptoApi = {
   resetPTOCycle: async (id: string) => {
     try {
       const response = await axios.put(
-        `/api/paid-time-off/reset-cycle/${id}`,
+        `/paid-time-off/reset-cycle/${id}`,
         {}
       );
       return { success: true, data: response.data };

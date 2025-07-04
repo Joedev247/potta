@@ -1,7 +1,8 @@
 'use client';
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import Left from './components/left';
 import PdfView from './components/pdfview';
+import { useSearchParams } from 'next/navigation';
 
 import {
   ResizableHandle,
@@ -9,10 +10,42 @@ import {
   ResizablePanelGroup,
 } from '@potta/components/resizable';
 import RootLayout from '../../../layout';
+import FileExtractDropzone from '@potta/components/FileExtractDropzone';
+import { ContextData } from '@potta/components/context';
+import { extractInvoiceFromFile } from './api/extractInvoice';
 
 const NewInvoice = () => {
   const [showPreview, setShowPreview] = useState(false);
   const [leftPanelSize, setLeftPanelSize] = useState(100);
+  const searchParams = useSearchParams();
+  const initialInvoiceType = searchParams.get('type');
+  const [extracting, setExtracting] = useState(false);
+  const context = useContext(ContextData);
+
+  // Extraction handler (real API)
+  const extractInvoiceData = async (file: File) => {
+    setExtracting(true);
+    try {
+      // Call the extraction API utility
+      const data = await extractInvoiceFromFile(file);
+      console.log('[EXTRACTED DATA]', data);
+      // Fill context with the extracted data
+      if (context && context.setData) {
+        context.setData((prev: any) => ({
+          ...prev,
+          data: {
+            ...prev.data,
+            ...data,
+          },
+        }));
+      }
+    } catch (err) {
+      console.error('Extraction error:', err);
+      // Optionally show a toast or error message
+    } finally {
+      setExtracting(false);
+    }
+  };
 
   // Toggle preview
   const togglePreview = () => {
@@ -37,62 +70,68 @@ const NewInvoice = () => {
   const shouldShowPreviewButton = !showPreview || leftPanelSize > 95;
 
   return (
-    <div className="max-h-[92.7vh] relative">
-      {/* Preview toggle button with fade transition */}
-      <div
-        className={`absolute top-4 right-4 z-10 transition-opacity duration-300 ease-in-out ${
-          shouldShowPreviewButton ? 'opacity-100' : 'opacity-0 pointer-events-none'
-        }`}
-      >
-        <button
-          onClick={togglePreview}
-          className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded flex items-center shadow-md"
+    <FileExtractDropzone onExtract={extractInvoiceData} extracting={extracting}>
+      <div className="max-h-[92.7vh] relative">
+        {/* Preview toggle button with fade transition */}
+        <div
+          className={`absolute top-4 right-4 z-10 transition-opacity duration-300 ease-in-out ${
+            shouldShowPreviewButton
+              ? 'opacity-100'
+              : 'opacity-0 pointer-events-none'
+          }`}
         >
-          <i className={`${showPreview ? 'ri-eye-off-line' : 'ri-eye-line'} mr-2`}></i>
-          {showPreview ? 'Hide Preview' : 'Show Preview'}
-        </button>
-      </div>
-
-      {/* Use a wrapper div with transition for the entire panel group */}
-      <div className="transition-all duration-300 ease-in-out">
-        <ResizablePanelGroup
-          direction="horizontal"
-          onLayout={handleLayout}
-        >
-          <ResizablePanel
-            minSize={50}
-            defaultSize={showPreview ? 50 : 100}
-            style={{transition: 'flex-basis 300ms ease-in-out'}}
+          <button
+            onClick={togglePreview}
+            className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 flex items-center "
           >
-            <div className="py-8 px-14 h-[92.7vh] overflow-y-auto flex justify-center">
-              <Left />
-            </div>
-          </ResizablePanel>
+            <i
+              className={`${
+                showPreview ? 'ri-eye-off-line' : 'ri-eye-line'
+              } mr-2`}
+            ></i>
+            {showPreview ? 'Hide Preview' : 'Show Preview'}
+          </button>
+        </div>
 
-          {/* Always render the right panel but control its width with CSS */}
-          <ResizableHandle
-            withHandle
-            className={`transition-opacity duration-200 ease-in-out ${
-              showPreview ? 'opacity-100' : 'opacity-0'
-            }`}
-          />
-          <ResizablePanel
-            minSize={0}
-            defaultSize={showPreview ? 50 : 0}
-            style={{
-              transition: 'flex-basis 300ms ease-in-out, opacity 300ms ease-in-out',
-              flexBasis: showPreview ? '50%' : '0%',
-              opacity: showPreview ? 1 : 0,
-            }}
-          >
-            <div className="h-[92.7vh] overflow-y-auto bg-[#F2F2F2]">
-              {/* Only render PdfView when preview is showing for performance */}
-              {showPreview && <PdfView />}
-            </div>
-          </ResizablePanel>
-        </ResizablePanelGroup>
+        {/* Use a wrapper div with transition for the entire panel group */}
+        <div className="transition-all duration-300 ease-in-out">
+          <ResizablePanelGroup direction="horizontal" onLayout={handleLayout}>
+            <ResizablePanel
+              minSize={50}
+              defaultSize={showPreview ? 50 : 100}
+              style={{ transition: 'flex-basis 300ms ease-in-out' }}
+            >
+              <div className="py-8 px-14 pr-0 h-[92.7vh] overflow-y-auto flex justify-center">
+                <Left initialInvoiceType={initialInvoiceType} />
+              </div>
+            </ResizablePanel>
+
+            {/* Always render the right panel but control its width with CSS */}
+            <ResizableHandle
+              withHandle
+              className={`transition-opacity duration-200 ease-in-out ${
+                showPreview ? 'opacity-100' : 'opacity-0'
+              }`}
+            />
+            <ResizablePanel
+              minSize={0}
+              defaultSize={showPreview ? 50 : 0}
+              style={{
+                transition:
+                  'flex-basis 300ms ease-in-out, opacity 300ms ease-in-out',
+                flexBasis: showPreview ? '50%' : '0%',
+                opacity: showPreview ? 1 : 0,
+              }}
+            >
+              <div className="h-[92.7vh] overflow-y-auto bg-[#F2F2F2]">
+                {/* Only render PdfView when preview is showing for performance */}
+                {showPreview && <PdfView />}
+              </div>
+            </ResizablePanel>
+          </ResizablePanelGroup>
+        </div>
       </div>
-    </div>
+    </FileExtractDropzone>
   );
 };
 

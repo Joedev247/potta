@@ -1,7 +1,7 @@
 import Input from '@potta/components/input';
-import CustomSelect from '@potta/components/react-select';
+import CustomSelect from '@potta/components/react-select';  
 import Select from '@potta/components/select';
-import react, { useState } from 'react';
+import react, { useState } from 'react'
 import { SingleValue } from 'react-select';
 
 interface Cat {

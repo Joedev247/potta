@@ -1,5 +1,5 @@
 import Select from '@potta/components/select';
-import react from 'react';
+import react from 'react'
 
 const Policies = () => {
   return (

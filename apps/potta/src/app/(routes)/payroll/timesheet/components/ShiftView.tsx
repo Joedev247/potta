@@ -209,7 +209,7 @@ const ShiftView: React.FC = () => {
 
       // Fetch shifts
       try {
-        const shiftsResponse = await axios.post('/api/shifts/filter', {
+        const shiftsResponse = await axios.post('/shifts/filter', {
           // You can add filter parameters here if needed
         });
 

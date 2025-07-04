@@ -33,8 +33,10 @@ export default function RootLayout({
           show ? 'w-[75%]' : 'w-[97.5%]'
         }`}
       > */}
-      <div className={`transition-all flex  duration-500  ease-in-out w-full`}>
-        <div className="w-full overflow-x-hidden overflow-y-auto scroll z-10 flex">
+      <div
+        className={`transition-all flex  duration-500  ease-in-out w-full`}
+      > 
+        <div className="w-full h-screen  overflow-x-hidden overflow-y-auto scroll z-10 flex">
           <div className="fixed z-50">
             <Sidebars />
           </div>

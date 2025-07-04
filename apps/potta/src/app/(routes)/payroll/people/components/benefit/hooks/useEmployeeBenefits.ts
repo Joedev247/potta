@@ -2,6 +2,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { toast } from 'react-hot-toast';
 import { peopleApi } from '../../../utils/api';
+import { useQueryClient } from '@tanstack/react-query';
 
 // Define benefit type
 interface Benefit {
@@ -29,6 +30,7 @@ export const useEmployeeBenefits = (personId?: string) => {
   const [hasChanges, setHasChanges] = useState(false);
   const [isComplete, setIsComplete] = useState(false);
   const [personData, setPersonData] = useState<any>(null);
+  const queryClient = useQueryClient();
 
   // Check if benefits have changed
   const checkForChanges = useCallback(() => {
@@ -169,6 +171,8 @@ export const useEmployeeBenefits = (personId?: string) => {
 
       // Set complete flag to true
       setIsComplete(true);
+      // Invalidate TanStack Query for employee benefits
+      queryClient.invalidateQueries(['employeeBenefits', personId]);
     } catch (error) {
       console.error('Error saving benefits:', error);
       toast.error('Failed to save benefits');

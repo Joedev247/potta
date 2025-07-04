@@ -10,23 +10,16 @@ const axios = Axios.create({
 
 // Request interceptor to add headers and log requests
 axios.interceptors.request.use((config: InternalAxiosRequestConfig) => {
-  // Ensure headers is an AxiosHeaders instance
-  if (!config.headers) {
-    config.headers = new AxiosHeaders();
-  }
-
-  // Convert to AxiosHeaders if it's a plain object
-  if (!(config.headers instanceof AxiosHeaders)) {
-    config.headers = new AxiosHeaders(config.headers);
-  }
+  // Add the required headers to every request
+  config.headers = config.headers || {};
 
   // Only set Content-Type to application/json if it's not already set
   // This allows the uploadImage function to set its own Content-Type
   if (
-    !config.headers.get('Content-Type') &&
+    !config.headers['Content-Type'] &&
     !config.data?.toString().includes('FormData')
   ) {
-    config.headers.set('Content-Type', 'application/json');
+    config.headers['Content-Type'] = 'application/json';
   }
 
   // For FormData (file uploads), don't set Content-Type as the browser will set it with the boundary
@@ -34,16 +27,17 @@ axios.interceptors.request.use((config: InternalAxiosRequestConfig) => {
     config.headers.delete('Content-Type');
   }
 
-  config.headers.set('accept', '*/*');
-  config.headers.set('branchId', 'f7b1b3b0-0b1b-4b3b-8b1b-0b1b3b0b1b3b');
-  config.headers.set('orgId', '8f79d19a-5319-4783-8ddc-c863d98ecc16');
-  config.headers.set('userId', '8f79d19a-5319-4783-8ddc-c863d98ecc16');
+  config.headers['accept'] = '*/*';
+  config.headers['branchId'] = 'f7b1b3b0-0b1b-4b3b-8b1b-0b1b3b0b1b3b';
+  config.headers['orgId'] = 'f7b1b3b0-0b1b-4b3b-8b1b-0b1b3b0b1b3c';
+  config.headers['userId'] = 'f7b1b3b0-0b1b-4b3b-8b1b-0b1b3b0b1b3e';
+  // config.headers['userId'] = 'f7b1b3b0-0b1b-4b3b-8b1b-0b1b3b0b1b3d';
 
   // Log the outgoing request
   console.log('REQUEST:', {
     url: (config.baseURL || '') + (config.url || ''),
     method: config.method,
-    headers: config.headers.toJSON(), // Convert to plain object for logging
+    headers: config.headers,
     data:
       config.data instanceof FormData ? 'FormData (file upload)' : config.data,
     params: config.params,
@@ -82,3 +76,9 @@ axios.interceptors.response.use(
 );
 
 export default axios;
+
+
+
+
+  
+  
