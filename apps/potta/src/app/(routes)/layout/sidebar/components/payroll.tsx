@@ -55,21 +55,13 @@ const SidebarsPayroll = () => {
 
         {/* Time Management with submenu */}
         <SubMenu
-          label={
-            <h3
-              className={`text-md ${
-                str[2] == 'timesheet' || str[2] == 'shifts'
-                  ? 'active-submenu'
-                  : ''
-              }`}
-            >
-              Time Management
-            </h3>
-          }
+          label={<h3 className="text-md">Time Management</h3>}
           icon={svgIcons.clock(
             str[2] == 'timesheet' || str[2] == 'shifts' ? 'white' : 'black'
           )}
-          className=" font-thin"
+          className={`font-thin ${
+            str[2] == 'timesheet' || str[2] == 'shifts' ? 'active-parent' : ''
+          }`}
           defaultOpen={str[2] == 'timesheet' || str[2] == 'shifts'}
         >
           <MenuItem

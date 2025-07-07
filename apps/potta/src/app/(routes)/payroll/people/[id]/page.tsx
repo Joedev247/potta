@@ -18,6 +18,7 @@ import PTOTab from './employeeTabs/PTOTab';
 import ShiftsTab from './employeeTabs/ShiftsTab';
 import PayInfoTab from './employeeTabs/PayInfoTab';
 import { useRoles } from '../hooks/useRoles';
+import { Avatar, AvatarImage, AvatarFallback } from '@potta/components/avatar';
 
 const TABS = [
   'Personal',
@@ -54,14 +55,15 @@ const EmployeeDetailsPage: React.FC<EmployeeDetailsPageProps> = ({
     <div className="flex overflow-y-hidden w-screen bg-gray-50">
       {/* Sidebar */}
       <div className="w-[17%]  p-8 border-r flex flex-col items-start">
-        <img
-          src={
-            employee?.photoUrl ||
-            'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png'
-          }
-          alt="Profile"
-          className="w-28 h-28 rounded-full object-cover mb-4 self-center"
-        />
+        <Avatar className="w-28 h-28 mb-4 self-center">
+          {employee?.profilePicture ? (
+            <AvatarImage src={employee.profilePicture} alt="Profile" />
+          ) : null}
+          <AvatarFallback>
+            {employee?.firstName?.charAt(0)}
+            {employee?.lastName?.charAt(0)}
+          </AvatarFallback>
+        </Avatar>
         <div className="text-left w-full space-y-2">
           {/* <div className="flex items-center gap-2 text-sm text-gray-500 font-semibold">
             <RiUserLine />

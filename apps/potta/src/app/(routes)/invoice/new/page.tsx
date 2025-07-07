@@ -1,5 +1,5 @@
 'use client';
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, Suspense } from 'react';
 import Left from './components/left';
 import PdfView from './components/pdfview';
 import { useSearchParams } from 'next/navigation';
@@ -14,7 +14,7 @@ import FileExtractDropzone from '@potta/components/FileExtractDropzone';
 import { ContextData } from '@potta/components/context';
 import { extractInvoiceFromFile } from './api/extractInvoice';
 
-const NewInvoice = () => {
+const NewInvoiceInner = () => {
   const [showPreview, setShowPreview] = useState(false);
   const [leftPanelSize, setLeftPanelSize] = useState(100);
   const searchParams = useSearchParams();
@@ -134,5 +134,11 @@ const NewInvoice = () => {
     </FileExtractDropzone>
   );
 };
+
+const NewInvoice = () => (
+  <Suspense fallback={<div>Loading...</div>}>
+    <NewInvoiceInner />
+  </Suspense>
+);
 
 export default NewInvoice;
