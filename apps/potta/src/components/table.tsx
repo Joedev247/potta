@@ -219,7 +219,7 @@ const MyTable: FC<TableProps & { pending?: boolean }> = ({
       style: {
         paddingLeft: '7px',
         paddingRight: '6px',
-        fontWeight: 'bold',
+        fontWeight: 'medium',
       },
     },
     headRow: {

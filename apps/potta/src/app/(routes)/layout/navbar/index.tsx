@@ -55,6 +55,10 @@ const urlRouters = [
     value: 'accounts',
     label: 'Accounts',
   },
+  {
+    value: 'bank-accounts',
+    label: 'Bank Accounts',
+  },
 ];
 
 // Routes where Box component should be displayed with their specific box component
@@ -85,7 +89,8 @@ const routesWithoutBlueBackground = [
   { main: 'payroll' }, // Exclude all payroll pages
   { main: 'payments' },
   { main: 'expenses' },
-  { main: 'expenses' },
+  { main: 'accounts' },
+  { main: 'bank-accounts' },
   { main: 'pos', sub: 'files' },
   { main: 'pos', sub: 'inventory' },
   { main: 'invoice', sub: 'new' },
@@ -206,6 +211,9 @@ export default function Navbar() {
 
   // Determine the title to display
   const getTitle = () => {
+    if (str[1] === 'bank-accounts' && str[2] && str[2].length > 20) {
+      return 'Bank Account';
+    }
     // Special case for /pos/new route
     if (str[1] === 'pos' && str[2] === 'sales' && str[3] === 'new') {
       return 'New Sales Receipt';
@@ -234,6 +242,7 @@ export default function Navbar() {
     if (str[1] === 'invoice' && str[2] === 'purchase' && str[3] === undefined) {
       return 'Purchase Order';
     }
+
     if (
       str[1] === 'invoice' &&
       str[2] === 'recurring' &&
@@ -290,6 +299,7 @@ export default function Navbar() {
               <Select
                 options={urlRouters}
                 selectedValue={selected.toString()}
+                SelectClass="!text-sm"
                 onChange={(value: any) => {
                   handleSelect(value);
                 }}

@@ -3,6 +3,7 @@ import { Inter } from 'next/font/google';
 import Navbar from './navbar';
 import Sidebars from './sidebar';
 import { useContext, useState } from 'react';
+import { usePathname } from 'next/navigation';
 
 import ChatAI from '../../../app/chatai';
 import { ContextData } from '../../../components/context';
@@ -16,6 +17,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   const [show, setShow] = useState(false);
+  const pathname = usePathname();
+  const isHome = pathname === '/';
 
   const toggleChatAI = () => {
     setShow(!show);
@@ -28,16 +31,14 @@ export default function RootLayout({
           show ? 'w-[75%]' : 'w-[97.5%]'
         }`}
       > */}
-      <div
-        className={`transition-all flex  duration-500  ease-in-out w-full`}
-      > 
+      <div className={`transition-all flex  duration-500  ease-in-out w-full`}>
         <div className="w-full h-screen  overflow-x-hidden overflow-y-auto scroll z-10 flex">
-          <div className="fixed z-50">
-            <Sidebars />
-          </div>
+          <div className="fixed z-50">{!isHome && <Sidebars />}</div>
           <div
             className={`flex  duration-500  ease-in-out ${
-              context?.toggle ? 'flex w-full  pl-[35px]' : 'pl-[150px] w-full '
+              context?.toggle
+                ? `flex w-full  ${!isHome && 'pl-[35px] '}`
+                : 'pl-[150px] w-full '
             }`}
           >
             <div className=" w-full relative  mx-0">

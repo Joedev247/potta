@@ -22,11 +22,15 @@ interface SearchableSelectProps
 
 // ✅ Custom styles for react-select
 const customStyles = {
-  control: (provided: any, state: any) => ({
+  control: (provided: any, state: any, { error }: { error?: string }) => ({
     ...provided,
-    borderColor: state.isFocused ? '#22c55e' : '#e5e7eb',
+    borderColor: error
+      ? '#ef4444' // Tailwind red-500
+      : state.isFocused
+      ? '#22c55e'
+      : '#e5e7eb',
     boxShadow: state.isFocused ? '0 0 0 2px #22c55e' : 'none',
-    borderRadius: '2px',
+    borderRadius: '0px',
     paddingTop: '0.25rem',
     paddingBottom: '0.25rem',
     paddingLeft: '0.5rem',
@@ -35,7 +39,7 @@ const customStyles = {
     minHeight: '40px',
     outline: 'none',
     '&:hover': {
-      borderColor: state.isFocused ? '#22c55e' : '#d1d5db',
+      borderColor: error ? '#ef4444' : state.isFocused ? '#22c55e' : '#d1d5db',
     },
   }),
   option: (provided: any, state: any) => ({
@@ -101,7 +105,11 @@ const SearchableSelect: React.FC<SearchableSelectProps> = ({
         isDisabled={isDisabled}
         isClearable
         isSearchable
-        styles={customStyles}
+        styles={{
+          ...customStyles,
+          control: (provided: any, state: any) =>
+            customStyles.control(provided, state, { error }),
+        }}
         className="react-select-container"
         classNamePrefix="react-select"
         {...rest}

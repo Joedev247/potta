@@ -37,7 +37,7 @@ const SidebarsPayroll = () => {
 
         <MenuItem
           active={str[2] == 'overview' ? true : false}
-          className="mt-8   font-thin"
+          className="mt-8"
           href="/payroll/overview"
           icon={svgIcons.dashboard(str[2] == 'overview' ? 'white' : 'black')}
         >
@@ -46,7 +46,6 @@ const SidebarsPayroll = () => {
         </MenuItem>
         <MenuItem
           active={str[2] == 'people' ? true : false}
-          className=" font-thin"
           href="/payroll/people"
           icon={svgIcons.users(str[2] == 'people' ? 'white' : 'black')}
         >
@@ -69,7 +68,6 @@ const SidebarsPayroll = () => {
           icon={svgIcons.clock(
             str[2] == 'timesheet' || str[2] == 'shifts' ? 'white' : 'black'
           )}
-          className=" font-thin"
           defaultOpen={str[2] == 'timesheet' || str[2] == 'shifts'}
         >
           <MenuItem
@@ -90,7 +88,6 @@ const SidebarsPayroll = () => {
 
         <MenuItem
           active={str[2] == 'benefit' ? true : false}
-          className=" font-thin"
           href="/payroll/benefit"
           icon={
             <Heart size={21} color={str[2] == 'benefit' ? 'white' : 'black'} />
@@ -101,15 +98,20 @@ const SidebarsPayroll = () => {
 
         <MenuItem
           active={str[2] == 'pto' ? true : false}
-          className=" font-thin"
           href="/payroll/pto"
           icon={svgIcons.pto(str[2] == 'pto' ? 'white' : 'black')}
         >
           <h3 className="text-md ">PTO</h3>
         </MenuItem>
         <MenuItem
+          active={str[2] == 'deductions'}
+          href="/payroll/deductions"
+          icon={svgIcons.dollarcoin(str[2] == 'deductions' ? 'white' : 'black')}
+        >
+          <h3 className="text-md ">Deductions</h3>
+        </MenuItem>
+        <MenuItem
           active={str[2] == 'reports' ? true : false}
-          className=" font-thin"
           href="/payroll/reports"
           icon={svgIcons.piechart(str[2] == 'reports' ? 'white' : 'black')}
         >

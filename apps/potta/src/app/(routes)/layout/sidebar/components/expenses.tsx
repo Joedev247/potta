@@ -4,6 +4,7 @@ import { usePathname } from 'next/navigation';
 import { ContextData } from '@potta/components/context';
 import Icon from '@potta/components/icon_fonts/icon';
 import { MdPolicy } from 'react-icons/md';
+import { TbShoppingCartCog } from 'react-icons/tb';
 
 const SidebarsExpenses = () => {
   const pathname = usePathname();
@@ -44,7 +45,7 @@ const SidebarsExpenses = () => {
           }
         >
           {' '}
-          <h3 className="text-lg mt-[2px]">Dashboard</h3>{' '}
+          <h3 className="text-md mt-[2px]">Dashboard</h3>{' '}
         </MenuItem>
         <MenuItem
           active={str[2] == 'policies' ? true : false}
@@ -58,7 +59,7 @@ const SidebarsExpenses = () => {
             )
           }
         >
-          <h3 className="text-lg mt-1.5">Policies</h3>
+          <h3 className="text-md mt-1.5">Policies</h3>
         </MenuItem>
         <MenuItem
           active={str[2] == 'budgets' ? true : false}
@@ -72,24 +73,21 @@ const SidebarsExpenses = () => {
             )
           }
         >
-          <h3 className="text-lg mt-1.5">Budget</h3>
+          <h3 className="text-md mt-1.5">Budget</h3>
         </MenuItem>
-        {/* <MenuItem
-          active={str[2] == 'transactions' ? true : false}
-          className={` ${
-            str[2] == 'transactions' ? 'text-white' : 'text-black'
-          }`}
-          href="/expenses/transactions"
+        <MenuItem
+          active={str[2] == 'spend-program' ? true : false}
+          className=""
+          href="/expenses/spend-program"
           icon={
-            str[2] == 'transactions' ? (
-              <img src="/images/sideExpensesIcons/white/4.svg" />
-            ) : (
-              <img src="/images/sideExpensesIcons/transact.svg" />
-            )
+            <TbShoppingCartCog
+              size={24}
+              className={`${str[2] === 'spend-program' && 'text-white'}`}
+            />
           }
         >
-          <h3 className="text-lg mt-1.5">Transaction</h3>
-        </MenuItem> */}
+          <h3 className="text-md mt-1.5">Spend Program</h3>
+        </MenuItem>
 
         <MenuItem
           active={str[2] == 're-imbursements' ? true : false}
@@ -103,7 +101,7 @@ const SidebarsExpenses = () => {
             )
           }
         >
-          <h3 className="text-lg mt-1.5">ReImbursement</h3>
+          <h3 className="text-md mt-1.5">ReImbursement</h3>
         </MenuItem>
         <MenuItem
           active={str[2] == 'bills' ? true : false}
@@ -117,7 +115,7 @@ const SidebarsExpenses = () => {
             )
           }
         >
-          <h3 className="text-lg mt-1.5">Biils </h3>
+          <h3 className="text-md mt-1.5">Biils </h3>
         </MenuItem>
         {/* <MenuItem
           active={str[1] == 'inbox' ? true : false}
@@ -131,10 +129,10 @@ const SidebarsExpenses = () => {
             )
           }
         >
-          <h3 className="text-lg mt-1.5">Terminals</h3>
+          <h3 className="text-md mt-1.5">Terminals</h3>
         </MenuItem> */}
         <MenuItem
-          active={str[1] == 'inbox' ? true : false}
+          active={str[1] == 'reports' ? true : false}
           className=" "
           href="/reports"
           icon={
@@ -145,7 +143,7 @@ const SidebarsExpenses = () => {
             )
           }
         >
-          <h3 className="text-lg mt-1.5">Report</h3>
+          <h3 className="text-md mt-1.5">Report</h3>
         </MenuItem>
       </Menu>
       <div className="absolute cursor-pointer mb-10 ml-6 bottom-0">
@@ -159,7 +157,7 @@ const SidebarsExpenses = () => {
           />
           <div className="flex space-x-5">
             <img src="/icons/user.svg" className="h-10 w-10 -ml-2" alt="" />
-            <p className="mt-2 text-lg ml-3 font-thin">Jamison</p>
+            <p className="mt-2 text-md ml-3 font-thin">Jamison</p>
           </div>
         </div>
       </div>

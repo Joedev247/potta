@@ -24,6 +24,7 @@ import {
   Banknote,
 } from 'lucide-react';
 import RootLayout from '../app/(routes)/layout';
+import CustomNavbar from '@potta/components/custom-navbar';
 
 // --- Component Logic ---
 interface GridItem {
@@ -173,7 +174,9 @@ const colorMap: {
 const WelcomePage = () => {
   return (
     <RootLayout>
-      <div className="p-6 pl-16 space-y-8 bg-white min-h-screen">
+      {/* <HeadlessNavbar /> */}
+      <CustomNavbar />
+      <div className="p-6 space-y-8 bg-white min-h-screen">
         {/* Welcome Banner */}
         <div className=" py-3">
           <div className="flex items-center space-x-2">

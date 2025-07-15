@@ -6,7 +6,7 @@ const BalanceBox = () => {
         <div className="w-full flex space-x-3">
             <div className="w-[50%]  grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 xl:grid-cols-2 gap-4 mt-5">
                 <div className="w-full ">
-                    <div className="flex flex-col border  px-5 h-[17vh] xs:w-full grow">
+                    <div className="flex flex-col border  px-5 h xs:w-full grow">
                         <div className="flex justify-between mt-2">
                             <p className="  text-[17px]  ">Total Amount</p>
                             <i className="ri-arrow-right-up-line text-green-400"></i>
@@ -21,7 +21,7 @@ const BalanceBox = () => {
                     </div>
                 </div>
                 <div className="w-full">
-                    <div className="flex flex-col border  px-5 h-[17vh] xs:w-full grow">
+                    <div className="flex flex-col border  px-5 h- xs:w-full grow">
                         <div className="flex justify-between mt-2">
                             <p className="text-[17px]">Transactions</p>
                             <i className="ri-arrow-left-down-line text-green-400"></i>

@@ -314,7 +314,7 @@ const BaseInfo: React.FC<BaseInfoProps> = ({ onChange, initialData }) => {
             { label: 'Contractor', value: 'Contractor' },
             { label: 'Employee', value: 'Employee' },
           ]}
-          label="Employement Type"
+          label="Employment Type"
           labelClass="pb-2 !font-bold"
           selectedValue={formData.employmentType}
           onChange={(value: string) =>

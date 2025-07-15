@@ -6,6 +6,7 @@ interface RightSideModalProps {
   setOpen: (open: boolean) => void;
   title?: string;
   children: ReactNode;
+  width?: string; // Tailwind max-width class or custom width
 }
 
 const RightSideModal: React.FC<RightSideModalProps> = ({
@@ -13,6 +14,7 @@ const RightSideModal: React.FC<RightSideModalProps> = ({
   setOpen,
   title,
   children,
+  width,
 }) => {
   return (
     <Transition.Root show={open} as={Fragment}>
@@ -39,7 +41,11 @@ const RightSideModal: React.FC<RightSideModalProps> = ({
               leaveFrom="translate-x-0"
               leaveTo="translate-x-full"
             >
-              <Dialog.Panel className="absolute right-0 top-0 h-full w-full max-w-xl bg-white shadow-xl flex flex-col">
+              <Dialog.Panel
+                className={`absolute right-0 top-0 h-full w-full ${
+                  width ? width : 'max-w-xl'
+                } bg-white shadow-xl flex flex-col`}
+              >
                 <div className="flex items-center justify-between px-6 py-4 border-b">
                   <h2 className="text-lg font-semibold">{title}</h2>
                   <button
@@ -63,7 +69,7 @@ const RightSideModal: React.FC<RightSideModalProps> = ({
                     </svg>
                   </button>
                 </div>
-                <div className="flex-1 overflow-y-auto p-6">{children}</div>
+                <div className="flex-1 overflow-y-auto p-4">{children}</div>
               </Dialog.Panel>
             </Transition.Child>
           </div>

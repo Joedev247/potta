@@ -53,7 +53,9 @@ const Select: React.FC<SelectProps> = ({
   return (
     <>
       {label && (
-        <div className={`text-gray-900 text-lg font-medium mb-[4px] ${labelClass}`}>
+        <div
+          className={`text-gray-900 text-lg font-medium mb-[4px] ${labelClass}`}
+        >
           {label}
           {required && <span className=" text-red-500">*</span>}
         </div>
@@ -98,7 +100,7 @@ const Select: React.FC<SelectProps> = ({
 
         {!isDisabled && (
           <ul
-            className={`absolute z-10 w-full bg-white border border-gray-300 rounded-md shadow-lg mt-1 ${
+            className={`absolute z-50 w-full bg-white border border-gray-300 rounded-md shadow-lg mt-1 ${
               isOpen ? 'block' : 'hidden'
             }`}
           >
