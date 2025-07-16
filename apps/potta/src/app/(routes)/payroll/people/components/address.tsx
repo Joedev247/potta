@@ -10,13 +10,22 @@ import {
   getStateName,
   LocationOption,
 } from '@potta/services/locationService';
+import { useValidation } from '../hooks/useValidation';
+import { addressValidationSchema } from '../validations/addressValidation';
 
 interface AddressProps {
   onChange?: (data: any) => void;
   initialData?: any;
+  setValidateAddress?: (validateFn: () => Promise<boolean>) => void;
+  showValidationErrors?: boolean;
 }
 
-const Address: React.FC<AddressProps> = ({ onChange, initialData }) => {
+const Address: React.FC<AddressProps> = ({
+  onChange,
+  initialData,
+  setValidateAddress,
+  showValidationErrors = false,
+}) => {
   // Use a ref to track if we've initialized with initial data
   const initializedRef = useRef(false);
 
@@ -33,10 +42,61 @@ const Address: React.FC<AddressProps> = ({ onChange, initialData }) => {
     stateName: '',
   });
 
+  // Initialize validation hook
+  const {
+    errors,
+    validate,
+    validateField,
+    clearErrors,
+    getFieldError,
+    hasFieldError,
+  } = useValidation(addressValidationSchema);
+
+  // Register validation function with parent
+  useEffect(() => {
+    if (setValidateAddress) {
+      setValidateAddress(() => async () => {
+        const isValid = await validate(formData);
+        return isValid;
+      });
+    }
+  }, [setValidateAddress, validate, formData]);
+
+  // Trigger validation when parent requests to show validation errors
+  useEffect(() => {
+    if (showValidationErrors) {
+      console.log(
+        '🔥 Address - Triggering validation due to showValidationErrors'
+      );
+      // Run validation to populate errors in the validation hook
+      validate(formData);
+    }
+  }, [showValidationErrors, validate, formData]);
+
   // State for location options
   const [countryOptions, setCountryOptions] = useState<LocationOption[]>([]);
   const [stateOptions, setStateOptions] = useState<LocationOption[]>([]);
   const [cityOptions, setCityOptions] = useState<LocationOption[]>([]);
+
+  // Track which fields have been touched by the user
+  const [touchedFields, setTouchedFields] = useState<Set<string>>(new Set());
+
+  // Helper function to mark a field as touched
+  const markFieldAsTouched = useCallback((fieldName: string) => {
+    setTouchedFields((prev) => new Set(prev).add(fieldName));
+  }, []);
+
+  // Helper function to get error - show if touched OR if parent requested to show all errors
+  const getFieldErrorIfTouched = useCallback(
+    (fieldName: string) => {
+      const error = getFieldError(fieldName);
+      const isTouched = touchedFields.has(fieldName);
+
+      // Show error if field is touched OR if parent requested to show all errors
+      return isTouched || showValidationErrors ? error : undefined;
+    },
+    [touchedFields, getFieldError, showValidationErrors]
+  );
 
   // Use a ref to prevent the onChange callback from causing re-renders
   const onChangeRef = useRef(onChange);
@@ -52,8 +112,14 @@ const Address: React.FC<AddressProps> = ({ onChange, initialData }) => {
 
   // Initialize with initialData if provided - only once
   useEffect(() => {
+    console.log('🟡 Address useEffect - initialData:', initialData);
+    console.log(
+      '🟡 Address useEffect - initializedRef.current:',
+      initializedRef.current
+    );
+
     if (initialData && !initializedRef.current) {
-      console.log('Address received initialData:', initialData);
+      console.log('🟡 Address received initialData:', initialData);
 
       // Create a new object with default values for any missing fields
       const newFormData = {
@@ -73,6 +139,7 @@ const Address: React.FC<AddressProps> = ({ onChange, initialData }) => {
             : ''),
       };
 
+      console.log('🟡 Address setting formData to:', newFormData);
       setFormData(newFormData);
       initializedRef.current = true;
     }
@@ -98,119 +165,184 @@ const Address: React.FC<AddressProps> = ({ onChange, initialData }) => {
     }
   }, [formData.country, formData.state]);
 
-  // Direct input change handler for the Input component
+  // Handle input change
   const handleInputChange = useCallback(
-    (name: string) => (e: React.ChangeEvent<HTMLInputElement>) => {
+    (field: string) => (e: React.ChangeEvent<HTMLInputElement>) => {
       const value = e.target.value;
+
+      // Mark field as touched
+      markFieldAsTouched(field);
+
       setFormData((prev) => {
-        const updated = { ...prev, [name]: value };
+        const updated = { ...prev, [field]: value };
+
+        // Validate the field
+        validateField(field, value);
+
         // Call onChange outside of setState to prevent re-renders
         setTimeout(() => {
-          if (onChangeRef.current) onChangeRef.current(updated);
+          if (onChangeRef.current) {
+            onChangeRef.current(updated);
+          }
         }, 0);
+
         return updated;
       });
     },
-    []
+    [validateField, markFieldAsTouched]
   );
 
-  // Handle select change
-  const handleSelectChange = useCallback((name: string, value: string) => {
-    setFormData((prev) => {
-      const newData = { ...prev, [name]: value };
+  // Handle country change
+  const handleCountryChange = useCallback(
+    (value: string) => {
+      // Mark field as touched
+      markFieldAsTouched('country');
 
-      // For country and state, also store the full names for the API
-      if (name === 'country') {
-        const countryName = getCountryName(value);
-        newData.countryName = countryName;
-        // Reset state and city
-        newData.state = '';
-        newData.stateName = '';
-        newData.city = '';
-      } else if (name === 'state') {
-        const stateName = getStateName(prev.country, value);
-        newData.stateName = stateName;
-        // Reset city
-        newData.city = '';
-      }
+      const selectedCountry = countryOptions.find(
+        (country) => country.value === value
+      );
+      const countryName = selectedCountry ? selectedCountry.label : '';
 
-      // Call onChange outside of setState to prevent re-renders
-      setTimeout(() => {
-        if (onChangeRef.current) onChangeRef.current(newData);
-      }, 0);
+      setFormData((prev) => {
+        const updated = {
+          ...prev,
+          country: value,
+          countryName,
+          // Reset state and city when country changes
+          state: '',
+          city: '',
+          stateName: '',
+        };
 
-      return newData;
-    });
-  }, []);
+        // Validate the field
+        validateField('country', value);
+
+        // Call onChange outside of setState to prevent re-renders
+        setTimeout(() => {
+          if (onChangeRef.current) {
+            onChangeRef.current(updated);
+          }
+        }, 0);
+
+        return updated;
+      });
+    },
+    [countryOptions, validateField, markFieldAsTouched]
+  );
+
+  // Handle state change
+  const handleStateChange = useCallback(
+    (value: string) => {
+      // Mark field as touched
+      markFieldAsTouched('state');
+
+      const selectedState = stateOptions.find((state) => state.value === value);
+      const stateName = selectedState ? selectedState.label : '';
+
+      setFormData((prev) => {
+        const updated = {
+          ...prev,
+          state: value,
+          stateName,
+          // Reset city when state changes
+          city: '',
+        };
+
+        // Validate the field
+        validateField('state', value);
+
+        // Call onChange outside of setState to prevent re-renders
+        setTimeout(() => {
+          if (onChangeRef.current) {
+            onChangeRef.current(updated);
+          }
+        }, 0);
+
+        return updated;
+      });
+    },
+    [stateOptions, validateField, markFieldAsTouched]
+  );
+
+  // Handle city change
+  const handleCityChange = useCallback(
+    (value: string) => {
+      setFormData((prev) => {
+        const updated = { ...prev, city: value };
+
+        // Validate the field
+        validateField('city', value);
+
+        // Call onChange outside of setState to prevent re-renders
+        setTimeout(() => {
+          if (onChangeRef.current) {
+            onChangeRef.current(updated);
+          }
+        }, 0);
+
+        return updated;
+      });
+    },
+    [validateField]
+  );
 
   return (
-    <div className="w-full flex h-[80vh] flex-col gap-4 pt-10 px-14">
-      <div>
+    <div className="w-full pt-5 px-6">
+      <div className="grid grid-cols-1 gap-4">
         <Input
           type="text"
+          placeholder="Street Address"
           name="address"
+          required
           label="Address"
-          labelClass="!font-bold"
-          placeholder="475 Meadow View"
           value={formData.address}
           onchange={handleInputChange('address')}
+          errors={getFieldErrorIfTouched('address')}
         />
-      </div>
 
-      <div>
-        <SearchableSelect
-          label="Country"
-          labelClass="!font-bold"
-          options={countryOptions}
-          selectedValue={formData.country}
-          onChange={(value) => handleSelectChange('country', value)}
-          placeholder="Select a country"
-        />
-      </div>
-
-      <div className="grid grid-cols-2 gap-3">
-        <div>
+        <div className="grid grid-cols-3 gap-3">
           <SearchableSelect
-            label="State"
-            labelClass="!font-bold"
+            required
+            label="Country"
+            options={countryOptions}
+            selectedValue={formData.country}
+            onChange={handleCountryChange}
+            placeholder="Select country"
+            error={getFieldErrorIfTouched('country')}
+          />
+
+          <SearchableSelect
+            required
+            label="State/Province"
             options={stateOptions}
             selectedValue={formData.state}
-            onChange={(value) => handleSelectChange('state', value)}
-            placeholder={
-              formData.country ? 'Select a state' : 'Select a country first'
-            }
+            onChange={handleStateChange}
+            placeholder="Select state"
             isDisabled={!formData.country}
+            error={getFieldErrorIfTouched('state')}
           />
-        </div>
 
-        <div>
           <SearchableSelect
+            required
             label="City"
-            labelClass="!font-bold"
             options={cityOptions}
             selectedValue={formData.city}
-            onChange={(value) => handleSelectChange('city', value)}
-            placeholder={
-              !formData.country
-                ? 'Select a country first'
-                : !formData.state
-                ? 'Select a state first'
-                : 'Select a city'
-            }
+            onChange={handleCityChange}
+            placeholder="Select city"
             isDisabled={!formData.state}
+            error={getFieldErrorIfTouched('city')}
           />
         </div>
-      </div>
 
-      <div>
         <Input
           type="text"
+          required
+          placeholder="Postal Code"
           name="postalCode"
           label="Postal Code"
-          labelClass="!font-bold"
-          placeholder="96352"
           value={formData.postalCode}
           onchange={handleInputChange('postalCode')}
+          errors={getFieldErrorIfTouched('postalCode')}
         />
       </div>
     </div>

@@ -7,7 +7,7 @@ export const deductionsApi = {
     return result?.data;
   },
   getAll: async (filter: Filter) => {
-    const result = await axios.get('/deductions/filter', {
+    const result = await axios.get('/deductions', {
       params: { ...filter },
     });
     return result.data;

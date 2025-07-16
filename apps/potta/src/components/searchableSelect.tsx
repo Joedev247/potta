@@ -7,8 +7,12 @@ export interface Option {
   label: string;
 }
 
-interface SearchableSelectProps
-  extends Omit<ReactSelectProps<Option, false>, 'onChange'> {
+// Overload for single select
+interface SearchableSelectSingleProps
+  extends Omit<
+    ReactSelectProps<Option, false>,
+    'onChange' | 'isMulti' | 'value'
+  > {
   label?: string;
   labelClass?: string;
   options: Option[];
@@ -18,7 +22,29 @@ interface SearchableSelectProps
   isDisabled?: boolean;
   required?: boolean;
   error?: string;
+  multiple?: false;
 }
+// Overload for multi select
+interface SearchableSelectMultiProps
+  extends Omit<
+    ReactSelectProps<Option, true>,
+    'onChange' | 'isMulti' | 'value'
+  > {
+  label?: string;
+  labelClass?: string;
+  options: Option[];
+  selectedValue?: string[];
+  onChange: (value: string[]) => void;
+  placeholder?: string;
+  isDisabled?: boolean;
+  required?: boolean;
+  error?: string;
+  multiple: true;
+}
+
+type SearchableSelectProps =
+  | SearchableSelectSingleProps
+  | SearchableSelectMultiProps;
 
 // ✅ Custom styles for react-select
 const customStyles = {
@@ -82,23 +108,43 @@ const SearchableSelect: React.FC<SearchableSelectProps> = ({
   isDisabled = false,
   required = false,
   error,
+  multiple = false,
   ...rest
 }) => {
   return (
     <div className="w-full">
       {label && (
-        <label className={`block mb-2 ${labelClass}`}>
+        <label className={`block mb-2 ${labelClass} !font-medium`}>
           {label} {required && <span className="text-red-500">*</span>}
         </label>
       )}
       <ReactSelect
         options={options}
-        value={options.find((option) => option.value === selectedValue) || null}
+        isMulti={multiple}
+        value={
+          multiple
+            ? options.filter((option) =>
+                Array.isArray(selectedValue)
+                  ? selectedValue.includes(option.value)
+                  : false
+              )
+            : options.find((option) => option.value === selectedValue) || null
+        }
         onChange={(option) => {
-          if (option) {
-            onChange(option.value);
+          if (multiple) {
+            if (Array.isArray(option)) {
+              (onChange as (value: string[]) => void)(
+                option.map((o) => o.value)
+              );
+            } else {
+              (onChange as (value: string[]) => void)([]);
+            }
           } else {
-            onChange('');
+            if (option) {
+              (onChange as (value: string) => void)((option as Option).value);
+            } else {
+              (onChange as (value: string) => void)('');
+            }
           }
         }}
         placeholder={placeholder}

@@ -6,6 +6,7 @@ import SearchableSelect from '@potta/components/searchableSelect';
 import Checkbox from '@potta/components/checkbox';
 import { useCreateDeduction } from '../hooks/useCreateDeduction';
 import toast from 'react-hot-toast';
+import { createDeductionSchema } from '../utils/validations';
 
 const typeOptions = [
   { label: 'Standard', value: 'Standard' },
@@ -18,7 +19,10 @@ const modeOptions = [
 const appliesToOptions = [
   { label: 'Salary', value: 'Salary' },
   { label: 'Bonus', value: 'Bonus' },
+  { label: 'All', value: 'All' },
 ];
+
+const defaultBrackets = [{ min: '', max: '', rate: '' }];
 
 const AddDeductionSlideover = ({
   open,
@@ -36,19 +40,15 @@ const AddDeductionSlideover = ({
   const [appliesTo, setAppliesTo] = useState('Salary');
   const [isActive, setIsActive] = useState(true);
   const [isEditable, setIsEditable] = useState(true);
-  const [brackets, setBrackets] = useState([{ min: 0, max: 0, rate: 0 }]);
+  const [brackets, setBrackets] = useState(defaultBrackets);
   const [formErrors, setFormErrors] = useState<Record<string, string>>({});
   const [loading, setLoading] = useState(false);
   const createDeduction = useCreateDeduction();
 
   const handleAddBracket = () => {
-    setBrackets([...brackets, { min: 0, max: 0, rate: 0 }]);
+    setBrackets([...brackets, { min: '', max: '', rate: '' }]);
   };
-  const handleBracketChange = (
-    idx: number,
-    field: string,
-    val: string | number
-  ) => {
+  const handleBracketChange = (idx: number, field: string, val: string) => {
     setBrackets(
       brackets.map((b, i) => (i === idx ? { ...b, [field]: val } : b))
     );
@@ -60,25 +60,40 @@ const AddDeductionSlideover = ({
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setFormErrors({});
-    if (!name) return setFormErrors({ name: 'Name is required' });
-    if (!type) return setFormErrors({ type: 'Type is required' });
-    if (!mode) return setFormErrors({ mode: 'Mode is required' });
-    if (!value || isNaN(Number(value)))
-      return setFormErrors({ value: 'Value is required and must be a number' });
+    // Prepare payload
+    const payload = {
+      name,
+      description,
+      type,
+      mode,
+      value: value === '' ? '' : isNaN(Number(value)) ? value : Number(value),
+      brackets: brackets.map((b) => ({
+        min: b.min === '' || isNaN(Number(b.min)) ? 0 : Number(b.min),
+        max: b.max === '' || isNaN(Number(b.max)) ? 0 : Number(b.max),
+        rate: b.rate === '' || isNaN(Number(b.rate)) ? 0 : Number(b.rate),
+      })),
+      is_tax: isTax,
+      applies_to: appliesTo,
+      is_active: isActive,
+      is_editable: isEditable,
+    };
+    try {
+      await createDeductionSchema.validate(payload, { abortEarly: false });
+    } catch (validationError: any) {
+      const errors: Record<string, string> = {};
+      if (validationError.inner && validationError.inner.length > 0) {
+        validationError.inner.forEach((err: any) => {
+          if (err.path) errors[err.path] = err.message;
+        });
+      } else if (validationError.path) {
+        errors[validationError.path] = validationError.message;
+      }
+      setFormErrors(errors);
+      return;
+    }
     setLoading(true);
     try {
-      await createDeduction.mutateAsync({
-        name,
-        description,
-        type,
-        mode,
-        value: Number(value),
-        brackets,
-        is_tax: isTax,
-        applies_to: appliesTo,
-        is_active: isActive,
-        is_editable: isEditable,
-      });
+      await createDeduction.mutateAsync(payload);
       toast.success('Deduction created successfully!');
       setOpen(false);
       setName('');
@@ -90,7 +105,7 @@ const AddDeductionSlideover = ({
       setAppliesTo('Salary');
       setIsActive(true);
       setIsEditable(true);
-      setBrackets([{ min: 0, max: 0, rate: 0 }]);
+      setBrackets(defaultBrackets);
       setFormErrors({});
     } catch (err) {
       toast.error('Failed to create deduction.');
@@ -106,11 +121,9 @@ const AddDeductionSlideover = ({
       open={open}
       setOpen={setOpen}
       title="Add Deduction"
-      sliderClass="justify-start items-start left-0 max-w-2xl"
-      sliderContentClass="justify-start items-start left-0 max-w-2xl"
     >
       <form
-        className="grid grid-cols-2 gap-4 w-full p-4"
+        className="grid grid-cols-2 gap-4 w-full max-w-4xl p-4"
         onSubmit={handleSubmit}
       >
         <div className="col-span-2">
@@ -158,7 +171,6 @@ const AddDeductionSlideover = ({
           type="number"
           value={value}
           onchange={(e) => setValue(e.target.value)}
-          required
           errors={formErrors.value}
           min={0}
         />
@@ -168,7 +180,7 @@ const AddDeductionSlideover = ({
           selectedValue={appliesTo}
           onChange={setAppliesTo}
           required
-          error={formErrors.appliesTo}
+          error={formErrors.applies_to}
           placeholder="Select applies to"
         />
         <div className="col-span-2">
@@ -181,9 +193,10 @@ const AddDeductionSlideover = ({
                 name={`min-${idx}`}
                 value={b.min}
                 onchange={(e) =>
-                  handleBracketChange(idx, 'min', Number(e.target.value))
+                  handleBracketChange(idx, 'min', e.target.value)
                 }
                 min={0}
+                errors={formErrors[`brackets.${idx}.min`]}
               />
               <Input
                 label="Max"
@@ -191,9 +204,10 @@ const AddDeductionSlideover = ({
                 name={`max-${idx}`}
                 value={b.max}
                 onchange={(e) =>
-                  handleBracketChange(idx, 'max', Number(e.target.value))
+                  handleBracketChange(idx, 'max', e.target.value)
                 }
                 min={0}
+                errors={formErrors[`brackets.${idx}.max`]}
               />
               <Input
                 label="Rate"
@@ -201,26 +215,55 @@ const AddDeductionSlideover = ({
                 name={`rate-${idx}`}
                 value={b.rate}
                 onchange={(e) =>
-                  handleBracketChange(idx, 'rate', Number(e.target.value))
+                  handleBracketChange(idx, 'rate', e.target.value)
                 }
                 min={0}
+                errors={formErrors[`brackets.${idx}.rate`]}
               />
               {brackets.length > 1 && (
                 <button
                   type="button"
-                  className="text-red-500"
+                  className="ml-2 p-1 rounded-full hover:bg-red-100 text-red-600 transition"
+                  title="Remove Bracket"
                   onClick={() => handleRemoveBracket(idx)}
                 >
-                  Remove
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-5 w-5"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M6 18L18 6M6 6l12 12"
+                    />
+                  </svg>
                 </button>
               )}
             </div>
           ))}
           <button
             type="button"
-            className="text-blue-600 mt-1"
+            className="flex items-center gap-1 text-green-700 font-medium mt-2 px-3 py-1 rounded hover:bg-green-50 border border-green-200 transition"
             onClick={handleAddBracket}
           >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="h-4 w-4"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M12 4v16m8-8H4"
+              />
+            </svg>
             Add Bracket
           </button>
         </div>

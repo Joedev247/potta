@@ -63,9 +63,9 @@ const DeductionTable = () => {
       header: 'Active',
       cell: ({ row }) =>
         row.original.is_active ? (
-          <span className="text-green-600">Active</span>
+          <span className="text-green-600 font-medium">Active</span>
         ) : (
-          <span className="text-red-600">Inactive</span>
+          <span className="text-red-600 font-medium">Inactive</span>
         ),
     },
     {
@@ -87,9 +87,11 @@ const DeductionTable = () => {
             <DropdownMenuItem onClick={() => setViewId(row.original.uuid)}>
               View
             </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => setEditId(row.original.uuid)}>
-              Edit
-            </DropdownMenuItem>
+            {row.original.is_editable && (
+              <DropdownMenuItem onClick={() => setEditId(row.original.uuid)}>
+                Edit
+              </DropdownMenuItem>
+            )}
             <DropdownMenuItem
               className="text-red-600"
               onClick={() => setDeleteId(row.original.uuid)}

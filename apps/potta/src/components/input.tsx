@@ -64,7 +64,7 @@ const Input: React.FC<Props> = ({
   return (
     <div className={`w-full ${className}`}>
       {label && (
-        <span className={`mb-3 text-gray-900 ${labelClass}`}>
+        <span className={`mb-3 text-gray-900 font-medium ${labelClass}`}>
           {label}
           {required && <span className=" text-red-500">*</span>}
         </span>
@@ -82,7 +82,7 @@ const Input: React.FC<Props> = ({
           errors
             ? 'focus:ring-red-500 border-red-500'
             : 'focus:ring-green-500 border-gray-200'
-        }   px-4 border border-gray-200 rounded-[2px] outline-none mt-2 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500
+        }   px-4 border border-gray-200 rounded-[0px] outline-none mt-2 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500
    `}
       />
       {errors ? (

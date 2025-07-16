@@ -1,5 +1,5 @@
 'use client';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import Input from '@potta/components/input';
 import Select from '@potta/components/select';
 import SearchableSelect from '@potta/components/searchableSelect';
@@ -8,15 +8,18 @@ import { peopleApi } from '../utils/api';
 import {
   getCountries,
   getCountryName,
-  getCountryCode,
   LocationOption,
 } from '@potta/services/locationService';
+import { useValidation } from '../hooks/useValidation';
+import { bankAccountValidationSchema } from '../validations/bankAccountValidation';
 
 interface BankAccountProps {
   personId: string;
   onChange?: (data: any) => void;
   initialData?: any;
   onSubmit?: (data: any) => void;
+  setValidateBankAccount?: (validateFn: () => Promise<boolean>) => void;
+  showValidationErrors?: boolean;
 }
 
 // Updated account types to match backend requirements
@@ -70,6 +73,8 @@ const BankAccount: React.FC<BankAccountProps> = ({
   onChange,
   initialData,
   onSubmit,
+  setValidateBankAccount,
+  showValidationErrors = false,
 }) => {
   const [formData, setFormData] = useState({
     person_id: personId,
@@ -81,16 +86,61 @@ const BankAccount: React.FC<BankAccountProps> = ({
     account_type: initialData?.account_type || 'Checking',
     is_primary:
       initialData?.is_primary !== undefined ? initialData.is_primary : true,
-    // country_code: initialData?.country_code || '',
+    country_code: initialData?.country_code || '',
     country: initialData?.country || '',
     verified:
       initialData?.verified !== undefined ? initialData.verified : false,
   });
 
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [personData, setPersonData] = useState<any>(null);
   const [countryOptions, setCountryOptions] = useState<LocationOption[]>([]);
+
+  // Initialize validation hook
+  const { validate, validateField, getFieldError, hasFieldError } =
+    useValidation(bankAccountValidationSchema);
+
+  // Track which fields have been touched by the user
+  const [touchedFields, setTouchedFields] = useState<Set<string>>(new Set());
+
+  // Helper function to mark a field as touched
+  const markFieldAsTouched = useCallback((fieldName: string) => {
+    setTouchedFields((prev) => new Set(prev).add(fieldName));
+  }, []);
+
+  // Helper function to get error - show if touched OR if parent requested to show all errors
+  const getFieldErrorIfTouched = useCallback(
+    (fieldName: string) => {
+      const error = getFieldError(fieldName);
+      const isTouched = touchedFields.has(fieldName);
+
+      // Show error if field is touched OR if parent requested to show all errors
+      return isTouched || showValidationErrors ? error : undefined;
+    },
+    [touchedFields, getFieldError, showValidationErrors]
+  );
+
+  // Register validation function with parent
+  useEffect(() => {
+    if (setValidateBankAccount) {
+      setValidateBankAccount(() => async () => {
+        const isValid = await validate(formData);
+        return isValid;
+      });
+    }
+  }, [setValidateBankAccount, validate, formData]);
+
+  // Trigger validation when parent requests to show validation errors
+  useEffect(() => {
+    if (showValidationErrors) {
+      console.log(
+        '🔥 BankAccount - Triggering validation due to showValidationErrors'
+      );
+      // Run validation to populate errors in the validation hook
+      validate(formData);
+    }
+  }, [showValidationErrors, validate, formData]);
 
   // Load countries on component mount
   useEffect(() => {
@@ -98,10 +148,10 @@ const BankAccount: React.FC<BankAccountProps> = ({
     setCountryOptions(countries);
   }, []);
 
-  // Fetch person data to get the country from address
+  // Fetch person data to get the country from address (only if personId exists - for edit mode)
   useEffect(() => {
     const fetchPersonData = async () => {
-      if (personId) {
+      if (personId && personId !== '') {
         try {
           setIsLoading(true);
           const data = await peopleApi.getPerson(personId);
@@ -112,23 +162,9 @@ const BankAccount: React.FC<BankAccountProps> = ({
 
           // Auto-populate country from person's address
           const country = data.address?.country || '';
-          let countryCode = '';
-
-          // Try to get country code using the locationService
-          if (country) {
-            // First try direct lookup by country code (if country is already a code)
-            if (country.length === 2) {
-              countryCode = country;
-            } else {
-              // Try to get code from country name
-              countryCode = getCountryCode(country);
-            }
-          }
 
           // Set default currency based on country
-          const defaultCurrency = countryCode
-            ? getDefaultCurrencyForCountry(countryCode)
-            : 'XAF';
+          const defaultCurrency = getDefaultCurrencyForCountry(country);
 
           setFormData((prev) => ({
             ...prev,
@@ -189,19 +225,24 @@ const BankAccount: React.FC<BankAccountProps> = ({
   const handleInputChange =
     (name: string) => (e: React.ChangeEvent<HTMLInputElement>) => {
       const value = e.target.value;
+
+      // Mark field as touched
+      markFieldAsTouched(name);
+
       setFormData((prev) => {
         const newData = { ...prev, [name]: value };
         if (onChange) onChange(newData);
         return newData;
       });
 
-      // Clear error when field is edited
-      if (errors[name]) {
-        setErrors((prev) => ({ ...prev, [name]: '' }));
-      }
+      // Validate the field
+      validateField(name, value);
     };
   // Handle select change
   const handleSelectChange = (name: string, value: string) => {
+    // Mark field as touched
+    markFieldAsTouched(name);
+
     setFormData((prev) => {
       const newData = { ...prev, [name]: value };
 
@@ -209,10 +250,8 @@ const BankAccount: React.FC<BankAccountProps> = ({
       if (name === 'country_code') {
         newData.country = getCountryName(value) || '';
 
-        // Also update currency based on new country if it hasn't been manually changed
-        if (prev.currency === getDefaultCurrencyForCountry(prev.country_code)) {
-          newData.currency = getDefaultCurrencyForCountry(value);
-        }
+        // Also update currency based on new country
+        newData.currency = getDefaultCurrencyForCountry(value);
       }
 
       if (onChange) {
@@ -227,10 +266,8 @@ const BankAccount: React.FC<BankAccountProps> = ({
       return newData;
     });
 
-    // Clear error when field is edited
-    if (errors[name]) {
-      setErrors((prev) => ({ ...prev, [name]: '' }));
-    }
+    // Validate the field
+    validateField(name, value);
   };
 
   // Handle switch change
@@ -283,44 +320,29 @@ const BankAccount: React.FC<BankAccountProps> = ({
   if (isLoading) {
     return (
       <div className="w-full flex justify-center items-center pt-20">
-        <p className="text-gray-500">Loading bank account information...</p>
+        <p className="text-gray-500">Loading employee information...</p>
       </div>
     );
   }
 
   return (
-    <div className="w-full flex flex-col gap-4 pt-10 px-14">
+    <div className="w-full flex flex-col gap-4 pt-5 px-6">
       <h2 className="text-xl font-bold mb-4">Direct Deposit Information</h2>
       <p className="text-gray-600 mb-4">
         Add bank account details for direct deposit
       </p>
-
-      {/* {personData && (
-        <div className="mb-4 p-3 bg-gray-50 rounded-md">
-          <p className="text-sm text-gray-600">
-            Using address information from: {personData.firstName}{' '}
-            {personData.lastName}
-          </p>
-          {personData.address && (
-            <p className="text-sm text-gray-600">
-              Country: {personData.address.country || 'Not specified'}
-              {formData.country_code && ` (${formData.country_code})`}
-            </p>
-          )}
-        </div>
-      )} */}
 
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
           <Input
             type={'text'}
             name={'account_holder_name'}
+            required
             label="Account Holder Name"
-            labelClass="!font-bold"
             placeholder="John Doe"
             value={formData.account_holder_name}
             onchange={handleInputChange('account_holder_name')}
-            error={errors.account_holder_name}
+            errors={getFieldErrorIfTouched('account_holder_name')}
           />
         </div>
 
@@ -328,12 +350,12 @@ const BankAccount: React.FC<BankAccountProps> = ({
           <Input
             type={'text'}
             name={'bank_name'}
+            required
             label="Bank Name"
-            labelClass="!font-bold"
             placeholder="Example Bank"
             value={formData.bank_name}
             onchange={handleInputChange('bank_name')}
-            error={errors.bank_name}
+            errors={getFieldErrorIfTouched('bank_name')}
           />
         </div>
 
@@ -342,31 +364,33 @@ const BankAccount: React.FC<BankAccountProps> = ({
             <Input
               type={'text'}
               name={'account_number'}
+              required
               label="Account Number"
-              labelClass="!font-bold"
               placeholder="123456789"
               value={formData.account_number}
               onchange={handleInputChange('account_number')}
-              error={errors.account_number}
+              errors={getFieldErrorIfTouched('account_number')}
             />
           </div>
           <div>
             <Input
               type={'text'}
               name={'routing_number'}
+              required
               label="Routing Number"
-              labelClass="!font-bold"
               placeholder="987654321"
               value={formData.routing_number}
               onchange={handleInputChange('routing_number')}
+              errors={getFieldErrorIfTouched('routing_number')}
             />
           </div>
         </div>
 
         <div className="grid grid-cols-2 gap-3">
           <div>
-            <label className="block mb-2 font-bold">Currency</label>
             <SearchableSelect
+              required
+              label="Currency"
               options={currencies}
               selectedValue={formData.currency}
               onChange={(value: string) =>
@@ -375,8 +399,9 @@ const BankAccount: React.FC<BankAccountProps> = ({
             />
           </div>
           <div>
-            <label className="block mb-2 font-bold">Account Type</label>
             <SearchableSelect
+              required
+              label="Account Type"
               options={accountTypes}
               selectedValue={formData.account_type}
               onChange={(value: string) =>
@@ -387,8 +412,9 @@ const BankAccount: React.FC<BankAccountProps> = ({
         </div>
 
         <div>
-          <label className="block mb-2 font-bold">Country</label>
           <SearchableSelect
+            required
+            label="Country"
             options={countryOptions}
             selectedValue={formData.country_code}
             onChange={(value) => {
@@ -401,14 +427,8 @@ const BankAccount: React.FC<BankAccountProps> = ({
               }));
             }}
             placeholder="Select a country"
-            error={errors.country}
+            error={getFieldErrorIfTouched('country')}
           />
-          {formData.country && !formData.country_code && (
-            <p className="text-amber-600 text-sm mt-1">
-              Country "{formData.country}" from address couldn't be matched.
-              Please select a country.
-            </p>
-          )}
         </div>
 
         <div className="flex items-center mt-2">

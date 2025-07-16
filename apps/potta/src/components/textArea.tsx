@@ -5,7 +5,7 @@ type Props = {
   label?: string;
   className?: string;
   name: string;
-  errors?: FieldError;
+  errors?: FieldError | string;
   placeholder?: string;
   register?: UseFormRegister<any>;
   onchange?: (event: React.ChangeEvent<HTMLTextAreaElement>) => void;

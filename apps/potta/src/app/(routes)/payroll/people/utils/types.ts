@@ -6,6 +6,10 @@ export interface PersonPayload {
   phone: string;
   gender: string;
   date_of_birth: string;
+  eligible_for_tips?: boolean;
+  eligible_for_overtime?: boolean;
+  base_pay?: number;
+  compensation_schedule?: string;
   employment_type: string;
   start_date: string;
   end_date?: string | null;
@@ -15,10 +19,21 @@ export interface PersonPayload {
   marital_status: string;
   tax_payer_number: string;
   national_identification_number: string;
+  // Bank account fields - now included in main payload
+  account_holder_name?: string;
+  bank_name?: string;
+  account_number?: string;
+  routing_number?: string;
+  currency?: string;
+  account_type?: string;
+  is_primary?: boolean;
+  country?: string;
+  verified?: boolean;
   roleId?: string;
   isActive: boolean;
   benefits?: string[];
   address: AddressPayload;
+  profilePicture?: string;
 }
 
 // Address information
@@ -57,7 +72,7 @@ export interface CompensationPayload {
   paymentFrequency?: string;
   eligibleForTips?: boolean;
   eligibleForOvertime?: boolean;
-  paid_time_off?: PaidTimeOffItem[];
+  paid_time_off?: string[];
 }
 
 // Paid Time Off (PTO) information
@@ -93,8 +108,12 @@ export interface PaidTimeOffFilterParams {
 
 // Schedule information
 export interface SchedulePayload {
+  personId?: string;
   payScheduleId: string;
   effectiveDate: string;
+  firstPayDate?: string;
+  endPayDate?: string;
+  payCycleName?: string;
 }
 
 // Deposit account information
@@ -176,4 +195,57 @@ export interface BankAccountPayload {
   is_primary: boolean;
   country: string;
   verified: boolean;
+}
+
+export interface Employee {
+  uuid: string;
+  firstName: string;
+  lastName: string;
+  matricule: string;
+  email: string;
+  phone: string;
+  gender: string;
+  date_of_birth: string;
+  employment_type: string;
+  marital_status: string;
+  start_date: string;
+  end_date: string | null;
+  hourly_rate: string;
+  salary: string | null;
+  base_pay: string;
+  compensation_schedule: string;
+  bank_name: string;
+  account_number: string;
+  currency: string;
+  is_active: boolean;
+  profilePicture?: string;
+  address: {
+    city: string;
+    state: string;
+    address: string;
+    country: string;
+    latitude: number;
+    longitude: number;
+    postalCode: string;
+  };
+  benefits: Array<{
+    uuid: string;
+    name: string;
+    description: string;
+    type: string;
+    value: string;
+    cycle: string;
+    is_taxable: boolean;
+    status: string;
+  }>;
+  paid_time_off: Array<{
+    uuid: string;
+    type: string;
+    cycle_type: string;
+    accrual_rate: string;
+    total_entitled_days: string;
+    days_used: string;
+    days_remaining: string;
+    status: string;
+  }>;
 }

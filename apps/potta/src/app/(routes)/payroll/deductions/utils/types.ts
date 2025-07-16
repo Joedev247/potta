@@ -3,7 +3,7 @@ export interface DecductionProps {
   description?: string;
   type: string;
   mode: string;
-  value: number;
+  value: number | string;
   brackets?: { min: number; max: number; rate: number }[];
   is_tax: boolean;
   applies_to: string;

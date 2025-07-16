@@ -46,6 +46,7 @@ interface CustomDatePickerProps {
   className?: string;
   yearRange?: { start: number; end: number };
   disabled?: boolean;
+  errors?: FieldError | string;
 }
 
 // Export the DateInput component for use with native Date objects
@@ -160,7 +161,7 @@ export function DateInput({
   return (
     <div className={className}>
       {label && (
-        <span className="block mb-2">
+        <span className="block mb-2 font-medium">
           {label}
           {required && <span className="text-red-500">*</span>}
         </span>
@@ -176,7 +177,8 @@ export function DateInput({
               'hover:bg-transparent focus:ring-2 focus:ring-green-500 focus:border-green-500',
               !isValidDate(date) && 'text-muted-foreground',
               disabled &&
-                'bg-gray-100 opacity-60 pointer-events-none cursor-not-allowed'
+              'bg-gray-100 opacity-60 pointer-events-none cursor-not-allowed',
+              errors && 'border-red-500 focus:ring-red-500 focus:border-red-500'
             )}
             disabled={disabled}
           >
@@ -361,6 +363,7 @@ const CustomDatePicker: React.FC<CustomDatePickerProps> = ({
   className,
   yearRange,
   disabled = false,
+  errors,
 }) => {
   // Convert CalendarDate to native Date
   const calendarDateToDate = (
@@ -403,6 +406,7 @@ const CustomDatePicker: React.FC<CustomDatePickerProps> = ({
       className={className}
       yearRange={yearRange}
       disabled={disabled}
+      errors={errors}
     />
   );
 };
