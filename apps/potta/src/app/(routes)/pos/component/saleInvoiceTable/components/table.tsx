@@ -30,7 +30,11 @@ const TableOPS = () => {
   };
 
   const calculateTotalPrice = () => {
-    if (!context?.data || !Array.isArray(context.data) || context.data.length === 0) {
+    if (
+      !context?.data ||
+      !Array.isArray(context.data) ||
+      context.data.length === 0
+    ) {
       // Initialize with zeros if data is not available or empty
       context?.setOrderSummary?.({
         subtotal: 0,
@@ -102,7 +106,7 @@ const TableOPS = () => {
     if (context?.data && Array.isArray(context.data)) {
       context.setData((prevData: LineItem[]) => {
         if (!Array.isArray(prevData)) return prevData;
-        
+
         return prevData.map((item: LineItem) => {
           if (item.productId === productId) {
             const newQuantity = item.quantity + change;
@@ -204,7 +208,7 @@ const TableOPS = () => {
     },
     {
       name: '',
-      width:"36px",
+      width: '36px',
       selector: (row: LineItem) => (
         <button
           className="text-red-500 hover:text-red-400"
@@ -226,9 +230,9 @@ const TableOPS = () => {
             data={Array.isArray(context?.data) ? context.data : []}
             ExpandableComponent={null}
             selectable={false}
-            expanded={true}
+            expanded={false}
             color
-            minHeight='47vh'
+            minHeight="47vh"
           />
         </div>
         <OrderSummary

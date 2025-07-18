@@ -42,7 +42,7 @@ const Button = ({
   return (
     <button
       type={type}
-      className={` ${
+      className={`whitespace-nowrap ${
         color ? 'text-black' : 'text-white'
       } items-center text-center gap-2 cursor-pointer ${
         width ? 'w-full text-center' : 'flex text-center justify-end'

@@ -30,6 +30,7 @@ import {
   DialogTitle,
 } from '@potta/components/shadcn/dialog';
 import CurrencyInput from '@potta/components/currencyInput';
+import { Account } from '../../utils/types';
 
 interface JournalLine {
   accountId: string;

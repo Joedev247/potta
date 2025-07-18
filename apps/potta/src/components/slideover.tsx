@@ -14,6 +14,8 @@ interface props {
   setOpen?: (value: boolean) => void; // Made optional
   closeButton?: boolean;
   noPanelScroll?: boolean;
+  sliderClass?: string;
+  sliderContentClass?: string;
 }
 
 const Slider: FC<props> = ({
@@ -25,7 +27,9 @@ const Slider: FC<props> = ({
   open: externalOpen,
   setOpen: externalSetOpen,
   closeButton,
+  sliderClass,
   noPanelScroll,
+  sliderContentClass,
 }) => {
   // Internal state for when open/setOpen aren't provided
   const [internalOpen, setInternalOpen] = useState(false);
@@ -124,6 +128,38 @@ const Slider: FC<props> = ({
             icon={<i className="ri-file-add-line"></i>}
           />
         )}
+        {buttonText == 'assets' && (
+          <Button
+            text={'Create Asset'}
+            onClick={handleToggle}
+            type={'button'}
+            icon={<i className="ri-file-add-line"></i>}
+          />
+        )}
+        {buttonText == 'deductions' && (
+          <Button
+            text={'New Deduction'}
+            onClick={handleToggle}
+            type={'button'}
+            icon={<i className="ri-file-add-line"></i>}
+          />
+        )}
+        {buttonText == 'payslips' && (
+          <Button
+            text={'Create Payslip'}
+            onClick={handleToggle}
+            type={'button'}
+            icon={<i className="ri-file-add-line"></i>}
+          />
+        )}
+        {buttonText == 'spend-program' && (
+          <Button
+            text={'New Spend Program'}
+            onClick={handleToggle}
+            type={'button'}
+            icon={<i className="ri-file-add-line"></i>}
+          />
+        )}
       </div>
       <Dialog
         open={open}
@@ -142,11 +178,11 @@ const Slider: FC<props> = ({
                 <div
                   className={`flex h-full flex-col bg-gray-50 py-6 shadow-xl${
                     noPanelScroll ? '' : ' overflow-y-auto'
-                  }`}
+                  } ${sliderClass}`}
                 >
                   <div className="flex justify-center items-center ">
                     <div className="flex py-2 px-4 w-full border-b justify-between">
-                      <DialogTitle className="text-xl leading-6 font-bold text-gray-900">
+                      <DialogTitle className="text-xl leading-6 !font-semibold text-gray-900">
                         {title}
                       </DialogTitle>
                       <div className="ml-3 flex h-7 items-center">
@@ -164,7 +200,9 @@ const Slider: FC<props> = ({
                       </div>
                     </div>
                   </div>
-                  <div className="relative mt-6 flex-1 px-4 sm:px-6 overflow-y-auto flex justify-center">
+                  <div
+                    className={`relative mt-6 flex-1 px-4 sm:px-6 overflow-y-auto flex custom-scrollbar justify-center ${sliderContentClass}`}
+                  >
                     {children}
                   </div>
                 </div>

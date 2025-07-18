@@ -331,12 +331,9 @@ const CreateBudgetModal: React.FC<CreateBudgetModalProps> = ({
         >
           <div className="max-w-3xl mx-auto space-y-6">
             <div className="w-full">
-              <label className="mb-3 text-gray-900 font-medium block">
-                Budget Name
-                <span className="text-red-500">*</span>
-              </label>
               <Input
                 type="text"
+                label="Budget Name"
                 name="budgetName"
                 placeholder="Enter budget name"
                 value={budgetName}
@@ -352,10 +349,8 @@ const CreateBudgetModal: React.FC<CreateBudgetModalProps> = ({
             </div>
 
             <div className="w-full">
-              <label className="mb-3 text-gray-900 font-medium block">
-                Description
-              </label>
               <Input
+                label="Description"
                 type="text"
                 name="budgetDescription"
                 placeholder="Enter budget description"
@@ -365,11 +360,8 @@ const CreateBudgetModal: React.FC<CreateBudgetModalProps> = ({
             </div>
 
             <div className="w-full">
-              <label className="mb-3 text-gray-900 font-medium block">
-                Budget Goal
-                <span className="text-red-500">*</span>
-              </label>
               <CurrencyInput
+                label="Budget Goal"
                 value={budgetGoal}
                 onChange={(e) => {
                   setBudgetGoal(e.target.value);
@@ -385,12 +377,9 @@ const CreateBudgetModal: React.FC<CreateBudgetModalProps> = ({
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="w-full">
-                <label className="mb-3 text-gray-900 font-medium block">
-                  Start Date
-                  <span className="text-red-500">*</span>
-                </label>
                 <DateInput
                   name="start-date"
+                  label="Start Date"
                   placeholder="Select start date"
                   value={startDate}
                   onChange={(date) => {
@@ -416,11 +405,8 @@ const CreateBudgetModal: React.FC<CreateBudgetModalProps> = ({
               </div>
 
               <div className="w-full">
-                <label className="mb-3 text-gray-900 font-medium block">
-                  End Date
-                  <span className="text-red-500">*</span>
-                </label>
                 <DateInput
+                  label="End Date"
                   name="end-date"
                   placeholder="Select end date"
                   value={endDate}
@@ -452,7 +438,7 @@ const CreateBudgetModal: React.FC<CreateBudgetModalProps> = ({
                 />
                 <label
                   htmlFor="recurring"
-                  className="ml-2 text-gray-900 font-medium"
+                  className="ml-2 text-gray-900 "
                 >
                   Recurring Budget
                 </label>
@@ -471,11 +457,8 @@ const CreateBudgetModal: React.FC<CreateBudgetModalProps> = ({
             </div>
 
             <div className="w-full">
-              <label className="mb-3 text-gray-900 font-medium block">
-                Policies
-                <span className="text-red-500">*</span>
-              </label>
-              <Select
+              <SearchableSelect
+                label="Policies"
                 options={policyOptions}
                 selectedValue={selectedPolicyIds[0] || ''}
                 onChange={(value: string) => {
@@ -486,7 +469,6 @@ const CreateBudgetModal: React.FC<CreateBudgetModalProps> = ({
                     }
                   }
                 }}
-                bg="bg-white border border-gray-200"
                 name="Select policy"
               />
               {errors.policies && (

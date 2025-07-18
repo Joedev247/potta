@@ -19,7 +19,7 @@ type Props = {
   type: string;
   className?: string;
   name: string;
-  errors?: FieldError | CustomError;
+  errors?: FieldError | CustomError | string;
   placeholder?: string;
   register?: UseFormRegister<any>;
   onchange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
@@ -78,13 +78,17 @@ const Input: React.FC<Props> = ({
         value={value}
         {...inputProps}
         placeholder={placeholder}
-        className={`w-full ${inputClass} ${
-          height ? 'py-1.5' : 'py-2.5'
-        } px-4 border border-gray-200 rounded-[2px] outline-none mt-2 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500
+        className={`w-full ${inputClass} ${height ? 'py-1.5' : 'py-2.5'} ${
+          errors
+            ? 'focus:ring-red-500 border-red-500'
+            : 'focus:ring-green-500 border-gray-200'
+        }   px-4 border border-gray-200 rounded-[0px] outline-none mt-2 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500
    `}
       />
       {errors ? (
-        <small className="col-span-2 text-red-500">{errors?.message}</small>
+        <small className="col-span-2 text-red-500">
+          {typeof errors === 'string' ? errors : errors.message}
+        </small>
       ) : null}
     </div>
   );

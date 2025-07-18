@@ -4,13 +4,13 @@ import Link from 'next/link';
 import RootLayout from '../../layout';
 import Search from '@potta/components/search';
 import CustomPopover from '@potta/components/popover';
-
+import { ContextData } from '@potta/components/context';
 interface CardProps {}
 
 const Card: FC<CardProps> = () => {
   const [heights, setHeights] = useState<string>('');
   const [dashTopHeight, setDashTopHeight] = useState<string>('');
-
+  const context = React.useContext(ContextData);
   const [allCards, setAllCards] = useState<boolean>(true);
   const [physicalCards, setPhysicalCards] = useState<boolean>(false);
   const [virtualCards, setVirtualCards] = useState<boolean>(false);
@@ -105,7 +105,9 @@ const Card: FC<CardProps> = () => {
     <RootLayout>
       <div
         style={{ height: parseInt(heights) - parseInt(dashTopHeight) - 20 }}
-        className=" pl-16 pr-5 mt-10 flex flex-col"
+        className={`${
+          context?.layoutMode === 'sidebar' ? 'pl-16 !mt-4' : 'pl-5 !mt-4'
+        } pr-5 mt-10 flex flex-col`}
       >
         <div className="flex justify-between">
           <div className="flex flex-col gap-2">

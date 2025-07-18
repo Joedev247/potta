@@ -1,16 +1,16 @@
 'use client';
-import Link from 'next/link';
-import { useState } from 'react';
+import { useContext } from 'react';
 import RootLayout from '../../layout';
 import PolicyTable from '../../policies/components/table';
+import { ContextData } from '@potta/components/context';
 
 const Invoice = () => {
-  const [detailsModal, setDetailsModal] = useState<boolean>(false);
-  const [page, setPage] = useState(1);
-
+  const context = useContext(ContextData);
   return (
     <RootLayout>
-      <div className="px-14">
+      <div
+        className={`${context?.layoutMode === 'sidebar' ? 'px-14' : 'px-5'}`}
+      >
         <div className="">
           <PolicyTable />
         </div>

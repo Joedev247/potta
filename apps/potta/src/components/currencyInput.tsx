@@ -268,7 +268,7 @@ const CurrencyInput = forwardRef<HTMLInputElement, CurrencyInputProps>(
       <div className="flex flex-col pr-1 gap-[6.5px] w-full">
         {label && (
           <div className="flex items-center gap-2">
-            <label className="font-semibold text-gray-800">
+            <label className="text-gray-800 font-semibold">
               {label}
               {required && <span className="text-red-500 ml-1">*</span>}
             </label>
@@ -287,7 +287,7 @@ const CurrencyInput = forwardRef<HTMLInputElement, CurrencyInputProps>(
             className={`outline-none w-full focus:ring-1 ${inputClass} ${
               error
                 ? 'focus:ring-red-500 border-red-500'
-                : 'focus:ring-blue-500 border-gray-200'
+                : 'focus:ring-green-500 border-gray-200'
             } border p-4 py-[11px]  flex-1 `}
             required={required}
             aria-invalid={error ? 'true' : 'false'}
@@ -300,7 +300,7 @@ const CurrencyInput = forwardRef<HTMLInputElement, CurrencyInputProps>(
               className={`flex items-center py-[11px] ml-[.5px] border border-l-0 ${inputClass} ${
                 error ? 'border-red-500' : 'border-gray-200'
               } px-3 bg-white cursor-pointer focus:ring-1 ${
-                error ? 'focus:ring-red-500' : 'focus:ring-blue-500'
+                error ? 'focus:ring-red-500' : 'focus:ring-green-500'
               } outline-none flex gap-3 justify-between`}
               disabled={isLoading}
             >

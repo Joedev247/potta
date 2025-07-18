@@ -4,6 +4,7 @@ import { usePathname } from 'next/navigation';
 import Icon from '@potta/components/icon_fonts/icon';
 import { ContextData } from '@potta/components/context';
 import { Heart, Clock } from 'lucide-react';
+import { GiReceiveMoney } from "react-icons/gi";
 import { svgIcons } from '@potta/components/svg_icons/IconsSvg';
 
 const SidebarsPayroll = () => {
@@ -26,7 +27,7 @@ const SidebarsPayroll = () => {
     >
       <Menu className="relative h-[76vh]" closeOnClick>
         <MenuItem
-          className=" font-thin "
+          className="  "
           href="/"
           icon={
             <img src="/icons/Potta.svg" className="h-16 w-16 mt-2" alt="logo" />
@@ -37,7 +38,7 @@ const SidebarsPayroll = () => {
 
         <MenuItem
           active={str[2] == 'overview' ? true : false}
-          className="mt-8   font-thin"
+          className="mt-8"
           href="/payroll/overview"
           icon={svgIcons.dashboard(str[2] == 'overview' ? 'white' : 'black')}
         >
@@ -46,7 +47,6 @@ const SidebarsPayroll = () => {
         </MenuItem>
         <MenuItem
           active={str[2] == 'people' ? true : false}
-          className=" font-thin"
           href="/payroll/people"
           icon={svgIcons.users(str[2] == 'people' ? 'white' : 'black')}
         >
@@ -59,21 +59,21 @@ const SidebarsPayroll = () => {
           icon={svgIcons.clock(
             str[2] == 'timesheet' || str[2] == 'shifts' ? 'white' : 'black'
           )}
-          className={`font-thin ${
+          className={` ${
             str[2] == 'timesheet' || str[2] == 'shifts' ? 'active-parent' : ''
           }`}
           defaultOpen={str[2] == 'timesheet' || str[2] == 'shifts'}
         >
           <MenuItem
             active={str[2] == 'timesheet'}
-            className="pl-6 font-thin"
+            className="pl-6 "
             href="/payroll/timesheet"
           >
             <h3 className="text-md">Timesheet</h3>
           </MenuItem>
           <MenuItem
             active={str[2] == 'shifts'}
-            className="pl-6 font-thin"
+            className="pl-6 "
             href="/payroll/shifts"
           >
             <h3 className="text-md">Shifts</h3>
@@ -82,7 +82,6 @@ const SidebarsPayroll = () => {
 
         <MenuItem
           active={str[2] == 'benefit' ? true : false}
-          className=" font-thin"
           href="/payroll/benefit"
           icon={
             <Heart size={21} color={str[2] == 'benefit' ? 'white' : 'black'} />
@@ -93,15 +92,55 @@ const SidebarsPayroll = () => {
 
         <MenuItem
           active={str[2] == 'pto' ? true : false}
-          className=" font-thin"
           href="/payroll/pto"
           icon={svgIcons.pto(str[2] == 'pto' ? 'white' : 'black')}
         >
           <h3 className="text-md ">PTO</h3>
         </MenuItem>
         <MenuItem
+          active={str[2] == 'deductions'}
+          className=""
+          href="/payroll/deductions"
+          icon={svgIcons.dollarcoin(str[2] == 'deductions' ? 'white' : 'black')}
+        >
+          <h3 className="text-md ">Deductions</h3>
+        </MenuItem>
+        {/* Payroll Docs (Payslips & Payschedules) submenu */}
+        {/* <SubMenu
+          label={<h3 className="text-md">Payroll Docs</h3>}
+         
+          icon={
+            str[2] == 'payslips' || str[2] == 'payschedules'? (
+              <GiReceiveMoney size={24} className="text-white" />
+            ) : (
+              <GiReceiveMoney size={24} className="text-gray-600" />
+            )
+          }
+          className={` ${
+            str[2] == 'payslips' || str[2] == 'payschedules'
+              ? 'active-parent'
+              : ''
+          }`}
+          defaultOpen={str[2] == 'payslips' || str[2] == 'payschedules'}
+        >
+          <MenuItem
+            active={str[2] == 'payslips'}
+            className="pl-6 "
+            href="/payroll/payslips"
+          >
+            <h3 className="text-md">Payslips</h3>
+          </MenuItem>
+          <MenuItem
+            active={str[2] == 'payschedules'}
+            className="pl-6 "
+            href="/payroll/payschedules"
+          >
+            <h3 className="text-md">Payschedules</h3>
+          </MenuItem>
+        </SubMenu> */}
+        <MenuItem
           active={str[2] == 'reports' ? true : false}
-          className=" font-thin"
+          className=""
           href="/payroll/reports"
           icon={svgIcons.piechart(str[2] == 'reports' ? 'white' : 'black')}
         >
@@ -119,7 +158,7 @@ const SidebarsPayroll = () => {
           />
           <div className="flex space-x-5">
             <img src="/icons/user.svg" className="h-10 w-10 -ml-2" alt="" />
-            <p className="mt-2 text-md ml-3 font-thin">Jamison</p>
+            <p className="mt-2 text-md ml-3 ">Jamison</p>
           </div>
         </div>
       </div>

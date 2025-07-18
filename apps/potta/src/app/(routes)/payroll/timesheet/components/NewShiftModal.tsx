@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import Button from '@potta/components/button';
 import Input from '@potta/components/input';
 import SearchableSelect from '@potta/components/searchableSelect';
+import { TimeInput } from '@potta/components/timeInput';
 import { toast } from 'react-hot-toast';
 import { X, Save, Plus } from 'lucide-react';
 import { AnimatePresence, motion } from 'framer-motion';
@@ -10,39 +11,15 @@ import { peopleApi } from '../../people/utils/api';
 import axios from 'config/axios.config';
 import CustomDatePicker from '@potta/components/customDatePicker';
 import { CalendarDate } from '@internationalized/date';
-
-interface NewShiftModalProps {
-  onClose: () => void;
-  onSuccess: () => void;
-  roles?: { value: string; label: string }[];
-  isLoadingRoles?: boolean;
-  selectedDate?: any;
-}
-
-// Define the shift payload structure to match the API
-interface ShiftPayload {
-  name: string;
-  start_time: string; // Format: "2025-04-20T08:00:00Z"
-  end_time: string; // Format: "2025-04-20T16:00:00Z"
-  employeeId: string;
-  recurrence_pattern: {
-    monday: boolean;
-    tuesday: boolean;
-    wednesday: boolean;
-    thursday: boolean;
-    friday: boolean;
-    saturday: boolean;
-    sunday: boolean;
-  };
-  break_minutes: number;
-  applies_to_roles: string[];
-}
+import { shiftValidationSchema } from '../../utils/validations';
+import { NewShiftModalProps, ShiftPayload } from '../../utils/types';
 
 const NewShiftModal: React.FC<NewShiftModalProps> = ({
   onClose,
   onSuccess,
   roles = [],
   isLoadingRoles = false,
+  selectedDate,
 }) => {
   // State for modal visibility to handle animations
   const [isVisible, setIsVisible] = useState(true);
@@ -55,7 +32,7 @@ const NewShiftModal: React.FC<NewShiftModalProps> = ({
   const [selectedEmployee, setSelectedEmployee] = useState('');
   const [selectedShift, setSelectedShift] = useState('morning');
   const [startDate, setStartDate] = useState(
-    new Date().toISOString().split('T')[0]
+    selectedDate ? selectedDate.isoDate : new Date().toISOString().split('T')[0]
   );
   const [selectedColor, setSelectedColor] = useState('#34A853');
   const [recurrence, setRecurrence] = useState({
@@ -74,22 +51,30 @@ const NewShiftModal: React.FC<NewShiftModalProps> = ({
   >([]);
   const [isLoadingEmployees, setIsLoadingEmployees] = useState(false);
 
+  // Validation errors state
+  const [errors, setErrors] = useState<Record<string, string>>({});
+
   // Available colors for UI display
   const colorOptions = [
-    '#34A853', // Green (default)
-    '#4CAF50', // Material Green
-    '#8BC34A', // Light Green
-    '#009688', // Teal
-    '#00BCD4', // Cyan
-    '#03A9F4', // Light Blue
-    '#2196F3', // Blue
-    '#3F51B5', // Indigo
+    { value: '#34A853', label: 'Green', name: 'Morning' },
+    { value: '#4CAF50', label: 'Material Green', name: 'Morning Alt' },
+    { value: '#8BC34A', label: 'Light Green', name: 'Morning Light' },
+    { value: '#009688', label: 'Teal', name: 'Teal' },
+    { value: '#00BCD4', label: 'Cyan', name: 'Cyan' },
+    { value: '#03A9F4', label: 'Light Blue', name: 'Afternoon' },
+    { value: '#2196F3', label: 'Blue', name: 'Afternoon Alt' },
+    { value: '#3F51B5', label: 'Indigo', name: 'Indigo' },
+    { value: '#9C27B0', label: 'Purple', name: 'Night' },
+    { value: '#E91E63', label: 'Pink', name: 'Pink' },
+    { value: '#FF9800', label: 'Orange', name: 'Custom' },
+    { value: '#FF5722', label: 'Red', name: 'Red' },
+    { value: '#9E9E9E', label: 'Gray', name: 'Unavailable' },
   ];
 
   // Standard shifts
   const standardShifts = [
     { value: 'morning', label: 'Morning Shift' },
-    { value: 'afternoon', label: 'Afternoon Shift ' },
+    { value: 'afternoon', label: 'Afternoon Shift' },
     { value: 'night', label: 'Night Shift' },
     { value: 'unavailable', label: 'Unavailable' },
     { value: 'custom', label: 'Custom Hours' },
@@ -103,6 +88,17 @@ const NewShiftModal: React.FC<NewShiftModalProps> = ({
       setSelectedRoles(defaultRoles);
     }
   }, [roles]);
+
+  // Set default recurrence based on selected date
+  useEffect(() => {
+    if (selectedDate && selectedDate.dayName) {
+      const dayName = selectedDate.dayName;
+      setRecurrence((prev) => ({
+        ...prev,
+        [dayName]: true,
+      }));
+    }
+  }, [selectedDate]);
 
   // Fetch employees on component mount
   useEffect(() => {
@@ -163,24 +159,31 @@ const NewShiftModal: React.FC<NewShiftModalProps> = ({
   // Handle standard shift selection
   const handleStandardShiftSelect = (shiftId: string) => {
     setSelectedShift(shiftId);
-    // Set default times based on selected shift
+    // Set default times and colors based on selected shift
     if (shiftId === 'morning') {
       setStartTime('08:00');
       setEndTime('16:00');
       setShiftName('Morning Shift');
+      setSelectedColor('#34A853');
     } else if (shiftId === 'afternoon') {
       setStartTime('14:00');
       setEndTime('22:00');
       setShiftName('Afternoon Shift');
+      setSelectedColor('#03A9F4');
     } else if (shiftId === 'night') {
       setStartTime('22:00');
       setEndTime('06:00');
       setShiftName('Night Shift');
+      setSelectedColor('#9C27B0');
     } else if (shiftId === 'unavailable') {
       setStartTime('00:00');
       setEndTime('00:00');
       setShiftName('Unavailable');
       setBreakMinutes('0');
+      setSelectedColor('#9E9E9E');
+    } else if (shiftId === 'custom') {
+      setShiftName('Custom Shift');
+      setSelectedColor('#FF9800');
     }
   };
 
@@ -234,30 +237,44 @@ const NewShiftModal: React.FC<NewShiftModalProps> = ({
     }
   };
 
+  // Validate form using Yup
+  const validateForm = async () => {
+    try {
+      const formData = {
+        name: shiftName,
+        startTime,
+        endTime,
+        employeeId: selectedEmployee,
+        startDate,
+        breakMinutes: parseInt(breakMinutes),
+        selectedRoles,
+        recurrence,
+        color: selectedColor,
+        shiftType: selectedShift,
+      };
+
+      await shiftValidationSchema.validate(formData, { abortEarly: false });
+      setErrors({});
+      return true;
+    } catch (validationError: any) {
+      const newErrors: Record<string, string> = {};
+      if (validationError.inner) {
+        validationError.inner.forEach((error: any) => {
+          newErrors[error.path] = error.message;
+        });
+      }
+      setErrors(newErrors);
+      return false;
+    }
+  };
+
   // Handle form submission
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
     // Validate form
-    if (!shiftName.trim()) {
-      toast.error('Shift name is required');
-      return;
-    }
-    if (!startTime || !endTime) {
-      toast.error('Please fill in all time fields');
-      return;
-    }
-    if (!selectedEmployee && selectedShift !== 'unavailable') {
-      toast.error('Please select an employee');
-      return;
-    }
-    // Check if at least one day is selected
-    if (!Object.values(recurrence).some((day) => day)) {
-      toast.error('Please select at least one day for the shift');
-      return;
-    }
-    // Check if at least one role is selected
-    if (selectedRoles.length === 0) {
-      toast.error('Please select at least one role');
+    const isValid = await validateForm();
+    if (!isValid) {
       return;
     }
 
@@ -273,7 +290,8 @@ const NewShiftModal: React.FC<NewShiftModalProps> = ({
         employeeId: selectedEmployee,
         recurrence_pattern: recurrence,
         break_minutes: parseInt(breakMinutes),
-        applies_to_roles: selectedRoles, // Use the roles selected by the user
+        applies_to_roles: selectedRoles,
+        color: selectedColor, // Include color in payload
       };
       // Log the payload
       console.log('Creating shift:', shiftData);
@@ -352,11 +370,10 @@ const NewShiftModal: React.FC<NewShiftModalProps> = ({
                 {/* Select Employee - Not required for Unavailable shifts */}
                 {selectedShift !== 'unavailable' && (
                   <div className="px-6 pt-2">
-                    <label className="block text-sm font-semibold mb-2">
-                      Select Employee
-                    </label>
                     <SearchableSelect
+                      label="Select Employee"
                       options={employees}
+                      required
                       selectedValue={selectedEmployee}
                       onChange={(value) => setSelectedEmployee(value)}
                       placeholder={
@@ -365,9 +382,169 @@ const NewShiftModal: React.FC<NewShiftModalProps> = ({
                           : 'Select employee'
                       }
                       isDisabled={isLoadingEmployees || isSubmitting}
+                      error={errors.employeeId}
                     />
                   </div>
                 )}
+
+                {/* Shift Name */}
+                <div className="px-6 pt-2">
+                  <Input
+                    label="Shift Name"
+                    type="text"
+                    name="shiftName"
+                    placeholder="Enter shift name"
+                    value={shiftName}
+                    onchange={(e) => setShiftName(e.target.value)}
+                    required
+                    disabled={isSubmitting}
+                    errors={errors.name}
+                  />
+                </div>
+
+                {/* Standard shifts */}
+                <div className="px-6 pt-2">
+                  <SearchableSelect
+                    label="Shift Type"
+                    options={standardShifts}
+                    selectedValue={selectedShift}
+                    onChange={(value) => handleStandardShiftSelect(value)}
+                    placeholder="Select a shift type"
+                    isDisabled={isSubmitting}
+                    error={errors.shiftType}
+                  />
+                </div>
+
+                {/* Date Selection - Using CustomDatePicker */}
+                <div className="px-6 pt-2">
+                  <CustomDatePicker
+                    label="Shift Date"
+                    placeholder="Select shift date"
+                    value={getShiftDate()}
+                    onChange={handleDateChange}
+                    isRequired
+                    errors={errors.startDate}
+                  />
+                </div>
+
+                {/* Time Selection using TimeInput */}
+                <div className="grid grid-cols-2 gap-4 px-6 pt-2">
+                  <TimeInput
+                    label="Start Time"
+                    name="startTime"
+                    placeholder="Select start time"
+                    value={startTime}
+                    onChange={(time) => setStartTime(time)}
+                    required
+                    disabled={isSubmitting || selectedShift === 'unavailable'}
+                    errors={errors.startTime}
+                    format="24"
+                  />
+                  <TimeInput
+                    label="End Time"
+                    name="endTime"
+                    placeholder="Select end time"
+                    value={endTime}
+                    onChange={(time) => setEndTime(time)}
+                    required
+                    disabled={isSubmitting || selectedShift === 'unavailable'}
+                    errors={errors.endTime}
+                    format="24"
+                  />
+                </div>
+
+                {/* Break Duration - Not needed for Unavailable shifts */}
+                {selectedShift !== 'unavailable' && (
+                  <div className="px-6 pt-2">
+                    <Input
+                      label="Break Duration (minutes)"
+                      type="number"
+                      name="break_minutes"
+                      value={breakMinutes}
+                      onchange={(e) => setBreakMinutes(e.target.value)}
+                      min={0}
+                      max={120}
+                      required
+                      disabled={isSubmitting}
+                      errors={errors.breakMinutes}
+                    />
+                  </div>
+                )}
+
+                {/* Color Selection */}
+                <div className="px-6 pt-2">
+                  <label className="block text-sm font-semibold mb-2">
+                    Shift Color
+                  </label>
+                  <div className="grid grid-cols-4 gap-2">
+                    {colorOptions.map((color) => (
+                      <button
+                        key={color.value}
+                        type="button"
+                        className={`relative w-12 h-12 rounded-lg transition-all ${
+                          selectedColor === color.value
+                            ? 'ring-2 ring-offset-2 ring-blue-500 scale-110'
+                            : 'hover:scale-105'
+                        }`}
+                        style={{ backgroundColor: color.value }}
+                        onClick={() => setSelectedColor(color.value)}
+                        disabled={isSubmitting}
+                        title={color.name}
+                      >
+                        {selectedColor === color.value && (
+                          <div className="absolute inset-0 flex items-center justify-center">
+                            <div className="w-2 h-2 bg-white rounded-full"></div>
+                          </div>
+                        )}
+                      </button>
+                    ))}
+                  </div>
+                  {errors.color && (
+                    <p className="mt-1 text-sm text-red-600">{errors.color}</p>
+                  )}
+                </div>
+
+                {/* Repeat on Days */}
+                <div className="px-6 pt-2">
+                  <label className="block text-sm font-semibold mb-2">
+                    Repeat on Days
+                  </label>
+                  <div className="flex justify-between">
+                    {['S', 'M', 'T', 'W', 'T', 'F', 'S'].map((day, index) => {
+                      const dayKey = [
+                        'sunday',
+                        'monday',
+                        'tuesday',
+                        'wednesday',
+                        'thursday',
+                        'friday',
+                        'saturday',
+                      ][index] as keyof typeof recurrence;
+                      return (
+                        <button
+                          key={day}
+                          type="button"
+                          onClick={() => toggleDay(dayKey)}
+                          className={`w-10 h-10 rounded-full flex items-center justify-center transition-colors ${
+                            recurrence[dayKey]
+                              ? 'bg-[#005D1F] text-white'
+                              : 'bg-gray-200 text-gray-700'
+                          }`}
+                          disabled={isSubmitting}
+                        >
+                          {day}
+                        </button>
+                      );
+                    })}
+                  </div>
+                  {errors.recurrence && (
+                    <p className="mt-1 text-sm text-red-600">
+                      {errors.recurrence}
+                    </p>
+                  )}
+                </div>
+
+                {/* Applies To Roles */}
                 <div className="px-6 pt-2">
                   <label className="block text-sm font-semibold mb-2">
                     Applies To Roles
@@ -401,157 +578,15 @@ const NewShiftModal: React.FC<NewShiftModalProps> = ({
                       )}
                     </div>
                   )}
+                  {errors.selectedRoles && (
+                    <p className="mt-1 text-sm text-red-600">
+                      {errors.selectedRoles}
+                    </p>
+                  )}
                 </div>
-                {/* Shift Name */}
-
-                <div className="px-6 pt-2">
-                  <label className="block text-sm font-semibold mb-2">
-                    Shift Name
-                  </label>
-                  <Input
-                    placeholder="Enter shift name"
-                    value={shiftName}
-                    onChange={(e) => setShiftName(e.target.value)}
-                    required
-                    disabled={isSubmitting}
-                  />
-                </div>
-                {/* Standard shifts */}
-                <div className="px-6 pt-2">
-                  <label className="block text-sm font-semibold mb-2">
-                    Shift Type
-                  </label>
-                  <SearchableSelect
-                    options={standardShifts}
-                    selectedValue={selectedShift}
-                    onChange={(value) => handleStandardShiftSelect(value)}
-                    placeholder="Select a shift type"
-                    isDisabled={isSubmitting}
-                  />
-                </div>
-
-                {/* Date Selection - Using CustomDatePicker */}
-                <div className="px-6 pt-2">
-                  <CustomDatePicker
-                    label="Shift Date"
-                    placeholder="Select shift date"
-                    value={getShiftDate()}
-                    onChange={handleDateChange}
-                    isRequired
-                    isDisabled={isSubmitting}
-                  />
-                </div>
-                <div className="px-6 pt-2">
-                  <label className="block text-sm font-semibold mb-2">
-                    Repeat on Days
-                  </label>
-                  <div className="flex justify-between">
-                    {['S', 'M', 'T', 'W', 'T', 'F', 'S'].map((day, index) => {
-                      const dayKey = [
-                        'sunday',
-                        'monday',
-                        'tuesday',
-                        'wednesday',
-                        'thursday',
-                        'friday',
-                        'saturday',
-                      ][index] as keyof typeof recurrence;
-                      return (
-                        <button
-                          key={day}
-                          type="button"
-                          onClick={() => toggleDay(dayKey)}
-                          className={`w-10 h-10 rounded-full flex items-center justify-center transition-colors ${
-                            recurrence[dayKey]
-                              ? 'bg-[#005D1F] text-white'
-                              : 'bg-gray-200 text-gray-700'
-                          }`}
-                          disabled={isSubmitting}
-                        >
-                          {day}
-                        </button>
-                      );
-                    })}
-                  </div>
-                </div>
-                {/* Time Selection */}
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="px-6 pt-2">
-                    <label className="block text-sm font-semibold mb-2">
-                      Start Time
-                    </label>
-                    <input
-                      type="time"
-                      className="w-full p-2 border rounded-sm"
-                      value={startTime}
-                      onChange={(e) => setStartTime(e.target.value)}
-                      required
-                      disabled={isSubmitting || selectedShift === 'unavailable'}
-                    />
-                  </div>
-                  <div className="px-6 pt-2">
-                    <label className="block text-sm font-semibold mb-2">
-                      End Time
-                    </label>
-                    <input
-                      type="time"
-                      className="w-full p-2 border rounded-sm"
-                      value={endTime}
-                      onChange={(e) => setEndTime(e.target.value)}
-                      required
-                      disabled={isSubmitting || selectedShift === 'unavailable'}
-                    />
-                  </div>
-                </div>
-                {/* Break Duration - Not needed for Unavailable shifts */}
-                {selectedShift !== 'unavailable' && (
-                  <div className="px-6 pt-2">
-                    <label className="block text-sm font-semibold mb-2">
-                      Break Duration (minutes)
-                    </label>
-                    <Input
-                      type="number"
-                      name="break_minutes"
-                      value={breakMinutes}
-                      onchange={(e) => setBreakMinutes(e.target.value)}
-                      min={0}
-                      max={120}
-                      required
-                      disabled={isSubmitting}
-                    />
-                  </div>
-                )}
-                {/* Color Label (UI only) */}
-                <div className="px-6 pt-2">
-                  <label className="block text-sm font-semibold mb-2">
-                    Shift Color
-                  </label>
-                  <div className="flex flex-wrap gap-2">
-                    {colorOptions.map((color) => (
-                      <button
-                        key={color}
-                        type="button"
-                        className={`w-10 h-10 rounded-sm transition-all ${
-                          selectedColor === color
-                            ? 'ring-2 ring-offset-2 ring-blue-500'
-                            : ''
-                        }`}
-                        style={{ backgroundColor: color }}
-                        onClick={() => setSelectedColor(color)}
-                        disabled={isSubmitting}
-                      />
-                    ))}
-                  </div>
-                  <p className="text-xs text-gray-500 mt-1">
-                    Color is used for display purposes only
-                  </p>
-                </div>
-                {/* Recurrence Pattern */}
-
-                {/* Applies To Roles */}
 
                 {/* Action buttons - fixed at bottom */}
-                <div className="pt-2 flex pb-2 justify-end sticky bottom-0 bg-white w-full mt-8">
+                <div className="pt-2 flex pb-2 justify-end sticky pr-3 bottom-0 bg-white w-full mt-8">
                   <Button
                     text={isSubmitting ? 'Adding...' : 'Add Shift'}
                     type="submit"

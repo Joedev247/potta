@@ -1,12 +1,15 @@
 'use client';
 import MyTable from '@potta/components/table';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { employeeApi } from '../../utils/api';
-import CustomLoader from '@potta/components/loader';
+import TableSkeleton from './TableSkeleton';
+import Search from '@potta/components/search';
 import axios from '@/config/axios.config';
 
 const PayrollTable = () => {
+  const [searchQuery, setSearchQuery] = useState('');
+
   // Fetch employees
   const { data: employeesResponse, isLoading: isLoadingEmployees } = useQuery({
     queryKey: ['employees'],
@@ -43,6 +46,32 @@ const PayrollTable = () => {
     },
   });
 
+  // Fetch timesheet data for current month to get actual hours worked
+  const { data: timesheetData, isLoading: isLoadingTimesheets } = useQuery({
+    queryKey: ['timesheets-current-month'],
+    queryFn: async () => {
+      try {
+        const startOfMonth = new Date();
+        startOfMonth.setDate(1);
+        startOfMonth.setHours(0, 0, 0, 0);
+
+        const endOfMonth = new Date();
+        endOfMonth.setMonth(endOfMonth.getMonth() + 1, 0);
+        endOfMonth.setHours(23, 59, 59, 999);
+
+        const response = await axios.post('/timesheets/filter', {
+          startDate: startOfMonth.toISOString(),
+          endDate: endOfMonth.toISOString(),
+          limit: 1000,
+        });
+        return response.data;
+      } catch (error) {
+        console.error('Error fetching timesheets:', error);
+        return { data: [] };
+      }
+    },
+  });
+
   // Create a map of role IDs to role names
   const roleMap = React.useMemo(() => {
     const map = new Map();
@@ -54,27 +83,17 @@ const PayrollTable = () => {
     return map;
   }, [rolesData]);
 
-  // Debug logs to check data
-  useEffect(() => {
-    if (employeesResponse?.data && rolesData?.data) {
-      console.log('Role map:', Array.from(roleMap.entries()));
+  // Helper function to get initials from name
+  const getInitials = (name: string) => {
+    if (!name) return '';
+    const names = name.split(' ');
+    if (names.length === 1) return names[0].charAt(0).toUpperCase();
+    return (
+      names[0].charAt(0) + names[names.length - 1].charAt(0)
+    ).toUpperCase();
+  };
 
-      // Log employee role IDs to check if they match any role UUIDs
-      const roleIds = employeesResponse.data.map((emp) => emp.role_id);
-      console.log('Employee role IDs:', roleIds);
-
-      // Check if role IDs exist in the role map
-      roleIds.forEach((roleId) => {
-        console.log(
-          `Role ID ${roleId} exists in map: ${roleMap.has(
-            roleId
-          )}, value: ${roleMap.get(roleId)}`
-        );
-      });
-    }
-  }, [employeesResponse, rolesData, roleMap]);
-
-  // Helper function to calculate hours from shift
+  // Helper function to calculate hours from shift (for shift-based calculations)
   const calculateHoursFromShift = (shift) => {
     if (!shift.start_time || !shift.end_time) return 8; // Default to 8 hours
 
@@ -101,6 +120,16 @@ const PayrollTable = () => {
     const breakHours = shift.break_minutes ? shift.break_minutes / 60 : 0;
 
     return hours + minutes / 60 - breakHours;
+  };
+
+  // Helper function to calculate regular hours (8 hours max per day)
+  const calculateRegularHours = (totalHours: number): number => {
+    return totalHours > 8 ? 8 : totalHours;
+  };
+
+  // Helper function to calculate overtime hours
+  const calculateOvertime = (totalHours: number): number => {
+    return totalHours > 8 ? totalHours - 8 : 0;
   };
 
   // Process employee data for the table
@@ -134,10 +163,41 @@ const PayrollTable = () => {
             employee.bank_accounts[0]
           : null;
 
-      // Calculate regular hours - UPDATED to show most common shift duration
-      let regularHours = 0;
-      let weeklyWorkdays = 0;
-      let weeklyHours = 0;
+      // Calculate actual hours from timesheet data
+      let actualTotalHours = 0;
+      let actualRegularHours = 0;
+      let actualOvertimeHours = 0;
+
+      if (timesheetData?.data) {
+        const employeeTimesheets = timesheetData.data.filter(
+          (timesheet) => timesheet.employee?.uuid === employee.uuid
+        );
+
+        employeeTimesheets.forEach((timesheet) => {
+          let totalHours = 0;
+
+          if (timesheet.total_hours && parseFloat(timesheet.total_hours) > 0) {
+            totalHours = parseFloat(timesheet.total_hours);
+          } else if (timesheet.check_in_time && timesheet.check_out_time) {
+            const checkIn = new Date(timesheet.check_in_time);
+            const checkOut = new Date(timesheet.check_out_time);
+            const diffMs = checkOut.getTime() - checkIn.getTime();
+            const diffHours = diffMs / (1000 * 60 * 60);
+            const breakHours = timesheet.break_minutes
+              ? timesheet.break_minutes / 60
+              : 0;
+            totalHours = diffHours - breakHours;
+          }
+
+          actualTotalHours += totalHours;
+          actualRegularHours += calculateRegularHours(totalHours);
+          actualOvertimeHours += calculateOvertime(totalHours);
+        });
+      }
+
+      // Fallback to shift-based calculations if no timesheet data
+      let shiftBasedRegularHours = 0;
+      let shiftBasedOvertimeHours = 0;
       let shiftTimeInfo = 'No shifts';
 
       if (employee.shifts && employee.shifts.length > 0) {
@@ -173,65 +233,26 @@ const PayrollTable = () => {
           if (info.count > maxCount) {
             maxCount = info.count;
             mostCommonDuration = info;
-            regularHours = parseFloat(durationKey);
+            shiftBasedRegularHours = parseFloat(durationKey);
             shiftTimeInfo = info.timeInfo;
           }
         }
 
-        // If we found a common duration, use it
-        if (mostCommonDuration) {
-          // Count workdays per week to calculate weekly hours
-          const primaryShift = employee.shifts[0]; // Use first shift for workday counting
-
-          if (primaryShift.recurrence_pattern) {
-            if (primaryShift.recurrence_pattern.monday) weeklyWorkdays++;
-            if (primaryShift.recurrence_pattern.tuesday) weeklyWorkdays++;
-            if (primaryShift.recurrence_pattern.wednesday) weeklyWorkdays++;
-            if (primaryShift.recurrence_pattern.thursday) weeklyWorkdays++;
-            if (primaryShift.recurrence_pattern.friday) weeklyWorkdays++;
-            if (primaryShift.recurrence_pattern.saturday) weeklyWorkdays++;
-            if (primaryShift.recurrence_pattern.sunday) weeklyWorkdays++;
-          }
-
-          weeklyHours = regularHours * weeklyWorkdays;
-        } else {
-          // Fallback if no shifts with duration found
-          regularHours = 8; // Default
-          weeklyHours = 40; // Default
+        // Calculate overtime based on shifts
+        if (employee.eligible_for_overtime) {
+          employee.shifts.forEach((shift) => {
+            const hoursPerShift = calculateHoursFromShift(shift);
+            const overtimePerShift = Math.max(0, hoursPerShift - 8);
+            shiftBasedOvertimeHours += overtimePerShift;
+          });
         }
-      } else {
-        // Default if no shifts defined
-        regularHours = 8; // Default to 8 hours per day
-        weeklyHours = 40; // Default to 40 hours per week
       }
 
-      // Calculate overtime hours based on shifts
-      let overtimeHours = 0;
-
-      if (
-        employee.eligible_for_overtime &&
-        employee.shifts &&
-        employee.shifts.length > 0
-      ) {
-        employee.shifts.forEach((shift) => {
-          const hoursPerShift = calculateHoursFromShift(shift);
-          const overtimePerShift = Math.max(0, hoursPerShift - 8);
-
-          // Count workdays for this shift
-          let shiftWorkdays = 0;
-          if (shift.recurrence_pattern) {
-            if (shift.recurrence_pattern.monday) shiftWorkdays++;
-            if (shift.recurrence_pattern.tuesday) shiftWorkdays++;
-            if (shift.recurrence_pattern.wednesday) shiftWorkdays++;
-            if (shift.recurrence_pattern.thursday) shiftWorkdays++;
-            if (shift.recurrence_pattern.friday) shiftWorkdays++;
-            if (shift.recurrence_pattern.saturday) shiftWorkdays++;
-            if (shift.recurrence_pattern.sunday) shiftWorkdays++;
-          }
-
-          overtimeHours += overtimePerShift * shiftWorkdays;
-        });
-      }
+      // Use actual timesheet data if available, otherwise use shift-based calculations
+      const regularHours =
+        actualTotalHours > 0 ? actualRegularHours : shiftBasedRegularHours;
+      const overtimeHours =
+        actualTotalHours > 0 ? actualOvertimeHours : shiftBasedOvertimeHours;
 
       // Calculate PTO hours
       let ptoHours = 0;
@@ -273,17 +294,18 @@ const PayrollTable = () => {
 
       // Get role name from the role map
       const roleId = employee.role_id;
-      console.log(
-        `Employee ${employee.firstName} ${employee.lastName} has role ID: ${roleId}`
-      );
       const roleName = roleMap.get(roleId) || 'Staff';
-      console.log(`Role name for ${roleId}: ${roleName}`);
+
+      // Get employee name and initials
+      const employeeName = `${employee.firstName} ${employee.lastName}`;
+      const initials = getInitials(employeeName);
 
       return {
         id: employee.uuid,
         employee: {
-          name: `${employee.firstName} ${employee.lastName}`,
-          avatar: `https://ui-avatars.com/api/?name=${employee.firstName}+${employee.lastName}&background=random`,
+          name: employeeName,
+          initials: initials,
+          email: employee.email,
         },
         todayPay: `XAF ${todayPay.toLocaleString(undefined, {
           maximumFractionDigits: 0,
@@ -291,8 +313,6 @@ const PayrollTable = () => {
         rate: rateDisplay,
         regularHours: regularHours.toFixed(1),
         shiftTimeInfo: shiftTimeInfo,
-        weeklyHours: weeklyHours.toFixed(1),
-        weeklyWorkdays: weeklyWorkdays,
         overtime: overtimeHours.toFixed(1),
         ptoHours: ptoHours.toFixed(1),
         benefits: `XAF ${benefitsValue.toLocaleString()}`,
@@ -302,23 +322,47 @@ const PayrollTable = () => {
             )}...)`
           : 'Not set',
         role: roleName,
-        roleId: roleId, // Add the role ID to the data for debugging
+        roleId: roleId,
+        hasTimesheetData: actualTotalHours > 0,
       };
     });
-  }, [employeesResponse, roleMap]);
+  }, [employeesResponse, roleMap, timesheetData]);
+
+  // Filter data based on search query
+  const filteredData = React.useMemo(() => {
+    if (!searchQuery.trim()) return processedData;
+
+    const query = searchQuery.toLowerCase();
+    return processedData.filter((employee) => {
+      return (
+        employee.employee.name.toLowerCase().includes(query) ||
+        employee.role.toLowerCase().includes(query) ||
+        employee.rate.toLowerCase().includes(query) ||
+        employee.paymentMethod.toLowerCase().includes(query) ||
+        employee.todayPay.toLowerCase().includes(query) ||
+        employee.benefits.toLowerCase().includes(query)
+      );
+    });
+  }, [processedData, searchQuery]);
 
   const columns = [
     {
       name: 'Employee',
       selector: (row) => row.employee.name,
+      width: '250px',
       cell: (row) => (
         <div className="flex items-center space-x-3">
-          <img
-            src={row.employee.avatar}
-            alt={row.employee.name}
-            className="h-8 w-8 rounded-full"
-          />
-          <p>{row.employee.name}</p>
+          <div className="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center text-gray-600 font-medium text-sm flex-shrink-0">
+            {row.employee.initials}
+          </div>
+          <div className="min-w-0 flex-1">
+            <p className="text-sm font-medium text-gray-900 truncate">
+              {row.employee.name}
+            </p>
+            <p className="text-xs text-gray-500 truncate">
+              {row.employee.email}
+            </p>
+          </div>
         </div>
       ),
       sortable: true,
@@ -340,7 +384,10 @@ const PayrollTable = () => {
       selector: (row) => row.regularHours,
       cell: (row) => (
         <div
-          title={`${row.shiftTimeInfo} | ${row.weeklyHours} hrs/week (${row.weeklyWorkdays} days)`}
+          title={`${
+            row.hasTimesheetData ? 'From timesheets' : 'From shifts'
+          } | ${row.shiftTimeInfo}`}
+          className={row.hasTimesheetData ? 'text-green-600 font-medium' : ''}
         >
           {row.regularHours}
         </div>
@@ -350,7 +397,13 @@ const PayrollTable = () => {
     {
       name: 'Overtime',
       selector: (row) => row.overtime,
-      cell: (row) => <div>{row.overtime}</div>,
+      cell: (row) => (
+        <div
+          className={row.hasTimesheetData ? 'text-green-600 font-medium' : ''}
+        >
+          {row.overtime}
+        </div>
+      ),
       sortable: true,
     },
     {
@@ -379,14 +432,34 @@ const PayrollTable = () => {
     },
   ];
 
-  const isLoading = isLoadingEmployees || isLoadingRoles;
+  const isLoading = isLoadingEmployees || isLoadingRoles || isLoadingTimesheets;
 
   return (
     <div className="mt-10">
+      {/* Search Section */}
+      <div className="mb-6">
+        <div className="max-w-md">
+          <Search
+            placeholder="Search employees, roles, rates..."
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+              setSearchQuery(e.target.value)
+            }
+            value={searchQuery}
+          />
+        </div>
+      </div>
+
+      {/* Table */}
       {isLoading ? (
-        <CustomLoader />
+        <TableSkeleton />
       ) : (
-        <MyTable columns={columns} data={processedData} />
+        <MyTable
+          columns={columns}
+          data={filteredData}
+          ExpandableComponent={null}
+      expanded={false} // Not needed
+
+        />
       )}
     </div>
   );

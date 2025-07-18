@@ -1,5 +1,17 @@
 import React, { useState, useEffect } from 'react';
-import { X } from 'lucide-react';
+import {
+  X,
+  Calendar,
+  User,
+  FileText,
+  Settings,
+  CheckCircle,
+  Clock,
+  AlertCircle,
+  Info,
+} from 'lucide-react';
+import moment from 'moment';
+import { GrDocumentText } from "react-icons/gr";
 import { Policy } from '../utils/types';
 import { PolicySummaryView } from './PolicySummaryView';
 
@@ -9,16 +21,14 @@ interface ViewPolicyModalProps {
   policy: Policy | null;
 }
 
-// Move formatDate above the return so it's always defined
 function formatDate(date: string) {
-  return new Date(date).toLocaleDateString();
+  return moment(date).format('MMM DD, YYYY');
 }
 
 const ViewPolicyModal = ({ open, setOpen, policy }: ViewPolicyModalProps) => {
   const [isAnimating, setIsAnimating] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
 
-  // Handle animation when modal opens or closes
   useEffect(() => {
     if (open) {
       setIsVisible(true);
@@ -41,73 +51,211 @@ const ViewPolicyModal = ({ open, setOpen, policy }: ViewPolicyModalProps) => {
 
   if (!isVisible || !policy) return null;
 
+  const getStatusIcon = (status: string | undefined) => {
+    switch (status?.toLowerCase()) {
+      case 'active':
+        return <CheckCircle className="h-4 w-4 text-green-600" />;
+      case 'pending':
+        return <Clock className="h-4 w-4 text-gray-600" />;
+      case 'inactive':
+        return <AlertCircle className="h-4 w-4 text-gray-600" />;
+      default:
+        return <Settings className="h-4 w-4 text-gray-600" />;
+    }
+  };
+
+  // Collect all requirements from all rules
+  const getAllRequirements = () => {
+    const requirements = new Set<string>();
+
+    // Add top-level policy requirements
+    if (policy.requireReceipt) requirements.add('Receipt Required');
+    if (policy.requireMemo) requirements.add('Memo Required');
+    if (policy.requireScreenshots) requirements.add('Screenshots Required');
+    if (policy.requireNetSuiteCustomerJob)
+      requirements.add('NetSuite Customer/Job');
+
+    // Add mileage requirements
+    if (policy.mileageRequirements?.requireGpsCoordinates)
+      requirements.add('GPS Coordinates');
+    if (policy.mileageRequirements?.businessPurpose)
+      requirements.add('Business Purpose');
+    if (policy.mileageRequirements?.requireBeforeAfterScreenshots)
+      requirements.add('Before/After Screenshots');
+
+    // Add requirements from rules
+    policy.rules.forEach((rule) => {
+      if (rule.requirements) {
+        Object.entries(rule.requirements).forEach(([key, value]) => {
+          if (value) {
+            const label = key
+              .replace(/([A-Z])/g, ' $1')
+              .replace(/^./, (s) => s.toUpperCase());
+            requirements.add(label);
+          }
+        });
+      }
+    });
+
+    return Array.from(requirements);
+  };
+
+  const allRequirements = getAllRequirements();
+
   return (
-    <div className="fixed inset-0  z-50 overflow-hidden">
+    <div className="fixed inset-0 z-50 overflow-hidden">
       {/* Backdrop */}
       <div
         className={`fixed inset-0 bg-black transition-opacity duration-300 ${
           isAnimating ? 'opacity-50' : 'opacity-0'
         }`}
         onClick={() => setOpen(false)}
-      ></div>
+      />
 
       {/* Modal Container */}
       <div
-        className={`fixed overflow-y-auto inset-0 bg-white transition-transform duration-300 ease-in-out transform ${
+        className={`fixed inset-0 bg-white transition-transform duration-300 ease-in-out transform ${
           isAnimating ? 'translate-y-0' : '-translate-y-full'
         }`}
       >
-        {/* Header */}
-        <div className="flex items-center justify-between p-6 border-b border-gray-200">
-          <h2 className="text-2xl font-bold">View Policy</h2>
-          <button
-            onClick={() => setOpen(false)}
-            className="text-gray-500 hover:text-gray-700 focus:outline-none"
-          >
-            <X size={24} />
-          </button>
-        </div>
-
-        {/* Content */}
-        <div
-          className="p-6 max-w-3xl mx-auto space-y-8"
-          style={{ maxHeight: 'calc(100vh - 140px)' }}
-        >
-          {/* Policy Summary - refined professional layout */}
-          <div className="bg-white border p-6  flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-            <div className="flex-1 min-w-0">
-              <div className="flex items-center gap-4 flex-wrap">
-                <h2 className="text-2xl font-bold truncate">{policy.name}</h2>
-                <span
-                  className={`text-xs font-semibold px-3 py-1 rounded-full capitalize ${
-                    policy.status === 'active'
-                      ? 'bg-green-100 text-green-700'
-                      : 'bg-gray-100 text-gray-600'
-                  }`}
-                >
-                  {policy.status || '-'}
-                </span>
-              </div>
-              <div className="flex gap-6 mt-2 text-sm text-gray-500 flex-wrap">
-                <span>
-                  Created:{' '}
-                  <span className="font-medium text-gray-700">
-                    {policy.createdAt ? formatDate(policy.createdAt) : '-'}
+        {/* Sticky Header */}
+        <div className="sticky top-0 z-10 bg-white border-b border-gray-200 shadow-sm">
+          <div className="flex items-center justify-between p-4">
+            <div className="flex items-center gap-4">
+              <div>
+                <h2 className="text-2xl font-bold text-gray-900">
+                  {policy.name}
+                </h2>
+                <div className="flex items-center gap- mt-1">
+                  {getStatusIcon(policy.status)}
+                  <span
+                    className={`px-2 capitalize  py-1 text-mda font-medium ${
+                      policy.status === 'active'
+                        ? ' text-green-700'
+                        : policy.status === 'pending'
+                        ? ' text-gray-600'
+                        : ' text-gray-600'
+                    }`}
+                  >
+                    {policy.status || 'Unknown'}
                   </span>
-                </span>
-                <span>
-                  Updated:{' '}
-                  <span className="font-medium text-gray-700">
-                    {policy.updatedAt ? formatDate(policy.updatedAt) : '-'}
-                  </span>
-                </span>
+                </div>
               </div>
             </div>
-            {/* Optionally add document link/type here if needed */}
+            <button
+              onClick={() => setOpen(false)}
+              className="p-2 hover:bg-gray-100 transition-colors"
+            >
+              <X size={24} className="text-gray-500" />
+            </button>
+          </div>
+        </div>
+
+        {/* Content - Two Side Layout */}
+        <div className="flex h-full" style={{ height: 'calc(100vh - 88px)' }}>
+          {/* Left Side - Essential Info */}
+          <div className="w-1/3 border-r border-gray-200 p-6 overflow-y-auto">
+            <div className="space-y-8">
+              {/* Policy Overview */}
+              <div>
+                <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
+                  <Info className="h-5 w-5" />
+                  Policy Overview
+                </h3>
+                <div className="space-y-4">
+                  <div className="flex items-center gap-3">
+                    <div className="p-2 bg-gray-50">
+                      <Calendar className="h-4 w-4" />
+                    </div>
+                    <div>
+                      <p className="text-sm font-medium text-gray-500">
+                        Created
+                      </p>
+                      <p className="text-sm font-semibold text-gray-900">
+                        {policy.createdAt
+                          ? formatDate(policy.createdAt)
+                          : 'N/A'}
+                      </p>
+                    </div>
+                  </div>
+                 
+                  <div className="flex items-center gap-3">
+                    <div className="p-2 bg-gray-50">
+                      <GrDocumentText  className="h-4 w-4" />
+                    </div>
+                    <div>
+                      <p className="text-sm font-medium text-gray-500">Rules</p>
+                      <p className="text-sm font-semibold text-gray-900">
+                        {policy.rules.length}{' '}
+                        {policy.rules.length === 1 ? 'Rule' : 'Rules'}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+                {policy.transactionType && (
+                  <div className="mt-4 pt-4 border-t border-gray-200">
+                    <div className="flex items-center gap-2">
+                      <span className="text-sm font-medium text-gray-500">
+                        Transaction Type:
+                      </span>
+                      <span className="px-3 py-1 bg-gray-50 text-gray-700 text-sm font-medium">
+                        {policy.transactionType}
+                      </span>
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              {/* Policy Requirements Summary */}
+              <div>
+                <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
+                  <CheckCircle className="h-5 w-5" />
+                  Requirements
+                </h3>
+                <div className="space-y-3">
+                  {allRequirements.length > 0 ? (
+                    allRequirements.map((requirement, index) => (
+                      <div
+                        key={index}
+                        className="flex items-center gap-2 text-sm"
+                      >
+                        <CheckCircle className="h-3 w-3 text-green-600" />
+                        <span className="text-gray-700">{requirement}</span>
+                      </div>
+                    ))
+                  ) : (
+                    <div className="text-sm text-gray-500 italic">
+                      No specific requirements defined
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              {/* Additional Info */}
+              {policy.additionalRequirements && (
+                <div>
+                  <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
+                    <FileText className="h-5 w-5" />
+                    Additional Requirements
+                  </h3>
+                  <p className="text-sm text-gray-700">
+                    {policy.additionalRequirements}
+                  </p>
+                </div>
+              )}
+            </div>
           </div>
 
-          {/* Rules Section - already styled below */}
-          <PolicySummaryView policy={policy} />
+          {/* Right Side - Detailed Rules */}
+          <div className="w-2/3 p-6 overflow-y-auto">
+            <div>
+              <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
+                <Settings className="h-5 w-5" />
+                Policy Rules & Requirements
+              </h3>
+              <PolicySummaryView policy={policy} />
+            </div>
+          </div>
         </div>
       </div>
     </div>

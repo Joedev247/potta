@@ -423,8 +423,8 @@ const TableAccount = () => {
   };
 
   return (
-    <div className="flex flex-col bg-white">
-      <div className="p-4">
+    <div className="flex flex-col bg-white h-full">
+      <div className="p-4 flex-shrink-0">
         <div className="flex justify-between mb-4">
           <div className="relative w-1/3">
             <Search
@@ -463,7 +463,7 @@ const TableAccount = () => {
               <Button
                 type="button"
                 text="Create Account"
-                icon={<Plus className="h-4 w-4" />}
+                icon={<i className="ri-file-add-line"></i>}
                 theme="default"
                 className="whitespace-nowrap"
                 onClick={() => {
@@ -474,9 +474,11 @@ const TableAccount = () => {
             </div>
           </div>
         </div>
+      </div>
 
-        {/* Account Table */}
-        <div className="w-full overflow-hidden">
+      {/* Account Table */}
+      <div className="flex-1 flex flex-col overflow-hidden px-4 pb-4">
+        <div className="flex-shrink-0">
           <table className="w-full table-fixed">
             <colgroup>
               <col style={{ width: '30%' }} />
@@ -501,35 +503,35 @@ const TableAccount = () => {
               </tr>
             </thead>
           </table>
+        </div>
 
-          <div className="max-h-[600px] min-h-[600px] css-dip3t8 overflow-y-auto">
-            <table className="w-full table-fixed">
-              <colgroup>
-                <col style={{ width: '30%' }} />
-                <col style={{ width: '15%' }} />
-                <col style={{ width: '20%' }} />
-                <col style={{ width: '20%' }} />
-                <col style={{ width: '15%' }} />
-              </colgroup>
-              <tbody className="text-gray-700">
-                {isLoading ? (
-                  <tr>
-                    <td colSpan={5} className="py-8 text-center text-gray-500">
-                      Loading accounts...
-                    </td>
-                  </tr>
-                ) : filteredAccounts.length === 0 ? (
-                  <tr>
-                    <td colSpan={5} className="py-8 text-center text-gray-500">
-                      No accounts found.
-                    </td>
-                  </tr>
-                ) : (
-                  renderAccountRows(filteredAccounts)
-                )}
-              </tbody>
-            </table>
-          </div>
+        <div className="flex-1 overflow-y-auto border border-gray-200 border-t-0">
+          <table className="w-full table-fixed">
+            <colgroup>
+              <col style={{ width: '30%' }} />
+              <col style={{ width: '15%' }} />
+              <col style={{ width: '20%' }} />
+              <col style={{ width: '20%' }} />
+              <col style={{ width: '15%' }} />
+            </colgroup>
+            <tbody className="text-gray-700">
+              {isLoading ? (
+                <tr>
+                  <td colSpan={5} className="py-8 text-center text-gray-500">
+                    Loading accounts...
+                  </td>
+                </tr>
+              ) : filteredAccounts.length === 0 ? (
+                <tr>
+                  <td colSpan={5} className="py-8 text-center text-gray-500">
+                    No accounts found.
+                  </td>
+                </tr>
+              ) : (
+                renderAccountRows(filteredAccounts)
+              )}
+            </tbody>
+          </table>
         </div>
       </div>
 

@@ -5,27 +5,27 @@ import { ProductPayload } from './validation';
 
 export const productApi = {
   create: async (data: ProductPayload) => {
-    const result = await axios.post(`/product`, data);
+    const result = await axios.post(`/item`, data);
     return result?.data;
   },
 
   getAll: async (filter: Filter) => {
-    const result = await axios.get(`/product`, {
+    const result = await axios.get(`/item`, {
       params: { ...filter },
     });
     console.log(result.data);
     return result.data;
   },
   getOne: async (product_id: string) => {
-    const result = await axios.get(`/product/${product_id}`);
+    const result = await axios.get(`/item/${product_id}`);
     return result.data;
   },
   update: async (product_id: string, data: unknown) => {
-    const result = await axios.put(`/product/${product_id}`, data);
+    const result = await axios.put(`/item/${product_id}`, data);
     return result?.data;
   },
   delete: async (product_id: string) => {
-    const result = await axios.delete(`/product/${product_id}`);
+    const result = await axios.delete(`/item/${product_id}`);
     return result?.data;
   },
   restock: async (data: {
@@ -34,7 +34,7 @@ export const productApi = {
     userId: string;
   }) => {
     const { productId: product_id, ...payload } = data;
-    const result = await axios.put(`/product/${product_id}/restock`, payload);
+    const result = await axios.put(`/item/${product_id}/restock`, payload);
     return result?.data;
   },
   uploadImage: async (file: File) => {

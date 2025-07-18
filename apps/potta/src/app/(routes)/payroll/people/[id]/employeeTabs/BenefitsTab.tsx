@@ -12,7 +12,7 @@ const BenefitsTab = ({ employee }: { employee: any }) => (
       ]}
       data={employee?.benefits || []}
       ExpandableComponent={null}
-      expanded
+      expanded={false}
       pagination={(employee?.benefits?.length || 0) > 9}
     />
   </div>

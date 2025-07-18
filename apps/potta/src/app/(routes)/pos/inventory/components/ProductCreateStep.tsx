@@ -38,9 +38,9 @@ const ProductCreateStep: React.FC<ProductCreateStepProps> = ({
       inventoryLevel: 0,
       salesPrice: 0,
       taxable: false,
-      taxRate: 0,
-      category: '',
+      categoryId: '',
       images: [],
+      type: 'INVENTORY', // Add default type for inventory products
     },
   });
   const mutation = useCreateProduct();
@@ -65,12 +65,11 @@ const ProductCreateStep: React.FC<ProductCreateStepProps> = ({
       }
       const selectedCategory =
         (categoriesData?.data || []).find(
-          (cat: { uuid: string }) => cat.uuid === formData.category
+          (cat: { uuid: string }) => cat.uuid === formData.categoryId
         ) || null;
       (formData as any).categoryId = selectedCategory
         ? selectedCategory.uuid
         : '';
-      delete formData.category;
       delete formData.taxRate;
       mutation.mutate(formData, {
         onSuccess: (data: any) => {
@@ -107,7 +106,7 @@ const ProductCreateStep: React.FC<ProductCreateStepProps> = ({
       <div className="w-full grid mt-5 grid-cols-2 gap-2">
         <div className="w-full">
           <Controller
-            name="category"
+            name="categoryId"
             control={control}
             render={({ field }) => (
               <Select
@@ -116,7 +115,7 @@ const ProductCreateStep: React.FC<ProductCreateStepProps> = ({
                 selectedValue={field.value || ''}
                 onChange={field.onChange}
                 bg="bg-white"
-                name="category"
+                name="categoryId"
                 required
               />
             )}
@@ -176,7 +175,6 @@ const ProductCreateStep: React.FC<ProductCreateStepProps> = ({
               name="taxable"
               control={control}
               errors={errors.taxable}
-              required
             />
           </div>
         </div>

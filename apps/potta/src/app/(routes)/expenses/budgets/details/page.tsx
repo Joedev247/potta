@@ -26,6 +26,7 @@ import {
 import { PaymentRequestDataTableWrapper } from './components/table';
 import Filter from './components/filters';
 import RootLayout from '../../../layout';
+import { ContextData } from '@potta/components/context';
 // Import your components and data
 
 // Import the NEW Table Wrapper Component
@@ -33,7 +34,7 @@ import RootLayout from '../../../layout';
 export default function DashboardPage() {
   const [searchTerm, setSearchTerm] = React.useState('');
   const [isLoading, setIsLoading] = React.useState(false); // Example loading state
-
+  const context = React.useContext(ContextData);
   // Basic filtering example (can be expanded)
   const filteredRequests = mockPaymentRequests.filter(
     (req) =>
@@ -51,11 +52,15 @@ export default function DashboardPage() {
 
   return (
     <RootLayout>
-      <div className=" bg-gray-50  pl-16 pr-5 w-full pt-6">
+      <div
+        className={`${
+          context?.layoutMode === 'sidebar' ? 'pl-16 !mt-4' : 'pl-5 !mt-4'
+        } bg-gray-50  pr-5 w-full pt-6`}
+      >
         {/* Top Row Cards (same as before) */}
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-6 xl:grid-cols-6">
           <div className="col-span-2">
-            <BudgetCard budget={mockBudget}  />
+            <BudgetCard budget={mockBudget} />
           </div>
           <TerminalsCard count={9} />
           <TeamCard teamMembers={mockTeam} />

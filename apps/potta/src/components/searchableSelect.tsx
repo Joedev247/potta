@@ -7,8 +7,12 @@ export interface Option {
   label: string;
 }
 
-interface SearchableSelectProps
-  extends Omit<ReactSelectProps<Option, false>, 'onChange'> {
+// Overload for single select
+interface SearchableSelectSingleProps
+  extends Omit<
+    ReactSelectProps<Option, false>,
+    'onChange' | 'isMulti' | 'value'
+  > {
   label?: string;
   labelClass?: string;
   options: Option[];
@@ -18,15 +22,41 @@ interface SearchableSelectProps
   isDisabled?: boolean;
   required?: boolean;
   error?: string;
+  multiple?: false;
 }
+// Overload for multi select
+interface SearchableSelectMultiProps
+  extends Omit<
+    ReactSelectProps<Option, true>,
+    'onChange' | 'isMulti' | 'value'
+  > {
+  label?: string;
+  labelClass?: string;
+  options: Option[];
+  selectedValue?: string[];
+  onChange: (value: string[]) => void;
+  placeholder?: string;
+  isDisabled?: boolean;
+  required?: boolean;
+  error?: string;
+  multiple: true;
+}
+
+type SearchableSelectProps =
+  | SearchableSelectSingleProps
+  | SearchableSelectMultiProps;
 
 // ✅ Custom styles for react-select
 const customStyles = {
-  control: (provided: any, state: any) => ({
+  control: (provided: any, state: any, { error }: { error?: string }) => ({
     ...provided,
-    borderColor: state.isFocused ? '#22c55e' : '#e5e7eb',
+    borderColor: error
+      ? '#ef4444' // Tailwind red-500
+      : state.isFocused
+      ? '#22c55e'
+      : '#e5e7eb',
     boxShadow: state.isFocused ? '0 0 0 2px #22c55e' : 'none',
-    borderRadius: '2px',
+    borderRadius: '0px',
     paddingTop: '0.25rem',
     paddingBottom: '0.25rem',
     paddingLeft: '0.5rem',
@@ -35,7 +65,7 @@ const customStyles = {
     minHeight: '40px',
     outline: 'none',
     '&:hover': {
-      borderColor: state.isFocused ? '#22c55e' : '#d1d5db',
+      borderColor: error ? '#ef4444' : state.isFocused ? '#22c55e' : '#d1d5db',
     },
   }),
   option: (provided: any, state: any) => ({
@@ -78,31 +108,57 @@ const SearchableSelect: React.FC<SearchableSelectProps> = ({
   isDisabled = false,
   required = false,
   error,
+  multiple = false,
   ...rest
 }) => {
   return (
     <div className="w-full">
       {label && (
-        <label className={`block mb-2 ${labelClass}`}>
+        <label className={`block mb-2 ${labelClass} !font-medium`}>
           {label} {required && <span className="text-red-500">*</span>}
         </label>
       )}
       <ReactSelect
         options={options}
-        value={options.find((option) => option.value === selectedValue) || null}
+        isMulti={multiple}
+        value={
+          multiple
+            ? options.filter((option) =>
+                Array.isArray(selectedValue)
+                  ? selectedValue.includes(option.value)
+                  : false
+              )
+            : options.find((option) => option.value === selectedValue) || null
+        }
         onChange={(option) => {
-          if (option) {
-            onChange(option.value);
+          if (multiple) {
+            if (Array.isArray(option)) {
+              (onChange as (value: string[]) => void)(
+                option.map((o) => o.value)
+              );
+            } else {
+              (onChange as (value: string[]) => void)([]);
+            }
           } else {
-            onChange('');
+            if (option) {
+              (onChange as (value: string) => void)((option as Option).value);
+            } else {
+              (onChange as (value: string) => void)('');
+            }
           }
         }}
         placeholder={placeholder}
         isDisabled={isDisabled}
         isClearable
         isSearchable
-        styles={customStyles}
-        className="react-select-container"
+        styles={{
+          ...customStyles,
+          control: (provided: any, state: any) =>
+            customStyles.control(provided, state, { error }),
+        }}
+        className={`react-select-container ${
+          isDisabled ? 'opacity-50 cursor-not-allowed' : ''
+        }`}
         classNamePrefix="react-select"
         {...rest}
       />

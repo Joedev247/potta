@@ -134,13 +134,13 @@ export function PaymentRequestDataTableWrapper({
         center: true,
         cell: (row: PaymentRequest) => (
           <div className="border-r">
-                       <div className="flex items-center gap-3  w-fit px-3 py-0.5 border border-green-500 bg-green-50 text-green-700">
-                         <div className="flex items-center justify-center text-white bg-green-700 rounded-full size-4">
-                           <Icon icon="material-symbols:check" width="20" height="20" />
-                         </div>
-                         Approved
-                       </div>
-                     </div>
+            <div className="flex items-center gap-3  w-fit px-3 py-0.5 border border-green-500 bg-green-50 text-green-700">
+              <div className="flex items-center justify-center text-white bg-green-700 rounded-full size-4">
+                <Icon icon="material-symbols:check" width="20" height="20" />
+              </div>
+              Approved
+            </div>
+          </div>
         ),
         minWidth: '100px',
       },
@@ -194,9 +194,9 @@ export function PaymentRequestDataTableWrapper({
       pending={isLoading} // Pass loading state
       color={false} // Use the default light header color
       size={false} // Use the default size
-      expanded={true} // Not needed
+      expanded={false} // Not needed
       ExpandableComponent={null} // Not needed
-      minHeight='400px'
+      minHeight="400px"
       // --- Add these if/when implementing server-side pagination ---
       // paginationServer={true}
       // paginationTotalRows={totalRowCount}

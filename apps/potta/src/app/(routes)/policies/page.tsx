@@ -1,27 +1,14 @@
 'use client';
-import Box from '../layout/navbar/box';
-import InvoiceTableComponents from './components/table';
 
-import Link from 'next/link';
-
-import { useState } from 'react';
-
+import { useContext, useState } from 'react';
 
 import PolicyTable from './components/table';
+import { ContextData } from '@potta/components/context';
 const Invoice = () => {
-  const [detailsModal, setDetailsModal] = useState<boolean>(false);
-  const [page, setPage] = useState(1);
-
-
-
-
+  const context = useContext(ContextData);
 
   return (
-    <div className=" px-14">
-
-
-
-
+    <div className={`${context?.layoutMode === 'sidebar' ? 'px-14s' : 'px-5'}`}>
       {/* <CustomInput />
       <CustomSelect
         options={options}
@@ -30,10 +17,8 @@ const Invoice = () => {
         placeholder="Choose an option"
       /> */}
       <div className="">
-        <PolicyTable/>
-        
+        <PolicyTable />
       </div>
-
     </div>
   );
 };

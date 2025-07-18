@@ -224,7 +224,7 @@ const ReimbursementForm = ({
         />
       </div>
       <div className="col-span-1 md:col-span-2 flex gap-4 mt-6 justify-end">
-        <Button type="submit" text="Submit" theme="default" />
+        <Button type="submit" text="Submit" theme="default" className='h-fit' />
       </div>
     </form>
   );

@@ -5,7 +5,7 @@ import React from 'react'
 
 const Notification = () => {
     return (
-        <div className='mx-auto max-w-4xl pl-16 p-6 pb-10 lg:px-8'>
+        <div className= 'mx-auto max-w-4xl pl-16 p-6 pb-10 lg:px-8'>
             <div>
                 <h3 className='text-xl mt-8 mb-3'>Orders</h3>
             </div>

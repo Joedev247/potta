@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import Select from '../../../../components/select';
@@ -17,6 +17,7 @@ import PosCustomersBox from './boxes/PosCustomersBox';
 import VendorsBox from './boxes/PosVendorsBox';
 import VouchersBox from './boxes/VouchersBox';
 import PosSalesBox from './boxes/PosSalesBox';
+import { ContextData } from '../../../../components/context';
 
 const urlRouters = [
   {
@@ -55,6 +56,14 @@ const urlRouters = [
     value: 'accounts',
     label: 'Accounts',
   },
+  {
+    value: 'bank-accounts',
+    label: 'Bank Accounts',
+  },
+  {
+    value: 'settings',
+    label: 'Settings',
+  },
 ];
 
 // Routes where Box component should be displayed with their specific box component
@@ -85,7 +94,9 @@ const routesWithoutBlueBackground = [
   { main: 'payroll' }, // Exclude all payroll pages
   { main: 'payments' },
   { main: 'expenses' },
-  { main: 'expenses' },
+  { main: 'settings' },
+  { main: 'accounts' },
+  { main: 'bank-accounts' },
   { main: 'pos', sub: 'files' },
   { main: 'pos', sub: 'inventory' },
   { main: 'invoice', sub: 'new' },
@@ -99,6 +110,7 @@ const routesWithoutBlueBackground = [
 export default function Navbar() {
   const router = useRouter();
   const pathname = usePathname();
+  const context = useContext(ContextData);
   const string = pathname;
   const str = string.split('/');
 
@@ -204,8 +216,16 @@ export default function Navbar() {
     return null;
   }
 
+  // Only render the minimal top bar if layoutMode is 'sidebar'
+  if (context?.layoutMode !== 'sidebar') {
+    return null;
+  }
+
   // Determine the title to display
   const getTitle = () => {
+    if (str[1] === 'bank-accounts' && str[2] && str[2].length > 20) {
+      return 'Bank Account';
+    }
     // Special case for /pos/new route
     if (str[1] === 'pos' && str[2] === 'sales' && str[3] === 'new') {
       return 'New Sales Receipt';
@@ -234,6 +254,7 @@ export default function Navbar() {
     if (str[1] === 'invoice' && str[2] === 'purchase' && str[3] === undefined) {
       return 'Purchase Order';
     }
+
     if (
       str[1] === 'invoice' &&
       str[2] === 'recurring' &&
@@ -264,7 +285,7 @@ export default function Navbar() {
   const bgColorClass = getBackgroundColorClass();
 
   return (
-    <nav className={`w-full ${bgColorClass} space-y-10`}>
+    <nav className={`w-full sticky z-20 top-0 ${bgColorClass} space-y-10`}>
       <div
         className={`flex sticky top-0 left-0 z-20 justify-between ${bgColorClass}`}
       >
@@ -290,6 +311,7 @@ export default function Navbar() {
               <Select
                 options={urlRouters}
                 selectedValue={selected.toString()}
+                SelectClass="!text-sm"
                 onChange={(value: any) => {
                   handleSelect(value);
                 }}

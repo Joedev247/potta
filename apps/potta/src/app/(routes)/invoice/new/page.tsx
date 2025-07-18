@@ -101,7 +101,11 @@ const NewInvoiceInner = () => {
               defaultSize={showPreview ? 50 : 100}
               style={{ transition: 'flex-basis 300ms ease-in-out' }}
             >
-              <div className="py-8 px-14 pr-0 h-[92.7vh] overflow-y-auto flex justify-center">
+              <div
+                className=  {`py-8 ${
+                  context?.layoutMode === 'sidebar' ? 'px-14' : 'px-5'
+                } pr-0 h-[92.7vh] overflow-y-auto flex justify-center`}
+              >
                 <Left initialInvoiceType={initialInvoiceType} />
               </div>
             </ResizablePanel>

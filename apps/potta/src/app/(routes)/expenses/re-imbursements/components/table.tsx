@@ -205,7 +205,7 @@ export function PaymentRequestDataTableWrapper({
         pending={isLoading}
         color={false}
         size={false}
-        expanded={true}
+        expanded={false}
         ExpandableComponent={null}
       />
       <RightSideModal

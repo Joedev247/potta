@@ -30,6 +30,8 @@ interface ContextType {
   setToggle: (toggle: boolean) => void;
   sidebarOpen: boolean;
   setSidebarOpen: (sidebarOpen: boolean) => void;
+  layoutMode: 'navbar' | 'sidebar';
+  setLayoutMode: (mode: 'navbar' | 'sidebar') => void;
   link: string;
   setLinks: (link: string) => void;
   programs: any;
@@ -87,6 +89,7 @@ const ContextData = createContext<ContextType | null>(null);
 const DataProvider: React.FC<Children> = ({ children }) => {
   const [toggle, setToggle] = useState<boolean>(true);
   const [sidebarOpen, setSidebarOpen] = useState<boolean>(false);
+  const [layoutMode, setLayoutMode] = useState<'navbar' | 'sidebar'>('navbar');
   const [link, setLinks] = useState<string>('');
   const [programs, setPrograms] = useState<any>([]);
   const [programDays, setProgramDays] = useState<any>([]);
@@ -139,6 +142,8 @@ const DataProvider: React.FC<Children> = ({ children }) => {
         setToggle,
         sidebarOpen,
         setSidebarOpen,
+        layoutMode,
+        setLayoutMode,
         link,
         setLinks,
         programs,

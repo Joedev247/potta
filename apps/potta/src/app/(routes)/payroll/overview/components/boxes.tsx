@@ -3,11 +3,7 @@ import React from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { employeeApi } from '../../utils/api';
 import { format } from 'date-fns';
-
-// Skeleton loader component
-const SkeletonLoader = ({ className = '' }) => (
-  <div className={`h-6 bg-gray-200 animate-pulse rounded ${className}`}></div>
-);
+import BoxSkeleton from './BoxSkeleton';
 
 const Boxes = () => {
   // Fetch employees with all their details
@@ -49,6 +45,35 @@ const Boxes = () => {
 
     // Format as currency
     return `XAF ${total.toLocaleString()}`;
+  };
+
+  // Calculate average salary per employee
+  const calculateAverageSalary = () => {
+    if (!employeesResponse?.data || employeesResponse.data.length === 0) {
+      return 'XAF 0';
+    }
+
+    const activeEmployees = employeesResponse.data.filter(
+      (emp) => emp.is_active
+    );
+    if (activeEmployees.length === 0) return 'XAF 0';
+
+    const totalSalary = activeEmployees.reduce((sum, employee) => {
+      const monthlyPay = employee.base_pay
+        ? parseFloat(employee.base_pay)
+        : employee.salary
+        ? parseFloat(employee.salary)
+        : employee.hourly_rate
+        ? parseFloat(employee.hourly_rate) * 160
+        : 0;
+
+      return sum + monthlyPay;
+    }, 0);
+
+    const average = totalSalary / activeEmployees.length;
+    return `XAF ${average.toLocaleString(undefined, {
+      maximumFractionDigits: 0,
+    })}`;
   };
 
   // Calculate next pay date based on compensation_schedule
@@ -99,29 +124,38 @@ const Boxes = () => {
     return activeCount.toString();
   };
 
+  // Calculate total employees with benefits
+  const calculateEmployeesWithBenefits = () => {
+    if (!employeesResponse?.data) return '0';
+
+    const employeesWithBenefits = employeesResponse.data.filter(
+      (emp) => emp.benefits && emp.benefits.length > 0
+    ).length;
+    return employeesWithBenefits.toString();
+  };
+
+  // Show skeleton loaders while loading
+  if (isLoading) {
+    return (
+      <div className="grid grid-cols-2 gap-5">
+        <BoxSkeleton />
+        <BoxSkeleton />
+      </div>
+    );
+  }
+
   const data = [
     {
       id: 1,
       title: 'Total Due Payroll',
-      amount: isLoading ? (
-        <SkeletonLoader className="w-32" />
-      ) : (
-        calculateTotalDuePayroll()
-      ),
+      amount: calculateTotalDuePayroll(),
       color: '#000',
-      percentage: '37.9',
     },
-
     {
       id: 2,
       title: 'Active Employees',
-      amount: isLoading ? (
-        <SkeletonLoader className="w-16" />
-      ) : (
-        calculateActiveEmployees()
-      ),
+      amount: calculateActiveEmployees(),
       color: '#000',
-      percentage: '100%',
     },
   ];
 

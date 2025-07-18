@@ -1,16 +1,22 @@
-'use client'
-import React, { useContext } from "react";
+'use client';
+import React, { useContext } from 'react';
 
-import RootLayout from "../layout";
-import TableAccount from "./components/table";
+import RootLayout from '../layout';
+import TableAccount from './components/table';
+import { ContextData } from '@potta/components/context';
 
 const Account = () => {
-    return (
-        <RootLayout>
-            <div className="px-14 pt-10">
-                <TableAccount />
-            </div>
-        </RootLayout>
-    )
-}
-export default Account 
+  const context = useContext(ContextData);
+  return (
+    <RootLayout>
+      <div
+        className={`h-full overflow-hidden ${
+          context?.layoutMode === 'sidebar' ? 'px-14' : 'px-5'
+        }`}
+      >
+        <TableAccount />
+      </div>
+    </RootLayout>
+  );
+};
+export default Account;

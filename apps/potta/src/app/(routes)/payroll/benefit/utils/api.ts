@@ -26,6 +26,12 @@ export const benefitsApi = {
     return result.data;
   },
 
+  // Delete a benefit
+  deleteBenefit: async (benefitId: string) => {
+    const result = await axios.delete(`/benefits/${benefitId}`);
+    return result.data;
+  },
+
   // Check if a benefit is expired
   isBenefitExpired: async (benefitId: string) => {
     const result = await axios.get(`/benefits/${benefitId}/expired`);

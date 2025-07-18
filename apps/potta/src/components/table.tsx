@@ -51,7 +51,7 @@ interface TableProps {
 const MyTable: FC<TableProps & { pending?: boolean }> = ({
   columns,
   data,
-  expanded,
+  expanded = false,
   pagination,
   ExpandableComponent,
   size,
@@ -220,7 +220,7 @@ const MyTable: FC<TableProps & { pending?: boolean }> = ({
       style: {
         paddingLeft: '7px',
         paddingRight: '6px',
-        fontWeight: 'bold',
+        fontWeight: 'medium',
       },
     },
     headRow: {
@@ -282,7 +282,7 @@ const MyTable: FC<TableProps & { pending?: boolean }> = ({
         data={data}
         selectableRows={selectable}
         pagination={pagination !== false}
-        expandableRows={!expanded}
+        expandableRows={expanded}
         expandableRowsComponent={ExpandableComponent || (() => null)}
         paginationServer={paginationServer}
         paginationTotalRows={paginationTotalRows}

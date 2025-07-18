@@ -9,7 +9,7 @@
   },
   "private": true,
   "dependencies": {
-    "@headlessui/react": "^2.1.2",
+    "@headlessui/react": "^2.2.4",
     "@heroicons/react": "^2.1.5",
     "@heroui/date-picker": "^2.3.17",
     "@heroui/react": "^2.7.6",

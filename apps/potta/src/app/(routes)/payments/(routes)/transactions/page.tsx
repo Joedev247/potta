@@ -2,13 +2,16 @@
 import React, { useState } from 'react';
 import Filter from './components/Filters';
 import TransactionsTable from './components/TransactionsTable';
+import { ContextData } from '@potta/components/context';
+import { useContext } from 'react';
 
 const TransactionsPage = () => {
+  const context = useContext(ContextData);
   const [search, setSearch] = useState('');
   const [status, setStatus] = useState('all');
   const [dateRange, setDateRange] = useState('All Time');
   return (
-    <div className="p-8 pl-12">
+    <div className={`${context?.layoutMode === 'sidebar' ? 'p-5 pl-12' : 'p-5'}`}>
       <Filter
         search={search}
         setSearch={setSearch}

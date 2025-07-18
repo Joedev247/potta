@@ -9,6 +9,7 @@ import Input from '@potta/components/input';
 import Filter from '../components/filters';
 import { useBudgets } from './hooks/useBudgets';
 import { Skeleton } from '@potta/components/shadcn/skeleton';
+import { ContextData } from '@potta/components/context';
 
 const BudgetCardSkeleton = () => (
   <div className="bg-white shadow-sm rounded-lg p-6">
@@ -48,22 +49,21 @@ const BudgetCardSkeleton = () => (
 );
 
 export default function BudgetsPage() {
-  const [searchTerm, setSearchTerm] = useState('');
+  const [search, setSearch] = useState('');
+  const [status, setStatus] = useState('pending');
+  const [date, setDate] = useState('All Time');
   const [activeTab, setActiveTab] = useState('active');
-  const { budgets, meta, loading, error, updateFilter, refetch } = useBudgets();
+  const { budgets, meta, loading, error, updateFilter, refetch } = useBudgets({
+    search,
+    status,
+    date,
+  });
+  const context = React.useContext(ContextData);
 
-  // Handle search input change
-  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    setSearchTerm(value);
-
-    // Debounce search to avoid too many API calls
-    const timeoutId = setTimeout(() => {
-      updateFilter({ search: value, page: 1, status: activeTab });
-    }, 500);
-
-    return () => clearTimeout(timeoutId);
-  };
+  // Update budgets when filters change
+  React.useEffect(() => {
+    updateFilter({ search, status, date, page: 1 });
+  }, [search, status, date, updateFilter]);
 
   // Handle tab change
   const handleTabChange = (value: string) => {
@@ -73,11 +73,22 @@ export default function BudgetsPage() {
 
   return (
     <RootLayout>
-      <div className="bg-gray-50 h-full pl-16 pr-5 w-full">
+      <div
+        className={`${
+          context?.layoutMode === 'sidebar' ? 'pl-16 !mt-4' : 'pl-5 !mt-4'
+        } h-full pr-5 w-full`}
+      >
         {/* Header Section */}
-        <div className="mb-6 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+        <div className="mb-6 flex flex-col border-b border-gray-200   md:flex-row md:items-center md:justify-between gap-4">
           {/* Search and Filters */}
-          <Filter />
+          <Filter
+            search={search}
+            setSearch={setSearch}
+            status={status}
+            setStatus={setStatus}
+            date={date}
+            setDate={setDate}
+          />
         </div>
 
         {/* Custom Tabs */}

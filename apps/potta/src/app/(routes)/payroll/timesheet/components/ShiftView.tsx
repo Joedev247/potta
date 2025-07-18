@@ -1,9 +1,21 @@
 'use client';
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import axios from 'config/axios.config';
 import { toast } from 'react-hot-toast';
 import Search from '@potta/components/search';
-import { ArrowUpFromLine, Download, Plus, ChevronRight } from 'lucide-react';
+import SearchableSelect from '@potta/components/searchableSelect';
+import {
+  ArrowUpFromLine,
+  Download,
+  Plus,
+  ChevronRight,
+  ChevronLeft,
+  Filter,
+  Calendar,
+  Users,
+  Clock,
+  MoreHorizontal,
+} from 'lucide-react';
 import { peopleApi } from '../../people/utils/api';
 import Button from '@potta/components/button';
 import {
@@ -14,10 +26,13 @@ import {
   parseISO,
   isSameDay,
   isToday,
+  addWeeks,
+  subWeeks,
 } from 'date-fns';
-import NewShiftModal from './NewShiftModal'; // Import the NewShiftModal component
+import NewShiftModal from './NewShiftModal';
 import PottaLoader from '@potta/components/pottaloader';
 
+// Types
 interface ShiftRecurrencePattern {
   monday: boolean;
   tuesday: boolean;
@@ -47,6 +62,7 @@ interface Shift {
   applies_to_roles: string[];
   applies_to_departments: string[] | null;
   role?: string;
+  color?: string; // New color field
 }
 
 interface Employee {
@@ -55,6 +71,8 @@ interface Employee {
   last_name: string;
   avatar?: string;
   initials?: string;
+  email?: string;
+  department?: string;
 }
 
 interface WeekDate {
@@ -71,24 +89,82 @@ interface Role {
   name: string;
 }
 
+// Constants
+const ITEMS_PER_PAGE = 10;
+const SHIFT_COLORS = {
+  morning: '#34A853',
+  afternoon: '#2196F3',
+  night: '#9C27B0',
+  unavailable: '#9E9E9E',
+  custom: '#FF9800',
+};
+
 const ShiftView: React.FC = () => {
+  // State
   const [shifts, setShifts] = useState<Shift[]>([]);
   const [employees, setEmployees] = useState<Employee[]>([]);
   const [roleNames, setRoleNames] = useState<Record<string, string>>({});
   const [loading, setLoading] = useState(false);
-
-  const [selectedDate, setSelectedDate] = useState<WeekDate | null>(null);
+  const [currentWeek, setCurrentWeek] = useState(new Date());
   const [searchQuery, setSearchQuery] = useState('');
   const [showNewShiftModal, setShowNewShiftModal] = useState(false);
   const [roles, setRoles] = useState<{ value: string; label: string }[]>([]);
   const [isLoadingRoles, setIsLoadingRoles] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [selectedDate, setSelectedDate] = useState<WeekDate | null>(null);
+  const [selectedEmployeeId, setSelectedEmployeeId] = useState<string | null>(
+    null
+  );
+  const [filters, setFilters] = useState({
+    department: '',
+    role: '',
+    status: 'all',
+  });
 
-  // Get current week dates dynamically
-  const getCurrentWeekDates = (): WeekDate[] => {
-    const today = new Date();
-    // Use startOfWeek with { weekStartsOn: 0 } to ensure week starts on Sunday
-    const startOfCurrentWeek = startOfWeek(today, { weekStartsOn: 0 });
+  // Memoized values
 
+  const filteredEmployees = useMemo(() => {
+    return employees.filter((employee) => {
+      const fullName =
+        `${employee.first_name} ${employee.last_name}`.toLowerCase();
+      const matchesSearch = fullName.includes(searchQuery.toLowerCase());
+      const matchesDepartment =
+        !filters.department || employee.department === filters.department;
+
+      // Role filter: check if employee has any shifts that apply to the selected role
+      const matchesRole =
+        !filters.role ||
+        shifts.some(
+          (shift) =>
+            (shift.person_id === employee.id ||
+              shift.employeeId === employee.id) &&
+            shift.applies_to_roles &&
+            shift.applies_to_roles.includes(filters.role)
+        );
+
+      return matchesSearch && matchesDepartment && matchesRole;
+    });
+  }, [employees, searchQuery, filters.department, filters.role, shifts]);
+
+  const paginatedEmployees = useMemo(() => {
+    const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+    return filteredEmployees.slice(startIndex, startIndex + ITEMS_PER_PAGE);
+  }, [filteredEmployees, currentPage]);
+
+  const totalPages = useMemo(
+    () => Math.ceil(filteredEmployees.length / ITEMS_PER_PAGE),
+    [filteredEmployees.length]
+  );
+
+  // Effects
+  useEffect(() => {
+    fetchEmployeesAndShifts();
+    fetchRoles();
+  }, []);
+
+  // Utility functions
+  const getCurrentWeekDates = (weekStart: Date): WeekDate[] => {
+    const startOfCurrentWeek = startOfWeek(weekStart, { weekStartsOn: 0 });
     const weekDates: WeekDate[] = [];
     const dayNames = [
       'sunday',
@@ -103,52 +179,162 @@ const ShiftView: React.FC = () => {
     for (let i = 0; i < 7; i++) {
       const date = addDays(startOfCurrentWeek, i);
       weekDates.push({
-        day: format(date, 'EEE'), // Short day name (Sun, Mon, etc.)
-        date: format(date, 'd'), // Day of month (1-31)
+        day: format(date, 'EEE'),
+        date: format(date, 'd'),
         fullDate: date,
-        dayIndex: i, // 0 = Sunday, 1 = Monday, etc.
-        isoDate: format(date, 'yyyy-MM-dd'), // ISO format date part
+        dayIndex: i,
+        isoDate: format(date, 'yyyy-MM-dd'),
         dayName: dayNames[i] as keyof ShiftRecurrencePattern,
       });
     }
     return weekDates;
   };
+  const weekDates = useMemo(
+    () => getCurrentWeekDates(currentWeek),
+    [currentWeek]
+  );
 
-  const weekDates = getCurrentWeekDates();
-
-  // Create a memoized refresh function that can be passed to the modal
-  const refreshData = useCallback(() => {
-    fetchEmployeesAndShifts();
-  }, []);
-
-  useEffect(() => {
-    fetchEmployeesAndShifts();
-    fetchRoles();
-  }, []);
-
-  // Generate initials from name
   const getInitials = (firstName: string): string => {
-    const firstInitial =
-      firstName && firstName.length > 0 ? firstName[0].toUpperCase() : '';
-
-    return `${firstInitial}`;
+    return firstName && firstName.length > 0 ? firstName[0].toUpperCase() : '';
   };
 
-  // Fetch roles data
+  const formatTime = (timeString: string): string => {
+    if (!timeString) return '';
+    try {
+      if (timeString.length <= 8 && timeString.includes(':')) {
+        return timeString.substring(0, 5);
+      }
+      return format(parseISO(timeString), 'HH:mm');
+    } catch (error) {
+      console.error('Error formatting time:', error);
+      return '08:00';
+    }
+  };
+
+  const formatHours = (hours: number): string => {
+    return hours === 0 ? '0 hrs' : `${hours} hrs`;
+  };
+
+  const getRoleName = (roleId: string): string => {
+    return roleNames[roleId] || 'Staff';
+  };
+
+  const calculateShiftHours = (shift: Shift): number => {
+    if (shift.name === 'Unavailable') return 0;
+    if (!shift.start_time || !shift.end_time) return 0;
+
+    try {
+      if (
+        shift.start_time.length <= 8 &&
+        shift.start_time.includes(':') &&
+        shift.end_time.length <= 8 &&
+        shift.end_time.includes(':')
+      ) {
+        const [startHours, startMinutes] = shift.start_time
+          .split(':')
+          .map(Number);
+        const [endHours, endMinutes] = shift.end_time.split(':').map(Number);
+        let totalMinutes =
+          endHours * 60 + endMinutes - (startHours * 60 + startMinutes);
+
+        if (totalMinutes < 0) {
+          totalMinutes += 24 * 60;
+        }
+
+        totalMinutes -= shift.break_minutes || 0;
+        return Math.max(0, Math.round((totalMinutes / 60) * 10) / 10);
+      }
+
+      const start = parseISO(shift.start_time);
+      const end = parseISO(shift.end_time);
+      const totalMinutes =
+        differenceInMinutes(end, start) - (shift.break_minutes || 0);
+      return Math.max(0, Math.round((totalMinutes / 60) * 10) / 10);
+    } catch (error) {
+      console.error('Error calculating shift hours:', error);
+      return 0;
+    }
+  };
+
+  const getEmployeeShiftForDay = (
+    employeeId: string,
+    dayName: keyof ShiftRecurrencePattern
+  ) => {
+    return shifts.find(
+      (shift) =>
+        (shift.person_id === employeeId || shift.employeeId === employeeId) &&
+        shift.recurrence_pattern &&
+        shift.recurrence_pattern[dayName]
+    );
+  };
+
+  const calculateEmployeeTotalHours = (employeeId: string): number => {
+    return weekDates.reduce((total, date) => {
+      const shift = getEmployeeShiftForDay(employeeId, date.dayName);
+      if (shift && shift.name !== 'Unavailable') {
+        total += calculateShiftHours(shift);
+      }
+      return total;
+    }, 0);
+  };
+
+  const calculateDayHours = (
+    employeeId: string,
+    dayName: keyof ShiftRecurrencePattern
+  ): number => {
+    const shift = getEmployeeShiftForDay(employeeId, dayName);
+    if (!shift || shift.name === 'Unavailable') return 0;
+    return calculateShiftHours(shift);
+  };
+
+  const calculateTotalDayHours = (
+    dayName: keyof ShiftRecurrencePattern
+  ): number => {
+    return filteredEmployees.reduce((total, employee) => {
+      return total + calculateDayHours(employee.id, dayName);
+    }, 0);
+  };
+
+  const calculateTotalHours = (): number => {
+    return filteredEmployees.reduce((total, employee) => {
+      return total + calculateEmployeeTotalHours(employee.id);
+    }, 0);
+  };
+
+  const getShiftColor = (shift: Shift, isToday: boolean): string => {
+    if (shift.color) {
+      // Use the custom color from the shift data
+      return '';
+    }
+
+    if (shift.name === 'Unavailable') {
+      return 'bg-gray-200';
+    }
+
+    if (shift.name.includes('Afternoon')) {
+      return isToday ? 'bg-blue-600' : 'bg-blue-500';
+    }
+
+    if (shift.name.includes('Night')) {
+      return isToday ? 'bg-purple-700' : 'bg-purple-600';
+    }
+
+    return isToday ? 'bg-green-600' : 'bg-green-500';
+  };
+
+  // API functions
   const fetchRoles = async () => {
     setIsLoadingRoles(true);
     try {
-      // Fetch roles from the API
       const rolesResponse = await axios.post('/roles/filter', {
         page: 1,
         limit: 100,
       });
 
-      if (rolesResponse && rolesResponse.data && rolesResponse.data.data) {
+      if (rolesResponse?.data?.data) {
         const rolesMap: Record<string, string> = {};
         const rolesForSelect: { value: string; label: string }[] = [];
 
-        // Map each role's UUID to its name
         rolesResponse.data.data.forEach((role: Role) => {
           if (role.uuid && role.name) {
             rolesMap[role.uuid] = role.name;
@@ -159,23 +345,19 @@ const ShiftView: React.FC = () => {
           }
         });
 
-        console.log('Roles loaded:', rolesMap);
         setRoleNames(rolesMap);
         setRoles(rolesForSelect);
       }
     } catch (error) {
       console.error('Error fetching roles:', error);
-      // Don't set any fallback role names - we'll handle missing roles in getRoleName
     } finally {
       setIsLoadingRoles(false);
     }
   };
 
-  // Fetch employees and shifts data
   const fetchEmployeesAndShifts = async () => {
     setLoading(true);
     try {
-      // Fetch employees
       const employeesResponse = await axios.post('/employees/filter', {
         page: 1,
         limit: 100,
@@ -184,12 +366,7 @@ const ShiftView: React.FC = () => {
 
       let employeeData: Employee[] = [];
 
-      if (
-        employeesResponse &&
-        employeesResponse.data &&
-        employeesResponse.data.data &&
-        employeesResponse.data.data.length > 0
-      ) {
+      if (employeesResponse?.data?.data?.length > 0) {
         employeeData = employeesResponse.data.data.map((emp: any) => {
           const firstName = emp.first_name || emp.firstName || '';
           const lastName = emp.last_name || emp.lastName || '';
@@ -201,26 +378,21 @@ const ShiftView: React.FC = () => {
             last_name: lastName,
             avatar: emp.avatar,
             initials: initials,
+            email: emp.email,
+            department: emp.department,
           };
         });
       }
 
       setEmployees(employeeData);
 
-      // Fetch shifts
       try {
-        const shiftsResponse = await axios.post('/shifts/filter', {
-          // You can add filter parameters here if needed
-        });
-
-        if (shiftsResponse && shiftsResponse.data && shiftsResponse.data.data) {
-          // Create a mapping of shifts to employees
-          // For this example, let's assign shifts to employees in a round-robin fashion
+        const shiftsResponse = await axios.post('/shifts/filter', {});
+        if (shiftsResponse?.data?.data) {
           const shiftsData = shiftsResponse.data.data.map(
             (shift: any, index: number) => {
-              // Assign shift to an employee (round-robin)
               const employeeIndex = index % employeeData.length;
-              const assignedEmployeeId = employeeData[employeeIndex].id;
+              const assignedEmployeeId = employeeData[employeeIndex]?.id;
 
               return {
                 id: shift.uuid || shift.id,
@@ -231,6 +403,7 @@ const ShiftView: React.FC = () => {
                 start_time: shift.start_time,
                 end_time: shift.end_time,
                 break_minutes: shift.break_minutes || 30,
+                color: shift.color || SHIFT_COLORS.morning,
                 recurrence_pattern: shift.recurrence_pattern || {
                   monday: true,
                   tuesday: false,
@@ -250,27 +423,23 @@ const ShiftView: React.FC = () => {
                 applies_to_departments: shift.applies_to_departments || [
                   'service',
                 ],
-                role: 'Staff', // Default role name
+                role: 'Staff',
               };
             }
           );
 
-          console.log('Shifts loaded:', shiftsData);
           setShifts(shiftsData);
         } else {
-          // Create fallback shifts if API returns empty data
           const sampleShifts = createSampleShifts(employeeData);
           setShifts(sampleShifts);
         }
       } catch (shiftError) {
         console.error('Error fetching shifts:', shiftError);
-        // Create fallback shifts if API fails
         const sampleShifts = createSampleShifts(employeeData);
         setShifts(sampleShifts);
       }
     } catch (error) {
       console.error('Error fetching data:', error);
-      // Fallback data
       const fallbackEmployees = [
         {
           id: '1',
@@ -278,6 +447,8 @@ const ShiftView: React.FC = () => {
           last_name: 'Doe',
           avatar: 'https://ui-avatars.com/api/?name=John+Doe&background=random',
           initials: 'JD',
+          email: 'john.doe@example.com',
+          department: 'Engineering',
         },
         {
           id: '2',
@@ -286,47 +457,24 @@ const ShiftView: React.FC = () => {
           avatar:
             'https://ui-avatars.com/api/?name=Blessed+Nur&background=random',
           initials: 'BN',
+          email: 'blessed.nur@example.com',
+          department: 'Sales',
         },
       ];
 
       setEmployees(fallbackEmployees);
-
-      // Create sample shifts based on fallback employees
       const sampleShifts = createSampleShifts(fallbackEmployees);
       setShifts(sampleShifts);
     } finally {
       setLoading(false);
     }
   };
-  // Update the toggleNewShiftModal function to accept a date parameter
-  const toggleNewShiftModal = (dateInfo?: WeekDate) => {
-    if (dateInfo) {
-      setSelectedDate(dateInfo);
-    } else {
-      setSelectedDate(null);
-    }
-    setShowNewShiftModal(!showNewShiftModal);
-  };
 
-  // Handle successful shift creation
-  const handleShiftCreated = () => {
-    // Close the modal
-    setShowNewShiftModal(false);
-
-    // Refresh the data to show the new shift
-    refreshData();
-
-    // Show success message
-    toast.success('Shift added successfully!');
-  };
-
-  // Create sample shifts only if API fails
   const createSampleShifts = (employeeList: Employee[]): Shift[] => {
     if (!employeeList || employeeList.length === 0) return [];
 
     const sampleShifts = [];
 
-    // Add shifts for first employee
     if (employeeList.length > 0) {
       sampleShifts.push({
         id: '1',
@@ -335,6 +483,7 @@ const ShiftView: React.FC = () => {
         start_time: '08:00:00',
         end_time: '16:00:00',
         break_minutes: 30,
+        color: SHIFT_COLORS.morning,
         recurrence_pattern: {
           monday: true,
           tuesday: false,
@@ -354,15 +503,15 @@ const ShiftView: React.FC = () => {
       });
     }
 
-    // Add shifts for second employee
     if (employeeList.length > 1) {
       sampleShifts.push({
         id: '2',
         person_id: employeeList[1].id,
-        name: 'Morning Shift',
-        start_time: '08:00:00',
-        end_time: '16:00:00',
+        name: 'Afternoon Shift',
+        start_time: '14:00:00',
+        end_time: '22:00:00',
         break_minutes: 30,
+        color: SHIFT_COLORS.afternoon,
         recurrence_pattern: {
           monday: true,
           tuesday: true,
@@ -385,170 +534,89 @@ const ShiftView: React.FC = () => {
     return sampleShifts;
   };
 
-  // Format time for display (e.g., "08:00")
-  const formatTime = (timeString: string) => {
-    if (!timeString) return '';
-
-    try {
-      // Handle API format "08:00:00" without date part
-      if (timeString.length <= 8 && timeString.includes(':')) {
-        return timeString.substring(0, 5); // Just take HH:MM part
-      }
-
-      return format(parseISO(timeString), 'HH:mm');
-    } catch (error) {
-      console.error('Error formatting time:', error);
-      return '08:00'; // Default fallback
-    }
+  // Event handlers
+  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchQuery(e.target.value);
+    setCurrentPage(1); // Reset to first page when searching
   };
 
-  // Get role name from role ID
-  const getRoleName = (roleId: string): string => {
-    // If we have a role name for this ID, return it
-    if (roleNames[roleId]) {
-      return roleNames[roleId];
-    }
-
-    // If not, return 'Staff' as a default
-    return 'Staff';
+  const handleFilterChange = (filterType: string, value: string) => {
+    setFilters((prev) => ({ ...prev, [filterType]: value }));
+    setCurrentPage(1); // Reset to first page when filtering
   };
 
-  // Calculate hours from shift
-  const calculateShiftHours = (shift: Shift): number => {
-    // If the shift is marked as "Unavailable", return 0 hours
-    if (shift.name === 'Unavailable') return 0;
-
-    if (!shift.start_time || !shift.end_time) return 0;
-
-    try {
-      // Handle API format "08:00:00" without date part
-      if (
-        shift.start_time.length <= 8 &&
-        shift.start_time.includes(':') &&
-        shift.end_time.length <= 8 &&
-        shift.end_time.includes(':')
-      ) {
-        // Extract hours and minutes
-        const [startHours, startMinutes] = shift.start_time
-          .split(':')
-          .map(Number);
-        const [endHours, endMinutes] = shift.end_time.split(':').map(Number);
-
-        // Calculate total minutes
-        let totalMinutes =
-          endHours * 60 + endMinutes - (startHours * 60 + startMinutes);
-
-        // Handle overnight shifts
-        if (totalMinutes < 0) {
-          totalMinutes += 24 * 60; // Add 24 hours in minutes
-        }
-
-        // Subtract break time
-        totalMinutes -= shift.break_minutes || 0;
-
-        // Convert to hours
-        return Math.max(0, Math.round((totalMinutes / 60) * 10) / 10);
-      }
-
-      const start = parseISO(shift.start_time);
-      const end = parseISO(shift.end_time);
-
-      // Calculate minutes between start and end, then subtract break time
-      const totalMinutes =
-        differenceInMinutes(end, start) - (shift.break_minutes || 0);
-
-      // Convert to hours (if negative or zero, return 0)
-      return Math.max(0, Math.round((totalMinutes / 60) * 10) / 10); // Round to 1 decimal place
-    } catch (error) {
-      console.error('Error calculating shift hours:', error);
-      return 0;
-    }
+  const handleClearFilters = () => {
+    setFilters({
+      department: '',
+      role: '',
+      status: 'all',
+    });
+    setSearchQuery('');
+    setCurrentPage(1);
   };
 
-  // Check if an employee has a shift on a specific day
-  const getEmployeeShiftForDay = (
-    employeeId: string,
-    dayName: keyof ShiftRecurrencePattern
-  ) => {
-    // Find shift for this employee that occurs on this day
-    return shifts.find(
-      (shift) =>
-        (shift.person_id === employeeId || shift.employeeId === employeeId) &&
-        shift.recurrence_pattern &&
-        shift.recurrence_pattern[dayName]
+  const handleWeekChange = (direction: 'next' | 'prev') => {
+    setCurrentWeek((prev) =>
+      direction === 'next' ? addWeeks(prev, 1) : subWeeks(prev, 1)
     );
   };
 
-  // Calculate total hours for an employee across all their shifts
-  const calculateEmployeeTotalHours = (employeeId: string): number => {
-    let totalHours = 0;
-
-    // Check each day of the week
-    weekDates.forEach((date) => {
-      const shift = getEmployeeShiftForDay(employeeId, date.dayName);
-      if (shift && shift.name !== 'Unavailable') {
-        totalHours += calculateShiftHours(shift);
-      }
-    });
-
-    return totalHours;
-  };
-
-  // Calculate hours for a specific day for an employee
-  const calculateDayHours = (
-    employeeId: string,
-    dayName: keyof ShiftRecurrencePattern
-  ): number => {
-    const shift = getEmployeeShiftForDay(employeeId, dayName);
-    if (!shift || shift.name === 'Unavailable') return 0;
-    return calculateShiftHours(shift);
-  };
-
-  // Calculate total hours for all employees on a specific day
-  const calculateTotalDayHours = (
-    dayName: keyof ShiftRecurrencePattern
-  ): number => {
-    return filteredEmployees.reduce((total, employee) => {
-      return total + calculateDayHours(employee.id, dayName);
-    }, 0);
-  };
-
-  // Handle search
-  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchQuery(e.target.value);
-  };
-
-  // Filter employees based on search query
-  const filteredEmployees = employees.filter((employee) => {
-    const fullName =
-      `${employee.first_name} ${employee.last_name}`.toLowerCase();
-    return fullName.includes(searchQuery.toLowerCase());
-  });
-
-  // Format hours for display
-  const formatHours = (hours: number): string => {
-    return hours === 0 ? '0 hrs' : `${hours} hrs`;
-  };
-
-  // Get shift color based on shift type
-  const getShiftColor = (shift: Shift, isToday: boolean): string => {
-    if (shift.name === 'Unavailable') {
-      return 'bg-gray-200';
+  const toggleNewShiftModal = (dateInfo?: WeekDate, employeeId?: string) => {
+    if (dateInfo) {
+      setSelectedDate(dateInfo);
+    } else {
+      setSelectedDate(null);
     }
-
-    if (shift.name.includes('Afternoon')) {
-      return isToday ? 'bg-blue-600' : 'bg-blue-500';
+    if (employeeId) {
+      setSelectedEmployeeId(employeeId);
+    } else {
+      setSelectedEmployeeId(null);
     }
-
-    if (shift.name.includes('Night')) {
-      return isToday ? 'bg-purple-700' : 'bg-purple-600';
-    }
-
-    // Default color for Morning shifts
-    return isToday ? 'bg-green-600' : 'bg-green-500';
+    setShowNewShiftModal(!showNewShiftModal);
   };
 
-  // Render shift cell content
+  const handleShiftCreated = () => {
+    setShowNewShiftModal(false);
+    fetchEmployeesAndShifts();
+    toast.success('Shift added successfully!');
+  };
+
+  const refreshData = useCallback(() => {
+    fetchEmployeesAndShifts();
+  }, []);
+
+  // Render functions
+  const renderEmployeeAvatar = (employee: Employee) => {
+    return (
+      <div className="flex-shrink-0 h-10 w-10 relative">
+        {employee.avatar ? (
+          <img
+            className="h-10 w-10 rounded-full object-cover"
+            src={employee.avatar}
+            alt={`${employee.first_name} ${employee.last_name}`}
+            onError={(e) => {
+              e.currentTarget.style.display = 'none';
+              const parent = e.currentTarget.parentElement;
+              if (parent) {
+                const initialsDiv = parent.querySelector('.initials-fallback');
+                if (initialsDiv) {
+                  (initialsDiv as HTMLElement).style.display = 'flex';
+                }
+              }
+            }}
+          />
+        ) : null}
+
+        <div
+          className="initials-fallback h-10 w-10 rounded-full bg-gray-300 flex items-center justify-center text-gray-600 font-medium"
+          style={{ display: employee.avatar ? 'none' : 'flex' }}
+        >
+          {employee.initials || employee.first_name.charAt(0)}
+        </div>
+      </div>
+    );
+  };
+
   const renderShiftCell = (employeeId: string, dateInfo: WeekDate) => {
     const shift = getEmployeeShiftForDay(employeeId, dateInfo.dayName);
     const isTodayCell = isToday(dateInfo.fullDate);
@@ -557,14 +625,15 @@ const ShiftView: React.FC = () => {
       return (
         <div className="h-full flex items-center justify-center">
           <button
-            className="text-gray-400 hover:text-gray-600"
-            onClick={() => toggleNewShiftModal(dateInfo)}
+            className="text-gray-400 hover:text-gray-600 transition-colors"
+            onClick={() => toggleNewShiftModal(dateInfo, employeeId)}
           >
             <Plus size={20} />
           </button>
         </div>
       );
     }
+
     if (shift.name === 'Unavailable') {
       return (
         <div className="bg-gray-200 h-full flex items-center justify-center">
@@ -585,7 +654,7 @@ const ShiftView: React.FC = () => {
                   <path d="M12 2L2 12 12 22 22 12 12 2z" />
                 </svg>
               </div>
-              <div className="text-gray-600">Unavailable</div>
+              <div className="text-gray-600 text-xs">Unavailable</div>
             </div>
           </div>
         </div>
@@ -593,202 +662,313 @@ const ShiftView: React.FC = () => {
     }
 
     const bgColor = getShiftColor(shift, isTodayCell);
-
-    // Get role name from the shift's applies_to_roles array
     const roleDisplay =
       shift.applies_to_roles && shift.applies_to_roles.length > 0
         ? getRoleName(shift.applies_to_roles[0])
         : 'Staff';
 
+    // Use custom color if available, otherwise use CSS classes
+    const customStyle = shift.color
+      ? {
+          backgroundColor: shift.color,
+          opacity: isTodayCell ? 0.9 : 1,
+        }
+      : {};
+
     return (
-      <div className={`${bgColor} h-full p-2 text-sm`}>
+      <div
+        className={`${bgColor} h-full p-2 text-sm rounded-sm`}
+        style={customStyle}
+      >
         <div className="text-white">
-          <div>
+          <div className="font-medium">
             {formatTime(shift.start_time)} - {formatTime(shift.end_time)}
           </div>
-          <div>{roleDisplay}</div>
+          <div className="text-xs opacity-90">{roleDisplay}</div>
         </div>
       </div>
     );
   };
 
-  // Calculate total hours for all employees
-  const calculateTotalHours = (): number => {
-    return filteredEmployees.reduce((total, employee) => {
-      return total + calculateEmployeeTotalHours(employee.id);
-    }, 0);
-  };
+  const renderPagination = () => {
+    if (totalPages <= 1) return null;
 
-  // Render employee avatar with fallback to initials
-  const renderEmployeeAvatar = (employee: Employee) => {
     return (
-      <div className="flex-shrink-0 h-10 w-10 relative">
-        {employee.avatar ? (
-          <img
-            className="h-10 w-10 rounded-full object-cover"
-            src={employee.avatar}
-            alt={`${employee.first_name} ${employee.last_name}`}
-            onError={(e) => {
-              // When image fails to load, show the initials div
-              e.currentTarget.style.display = 'none';
-              const parent = e.currentTarget.parentElement;
-              if (parent) {
-                const initialsDiv = parent.querySelector('.initials-fallback');
-                if (initialsDiv) {
-                  (initialsDiv as HTMLElement).style.display = 'flex';
-                }
-              }
-            }}
-          />
-        ) : null}
-
-        {/* Fallback for when image is not available or fails to load */}
-        <div
-          className="initials-fallback h-10 w-10 rounded-full bg-gray-300 flex items-center justify-center text-gray-600 font-medium"
-          style={{ display: employee.avatar ? 'none' : 'flex' }}
-        >
-          {employee.initials || employee.first_name.charAt(0)}
+      <div className="flex items-center justify-between px-6 py-4 bg-white border-t">
+        <div className="text-sm text-gray-700">
+          Showing {(currentPage - 1) * ITEMS_PER_PAGE + 1} to{' '}
+          {Math.min(currentPage * ITEMS_PER_PAGE, filteredEmployees.length)} of{' '}
+          {filteredEmployees.length} employees
+        </div>
+        <div className="flex items-center space-x-2">
+          <button
+            onClick={() => setCurrentPage((prev) => Math.max(1, prev - 1))}
+            disabled={currentPage === 1}
+            className="px-3 py-1 text-sm border rounded disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50"
+          >
+            Previous
+          </button>
+          <span className="px-3 py-1 text-sm">
+            Page {currentPage} of {totalPages}
+          </span>
+          <button
+            onClick={() =>
+              setCurrentPage((prev) => Math.min(totalPages, prev + 1))
+            }
+            disabled={currentPage === totalPages}
+            className="px-3 py-1 text-sm border rounded disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50"
+          >
+            Next
+          </button>
         </div>
       </div>
     );
   };
 
   return (
-    <div className="mt-8">
-      <div className="flex justify-between items-center mb-6">
-        <div className="relative w-64">
+    <div className="">
+      {/* Header Section */}
+      <div className="bg-white border p-4">
+        <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+          <div className="flex items-center gap-4">
+            <div className="flex items-center gap-2">
+              <Calendar className="h-5 w-5 text-gray-600" />
+              <h1 className="text-2xl font-semibold text-gray-900">
+                Shift Management
+              </h1>
+            </div>
+            <div className="flex items-center gap-2 text-sm text-gray-600">
+              <span>{format(weekDates[0].fullDate, 'MMM d')}</span>
+              <span>-</span>
+              <span>{format(weekDates[6].fullDate, 'MMM d, yyyy')}</span>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-3">
+            <Button
+              type="button"
+              text="New Shift"
+              icon={<Plus size={16} />}
+              onClick={() => toggleNewShiftModal()}
+            />
+          </div>
+        </div>
+
+        {/* Week Navigation */}
+        <div className="flex items-center justify-between mt-4">
+          <button
+            onClick={() => handleWeekChange('prev')}
+            className="flex items-center gap-2 px-3 py-2 text-sm border  hover:bg-gray-50"
+          >
+            <ChevronLeft size={16} />
+            Previous Week
+          </button>
+
+          <div className="flex items-center gap-4">
+            <div className="flex items-center gap-2">
+              <Users className="h-4 w-4 text-gray-600" />
+              <span className="text-sm text-gray-600">
+                {filteredEmployees.length} employees
+              </span>
+            </div>
+            <div className="flex items-center gap-2">
+              <Clock className="h-4 w-4 text-gray-600" />
+              <span className="text-sm text-gray-600">
+                {formatHours(calculateTotalHours())} total
+              </span>
+            </div>
+          </div>
+
+          <button
+            onClick={() => handleWeekChange('next')}
+            className="flex items-center gap-2 px-3 py-2 text-sm border  hover:bg-gray-50"
+          >
+            Next Week
+            <ChevronRight size={16} />
+          </button>
+        </div>
+      </div>
+
+      {/* Filters and Search */}
+      <div className="flex flex-col items-center lg:flex-row gap-4">
+        <div className="flex-1">
           <Search
-            placeholder="Search People"
+            placeholder="Search employees..."
             value={searchQuery}
             onChange={handleSearch}
           />
         </div>
-        <div className="flex space-x-2">
-          <Button
-            type="button"
-            text="New Shift"
-            icon={<Plus size={16} />}
-            onClick={toggleNewShiftModal}
-          />
+
+        <div className="flex gap-3">
+          <div className="w-48">
+            <SearchableSelect
+              // label="Filter by Role"
+              options={[
+                { value: '', label: 'All Roles' },
+                ...roles.map((role) => ({
+                  value: role.value,
+                  label: role.label,
+                })),
+              ]}
+              selectedValue={filters.role}
+              onChange={(value) => handleFilterChange('role', value)}
+              placeholder="Select role"
+            />
+          </div>
+          {(filters.role || searchQuery) && (
+            <button
+              onClick={handleClearFilters}
+              className="px-3 py-2 text-sm text-gray-600 border border-gray-300 hover:bg-gray-50"
+            >
+              Clear Filters
+            </button>
+          )}
         </div>
       </div>
 
+      {/* Main Table */}
       {loading ? (
-        <div className="flex justify-center py-8">
+        <div className="flex justify-center py-12">
           <PottaLoader />
         </div>
       ) : (
-        <div className="bg-white border overflow-x-auto">
-          <table className="min-w-full divide-y divide-gray-200 border-collapse">
-            <thead className="bg-[#F3FBFB]">
-              <tr>
-                <th scope="col" className="px-6 py-4 w-8 border">
-                  <input type="checkbox" className="h-4 w-4 text-blue-600" />
-                </th>
-                <th
-                  scope="col"
-                  className="px-6 py-4 text-left text-sm font-medium text-gray-500 tracking-wider w-48 border"
-                >
-                  Employee
-                </th>
-                <th
-                  scope="col"
-                  className="px-2 pl-6 py-4 text-left text-sm font-medium text-gray-500 tracking-wider w-24 border"
-                >
-                  Total Hours
-                </th>
-                {weekDates.map((date) => (
-                  <th
-                    key={date.dayIndex}
-                    scope="col"
-                    className={`px-6 py-4 text-left text-sm font-medium ${
-                      isToday(date.fullDate)
-                        ? 'text-green-600 font-bold'
-                        : 'text-gray-500'
-                    } tracking-wider w-28 border`}
-                  >
-                    {date.day} {date.date}
+        <div className="bg-white border overflow-hidden">
+          <div className="overflow-x-auto">
+            <table className="min-w-full divide-y divide-gray-200">
+              <thead className="bg-gray-50">
+                <tr>
+                  <th scope="col" className="px-6 py-4 w-8 border-r">
+                    <input type="checkbox" className="h-4 w-4 text-blue-600" />
                   </th>
-                ))}
-              </tr>
-            </thead>
-            <tbody className="bg-white divide-y divide-gray-200">
-              {filteredEmployees.map((employee, index) => (
-                <tr
-                  key={employee.id}
-                  className={index % 2 === 0 ? 'bg-white' : 'bg-gray-50'}
-                >
-                  <td className="px-6 py-4 whitespace-nowrap border">
-                    <div className="flex items-center justify-center">
-                      <input
-                        type="checkbox"
-                        className="h-4 w-4 text-blue-600 rounded"
-                      />
-                    </div>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap border">
-                    <div className="flex items-center">
-                      {renderEmployeeAvatar(employee)}
-                      <div className="ml-4">
-                        <div className="text-sm font-medium text-gray-900">
-                          {employee.first_name} {employee.last_name}
+                  <th
+                    scope="col"
+                    className="px-6 py-4 text-left text-sm font-medium text-gray-700 tracking-wider w-48 border-r"
+                  >
+                    Employee
+                  </th>
+                  <th
+                    scope="col"
+                    className="px-6 py-4 text-left text-sm font-medium text-gray-700 tracking-wider w-24 border-r"
+                  >
+                    Total Hours
+                  </th>
+                  {weekDates.map((date) => (
+                    <th
+                      key={date.dayIndex}
+                      scope="col"
+                      className={`px-4 py-4 text-center text-sm font-medium ${
+                        isToday(date.fullDate)
+                          ? 'text-green-600 font-bold bg-green-50'
+                          : 'text-gray-700'
+                      } tracking-wider w-28 border-r`}
+                    >
+                      <div className="flex flex-col items-center">
+                        <span className="text-xs text-gray-500">
+                          {date.day}
+                        </span>
+                        <span className="text-lg font-semibold">
+                          {date.date}
+                        </span>
+                      </div>
+                    </th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody className="bg-white divide-y divide-gray-200">
+                {paginatedEmployees.map((employee, index) => (
+                  <tr
+                    key={employee.id}
+                    className={
+                      index % 2 === 0
+                        ? 'bg-white'
+                        : 'bg-gray-50 hover:bg-gray-100'
+                    }
+                  >
+                    <td className="px-6 py-4 whitespace-nowrap border-r">
+                      <div className="flex items-center justify-center">
+                        <input
+                          type="checkbox"
+                          className="h-4 w-4 text-blue-600 rounded"
+                        />
+                      </div>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap border-r">
+                      <div className="flex items-center">
+                        {renderEmployeeAvatar(employee)}
+                        <div className="ml-4">
+                          <div className="text-sm font-medium text-gray-900">
+                            {employee.first_name} {employee.last_name}
+                          </div>
+                          {employee.email && (
+                            <div className="text-xs text-gray-500">
+                              {employee.email}
+                            </div>
+                          )}
                         </div>
                       </div>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 border-r">
+                      <div className="font-medium">
+                        {formatHours(calculateEmployeeTotalHours(employee.id))}
+                      </div>
+                    </td>
+                    {weekDates.map((date) => (
+                      <td
+                        key={`${employee.id}-${date.dayIndex}`}
+                        className={`px-2 py-4 h-20 border-r ${
+                          isToday(date.fullDate) ? 'bg-green-50' : ''
+                        }`}
+                      >
+                        {renderShiftCell(employee.id, date)}
+                      </td>
+                    ))}
+                  </tr>
+                ))}
+
+                {/* Total row */}
+                <tr className="bg-gray-50 border-t-2 border-gray-300">
+                  <td className="px-6 py-4 whitespace-nowrap border-r">
+                    <div className="flex items-center justify-center">
+                      <MoreHorizontal className="h-4 w-4 text-gray-500" />
                     </div>
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 border">
-                    {formatHours(calculateEmployeeTotalHours(employee.id))}
+                  <td className="px-6 py-4 whitespace-nowrap border-r">
+                    <div className="text-sm font-bold text-gray-900">Total</div>
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm font-bold border-r">
+                    {formatHours(calculateTotalHours())}
                   </td>
                   {weekDates.map((date) => (
                     <td
-                      key={`${employee.id}-${date.dayIndex}`}
-                      className={`px-3 py-4 h-20 ${
-                        isToday(date.fullDate) ? 'bg-green-50' : ''
-                      } border`}
+                      key={`total-${date.dayIndex}`}
+                      className={`px-6 py-4 whitespace-nowrap text-sm font-bold border-r ${
+                        isToday(date.fullDate)
+                          ? 'text-green-600'
+                          : 'text-gray-700'
+                      }`}
                     >
-                      {renderShiftCell(employee.id, date)}
+                      {formatHours(calculateTotalDayHours(date.dayName))}
                     </td>
                   ))}
                 </tr>
-              ))}
-              {/* Total row */}
-              <tr className="bg-white">
-                <td className="px-6 py-4 whitespace-nowrap border">
-                  <div className="flex items-center justify-center">
-                    {/* Chevron removed */}
-                  </div>
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap border">
-                  <div className="text-sm font-medium text-gray-900">Total</div>
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm font-medium border">
-                  {formatHours(calculateTotalHours())}
-                </td>
-                {weekDates.map((date) => (
-                  <td
-                    key={`total-${date.dayIndex}`}
-                    className={`px-6 py-4 whitespace-nowrap text-sm ${
-                      isToday(date.fullDate)
-                        ? 'font-bold text-green-600'
-                        : 'text-gray-500'
-                    } border`}
-                  >
-                    {formatHours(calculateTotalDayHours(date.dayName))}
-                  </td>
-                ))}
-              </tr>
-            </tbody>
-          </table>
+              </tbody>
+            </table>
+          </div>
+
+          {/* Pagination */}
+          {renderPagination()}
         </div>
       )}
 
-      {/* Render the NewShiftModal when showNewShiftModal is true */}
+      {/* New Shift Modal */}
       {showNewShiftModal && (
         <NewShiftModal
           onClose={toggleNewShiftModal}
           onSuccess={handleShiftCreated}
           roles={roles}
           isLoadingRoles={isLoadingRoles}
+          selectedDate={selectedDate}
+          selectedEmployeeId={selectedEmployeeId}
         />
       )}
     </div>

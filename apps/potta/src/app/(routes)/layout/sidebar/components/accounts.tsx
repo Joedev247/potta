@@ -3,7 +3,8 @@ import { useContext } from 'react';
 import { Sidebar, Menu, MenuItem } from 'react-pro-sidebar';
 import Icon from '../../../../../components/icon_fonts/icon';
 import { usePathname } from 'next/navigation';
-import { Home, ScrollText, Menu as MenuIcon } from 'lucide-react';
+import { PiBuildingApartmentLight } from 'react-icons/pi';
+import { Home, ScrollText, Menu as MenuIcon, Briefcase } from 'lucide-react';
 
 const SidebarsAccounts = () => {
   const pathname = usePathname();
@@ -26,7 +27,7 @@ const SidebarsAccounts = () => {
     >
       <Menu className="relative h-[76vh]" closeOnClick>
         <MenuItem
-          className="mt-4 font-thin "
+          className=" font-thin "
           href="/"
           icon={
             <img src="/icons/Potta.svg" className="h-16 w-16 mt-2" alt="logo" />
@@ -55,7 +56,7 @@ const SidebarsAccounts = () => {
         {/* Journal */}
         <MenuItem
           active={isActive('/accounts/journals')}
-          className="mt-4"
+          className=""
           href="/accounts/journals"
           icon={
             <ScrollText
@@ -66,6 +67,21 @@ const SidebarsAccounts = () => {
           }
         >
           <h3 className="text-lg mt-[2px]">Journals</h3>
+        </MenuItem>
+        {/* Assets */}
+        <MenuItem
+          active={isActive('/accounts/assets')}
+          className=""
+          href="/accounts/assets"
+          icon={
+            <PiBuildingApartmentLight
+              className={`h-6 w-6 ${
+                isActive('/accounts/assets') ? 'text-white' : 'text-gray-500'
+              }`}
+            />
+          }
+        >
+          <h3 className="text-lg mt-[2px]">Assets</h3>
         </MenuItem>
       </Menu>
       <div className="absolute cursor-pointer mb-10 ml-6 bottom-0">

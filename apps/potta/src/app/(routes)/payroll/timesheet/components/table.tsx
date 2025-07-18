@@ -127,10 +127,11 @@ const TimesheetTable = ({
     {
       name: 'Employee',
       selector: (row) => row.employee,
+      width: '200px',
       cell: (row) => {
         // For the total row, show bold text
         if (row.isTotal) {
-          return <div className="font-bold text-lg">{row.employee}</div>;
+          return <div className="font-bold text-md">{row.employee}</div>;
         }
 
         return (
@@ -157,6 +158,15 @@ const TimesheetTable = ({
       cell: (row) => (
         <div className={row.isTotal ? 'font-bold text-lg' : ''}>
           {row.totalHours}
+        </div>
+      ),
+    },
+    {
+      name: 'Break',
+      selector: (row) => row.breakTime,
+      cell: (row) => (
+        <div className={row.isTotal ? 'font-bold text-lg' : ''}>
+          {row.breakTime || '0 min'}
         </div>
       ),
     },
@@ -259,27 +269,52 @@ const TimesheetTable = ({
           return null;
         }
 
-        let statusClass = '';
-        if (row.status === 'Approved' || row.status === 'APPROVED') {
-          statusClass = 'text-green-600';
-        } else if (row.status === 'Rejected' || row.status === 'REJECTED') {
-          statusClass = 'text-red-600';
-        } else {
-          statusClass = 'text-blue-600';
-        }
+        // Define status styling with proper badges
+        const getStatusConfig = (status: string) => {
+          switch (status) {
+            case 'Approved':
+            case 'APPROVED':
+              return {
+                bg: '',
+                text: 'text-green-700',
+                border: '',
+                label: 'Approved',
+              };
+            case 'Rejected':
+            case 'REJECTED':
+              return {
+                bg: '',
+                text: 'text-red-700',
+                border: '',
+                label: 'Rejected',
+              };
+            case 'Pending':
+            case 'PENDING':
+            default:
+              return {
+                bg: '',
+                text: 'text-yellow-600',
+                border: '',
+                label: 'Pending',
+              };
+          }
+        };
+
+        const config = getStatusConfig(row.status);
 
         return (
-          <span className={statusClass}>
-            {row.status === 'APPROVED'
-              ? 'Approved'
-              : row.status === 'REJECTED'
-              ? 'Rejected'
-              : row.status === 'PENDING'
-              ? 'pending'
-              : row.status}
-          </span>
+          <div className="flex justify-center">
+            <div
+              className={`inline-flex items-center px-3 py-1  ${config.bg} ${config.text} ${config.border}`}
+            >
+              <span className="text-sm font-medium rounded-full">
+                {config.label}
+              </span>
+            </div>
+          </div>
         );
       },
+      width: '140px',
     },
     {
       name: 'Actions',
@@ -292,19 +327,35 @@ const TimesheetTable = ({
 
         // Check if we have a timesheet ID
         if (!row.timesheetId) {
-          return <div className="text-gray-400">No actions available</div>;
+          return (
+            <div className="flex justify-center">
+              <span className="text-gray-400 text-sm">
+                No actions available
+              </span>
+            </div>
+          );
         }
 
+        const isApproved =
+          row.status === 'Approved' || row.status === 'APPROVED';
+        const isRejected =
+          row.status === 'Rejected' || row.status === 'REJECTED';
+        const isProcessing =
+          loading[row.timesheetId] === 'approving' ||
+          loading[row.timesheetId] === 'rejecting';
+
         return (
-          <div className="flex space-x-2">
+          <div className="flex justify-center gap-2">
             <button
-              className="text-green-600 hover:text-green-900 disabled:opacity-50 disabled:cursor-not-allowed"
-              disabled={
-                row.status === 'Approved' ||
-                row.status === 'APPROVED' ||
-                loading[row.timesheetId] === 'approving' ||
-                loading[row.timesheetId] === 'rejecting'
-              }
+              className={`
+                inline-flex items-center gap-1 rounded-full px-3 py-1 text-sm font-medium transition-colors border
+                ${
+                  isApproved || isProcessing
+                    ? 'bg-gray-100 text-gray-400 cursor-not-allowed border-gray-200'
+                    : 'bg-green-50 text-green-700 hover:bg-green-100 border-green-200'
+                }
+              `}
+              disabled={isApproved || isProcessing}
               onClick={(e) => {
                 e.stopPropagation();
                 handleApprove(row);
@@ -314,14 +365,17 @@ const TimesheetTable = ({
                 ? 'Processing...'
                 : 'Approve'}
             </button>
+
             <button
-              className="text-red-600 hover:text-red-900 disabled:opacity-50 disabled:cursor-not-allowed"
-              disabled={
-                row.status === 'Rejected' ||
-                row.status === 'REJECTED' ||
-                loading[row.timesheetId] === 'approving' ||
-                loading[row.timesheetId] === 'rejecting'
-              }
+              className={`
+                inline-flex items-center rounded-full gap-1 px-3 py-1 text-sm font-medium transition-colors border
+                ${
+                  isRejected || isProcessing
+                    ? 'bg-gray-100 text-gray-400 cursor-not-allowed border-gray-200'
+                    : 'bg-red-50 text-red-700 hover:bg-red-100 border-red-200'
+                }
+              `}
+              disabled={isRejected || isProcessing}
               onClick={(e) => {
                 e.stopPropagation();
                 handleReject(row);
@@ -334,6 +388,7 @@ const TimesheetTable = ({
           </div>
         );
       },
+      width: '200px',
     },
   ];
 
@@ -357,12 +412,49 @@ const TimesheetTable = ({
       return sum + hours;
     }, 0);
 
+    // Calculate total break time
+    const totalBreakMinutes = data.reduce((sum, row) => {
+      // Extract minutes from breakTime string (e.g., "30 min", "1h 30m", "2h")
+      const breakTime = row.breakTime || '0 min';
+      let minutes = 0;
+
+      if (breakTime.includes('h') && breakTime.includes('m')) {
+        // Format: "1h 30m"
+        const hourMatch = breakTime.match(/(\d+)h/);
+        const minuteMatch = breakTime.match(/(\d+)m/);
+        minutes =
+          (hourMatch ? parseInt(hourMatch[1]) * 60 : 0) +
+          (minuteMatch ? parseInt(minuteMatch[1]) : 0);
+      } else if (breakTime.includes('h')) {
+        // Format: "2h"
+        const hourMatch = breakTime.match(/(\d+)h/);
+        minutes = hourMatch ? parseInt(hourMatch[1]) * 60 : 0;
+      } else if (breakTime.includes('min')) {
+        // Format: "30 min"
+        const minuteMatch = breakTime.match(/(\d+) min/);
+        minutes = minuteMatch ? parseInt(minuteMatch[1]) : 0;
+      }
+
+      return sum + minutes;
+    }, 0);
+
+    // Format total break time for display
+    const formatTotalBreakTime = (totalMinutes) => {
+      if (totalMinutes === 0) return '0 min';
+      if (totalMinutes < 60) return `${totalMinutes} min`;
+      const hours = Math.floor(totalMinutes / 60);
+      const remainingMinutes = totalMinutes % 60;
+      if (remainingMinutes === 0) return `${hours}h`;
+      return `${hours}h ${remainingMinutes}m`;
+    };
+
     // Create a new array with the original data plus the total row
     return [
       ...data,
       {
         employee: 'Total',
         totalHours: `${totalHours} hrs`,
+        breakTime: formatTotalBreakTime(totalBreakMinutes),
         regularHours: `${totalRegularHours} hrs`,
         overTime: `${totalOverTime} hrs`,
         isTotal: true, // Flag to identify this as the total row
@@ -381,7 +473,12 @@ const TimesheetTable = ({
             <Search placeholder="Search People" />
           </div>
           <div className="flex space-x-2">
-            <Button type="button" text="New Time Entry" onClick={buttonClick} />
+            <Button
+              type="button"
+              icon={<i className="ri-file-add-line"></i>}
+              text="New Time Entry"
+              onClick={buttonClick}
+            />
           </div>
         </div>
       )}
@@ -390,7 +487,7 @@ const TimesheetTable = ({
         columns={columns}
         data={dataWithTotals}
         ExpandableComponent={null}
-        expanded
+        expanded={false}
         pagination={data.length > 9}
         selectableRows
       />

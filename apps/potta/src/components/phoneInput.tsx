@@ -1,7 +1,7 @@
-"use client";
-import React, { useState, useEffect, useRef } from "react";
-import { ChevronDown, AlertCircle } from "lucide-react";
-import { Country } from "country-state-city";
+'use client';
+import React, { useState, useEffect, useRef } from 'react';
+import { ChevronDown, AlertCircle } from 'lucide-react';
+import { Country } from 'country-state-city';
 
 interface BaseInputProps {
   label?: string;
@@ -9,6 +9,8 @@ interface BaseInputProps {
   value?: string;
   whatsapp?: boolean;
   onChange?: (value: string, metadata: PhoneMetadata) => void;
+  errors?: string; // Add errors prop for external validation
+  required?: boolean; // Add required prop
 }
 
 interface PhoneMetadata {
@@ -36,18 +38,18 @@ interface CountryCodeInfo {
 // Phone number length requirements by country
 const phoneNumberLengths: Record<string, { min: number; max: number }> = {
   // Africa
-  CM: { min: 8, max: 9 },   // Cameroon
+  CM: { min: 8, max: 9 }, // Cameroon
   NG: { min: 10, max: 11 }, // Nigeria
-  ZA: { min: 9, max: 9 },   // South Africa
-  KE: { min: 9, max: 10 },  // Kenya
-  GH: { min: 9, max: 10 },  // Ghana
+  ZA: { min: 9, max: 9 }, // South Africa
+  KE: { min: 9, max: 10 }, // Kenya
+  GH: { min: 9, max: 10 }, // Ghana
   
   // Europe
   GB: { min: 10, max: 11 }, // UK
-  FR: { min: 9, max: 9 },   // France
+  FR: { min: 9, max: 9 }, // France
   DE: { min: 10, max: 11 }, // Germany
-  IT: { min: 9, max: 10 },  // Italy
-  ES: { min: 9, max: 9 },   // Spain
+  IT: { min: 9, max: 10 }, // Italy
+  ES: { min: 9, max: 9 }, // Spain
   
   // North America
   US: { min: 10, max: 10 }, // USA
@@ -60,26 +62,26 @@ const phoneNumberLengths: Record<string, { min: number; max: number }> = {
   IN: { min: 10, max: 10 }, // India
   
   // Default for other countries
-  default: { min: 7, max: 15 }
+  default: { min: 7, max: 15 },
 };
 
 // Common phone number formats by region
 const phoneFormats: Record<string, string> = {
-  AF: "XX XXX XXXX", // Africa
-  AS: "XXX XXXX XXXX", // Asia
-  EU: "XXX XXX XXXX", // Europe
-  NA: "XXX XXX XXXX", // North America
-  SA: "XXX XXX XXXX", // South America
-  OC: "XXX XXX XXX", // Oceania
-  default: "XXX XXX XXXX",
+  AF: 'X XX XX XX XX', // Africa
+  AS: 'XXX XXXX XXXX', // Asia
+  EU: 'XXX XXX XXXX', // Europe
+  NA: 'XXX XXX XXXX', // North America
+  SA: 'XXX XXX XXXX', // South America
+  OC: 'XXX XXX XXX', // Oceania
+  default: 'XXX XXX XXXX',
 };
 
 // Helper to determine format based on continent/region
 const getFormatForCountry = (isoCode: string): string => {
-  const africanCountries = ["CM", "NG", "ZA", "KE", "GH", "SN", "CI"];
-  const europeanCountries = ["GB", "FR", "DE", "IT", "ES", "NL"];
-  const asianCountries = ["CN", "JP", "IN", "KR", "SG"];
-  const northAmericanCountries = ["US", "CA", "MX"];
+  const africanCountries = ['CM', 'NG', 'ZA', 'KE', 'GH', 'SN', 'CI'];
+  const europeanCountries = ['GB', 'FR', 'DE', 'IT', 'ES', 'NL'];
+  const asianCountries = ['CN', 'JP', 'IN', 'KR', 'SG'];
+  const northAmericanCountries = ['US', 'CA', 'MX'];
 
   if (africanCountries.includes(isoCode)) return phoneFormats.AF;
   if (europeanCountries.includes(isoCode)) return phoneFormats.EU;
@@ -90,7 +92,9 @@ const getFormatForCountry = (isoCode: string): string => {
 };
 
 // Get phone number length requirements for a country
-const getPhoneLengthForCountry = (isoCode: string): { min: number; max: number } => {
+const getPhoneLengthForCountry = (
+  isoCode: string
+): { min: number; max: number } => {
   return phoneNumberLengths[isoCode] || phoneNumberLengths.default;
 };
 
@@ -102,10 +106,12 @@ const getFlagUrl = (isoCode: string): string => {
 export function PhoneInput({
   label,
   placeholder,
-  value = "",
+  value = '',
   onChange,
   whatsapp,
-  countryCode = "+237",
+  countryCode = '+237',
+  errors, // Add errors prop
+  required = false, // Add required prop
 }: PhoneInputProps) {
   // Store the raw phone number input (without country code)
   const [phoneNumber, setPhoneNumber] = useState(value);
@@ -115,7 +121,8 @@ export function PhoneInput({
   
   const [isWhatsApp, setIsWhatsApp] = useState(whatsapp || false);
   const [countryCodes, setCountryCodes] = useState<CountryCodeInfo[]>([]);
-  const [selectedCountryInfo, setSelectedCountryInfo] = useState<CountryCodeInfo | null>(null);
+  const [selectedCountryInfo, setSelectedCountryInfo] =
+    useState<CountryCodeInfo | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [validationError, setValidationError] = useState<string | null>(null);
@@ -137,15 +144,19 @@ export function PhoneInput({
         setDropdownOpen(false);
       }
     }
-    document.addEventListener("mousedown", handleClickOutside);
+    document.addEventListener('mousedown', handleClickOutside);
     return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener('mousedown', handleClickOutside);
     };
   }, []);
 
   // Update the country code when the prop changes
   useEffect(() => {
-    if (countryCode && countryCode !== selectedCountryCode && !isInitialMount.current) {
+    if (
+      countryCode &&
+      countryCode !== selectedCountryCode &&
+      !isInitialMount.current
+    ) {
       setSelectedCountryCode(countryCode);
       lastSelectedCountry.current = countryCode;
     }
@@ -169,7 +180,7 @@ export function PhoneInput({
         const codeMap = new Map<string, CountryCodeInfo[]>();
 
         countries.forEach((country) => {
-          let callingCode = "";
+          let callingCode = '';
           try {
             callingCode = `+${country.phonecode}`;
           } catch (error) {
@@ -180,7 +191,7 @@ export function PhoneInput({
             return; // Skip this country
           }
 
-          if (!callingCode || callingCode === "+") return; // Skip invalid codes
+          if (!callingCode || callingCode === '+') return; // Skip invalid codes
 
           const lengthRequirements = getPhoneLengthForCountry(country.isoCode);
 
@@ -192,7 +203,7 @@ export function PhoneInput({
             isoCode: country.isoCode,
             id: `${country.isoCode}-${callingCode}`, // Create unique ID
             minLength: lengthRequirements.min,
-            maxLength: lengthRequirements.max
+            maxLength: lengthRequirements.max,
           };
 
           if (!codeMap.has(callingCode)) {
@@ -225,38 +236,38 @@ export function PhoneInput({
           lastSelectedCountry.current = initialCountry.code;
         }
       } catch (error) {
-        console.error("Error loading country codes:", error);
+        console.error('Error loading country codes:', error);
         // Fallback to some default countries if API fails
         const fallbackCountries = [
           {
-            code: "+237",
-            country: "Cameroon",
-            format: "X XX XX XX XX",
-            flag: getFlagUrl("CM"),
-            isoCode: "CM",
-            id: "CM-237",
+            code: '+237',
+            country: 'Cameroon',
+            format: 'X XX XX XX XX',
+            flag: getFlagUrl('CM'),
+            isoCode: 'CM',
+            id: 'CM-237',
             minLength: 8,
-            maxLength: 9
+            maxLength: 9,
           },
           {
-            code: "+1",
-            country: "United States",
-            format: "XXX XXX XXXX",
-            flag: getFlagUrl("US"),
-            isoCode: "US",
-            id: "US-1",
+            code: '+1',
+            country: 'United States',
+            format: 'XXX XXX XXXX',
+            flag: getFlagUrl('US'),
+            isoCode: 'US',
+            id: 'US-1',
             minLength: 10,
-            maxLength: 10
+            maxLength: 10,
           },
           {
-            code: "+44",
-            country: "United Kingdom",
-            format: "XXXX XXXXXX",
-            flag: getFlagUrl("GB"),
-            isoCode: "GB",
-            id: "GB-44",
+            code: '+44',
+            country: 'United Kingdom',
+            format: 'XXXX XXXXXX',
+            flag: getFlagUrl('GB'),
+            isoCode: 'GB',
+            id: 'GB-44',
             minLength: 10,
-            maxLength: 11
+            maxLength: 11,
           },
         ];
         setCountryCodes(fallbackCountries);
@@ -294,13 +305,16 @@ export function PhoneInput({
       
       // Validate current phone number with new country requirements
       if (phoneNumber) {
-        validatePhoneNumber(phoneNumber.replace(/\D/g, ""), countryInfo);
+        validatePhoneNumber(phoneNumber.replace(/\D/g, ''), countryInfo);
       }
     }
   }, [selectedCountryCode, countryCodes, phoneNumber]);
 
   // Validate phone number against country requirements
-  const validatePhoneNumber = (digits: string, countryInfo?: CountryCodeInfo | null): boolean => {
+  const validatePhoneNumber = (
+    digits: string,
+    countryInfo?: CountryCodeInfo | null
+  ): boolean => {
     const country = countryInfo || selectedCountryInfo;
     if (!country) return true; // Can't validate without country info
     
@@ -312,12 +326,16 @@ export function PhoneInput({
     }
     
     if (length < country.minLength) {
-      setValidationError(`Phone number too short. ${country.country} numbers should be at least ${country.minLength} digits.`);
+      setValidationError(
+        `Phone number too short. ${country.country} numbers should be at least ${country.minLength} digits.`
+      );
       return false;
     }
     
     if (length > country.maxLength) {
-      setValidationError(`Phone number too long. ${country.country} numbers should be at most ${country.maxLength} digits.`);
+      setValidationError(
+        `Phone number too long. ${country.country} numbers should be at most ${country.maxLength} digits.`
+      );
       return false;
     }
     
@@ -330,24 +348,24 @@ export function PhoneInput({
   // Format phone number for display
   const formatPhoneNumber = (input: string): string => {
     // Remove any non-digit characters from the input
-    const cleaned = input.replace(/\D/g, "");
-    if (cleaned.length === 0) return "";
+    const cleaned = input.replace(/\D/g, '');
+    if (cleaned.length === 0) return '';
 
-    const format = selectedCountryInfo?.format || "XXX XXX XXX";
+    const format = selectedCountryInfo?.format || 'XXX XXX XXX';
 
-    let formatted = "";
+    let formatted = '';
     let digitIndex = 0;
 
     // Apply the format pattern
     for (let i = 0; i < format.length && digitIndex < cleaned.length; i++) {
-      if (format[i] === "X") {
+      if (format[i] === 'X') {
         formatted += cleaned[digitIndex];
         digitIndex++;
       } else {
         formatted += format[i];
         // Don't add extra spaces at the end
         if (digitIndex < cleaned.length) {
-          formatted += "";
+          formatted += '';
         }
       }
     }
@@ -364,7 +382,7 @@ export function PhoneInput({
   const notifyChange = (rawInput: string) => {
     if (onChange) {
       // Get the digits-only version of the raw input
-      const digitsOnly = rawInput.replace(/\D/g, "");
+      const digitsOnly = rawInput.replace(/\D/g, '');
       
       // Format the raw input for display
       const formattedValue = formatPhoneNumber(digitsOnly);
@@ -380,7 +398,7 @@ export function PhoneInput({
         formattedValue: formattedValue,
         countryCode: selectedCountryCode,
         rawInput: digitsOnly,
-        isValid: isValid
+        isValid: isValid,
       });
     }
   };
@@ -388,10 +406,11 @@ export function PhoneInput({
   // Handle phone number input changes
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const input = e.target.value;
-    const digitsOnly = input.replace(/\D/g, "");
+    const digitsOnly = input.replace(/\D/g, '');
     const maxLength = selectedCountryInfo?.maxLength || 15; // Use country-specific max length
 
-    if (digitsOnly.length <= maxLength + 5) { // Allow slightly more than max for validation feedback
+    if (digitsOnly.length <= maxLength + 5) {
+      // Allow slightly more than max for validation feedback
       // Format the number for display
       const formatted = formatPhoneNumber(digitsOnly);
       setPhoneNumber(formatted);
@@ -410,7 +429,7 @@ export function PhoneInput({
     setDropdownOpen(false);
 
     // Validate the current phone number with the new country
-    const digitsOnly = phoneNumber.replace(/\D/g, "");
+    const digitsOnly = phoneNumber.replace(/\D/g, '');
     validatePhoneNumber(digitsOnly, country);
 
     // Notify parent with the same phone number but updated country code
@@ -425,17 +444,22 @@ export function PhoneInput({
 
   // Determine input border color based on validation state
   const getBorderClass = () => {
-    if (!phoneNumber || phoneNumber.length === 0) return "border-gray-200"; // Default
-    if (validationError) return "border-red-500"; // Error
-    return "border-green-500"; // Valid
+    if (!phoneNumber || phoneNumber.length === 0) return 'border-gray-200'; // Default
+    if (errors || validationError) return 'border-red-500'; // Error (external or internal)
+    return 'border-green-500'; // Valid
   };
 
   return (
     <div className="flex flex-col gap-1 w-full">
       <div className="flex justify-between items-center">
-        <p className="font-bold mb-1 w-fit">{label}</p>
+        <p className="font-medium mb-1 w-fit">
+          {label} {required && <span className="text-red-500">*</span>}
+        </p>
         {whatsapp && (
-          <WhatsAppToggle checked={isWhatsApp} onChange={handleWhatsAppToggle} />
+          <WhatsAppToggle
+            checked={isWhatsApp}
+            onChange={handleWhatsAppToggle}
+          />
         )}
       </div>
       <div className="flex gap-[1px]">
@@ -444,7 +468,9 @@ export function PhoneInput({
           <button
             type="button"
             onClick={() => setDropdownOpen(!dropdownOpen)}
-            className={`flex items-center py-2.5 border border-r-0 ${validationError ? 'border-red-500' : 'border-gray-200'} px-3 bg-white cursor-pointer focus:ring-1 focus:ring-blue-500 outline-none min-w-[90px] justify-between`}
+            className={`flex items-center py-2.5 border border-r-0 ${
+              errors || validationError ? 'border-red-500' : 'border-gray-200'
+            } px-3 bg-white cursor-pointer focus:ring-2 focus:ring-green-500 outline-none min-w-[90px] justify-between`}
             disabled={isLoading}
             aria-label="Select country code"
           >
@@ -503,28 +529,32 @@ export function PhoneInput({
         {/* Phone number input */}
         <input
           type="tel"
-          placeholder={placeholder || "Enter phone number"}
+          placeholder={placeholder || 'Enter phone number'}
           value={phoneNumber}
           onChange={handleInputChange}
-          className={`outline-none focus:ring-1 focus:ring-blue-500 border ${getBorderClass()} p-2 flex-1 py-2.5`}
+          className={`outline-none focus:ring-2 focus:ring-green-500 border ${getBorderClass()} p-2 flex-1 py-2.5`}
           aria-label="Phone number"
-          aria-invalid={!!validationError}
+          aria-invalid={!!(errors || validationError)}
         />
       </div>
       
       {/* Display selected country info */}
       {selectedCountryInfo && (
         <div className="text-xs text-gray-500 mt-1">
-          {selectedCountryInfo.country} ({selectedCountryInfo.code}) - Expected length: {selectedCountryInfo.minLength} 
-          {selectedCountryInfo.minLength !== selectedCountryInfo.maxLength ? `-${selectedCountryInfo.maxLength}` : ''} digits
+          {selectedCountryInfo.country} ({selectedCountryInfo.code}) - Expected
+          length: {selectedCountryInfo.minLength}
+          {selectedCountryInfo.minLength !== selectedCountryInfo.maxLength
+            ? `-${selectedCountryInfo.maxLength}`
+            : ''}{' '}
+          digits
         </div>
       )}
       
       {/* Display validation error */}
-      {validationError && (
+      {(errors || validationError) && (
         <div className="flex items-center gap-1 text-red-500 text-xs mt-1">
           <AlertCircle className="w-3 h-3" />
-          <span>{validationError}</span>
+          <span>{errors || validationError}</span>
         </div>
       )}
     </div>
@@ -544,14 +574,14 @@ export function WhatsAppToggle({ checked, onChange }: WhatsAppToggleProps) {
         type="button"
         onClick={() => onChange(!checked)}
         className={`w-12 h-6 rounded-full transition-colors ${
-          checked ? "bg-green-500" : "bg-gray-300"
+          checked ? 'bg-green-500' : 'bg-gray-300'
         } relative`}
         aria-checked={checked}
         role="switch"
       >
         <div
           className={`w-5 h-5 rounded-full bg-white absolute top-0.5 transition-transform ${
-            checked ? "translate-x-6" : "translate-x-0.5"
+            checked ? 'translate-x-6' : 'translate-x-0.5'
           }`}
         />
       </button>

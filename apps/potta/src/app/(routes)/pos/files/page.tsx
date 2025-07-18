@@ -1,17 +1,17 @@
 'use client';
-import React, { useState, useRef, DragEvent } from 'react';
+import React, { useState, useRef, DragEvent, useContext } from 'react';
 import RootLayout from '../../layout';
 import Filter from './components/filter';
 import CardFile from './components/cardFiles';
 import RecentUpload from './components/recentUpload';
 import Slideover from '@potta/components/slideover';
 import Button from '@potta/components/button';
-import dayjs from 'dayjs';
 import { uploadFile, createFolderSimple, bulkUploadFiles } from './utils/api';
-import Input from '@potta/components/input';
 import Select from '@potta/components/select';
+import { ContextData } from '@potta/components/context';
 
 const Files = () => {
+  const context = useContext(ContextData);
   const [uploadOpen, setUploadOpen] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [uploadError, setUploadError] = useState<string | null>(null);
@@ -131,7 +131,11 @@ const Files = () => {
 
   return (
     <RootLayout>
-      <div className="pl-8 pr-6 flex w-full mt-5">
+      <div
+        className={`${
+          context?.layoutMode === 'sidebar' ? 'pl-8' : 'pl-2'
+        } pr-6 flex w-full mt-5`}
+      >
         <div className="w-[80%]">
           <div className="flex justify-between items-center mb-4 px-4">
             <Filter

@@ -6,11 +6,10 @@ import { IFilter } from '../_utils/types';
 import TableActionPopover from '@potta/components/tableActionsPopover';
 import { MoreVertical } from 'lucide-react';
 import useGetAllInvoice from '../_hooks/useGetAllInvoice';
-import Search from '@potta/components/search';
-import CustomSelect, { IOption } from './CustomSelect';
 import Button from '@potta/components/button';
 import ModalInvoice from './modal';
 import { Icon } from '@iconify/react';
+import DynamicFilter from '@potta/components/dynamic-filter';
 
 // Define types based on the API response
 interface Invoice {
@@ -42,8 +41,11 @@ const InvoiceTable = () => {
   const [openPopover, setOpenPopover] = useState<string | null>(null);
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(20);
-  const [selectedValue, setSelectedValue] = useState<string | null>(null);
+  const [searchValue, setSearchValue] = useState('');
+  const [statusFilter, setStatusFilter] = useState('all');
+  const [sortBy, setSortBy] = useState('createdAt:DESC');
   const [isOpen, setIsOpen] = useState(false);
+
   const filter: IFilter = {
     limit,
     page,
@@ -79,10 +81,44 @@ const InvoiceTable = () => {
     }
     return inputDate.toLocaleDateString();
   };
-  const options: IOption[] = [
-    { value: 'option1', label: 'Option 1' },
-    { value: 'option2', label: 'Option 2' },
-    { value: 'option3', label: 'Option 3' },
+
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchValue(e.target.value);
+  };
+
+  const handleSearchClear = () => {
+    setSearchValue('');
+  };
+
+  const filterConfig = [
+    {
+      key: 'status',
+      label: 'Status',
+      options: [
+        { label: 'All Status', value: 'all' },
+        { label: 'Draft', value: 'draft' },
+        { label: 'Paid', value: 'paid' },
+        { label: 'Overdue', value: 'overdue' },
+        { label: 'Pending', value: 'pending' },
+      ],
+      value: statusFilter,
+      onChange: setStatusFilter,
+      selectClassName: 'min-w-[120px]',
+    },
+    {
+      key: 'sort',
+      label: 'Sort by',
+      options: [
+        { label: 'Newest First', value: 'createdAt:DESC' },
+        { label: 'Oldest First', value: 'createdAt:ASC' },
+        { label: 'Due Date', value: 'dueDate:ASC' },
+        { label: 'Amount High to Low', value: 'invoiceTotal:DESC' },
+        { label: 'Amount Low to High', value: 'invoiceTotal:ASC' },
+      ],
+      value: sortBy,
+      onChange: setSortBy,
+      selectClassName: 'min-w-[140px]',
+    },
   ];
 
   const columns = [
@@ -168,61 +204,43 @@ const InvoiceTable = () => {
       width: '50px',
     },
   ];
-  // if (error) {
-  //   return (
-  //     <div className={'w-full py-24 flex flex-col items-center justify-center'}>
-  //       An Error Occured
-  //     </div>
-  //   );
-  // }
+
   return (
     <div className="">
-      <div className="flex justify-between w-full">
-        <div className="mt-5 w-[50%] flex items-center space-x-2">
-          <div className="w-[65%]">
-            <Search />
-          </div>
-
-          <CustomSelect
-            options={options}
-            value={selectedValue}
-            onChange={setSelectedValue}
-            placeholder="Choose an option"
-          />
-          <CustomSelect
-            options={options}
-            value={selectedValue}
-            onChange={setSelectedValue}
-            placeholder="Choose an option"
+      <div className="flex justify-between items-center w-full">
+        {/* Left side - Dynamic Filter */}
+        <div className="flex-1">
+          <DynamicFilter
+            searchValue={searchValue}
+            onSearchChange={handleSearchChange}
+            onSearchClear={handleSearchClear}
+            searchPlaceholder="Search invoices by customer, ID, or title..."
+            filters={filterConfig}
+            className="p-0 bg-transparent"
           />
         </div>
-        <div className="w-[50%] flex justify-end">
-          <div className="flex mt-10 space-x-2">
-            <div>
-              {/*<Link href={'/invoicing/new_invoice'}>*/}
-              <Button
-                text={'Export'}
-                icon={<i className="ri-upload-2-line"></i>}
-                theme="lightBlue"
-                type={'button'}
-                color={true}
-              />
-              {/*</Link>*/}
-            </div>
-            <div>
-              <Button
-                text={'Create Invoice'}
-                icon={<i className="ri-file-add-line"></i>}
-                theme="default"
-                type={'button'}
-                onClick={() => {
-                  setIsOpen(true);
-                }}
-              />
-            </div>
-          </div>
+
+        {/* Right side - Action Buttons */}
+        <div className="flex items-center space-x-2 ml-4">
+          <Button
+            text={'Export'}
+            icon={<i className="ri-upload-2-line"></i>}
+            theme="lightBlue"
+            type={'button'}
+            color={true}
+          />
+          <Button
+            text={'Create Invoice'}
+            icon={<i className="ri-file-add-line"></i>}
+            theme="default"
+            type={'button'}
+            onClick={() => {
+              setIsOpen(true);
+            }}
+          />
         </div>
       </div>
+
       <MyTable
         maxHeight="50vh"
         minHeight="50vh"

@@ -4,7 +4,7 @@ import RootLayout from "../../layout";
 import NewInvoice from "./components/newInvoice";
 // import InvoiceTable from "./table";
 // import NewInvoice from "../modals/showNewInvoice";
-
+import { ContextData } from "@potta/components/context";
 function classNames(...classes: string[]): string {
     return classes.filter(Boolean).join(" ");
 }
@@ -12,7 +12,7 @@ function classNames(...classes: string[]): string {
 export default function Invoicing(): JSX.Element {
     const [heights, setHeights] = useState<string>("");
     const [dashTopHeight, setDashTopHeight] = useState<string>("");
-
+    const context = React.useContext(ContextData);
     useEffect(() => {
         setHeights(window.innerHeight.toString());
         setDashTopHeight(localStorage.getItem("dashTopHeight") || "");
@@ -55,7 +55,7 @@ export default function Invoicing(): JSX.Element {
         <RootLayout>
             <div
                 style={{ height: parseInt(heights) - parseInt(dashTopHeight) - 20 }}
-                className="flex justify-evenly pl-16 pr-5"
+                className={`${context?.layoutMode === 'sidebar' ? 'pl-16':'pl-5'} flex justify-evenly pr-5`}
             >
                 <div
                     className={`justify-evenly ${invoices.length === 0 ? "flex" : "hidden"

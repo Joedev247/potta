@@ -49,7 +49,7 @@ const TableComponents = () => {
         columns={columns}
         data={data}
         ExpandableComponent={null}
-        expanded
+        expanded={false}
         pagination={data.length > 9}
       />
     </div>

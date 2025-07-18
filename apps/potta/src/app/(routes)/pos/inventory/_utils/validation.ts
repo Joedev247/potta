@@ -11,6 +11,10 @@ export const productSchema = yup.object().shape({
   taxable: yup.boolean().required(),
   categoryId: yup.string(),
   images: yup.array().of(yup.string()).default([]),
+  type: yup
+    .string()
+    .oneOf(['INVENTORY', 'NON_INVENTORY'])
+    .required('type is required'),
 });
 
 export const UpdateProductSchema = yup.object().shape({
@@ -25,6 +29,10 @@ export const UpdateProductSchema = yup.object().shape({
   categoryId: yup.string(),
   images: yup.array().of(yup.string()).default([]),
   status: yup.string().required('status is required'),
+  type: yup
+    .string()
+    .oneOf(['INVENTORY', 'NON_INVENTORY'])
+    .required('type is required'),
 });
 
 export const productCategorySchema = yup.object().shape({

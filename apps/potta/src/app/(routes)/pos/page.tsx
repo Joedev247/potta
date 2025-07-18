@@ -14,8 +14,12 @@ const POS = () => {
   return (
     <RootLayout>
       <Toaster />
-      <div className="pl-8 ">
-        <div className="h-[92vh] flex  w-full">
+      <div
+        className={`${
+          context?.layoutMode === 'sidebar' ? 'pl-8' : ''
+        } h-full overflow-hidden`}
+      >
+        <div className="h-[92vh] flex  w-full"> 
           <div className="w-[60%]">
             <SaleInvoiceCard />
           </div>

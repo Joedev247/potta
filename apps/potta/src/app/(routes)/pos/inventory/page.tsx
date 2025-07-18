@@ -5,15 +5,20 @@ import Filter from './components/filters';
 import InventoryTable from './components/table';
 import { InventoryProvider } from './_utils/context';
 import CategoryManager from './components/CategoryManager';
-
+import { ContextData } from '@potta/components/context';
 const Files = () => {
   const [activeTab, setActiveTab] = useState<'inventory' | 'category'>(
     'inventory'
   );
+  const context = React.useContext(ContextData);
   return (
     <InventoryProvider>
       <RootLayout>
-        <div className="pl-16 pr-5 w-full mt-10">
+        <div
+          className={`${
+            context?.layoutMode === 'sidebar' ? 'pl-16 !mt-4' : 'pl-5 !mt-4'
+          } pr-5 w-full mt-10`}
+        >
           {/* Tabs */}
           <div className="w-[30%] flex mb-6">
             <div
