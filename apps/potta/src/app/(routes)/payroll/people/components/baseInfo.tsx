@@ -108,9 +108,6 @@ const BaseInfo: React.FC<BaseInfoProps> = ({
   // Trigger validation when parent requests to show validation errors
   useEffect(() => {
     if (showValidationErrors) {
-      console.log(
-        '🔥 BaseInfo - Triggering validation due to showValidationErrors'
-      );
       // Run validation to populate errors in the validation hook
       validate(formData);
     }
@@ -175,14 +172,6 @@ const BaseInfo: React.FC<BaseInfoProps> = ({
       return true; // Return true immediately, don't run validation
     }
 
-    // If initialized, run actual validation
-    console.log('✅ VALIDATION ALLOWED - Component ready, running validation');
-
-    // Mark as form submission and enable validation
-    // setIsValidationAllowed(true); // This state is removed
-    // setIsFormSubmission(true); // This state is removed
-
-    // Get current formData at validation time
     const currentFormData = formDataRef.current;
 
     // Mark all fields as touched when form is submitted
@@ -194,24 +183,9 @@ const BaseInfo: React.FC<BaseInfoProps> = ({
     const result = await validate(currentFormData);
     console.log('🔥 Validation result:', result);
 
-    // Reset form submission flag after validation
-    // setIsFormSubmission(false); // This state is removed
-
     return result;
   }, [validate]); // Only depends on validate
 
-  // Register the stable wrapper with parent form
-  // useEffect(() => { // This useEffect is no longer needed
-  //   console.log('🔧 Registering STABLE validation wrapper...');
-
-  //   if (onValidationRegisterRef.current) {
-  //     console.log('🔧 Calling onValidationRegister with STABLE wrapper');
-  //     onValidationRegisterRef.current(stableValidationWrapper);
-  //     console.log('✅ STABLE wrapper registered with parent');
-  //   }
-  // }, []); // Empty dependency array - only register once
-
-  // Fetch roles on component mount
   useEffect(() => {
     const fetchRoles = async () => {
       setIsLoadingRoles(true);
@@ -522,6 +496,7 @@ const BaseInfo: React.FC<BaseInfoProps> = ({
         <SearchableSelect
           label="Job Title / Role"
           options={roleOptions}
+          required
           selectedValue={formData.roleId}
           onChange={(value) => handleSelectChange('roleId', value)}
           placeholder={isLoadingRoles ? 'Loading roles...' : 'Select a role'}
@@ -559,7 +534,7 @@ const BaseInfo: React.FC<BaseInfoProps> = ({
             value={phoneMetadata.formattedValue} // Use the formatted value from metadata
             onChange={handlePhoneChange}
             whatsapp={false}
-          required
+            required
             countryCode={phoneMetadata.countryCode} // Use the country code from metadata
             errors={getFieldErrorIfTouched('phoneNumber')}
           />
@@ -568,7 +543,7 @@ const BaseInfo: React.FC<BaseInfoProps> = ({
             <Input
               type="text"
               name="email"
-          required
+              required
               label="Email Address"
               placeholder="youemail@gmail.com"
               value={formData.email}
@@ -591,8 +566,7 @@ const BaseInfo: React.FC<BaseInfoProps> = ({
           <SearchableSelect
             options={maritalStatusOptions}
             label="Marital Status"
-          required
-
+            required
             selectedValue={formData.maritalStatus}
             onChange={(value: string) =>
               handleSelectChange('maritalStatus', value)
@@ -633,7 +607,7 @@ const BaseInfo: React.FC<BaseInfoProps> = ({
         <CustomDatePicker
           label="Employment Date"
           placeholder="Select employment date"
-          required
+          isRequired
           value={getEmploymentDate()}
           onChange={handleEmploymentDateChange}
           errors={getFieldErrorIfTouched('employmentDate')}

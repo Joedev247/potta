@@ -231,7 +231,7 @@ const SliderSchedule = () => {
         });
 
         if (result.success) {
-          // toast.success('PTO policy created successfully');
+          toast.success('PTO policy created successfully!');
           // Reset form and close slider on success
           resetForm();
           setIsSliderOpen(false);

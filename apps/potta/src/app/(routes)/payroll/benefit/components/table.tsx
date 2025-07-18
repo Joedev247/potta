@@ -1,261 +1,155 @@
 'use client';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { toast } from 'react-hot-toast';
 import SliderBenefit from './sliderBenefit';
-import MyTable from '@potta/components/table';
+import BenefitTable, { Benefit } from './benefitTable';
 import Search from '@potta/components/search';
-import { Benefit, BenefitType } from '../utils/types';
-import moment from 'moment';
-import { useBenefits } from '../hooks/useBenefits';
-import PottaLoader from '@potta/components/pottaloader';
+import CustomLoader from '@potta/components/loader';
+import {
+  useBenefitsManagement,
+  useBenefitDetail,
+  useDeleteBenefitMutation,
+} from '../hooks/useBenefitsQuery';
+
+// Import action components
+import ViewBenefit from '../actions/viewBenefit';
+import DeleteBenefit from '../actions/deleteBenefit';
 
 const TableBenefit = () => {
-  const { benefits, loading, meta, updateFilter } = useBenefits({
-    page: 1,
-    limit: 20,
-    sort_by: 'createdAt',
-    sort_order: 'asc',
-  });
-
   const [searchTerm, setSearchTerm] = useState('');
+  const [selectedBenefitId, setSelectedBenefitId] = useState<string | null>(
+    null
+  );
 
-  const handleSearch = (term: string) => {
+  // Action states
+  const [showViewModal, setShowViewModal] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [editBenefitId, setEditBenefitId] = useState<string | null>(null);
+
+  // TanStack Query hooks
+  const {
+    benefits,
+    isFetching,
+    currentPage,
+    totalPages,
+    pageSize,
+    handlePageChange,
+    handleSearch,
+  } = useBenefitsManagement();
+
+  const { benefit: selectedBenefit, isLoading: benefitLoading } =
+    useBenefitDetail(selectedBenefitId || '');
+  const { benefit: editBenefit, isLoading: editBenefitLoading } =
+    useBenefitDetail(editBenefitId || '');
+  const deleteBenefitMutation = useDeleteBenefitMutation();
+
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const term = e.target.value;
     setSearchTerm(term);
-    updateFilter({ search: term });
+    handleSearch(term);
   };
 
-  const formatCurrency = (value: string) => {
-    if (!value) return 'N/A';
-    return new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      currency: 'USD',
-      minimumFractionDigits: 2,
-    }).format(parseFloat(value));
+  // Handle benefit actions
+  const handleViewBenefit = (id: string) => {
+    setSelectedBenefitId(id);
+    setShowViewModal(true);
   };
 
-  const formatRate = (rate: string, type: BenefitType, cycle: string) => {
-    if (!rate) return 'N/A';
+  const handleEditBenefit = (id: string) => {
+    setEditBenefitId(id);
+    // The SliderBenefit component will handle opening the slider
+  };
 
-    const rateValue = parseFloat(rate) * 100;
+  const handleDeleteBenefit = (id: string) => {
+    setSelectedBenefitId(id);
+    setShowDeleteModal(true);
+  };
 
-    if (type === 'FINANCIAL') {
-      if (cycle === 'MONTHLY') {
-        return `${rateValue}%/Mn`;
-      } else if (cycle === 'ANNUALLY' || cycle === 'YEARLY') {
-        return `${rateValue}%/Yr`;
-      } else {
-        return `${rateValue}%`;
+  const handleRowClick = (benefit: Benefit) => {
+    setSelectedBenefitId(benefit.uuid);
+    setShowViewModal(true);
+  };
+
+  // Action handlers
+  const handleCloseView = () => {
+    setShowViewModal(false);
+    setSelectedBenefitId(null);
+  };
+
+  const handleEditComplete = () => {
+    setEditBenefitId(null);
+    // No need to manually refresh - TanStack Query handles it
+  };
+
+  const handleEditClose = () => {
+    setEditBenefitId(null);
+  };
+
+  const handleCloseDelete = () => {
+    setShowDeleteModal(false);
+    setSelectedBenefitId(null);
+  };
+
+  const handleConfirmDelete = async () => {
+    if (selectedBenefitId) {
+      try {
+        await deleteBenefitMutation.mutateAsync(selectedBenefitId);
+        setShowDeleteModal(false);
+        setSelectedBenefitId(null);
+        // No need to manually refresh - TanStack Query handles it
+      } catch (error) {
+        console.error('Delete error:', error);
+        // Error handling is done in the mutation hook
       }
-    } else {
-      return formatCurrency(rate);
     }
   };
-
-  const formatCycle = (cycle: string) => {
-    switch (cycle) {
-      case 'MONTHLY':
-        return 'Monthly';
-      case 'ANNUALLY':
-        return 'Annually';
-      case 'DAILY':
-        return 'Daily';
-      case 'WEEKLY':
-        return 'Weekly';
-      case 'QUARTERLY':
-        return 'Quarterly';
-      case 'ONE_TIME':
-        return 'One-time';
-      default:
-        return cycle;
-    }
-  };
-
-  const getBenefitTypeDisplay = (type: BenefitType) => {
-    switch (type) {
-      case 'FINANCIAL':
-        return 'Financial';
-      case 'SERVICE':
-        return 'Service';
-      case 'REDEEMABLE':
-        return 'Redeemable';
-      default:
-        return 'Employer'; // Default to Employer as shown in the image
-    }
-  };
-
-  const getMaxAmount = (benefit: Benefit) => {
-    if (!benefit.max_amount) return 'N/A';
-    return formatCurrency(benefit.max_amount);
-  };
-
-  // Updated status color function with more distinctive colors
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case 'ACTIVE':
-        return 'text-emerald-600 font-medium';
-      case 'PENDING':
-        return 'text-amber-600 font-medium';
-      case 'INACTIVE':
-        return 'text-red-600 font-medium';
-      case 'SUSPENDED':
-        return 'text-orange-600 font-medium';
-      case 'EXPIRED':
-        return 'text-gray-600 font-medium';
-      default:
-        return 'text-gray-800 font-medium';
-    }
-  };
-
-  // Format status text with proper capitalization
-  const formatStatus = (status: string) => {
-    if (!status) return 'Unknown';
-    return status.charAt(0).toUpperCase() + status.slice(1).toLowerCase();
-  };
-
-  const columns = [
-    {
-      name: 'Benefit',
-      selector: (row: Benefit) => row.name,
-      render: (row: Benefit) => <div className="font-medium">{row.name}</div>,
-    },
-    {
-      name: 'Type',
-      selector: (row: Benefit) => row.type,
-      render: (row: Benefit) => <div>{getBenefitTypeDisplay(row.type)}</div>,
-    },
-    {
-      name: 'Rate',
-      selector: (row: Benefit) => row.rate,
-      render: (row: Benefit) => (
-        <div>{formatRate(row.rate, row.type, row.cycle)}</div>
-      ),
-    },
-    {
-      name: 'Provider',
-      selector: (row: Benefit) => row.provider || 'N/A',
-      render: (row: Benefit) => <div>{row.provider || 'N/A'}</div>,
-    },
-    {
-      name: 'Max Amount',
-      selector: (row: Benefit) => row.max_amount || '',
-      render: (row: Benefit) => <div>{getMaxAmount(row)}</div>,
-    },
-    {
-      name: 'Status',
-      selector: (row: Benefit) => row.status,
-      cell: (row: Benefit) => {
-        // Normalize the status to uppercase for consistent comparison
-        const normalizedStatus = row.status?.toUpperCase() || '';
-
-        // Define styling based on status
-        let statusStyle = '';
-
-        switch (normalizedStatus) {
-          case 'ACTIVE':
-            statusStyle = ' text-green-800';
-            break;
-          case 'PENDING':
-            statusStyle = ' text-yellow-600';
-            break;
-          case 'EXPIRED':
-            statusStyle = ' text-gray-800';
-            break;
-          case 'REDEEMED':
-            statusStyle = 'text-blue-800';
-            break;
-          default:
-            statusStyle = ' text-gray-600';
-            break;
-        }
-
-        return (
-          <span
-            className={`py-1 inline-flex text-sm leading-5 font-semibold rounded-full ${statusStyle}`}
-          >
-            {row.status}
-          </span>
-        );
-      },
-    },
-  ];
 
   return (
-    <div className="mt-5 px-14">
-      <div className="my-2 items-center flex justify-between">
-        <div className="relative w-1/3">
-          <Search
-            placeholder="Search benefits"
-            value={searchTerm}
-            onChange={(e) => handleSearch(e.target.value)}
-          />
-        </div>
-        <SliderBenefit />
-      </div>
-      {benefits && benefits.length > 0 ? (
-        <MyTable
-          columns={columns}
-          data={benefits}
-          ExpandableComponent={({ row }: { row: Benefit }) => (
-            <div className="p-4 bg-gray-50">
-              <h3 className="font-medium mb-2">Benefit Details</h3>
-              <p className="text-sm text-gray-600 mb-2">{row.description}</p>
-              <div className="grid grid-cols-2 gap-4 mt-2">
-                <div>
-                  <p className="text-sm">
-                    <span className="font-medium">Cycle:</span>{' '}
-                    {formatCycle(row.cycle)}
-                  </p>
-                  <p className="text-sm">
-                    <span className="font-medium">Taxable:</span>{' '}
-                    {row.is_taxable ? 'Yes' : 'No'}
-                  </p>
-                  {row.tax_cap && (
-                    <p className="text-sm">
-                      <span className="font-medium">Tax Cap:</span>{' '}
-                      {formatCurrency(row.tax_cap)}
-                    </p>
-                  )}
-                </div>
-                <div>
-                  <p className="text-sm">
-                    <span className="font-medium">Value:</span>{' '}
-                    {row.value ? formatCurrency(row.value) : 'N/A'}
-                  </p>
-                  <p className="text-sm">
-                    <span className="font-medium">Salary Cap:</span>{' '}
-                    {row.salary_cap ? formatCurrency(row.salary_cap) : 'N/A'}
-                  </p>
-                  {row.expires_at && (
-                    <p className="text-sm">
-                      <span className="font-medium">Expires:</span>{' '}
-                      {moment(row.expires_at).format('MMM DD, YYYY')}
-                    </p>
-                  )}
-                  <p className="text-sm">
-                    <span className="font-medium">Default:</span>{' '}
-                    {row.is_default ? 'Yes' : 'No'}
-                  </p>
-                </div>
-              </div>
-            </div>
-          )}
-          expanded
-          pagination={!!meta && meta.totalItems > meta.itemsPerPage}
-          pending={loading}
-          onPageChange={(page) => updateFilter({ page })}
-          totalPages={meta?.totalPages || 1}
-          currentPage={meta?.currentPage || 1}
+    <div className="w-full p-6 pl-12">
+      <div className="flex justify-between items-center mb-6">
+        <Search
+          placeholder="Search Benefits"
+          onChange={handleSearchChange}
+          value={searchTerm}
         />
+        <SliderBenefit
+          isEditMode={!!editBenefitId}
+          editBenefitId={editBenefitId || undefined}
+          editBenefit={editBenefit}
+          onComplete={handleEditComplete}
+          onClose={handleEditClose}
+        />
+      </div>
+
+      {isFetching ? (
+        <CustomLoader />
       ) : (
-        <div className="text-center py-10">
-          {loading ? (
-            <div className="fixed z-[9999] backdrop-blur-sm top-0 left-0 h-screen w-screen grid place-content-center">
-              <PottaLoader />
-            </div>
-          ) : (
-            <p>No benefits found. Create a new benefit to get started.</p>
-          )}
-        </div>
+        <BenefitTable
+          benefits={benefits}
+          onViewBenefit={handleViewBenefit}
+          onEditBenefit={handleEditBenefit}
+          onDeleteBenefit={handleDeleteBenefit}
+          onRowClick={handleRowClick}
+          totalPages={totalPages}
+          pageSize={pageSize}
+          onPageChange={handlePageChange}
+          isLoading={isFetching}
+        />
       )}
+
+      {/* Action Modals */}
+      <ViewBenefit
+        isOpen={showViewModal}
+        onClose={handleCloseView}
+        benefit={selectedBenefit || null}
+      />
+
+      <DeleteBenefit
+        isOpen={showDeleteModal}
+        onClose={handleCloseDelete}
+        onConfirm={handleConfirmDelete}
+        benefit={selectedBenefit || null}
+      />
     </div>
   );
 };

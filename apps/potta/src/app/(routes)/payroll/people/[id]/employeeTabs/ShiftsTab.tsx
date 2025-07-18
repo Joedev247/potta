@@ -16,7 +16,7 @@ const ShiftsTab = ({ employee }: { employee: any }) => (
       ]}
       data={employee?.shifts || []}
       ExpandableComponent={null}
-      expanded
+      expanded={false}
       pagination={(employee?.shifts?.length || 0) > 9}
     />
   </div>

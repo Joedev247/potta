@@ -2,11 +2,12 @@
 import React from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { employeeApi } from '../../utils/api';
-import PottaLoader from '@potta/components/pottaloader';
+import PayBreakdownSkeleton from './PayBreakdownSkeleton';
+import axios from '@/config/axios.config';
 
 const PayBreakDown = () => {
   // Fetch employees with all details
-  const { data: employeesResponse, isLoading } = useQuery({
+  const { data: employeesResponse, isLoading: isLoadingEmployees } = useQuery({
     queryKey: ['employees'],
     queryFn: async () => {
       try {
@@ -22,6 +23,47 @@ const PayBreakDown = () => {
     },
   });
 
+  // Fetch timesheet data for current month to get actual hours worked
+  const { data: timesheetData, isLoading: isLoadingTimesheets } = useQuery({
+    queryKey: ['timesheets-current-month'],
+    queryFn: async () => {
+      try {
+        const startOfMonth = new Date();
+        startOfMonth.setDate(1);
+        startOfMonth.setHours(0, 0, 0, 0);
+
+        const endOfMonth = new Date();
+        endOfMonth.setMonth(endOfMonth.getMonth() + 1, 0);
+        endOfMonth.setHours(23, 59, 59, 999);
+
+        const response = await axios.post('/timesheets/filter', {
+          startDate: startOfMonth.toISOString(),
+          endDate: endOfMonth.toISOString(),
+          limit: 1000,
+        });
+        return response.data;
+      } catch (error) {
+        console.error('Error fetching timesheets:', error);
+        return { data: [] };
+      }
+    },
+  });
+
+  // Helper function to calculate regular hours (8 hours max per day)
+  const calculateRegularHours = (totalHours: number): number => {
+    return totalHours > 8 ? 8 : totalHours;
+  };
+
+  // Helper function to calculate overtime hours
+  const calculateOvertime = (totalHours: number): number => {
+    return totalHours > 8 ? totalHours - 8 : 0;
+  };
+
+  // Show skeleton loader while loading
+  if (isLoadingEmployees || isLoadingTimesheets) {
+    return <PayBreakdownSkeleton />;
+  }
+
   const calculateTotalHoursWorked = () => {
     if (!employeesResponse?.data || employeesResponse.data.length === 0) {
       return { hours: 0, count: 0 };
@@ -30,37 +72,55 @@ const PayBreakDown = () => {
     const uniqueEmployees = new Set();
     let totalHoursWorked = 0;
 
-    // Get current date
-    const today = new Date();
-
-    // Get employee start date (or first day of current month if you want monthly view)
-    const startOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
-
     employeesResponse.data.forEach((employee) => {
-      if (employee.shifts && employee.shifts.length > 0) {
-        // Get employee start date
-        const employeeStartDate = new Date(employee.start_date);
+      let employeeTotalHours = 0;
+      let hasTimesheetData = false;
 
-        // Use the later of employee start date or start of month
-        const effectiveStartDate =
-          employeeStartDate > startOfMonth ? employeeStartDate : startOfMonth;
-
-        // Calculate days employee has been active this month
-        const daysActive = Math.min(
-          Math.floor((today - effectiveStartDate) / (1000 * 60 * 60 * 24)),
-          today.getDate() - 1 // Don't count today
+      // Calculate actual hours from timesheet data
+      if (timesheetData?.data) {
+        const employeeTimesheets = timesheetData.data.filter(
+          (timesheet) => timesheet.employee?.uuid === employee.uuid
         );
 
-        // Calculate completed weeks
+        employeeTimesheets.forEach((timesheet) => {
+          let totalHours = 0;
+
+          if (timesheet.total_hours && parseFloat(timesheet.total_hours) > 0) {
+            totalHours = parseFloat(timesheet.total_hours);
+          } else if (timesheet.check_in_time && timesheet.check_out_time) {
+            const checkIn = new Date(timesheet.check_in_time);
+            const checkOut = new Date(timesheet.check_out_time);
+            const diffMs = checkOut.getTime() - checkIn.getTime();
+            const diffHours = diffMs / (1000 * 60 * 60);
+            const breakHours = timesheet.break_minutes
+              ? timesheet.break_minutes / 60
+              : 0;
+            totalHours = diffHours - breakHours;
+          }
+
+          employeeTotalHours += totalHours;
+          hasTimesheetData = true;
+        });
+      }
+
+      // Fallback to shift-based calculations if no timesheet data
+      if (!hasTimesheetData && employee.shifts && employee.shifts.length > 0) {
+        // Get current date
+        const today = new Date();
+        const startOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+        const employeeStartDate = new Date(employee.start_date);
+        const effectiveStartDate =
+          employeeStartDate > startOfMonth ? employeeStartDate : startOfMonth;
+        const daysActive = Math.min(
+          Math.floor((today - effectiveStartDate) / (1000 * 60 * 60 * 24)),
+          today.getDate() - 1
+        );
         const completedWeeks = Math.floor(daysActive / 7);
         const remainingDays = daysActive % 7;
-
-        // Get day of week for start date (0 = Sunday, 1 = Monday, etc.)
         const startDayOfWeek = effectiveStartDate.getDay();
 
         employee.shifts.forEach((shift) => {
           if (shift.start_time && shift.end_time) {
-            // Calculate hours per shift
             const startParts = shift.start_time.split(':');
             const endParts = shift.end_time.split(':');
             const startHour = parseInt(startParts[0]);
@@ -70,7 +130,6 @@ const PayBreakDown = () => {
 
             let hours = endHour - startHour;
             let minutes = endMinute - startMinute;
-
             if (minutes < 0) {
               hours--;
               minutes += 60;
@@ -81,10 +140,7 @@ const PayBreakDown = () => {
               : 0;
             const hoursPerShift = hours + minutes / 60 - breakHours;
 
-            // Count completed shifts
             let completedShifts = 0;
-
-            // Count shifts in completed weeks
             if (shift.recurrence_pattern) {
               const weeklyShifts =
                 (shift.recurrence_pattern.sunday ? 1 : 0) +
@@ -97,7 +153,6 @@ const PayBreakDown = () => {
 
               completedShifts = weeklyShifts * completedWeeks;
 
-              // Add shifts for remaining days
               for (let i = 0; i < remainingDays; i++) {
                 const dayOfWeek = (startDayOfWeek + i) % 7;
                 const dayName = [
@@ -116,12 +171,13 @@ const PayBreakDown = () => {
               }
             }
 
-            // Calculate total hours for this shift
-            const shiftHours = hoursPerShift * completedShifts;
-            totalHoursWorked += shiftHours;
+            employeeTotalHours += hoursPerShift * completedShifts;
           }
         });
+      }
 
+      if (employeeTotalHours > 0) {
+        totalHoursWorked += employeeTotalHours;
         uniqueEmployees.add(employee.uuid);
       }
     });
@@ -138,52 +194,69 @@ const PayBreakDown = () => {
       return { hours: 0, count: 0 };
     }
 
-    // Count unique employees eligible for overtime
     const uniqueEmployees = new Set();
-
-    // Calculate potential overtime based on shifts that exceed 8 hours
     let totalOvertimeHours = 0;
 
     employeesResponse.data.forEach((employee) => {
-      // Only include employees eligible for overtime
+      let employeeOvertimeHours = 0;
+      let hasTimesheetData = false;
+
+      // Calculate overtime from timesheet data
+      if (timesheetData?.data) {
+        const employeeTimesheets = timesheetData.data.filter(
+          (timesheet) => timesheet.employee?.uuid === employee.uuid
+        );
+
+        employeeTimesheets.forEach((timesheet) => {
+          let totalHours = 0;
+
+          if (timesheet.total_hours && parseFloat(timesheet.total_hours) > 0) {
+            totalHours = parseFloat(timesheet.total_hours);
+          } else if (timesheet.check_in_time && timesheet.check_out_time) {
+            const checkIn = new Date(timesheet.check_in_time);
+            const checkOut = new Date(timesheet.check_out_time);
+            const diffMs = checkOut.getTime() - checkIn.getTime();
+            const diffHours = diffMs / (1000 * 60 * 60);
+            const breakHours = timesheet.break_minutes
+              ? timesheet.break_minutes / 60
+              : 0;
+            totalHours = diffHours - breakHours;
+          }
+
+          employeeOvertimeHours += calculateOvertime(totalHours);
+          hasTimesheetData = true;
+        });
+      }
+
+      // Fallback to shift-based calculations if no timesheet data
       if (
+        !hasTimesheetData &&
         employee.eligible_for_overtime &&
         employee.shifts &&
         employee.shifts.length > 0
       ) {
-        let employeeOvertimeHours = 0;
-
         employee.shifts.forEach((shift) => {
           if (shift.start_time && shift.end_time) {
-            // Parse hours from time strings
             const startParts = shift.start_time.split(':');
             const endParts = shift.end_time.split(':');
-
             const startHour = parseInt(startParts[0]);
             const startMinute = parseInt(startParts[1]);
             const endHour = parseInt(endParts[0]);
             const endMinute = parseInt(endParts[1]);
 
-            // Calculate hours for this shift
             let hours = endHour - startHour;
             let minutes = endMinute - startMinute;
-
-            // Adjust for minutes
             if (minutes < 0) {
               hours--;
               minutes += 60;
             }
 
-            // Subtract break time if available
             const breakHours = shift.break_minutes
               ? shift.break_minutes / 60
               : 0;
             const hoursPerShift = hours + minutes / 60 - breakHours;
-
-            // Calculate overtime (hours over 8)
             const overtimePerShift = Math.max(0, hoursPerShift - 8);
 
-            // Count workdays per week from recurrence pattern
             let workdaysPerWeek = 0;
             if (shift.recurrence_pattern) {
               if (shift.recurrence_pattern.monday) workdaysPerWeek++;
@@ -195,18 +268,14 @@ const PayBreakDown = () => {
               if (shift.recurrence_pattern.sunday) workdaysPerWeek++;
             }
 
-            employeeOvertimeHours += overtimePerShift * workdaysPerWeek;
+            employeeOvertimeHours += overtimePerShift * workdaysPerWeek * 4; // 4 weeks per month
           }
         });
+      }
 
-        // Monthly overtime hours (assuming 4 weeks per month)
-        const monthlyOvertimeHours = employeeOvertimeHours * 4;
-        totalOvertimeHours += monthlyOvertimeHours;
-
-        // Add employee to unique set if they have overtime
-        if (monthlyOvertimeHours > 0) {
-          uniqueEmployees.add(employee.uuid);
-        }
+      if (employeeOvertimeHours > 0) {
+        totalOvertimeHours += employeeOvertimeHours;
+        uniqueEmployees.add(employee.uuid);
       }
     });
 
@@ -324,87 +393,47 @@ const PayBreakDown = () => {
       </div>
       <div className="w-full text-center grid grid-cols-4 border max-h-[126px] min-h-[126px]">
         <div className="h-full w-full py-5 flex justify-center">
-          <div
-            className={`${
-              isLoading && 'grid place-content-center'
-            } pl-4 border-r pr-3 w-full`}
-          >
-            {!isLoading && <p className="font-semibold">Total Off hours</p>}{' '}
+          <div className="pl-4 border-r pr-3 w-full">
+            <p className="font-semibold">Total Off hours</p>
             <h3 className="mt-1 text-green-700 text-xl">
-              {isLoading ? (
-                <PottaLoader size="sm" />
-              ) : (
-                formatHours(offHours.hours)
-              )}
+              {formatHours(offHours.hours)}
             </h3>
-            {!isLoading && (
-              <p className="mt-2 text-sm ">
-                {offHours.count} {personOrPeople(offHours.count)}
-              </p>
-            )}
+            <p className="mt-2 text-sm ">
+              {offHours.count} {personOrPeople(offHours.count)}
+            </p>
           </div>
         </div>
         <div className="h-full w-full py-5 flex justify-center">
-          <div
-            className={`${
-              isLoading && 'grid place-content-center'
-            } pl-4 border-r pr-3 w-full`}
-          >
-            {!isLoading && <p className="font-semibold">Total hours worked</p>}{' '}
+          <div className="pl-4 border-r pr-3 w-full">
+            <p className="font-semibold">Total hours worked</p>
             <h3 className="mt-1 text-green-700 text-xl">
-              {isLoading ? (
-                <PottaLoader size="sm" />
-              ) : (
-                formatHours(hoursWorked.hours)
-              )}
+              {formatHours(hoursWorked.hours)}
             </h3>
-            {!isLoading && (
-              <p className="mt-2 text-sm">
-                {hoursWorked.count} {personOrPeople(hoursWorked.count)}
-              </p>
-            )}
+            <p className="mt-2 text-sm">
+              {hoursWorked.count} {personOrPeople(hoursWorked.count)}
+            </p>
           </div>
         </div>
         <div className="h-full w-full py-5 flex justify-center">
-          <div
-            className={`${
-              isLoading && 'grid place-content-center'
-            } pl-4 border-r pr-3 w-full`}
-          >
-            {!isLoading && <p className="font-semibold">Total Overtime</p>}{' '}
+          <div className="pl-4 border-r pr-3 w-full">
+            <p className="font-semibold">Total Overtime</p>
             <h3 className="mt-1 text-green-700 text-xl">
-              {isLoading ? (
-                <PottaLoader size="sm" />
-              ) : (
-                formatHours(overtime.hours)
-              )}
+              {formatHours(overtime.hours)}
             </h3>
-            {!isLoading && (
-              <p className="mt-2 text-sm">
-                {overtime.count} {personOrPeople(overtime.count)}
-              </p>
-            )}
+            <p className="mt-2 text-sm">
+              {overtime.count} {personOrPeople(overtime.count)}
+            </p>
           </div>
         </div>
         <div className="h-full w-full py-5 flex justify-center">
-          <div
-            className={`${
-              isLoading && 'grid place-content-center'
-            } pl-4 pr-3 w-full`}
-          >
-            {!isLoading && <p className="font-semibold">Total Benefits</p>}{' '}
+          <div className="pl-4 pr-3 w-full">
+            <p className="font-semibold">Total Benefits</p>
             <h3 className="mt-1 text-green-700 text-xl">
-              {isLoading ? (
-                <PottaLoader size="sm" />
-              ) : (
-                formatCurrency(benefits.amount)
-              )}
+              {formatCurrency(benefits.amount)}
             </h3>
-            {!isLoading && (
-              <p className="mt-2 text-sm">
-                {benefits.count} {personOrPeople(benefits.count)}
-              </p>
-            )}
+            <p className="mt-2 text-sm">
+              {benefits.count} {personOrPeople(benefits.count)}
+            </p>
           </div>
         </div>
       </div>

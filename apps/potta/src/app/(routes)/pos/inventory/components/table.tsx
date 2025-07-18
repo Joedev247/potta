@@ -212,7 +212,7 @@ const InventoryTable = () => {
         columns={columns}
         data={data?.data || []}
         ExpandableComponent={null}
-        expanded
+        expanded={false}
         pagination
         pending={isLoading}
         paginationServer

@@ -1,14 +1,16 @@
 'use client';
-import React from 'react';
+import React, { useContext } from 'react';
 import DeductionFilters from './components/filters';
 import DeductionTable from './components/table';
 import RootLayout from '../../layout';
+import { ContextData } from '@potta/components/context';
 
 const DeductionsPage = () => {
+  const context = useContext(ContextData);
   return (
     <RootLayout>
-      <div className="pl-10 pr-5">
-        <div className="p-6">
+      <div className={`${context?.layoutMode === 'sidebar' ? 'px-14' : 'px-5'}`}>
+        <div className="p-2">
           <DeductionFilters />
           <DeductionTable />
         </div>

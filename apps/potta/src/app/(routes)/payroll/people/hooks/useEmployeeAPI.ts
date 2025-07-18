@@ -11,51 +11,86 @@ export const useEmployeeAPI = () => {
   const [totalPages, setTotalPages] = useState(1);
   const [pageSize, setPageSize] = useState(10);
 
-  const fetchEmployees = useCallback(async () => {
-    setIsFetching(true);
-    try {
-      const filterParams: FilterParams = {
-        page: currentPage,
-        pageSize: pageSize,
-        isActive: true,
-        sortBy: 'firstName',
-        sortDirection: 'asc',
-      };
-
-      const response = await peopleApi.filterPersons(filterParams);
-
-      if (response && response.data) {
-        setEmployees(response.data);
-
-        if (response.meta) {
-          setTotalPages(response.meta.totalPages);
-          setCurrentPage(response.meta.currentPage);
-        }
-      } else {
-        console.error('Unexpected response format:', response);
-        toast.error('Failed to parse employee data');
-      }
-    } catch (error) {
-      console.error('Error fetching employees:', error);
-      toast.error('Failed to load employees');
-    } finally {
-      setIsFetching(false);
-    }
-  }, [currentPage, pageSize]);
-
-  const deleteEmployee = useCallback(
-    async (id: string) => {
+  const fetchEmployees = useCallback(
+    async (filters?: {
+      searchTerm?: string;
+      statusFilter?: string;
+      employmentTypeFilter?: string;
+      departmentFilter?: string;
+      locationFilter?: string;
+    }) => {
+      setIsFetching(true);
       try {
-        await peopleApi.deletePerson(id);
-        toast.success('Employee deleted successfully');
-        fetchEmployees();
+        const filterParams: FilterParams = {
+          page: currentPage,
+          pageSize: pageSize,
+          sortBy: 'firstName',
+          sortDirection: 'asc',
+        };
+
+        // Add search term
+        if (filters?.searchTerm) {
+          filterParams.searchTerm = filters.searchTerm;
+        }
+
+        // Add status filter
+        if (filters?.statusFilter && filters.statusFilter !== 'all') {
+          filterParams.isActive = filters.statusFilter === 'active';
+        }
+
+        // Add employment type filter
+        if (
+          filters?.employmentTypeFilter &&
+          filters.employmentTypeFilter !== 'all'
+        ) {
+          filterParams.employmentType = filters.employmentTypeFilter;
+        }
+
+        // Add department filter (if available in API)
+        if (filters?.departmentFilter && filters.departmentFilter !== 'all') {
+          // Note: This would need to be added to the API if not already supported
+          // filterParams.department = filters.departmentFilter;
+        }
+
+        // Add location filter (if available in API)
+        if (filters?.locationFilter && filters.locationFilter !== 'all') {
+          // Note: This would need to be added to the API if not already supported
+          // filterParams.location = filters.locationFilter;
+        }
+
+        const response = await peopleApi.filterPersons(filterParams);
+
+        if (response && response.data) {
+          setEmployees(response.data);
+
+          if (response.meta) {
+            setTotalPages(response.meta.totalPages);
+            setCurrentPage(response.meta.currentPage);
+          }
+        } else {
+          console.error('Unexpected response format:', response);
+          toast.error('Failed to parse employee data');
+        }
       } catch (error) {
-        console.error('Error deleting employee:', error);
-        toast.error('Failed to delete employee');
+        console.error('Error fetching employees:', error);
+        toast.error('Failed to load employees');
+      } finally {
+        setIsFetching(false);
       }
     },
-    [fetchEmployees]
+    [currentPage, pageSize]
   );
+
+  const deleteEmployee = useCallback(async (id: string) => {
+    try {
+      await peopleApi.deletePerson(id);
+      toast.success('Employee deleted successfully');
+      // Note: fetchEmployees will be called from the component after deletion
+    } catch (error) {
+      console.error('Error deleting employee:', error);
+      toast.error('Failed to delete employee');
+    }
+  }, []);
 
   const createPerson = useCallback(async (payload: PersonPayload) => {
     const loadingToastId = toast.loading('Creating employee...');

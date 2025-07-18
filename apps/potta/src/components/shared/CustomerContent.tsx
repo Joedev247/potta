@@ -3,14 +3,17 @@ import React from 'react';
 import Boxes from '../../app/(routes)/customers/components/boxes';
 import TableComponents from '../../app/(routes)/customers/components/table';
 import { toast } from 'react-hot-toast';
+import { ContextData } from '@potta/components/context';
+import { useContext } from 'react';
 
 const CustomerContent = () => {
+  const context = useContext(ContextData);
   return (
-    <div className="px-14 py-5">
-      
+    <div
+      className={`${context?.layoutMode === 'sidebar' ? 'px-14' : 'px-5'} py-5`}
+    >
       <div>
         <TableComponents />
-      
       </div>
     </div>
   );

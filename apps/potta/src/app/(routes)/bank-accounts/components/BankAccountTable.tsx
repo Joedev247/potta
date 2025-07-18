@@ -149,7 +149,7 @@ const BankAccountTable: React.FC<BankAccountTableProps> = ({
           columns={columns}
           data={filteredData}
           ExpandableComponent={null}
-          expanded
+          expanded={false}
           pagination={Array.isArray(filteredData) && filteredData.length > 9}
         />
       )}

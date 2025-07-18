@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { Policy } from '../utils/types';
-import { ChevronRight, UserCheck, CheckCircle2 } from 'lucide-react';
+import { ChevronRight, UserCheck, CheckCircle2, AlertCircle, Settings, Users } from 'lucide-react';
 import { peopleApi } from '../../payroll/people/utils/api';
+import { MdOutlinePendingActions } from 'react-icons/md';
 
 interface PolicySummaryViewProps {
   policy: Policy;
@@ -13,6 +14,44 @@ interface Employee {
   lastName: string;
   profile_url?: string;
 }
+
+const requirementLabels: Record<string, { label: string; description: string; icon: React.ReactNode }> = {
+  requireReceipt: {
+    label: 'Receipt Required',
+    description: 'Must attach receipt for this expense',
+    icon: <i className="ri-receipt-2-line text-gray-600" />
+  },
+  requireMemo: {
+    label: 'Memo Required',
+    description: 'Must provide a memo explaining the expense',
+    icon: <i className="ri-file-text-line text-gray-600" />
+  },
+  requireScreenshots: {
+    label: 'Screenshots Required',
+    description: 'Must attach screenshots as proof',
+    icon: <i className="ri-image-line text-gray-600" />
+  },
+  requireNetSuiteCustomerJob: {
+    label: 'NetSuite Customer/Job',
+    description: 'Must select NetSuite customer or job',
+    icon: <i className="ri-briefcase-line text-gray-600" />
+  },
+  requireGpsCoordinates: {
+    label: 'GPS Coordinates',
+    description: 'Must include GPS location data',
+    icon: <i className="ri-map-pin-line text-gray-600" />
+  },
+  businessPurpose: {
+    label: 'Business Purpose',
+    description: 'Must specify business purpose',
+    icon: <i className="ri-building-2-line text-gray-600" />
+  },
+  requireBeforeAfterScreenshots: {
+    label: 'Before/After Screenshots',
+    description: 'Must provide before and after screenshots',
+    icon: <i className="ri-split-cells-horizontal text-gray-600" />
+  },
+};
 
 export const PolicySummaryView: React.FC<PolicySummaryViewProps> = ({
   policy,
@@ -52,117 +91,167 @@ export const PolicySummaryView: React.FC<PolicySummaryViewProps> = ({
 
   if (!policy || !policy.rules || policy.rules.length === 0) {
     return (
-      <div className="border rounded-md p-4 bg-white text-center text-gray-500">
-        No rules defined for this policy.
+      <div className="border border-gray-200 p-6 bg-gray-50 text-center text-gray-500">
+        <AlertCircle className="h-8 w-8 mx-auto mb-2 text-gray-400" />
+        <p>No rules defined for this policy.</p>
       </div>
     );
   }
 
   return (
-    <div className="space-y-6 max-w-3xl mx-auto">
+    <div className="space-y-6">
       {policy.rules.map((rule, idx) => (
         <div
           key={rule.uuid || rule.id || idx}
-          className="bg-gray-50 border p-6"
+          className="bg-gray-50 border border-gray-200 p-6"
         >
-          <div className="flex items-center gap-2 mb-4">
-            <span className="text-blue-600 font-bold">Rule {idx + 1}</span>
-            <span className="text-xs text-gray-400">
-              ({rule.conditionOperator?.toUpperCase()})
-            </span>
+          {/* Rule Header */}
+          <div className="flex items-center gap-3 mb-4 pb-3 border-b border-gray-200">
+            <div className="flex items-center gap-2">
+              <div className="p-2 bg-green-100">
+                <Settings className="h-4 w-4 text-green-600" />
+              </div>
+              <div>
+                <span className="text-green-600 font-semibold text-lg">Rule {idx + 1}</span>
+                <div className="text-xs text-gray-500">
+                  Condition Operator: {rule.conditionOperator?.toUpperCase() || 'AND'}
+                </div>
+              </div>
+            </div>
           </div>
+
           {/* Conditions */}
-          <div className="mb-2">
-            <div className="font-semibold text-gray-700 mb-1">Conditions</div>
-            <ul className="ml-4 list-disc text-gray-800">
+          <div className="mb-4">
+            <div className="flex items-center gap-2 mb-3">
+              <CheckCircle2 className="h-4 w-4 text-green-600" />
+              <span className="font-semibold text-gray-700">Conditions</span>
+              <span className="text-xs text-gray-500 bg-gray-100 px-2 py-0.5">
+                {rule.conditions.length} condition{rule.conditions.length !== 1 ? 's' : ''}
+              </span>
+            </div>
+            <div className="space-y-2">
               {rule.conditions.map((cond) => (
-                <li key={cond.id}>
-                  <span className="capitalize font-medium">
-                    {cond.criterionType}
-                  </span>{' '}
-                  <span className="text-gray-500">
-                    {cond.comparisonOperator}
-                  </span>{' '}
-                  <span className="text-blue-700 font-semibold">
-                    {cond.value}
-                  </span>
-                </li>
+                <div key={cond.id} className="flex items-center gap-3 p-3 bg-white border border-gray-100">
+                  <div className="flex-1">
+                    <span className="capitalize font-medium text-gray-700">
+                      {cond.criterionType}
+                    </span>
+                    <span className="text-gray-500 mx-2">
+                      {cond.comparisonOperator}
+                    </span>
+                    <span className="text-green-700 font-semibold">
+                      {cond.value}
+                    </span>
+                  </div>
+                </div>
               ))}
-            </ul>
+            </div>
           </div>
+
           {/* Requirements */}
           {rule.requirements &&
             Object.values(rule.requirements).some(Boolean) && (
-              <div className="mb-2">
-                <div className="font-semibold text-gray-700 mb-1">
-                  Requirements
+              <div className="mb-4">
+                <div className="flex items-center gap-2 mb-3">
+                  <AlertCircle className="h-4 w-4 text-gray-600" />
+                  <span className="font-semibold text-gray-700">Requirements</span>
+                  <span className="text-xs text-gray-500 bg-gray-100 px-2 py-0.5">
+                    {Object.values(rule.requirements).filter(Boolean).length} requirement{Object.values(rule.requirements).filter(Boolean).length !== 1 ? 's' : ''}
+                  </span>
                 </div>
-                <div className="flex flex-wrap gap-2">
+                <div className="space-y-2">
                   {Object.entries(rule.requirements).map(([key, value]) =>
                     value ? (
-                      <span
-                        key={key}
-                        className="bg-gray-200 text-xs px-2 py-0.5 rounded"
-                      >
-                        {key
-                          .replace(/([A-Z])/g, ' $1')
-                          .replace(/^./, (s) => s.toUpperCase())}
-                      </span>
+                      <div key={key} className="flex items-center gap-3 p-3 bg-white border border-gray-100">
+                        <div className="flex-shrink-0">
+                          {requirementLabels[key]?.icon || <i className="ri-check-line text-gray-400" />}
+                        </div>
+                        <div className="flex-1">
+                          <div className="font-medium text-gray-700">
+                            {requirementLabels[key]?.label || key.replace(/([A-Z])/g, ' $1').replace(/^./, (s) => s.toUpperCase())}
+                          </div>
+                          <div className="text-sm text-gray-500">
+                            {requirementLabels[key]?.description || 'Required for this policy'}
+                          </div>
+                        </div>
+                      </div>
                     ) : null
                   )}
                 </div>
               </div>
             )}
+
           {/* Actions */}
           <div>
-            <div className="font-semibold text-gray-700 mb-1">Actions</div>
-            {rule.actions.map((action, actionIdx) => {
-              const userIds =
-                action.parameters?.users ||
-                (action.parameters && 'selectedUserIds' in action.parameters
-                  ? action.parameters.selectedUserIds
-                  : []) ||
-                [];
-              return (
-                <div
-                  key={action.id || actionIdx}
-                  className="flex items-center gap-2 text-sm"
-                >
-                  <span className="font-medium capitalize">{action.type}</span>
-                  <span className="text-gray-500">
-                    (Approval Mode: {action.parameters?.approvalMode})
-                  </span>
-                  {/* Approvers */}
-                  {loading ? (
-                    <span className="ml-2 text-gray-400">Loading users...</span>
-                  ) : (
-                    Array.isArray(userIds) &&
-                    userIds.length > 0 && (
-                      <span className="flex flex-wrap gap-1">
-                        {userIds.map((id: string) => {
-                          const emp = employeeMap[id];
-                          return emp ? (
-                            <span
-                              key={id}
-                              className="bg-indigo-100 text-indigo-700 px-2 py-0.5 rounded text-xs"
-                            >
-                              {emp.firstName} {emp.lastName}
-                            </span>
-                          ) : (
-                            <span
-                              key={id}
-                              className="bg-gray-200 text-gray-700 px-2 py-0.5 rounded text-xs"
-                            >
-                              {id}
-                            </span>
-                          );
-                        })}
-                      </span>
-                    )
-                  )}
-                </div>
-              );
-            })}
+            <div className="flex items-center gap-2 mb-3">
+              <MdOutlinePendingActions  className="h-4 w-4 text-gray-600" />
+              <span className="font-semibold text-gray-700">Actions</span>
+              <span className="text-xs text-gray-500 bg-gray-100 px-2 py-0.5">
+                {rule.actions.length} action{rule.actions.length !== 1 ? 's' : ''}
+              </span>
+            </div>
+            <div className="space-y-3">
+              {rule.actions.map((action, actionIdx) => {
+                const userIds =
+                  action.parameters?.users ||
+                  (action.parameters && 'selectedUserIds' in action.parameters
+                    ? action.parameters.selectedUserIds
+                    : []) ||
+                  [];
+                return (
+                  <div
+                    key={action.id || actionIdx}
+                    className="p-4 bg-white border border-gray-100"
+                  >
+                    <div className="flex items-center gap-3 mb-2">
+                      <div className="p-1.5 bg-green-100">
+                        <UserCheck className="h-3 w-3 text-green-600" />
+                      </div>
+                      <div className="flex-1">
+                        <div className="font-medium capitalize text-gray-700">{action.type}</div>
+                        <div className="text-sm text-gray-500">
+                          Approval Mode: {action.parameters?.approvalMode || 'Standard'}
+                        </div>
+                      </div>
+                    </div>
+                    
+                    {/* Approvers */}
+                    {loading ? (
+                      <div className="text-sm text-gray-400 italic">Loading approvers...</div>
+                    ) : (
+                      Array.isArray(userIds) &&
+                      userIds.length > 0 && (
+                        <div className="mt-3 pt-3 border-t border-gray-100">
+                          <div className="text-sm font-medium text-gray-600 mb-2">Approvers:</div>
+                          <div className="flex flex-wrap gap-2">
+                            {userIds.map((id: string) => {
+                              const emp = employeeMap[id];
+                              return emp ? (
+                                <span
+                                  key={id}
+                                  className="inline-flex items-center gap-1 px-3 py-1 bg-green-50 text-green-700 border border-green-200 text-sm"
+                                >
+                                  <i className="ri-user-line text-green-600"></i>
+                                  {emp.firstName} {emp.lastName}
+                                </span>
+                              ) : (
+                                <span
+                                  key={id}
+                                  className="inline-flex items-center gap-1 px-3 py-1 bg-gray-100 text-gray-600 border border-gray-200 text-sm"
+                                >
+                                  <i className="ri-user-line text-gray-400"></i>
+                                  {id}
+                                </span>
+                              );
+                            })}
+                          </div>
+                        </div>
+                      )
+                    )}
+                  </div>
+                );
+              })}
+            </div>
           </div>
         </div>
       ))}

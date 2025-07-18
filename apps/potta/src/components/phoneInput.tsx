@@ -43,24 +43,24 @@ const phoneNumberLengths: Record<string, { min: number; max: number }> = {
   ZA: { min: 9, max: 9 }, // South Africa
   KE: { min: 9, max: 10 }, // Kenya
   GH: { min: 9, max: 10 }, // Ghana
-
+  
   // Europe
   GB: { min: 10, max: 11 }, // UK
   FR: { min: 9, max: 9 }, // France
   DE: { min: 10, max: 11 }, // Germany
   IT: { min: 9, max: 10 }, // Italy
   ES: { min: 9, max: 9 }, // Spain
-
+  
   // North America
   US: { min: 10, max: 10 }, // USA
   CA: { min: 10, max: 10 }, // Canada
   MX: { min: 10, max: 10 }, // Mexico
-
+  
   // Asia
   CN: { min: 11, max: 13 }, // China
   JP: { min: 10, max: 11 }, // Japan
   IN: { min: 10, max: 10 }, // India
-
+  
   // Default for other countries
   default: { min: 7, max: 15 },
 };
@@ -115,10 +115,10 @@ export function PhoneInput({
 }: PhoneInputProps) {
   // Store the raw phone number input (without country code)
   const [phoneNumber, setPhoneNumber] = useState(value);
-
+  
   // Store the selected country code separately
   const [selectedCountryCode, setSelectedCountryCode] = useState(countryCode);
-
+  
   const [isWhatsApp, setIsWhatsApp] = useState(whatsapp || false);
   const [countryCodes, setCountryCodes] = useState<CountryCodeInfo[]>([]);
   const [selectedCountryInfo, setSelectedCountryInfo] =
@@ -127,10 +127,10 @@ export function PhoneInput({
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [validationError, setValidationError] = useState<string | null>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
-
+  
   // Flag to prevent initial render effect conflicts
   const isInitialMount = useRef(true);
-
+  
   // Store the last selected country to prevent unnecessary updates
   const lastSelectedCountry = useRef<string | null>(null);
 
@@ -292,17 +292,17 @@ export function PhoneInput({
   useEffect(() => {
     // Skip if this is the initial mount
     if (isInitialMount.current) return;
-
+    
     // Skip if the country code hasn't actually changed
     if (lastSelectedCountry.current === selectedCountryCode) return;
-
+    
     const countryInfo =
       countryCodes.find((c) => c.code === selectedCountryCode) || null;
-
+      
     if (countryInfo) {
       setSelectedCountryInfo(countryInfo);
       lastSelectedCountry.current = selectedCountryCode;
-
+      
       // Validate current phone number with new country requirements
       if (phoneNumber) {
         validatePhoneNumber(phoneNumber.replace(/\D/g, ''), countryInfo);
@@ -317,30 +317,30 @@ export function PhoneInput({
   ): boolean => {
     const country = countryInfo || selectedCountryInfo;
     if (!country) return true; // Can't validate without country info
-
+    
     const length = digits.length;
-
+    
     if (length === 0) {
       setValidationError(null);
       return true; // Empty is valid (for now)
     }
-
+    
     if (length < country.minLength) {
       setValidationError(
         `Phone number too short. ${country.country} numbers should be at least ${country.minLength} digits.`
       );
       return false;
     }
-
+    
     if (length > country.maxLength) {
       setValidationError(
         `Phone number too long. ${country.country} numbers should be at most ${country.maxLength} digits.`
       );
       return false;
     }
-
+    
     // Additional country-specific validation could go here
-
+    
     setValidationError(null);
     return true;
   };
@@ -383,10 +383,10 @@ export function PhoneInput({
     if (onChange) {
       // Get the digits-only version of the raw input
       const digitsOnly = rawInput.replace(/\D/g, '');
-
+      
       // Format the raw input for display
       const formattedValue = formatPhoneNumber(digitsOnly);
-
+      
       // The combined value includes the country code + raw digits
       const combinedValue = `${selectedCountryCode}${digitsOnly}`;
 
@@ -414,7 +414,7 @@ export function PhoneInput({
       // Format the number for display
       const formatted = formatPhoneNumber(digitsOnly);
       setPhoneNumber(formatted);
-
+      
       // Notify parent with the raw input
       notifyChange(digitsOnly);
     }
@@ -525,7 +525,7 @@ export function PhoneInput({
             </div>
           )}
         </div>
-
+        
         {/* Phone number input */}
         <input
           type="tel"
@@ -537,7 +537,7 @@ export function PhoneInput({
           aria-invalid={!!(errors || validationError)}
         />
       </div>
-
+      
       {/* Display selected country info */}
       {selectedCountryInfo && (
         <div className="text-xs text-gray-500 mt-1">
@@ -549,7 +549,7 @@ export function PhoneInput({
           digits
         </div>
       )}
-
+      
       {/* Display validation error */}
       {(errors || validationError) && (
         <div className="flex items-center gap-1 text-red-500 text-xs mt-1">

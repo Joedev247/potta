@@ -107,7 +107,7 @@ const PayInfoTab = ({ employee }: { employee: any }) => (
           },
         ]}
         ExpandableComponent={null}
-        expanded
+        expanded={false}
         pagination={false}
       />
     </div>

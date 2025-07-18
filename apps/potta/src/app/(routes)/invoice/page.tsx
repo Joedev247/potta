@@ -1,33 +1,15 @@
 'use client';
-import Box from '../layout/navbar/box';
 import InvoiceTableComponents from './components/table';
 
-import Link from 'next/link';
-import SliderInvoice from './components/slideNewInvoice';
-import Search from '@potta/components/search';
-import Select from '@potta/components/select';
-import Button from '@potta/components/button';
 import { useState } from 'react';
-import ModalInvoice from '@potta/app/(routes)/invoice/components/modal';
-import useGetAllInvoice from '@potta/app/(routes)/invoice/_hooks/useGetAllInvoice';
-import { v4 as uuid } from 'uuid';
-import DataGrid from './components/DataGrid';
-import CustomInput from './components/CustomInput';
-import CustomSelect, { IOption } from './components/CustomSelect';
+
+import { ContextData } from '@potta/components/context';
+import { useContext } from 'react';
 const Invoice = () => {
-  const [detailsModal, setDetailsModal] = useState<boolean>(false);
-  const [page, setPage] = useState(1);
-
-
-
-
+  const context = useContext(ContextData);
 
   return (
-    <div className=" px-14">
-
-
-
-
+    <div className={`${context?.layoutMode === 'sidebar' ? 'px-14' : 'px-5'}`}>
       {/* <CustomInput />
       <CustomSelect
         options={options}
@@ -36,10 +18,8 @@ const Invoice = () => {
         placeholder="Choose an option"
       /> */}
       <div className="">
-        <InvoiceTableComponents
-        />
+        <InvoiceTableComponents />
       </div>
-
     </div>
   );
 };

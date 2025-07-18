@@ -12,6 +12,7 @@ import SidebarsAccounts from './components/accounts';
 import SidebarsHome from './components/home';
 import SidebarsVoucher from './components/voucher';
 import SidebarsBankAccounts from './components/bankAccounts';
+import SidebarsSettings from './components/settings';
 const Sidebars = () => {
   const pathname = usePathname();
   const string = pathname;
@@ -33,6 +34,7 @@ const Sidebars = () => {
       {str[1] == 'accounts' && <SidebarsAccounts />}
       {str[1] == 'reports' && <SidebarsVoucher />}
       {str[1] == 'bank-accounts' && <SidebarsBankAccounts />}
+      {str[1] == 'settings' && <SidebarsSettings />}
     </>
   );
 };

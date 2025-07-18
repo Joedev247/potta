@@ -136,11 +136,15 @@ export const useEmployeeForm = () => {
       const savedPersonId = localStorage.getItem(STORAGE_KEYS.PERSON_ID);
       if (savedPersonId) {
         setPersonId(savedPersonId);
-      }
 
+        // Only restore saved active step if there's a valid personId
       const savedActiveStep = localStorage.getItem(STORAGE_KEYS.ACTIVE_STEP);
       if (savedActiveStep) {
         setActive(savedActiveStep as any);
+        }
+      } else {
+        // If no personId, always start from base info step
+        setActive(FORM_STEPS.EMPLOYEE_BASE_INFO);
       }
 
       // Load saved form data
@@ -206,6 +210,8 @@ export const useEmployeeForm = () => {
         setSchedule(null);
         setBenefit(null);
         setTaxInfo(null);
+        // Reset to base info step when personId is cleared
+        setActive(FORM_STEPS.EMPLOYEE_BASE_INFO);
       }
     };
 
@@ -489,7 +495,7 @@ export const useEmployeeForm = () => {
             toast.error('Please complete the employee base information');
             break;
           }
-
+          
           // Validate base info using the form component's validation
           console.log('🔍 PARENT: Checking validateBaseInfo function', {
             hasValidateBaseInfo: !!validateBaseInfoData,
@@ -507,7 +513,7 @@ export const useEmployeeForm = () => {
           }
 
           console.log('✅ PARENT: Validation function available, calling...');
-
+          
           try {
             const isBaseInfoValid = await validateBaseInfoData();
             if (!isBaseInfoValid) {
@@ -519,7 +525,7 @@ export const useEmployeeForm = () => {
             toast.error('Validation failed, please try again');
             break;
           }
-
+          
           setActive(FORM_STEPS.EMPLOYEE_LOCATION);
           break;
 

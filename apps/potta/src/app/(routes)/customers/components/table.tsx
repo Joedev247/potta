@@ -209,7 +209,7 @@ const TableComponents = () => {
         columns={columns}
         data={customer?.data || []}
         pagination
-        expanded
+        expanded={false}
         pending={isLoading}
         paginationServer
         paginationTotalRows={customer?.meta?.totalItems ?? 0}

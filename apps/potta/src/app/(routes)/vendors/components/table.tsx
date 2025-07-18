@@ -22,7 +22,9 @@ import DeleteModal from './deleteModal';
 import { VendorFilter } from '../utils/types';
 import { log } from 'console';
 import { UpdateVendorPayload, updateVendorSchema } from '../utils/validations';
-import TableActionPopover, { PopoverAction } from '@potta/components/tableActionsPopover';
+import TableActionPopover, {
+  PopoverAction,
+} from '@potta/components/tableActionsPopover';
 
 export const PhoneFlag = ({ phoneNumber }: { phoneNumber: string }) => {
   const phoneNumberObj = parsePhoneNumberFromString(phoneNumber);
@@ -86,7 +88,7 @@ const TableComponents = () => {
               setIsViewOpen(true);
             },
             className: 'hover:bg-gray-200',
-            icon: <i className="ri-eye-line" />
+            icon: <i className="ri-eye-line" />,
           },
           {
             label: 'Edit',
@@ -96,7 +98,7 @@ const TableComponents = () => {
               setIsEditOpen(true);
             },
             className: 'hover:bg-gray-200',
-            icon: <i className="ri-edit-line" />
+            icon: <i className="ri-edit-line" />,
           },
           {
             label: 'Delete',
@@ -105,8 +107,8 @@ const TableComponents = () => {
               setIsDeleteOpen(true);
             },
             className: 'hover:bg-red-200 text-red-600',
-            icon: <i className="ri-delete-bin-line" />
-          }
+            icon: <i className="ri-delete-bin-line" />,
+          },
         ];
 
         return (
@@ -147,7 +149,7 @@ const TableComponents = () => {
         columns={columns}
         data={vendor?.data || []}
         pagination
-        expanded
+        expanded={false}
         pending={isLoading}
         paginationServer
         paginationTotalRows={vendor?.meta?.totalItems ?? 0}

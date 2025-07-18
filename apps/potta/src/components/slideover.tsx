@@ -152,6 +152,14 @@ const Slider: FC<props> = ({
             icon={<i className="ri-file-add-line"></i>}
           />
         )}
+        {buttonText == 'spend-program' && (
+          <Button
+            text={'New Spend Program'}
+            onClick={handleToggle}
+            type={'button'}
+            icon={<i className="ri-file-add-line"></i>}
+          />
+        )}
       </div>
       <Dialog
         open={open}

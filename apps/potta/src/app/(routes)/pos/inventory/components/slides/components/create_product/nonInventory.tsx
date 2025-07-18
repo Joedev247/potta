@@ -48,16 +48,22 @@ const CreateNonInventoryProduct:React.FC<CreateProductProps> = ({ open: controll
       inventoryLevel: 0,
       salesPrice: 0,
       taxable: false,
-      taxRate: 0,
-      category: '',
-      image: '',
+      categoryId: '',
+      images: [],
+      type: 'NON_INVENTORY', // Set type for non-inventory products
     },
   });
 
   const mutation = useCreateProduct();
   const onSubmit = (data: ProductPayload) => {
     console.log('Submitted Data:', data);
-    mutation.mutate(data, {
+    // Ensure type is set to NON_INVENTORY
+    const payload = {
+      ...data,
+      type: 'NON_INVENTORY',
+      inventoryLevel: 0, // Non-inventory items don't have inventory levels
+    };
+    mutation.mutate(payload, {
       onSuccess: () => {
         toast.success('Product created successfully!');
         reset(); // Reset the form after success

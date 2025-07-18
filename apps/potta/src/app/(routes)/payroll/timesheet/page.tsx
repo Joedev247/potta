@@ -21,6 +21,7 @@ import { toast } from 'react-hot-toast';
 import Button from '@potta/components/button';
 import DateNavigation from './components/DateNavigation';
 import NewTimeEntryModal from './components/NewTimeEntryModal';
+import { ContextData } from '@potta/components/context';
 
 // Create a client
 const queryClient = new QueryClient({
@@ -33,6 +34,7 @@ const queryClient = new QueryClient({
 });
 
 const Timesheet = () => {
+  const context = React.useContext(ContextData);
   // State for filters
   const [cycleTab, setCycleTab] = useState('Daily');
   const [selectedDate, setSelectedDate] = useState(new Date());
@@ -82,7 +84,7 @@ const Timesheet = () => {
   return (
     <QueryClientProvider client={queryClient}>
       <RootLayout>
-        <div className="px-14 pt-2">
+        <div className={`${context?.layoutMode === 'sidebar' ? 'px-14' : 'px-5'} pt-2`}>
           {/* Time cycle tabs and date navigation */}
           <DateNavigation
             cycleTab={cycleTab}
@@ -94,7 +96,7 @@ const Timesheet = () => {
           />
 
           {/* Summary boxes */}
-          <Boxes />
+          <Boxes dateRange={dateRange} />
           {/* Timesheet content */}
           <TimesheetView
             dateRange={dateRange}
@@ -112,7 +114,6 @@ const Timesheet = () => {
           />
         )}
       </RootLayout>
-      {process.env.NODE_ENV === 'development' && <ReactQueryDevtools />}
     </QueryClientProvider>
   );
 };

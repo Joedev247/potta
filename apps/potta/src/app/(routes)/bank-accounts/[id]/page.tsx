@@ -10,12 +10,13 @@ import Select from '@potta/components/select';
 import BankAccountDetailsWideCard from '../components/BankAccountDetailsWideCard';
 import { useDeactivateBankAccount } from '../hooks/useDeactivateBankAccount';
 import toast from 'react-hot-toast';
+import { ContextData } from '@potta/components/context';
 
 const BankAccountDetailsPage = () => {
   const params = useParams();
   const accountId = params.id as string;
   const { data: account, isLoading, isError } = useGetBankAccount(accountId);
-
+  const context = React.useContext(ContextData);
   // Filter state
   const [search, setSearch] = useState('');
   const [status, setStatus] = useState('all');
@@ -42,7 +43,11 @@ const BankAccountDetailsPage = () => {
 
   return (
     <RootLayout>
-      <div className="pl-16 pr-5 w-full pt-6">
+      <div
+        className={`${
+          context?.layoutMode === 'sidebar' ? 'pl-16 !mt-4' : 'pl-5 !mt-4'
+        } pr-5 w-full pt-6`}
+      >
         {/* Top Card */}
         <div className="w-full mb-6">
           <BankAccountDetailsWideCard

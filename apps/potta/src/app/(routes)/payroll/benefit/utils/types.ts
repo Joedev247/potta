@@ -1,24 +1,29 @@
 export type BenefitType = 'FINANCIAL' | 'SERVICE' | 'REDEEMABLE';
-export type CycleType = 'DAILY' | 'WEEKLY' | 'MONTHLY' | 'QUARTERLY' | 'ANNUALLY' | 'ONE_TIME' | 'NONE';
+export type CycleType =
+  | 'DAILY'
+  | 'WEEKLY'
+  | 'MONTHLY'
+  | 'QUARTERLY'
+  | 'ANNUALLY'
+  | 'ONE_TIME'
+  | 'NONE';
 
 export interface BenefitPayload {
   name: string;
-  description?: string;
+  description: string;
   type: BenefitType;
-  value?: number;
-  rate?: number;
-  cycle: CycleType;
-  is_taxable: boolean;
+  value: number;
+  cycle?: CycleType;
+  is_taxable?: boolean;
   tax_cap?: number;
   expires_at?: string;
   role_based?: boolean;
   eligible_roles?: string[];
   is_default?: boolean;
+  rate?: number;
   salary_cap?: number;
   max_amount?: number;
-  provider?: string;
-  category?: string;
-  percentage_base?: string;
+  provider: string;
 }
 
 export interface FilterParams {

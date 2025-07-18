@@ -1,21 +1,28 @@
 'use client';
+import React from 'react';
 import Button from '@potta/components/button';
-import Search from '@potta/components/search';
-import Select from '@potta/components/select';
-import React, { useState } from 'react';
 import CreateBudgetModal from '../../dashboard/components/createBudgetModal';
+import { RiFilter3Line, RiCalendar2Line } from 'react-icons/ri';
+import DynamicFilter from '@potta/components/dynamic-filter';
 
-const Filter = () => {
-  const [selectedValue, setSelectedValue] = useState('All Time'); // Set your default value here
-  const [selectedValue2, setSelectedValue2] = useState('pending'); // Set your default value here
-  const [isBudgetModalOpen, setIsBudgetModalOpen] = useState(false);
+interface FilterProps {
+  search: string;
+  setSearch: (v: string) => void;
+  status: string;
+  setStatus: (v: string) => void;
+  date: string;
+  setDate: (v: string) => void;
+}
 
-  const handleChange = (value: string) => {
-    setSelectedValue(value);
-  };
-  const handleChange2 = (value: string) => {
-    setSelectedValue2(value);
-  };
+const Filter = ({
+  search,
+  setSearch,
+  status,
+  setStatus,
+  date,
+  setDate,
+}: FilterProps) => {
+  const [isBudgetModalOpen, setIsBudgetModalOpen] = React.useState(false);
 
   const handleCreateBudget = (budgetData: {
     name: string;
@@ -26,71 +33,60 @@ const Filter = () => {
   }) => {
     // Here you would typically save the budget data to your backend
     console.log('Budget created:', budgetData);
-
     // You can add API call here to save the budget
-    // Example: saveBudget(budgetData)
   };
+
+  const filterConfigs = [
+    {
+      key: 'status',
+      icon: <RiFilter3Line className="text-gray-400 text-lg" />,
+      options: [
+        { label: 'All', value: 'all' },
+        { label: 'Pending', value: 'pending' },
+        { label: 'Paid', value: 'paid' },
+      ],
+      value: status,
+      onChange: setStatus,
+    },
+    {
+      key: 'date',
+      icon: <RiCalendar2Line className="text-gray-400 text-lg" />,
+      options: [
+        { label: 'All Time', value: 'All Time' },
+        { label: 'Yesterday', value: 'Yesterday' },
+        { label: 'Last 7 Days', value: 'Last 7 Days' },
+        { label: 'Last 30 Days', value: 'Last 30 Days' },
+      ],
+      value: date,
+      onChange: setDate,
+    },
+  ];
 
   return (
     <>
-      <div className="w-full flex justify-between my-4 ">
-        <div className="flex space-x-2 w-[50%]">
-          <div className=" w-[50%]">
-            <Search />
-          </div>
-          <div className="flex w-[50%] space-x-2">
-            <div className="flex items-center gap-2 ">
-              <label className="text-sm font-medium whitespace-nowrap">
-                Filter:
-              </label>
-              <Select
-                options={[
-                  { label: 'All', value: 'all' },
-                  { label: 'Pending', value: 'pending' },
-                  { label: 'Paid', value: 'paid' },
-                ]}
-                selectedValue={selectedValue2}
-                onChange={handleChange2}
-                bg=""
-              />
-            </div>
-
-            <div className="flex items-center gap-2">
-              <label className="text-sm font-medium whitespace-nowrap">
-                Date:
-              </label>
-              <Select
-                options={[
-                  { label: 'All Time', value: 'All Time' },
-                  { label: 'Yesterday', value: 'Yesterday' },
-                  { label: 'Last 7 Days', value: 'Last 7 Days' },
-                  { label: 'Last 30 Days', value: 'Last 30 Days' },
-                ]}
-                selectedValue={selectedValue}
-                onChange={handleChange}
-                bg=""
-              />
-            </div>
-          </div>
-        </div>
-        <div className=" w-[30%] flex justify-end">
-          <div className="flex w-fit gap-4 items-center  ">
-            <Button
-              type={'button'}
-              color
-              text="Export"
-              icon={<img src="/images/export.svg" />}
-              theme="lightBlue"
-            />
-
-            <Button
-              type={'button'}
-              text="Create Budget"
-              icon={<i className="ri-add-line text-white text-xl "></i>}
-              theme="default"
-              onClick={() => setIsBudgetModalOpen(true)}
-            />
-          </div>
+      <div className="flex flex-col w-full md:flex-row md:items-center md:justify-between gap-4 my-4 mt-0">
+        <DynamicFilter
+          searchValue={search}
+          onSearchChange={(e) => setSearch(e.target.value)}
+          onSearchClear={() => setSearch('')}
+          searchPlaceholder="Search budgets..."
+          filters={filterConfigs}
+        />
+        <div className="flex gap-3 mt-4 md:mt-0">
+          <Button
+            type={'button'}
+            color
+            text="Export"
+            icon={<img src="/images/export.svg" />}
+            theme="lightBlue"
+          />
+          <Button
+            type={'button'}
+            text="Create Budget"
+            icon={<i className="ri-file-add-line"></i>}
+            theme="default"
+            onClick={() => setIsBudgetModalOpen(true)}
+          />
         </div>
       </div>
       {/* Budget Creation Modal */}

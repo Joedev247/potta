@@ -90,7 +90,7 @@ const CategoryManager = () => {
         minHeight="50vh"
         maxHeight="60vh"
         ExpandableComponent={null}
-        expanded
+        expanded={false}
         pending={isLoading}
         pagination
         paginationServer

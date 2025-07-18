@@ -156,7 +156,9 @@ const SearchableSelect: React.FC<SearchableSelectProps> = ({
           control: (provided: any, state: any) =>
             customStyles.control(provided, state, { error }),
         }}
-        className="react-select-container"
+        className={`react-select-container ${
+          isDisabled ? 'opacity-50 cursor-not-allowed' : ''
+        }`}
         classNamePrefix="react-select"
         {...rest}
       />

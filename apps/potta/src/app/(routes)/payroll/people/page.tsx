@@ -4,7 +4,7 @@ import { toast } from 'react-hot-toast';
 import RootLayout from '../../layout';
 import Button from '@potta/components/button';
 import CustomLoader from '@potta/components/loader';
-import Search from '@potta/components/search';
+import DynamicFilter from '@potta/components/dynamic-filter';
 import Slider from '@potta/components/slideover';
 import dynamic from 'next/dynamic';
 import EmployeeTable, { Employee } from './components/EmployeeTable';
@@ -12,12 +12,14 @@ import EmployeeModal from './components/EmployeeModal';
 import ConfirmationModal from './components/ConfirmationModal';
 import { useEmployeeAPI } from './hooks/useEmployeeAPI';
 import { DEFAULT_PAGE_SIZE, STORAGE_KEYS } from './constants';
+import { ContextData } from '@potta/components/context';
 
 const EmployeeDetailsPage = dynamic(() => import('./[id]/page'), {
   ssr: false,
 });
 
 const People = () => {
+  const context = React.useContext(ContextData);
   const [showModal, setShowModal] = useState(false);
   const [modalAnimation, setModalAnimation] = useState('animate-slide-in-top');
   const [detailsOpen, setDetailsOpen] = useState(false);
@@ -30,8 +32,15 @@ const People = () => {
   const [employeeToDelete, setEmployeeToDelete] = useState<string | null>(null);
   const [employeeToDeleteName, setEmployeeToDeleteName] = useState<string>('');
 
+  // Filter states
+  const [searchTerm, setSearchTerm] = useState('');
+  const [statusFilter, setStatusFilter] = useState('all');
+  const [employmentTypeFilter, setEmploymentTypeFilter] = useState('all');
+  const [departmentFilter, setDepartmentFilter] = useState('all');
+  const [locationFilter, setLocationFilter] = useState('all');
+
   const {
-    employees,
+    employees: allEmployees,
     isFetching,
     currentPage,
     totalPages,
@@ -41,10 +50,130 @@ const People = () => {
     handlePageChange,
   } = useEmployeeAPI();
 
-  // Fetch employees on initial load
+  // Client-side filtering for department and location
+  const filteredEmployees = React.useMemo(() => {
+    let filtered = allEmployees;
+
+    // Filter by department (if available in employee data)
+    if (departmentFilter !== 'all') {
+      // Note: This assumes department info is available in employee data
+      // You may need to adjust based on actual data structure
+      filtered = filtered.filter((employee) =>
+        employee.employment_type
+          ?.toLowerCase()
+          .includes(departmentFilter.toLowerCase())
+      );
+    }
+
+    // Filter by location (if available in employee data)
+    if (locationFilter !== 'all') {
+      // Note: This assumes location info is available in employee data
+      // You may need to adjust based on actual data structure
+      filtered = filtered.filter((employee) => {
+        const city = employee.address?.city?.toLowerCase() || '';
+        const country = employee.address?.country?.toLowerCase() || '';
+        return (
+          city.includes(locationFilter.toLowerCase()) ||
+          country.includes(locationFilter.toLowerCase())
+        );
+      });
+    }
+
+    return filtered;
+  }, [allEmployees, departmentFilter, locationFilter]);
+
+  const employees = filteredEmployees;
+
+  // Fetch employees on initial load and when filters change
   useEffect(() => {
-    fetchEmployees();
-  }, [fetchEmployees]);
+    fetchEmployees({
+      searchTerm,
+      statusFilter,
+      employmentTypeFilter,
+      departmentFilter,
+      locationFilter,
+    });
+  }, [
+    fetchEmployees,
+    searchTerm,
+    statusFilter,
+    employmentTypeFilter,
+    departmentFilter,
+    locationFilter,
+  ]);
+
+  // Filter options
+  const statusOptions = [
+    { label: 'All Status', value: 'all' },
+    { label: 'Active', value: 'active' },
+    { label: 'Inactive', value: 'inactive' },
+  ];
+
+  const employmentTypeOptions = [
+    { label: 'All Types', value: 'all' },
+    { label: 'Full-time', value: 'full-time' },
+    { label: 'Part-time', value: 'part-time' },
+    { label: 'Contract', value: 'contract' },
+    { label: 'Temporary', value: 'temporary' },
+    { label: 'Intern', value: 'intern' },
+  ];
+
+  const departmentOptions = [
+    { label: 'All Departments', value: 'all' },
+    { label: 'Engineering', value: 'engineering' },
+    { label: 'Sales', value: 'sales' },
+    { label: 'Marketing', value: 'marketing' },
+    { label: 'HR', value: 'hr' },
+    { label: 'Finance', value: 'finance' },
+    { label: 'Operations', value: 'operations' },
+    { label: 'Customer Support', value: 'customer-support' },
+  ];
+
+  const locationOptions = [
+    { label: 'All Locations', value: 'all' },
+    { label: 'Remote', value: 'remote' },
+    { label: 'Office', value: 'office' },
+    { label: 'Hybrid', value: 'hybrid' },
+  ];
+
+  const filterConfigs = [
+    {
+      key: 'status',
+      label: 'Status',
+      icon: <i className="ri-user-line text-gray-500"></i>,
+      options: statusOptions,
+      value: statusFilter,
+      onChange: setStatusFilter,
+    },
+    {
+      key: 'employmentType',
+      label: 'Employment Type',
+      icon: <i className="ri-briefcase-line text-gray-500"></i>,
+      options: employmentTypeOptions,
+      value: employmentTypeFilter,
+      onChange: setEmploymentTypeFilter,
+    },
+  
+  ];
+
+  // Handle search change
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchTerm(e.target.value);
+  };
+
+  // Handle search clear
+  const handleSearchClear = () => {
+    setSearchTerm('');
+  };
+
+  // Handle clear all filters
+  const handleClearAllFilters = () => {
+    setSearchTerm('');
+    setStatusFilter('all');
+    setEmploymentTypeFilter('all');
+    setDepartmentFilter('all');
+    setLocationFilter('all');
+  };
 
   // Handle employee actions
   const handleViewEmployee = (id: string) => {
@@ -130,6 +259,14 @@ const People = () => {
       setShowDeleteModal(false);
       setEmployeeToDelete(null);
       setEmployeeToDeleteName('');
+      // Refresh the employee list with current filters
+      fetchEmployees({
+        searchTerm,
+        statusFilter,
+        employmentTypeFilter,
+        departmentFilter,
+        locationFilter,
+      });
     }
   };
 
@@ -163,19 +300,59 @@ const People = () => {
   const handleModalComplete = () => {
     setIsEditMode(false); // Reset edit mode
     closeModalWithoutConfirmation();
-    fetchEmployees(); // Refresh the employee list
+    fetchEmployees({
+      searchTerm,
+      statusFilter,
+      employmentTypeFilter,
+      departmentFilter,
+      locationFilter,
+    }); // Refresh the employee list
   };
 
   return (
     <RootLayout>
-      <div className="w-full p-6 pl-12">
-        <div className="flex justify-between items-center mb-6">
-          <Search placeholder="Search People" />
-          <Button
-            text="New Employee"
-            type="button"
-            onClick={handleNewEmployee}
+      <div
+        className={`${
+          context?.layoutMode === 'sidebar' ? 'w-full p-5 pl-12' : 'w-full p-5'
+        }`}
+      >
+        <div className="mb-6">
+          <DynamicFilter
+            searchValue={searchTerm}
+            onSearchChange={handleSearchChange}
+            onSearchClear={handleSearchClear}
+            searchPlaceholder="Search employees..."
+            filters={filterConfigs}
+            className="mb-4"
           />
+          <div className="flex justify-between items-center">
+            <div className="flex items-center gap-4">
+              <div className="text-sm text-gray-600">
+                Showing {employees.length} employee
+                {employees.length !== 1 ? 's' : ''}
+              </div>
+              {(searchTerm ||
+                statusFilter !== 'all' ||
+                employmentTypeFilter !== 'all' ||
+                departmentFilter !== 'all' ||
+                locationFilter !== 'all') && (
+                <button
+                  onClick={handleClearAllFilters}
+                  className="text-sm text-blue-600 hover:text-blue-800 font-medium flex items-center gap-1"
+                >
+                  <i className="ri-refresh-line"></i>
+                  Clear All Filters
+                </button>
+              )}
+            </div>
+            <Button
+              text="New Employee"
+              type="button"
+              icon={<i className="ri-file-add-line"></i>}
+              className="whitespace-nowrap"
+              onClick={handleNewEmployee}
+            />
+          </div>
         </div>
 
         {isFetching ? (
@@ -200,7 +377,6 @@ const People = () => {
         modalAnimation={modalAnimation}
         onClose={handleCloseModal}
         onComplete={handleModalComplete}
-        isEditMode={isEditMode}
       />
 
       {/* Employee Details Slideover */}

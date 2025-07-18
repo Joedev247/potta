@@ -146,7 +146,7 @@ const BudgetTable: React.FC<BudgetTableProps> = ({
             columns={columns}
             data={filteredData}
             ExpandableComponent={null}
-            expanded
+            expanded={false}
             pagination={Array.isArray(filteredData) && filteredData.length > 9}
           />
           <BudgetTransactionSlider

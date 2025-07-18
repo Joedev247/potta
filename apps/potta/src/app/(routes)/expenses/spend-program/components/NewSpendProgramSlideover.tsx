@@ -7,10 +7,12 @@ import { FiEye, FiEyeOff } from 'react-icons/fi';
 import RightSideModal from '../../re-imbursements/components/RightSideModal';
 import Select from '@potta/components/select';
 import PreSpendControlsForm from './PreSpendControlsForm';
+import { createSpendProgram } from '../utils/api';
 
 interface NewSpendProgramSlideoverProps {
   open: boolean;
   setOpen: (open: boolean) => void;
+  onCreated?: () => void;
 }
 
 const programTypes = [
@@ -70,6 +72,7 @@ const initialFormState = {
 const NewSpendProgramSlideover: React.FC<NewSpendProgramSlideoverProps> = ({
   open,
   setOpen,
+  onCreated,
 }) => {
   const [step, setStep] = useState(0);
   const [selected, setSelected] = useState<string>('');
@@ -80,14 +83,38 @@ const NewSpendProgramSlideover: React.FC<NewSpendProgramSlideoverProps> = ({
   const [showDescriptionError, setShowDescriptionError] = useState(false);
   const [showProgramNameError, setShowProgramNameError] = useState(false);
   const [showPreviewModal, setShowPreviewModal] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
 
   // Step 0: Type selection
   // Step 1: Form builder + preview
+
+  // In the final step, handle creation
+  const handleCreate = async (preSpendControls: any) => {
+    setIsSubmitting(true);
+    setSubmitError(null);
+    try {
+      await createSpendProgram({
+        type: selected as 'procurement' | 'card',
+        name: programName,
+        description,
+        form: formState.questions,
+        preSpendControls,
+      });
+      setIsSubmitting(false);
+      setOpen(false);
+      if (onCreated) onCreated();
+    } catch (err: any) {
+      setIsSubmitting(false);
+      setSubmitError(err?.message || 'Failed to create spend program');
+    }
+  };
 
   return (
     <Slider
       edit={false}
       title="New Spend Program"
+      buttonText="spend-program"
       open={open}
       setOpen={setOpen}
       noPanelScroll
@@ -292,11 +319,13 @@ const NewSpendProgramSlideover: React.FC<NewSpendProgramSlideoverProps> = ({
         <>
           <PreSpendControlsForm
             programName={programName}
-            onCreate={() => setOpen(false)}
+            onCreate={handleCreate}
             onBack={() => setStep(1)}
             onPreview={() => setShowPreviewModal(true)}
             showPreviewModal={showPreviewModal}
+            isSubmitting={isSubmitting}
           />
+          {submitError && <div className="text-red-500 p-2">{submitError}</div>}
           <RightSideModal
             open={showPreviewModal}
             setOpen={setShowPreviewModal}

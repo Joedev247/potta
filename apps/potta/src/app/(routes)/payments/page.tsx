@@ -4,7 +4,7 @@ import RootLayout from '../layout';
 import DateNavigation from '../payroll/timesheet/components/DateNavigation';
 import Boxes from './components/Boxes';
 import DashboardContent from './components/DashboardContent';
-
+import { ContextData } from '@potta/components/context';
 const Payment = () => {
   // State for date navigation
   const [cycleTab, setCycleTab] = useState('Daily');
@@ -13,7 +13,7 @@ const Payment = () => {
     start: new Date(),
     end: new Date(),
   });
-
+  const context = React.useContext(ContextData);
   // Handle date range changes based on cycle tab
   useEffect(() => {
     const today = new Date(selectedDate);
@@ -22,7 +22,11 @@ const Payment = () => {
 
   return (
     <RootLayout>
-      <div className="pl-16 pr-5 mt-10">
+      <div
+        className={`${
+          context?.layoutMode === 'sidebar' ? 'pl-16 !mt-4' : 'pl-5 !mt-4'
+        } pr-5 mt-10`}
+      >
         {/* Time cycle tabs and date navigation */}
         <DateNavigation
           cycleTab={cycleTab}

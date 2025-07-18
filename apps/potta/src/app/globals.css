@@ -229,18 +229,6 @@ label {
   border-right-width: 0px !important;
 }
 
-.react-google-flight-datepicker .date-picker {
-  border-radius: 0px !important;
-  background: transparent !important;
-  padding: 0px !important;
-}
-.react-google-flight-datepicker .date-picker-input {
-  border: 0px !important;
-  height: auto !important;
-}
-.react-google-flight-datepicker .date {
-  background: transparent !important;
-}
 .is-focus {
   border: 1px solid transparent !important;
 }

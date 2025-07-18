@@ -50,10 +50,10 @@ const VoucherTable = () => {
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(20);
   const [selectedValue, setSelectedValue] = useState<string | null>(null);
-   const [openViewModal, setOpenViewModal] = useState<string | null>(null);
-    const [openDeleteModal, setOpenDeleteModal] = useState<string | null>(null);
+  const [openViewModal, setOpenViewModal] = useState<string | null>(null);
+  const [openDeleteModal, setOpenDeleteModal] = useState<string | null>(null);
   const [isViewOpen, setIsViewOpen] = useState(false);
- 
+
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const filter: Filter = {
@@ -155,7 +155,7 @@ const VoucherTable = () => {
           {
             label: 'View',
             onClick: () => {
-               setOpenViewModal(row.uuid);
+              setOpenViewModal(row.uuid);
               setIsViewOpen(true);
             },
             className: 'hover:bg-gray-200',
@@ -250,7 +250,7 @@ const VoucherTable = () => {
         paginationTotalRows={data?.meta?.totalItems ?? 0}
         onChangePage={setPage}
         onChangeRowsPerPage={setLimit}
-        expanded={true}
+        expanded={false}
       />
 
       {openDeleteModal && (

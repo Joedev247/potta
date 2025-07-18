@@ -40,7 +40,11 @@ const Budgets: FC = () => {
 
   return (
     <RootLayout>
-      <div className="pl-16 pr-5 mt-10">
+      <div
+        className={`${
+          context?.layoutMode === 'sidebar' ? 'pl-16 !mt-4' : 'pl-5 !mt-4'
+        } pr-5 mt-10`}
+      >
         <div className="flex justify-between mt-10">
           <FilterComponent
             includeSearch={true}

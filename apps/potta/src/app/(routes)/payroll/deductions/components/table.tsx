@@ -9,7 +9,7 @@ import {
   DropdownMenuTrigger,
 } from '@potta/components/shadcn/dropdown';
 import { useDeductions } from '../hooks/useDeductions';
-// import ViewDeductionModal from './ViewDeductionModal';
+import ViewDeductionModal from './ViewDeductionModal';
 // import EditDeductionSlideover from './EditDeductionSlideover';
 // import DeleteDeductionModal from './DeleteDeductionModal';
 
@@ -107,7 +107,15 @@ const DeductionTable = () => {
   return (
     <>
       <DataGrid data={deductions} column={columns} loading={isLoading} />
-      {/* Modals/Slideover for view, edit, delete will go here */}
+      
+      {/* View Deduction Modal */}
+      <ViewDeductionModal
+        open={!!viewId}
+        setOpen={(open) => !open && setViewId(null)}
+        deductionId={viewId}
+      />
+      
+      {/* Modals/Slideover for edit, delete will go here */}
     </>
   );
 };

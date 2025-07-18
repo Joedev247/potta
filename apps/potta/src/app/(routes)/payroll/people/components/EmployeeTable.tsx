@@ -47,7 +47,9 @@ const EmployeeTable: React.FC<EmployeeTableProps> = ({
               />
             ) : (
               <img
-                src={"https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png"}
+                src={
+                  'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png'
+                }
                 alt={`${row.firstName} ${row.lastName}`}
                 className="h-full w-full object-cover"
               />
@@ -213,7 +215,7 @@ const EmployeeTable: React.FC<EmployeeTableProps> = ({
         columns={columns}
         data={employees}
         ExpandableComponent={null}
-        expanded
+        expanded={false}
         pagination={employees.length > 9}
         paginationTotalRows={totalPages * pageSize}
         onChangePage={onPageChange}

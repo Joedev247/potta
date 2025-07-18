@@ -15,10 +15,11 @@ import {
 
 interface PreSpendControlsFormProps {
   programName: string;
-  onCreate: () => void;
+  onCreate: (preSpendControls: any) => void;
   onBack: () => void;
   onPreview: () => void;
   showPreviewModal: boolean;
+  isSubmitting?: boolean;
 }
 
 const PreSpendControlsForm: React.FC<PreSpendControlsFormProps> = ({
@@ -27,6 +28,7 @@ const PreSpendControlsForm: React.FC<PreSpendControlsFormProps> = ({
   onBack,
   onPreview,
   showPreviewModal,
+  isSubmitting,
 }) => {
   const [allowEmployees, setAllowEmployees] = React.useState('all');
   const [requestedBy, setRequestedBy] = React.useState('all');
@@ -49,8 +51,16 @@ const PreSpendControlsForm: React.FC<PreSpendControlsFormProps> = ({
             text={`Create "${programName}"`}
             type="button"
             className="text-sm"
-            onClick={onCreate}
+            onClick={() =>
+              onCreate({
+                allowEmployees,
+                approver,
+                paymentMethod,
+                canChangePayment,
+              })
+            }
             icon={<i className="ri-file-add-line"></i>}
+            disabled={isSubmitting}
           />
           <Button
             text={showPreviewModal ? 'Hide preview' : 'View preview'}

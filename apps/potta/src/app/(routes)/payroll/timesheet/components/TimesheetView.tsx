@@ -1,17 +1,18 @@
 'use client';
-import React, { useState } from 'react';
-import { useQuery, useQueryClient } from '@tanstack/react-query';
+import React, { useMemo } from 'react';
+import { useQueryClient } from '@tanstack/react-query';
 import { format } from 'date-fns';
 import TimesheetTable from './table';
 import Button from '@potta/components/button';
-import axios from '@/config/axios.config';
 import CustomLoader from '@potta/components/loader';
 import Search from '@potta/components/search';
+import { useTimesheets } from '../hooks/useTimesheets';
+import { Timesheet } from '../../people/utils/types';
 
 interface TimesheetViewProps {
   dateRange: { start: Date; end: Date };
   buttonClick: () => void;
-  setSelectedEmployeeId?: (id: string) => void; // New prop to set the selected employee ID
+  setSelectedEmployeeId?: (id: string) => void;
 }
 
 const TimesheetView: React.FC<TimesheetViewProps> = ({
@@ -21,32 +22,8 @@ const TimesheetView: React.FC<TimesheetViewProps> = ({
 }) => {
   const queryClient = useQueryClient();
 
-  // Fetch timesheets with date range filter
-  const { data: timesheetsData, isLoading: isLoadingTimesheets } = useQuery({
-    queryKey: [
-      'timesheets',
-      format(dateRange.start, 'yyyy-MM-dd'),
-      format(dateRange.end, 'yyyy-MM-dd'),
-    ],
-    queryFn: async () => {
-      try {
-        const response = await axios.post('/timesheets/filter', {
-          limit: 100,
-          sortBy: ['date:DESC'],
-          filter: {
-            date: {
-              $gte: format(dateRange.start, 'yyyy-MM-dd'),
-              $lte: format(dateRange.end, 'yyyy-MM-dd'),
-            },
-          },
-        });
-        return response.data;
-      } catch (error) {
-        console.error('Error fetching timesheets:', error);
-        return { data: [] };
-      }
-    },
-  });
+  // Use the custom hook for timesheets
+  const { data: filteredTimesheets, isLoading } = useTimesheets(dateRange);
 
   // Format time for display (e.g., "08:00")
   const formatTime = (timeString: string | null | undefined): string => {
@@ -55,7 +32,7 @@ const TimesheetView: React.FC<TimesheetViewProps> = ({
       const date = new Date(timeString);
       return format(date, 'HH:mm');
     } catch (error) {
-      return timeString;
+      return timeString || '';
     }
   };
 
@@ -66,42 +43,35 @@ const TimesheetView: React.FC<TimesheetViewProps> = ({
   };
 
   // Calculate overtime hours
-  const calculateOvertime = (totalHours) => {
-    const hours = parseFloat(totalHours);
+  const calculateOvertime = (totalHours: number | string): string | number => {
+    const hours = parseFloat(totalHours as string);
     return isNaN(hours) ? 0 : hours > 8 ? (hours - 8).toFixed(1) : 0;
   };
 
   // Handle timesheet status change
-  const handleTimesheetStatusChange = (timesheetId, newStatus) => {
-    // Invalidate queries to refresh data
-    queryClient.invalidateQueries(['timesheets']);
-    queryClient.invalidateQueries(['timesheets-summary']);
+  const handleTimesheetStatusChange = (
+    timesheetId: string,
+    newStatus: string
+  ) => {
+    queryClient.invalidateQueries({ queryKey: ['timesheets'] });
+    queryClient.invalidateQueries({ queryKey: ['timesheets-summary'] });
   };
 
   // Handle adding hours for a specific employee
-  const handleAddHours = (userId) => {
-    // Set the selected employee ID in the parent component
+  const handleAddHours = (userId: string) => {
     if (setSelectedEmployeeId) {
       setSelectedEmployeeId(userId);
     }
-    // The modal is opened by the buttonClick function called in the table component
   };
 
   // Process timesheet data for the table
-  const processedData = React.useMemo(() => {
-    if (!timesheetsData?.data) return [];
-
-    // Create table rows for each timesheet
-    return timesheetsData.data.map((timesheet) => {
-      // Calculate total hours for this timesheet
+  const processedData = useMemo(() => {
+    if (!filteredTimesheets) return [];
+    return filteredTimesheets.map((timesheet: Timesheet) => {
       let totalHours = 0;
       let checkInTime = timesheet.check_in_time || '';
       let checkOutTime = timesheet.check_out_time || '';
-
-      // Get employee data
       const employee = timesheet.employee || {};
-
-      // Calculate hours if available
       if (timesheet.total_hours && parseFloat(timesheet.total_hours) > 0) {
         totalHours = parseFloat(timesheet.total_hours);
       } else if (timesheet.check_in_time && timesheet.check_out_time) {
@@ -109,26 +79,33 @@ const TimesheetView: React.FC<TimesheetViewProps> = ({
         const checkOut = new Date(timesheet.check_out_time);
         const diffMs = checkOut.getTime() - checkIn.getTime();
         const diffHours = diffMs / (1000 * 60 * 60);
-
-        // Subtract break minutes if available
         const breakHours = timesheet.break_minutes
           ? timesheet.break_minutes / 60
           : 0;
         totalHours = diffHours - breakHours;
       }
-
+      const breakMinutes = timesheet.break_minutes || 0;
+      const formatBreakTime = (minutes: number): string => {
+        if (minutes === 0) return '0 min';
+        if (minutes < 60) return `${minutes} min`;
+        const hours = Math.floor(minutes / 60);
+        const remainingMinutes = minutes % 60;
+        if (remainingMinutes === 0) return `${hours}h`;
+        return `${hours}h ${remainingMinutes}m`;
+      };
       return {
-        id: employee.uuid, // Employee ID
-        timesheetId: timesheet.uuid, // Timesheet ID for approval/rejection
+        id: employee.uuid,
+        timesheetId: timesheet.uuid,
         employee: `${employee.firstName || ''} ${employee.lastName || ''}`,
         totalHours: totalHours.toFixed(1),
+        breakTime: formatBreakTime(breakMinutes),
         breakDown: `${formatTime(checkInTime)} - ${formatTime(checkOutTime)}`,
         regularHours: calculateRegularHours(totalHours),
         overTime: calculateOvertime(totalHours),
         status: timesheet.status || 'Pending',
       };
     });
-  }, [timesheetsData]);
+  }, [filteredTimesheets]);
 
   return (
     <div className="mt-10">
@@ -138,16 +115,20 @@ const TimesheetView: React.FC<TimesheetViewProps> = ({
           <Search placeholder="Search People" />
         </div>
         <div className="flex space-x-2">
-          <Button type="button" text="New Time Entry" onClick={buttonClick} />
+          <Button
+            type="button"
+            icon={<i className="ri-file-add-line"></i>}
+            text="New Time Entry"
+            onClick={buttonClick}
+          />
         </div>
       </div>
-
       {/* Table or loading/empty states */}
-      {isLoadingTimesheets ? (
+      {isLoading ? (
         <div className="mt-4">
           <CustomLoader />
         </div>
-      ) : !timesheetsData?.data || timesheetsData.data.length === 0 ? (
+      ) : !processedData || processedData.length === 0 ? (
         <div className="text-center py-10  mt-4">
           <p className="text-gray-500">
             No timesheet entries found for this period.
@@ -157,9 +138,9 @@ const TimesheetView: React.FC<TimesheetViewProps> = ({
         <TimesheetTable
           data={processedData}
           onTimesheetStatusChange={handleTimesheetStatusChange}
-          showControls={false} // Don't show controls in the table since we already have them above
-          buttonClick={buttonClick} // Pass the buttonClick function to open the modal
-          onAddHours={handleAddHours} // Pass the handler to set the selected employee ID
+          showControls={false}
+          buttonClick={buttonClick}
+          onAddHours={handleAddHours}
         />
       )}
     </div>

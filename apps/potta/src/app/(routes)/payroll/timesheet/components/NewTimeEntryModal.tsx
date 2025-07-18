@@ -9,11 +9,30 @@ import { format } from 'date-fns';
 import { X, Save, Clock } from 'lucide-react';
 import { AnimatePresence, motion } from 'framer-motion';
 import SearchableSelect, { Option } from '@potta/components/searchableSelect';
+import * as yup from 'yup';
+import { DateInput } from '@potta/components/customDatePicker';
+import { TimeInput } from '@potta/components/timeInput';
 
 interface NewTimeEntryModalProps {
   onClose: () => void;
   onSuccess: () => void;
 }
+
+// Validation schema
+const timeEntrySchema = yup.object().shape({
+  employeeId: yup.string().required('Employee selection is required'),
+  date: yup
+    .date()
+    .required('Date is required')
+    .typeError('Please enter a valid date'),
+  check_in_time: yup.string().required('Check-in time is required'),
+  check_out_time: yup.string().required('Check-out time is required'),
+  break_minutes: yup
+    .number()
+    .min(0, 'Break minutes cannot be negative')
+    .max(480, 'Break minutes cannot exceed 8 hours')
+    .required('Break minutes is required'),
+});
 
 const NewTimeEntryModal: React.FC<NewTimeEntryModalProps> = ({
   onClose,
@@ -23,6 +42,7 @@ const NewTimeEntryModal: React.FC<NewTimeEntryModalProps> = ({
 
   // State for modal visibility to handle animations
   const [isVisible, setIsVisible] = useState(true);
+  const [errors, setErrors] = useState<Record<string, string>>({});
 
   const [newTimeEntry, setNewTimeEntry] = useState({
     employeeId: '',
@@ -31,6 +51,33 @@ const NewTimeEntryModal: React.FC<NewTimeEntryModalProps> = ({
     check_out_time: '17:00',
     break_minutes: 30,
   });
+
+  // Convert string date to Date object for the DateInput
+  const getDateValue = (): Date | undefined => {
+    try {
+      if (newTimeEntry.date) {
+        return new Date(newTimeEntry.date);
+      }
+      return undefined;
+    } catch (error) {
+      console.error('Invalid date format:', error);
+      return undefined;
+    }
+  };
+
+  // Handle date change from DateInput
+  const handleDateChange = (date: Date | undefined) => {
+    if (date) {
+      // Format date as YYYY-MM-DD
+      const formattedDate = format(date, 'yyyy-MM-dd');
+      handleTimeEntryChange('date', formattedDate);
+    }
+  };
+
+  // Handle time change from TimeInput
+  const handleTimeChange = (field: string, time: string) => {
+    handleTimeEntryChange(field, time);
+  };
 
   // Fetch employees
   const { data: employeesResponse, isLoading: isLoadingEmployees } = useQuery({
@@ -93,18 +140,59 @@ const NewTimeEntryModal: React.FC<NewTimeEntryModalProps> = ({
   // Handle time entry form changes
   const handleTimeEntryChange = (field, value) => {
     setNewTimeEntry((prev) => ({ ...prev, [field]: value }));
+
+    // Clear error for this field when user starts typing
+    if (errors[field]) {
+      setErrors((prev) => ({ ...prev, [field]: '' }));
+    }
+  };
+
+  // Validate form using yup
+  const validateForm = async () => {
+    try {
+      await timeEntrySchema.validate(newTimeEntry, { abortEarly: false });
+      setErrors({});
+      return true;
+    } catch (error) {
+      const validationErrors: Record<string, string> = {};
+      error.inner.forEach((err) => {
+        if (err.path) {
+          validationErrors[err.path] = err.message;
+        }
+      });
+      setErrors(validationErrors);
+      return false;
+    }
+  };
+
+  // Additional time validation
+  const validateTimes = () => {
+    const checkIn = new Date(
+      `${newTimeEntry.date}T${newTimeEntry.check_in_time}`
+    );
+    const checkOut = new Date(
+      `${newTimeEntry.date}T${newTimeEntry.check_out_time}`
+    );
+
+    if (checkOut <= checkIn) {
+      setErrors((prev) => ({
+        ...prev,
+        check_out_time: 'Check-out time must be after check-in time',
+      }));
+      return false;
+    }
+
+    return true;
   };
 
   // Create a new time entry
   const createTimeEntry = async () => {
     // Validate form
-    if (
-      !newTimeEntry.employeeId ||
-      !newTimeEntry.date ||
-      !newTimeEntry.check_in_time ||
-      !newTimeEntry.check_out_time
-    ) {
-      toast.error('Please fill all required fields');
+    const isFormValid = await validateForm();
+    const areTimesValid = validateTimes();
+
+    if (!isFormValid || !areTimesValid) {
+      toast.error('Please fix the validation errors');
       return;
     }
 
@@ -181,10 +269,9 @@ const NewTimeEntryModal: React.FC<NewTimeEntryModalProps> = ({
             <div className="p-6">
               <div className="space-y-6">
                 <div>
-                  <label className="block text-sm font-semibold mb-2 text-gray-700">
-                    Employee <span className="text-red-500">*</span>
-                  </label>
                   <SearchableSelect
+                    label="Employee"
+                    required
                     options={employeeOptions}
                     selectedValue={newTimeEntry.employeeId}
                     onChange={(value) =>
@@ -198,60 +285,64 @@ const NewTimeEntryModal: React.FC<NewTimeEntryModalProps> = ({
                     isDisabled={
                       isLoadingEmployees || createTimesheetMutation.isLoading
                     }
-                    required
                   />
+                  {errors.employeeId && (
+                    <p className="mt-1 text-sm text-red-600">
+                      {errors.employeeId}
+                    </p>
+                  )}
                 </div>
 
                 <div>
-                  <label className="block text-sm font-semibold mb-2 text-gray-700">
-                    Date <span className="text-red-500">*</span>
-                  </label>
-                  <Input
-                    type="date"
-                    value={newTimeEntry.date}
-                    onchange={(e) =>
-                      handleTimeEntryChange('date', e.target.value)
-                    }
-                    disabled={createTimesheetMutation.isLoading}
+                  <DateInput
+                    label="Date"
+                    placeholder="Select date"
+                    name="date"
+                    value={getDateValue()}
+                    onChange={handleDateChange}
                     required
+                    disabled={createTimesheetMutation.isLoading}
+                    errors={errors.date}
                   />
                 </div>
 
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-sm font-semibold mb-2 text-gray-700">
-                      Check In <span className="text-red-500">*</span>
-                    </label>
-                    <Input
-                      type="time"
+                    <TimeInput
+                      label="Check In"
+                      placeholder="Select check-in time"
+                      name="check_in_time"
                       value={newTimeEntry.check_in_time}
-                      onchange={(e) =>
-                        handleTimeEntryChange('check_in_time', e.target.value)
+                      onChange={(time) =>
+                        handleTimeChange('check_in_time', time)
                       }
-                      disabled={createTimesheetMutation.isLoading}
                       required
+                      disabled={createTimesheetMutation.isLoading}
+                      errors={errors.check_in_time}
+                      format="12"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-sm font-semibold mb-2 text-gray-700">
-                      Check Out <span className="text-red-500">*</span>
-                    </label>
-                    <Input
-                      type="time"
+                    <TimeInput
+                      label="Check Out"
+                      placeholder="Select check-out time"
+                      name="check_out_time"
                       value={newTimeEntry.check_out_time}
-                      onchange={(e) =>
-                        handleTimeEntryChange('check_out_time', e.target.value)
+                      onChange={(time) =>
+                        handleTimeChange('check_out_time', time)
                       }
-                      disabled={createTimesheetMutation.isLoading}
                       required
+                      disabled={createTimesheetMutation.isLoading}
+                      errors={errors.check_out_time}
+                      format="12"
                     />
                   </div>
                 </div>
 
                 <div>
                   <label className="block text-sm font-semibold mb-2 text-gray-700">
-                    Break (minutes)
+                    Break (minutes) <span className="text-red-500">*</span>
                   </label>
                   <Input
                     type="number"
@@ -259,13 +350,17 @@ const NewTimeEntryModal: React.FC<NewTimeEntryModalProps> = ({
                     onchange={(e) =>
                       handleTimeEntryChange(
                         'break_minutes',
-                        parseInt(e.target.value)
+                        parseInt(e.target.value) || 0
                       )
                     }
                     disabled={createTimesheetMutation.isLoading}
-                    min="0"
-                    max="120"
+                    required
                   />
+                  {errors.break_minutes && (
+                    <p className="mt-1 text-sm text-red-600">
+                      {errors.break_minutes}
+                    </p>
+                  )}
                 </div>
 
                 {/* Optional notes field */}

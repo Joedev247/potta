@@ -1,4 +1,3 @@
-// src/app/dashboard/page.tsx (or your desired route)
 'use client';
 
 import * as React from 'react';
@@ -7,6 +6,7 @@ import { PaymentRequestDataTableWrapper } from './components/table';
 import Filter from './components/filters';
 import RootLayout from '../../layout';
 import { mockPaymentRequests } from '../budgets/details/utils/data';
+import { ContextData } from '@potta/components/context';
 // Import your components and data
 
 // Import the NEW Table Wrapper Component
@@ -15,6 +15,7 @@ export default function DashboardPage() {
   const [searchTerm, setSearchTerm] = React.useState('');
   const [isLoading, setIsLoading] = React.useState(false); // Example loading state
   const [requests, setRequests] = React.useState(mockPaymentRequests);
+  const context = React.useContext(ContextData);
 
   // Basic filtering example (can be expanded)
   const filteredRequests = requests.filter(
@@ -49,11 +50,15 @@ export default function DashboardPage() {
 
   return (
     <RootLayout>
-      <div className=" bg-gray-50 min-h-[92vh] space-y-14 pl-16 pr-5 w-full pt-6">
+      <div
+        className={`${
+          context?.layoutMode === 'sidebar' ? 'pl-16 !mt-4' : 'pl-5 !mt-4'
+        } min-h-[92vh] space-y-14 pr-5 w-full`}
+      >
         {/* Top Row Cards (same as before) */}
 
         {/* Action/Filter Row (same as before) */}
-        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mt-8">
+        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mt-2">
           {/* Search and Filters */}
           <Filter onNew={handleAddReimbursement} />
         </div>

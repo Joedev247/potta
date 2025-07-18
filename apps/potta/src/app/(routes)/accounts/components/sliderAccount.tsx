@@ -216,8 +216,6 @@ const SliderAccount: React.FC<SliderAccountProps> = ({
         )}
 
         <div className="mb-4">
-          <h3 className="text-sm font-medium mb-2">Account Details</h3>
-
           {/* Account Type */}
           <div className="mb-4">
             <SearchableSelect
@@ -307,13 +305,6 @@ const SliderAccount: React.FC<SliderAccountProps> = ({
             type="submit"
             text={isLoading ? 'Creating Account...' : 'Create Account'}
             onClick={handleSubmit}
-            disabled={isLoading}
-          />
-          <Button
-            type="button"
-            text="Cancel"
-            theme="danger"
-            onClick={() => setOpen(false)}
             disabled={isLoading}
           />
         </div>

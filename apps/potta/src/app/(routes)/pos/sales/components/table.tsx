@@ -87,7 +87,7 @@ const SaleTable = () => {
 
   // Fetch receipts data using the hook
   const { data, isLoading, error } = useGetAllSalesReceipts(filter);
- const handleRowClick = (row: ResponseSalesReceipt) => {
+  const handleRowClick = (row: ResponseSalesReceipt) => {
     setOpenViewModal(row.uuid);
     setIsViewOpen(true);
   };
@@ -137,8 +137,11 @@ const SaleTable = () => {
     {
       name: ``,
       selector: (row: ResponseSalesReceipt) => (
-        <div className=""><FileDown /></div>),
-        width: '50px',
+        <div className="">
+          <FileDown />
+        </div>
+      ),
+      width: '50px',
     },
     {
       name: 'Resolution',
@@ -155,10 +158,9 @@ const SaleTable = () => {
           </div>
         );
       },
-      hasBorderLeft: true,          // Left border for data cells
-  headerBorderLeft: true,       // Left border for header cell
-      width: "150px"
-
+      hasBorderLeft: true, // Left border for data cells
+      headerBorderLeft: true, // Left border for header cell
+      width: '150px',
     },
     {
       name: '',
@@ -230,13 +232,13 @@ const SaleTable = () => {
     <div className="mt-10">
       <Filter />
       <MyTable
-      maxHeight="50vh"
+        maxHeight="50vh"
         minHeight="50vh"
         columns={columns}
         selectable={true}
         data={receiptsData}
         pagination
-        expanded
+        expanded={false}
         pending={isLoading}
         paginationServer
         paginationTotalRows={data?.meta?.totalItems ?? 0}
@@ -246,7 +248,7 @@ const SaleTable = () => {
       />
 
       {/* Add your modal components here when implemented */}
-   
+
       {openDeleteModal && (
         <DeleteModal
           recieptID={openDeleteModal}
@@ -261,7 +263,6 @@ const SaleTable = () => {
           setOpen={setIsViewOpen}
         />
       )}
-     
     </div>
   );
 };

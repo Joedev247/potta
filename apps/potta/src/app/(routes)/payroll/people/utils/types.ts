@@ -249,3 +249,15 @@ export interface Employee {
     status: string;
   }>;
 }
+
+export interface Timesheet {
+  uuid: string;
+  employee?: { uuid: string; firstName?: string; lastName?: string };
+  check_in_time?: string;
+  check_out_time?: string;
+  total_hours?: string;
+  break_minutes?: number;
+  status?: string;
+  createdAt: string;
+  [key: string]: any;
+}

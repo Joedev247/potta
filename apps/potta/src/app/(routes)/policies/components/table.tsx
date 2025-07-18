@@ -84,6 +84,7 @@ interface Policy {
   mileageRequirements: MileageRequirements | null;
   branchId: string;
   rules: Rule[];
+  status: string; // Added status for the new PolicyCard
 }
 
 interface ApiResponse {
@@ -96,6 +97,44 @@ interface ApiResponse {
   };
 }
 
+const requirementIcons: Record<string, { icon: React.ReactNode; label: string; description: string }> = {
+  requireReceipt: {
+    icon: <i className="ri-receipt-2-line text-gray-600" />,
+    label: 'Receipt Required',
+    description: 'Must attach receipt for this expense'
+  },
+  requireMemo: {
+    icon: <i className="ri-file-text-line text-gray-600" />,
+    label: 'Memo Required',
+    description: 'Must provide a memo explaining the expense'
+  },
+  requireScreenshots: {
+    icon: <i className="ri-image-line text-gray-600" />,
+    label: 'Screenshots Required',
+    description: 'Must attach screenshots as proof'
+  },
+  requireNetSuiteCustomerJob: {
+    icon: <i className="ri-briefcase-line text-gray-600" />,
+    label: 'NetSuite Customer/Job',
+    description: 'Must select NetSuite customer or job'
+  },
+  requireGpsCoordinates: {
+    icon: <i className="ri-map-pin-line text-gray-600" />,
+    label: 'GPS Coordinates',
+    description: 'Must include GPS location data'
+  },
+  businessPurpose: {
+    icon: <i className="ri-building-2-line text-gray-600" />,
+    label: 'Business Purpose',
+    description: 'Must specify business purpose'
+  },
+  requireBeforeAfterScreenshots: {
+    icon: <i className="ri-split-cells-horizontal text-gray-600" />,
+    label: 'Before/After Screenshots',
+    description: 'Must provide before and after screenshots'
+  },
+};
+
 const PolicyCard = ({
   policy,
   onView,
@@ -105,7 +144,6 @@ const PolicyCard = ({
   onView: (policy: Policy) => void;
   onDelete: (policy: Policy) => void;
 }) => {
-  // Get requirements from the first rule (assuming all rules have the same requirements)
   const requirements = policy.rules[0]?.requirements || {
     requireReceipt: false,
     requireMemo: false,
@@ -116,95 +154,94 @@ const PolicyCard = ({
     requireBeforeAfterScreenshots: false,
   };
 
-  // Format requirements for display
-  const requirementsList = [
-    requirements.requireReceipt && 'Receipt',
-    requirements.requireMemo && 'Memo',
-    requirements.requireScreenshots && 'Screenshots',
-    requirements.requireNetSuiteCustomerJob && 'NetSuite Customer/Job',
-    requirements.requireGpsCoordinates && 'GPS Coordinates',
-    requirements.businessPurpose && 'Business Purpose',
-    requirements.requireBeforeAfterScreenshots && 'Before/After Screenshots',
-  ]
-    .filter(Boolean)
-    .join(' • ');
+  const activeRequirements = Object.entries(requirements).filter(([, value]) => value);
 
   return (
-    <Card className="bg-white shadow-sm hover:shadow-md transition-shadow duration-200 cursor-pointer relative overflow-hidden">
-      <CardHeader className="pb-6">
-        <div className="flex justify-between items-start gap-2">
-          <div>
-            <div className="flex items-center gap-2 mb-1">
-              <CardTitle className="text-lg font-semibold">
+    <Card className="relative overflow-hidden bg-white shadow-sm  transition-all duration-200 cursor-pointer border border-gray-200">
+      <div className="absolute top-0 left-0 w-1 h-full bg-gradient-to-b from-green-500 to-green-600" />
+      <CardHeader className="pb-3">
+        <div className="flex justify-between items-start gap-3">
+          <div className="flex-1 min-w-0">
+            <div className="flex items-center gap-2 mb-2">
+              <CardTitle className="text-lg font-semibold truncate text-gray-900">
                 {policy.name}
               </CardTitle>
-              <div className="flex items-center gap-1.5 px-2.5 py-1 bg-green-50 text-green-700 rounded-full text-sm">
-                <div className="w-1.5 h-1.5 bg-green-500 rounded-full" />
+              <span className={`px-2 py-1 text-xs font-medium ${
+                policy.status === 'active' 
+                  ? 'bg-green-50 text-green-700 border border-green-200' 
+                  : 'bg-gray-50 text-gray-600 border border-gray-200'
+              }`}>
                 {policy.status}
-              </div>
+              </span>
             </div>
-            <p className="text-gray-500">
-              {policy.rules.length}{' '}
-              {policy.rules.length === 1 ? 'Rule' : 'Rules'}
-            </p>
+            <div className="flex items-center gap-3 text-sm text-gray-600">
+              <span className="flex items-center gap-1">
+                <i className="ri-settings-3-line text-gray-400"></i>
+                {policy.rules.length} {policy.rules.length === 1 ? 'Rule' : 'Rules'}
+              </span>
+              {policy.transactionType && (
+                <span className="flex items-center gap-1 px-2 py-1 bg-gray-50 border border-gray-200 text-xs">
+                  <i className="ri-exchange-line text-gray-400"></i>
+                  {policy.transactionType}
+                </span>
+              )}
+            </div>
           </div>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <button className="p-1 hover:bg-gray-100 rounded">
-                <MoreVertical size={16} />
+              <button className="p-1.5 hover:bg-gray-100 transition-colors">
+                <MoreVertical size={16} className="text-gray-500" />
               </button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              <DropdownMenuItem onClick={() => onView(policy)}>
-                <Icon
-                  icon="material-symbols:visibility-outline"
-                  className="mr-2 h-4 w-4"
-                />
-                <span>View Policy</span>
+            <DropdownMenuContent align="end" className="w-40">
+              <DropdownMenuItem onClick={() => onView(policy)} className="cursor-pointer">
+                <Icon icon="material-symbols:visibility-outline" className="mr-2 h-4 w-4" />
+                <span>View Details</span>
               </DropdownMenuItem>
-              <DropdownMenuItem
-                onClick={() => onDelete(policy)}
-                className="text-red-600"
-              >
-                <Icon
-                  icon="material-symbols:delete-outline"
-                  className="mr-2 h-4 w-4"
-                />
+              <DropdownMenuItem onClick={() => onDelete(policy)} className="text-red-600 cursor-pointer">
+                <Icon icon="material-symbols:delete-outline" className="mr-2 h-4 w-4" />
                 <span>Delete Policy</span>
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
       </CardHeader>
-      <CardContent>
-        <div className="space-y-4">
+      <CardContent className="pt-0 pb-4">
+        <div className="space-y-3">
+          {/* Requirements Section - Compact */}
           <div>
-            <p className="text-sm font-medium text-gray-500 mb-2">
-              Requirements
-            </p>
-            <div className="bg-gray-50 p-2 rounded-lg">
-              <p
-                className="text-sm text-gray-600 truncate"
-                title={requirementsList}
-              >
-                {requirementsList || 'No requirements'}
-              </p>
+            <div className="flex items-center gap-2 mb-2">
+              <span className="text-sm font-medium text-gray-700">Requirements</span>
+              <span className="text-xs text-gray-500">({activeRequirements.length})</span>
             </div>
+            {activeRequirements.length === 0 ? (
+              <div className="text-sm text-gray-500 italic">No special requirements</div>
+            ) : (
+              <div className="flex flex-wrap gap-1">
+                {activeRequirements.map(([key, value]) => {
+                  const req = requirementIcons[key];
+                  return req ? (
+                    <span key={key} className="inline-flex items-center gap-1 px-2 py-1 bg-gray-50 border border-gray-200 text-xs text-gray-700">
+                      {req.icon}
+                      {req.label}
+                    </span>
+                  ) : null;
+                })}
+              </div>
+            )}
           </div>
 
+          {/* Rules Summary - Compact */}
           <div>
-            <p className="text-sm font-medium text-gray-500 mb-2">
-              Rules Overview
-            </p>
-            <div className="space-y-2">
-              {policy.rules.map((rule, index) => (
-                <div key={rule.uuid} className="bg-gray-50 p-2 rounded-lg">
-                  <p className="text-sm font-medium">Rule {index + 1}</p>
-                  <p className="text-xs text-gray-500">
-                    {rule.conditions.length} conditions • {rule.actions.length}{' '}
-                    actions
-                  </p>
-                </div>
+            <div className="flex items-center gap-2 mb-2">
+              <span className="text-sm font-medium text-gray-700">Rules Summary</span>
+            </div>
+            <div className="flex flex-wrap gap-1">
+              {policy.rules.map((rule, idx) => (
+                <span key={rule.id || idx} className="inline-flex items-center gap-1 px-2 py-1 bg-green-50 border border-green-200 text-xs text-green-700">
+                  <i className="ri-settings-3-line text-green-600"></i>
+                  Rule {idx + 1}: {rule.conditions.length} cond. / {rule.actions.length} act.
+                </span>
               ))}
             </div>
           </div>
