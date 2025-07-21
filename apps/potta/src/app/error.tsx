@@ -24,7 +24,7 @@ export default function Error({
         </div>
 
         {/* Error Message */}
-        <h2 className="text-2xl font-bold text-gray-900 mb-3">
+        <h2 className="text-2xl font-semibold text-gray-900 mb-3">
           Oops! Something unexpected happened
         </h2>
 

@@ -20,6 +20,7 @@ export default function RootLayout({ children }) {
   const [show, setShow] = useState(false);
   const pathname = usePathname();
   const isHome = pathname === '/';
+  const isOrganigrammer = pathname === '/organigrammer';
   const context = useContext(ContextData);
 
   // Show loader until layout is loaded from localStorage
@@ -44,6 +45,8 @@ export default function RootLayout({ children }) {
 
           <div
             className={`flex duration-500 ease-in-out ${
+              isOrganigrammer ? '!pl-0' : ''
+            } ${
               context?.layoutMode === 'sidebar' && !isHome
                 ? context?.toggle
                   ? 'flex w-full pl-[35px]'

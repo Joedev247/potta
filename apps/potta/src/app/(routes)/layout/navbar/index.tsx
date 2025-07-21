@@ -93,6 +93,7 @@ const routesWithoutBox = [
 const routesWithoutBlueBackground = [
   { main: 'payroll' }, // Exclude all payroll pages
   { main: 'payments' },
+  { main: 'organigrammer' },
   { main: 'expenses' },
   { main: 'settings' },
   { main: 'accounts' },
@@ -291,7 +292,7 @@ export default function Navbar() {
       >
         <div className="flex items-center gap-20 py-4">
           <Link href={'/'} className="flex items-center ml-8 -mt-2"></Link>
-          <h1 className="font-medium text-3xl -ml-14 capitalize">
+          <h1 className="font-medium text-3xl --14 capitalize">
             {getTitle()}
           </h1>
         </div>
