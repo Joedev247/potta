@@ -12,7 +12,7 @@ const SideBar = () => {
     <div className='h-screen flex flex-col justify-between items-center primary p-2 w-full'>
       <div className='mt-2'>
         <div className="flex place-content-center rounded-md p-2">
-          <Image src="/icons/dashboard.svg" width={20} height={20} alt="" />
+          <img src="/icons/dashboard.svg" width={20} height={20} alt="" />
         </div>
         <div className='mt-10 flex place-content-center rounded-md hover:bg-green-100 p-2'>
           <ButtonIcon />
@@ -21,7 +21,7 @@ const SideBar = () => {
       <div className='flex justify-center'>
         <div className='flex space-y-3 flex-col'>
           <div className=' hover:bg-gray-200 rounded-full p-1.5' onClick={() => push("/settings")}>
-            <Image src="/icons/settings-outline.svg" height={24} width={24} alt="" />
+            <img src="/icons/settings-outline.svg" height={24} width={24} alt="" />
           </div>
           <div className='relative' onClick={() => setOpen(!open)}>
             <button

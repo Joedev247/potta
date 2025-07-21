@@ -5,6 +5,7 @@ import Select from '@potta/components/select';
 import SearchableSelect from '@potta/components/searchableSelect';
 import { Switch } from '@headlessui/react';
 import { peopleApi } from '../utils/api';
+import { Country } from 'country-state-city';
 import {
   getCountries,
   getCountryName,

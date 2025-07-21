@@ -1,3 +1,4 @@
+"use client"
 import React, { useState } from 'react';
 import Input from '@potta/components/input';
 import CustomSelect from '@potta/components/react-select';

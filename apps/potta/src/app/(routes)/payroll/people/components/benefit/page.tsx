@@ -7,12 +7,23 @@ import Button from '@potta/components/button';
 import { useBenefits } from './hooks/useBenefits';
 import { useEmployeeBenefits } from './hooks/useEmployeeBenefits';
 
+interface PageProps {
+  params: { personId?: string };
+  searchParams: { [key: string]: string | string[] | undefined };
+}
+
+export default async function Page({ params, searchParams }: PageProps) {
+  const personId = params.personId;
+
+  return <BenefitContent personId={personId} />;
+}
+
 interface BenefitProps {
   personId?: string;
   onComplete?: () => void;
 }
 
-const Benefit: React.FC<BenefitProps> = ({ personId, onComplete }) => {
+const BenefitContent: React.FC<BenefitProps> = ({ personId, onComplete }) => {
   // Fetch available benefits
   const { benefits: benefitOptions, loading: benefitsLoading } = useBenefits();
 
@@ -240,5 +251,3 @@ const Benefit: React.FC<BenefitProps> = ({ personId, onComplete }) => {
     </div>
   );
 };
-
-export default Benefit;

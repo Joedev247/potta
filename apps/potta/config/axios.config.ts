@@ -1,4 +1,8 @@
-import Axios, { AxiosResponse, InternalAxiosRequestConfig } from 'axios';
+import Axios, {
+  AxiosResponse,
+  InternalAxiosRequestConfig,
+  AxiosHeaders,
+} from 'axios';
 
 const axios = Axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_BASE_URL,
@@ -20,7 +24,7 @@ axios.interceptors.request.use((config: InternalAxiosRequestConfig) => {
 
   // For FormData (file uploads), don't set Content-Type as the browser will set it with the boundary
   if (config.data instanceof FormData) {
-    delete config.headers['Content-Type'];
+    config.headers.delete('Content-Type');
   }
 
   config.headers['accept'] = '*/*';
@@ -73,4 +77,8 @@ axios.interceptors.response.use(
 
 export default axios;
 
-// anywhere where u need axios, import it from this directory and not from axios itself
+
+
+
+  
+  

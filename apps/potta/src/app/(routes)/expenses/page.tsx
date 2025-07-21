@@ -4,11 +4,11 @@ import RootLayout from '../layout';
 import Select from '../../../components/select';
 import DashboardCollection from '../dashboard/components/collection';
 import DashboardExpenses from '../dashboard/components/expenses';
-import CustomDatePicker from '../../../components/CustomDatePicker';
 import Icon from '@potta/components/icon_fonts/icon';
 import { useQuery } from '@tanstack/react-query';
 import axios from '@/config/axios.config';
 import { ContextData } from '@potta/components/context';
+import CustomDatePicker from '@potta/components/customDatePicker';
 
 const Dashboard = () => {
   const DEFAULT_ORGANIZATION_ID = 'f7b1b3b0-0b1b-4b3b-8b1b-0b1b3b0b1b3c';

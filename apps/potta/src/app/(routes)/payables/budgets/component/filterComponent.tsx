@@ -11,7 +11,7 @@ interface FilterComponentProps {
   activeSort: (isSorted: boolean) => void;
   includeDatePicker: boolean;
   includePopover: boolean;
-  children: ReactNode;
+  children?: ReactNode;
 }
 
 const FilterComponent: FC<FilterComponentProps> = ({
@@ -66,9 +66,11 @@ const FilterComponent: FC<FilterComponentProps> = ({
         <DateRangePickerComponent />
       </div>
 
-      <div className={`flex ${includePopover ? '' : 'hidden'}`}>
-        <CustomPopover>{children}</CustomPopover>
-      </div>
+      {includePopover && children && (
+        <div className="flex">
+          <CustomPopover>{children}</CustomPopover>
+        </div>
+      )}
     </div>
   );
 };

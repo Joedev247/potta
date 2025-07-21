@@ -1,3 +1,5 @@
+'use client';
+
 import React from 'react';
 import RootLayout from '../../layout';
 import Filter from './components/filters';
@@ -6,6 +8,7 @@ import { ContextData } from '@potta/components/context';
 
 const Files = () => {
   const context = React.useContext(ContextData);
+
   return (
     <RootLayout>
       <div
@@ -18,4 +21,5 @@ const Files = () => {
     </RootLayout>
   );
 };
+
 export default Files;

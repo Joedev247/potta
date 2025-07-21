@@ -77,10 +77,10 @@ const ModalInvoice: FC<IModalInvoice> = ({ isOpen, setIsOpen }) => {
                          hover:bg-gray-50 active:bg-gray-100 h-full"
               >
                 <div className="flex-shrink-0 relative w-16 h-16">
-                  <Image
+                  <img
                     src={item.image}
                     alt={item.title}
-                    fill
+                    // fill
                     className="object-contain"
                     sizes="(max-width: 48px) 100vw"
                   />

@@ -40,6 +40,7 @@ const ReimbursementDetails = ({ data }: { data: any }) => {
         <div className="font-semibold text-gray-700 mb-4">
           Approval Progress
         </div>
+        
         <div className="flex flex-col gap-0 w-full relative">
           {approvers.map((approver, idx) => (
             <React.Fragment key={approver.id}>

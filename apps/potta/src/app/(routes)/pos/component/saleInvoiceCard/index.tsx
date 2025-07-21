@@ -322,7 +322,7 @@ const SaleInvoiceCard = () => {
                     menuItem.stock === 0 ? 'opacity-50' : ''
                   }`}
                 >
-                  <Image
+                  <img
                     width={100}
                     height={100}
                     src={menuItem.image || '/images/placeholder.png'}

@@ -18,6 +18,7 @@ import PTOTab from './employeeTabs/PTOTab';
 import ShiftsTab from './employeeTabs/ShiftsTab';
 import PayInfoTab from './employeeTabs/PayInfoTab';
 import { useRoles } from '../hooks/useRoles';
+import { Avatar, AvatarImage, AvatarFallback } from '@potta/components/avatar';
 
 const TABS = [
   'Personal',

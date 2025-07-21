@@ -21,7 +21,7 @@ const ContentSidebar = () => {
     return (
       <div onClick={onClick} className={`w-full h-12 cursor-pointer flex justify-center items-center hover:bg-gray-50 ${name == text.toLowerCase() ? 'primary' : ''}`}>
         <div className='flex space-x-2 px-2' >
-          <Image src={src} width={30} height={30} alt="" />
+          <img src={src} width={30} height={30} alt="" />
           <div>
             <p className={`capitalize ${name == text.toLowerCase() ? "font-semibold" : ""}`}>{text}</p>
           </div>

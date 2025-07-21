@@ -1,3 +1,4 @@
+"use client"
 import React, { useState } from 'react';
 import { SingleValue } from 'react-select';
 import Control from './components/control';

@@ -169,7 +169,7 @@ const Boxes = () => {
             </p>
           </div>
 
-          <div className="mb-4 mt-10 text-left font-semibold text-xl ">
+          <div className="mb-4 mt-10 text-left font-medium text-xl ">
             {item.amount}
           </div>
         </div>

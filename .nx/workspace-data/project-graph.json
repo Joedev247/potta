@@ -18798,6 +18798,11 @@
       },
       {
         "source": "potta",
+        "target": "npm:@internationalized/date",
+        "type": "static"
+      },
+      {
+        "source": "potta",
         "target": "npm:next",
         "type": "static"
       },
@@ -18849,11 +18854,6 @@
       {
         "source": "potta",
         "target": "npm:react-pro-sidebar",
-        "type": "static"
-      },
-      {
-        "source": "potta",
-        "target": "npm:@internationalized/date",
         "type": "static"
       },
       {
@@ -56562,5 +56562,5 @@
   },
   "version": "6.0",
   "errors": [],
-  "computedAt": 1747414793169
+  "computedAt": 1749115501853
 }
