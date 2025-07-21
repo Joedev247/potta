@@ -7,6 +7,7 @@ import { useContext, useState } from 'react';
 import { usePathname } from 'next/navigation';
 import { ContextData } from '../../../components/context';
 import { Toaster } from 'sonner';
+import PottaLoader from '../../../components/pottaloader';
 
 // Force dynamic rendering
 export const dynamic = 'force-dynamic';
@@ -20,6 +21,15 @@ export default function RootLayout({ children }) {
   const pathname = usePathname();
   const isHome = pathname === '/';
   const context = useContext(ContextData);
+
+  // Show loader until layout is loaded from localStorage
+  if (!context?.isLayoutLoaded) {
+    return (
+      <div className="relative flex w-full h-screen bg-white">
+        <PottaLoader size="lg" />
+      </div>
+    );
+  }
 
   return (
     <div className="relative flex w-full h-screen">

@@ -87,7 +87,7 @@ const MyTable: FC<TableProps & { pending?: boolean }> = ({
         });
       }
     }
-  }, []);
+  }, [data]); // Add data as dependency to ensure it runs when data changes
 
   // Process columns to add cell styling for borders
   const processedColumns = columns.map((column) => {

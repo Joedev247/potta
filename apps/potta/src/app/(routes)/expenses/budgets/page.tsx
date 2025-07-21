@@ -1,5 +1,5 @@
 'use client';
-import React, { useState } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import RootLayout from '../../layout';
 import { BudgetCard } from './component/budgetCard';
 import { Budget } from './utils/types';
@@ -49,51 +49,64 @@ const BudgetCardSkeleton = () => (
 );
 
 export default function BudgetsPage() {
-  const [search, setSearch] = useState('');
-  const [status, setStatus] = useState('pending');
-  const [date, setDate] = useState('All Time');
+  const [searchTerm, setSearchTerm] = useState('');
   const [activeTab, setActiveTab] = useState('active');
-  const { budgets, meta, loading, error, updateFilter, refetch } = useBudgets({
-    search,
-    status,
-    date,
-  });
-  const context = React.useContext(ContextData);
+  const { budgets, meta, loading, error, updateFilter, refetch } = useBudgets();
 
-  // Update budgets when filters change
-  React.useEffect(() => {
-    updateFilter({ search, status, date, page: 1 });
-  }, [search, status, date, updateFilter]);
+  // Debounced search effect
+  useEffect(() => {
+    const timeoutId = setTimeout(() => {
+      updateFilter({ search: searchTerm, page: 1, status: activeTab });
+    }, 500);
+
+    return () => clearTimeout(timeoutId);
+  }, [searchTerm, activeTab, updateFilter]);
+
+  // Handle search input change
+  const handleSearchChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      setSearchTerm(e.target.value);
+    },
+    []
+  );
 
   // Handle tab change
-  const handleTabChange = (value: string) => {
+  const handleTabChange = useCallback((value: string) => {
     setActiveTab(value);
-    updateFilter({ status: value, page: 1 });
-  };
+  }, []);
+
+  // Handle pagination
+  const handlePreviousPage = useCallback(() => {
+    updateFilter({
+      page: Math.max(1, (meta?.currentPage || 1) - 1),
+      status: activeTab,
+    });
+  }, [meta?.currentPage, activeTab, updateFilter]);
+
+  const handleNextPage = useCallback(() => {
+    updateFilter({
+      page: Math.min(meta?.totalPages || 1, (meta?.currentPage || 1) + 1),
+      status: activeTab,
+    });
+  }, [meta?.currentPage, meta?.totalPages, activeTab, updateFilter]);
+
+  const context = React.useContext(ContextData);
 
   return (
     <RootLayout>
-      <div
-        className={`${
+      <div className={`${
           context?.layoutMode === 'sidebar' ? 'pl-16 !mt-4' : 'pl-5 !mt-4'
-        } h-full pr-5 w-full`}
-      >
+        } h-full pr-5 w-full`}>
         {/* Header Section */}
-        <div className="mb-6 flex flex-col border-b border-gray-200   md:flex-row md:items-center md:justify-between gap-4">
+        <div className="mb-6 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
           {/* Search and Filters */}
-          <Filter
-            search={search}
-            setSearch={setSearch}
-            status={status}
-            setStatus={setStatus}
-            date={date}
-            setDate={setDate}
-          />
+          <Filter />
         </div>
 
         {/* Custom Tabs */}
         <div className="w-[30%] flex mb-6">
-          <div
+          <button
+            type="button"
             onClick={() => handleTabChange('active')}
             className={`w-full h-12 flex justify-center cursor-pointer items-center bg-[#F3FBFB] ${
               activeTab === 'active' &&
@@ -101,8 +114,9 @@ export default function BudgetsPage() {
             }`}
           >
             <p>Active Budgets</p>
-          </div>
-          <div
+          </button>
+          <button
+            type="button"
             onClick={() => handleTabChange('archived')}
             className={`w-full h-12 flex justify-center cursor-pointer items-center bg-[#F3FBFB] ${
               activeTab === 'archived' &&
@@ -110,7 +124,7 @@ export default function BudgetsPage() {
             }`}
           >
             <p>Archived Budgets</p>
-          </div>
+          </button>
         </div>
 
         {/* Budgets Grid */}
@@ -148,31 +162,18 @@ export default function BudgetsPage() {
             <div className="flex space-x-2">
               <Button
                 variant="outline"
-                onClick={() =>
-                  updateFilter({
-                    page: Math.max(1, (meta.currentPage || 1) - 1),
-                    status: activeTab,
-                  })
-                }
-                disabled={meta.currentPage === 1}
+                onClick={handlePreviousPage}
+                disabled={meta?.currentPage === 1}
               >
                 Previous
               </Button>
               <span className="py-2 px-4 border rounded">
-                Page {meta.currentPage} of {meta.totalPages}
+                Page {meta?.currentPage} of {meta?.totalPages}
               </span>
               <Button
                 variant="outline"
-                onClick={() =>
-                  updateFilter({
-                    page: Math.min(
-                      meta.totalPages,
-                      (meta.currentPage || 1) + 1
-                    ),
-                    status: activeTab,
-                  })
-                }
-                disabled={meta.currentPage === meta.totalPages}
+                onClick={handleNextPage}
+                disabled={meta?.currentPage === meta?.totalPages}
               >
                 Next
               </Button>

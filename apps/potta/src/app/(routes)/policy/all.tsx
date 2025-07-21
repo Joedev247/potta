@@ -1,3 +1,5 @@
+'use client';
+
 // components/spend-policy/components/approval-rule-form.tsx
 import React, { useState, useEffect } from 'react';
 import { Button } from '@potta/components/shadcn/button';

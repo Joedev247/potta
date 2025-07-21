@@ -1,5 +1,5 @@
 'use client';
-import React, { createContext, ReactNode, useState } from 'react';
+import React, { createContext, ReactNode, useState, useEffect } from 'react';
 import {
   accountList,
   allBranches,
@@ -32,6 +32,7 @@ interface ContextType {
   setSidebarOpen: (sidebarOpen: boolean) => void;
   layoutMode: 'navbar' | 'sidebar';
   setLayoutMode: (mode: 'navbar' | 'sidebar') => void;
+  isLayoutLoaded: boolean;
   link: string;
   setLinks: (link: string) => void;
   programs: any;
@@ -87,9 +88,48 @@ interface Children {
 const ContextData = createContext<ContextType | null>(null);
 
 const DataProvider: React.FC<Children> = ({ children }) => {
+  // Initialize layoutMode from localStorage or default to 'navbar'
+  const [layoutMode, setLayoutMode] = useState<'navbar' | 'sidebar'>(() => {
+    if (typeof window !== 'undefined') {
+      const saved = localStorage.getItem('potta_layoutMode');
+      return (saved as 'navbar' | 'sidebar') || 'navbar';
+    }
+    return 'navbar';
+  });
+
+  // Track if layout has been loaded from localStorage
+  const [isLayoutLoaded, setIsLayoutLoaded] = useState(false);
+
+  // Initialize layout from localStorage on mount
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const saved = localStorage.getItem('potta_layoutMode');
+      if (saved) {
+        setLayoutMode(saved as 'navbar' | 'sidebar');
+      }
+      setIsLayoutLoaded(true);
+    } else {
+      setIsLayoutLoaded(true);
+    }
+  }, []);
+
+  // Save layoutMode to localStorage whenever it changes
+  useEffect(() => {
+    if (typeof window !== 'undefined' && isLayoutLoaded) {
+      localStorage.setItem('potta_layoutMode', layoutMode);
+    }
+  }, [layoutMode, isLayoutLoaded]);
+
+  // Custom setter for layoutMode that also saves to localStorage
+  const handleSetLayoutMode = (mode: 'navbar' | 'sidebar') => {
+    setLayoutMode(mode);
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('potta_layoutMode', mode);
+    }
+  };
+
   const [toggle, setToggle] = useState<boolean>(true);
   const [sidebarOpen, setSidebarOpen] = useState<boolean>(false);
-  const [layoutMode, setLayoutMode] = useState<'navbar' | 'sidebar'>('navbar');
   const [link, setLinks] = useState<string>('');
   const [programs, setPrograms] = useState<any>([]);
   const [programDays, setProgramDays] = useState<any>([]);
@@ -143,7 +183,8 @@ const DataProvider: React.FC<Children> = ({ children }) => {
         sidebarOpen,
         setSidebarOpen,
         layoutMode,
-        setLayoutMode,
+        setLayoutMode: handleSetLayoutMode,
+        isLayoutLoaded,
         link,
         setLinks,
         programs,

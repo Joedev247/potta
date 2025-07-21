@@ -1,3 +1,5 @@
+'use client';
+
 import React from 'react';
 import { ExtendedApprovalRule, FieldType } from '../types/approval-rule';
 import {
@@ -88,48 +90,43 @@ export const RuleSummaryView: React.FC<RuleSummaryViewProps> = ({
                 <ChevronRight size={16} />
               </span>
             </div>
-            <div className="font-medium text-xl text-gray-700  ">
-              IF
-            </div>
+            <div className="font-medium text-xl text-gray-700  ">IF</div>
           </div>
-              {/* Conditions */}
-              <div>
-                
-              </div>
-              {rule.conditions.map((condition, condIndex) => (
-                <div key={condition.id} className="mb-2 ml-10 flex items-center">
-                  <div className="flex items-start">
-                    
-                    <div className="flex-1">
-                      {condition.field && condition.operator ? (
-                        <div>
-                          <span className="font-medium">
-                            {getFieldDisplayName(condition.field)}
-                          </span>{' '}
-                          <span className="text-gray-500">
-                            {condition.operator}
-                          </span>{' '}
-                          {displayValue(
-                            condition.field,
-                            ensureStringOrStringArray(condition.value)
-                          )}
-                        </div>
-                      ) : (
-                        <span className="text-gray-400 italic">
-                          Incomplete condition
-                        </span>
+          {/* Conditions */}
+          <div></div>
+          {rule.conditions.map((condition, condIndex) => (
+            <div key={condition.id} className="mb-2 ml-10 flex items-center">
+              <div className="flex items-start">
+                <div className="flex-1">
+                  {condition.field && condition.operator ? (
+                    <div>
+                      <span className="font-medium">
+                        {getFieldDisplayName(condition.field)}
+                      </span>{' '}
+                      <span className="text-gray-500">
+                        {condition.operator}
+                      </span>{' '}
+                      {displayValue(
+                        condition.field,
+                        ensureStringOrStringArray(condition.value)
                       )}
                     </div>
-                  </div>
-
-                  {/* Add "and" between conditions */}
-                  {condIndex < rule.conditions.length - 1 && (
-                    <div className="ml-2 text-sm text-gray-500 font-medium">
-                      and
-                    </div>
+                  ) : (
+                    <span className="text-gray-400 italic">
+                      Incomplete condition
+                    </span>
                   )}
                 </div>
-              ))}
+              </div>
+
+              {/* Add "and" between conditions */}
+              {condIndex < rule.conditions.length - 1 && (
+                <div className="ml-2 text-sm text-gray-500 font-medium">
+                  and
+                </div>
+              )}
+            </div>
+          ))}
           {/* SECOND LEVEL: Conditions, Requirements, Actions */}
           <div className="ml-10 border-l border-gray-200 pl-[18px] mt-2 ">
             {/* Actions */}
@@ -194,69 +191,68 @@ export const RuleSummaryView: React.FC<RuleSummaryViewProps> = ({
                 </div>
               </div>
             )}
-          {/* Requirements */}
-          {rule.requirements &&
-            Object.values(rule.requirements).some((v) => v === true) && (
-              <div className="mb-3 mt-4">
-                <div className="flex items-start">
-                  <div className="min-w-[36px] flex justify-center">
-                    <span className="inline-flex items-center justify-center h-5 w-5 rounded-full bg-green-50 text-green-500">
-                      <CheckCircle2 size={14} />
-                    </span>
-                  </div>
-                  <div className="flex flex-col">
-                    <div className="text-gray-500 font-medium mb-1">
-                      Require
+            {/* Requirements */}
+            {rule.requirements &&
+              Object.values(rule.requirements).some((v) => v === true) && (
+                <div className="mb-3 mt-4">
+                  <div className="flex items-start">
+                    <div className="min-w-[36px] flex justify-center">
+                      <span className="inline-flex items-center justify-center h-5 w-5 rounded-full bg-green-50 text-green-500">
+                        <CheckCircle2 size={14} />
+                      </span>
                     </div>
-                    <div className="flex flex-wrap gap-1">
-                      {rule.requirements.requireMemo && (
-                        <span className="bg-amber-50 border border-amber-200 px-2 py-0.5 text-sm rounded">
-                          Memo
-                        </span>
-                      )}
+                    <div className="flex flex-col">
+                      <div className="text-gray-500 font-medium mb-1">
+                        Require
+                      </div>
+                      <div className="flex flex-wrap gap-1">
+                        {rule.requirements.requireMemo && (
+                          <span className="bg-amber-50 border border-amber-200 px-2 py-0.5 text-sm rounded">
+                            Memo
+                          </span>
+                        )}
 
-                      {rule.requirements.requireReceipt && (
-                        <span className="bg-amber-50 border border-amber-200 px-2 py-0.5 text-sm rounded">
-                          Receipt
-                        </span>
-                      )}
+                        {rule.requirements.requireReceipt && (
+                          <span className="bg-amber-50 border border-amber-200 px-2 py-0.5 text-sm rounded">
+                            Receipt
+                          </span>
+                        )}
 
-                      {rule.requirements.requireNetSuiteCustomerJob && (
-                        <span className="bg-amber-50 border border-amber-200 px-2 py-0.5 text-sm rounded">
-                          NetSuite Customer/Job
-                        </span>
-                      )}
+                        {rule.requirements.requireNetSuiteCustomerJob && (
+                          <span className="bg-amber-50 border border-amber-200 px-2 py-0.5 text-sm rounded">
+                            NetSuite Customer/Job
+                          </span>
+                        )}
 
-                      {rule.requirements.requireScreenshots && (
-                        <span className="bg-amber-50 border border-amber-200 px-2 py-0.5 text-sm rounded">
-                          Screenshots
-                        </span>
-                      )}
+                        {rule.requirements.requireScreenshots && (
+                          <span className="bg-amber-50 border border-amber-200 px-2 py-0.5 text-sm rounded">
+                            Screenshots
+                          </span>
+                        )}
 
-                      {rule.requirements.requireGpsCoordinates && (
-                        <span className="bg-amber-50 border border-amber-200 px-2 py-0.5 text-sm rounded">
-                          GPS Coordinates
-                        </span>
-                      )}
+                        {rule.requirements.requireGpsCoordinates && (
+                          <span className="bg-amber-50 border border-amber-200 px-2 py-0.5 text-sm rounded">
+                            GPS Coordinates
+                          </span>
+                        )}
 
-                      {rule.requirements.businessPurpose && (
-                        <span className="bg-amber-50 border border-amber-200 px-2 py-0.5 text-sm rounded">
-                          Business Purpose
-                        </span>
-                      )}
+                        {rule.requirements.businessPurpose && (
+                          <span className="bg-amber-50 border border-amber-200 px-2 py-0.5 text-sm rounded">
+                            Business Purpose
+                          </span>
+                        )}
 
-                      {rule.requirements.requireBeforeAfterScreenshots && (
-                        <span className="bg-amber-50 border border-amber-200 px-2 py-0.5 text-sm rounded">
-                          Before/After Screenshots
-                        </span>
-                      )}
+                        {rule.requirements.requireBeforeAfterScreenshots && (
+                          <span className="bg-amber-50 border border-amber-200 px-2 py-0.5 text-sm rounded">
+                            Before/After Screenshots
+                          </span>
+                        )}
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
-            )}
+              )}
           </div>
-
 
           {/* Separator between multiple rules */}
           {ruleIndex < formData.rules.length - 1 && (

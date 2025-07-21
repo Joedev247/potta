@@ -399,7 +399,9 @@ const CustomDatePicker: React.FC<CustomDatePickerProps> = ({
     <DateInput
       label={label}
       placeholder={placeholder}
-      name={`${label.toLowerCase().replace(/\s+/g, '-')}-date-input`}
+      name={`${(label || 'date')
+        .toLowerCase()
+        .replace(/\s+/g, '-')}-date-input`}
       value={calendarDateToDate(value)}
       onChange={handleDateChange}
       required={isRequired}

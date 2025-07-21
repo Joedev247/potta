@@ -1,3 +1,5 @@
+'use client';
+
 import React, { useState, useEffect } from 'react';
 import { Button } from '@potta/components/shadcn/button';
 import {
@@ -23,7 +25,7 @@ interface Item {
 }
 
 interface SearchSelectProps {
-  value: string  | string[];
+  value: string | string[];
   onChange: (value: string | string[]) => void;
   isMultiSelect: boolean;
   onSearch: (query: string) => void;
@@ -41,20 +43,20 @@ export const SearchSelect: React.FC<SearchSelectProps> = ({
   items,
   isLoading,
   placeholder,
-  emptyMessage
+  emptyMessage,
 }) => {
   // State
   const [open, setOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedItems, setSelectedItems] = useState<Item[]>([]);
-  
+
   // Effect to update selected items when value changes
   useEffect(() => {
     if (isMultiSelect && Array.isArray(value)) {
-      const selected = items.filter(item => value.includes(item.id));
+      const selected = items.filter((item) => value.includes(item.id));
       setSelectedItems(selected);
     } else if (!isMultiSelect && typeof value === 'string' && value) {
-      const selected = items.find(item => item.id === value);
+      const selected = items.find((item) => item.id === value);
       if (selected) {
         setSelectedItems([selected]);
       } else {
@@ -64,20 +66,20 @@ export const SearchSelect: React.FC<SearchSelectProps> = ({
       setSelectedItems([]);
     }
   }, [value, items, isMultiSelect]);
-  
+
   // Handle search query change
   const handleSearchChange = (query: string) => {
     setSearchQuery(query);
     onSearch(query);
   };
-  
+
   // Handle item selection
   const handleSelect = (itemId: string) => {
     if (isMultiSelect) {
       // For multi-select, toggle selection
       const newValue = Array.isArray(value) ? [...value] : [];
       const index = newValue.indexOf(itemId);
-      
+
       if (index === -1) {
         // Add item
         newValue.push(itemId);
@@ -85,7 +87,7 @@ export const SearchSelect: React.FC<SearchSelectProps> = ({
         // Remove item
         newValue.splice(index, 1);
       }
-      
+
       onChange(newValue);
     } else {
       // For single select
@@ -93,18 +95,18 @@ export const SearchSelect: React.FC<SearchSelectProps> = ({
       setOpen(false);
     }
   };
-  
+
   // Remove an item
   const removeItem = (itemId: string, e?: React.MouseEvent) => {
     e?.stopPropagation();
-    
+
     if (isMultiSelect && Array.isArray(value)) {
-      onChange(value.filter(id => id !== itemId));
+      onChange(value.filter((id) => id !== itemId));
     } else {
       onChange('');
     }
   };
-  
+
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
@@ -113,8 +115,8 @@ export const SearchSelect: React.FC<SearchSelectProps> = ({
           role="combobox"
           aria-expanded={open}
           className={cn(
-            "justify-between w-full text-left font-normal",
-            selectedItems.length > 0 ? "h-auto" : ""
+            'justify-between w-full text-left font-normal',
+            selectedItems.length > 0 ? 'h-auto' : ''
           )}
         >
           {isLoading ? (
@@ -124,9 +126,9 @@ export const SearchSelect: React.FC<SearchSelectProps> = ({
             </div>
           ) : selectedItems.length > 0 ? (
             <div className="flex flex-wrap gap-1 py-1">
-              {selectedItems.map(item => (
-                <Badge 
-                  key={item.id} 
+              {selectedItems.map((item) => (
+                <Badge
+                  key={item.id}
                   className="flex items-center gap-1"
                   variant="secondary"
                 >
@@ -149,19 +151,19 @@ export const SearchSelect: React.FC<SearchSelectProps> = ({
       </PopoverTrigger>
       <PopoverContent className="p-0 w-[300px]">
         <Command>
-          <CommandInput 
-            placeholder={placeholder} 
+          <CommandInput
+            placeholder={placeholder}
             onValueChange={handleSearchChange}
             className="h-9"
           />
           <CommandEmpty>{emptyMessage}</CommandEmpty>
           <CommandGroup>
             <ScrollArea className="h-[200px]">
-              {items.map(item => {
-                const isSelected = isMultiSelect 
+              {items.map((item) => {
+                const isSelected = isMultiSelect
                   ? Array.isArray(value) && value.includes(item.id)
                   : value === item.id;
-                
+
                 return (
                   <CommandItem
                     key={item.id}
