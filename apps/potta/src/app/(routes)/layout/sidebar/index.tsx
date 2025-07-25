@@ -13,6 +13,7 @@ import SidebarsHome from './components/home';
 import SidebarsVoucher from './components/voucher';
 import SidebarsBankAccounts from './components/bankAccounts';
 import SidebarsSettings from './components/settings';
+import SidebarsReports from './components/reports';
 const Sidebars = () => {
   const pathname = usePathname();
   const string = pathname;
@@ -24,15 +25,15 @@ const Sidebars = () => {
       {str[1] == '' && <SidebarsHome />}
       {str[1] == undefined && <SidebarsPayment />}
       {str[1] == 'payments' && <SidebarsPayment />}
-      {str[1] == 'expenses' && <SidebarsExpenses />}
-      {str[1] == 'invoice' && <Sidebarsinvoicing />}
+      {str[1] == 'account_payables' && <SidebarsExpenses />}
+      {str[1] == 'account_receivables' && <Sidebarsinvoicing />}
       {str[1] == 'POS' || (str[1] == 'pos' && <SidebarsPOS />)}
       {str[1] == 'taxation' && <SidebarsTaxation />}
       {str[1] == 'vouchers' && <SidebarsVoucher />}
       {str[1] == 'vendors' && <SidebarsVoucher />}
       {str[1] == 'payroll' && <SidebarsPayroll />}
-      {str[1] == 'accounts' && <SidebarsAccounts />}
-      {str[1] == 'reports' && <SidebarsVoucher />}
+      {str[1] == 'accounting' && <SidebarsAccounts />}
+      {str[1] == 'reports' && <SidebarsReports />}
       {str[1] == 'bank-accounts' && <SidebarsBankAccounts />}
       {str[1] == 'settings' && <SidebarsSettings />}
     </>

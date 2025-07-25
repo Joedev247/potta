@@ -16,7 +16,7 @@ import Link from 'next/link';
 import { useGetAllVouchers } from '../_hooks/hooks';
 import DeleteModal from './deleteModal';
 import ViewVoucherSlider from './viewVoucherSlider.tsx';
-import CustomSelect from '../../invoice/components/CustomSelect';
+import CustomSelect from '../../account_receivables/components/CustomSelect';
 import { IOption } from '../../policies/utils/types';
 
 // Define types based on the API response

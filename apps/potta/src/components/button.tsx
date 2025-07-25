@@ -47,7 +47,7 @@ const Button = ({
       } items-center text-center gap-2 cursor-pointer ${
         width ? 'w-full text-center' : 'flex text-center justify-end'
       } ${theme ? themes[theme] : themes.default} ${
-        rounded ? 'rounded-full' : 'rounded-[2px]'
+        rounded && 'rounded-full'
       }  ${height ? 'py-1.5' : 'py-2.5'}  px-6 ${
         isLoading ? 'opacity-65' : 'opacity-none'
       } ${className}`}

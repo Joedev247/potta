@@ -14,7 +14,7 @@ import { DateInput } from '../../../../components/customDatePicker';
 import { CalendarDate } from '@internationalized/date';
 import { useCreateBudget } from '../../expenses/budgets/hooks/useCreateBudget';
 import { useAccountingAccounts } from '../../expenses/budgets/hooks/useAccountingAccounts';
-import axios from '@/config/axios.config';
+import axios from 'config/axios.config';
 import toast from 'react-hot-toast';
 
 type ApprovalRequirement = 'one' | 'at_least' | 'all';
@@ -436,10 +436,7 @@ const CreateBudgetModal: React.FC<CreateBudgetModalProps> = ({
                   onChange={(e) => setIsRecurring(e.target.checked)}
                   className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
                 />
-                <label
-                  htmlFor="recurring"
-                  className="ml-2 text-gray-900 "
-                >
+                <label htmlFor="recurring" className="ml-2 text-gray-900 ">
                   Recurring Budget
                 </label>
               </div>

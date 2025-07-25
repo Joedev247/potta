@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import DataGrid from '@potta/app/(routes)/invoice/components/DataGrid';
-import { IColumnDef } from '@potta/app/(routes)/invoice/_utils/types';
+import DataGrid from '@potta/app/(routes)/account_receivables/components/DataGrid';
+import { IColumnDef } from '@potta/app/(routes)/account_receivables/_utils/types';
 import { EllipsisVertical } from 'lucide-react';
 import {
   DropdownMenu,

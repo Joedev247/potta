@@ -726,7 +726,7 @@ const ShiftView: React.FC = () => {
   };
 
   return (
-    <div className="">
+    <div className="space-y-4">
       {/* Header Section */}
       <div className="bg-white border p-4">
         <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">

@@ -4,6 +4,7 @@ import { usePathname } from 'next/navigation';
 import { ContextData } from '@potta/components/context';
 import Icon from '@potta/components/icon_fonts/icon';
 import { MdPolicy } from 'react-icons/md';
+import { FaHandHoldingDollar } from "react-icons/fa6";
 import { TbShoppingCartCog } from 'react-icons/tb';
 
 const SidebarsExpenses = () => {
@@ -33,11 +34,13 @@ const SidebarsExpenses = () => {
           {' '}
         </MenuItem>
         <MenuItem
-          active={str[1] == 'expenses' && str[2] == undefined ? true : false}
+          active={
+            str[1] == 'account_payables' && str[2] == undefined ? true : false
+          }
           className="mt-8  "
-          href="/expenses"
+          href="/account_payables"
           icon={
-            str[1] == 'expenses' && str[2] == undefined ? (
+            str[1] == 'account_payables' && str[2] == undefined ? (
               <img src="/images/sideExpensesIcons/white/1.svg" />
             ) : (
               <img src="/images/sideDashboardIcons/schedule.svg" />
@@ -50,7 +53,7 @@ const SidebarsExpenses = () => {
         <MenuItem
           active={str[2] == 'policies' ? true : false}
           className=" "
-          href="/expenses/policies"
+          href="/account_payables/policies"
           icon={
             str[2] == 'policies' ? (
               <MdPolicy size={24} className="text-white" />
@@ -64,7 +67,7 @@ const SidebarsExpenses = () => {
         <MenuItem
           active={str[2] == 'budgets' ? true : false}
           className=""
-          href="/expenses/budgets"
+          href="/account_payables/budgets"
           icon={
             str[2] == 'budgets' ? (
               <img src="/images/sideExpensesIcons/dash.svg" />
@@ -75,24 +78,60 @@ const SidebarsExpenses = () => {
         >
           <h3 className="text-md mt-1.5">Budget</h3>
         </MenuItem>
-        <MenuItem
-          active={str[2] == 'spend-program' ? true : false}
-          className=""
-          href="/expenses/spend-program"
+        <SubMenu
+          label={<span className="text-md mt-1.5">Procurement</span>}
           icon={
             <TbShoppingCartCog
               size={24}
-              className={`${str[2] === 'spend-program' && 'text-white'}`}
+              className={
+                str[2] === 'spend-program' || str[2] === 'purchase'
+                  ? 'text-white'
+                  : ''
+              }
             />
           }
+          className={` ${
+            str[2] === 'spend-program' || str[2] === 'purchase'
+              ? 'active-parent'
+              : ''
+          }`}
+          defaultOpen={str[2] === 'spend-program' || str[2] === 'purchase'}
         >
-          <h3 className="text-md mt-1.5">Spend Program</h3>
-        </MenuItem>
+          <MenuItem
+            active={str[2] == 'spend-program'}
+            className=""
+            href="/account_payables/spend-program"
+            icon={
+              <FaHandHoldingDollar
+                size={24}
+                className={`${str[2] === 'spend-program' && 'text-white'}`}
+              />
+            }
+          >
+            <h3 className="text-md mt-1.5">Spend Program</h3>
+          </MenuItem>
+          <MenuItem
+            active={str[2] == 'purchase'}
+            className=""
+            href="/account_payables/purchase"
+            icon={
+              <img
+                src={
+                  str[2] === 'purchase'
+                    ? '/images/sideExpensesIcons/white/7.svg'
+                    : '/images/sideExpensesIcons/white/8.svg'
+                }
+              />
+            }
+          >
+            <h3 className="text-md mt-1.5">Purchase</h3>
+          </MenuItem>
+        </SubMenu>
 
         <MenuItem
           active={str[2] == 're-imbursements' ? true : false}
           className=" "
-          href="/expenses/re-imbursements"
+          href="/account_payables/re-imbursements"
           icon={
             str[2] == 're-imbursements' ? (
               <img src="/images/sideExpensesIcons/white/3.svg" />
@@ -106,7 +145,7 @@ const SidebarsExpenses = () => {
         <MenuItem
           active={str[2] == 'bills' ? true : false}
           className=" "
-          href="/expenses/bills"
+          href="/account_payables/bills"
           icon={
             str[2] == 'bills' ? (
               <img src="/images/sideExpensesIcons/white/6.svg" />

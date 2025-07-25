@@ -6,59 +6,50 @@ import { usePathname } from 'next/navigation';
 import Select from '../../../../components/select';
 import { useRouter } from 'next/navigation';
 import { Bell, Inbox } from 'lucide-react'; // Import the icons
-import Box from './box';
-import PaymentsBox from './boxes/PaymentsBox';
-import AccountsBox from './boxes/AccountsBox';
-import ExpensesBox from './boxes/ExpensesBox';
-import InvoiceBox from './boxes/InvoiceBox';
-import InvoicePurchaseBox from './boxes/InvoicePurchaseBox';
-import InvoiceRecurringBox from './boxes/InvoiceRecurringBox';
 import PosCustomersBox from './boxes/PosCustomersBox';
-import VendorsBox from './boxes/PosVendorsBox';
-import VouchersBox from './boxes/VouchersBox';
 import PosSalesBox from './boxes/PosSalesBox';
 import { ContextData } from '../../../../components/context';
+import VouchersBox from '../../vouchers/components/boxVouchers';
+import InvoiceBox from './boxes/InvoiceBox';
+import VendorsBox from './boxes/PosVendorsBox';
 
 const urlRouters = [
   {
+    value: '',
+    label: 'Home',
+  },
+  {
+    value: 'account_payables',
+    label: 'Payables',
+  },
+  {
+    value: 'account_receivables',
+    label: 'Receivables',
+  },
+  {
     value: 'payroll',
     label: 'Payroll',
-  },
-  {
-    value: 'expenses',
-    label: 'Expenses',
-  },
-  {
-    value: 'vouchers',
-    label: 'Vouchers',
   },
   {
     value: 'pos',
     label: 'POS',
   },
   {
-    value: 'invoice',
-    label: 'Invoice',
-  },
-  {
     value: 'taxation',
-    label: 'Taxation',
+    label: 'Tax',
   },
   {
-    value: 'payments',
-    label: 'Payments',
+    value: 'treasury',
+    label: 'Treasury',
+  },
+
+  {
+    value: 'accounting',
+    label: 'Accounting',
   },
   {
     value: 'reports',
-    label: 'Reports',
-  },
-  {
-    value: 'accounts',
-    label: 'Accounts',
-  },
-  {
-    value: 'bank-accounts',
-    label: 'Bank Accounts',
+    label: 'FP & A',
   },
   {
     value: 'settings',
@@ -69,10 +60,10 @@ const urlRouters = [
 // Routes where Box component should be displayed with their specific box component
 const routesWithBox = [
   { main: 'payments', sub: '', component: '' },
-  { main: 'expenses', sub: '', component: '' },
-  { main: 'vouchers', sub: '', component: VouchersBox },
-  { main: 'accounts', sub: '', component: '' },
-  { main: 'invoice', sub: '', component: InvoiceBox },
+  { main: 'account_payables', sub: '', component: '' },
+  { main: 'account_receivables', sub: 'vouchers', component: VouchersBox },
+  { main: 'accounting', sub: '', component: '' },
+  { main: 'account_receivables', sub: 'invoice', component: InvoiceBox },
   { main: 'pos', sub: 'sales', component: PosSalesBox },
   { main: 'invoice', sub: 'purchase', component: '' },
   { main: 'invoice', sub: 'recurring', component: '' },
@@ -94,9 +85,11 @@ const routesWithoutBlueBackground = [
   { main: 'payroll' }, // Exclude all payroll pages
   { main: 'payments' },
   { main: 'organigrammer' },
-  { main: 'expenses' },
+  { main: 'account_payables' },
+  { main: 'account_receivables' },
+  { main: 'reports' },
   { main: 'settings' },
-  { main: 'accounts' },
+  { main: 'accounting' },
   { main: 'bank-accounts' },
   { main: 'pos', sub: 'files' },
   { main: 'pos', sub: 'inventory' },
@@ -112,14 +105,18 @@ export default function Navbar() {
   const router = useRouter();
   const pathname = usePathname();
   const context = useContext(ContextData);
+  const isReports = pathname.startsWith('/reports');
   const string = pathname;
   const str = string.split('/');
+  const isHome = pathname === '/';
 
   // Check if str[1] is one of the valid route values
   const isValidRoute =
     str[1] && urlRouters.some((route) => route.value === str[1]);
 
-  const [selected, setSeleted] = useState(isValidRoute ? str[1] : 'payments');
+  const [selected, setSelected] = useState(
+    isHome ? '' : isValidRoute ? str[1] : 'payments'
+  );
 
   // Get the current route and sub-route
   const currentMainRoute = str[1] || '';
@@ -180,6 +177,8 @@ export default function Navbar() {
 
   // Check if the current route should have the blue background
   const shouldHaveBlueBackground = () => {
+    // Home page should NOT have blue background
+    if (pathname === '/') return false;
     // Check if the route is in the exclusion list for blue background
     return !routesWithoutBlueBackground.some((route) => {
       if (route.main && !route.sub) {
@@ -204,26 +203,28 @@ export default function Navbar() {
   };
 
   const handleSelect = (value: string) => {
-    router.push(`/${value}`);
-    setSeleted(value);
+    if (value === '') {
+      router.push('/');
+      setSelected('');
+    } else {
+      router.push(`/${value}`);
+      setSelected(value);
+    }
   };
 
   // If the current route is 'pos', don't render the navbar
-  if (str[1] === 'pos' && str[2] === undefined) {
-    return null;
-  }
+  // Home page logic is now handled by isHome
 
-  if (str[1] === '' && str[2] === undefined) {
-    return null;
-  }
-
-  // Only render the minimal top bar if layoutMode is 'sidebar'
-  if (context?.layoutMode !== 'sidebar') {
+  // Only render the minimal top bar if layoutMode is 'sidebar' or if on /reports
+  if (context?.layoutMode !== 'sidebar' && !isReports) {
     return null;
   }
 
   // Determine the title to display
   const getTitle = () => {
+    if (isHome) {
+      return 'Home';
+    }
     if (str[1] === 'bank-accounts' && str[2] && str[2].length > 20) {
       return 'Bank Account';
     }
@@ -234,25 +235,47 @@ export default function Navbar() {
     if (str[1] === 'expenses' && str[2] === 'bills' && str[3] === 'new') {
       return 'New Bill';
     }
+    if (str[1] === 'account_payables' && str[2] === undefined) {
+      return 'AP';
+    }
+    if (str[1] === 'account_receivables' && str[2] === undefined) {
+      return 'AR';
+    }
 
     if (str[1] === 'invoice' && str[2] === 'new') {
       return 'New Invoice';
     }
 
-    if (str[1] === 'payroll' && str[2] === 'people') {
-      return 'Add People';
+    if (str[1] === 'reports' && str[2] === undefined) {
+      return 'FP & A';
     }
-    if (str[1] === 'invoice' && str[2] === undefined) {
+    if (str[1] === 'payroll' && str[2] === 'people') {
+      return 'Employees';
+    }
+    if (str[1] === 'account_receivables' && str[2] === 'invoice') {
       return 'Invoice Overview';
     }
-    if (str[1] === 'invoice' && str[2] === 'credit' && str[3] === 'new') {
+    if (
+      str[1] === 'account_receivables' &&
+      str[2] === 'invoice' &&
+      str[3] === 'credit' &&
+      str[4] === 'new'
+    ) {
       return 'New Credit Note';
     }
 
-    if (str[1] === 'invoice' && str[2] === 'purchase' && str[3] === 'new') {
+    if (
+      str[1] === 'account_payables' &&
+      str[2] === 'purchase' &&
+      str[3] === 'new'
+    ) {
       return 'New Purchase Order';
     }
-    if (str[1] === 'invoice' && str[2] === 'purchase' && str[3] === undefined) {
+    if (
+      str[1] === 'account_payables' &&
+      str[2] === 'purchase' &&
+      str[3] === undefined
+    ) {
       return 'Purchase Order';
     }
 
@@ -290,9 +313,8 @@ export default function Navbar() {
       <div
         className={`flex sticky top-0 left-0 z-20 justify-between ${bgColorClass}`}
       >
-        <div className="flex items-center gap-20 py-4">
-          <Link href={'/'} className="flex items-center ml-8 -mt-2"></Link>
-          <h1 className="font-medium text-3xl --14 capitalize">
+        <div className="flex ml-16 items-start gap-20 py-4">
+          <h1 className="font-medium text-3xl text-start capitalize">
             {getTitle()}
           </h1>
         </div>
@@ -311,8 +333,8 @@ export default function Navbar() {
             <div className="w-full min-w-32">
               <Select
                 options={urlRouters}
-                selectedValue={selected.toString()}
-                SelectClass="!text-sm"
+                selectedValue={isHome ? '' : selected}
+                SelectClass="!text-base !font-medium"
                 onChange={(value: any) => {
                   handleSelect(value);
                 }}

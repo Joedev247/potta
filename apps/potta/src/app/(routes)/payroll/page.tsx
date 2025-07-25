@@ -2,9 +2,31 @@
 import React from 'react';
 import RootLayout from '../layout';
 import { useRouter } from 'next/navigation';
+import { employeeApi } from './utils/api';
 
 const Payroll = () => {
   const router = useRouter();
+  const [loading, setLoading] = React.useState(true);
+
+  React.useEffect(() => {
+    const checkEmployees = async () => {
+      try {
+        const res = await employeeApi.filterEmployees({ limit: 1 });
+        if (res?.data?.data && res.data.data.length > 0) {
+          router.replace('/payroll/overview');
+        } else {
+          setLoading(false);
+        }
+      } catch (e) {
+        setLoading(false);
+      }
+    };
+    checkEmployees();
+  }, [router]);
+
+  if (loading) {
+    return null;
+  }
 
   const handleNavigation = (route: any) => {
     router.push(route);

@@ -112,7 +112,7 @@ const EnhancedNavbar = () => {
               Expenses
             </Link>
             <Link
-              href="/invoice"
+              href="/account_receivables"
               className="text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium transition-colors"
             >
               Invoice
@@ -230,7 +230,7 @@ const EnhancedNavbar = () => {
             Expenses
           </Link>
           <Link
-            href="/invoice"
+            href="/account_receivables"
             className="block px-3 py-2 rounded-md text-base font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-100"
           >
             Invoice

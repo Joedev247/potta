@@ -4,7 +4,7 @@ import { ArrowUpFromLine, CirclePlus, Download, Plus } from 'lucide-react';
 import Search from '@potta/components/search';
 import Button from '@potta/components/button';
 import { toast } from 'react-hot-toast';
-import axios from '@/config/axios.config';
+import axios from 'config/axios.config';
 
 interface TableProps {
   data: any[];

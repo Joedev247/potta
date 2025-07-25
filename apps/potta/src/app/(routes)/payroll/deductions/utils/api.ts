@@ -1,4 +1,4 @@
-import axios from '@/config/axios.config';
+import axios from 'config/axios.config';
 import { DecductionProps, Filter } from './types';
 
 export const deductionsApi = {

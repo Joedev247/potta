@@ -1,12 +1,21 @@
 import React from 'react';
 import RootLayout from '../layout';
-import CustomerContent from '../../../components/shared/CustomerContent';
+import { ContextData } from '@potta/components/context';
+import DashboardCollection from '../dashboard/components/collection';
 
-const Customers = () => {
+const AccountReceivablesDashboard = () => {
+  const context = React.useContext(ContextData);
   return (
     <RootLayout>
-      <CustomerContent />
+      {/* <CustomerContent /> */}
+      <div
+        className={`${
+          context?.layoutMode === 'sidebar' ? 'pl-16' : 'pl-5'
+        } pr-5 mt-2`}
+      >
+        <DashboardCollection />
+      </div>
     </RootLayout>
   );
 };
-export default Customers;
+export default AccountReceivablesDashboard;

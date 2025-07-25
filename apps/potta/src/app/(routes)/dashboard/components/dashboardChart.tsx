@@ -2,7 +2,7 @@ import React, { FC } from 'react';
 import dynamic from 'next/dynamic';
 import { ApexOptions } from 'apexcharts';
 import { useQuery } from '@tanstack/react-query';
-import axios from '@/config/axios.config';
+import axios from 'config/axios.config';
 
 // Define your own type for series data
 type ApexSeries = {

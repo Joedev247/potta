@@ -1,9 +1,9 @@
-'use client';
+// 'use client';
 import React, { useEffect, useState } from 'react';
 import Chart from './dashboardChart';
 import BalanceBox from './balanceBoxes';
 import { useQuery } from '@tanstack/react-query';
-import axios from '@/config/axios.config';
+import axios from 'config/axios.config';
 
 interface Assets {
   image: string;
@@ -19,19 +19,12 @@ interface Income {
 const DashboardCollection = () => {
   const [heights, setHeights] = useState<string>('');
   const [dashTopHeight, setDashTopHeight] = useState<string>('');
-  const DEFAULT_ORGANIZATION_ID = 'f7b1b3b0-0b1b-4b3b-8b1b-0b1b3b0b1b3c';
-  const DEFAULT_BRANCH_ID = 'f7b1b3b0-0b1b-4b3b-8b1b-0b1b3b0b1b3b';
 
   // Fetch bills data for collection analysis
   const { data: billsData, isLoading: billsLoading } = useQuery({
     queryKey: ['bills-collection'],
     queryFn: async () => {
-      const response = await axios.get('/bills', {
-        headers: {
-          organizationId: DEFAULT_ORGANIZATION_ID,
-          BranchId: DEFAULT_BRANCH_ID,
-        },
-      });
+      const response = await axios.get('/bills');
       return response.data;
     },
   });
@@ -40,12 +33,7 @@ const DashboardCollection = () => {
   const { data: budgetsData, isLoading: budgetsLoading } = useQuery({
     queryKey: ['budgets-collection'],
     queryFn: async () => {
-      const response = await axios.get('/budgets', {
-        headers: {
-          organizationId: DEFAULT_ORGANIZATION_ID,
-          BranchId: DEFAULT_BRANCH_ID,
-        },
-      });
+      const response = await  axios.get('/budgets');
       return response.data;
     },
   });

@@ -23,11 +23,13 @@ import Select from '@potta/components/select';
 interface CreateProductProps {
   open?: boolean;
   setOpen?: (open: boolean) => void;
+  productType?: 'PHYSICAL' | 'SERVICE';
 }
 
 const CreateProduct: React.FC<CreateProductProps> = ({
   open: controlledOpen,
   setOpen: setControlledOpen,
+  productType = 'PHYSICAL',
 }) => {
   const [localOpen, setLocalOpen] = useState(false);
   const isOpen = controlledOpen ?? localOpen;
@@ -49,15 +51,18 @@ const CreateProduct: React.FC<CreateProductProps> = ({
     defaultValues: {
       name: '',
       description: '',
-      unitOfMeasure: undefined,
+      unitOfMeasure: '',
       cost: 0,
       sku: '',
-      inventoryLevel: 0,
+      inventoryLevel: productType === 'PHYSICAL' ? 0 : 0,
+      reorderPoint: 0,
       salesPrice: 0,
       taxable: false,
-      taxRate: 0,
-      category: '',
+      categoryId: '',
+      taxId: '',
       images: [],
+      type: productType,
+      structure: 'SIMPLE',
     },
   });
 
@@ -120,20 +125,16 @@ const CreateProduct: React.FC<CreateProductProps> = ({
         return;
       }
 
-      // Set category_id to the selected category uuid
-      const selectedCategory =
-        (categoriesData?.data || []).find(
-          (cat: { uuid: string }) => cat.uuid === formData.category
-        ) || null;
-      (formData as any).categoryId = selectedCategory
-        ? selectedCategory.uuid
-        : '';
-      // Remove category and taxRate from payload
-      delete formData.category;
-      delete formData.taxRate;
+      // Ensure the payload has the correct structure
+      const payload = {
+        ...formData,
+        type: productType,
+        structure: 'SIMPLE',
+        inventoryLevel: productType === 'SERVICE' ? 0 : formData.inventoryLevel,
+      };
 
-      console.log('Submitting product data:', formData);
-      mutation.mutate(formData, {
+      console.log('Submitting product data:', payload);
+      mutation.mutate(payload, {
         onSuccess: () => {
           toast.success('Product created successfully!');
           reset();
@@ -157,7 +158,7 @@ const CreateProduct: React.FC<CreateProductProps> = ({
       setOpen={setIsOpen}
       edit={true}
       buttonText={'Create Product'}
-      title={'Inventory Item'}
+      title={productType === 'PHYSICAL' ? 'Physical Item' : 'Service Item'}
     >
       <form
         onSubmit={handleSubmit(onSubmit)}
@@ -178,7 +179,7 @@ const CreateProduct: React.FC<CreateProductProps> = ({
         <div className="w-full grid mt-5 grid-cols-2 gap-2">
           <div className="w-full">
             <Controller
-              name="category"
+              name="categoryId"
               control={control}
               render={({ field }) => (
                 <Select
@@ -187,7 +188,7 @@ const CreateProduct: React.FC<CreateProductProps> = ({
                   selectedValue={field.value || ''}
                   onChange={field.onChange}
                   bg="bg-white"
-                  name="category"
+                  name="categoryId"
                   required
                 />
               )}
@@ -234,6 +235,16 @@ const CreateProduct: React.FC<CreateProductProps> = ({
                 required
               />
             </div>
+            <div className="mt-4">
+              <Input
+                type={'text'}
+                label={'Tax ID'}
+                placeholder="Enter Tax ID"
+                name={'taxId'}
+                register={register}
+                errors={errors.taxId}
+              />
+            </div>
           </div>
           <div className="w-full">
             <div className="mt-6">
@@ -247,6 +258,16 @@ const CreateProduct: React.FC<CreateProductProps> = ({
                 required
               />
             </div>
+            <div className="mt-6">
+              <Input
+                type={'number'}
+                label={'Reorder Point'}
+                placeholder="50"
+                name={'reorderPoint'}
+                register={register}
+                errors={errors.reorderPoint}
+              />
+            </div>
             <div className="mt-6 flex flex-col items-start ">
               <Checkbox
                 label="Taxable"
@@ -258,28 +279,30 @@ const CreateProduct: React.FC<CreateProductProps> = ({
             </div>
           </div>
         </div>
-        <div className="mt-12 pb-20">
-          <div className="flex ">
-            <div
-              onClick={() => setData('inventory')}
-              className={`px-4 py-2 bg-green-50 cursor-pointer ${
-                data == 'inventory' &&
-                'border-b-2 border-green-500 text-green-500'
-              }`}
-            >
-              <p>Inventory</p>
+        {productType === 'PHYSICAL' && (
+          <div className="mt-12 pb-20">
+            <div className="flex ">
+              <div
+                onClick={() => setData('inventory')}
+                className={`px-4 py-2 bg-green-50 cursor-pointer ${
+                  data == 'inventory' &&
+                  'border-b-2 border-green-500 text-green-500'
+                }`}
+              >
+                <p>Inventory</p>
+              </div>
+            </div>
+            <div className="mt-8">
+              {data == 'inventory' && (
+                <Inventory
+                  control={control}
+                  register={register}
+                  errors={errors}
+                />
+              )}
             </div>
           </div>
-          <div className="mt-8">
-            {data == 'inventory' && (
-              <Inventory
-                control={control}
-                register={register}
-                errors={errors}
-              />
-            )}
-          </div>
-        </div>
+        )}
         <div className="flex-grow" />
         <div className="text-center md:text-right md:flex space-x-4 fixed bottom-0 left-0 right-0 justify-center bg-white p-4">
           <div className="flex gap-2 w-full max-w-4xl justify-between">

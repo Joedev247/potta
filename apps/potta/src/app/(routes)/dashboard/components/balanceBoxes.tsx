@@ -1,6 +1,6 @@
 import React from 'react';
 import { useQuery } from '@tanstack/react-query';
-import axios from '@/config/axios.config';
+import axios from 'config/axios.config';
 
 const BalanceBox = () => {
   // Default organization and branch IDs

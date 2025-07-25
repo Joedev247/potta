@@ -4,7 +4,7 @@ import Chart from './dashboardChart';
 import BalanceBox from './balanceBoxes';
 import PieChart from '../../../charts/piechart';
 import { useQuery } from '@tanstack/react-query';
-import axios from '@/config/axios.config';
+import axios from 'config/axios.config';
 
 const DashboardExpenses = () => {
   const DEFAULT_ORGANIZATION_ID = 'f7b1b3b0-0b1b-4b3b-8b1b-0b1b3b0b1b3c';
@@ -197,14 +197,14 @@ const DashboardExpenses = () => {
           </div>
         </div>
         <div className="w-full flex space-x-5 mt-8">
-          <div className="w-[50%] border">
+          {/* <div className="w-[50%] border">
             <div className="w-full border-b py-3 bg-[#F3FBFB]">
               <h3>Expenses by Category</h3>
             </div>
             <div className="flex space-x-5 w-full px-2">
               <div className="my-5 w-[50%]">
                 {/* Pass real pie chart data */}
-                <PieChart
+                {/* <PieChart
                   data={pieChartData}
                   title="Expenses by Category"
                   width={200}
@@ -224,8 +224,8 @@ const DashboardExpenses = () => {
                 </div>
               </div>
             </div>
-          </div>
-          <div className="w-[50%] border">
+          </div> */} 
+          {/* <div className="w-[50%] border">
             <div className="w-full border-b py-3 bg-[#F3FBFB]">
               <h3>Expenses by Category</h3>
             </div>
@@ -251,7 +251,7 @@ const DashboardExpenses = () => {
                 </div>
               </div>
             </div>
-          </div>
+          </div> */}
         </div>
       </div>
     </div>

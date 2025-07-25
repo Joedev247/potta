@@ -1,4 +1,4 @@
-import axios from '@/config/axios.config';
+import axios from "config/axios.config";
 
 // Employee API
 export const employeeApi = {

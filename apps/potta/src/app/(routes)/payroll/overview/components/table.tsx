@@ -5,7 +5,7 @@ import { useQuery } from '@tanstack/react-query';
 import { employeeApi } from '../../utils/api';
 import TableSkeleton from './TableSkeleton';
 import Search from '@potta/components/search';
-import axios from '@/config/axios.config';
+import axios from 'config/axios.config';
 
 const PayrollTable = () => {
   const [searchQuery, setSearchQuery] = useState('');
@@ -457,8 +457,7 @@ const PayrollTable = () => {
           columns={columns}
           data={filteredData}
           ExpandableComponent={null}
-      expanded={false} // Not needed
-
+          expanded={false} // Not needed
         />
       )}
     </div>

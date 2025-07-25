@@ -18,35 +18,35 @@ const ModalInvoice: FC<IModalInvoice> = ({ isOpen, setIsOpen }) => {
       description: 'A document issued by the seller to a buyer which indicates the quantity and cost of the product purchased',
       image: '/images/invoice/invoice.svg',
       type: 'invoice',
-      link: '/invoice/new?type=invoice' // Unique link for regular invoice
+      link: '/account_receivables/new?type=invoice' // Unique link for regular invoice
     },
     {
       title: 'Proforma Invoice',
       description: 'A preliminary bill of sale sent in advance of shipment or delivery of goods',
       image: '/images/invoice/budget.svg',
       type: 'proforma',
-      link: '/invoice/new?type=proforma' // Unique link for proforma
+      link: '/account_receivables/new?type=proforma' // Unique link for proforma
     },
     {
       title: 'Prepayment Invoice',
       description: 'Record advanced payment',
       image: '/images/invoice/prepayment.svg',
       type: 'prepayment',
-      link: '/invoice/new?type=prepayment' // Unique link for prepayment
+      link: '/account_receivables/new?type=prepayment' // Unique link for prepayment
     },
     {
       title: 'Purchase Order',
       description: 'Create a purchase order for a seller indicating proposed goods and services, price and quantity',
       image: '/images/invoice/purchase.svg',
       type: 'purchase-order',
-      link: '/invoice/purchase-order' // Unique link for purchase order
+      link: '/account_receivables/purchase-order' // Unique link for purchase order
     },
     {
       title: 'Credit Note',
       description: 'Issue credit against future purchases',
       image: '/images/invoice/credit note.svg',
       type: 'credit-note',
-      link: '/invoice/credit' // Unique link for credit note
+      link: '/account_receivables/credit' // Unique link for credit note
     },
   ];
 

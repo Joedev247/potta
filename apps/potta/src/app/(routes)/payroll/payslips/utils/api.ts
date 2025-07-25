@@ -1,4 +1,4 @@
-import axios from '@/config/axios.config';
+import axios from 'config/axios.config';
 
 export const payslipsApi = {
   create: async (data: any) => {
@@ -14,7 +14,9 @@ export const payslipsApi = {
     return result.data;
   },
   getByEmployee: async (employeeId: string, params: any) => {
-    const result = await axios.get(`/payslips/employee/${employeeId}`, { params });
+    const result = await axios.get(`/payslips/employee/${employeeId}`, {
+      params,
+    });
     return result.data;
   },
   markAsPaid: async (id: string) => {
@@ -22,7 +24,9 @@ export const payslipsApi = {
     return result.data;
   },
   export: async (id: string) => {
-    const result = await axios.get(`/payslips/${id}/export`, { responseType: 'blob' });
+    const result = await axios.get(`/payslips/${id}/export`, {
+      responseType: 'blob',
+    });
     return result.data;
   },
-}; 
+};

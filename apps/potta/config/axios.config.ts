@@ -8,7 +8,20 @@ const axios = Axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_BASE_URL,
 });
 
-// Request interceptor to add headers and log requests
+let authToken: string | null = null;
+
+export function setAuthToken(token: string) {
+  authToken = token;
+}
+
+function getTokenFromUrl() {
+  if (typeof window !== 'undefined') {
+    const url = new URL(window.location.href);
+    return url.searchParams.get('token');
+  }
+  return null;
+}
+
 axios.interceptors.request.use((config: InternalAxiosRequestConfig) => {
   // Add the required headers to every request
   config.headers = config.headers || {};
@@ -27,10 +40,14 @@ axios.interceptors.request.use((config: InternalAxiosRequestConfig) => {
     config.headers.delete('Content-Type');
   }
 
-  config.headers['accept'] = '*/*';
-  config.headers['branchId'] = 'f7b1b3b0-0b1b-4b3b-8b1b-0b1b3b0b1b3b';
-  config.headers['orgId'] = 'f7b1b3b0-0b1b-4b3b-8b1b-0b1b3b0b1b3c';
-  config.headers['userId'] = 'f7b1b3b0-0b1b-4b3b-8b1b-0b1b3b0b1b3e';
+  let token = authToken || getTokenFromUrl();
+  if (token) {
+    config.headers['Authorization'] = `Bearer ${token}`;
+  }
+
+  // config.headers['branchId'] = 'f7b1b3b0-0b1b-4b3b-8b1b-0b1b3b0b1b3b';
+  // config.headers['orgId'] = 'f7b1b3b0-0b1b-4b3b-8b1b-0b1b3b0b1b3c';
+  // config.headers['userId'] = 'f7b1b3b0-0b1b-4b3b-8b1b-0b1b3b0b1b3e';
   // config.headers['userId'] = 'f7b1b3b0-0b1b-4b3b-8b1b-0b1b3b0b1b3d';
 
   // Log the outgoing request
@@ -76,9 +93,3 @@ axios.interceptors.response.use(
 );
 
 export default axios;
-
-
-
-
-  
-  

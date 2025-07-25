@@ -1,6 +1,6 @@
 'use client';
 import React, { useState } from 'react';
-import DataGrid from '@potta/app/(routes)/invoice/components/DataGrid';
+import DataGrid from '@potta/app/(routes)/account_receivables/components/DataGrid';
 import CustomLoader from '@potta/components/loader';
 import useGetAllTransactions from '../hooks/useGetAllTransaction';
 import moment from 'moment';
@@ -11,7 +11,6 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@potta/components/shadcn/dropdown';
-import { FaMobileAlt } from 'react-icons/fa';
 import { svgIcons } from '@potta/components/svg_icons/IconsSvg';
 import TransactionSlider from './TransactionSlider';
 

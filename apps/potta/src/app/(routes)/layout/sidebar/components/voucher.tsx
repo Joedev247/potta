@@ -84,7 +84,7 @@ const SidebarsVoucher = () => {
           <h3 className="text-lg ">Customers</h3>
         </MenuItem>
         <MenuItem
-          active={isActive('/invoice/reports')}
+          active={isActive('/vouchers/reports')}
           className=""
           href="/vouchers/reports"
           icon={

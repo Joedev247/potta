@@ -50,7 +50,7 @@ const SidebarsPayroll = () => {
           href="/payroll/people"
           icon={svgIcons.users(str[2] == 'people' ? 'white' : 'black')}
         >
-          <h3 className="text-md ">People</h3>
+          <h3 className="text-md ">Employees</h3>
         </MenuItem>
 
         {/* Time Management with submenu */}

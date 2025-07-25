@@ -13,6 +13,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { ContextData } from './context';
 import { menuStructure } from './navbarLinks';
+import { useAuth } from '../app/(routes)/auth/AuthContext';
 
 export type MenuItem = {
   title: string;
@@ -29,23 +30,27 @@ const slugify = (str: string) =>
     .replace(/(^-|-$)+/g, '');
 
 const ImprovedCustomNavbar = () => {
+  const { user } = useAuth ? useAuth() : { user: null };
   const [activeMenu, setActiveMenu] = useState<number | null>(null);
   const [showUserMenu, setShowUserMenu] = useState(false);
   const pathname = usePathname();
   const context = useContext(ContextData);
-
+  console.log(user?.user?.user);
   const isHome = pathname === '/';
 
   return (
     <nav className="flex gap-6 items-center px-6 py-4 bg-white sticky top-0 left-0 z-30 w-full shadow-sm border-b border-gray-100">
       {/* Logo */}
-      <div className="font-bold cursor-pointer text-xl text-black flex-shrink-0">
+      <Link
+        href="/"
+        className="font-bold cursor-pointer text-xl text-black flex-shrink-0"
+      >
         <img
           src="/images/pottaLogo.svg"
           alt="Potta Logo"
           className="h-8 w-auto"
         />
-      </div>
+      </Link>
 
       {/* Main Navigation Menu */}
       <ul className="flex space-x-1 flex-1 text-[15px]">
@@ -331,9 +336,17 @@ const ImprovedCustomNavbar = () => {
             onClick={() => setShowUserMenu(!showUserMenu)}
             className="flex items-center space-x-2 p-2 rounded-full hover:bg-gray-50 transition-all duration-200 group"
           >
-            <div className="h-8 w-8 bg-gradient-to-br from-green-500 to-green-600 rounded-full flex items-center justify-center shadow-sm">
-              <User className="h-4 w-4 text-white" />
-            </div>
+            {user?.branch?.organization?.logo ? (
+              <img
+                src={user.branch.organization.logo}
+                // alt={user.branch.organization.name || 'Org Logo'}
+                className="h-8 w-8 rounded-full object-cover border border-gray-200 bg-white"
+              />
+            ) : (
+              <div className="h-8 w-8 bg-gradient-to-br from-green-500 to-green-600 rounded-full flex items-center justify-center shadow-sm">
+                <User className="h-4 w-4 text-white" />
+              </div>
+            )}
             <ChevronDown className="h-4 w-4 text-gray-600 transition-transform duration-200 group-hover:rotate-180" />
           </button>
 
@@ -341,14 +354,21 @@ const ImprovedCustomNavbar = () => {
             <div className="absolute right-0 mt-3 w-56 bg-white  shadow-sm border border-gray-200 z-50 backdrop-blur-sm">
               <div className="p-2">
                 <div className="px-3 py-2 border-b border-gray-100 mb-1">
-                  <p className="text-sm font-medium text-gray-900">John Doe</p>
-                  <p className="text-xs text-gray-500">john@example.com</p>
+                  <p className="text-sm font-medium text-gray-900">
+                    {user?.user?.firstName || user?.user?.username || 'User'}
+                  </p>
+                  <p className="text-xs text-gray-500">
+                    {user?.user?.email || ''}
+                  </p>
                 </div>
                 <button className="flex items-center w-full px-3 py-2.5 text-sm text-gray-700 hover:bg-gray-50  transition-colors duration-200">
                   <User className="h-4 w-4 mr-3 text-gray-500" />
                   Profile
                 </button>
-                <Link href="/settings" className="flex items-center w-full px-3 py-2.5 text-sm text-gray-700 hover:bg-gray-50  transition-colors duration-200">
+                <Link
+                  href="/settings"
+                  className="flex items-center w-full px-3 py-2.5 text-sm text-gray-700 hover:bg-gray-50  transition-colors duration-200"
+                >
                   <Settings className="h-4 w-4 mr-3 text-gray-500" />
                   Settings
                 </Link>

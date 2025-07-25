@@ -4,9 +4,11 @@ import React, { useState } from 'react';
 import { createPortal } from 'react-dom';
 
 import ProductStepperModal from './ProductStepperModal';
+import CreateProduct from './slides/components/create_product/inventory';
 import { PopoverAction } from '@potta/components/tableActionsPopover';
 import { NextPopover } from '@potta/components/popover';
-import CreateNonInventoryProduct from './slides/components/create_product/nonInventory';
+
+import CreateBundleProduct from './slides/components/create_product/bundle';
 import { Proportions, SquareStack } from 'lucide-react';
 import RestockModal from './slides/components/restock';
 import { useInventory } from '../_utils/context';
@@ -17,6 +19,7 @@ const Filter = () => {
   const [searchValue, setSearchValue] = useState('');
   const [isCreateOpen, setIsCreateOpen] = useState(false);
   const [isImportOpen, setIsImportOpen] = useState(false);
+  const [isBundleOpen, setIsBundleOpen] = useState(false);
   const [isRestockOpen, setIsRestockOpen] = useState(false);
   const [openPopover, setOpenPopover] = useState<string | null>(null);
   const { selectedProduct } = useInventory();
@@ -39,16 +42,23 @@ const Filter = () => {
 
   const actions: PopoverAction[] = [
     {
-      label: 'Inventory Item',
+      label: 'Physical Item',
       onClick: () => {
         setIsCreateOpen(true);
       },
       className: 'hover:bg-gray-200',
     },
     {
-      label: 'Non Inventory Item',
+      label: 'Service Item',
       onClick: () => {
         setIsImportOpen(true);
+      },
+      className: 'hover:bg-gray-200',
+    },
+    {
+      label: 'Bundle Items',
+      onClick: () => {
+        setIsBundleOpen(true);
       },
       className: 'hover:bg-gray-200',
     },
@@ -127,10 +137,12 @@ const Filter = () => {
       </div>
 
       <ProductStepperModal open={isCreateOpen} setOpen={setIsCreateOpen} />
-      <CreateNonInventoryProduct
+      <CreateProduct
         open={isImportOpen}
         setOpen={setIsImportOpen}
+        productType="SERVICE"
       />
+      <CreateBundleProduct open={isBundleOpen} setOpen={setIsBundleOpen} />
       {typeof window !== 'undefined' &&
         createPortal(
           <RestockModal open={isRestockOpen} setOpen={setIsRestockOpen} />,

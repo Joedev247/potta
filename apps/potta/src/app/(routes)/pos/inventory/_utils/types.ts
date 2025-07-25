@@ -28,6 +28,16 @@ export type Product = {
   tax?: { name: string } | null;
   images: any[] | null;
   status: string;
+  type?: 'PHYSICAL' | 'SERVICE';
+  structure?: 'SIMPLE' | 'BUNDLE';
+  reorderPoint?: number;
+  components?: ProductComponent[];
+};
+
+export type ProductComponent = {
+  productId: string;
+  quantity: number;
+  product?: Product;
 };
 
 export type ProductResponse = {

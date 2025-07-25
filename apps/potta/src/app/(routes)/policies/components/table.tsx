@@ -10,8 +10,8 @@ import CreateRuleModal from './createRuleModal';
 import ViewPolicyModal from './viewPolicyModal';
 import DeletePolicyModal from './deletePolicyModal';
 import { ExtendedApprovalRule } from '../../policy/types/approval-rule';
-import DataGrid from '../../invoice/components/DataGrid';
-import { IColumnDef } from '../../invoice/_utils/types';
+import DataGrid from '../../account_receivables/components/DataGrid';
+import { IColumnDef } from '../../account_receivables/_utils/types';
 import { HeaderContext } from '@tanstack/react-table';
 import {
   DropdownMenu,

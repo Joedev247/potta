@@ -5,6 +5,7 @@ import Icon from '../../../../../components/icon_fonts/icon';
 import { usePathname } from 'next/navigation';
 import { PiBuildingApartmentLight } from 'react-icons/pi';
 import { Home, ScrollText, Menu as MenuIcon, Briefcase } from 'lucide-react';
+import { MdManageAccounts } from 'react-icons/md';
 
 const SidebarsAccounts = () => {
   const pathname = usePathname();
@@ -37,13 +38,13 @@ const SidebarsAccounts = () => {
         </MenuItem>
         {/* Dashboard */}
         <MenuItem
-          active={isActive('/accounts') && pathParts.length === 2}
+          active={isActive('/accounting') && pathParts.length === 2}
           className="mt-8"
-          href="/accounts"
+          href="/accounting"
           icon={
-            <Home
+            <MdManageAccounts
               className={`h-6 w-6 ${
-                isActive('/accounts') && pathParts.length === 2
+                isActive('/accounting') && pathParts.length === 2
                   ? 'text-white'
                   : 'text-gray-500'
               }`}
@@ -55,13 +56,13 @@ const SidebarsAccounts = () => {
 
         {/* Journal */}
         <MenuItem
-          active={isActive('/accounts/journals')}
+          active={isActive('/accounting/journals')}
           className=""
-          href="/accounts/journals"
+          href="/accounting/journals"
           icon={
             <ScrollText
               className={`h-6 w-6 ${
-                isActive('/accounts/journals') ? 'text-white' : 'text-gray-500'
+                isActive('/accounting/journals') ? 'text-white' : 'text-gray-500'
               }`}
             />
           }
@@ -70,13 +71,13 @@ const SidebarsAccounts = () => {
         </MenuItem>
         {/* Assets */}
         <MenuItem
-          active={isActive('/accounts/assets')}
+          active={isActive('/accounting/assets')}
           className=""
-          href="/accounts/assets"
+          href="/accounting/assets"
           icon={
             <PiBuildingApartmentLight
               className={`h-6 w-6 ${
-                isActive('/accounts/assets') ? 'text-white' : 'text-gray-500'
+                isActive('/accounting/assets') ? 'text-white' : 'text-gray-500'
               }`}
             />
           }

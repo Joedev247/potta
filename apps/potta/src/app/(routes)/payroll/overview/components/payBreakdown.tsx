@@ -3,7 +3,7 @@ import React from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { employeeApi } from '../../utils/api';
 import PayBreakdownSkeleton from './PayBreakdownSkeleton';
-import axios from '@/config/axios.config';
+import axios from 'config/axios.config';
 
 const PayBreakDown = () => {
   // Fetch employees with all details
