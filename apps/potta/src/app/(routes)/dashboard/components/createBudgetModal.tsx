@@ -12,10 +12,9 @@ import SearchableSelect, {
 import { CalendarIcon, Info } from 'lucide-react';
 import { DateInput } from '../../../../components/customDatePicker';
 import { CalendarDate } from '@internationalized/date';
-import { useCreateBudget } from '../../expenses/budgets/hooks/useCreateBudget';
-import { useAccountingAccounts } from '../../expenses/budgets/hooks/useAccountingAccounts';
 import axios from 'config/axios.config';
 import toast from 'react-hot-toast';
+import { useCreateBudget } from '../../account_payables/budgets/hooks/useCreateBudget';
 
 type ApprovalRequirement = 'one' | 'at_least' | 'all';
 type RecurrenceType = 'DAILY' | 'WEEKLY' | 'MONTHLY' | 'QUARTERLY' | 'ANNUALLY';

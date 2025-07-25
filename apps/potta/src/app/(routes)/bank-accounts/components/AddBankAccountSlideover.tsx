@@ -9,7 +9,7 @@ import CardNumberInput from '@potta/components/CardNumberInput';
 import { useCreateBankAccount } from '../hooks/useCreateBankAccount';
 import { createBankAccountSchema } from '../utils/validation';
 import toast from 'react-hot-toast';
-import { accountsApi } from '../../accounts/utils/api';
+import { accountsApi } from '../../accounting/utils/api';
 
 const accountTypeOptions = [
   { label: 'Bank Account', value: 'Bank_Account' },

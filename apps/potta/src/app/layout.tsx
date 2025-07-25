@@ -10,6 +10,7 @@ import { Toaster } from 'react-hot-toast';
 
 import { HeroUIProvider } from '@heroui/react';
 import { AuthProvider } from './(routes)/auth/AuthContext';
+import AuthGuard from './_components/AuthGuard';
 
 const geistSans = localFont({
   src: './fonts/GeistVF.woff',
@@ -36,16 +37,16 @@ export default function RootLayout({
   return (
     <DataProvider>
       <AuthProvider>
-      <html lang="en" suppressHydrationWarning>
-        <body
-          className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-        >
-          <TanstackQueryClientProvider>
-            <HeroUIProvider>
-              <Toaster position="top-center" />
-              {children}
-            </HeroUIProvider>
-          </TanstackQueryClientProvider>
+        <html lang="en" suppressHydrationWarning>
+          <body
+            className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+          >
+            <TanstackQueryClientProvider>
+              <HeroUIProvider>
+                <Toaster position="top-center" />
+                <AuthGuard>{children}</AuthGuard>
+              </HeroUIProvider>
+            </TanstackQueryClientProvider>
           </body>
         </html>
       </AuthProvider>

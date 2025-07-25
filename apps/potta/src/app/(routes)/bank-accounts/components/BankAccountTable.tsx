@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import MyTable from '@potta/components/table';
-import { accountsApi } from '../../accounts/utils/api';
 import { MoreVertical } from 'lucide-react';
 import {
   DropdownMenu,
@@ -9,6 +8,7 @@ import {
   DropdownMenuTrigger,
 } from '@potta/components/shadcn/dropdown';
 import moment from 'moment';
+import { accountsApi } from '../../accounting/utils/api';
 
 interface BankAccountTableProps {
   ledgerAccountId: string;

@@ -7,7 +7,7 @@ import CustomDatePicker from '@potta/components/customDatePicker';
 import SearchableSelect from '@potta/components/searchableSelect';
 import { CalendarDate } from '@internationalized/date';
 import FileUpload from '@potta/components/fileUpload';
-import { accountsApi } from '@potta/app/(routes)/accounts/utils/api';
+import { accountsApi } from '@potta/app/(routes)/accounting/utils/api';
 
 const typeOptions = [
   { label: 'Out of Pocket', value: 'out_of_pocket' },
