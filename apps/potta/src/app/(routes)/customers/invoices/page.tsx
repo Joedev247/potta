@@ -1,10 +1,10 @@
 'use client';
-import InvoiceTableComponents from './components/table';
 
 import { useState } from 'react';
 
 import { ContextData } from '@potta/components/context';
 import { useContext } from 'react';
+import InvoiceTableComponents from '../../account_receivables/credit/components/table';
 const Invoice = () => {
   const context = useContext(ContextData);
 

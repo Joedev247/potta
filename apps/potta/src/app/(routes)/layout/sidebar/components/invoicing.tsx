@@ -3,6 +3,7 @@ import { Sidebar, Menu, MenuItem, SubMenu } from 'react-pro-sidebar';
 import { usePathname } from 'next/navigation';
 import { ContextData } from '@potta/components/context';
 import Icon from '@potta/components/icon_fonts/icon';
+import SidebarProfile from './SidebarProfile';
 import {
   ChartPie,
   CircleDollarSign,
@@ -129,7 +130,7 @@ const Sidebarsinvoicing = () => {
           <h3 className="text-lg mt-1.5">Vouchers</h3>
         </MenuItem>
 
-        <MenuItem
+        {/* <MenuItem
           active={isActive('/account_receivables/payments')}
           className="text-md"
           href="/account_receivables/payments"
@@ -144,16 +145,16 @@ const Sidebarsinvoicing = () => {
           }
         >
           <h3 className="text-lg mt-1.5">Payments</h3>
-        </MenuItem>
+        </MenuItem> */}
         <MenuItem
-          active={isActive('/account_receivables/sales-receipts')}
+          active={isActive('/account_receivables/sales_receipts')}
           className="text-md"
-          href="/account_receivables/sales-receipts"
+          href="/account_receivables/sales_receipts"
           icon={
             <FileText
               size={23}
               color={
-                isActive('/account_receivables/sales-receipts')
+                isActive('/account_receivables/sales_receipts')
                   ? 'white'
                   : 'black'
               }
@@ -179,15 +180,13 @@ const Sidebarsinvoicing = () => {
           <h3 className="text-lg mt-1.5">Inbox</h3>
         </MenuItem> */}
         <MenuItem
-          active={isActive('/account_receivables/reports')}
+          active={isActive('/reports')}
           className="text-md"
-          href="/account_receivables/reports"
+          href="/reports"
           icon={
             <ChartPie
               className={`h-6 w-6 ${
-                isActive('/account_receivables/reports')
-                  ? 'text-white'
-                  : 'text-gray-900'
+                isActive('/reports') ? 'text-white' : 'text-gray-900'
               }`}
             />
           }
@@ -195,21 +194,7 @@ const Sidebarsinvoicing = () => {
           <h3 className="text-lg mt-1.5">Reports</h3>
         </MenuItem>
       </Menu>
-      <div className="absolute cursor-pointer mb-10 ml-6 bottom-0">
-        <div className="flex-1 space-y-7 flex-col">
-          <Icon
-            onClick={() => {
-              context?.setToggle(!context?.toggle);
-            }}
-            icon="Menu-1"
-            size={23}
-          />
-          <div className="flex space-x-5">
-            <img src="/icons/user.svg" className="h-10 w-10 -ml-2" alt="" />
-            <p className="mt-2 text-lg ml-3 font-thin">Jamison</p>
-          </div>
-        </div>
-      </div>
+      <SidebarProfile context={context} />
     </Sidebar>
   );
 };

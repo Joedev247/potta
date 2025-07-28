@@ -34,14 +34,14 @@ const urlRouters = [
     value: 'pos',
     label: 'POS',
   },
-  {
-    value: 'taxation',
-    label: 'Tax',
-  },
-  {
-    value: 'treasury',
-    label: 'Treasury',
-  },
+  // {
+  //   value: 'taxation',
+  //   label: 'Tax',
+  // },
+  // {
+  //   value: 'treasury',
+  //   label: 'Treasury',
+  // },
 
   {
     value: 'accounting',
@@ -91,6 +91,7 @@ const routesWithoutBlueBackground = [
   { main: 'settings' },
   { main: 'accounting' },
   { main: 'bank-accounts' },
+  { main: 'pos' },
   { main: 'pos', sub: 'files' },
   { main: 'pos', sub: 'inventory' },
   { main: 'invoice', sub: 'new' },

@@ -13,7 +13,7 @@ import { useMemo } from 'react';
 import { useCreateAsset } from '../hooks/useCreateAsset';
 import toast from 'react-hot-toast';
 import { createAssetSchema } from '../utils/validation';
-import { fetchPurchaseOrders } from '@potta/app/(routes)/account_receivables/purchase/utils/api';
+import { fetchPurchaseOrders } from '@potta/app/(routes)/account_payables/purchase/utils/api';
 
 const assetTypeOptions = [
   { label: 'Equipment', value: 'Equipment' },

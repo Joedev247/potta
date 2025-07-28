@@ -62,7 +62,7 @@ export default function RootLayout({
                 ? context?.toggle
                   ? 'flex w-full pl-[35px]'
                   : 'pl-[150px] w-full'
-                : 'w-full'
+                : 'w-full pl-5'
             }`}
           >
             <div className="w-full relative mx-0">

@@ -228,7 +228,7 @@ export function BudgetCard({
   };
 
   return (
-    <Link href={`/expenses/budgets/${budget.uuid}`}>
+    <Link href={`/account_payables/budgets/${budget.uuid}`}>
       <Card className="bg-white shadow-sm hover:shadow-md transition-shadow duration-200 cursor-pointer relative overflow-hidden">
         <CardHeader className="pb-6">
           <div className="flex justify-between items-start gap-2">
@@ -284,7 +284,7 @@ export function BudgetCard({
                   <DropdownMenuItem
                     onClick={(e) => {
                       e.preventDefault();
-                      router.push(`/expenses/budgets/${budget.uuid}`);
+                      router.push(`/account_payables/budgets/${budget.uuid}`);
                     }}
                   >
                     View Details

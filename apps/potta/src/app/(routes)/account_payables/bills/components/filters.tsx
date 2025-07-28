@@ -77,7 +77,7 @@ const Filter: React.FC<FilterProps> = ({
           icon={<img src="/images/export.svg" />}
           theme="lightBlue"
         />
-        <Link className="flex justify-end" href={'/expenses/bills/new'}>
+        <Link className="flex justify-end" href={'/account_payables/bills/new'}>
           <Button
             text={'Create New'}
             icon={<i className="ri-file-add-line"></i>}

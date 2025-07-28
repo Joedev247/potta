@@ -234,7 +234,7 @@ const Left = () => {
     mutation.mutate(billData, {
       onSuccess: () => {
         toast.success('Bill created successfully');
-        router.push('/expenses/bills');
+        router.push('/account_payables/bills');
       },
       onError: (error: any) => {
         toast.error(

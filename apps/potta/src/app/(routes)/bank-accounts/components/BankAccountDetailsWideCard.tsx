@@ -16,7 +16,7 @@ import {
 } from 'lucide-react';
 import { Skeleton } from '@potta/components/shadcn/skeleton';
 import { Button } from '@potta/components/shadcn/button';
-import { accountsApi } from '../../accounts/utils/api';
+import { accountsApi } from '../../accounting/utils/api';
 
 interface BankAccountDetailsWideCardProps {
   account: any;

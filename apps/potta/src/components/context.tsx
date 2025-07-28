@@ -92,9 +92,9 @@ const DataProvider: React.FC<Children> = ({ children }) => {
   const [layoutMode, setLayoutMode] = useState<'navbar' | 'sidebar'>(() => {
     if (typeof window !== 'undefined') {
       const saved = localStorage.getItem('potta_layoutMode');
-      return (saved as 'navbar' | 'sidebar') || 'navbar';
+      return (saved as 'navbar' | 'sidebar') || 'sidebar';
     }
-    return 'navbar';
+    return 'sidebar';
   });
 
   // Track if layout has been loaded from localStorage

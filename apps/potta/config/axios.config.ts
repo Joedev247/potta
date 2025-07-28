@@ -2,6 +2,7 @@ import Axios, {
   AxiosResponse,
   InternalAxiosRequestConfig,
   AxiosHeaders,
+  AxiosError,
 } from 'axios';
 
 const axios = Axios.create({
@@ -22,9 +23,31 @@ function getTokenFromUrl() {
   return null;
 }
 
+axios.interceptors.response.use(
+  (response: AxiosResponse) => {
+    return response;
+  },
+  (error) => {
+    // Handle 401 Unauthorized responses
+    if (error.response?.status === 401) {
+      // Clear any stored tokens
+      if (typeof window !== 'undefined') {
+        // Clear cookies
+        document.cookie =
+          'auth_token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+        // Redirect to auth page
+        window.location.href = 'https://instanvi-auth.vercel.app';
+      }
+    }
+    return Promise.reject(error);
+  }
+);
+
 axios.interceptors.request.use((config: InternalAxiosRequestConfig) => {
   // Add the required headers to every request
-  config.headers = config.headers || {};
+  if (!config.headers) {
+    config.headers = new AxiosHeaders();
+  }
 
   // Only set Content-Type to application/json if it's not already set
   // This allows the uploadImage function to set its own Content-Type

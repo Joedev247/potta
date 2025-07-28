@@ -61,21 +61,6 @@ const SettingsPage = () => {
                 Switch between sidebar and navbar navigation modes
               </p>
             </div>
-            <div className="flex items-center gap-3">
-              <div className="flex items-center gap-2">
-                <Sidebar className="h-4 w-4 text-slate-500" />
-                <span className="text-xs text-slate-600">Sidebar</span>
-              </div>
-              <Switch
-                checked={context?.layoutMode === 'navbar'}
-                onCheckedChange={() => handleLayoutChange('navbar')}
-                className="data-[state=checked]:bg-green-600"
-              />
-              <div className="flex items-center gap-2">
-                <span className="text-xs text-slate-600">Navbar</span>
-                <Monitor className="h-4 w-4 text-slate-500" />
-              </div>
-            </div>
           </div>
 
           <Separator />

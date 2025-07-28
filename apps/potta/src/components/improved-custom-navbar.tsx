@@ -30,7 +30,9 @@ const slugify = (str: string) =>
     .replace(/(^-|-$)+/g, '');
 
 const ImprovedCustomNavbar = () => {
-  const { user } = useAuth ? useAuth() : { user: null };
+  const { user, signOut } = useAuth
+    ? useAuth()
+    : { user: null, signOut: () => {} };
   const [activeMenu, setActiveMenu] = useState<number | null>(null);
   const [showUserMenu, setShowUserMenu] = useState(false);
   const pathname = usePathname();
@@ -373,7 +375,14 @@ const ImprovedCustomNavbar = () => {
                   Settings
                 </Link>
                 <hr className="my-1 border-gray-100" />
-                <button className="flex items-center w-full px-3 py-2.5 text-sm text-red-600 hover:bg-red-50  transition-colors duration-200">
+                <button
+                  onClick={() => {
+                    if (confirm('Are you sure you want to sign out?')) {
+                      signOut();
+                    }
+                  }}
+                  className="flex items-center w-full px-3 py-2.5 text-sm text-red-600 hover:bg-red-50  transition-colors duration-200"
+                >
                   <LogOut className="h-4 w-4 mr-3" />
                   Sign out
                 </button>
