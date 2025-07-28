@@ -4,8 +4,9 @@ import { usePathname } from 'next/navigation';
 import Icon from '@potta/components/icon_fonts/icon';
 import { ContextData } from '@potta/components/context';
 import { Heart, Clock } from 'lucide-react';
-import { GiReceiveMoney } from "react-icons/gi";
+import { GiReceiveMoney } from 'react-icons/gi';
 import { svgIcons } from '@potta/components/svg_icons/IconsSvg';
+import SidebarProfile from './SidebarProfile';
 
 const SidebarsPayroll = () => {
   const pathname = usePathname();
@@ -147,21 +148,7 @@ const SidebarsPayroll = () => {
           <h3 className="text-md ">Reports</h3>
         </MenuItem>
       </Menu>
-      <div className="absolute cursor-pointer mb-10 ml-6 bottom-0">
-        <div className="flex-1 space-y-7 flex-col">
-          <Icon
-            onClick={() => {
-              context?.setToggle(!context?.toggle);
-            }}
-            icon="Menu-1"
-            size={23}
-          />
-          <div className="flex space-x-5">
-            <img src="/icons/user.svg" className="h-10 w-10 -ml-2" alt="" />
-            <p className="mt-2 text-md ml-3 ">Jamison</p>
-          </div>
-        </div>
-      </div>
+      <SidebarProfile context={context} />
     </Sidebar>
   );
 };

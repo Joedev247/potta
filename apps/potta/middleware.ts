@@ -30,11 +30,17 @@ export async function middleware(request: NextRequest) {
   const token = request.cookies.get('auth_token')?.value;
   const urlToken = request.nextUrl.searchParams.get('token');
 
-  // If no token in cookies or URL, redirect to auth page
-  if (!token && !urlToken) {
+  // If there's a token in the URL, allow the request to proceed
+  // The client-side code will handle the token processing
+  if (urlToken) {
+    return NextResponse.next();
+  }
+
+  // If no token in cookies and no URL token, redirect to auth page
+  if (!token) {
     const authUrl = new URL(AUTH_URL);
     // Add the current URL as a redirect parameter
-    authUrl.searchParams.set('redirect', request.url);
+    authUrl.searchParams.set('redirectUrl', request.url);
     return NextResponse.redirect(authUrl);
   }
 

@@ -11,13 +11,14 @@ interface AuthContextType {
   user: User | null;
   token: string | null;
   setToken: (token: string) => void;
+  signOut: () => void;
   isAuthenticated: boolean;
   isLoading: boolean;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-// Token decryption function
+// Token decryption function using AES-GCM with SHA256 key derivation
 async function decryptToken(
   encryptedBase64: string,
   secretKey: string
@@ -71,21 +72,31 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 
   useEffect(() => {
     const handleToken = async () => {
+      console.log('AuthContext: Starting token handling...');
+
       // Extract token from URL
       const url = new URL(window.location.href);
       const urlToken = url.searchParams.get('token');
       const secret = process.env.NEXT_PUBLIC_ENCRYPTION_SECRET ?? '';
 
+      console.log('AuthContext: URL token found:', !!urlToken);
+      console.log('AuthContext: Secret available:', !!secret);
+
       if (!secret) {
+        console.error('AuthContext: No encryption secret found');
         toast.error('Unauthorized action');
         return;
       }
 
       if (urlToken) {
+        console.log('AuthContext: Processing URL token...');
         try {
           // Decrypt the token
           const decryptedToken = await decryptToken(urlToken, secret);
-          console.log('Decrypted token:', decryptedToken);
+          console.log(
+            'AuthContext: Successfully decrypted token:',
+            decryptedToken
+          );
 
           setTokenState(decryptedToken);
           setAuthToken(decryptedToken);
@@ -94,19 +105,26 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
           // Clean up URL by removing the token parameter
           const newUrl = new URL(window.location.href);
           newUrl.searchParams.delete('token');
+          newUrl.searchParams.delete('redirectUrl'); // Also clean up redirectUrl if present
           window.history.replaceState({}, '', newUrl.toString());
+
+          console.log('AuthContext: Token processed and URL cleaned');
         } catch (err) {
-          console.error('Failed to decrypt token:', err);
+          console.error('AuthContext: Failed to decrypt token:', err);
           toast.error('Invalid token');
           // Redirect to auth page on decryption failure
           window.location.href = 'https://instanvi-auth.vercel.app';
         }
       } else {
+        console.log('AuthContext: No URL token, checking cookies...');
         // If no token in URL, try to load from cookie
         const cookieToken = Cookies.get('auth_token');
         if (cookieToken) {
+          console.log('AuthContext: Found token in cookies');
           setTokenState(cookieToken);
           setAuthToken(cookieToken);
+        } else {
+          console.log('AuthContext: No token found in cookies');
         }
       }
     };
@@ -143,6 +161,27 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     Cookies.set('auth_token', t, { expires: 7 });
   };
 
+  const signOut = () => {
+    console.log('AuthContext: Signing out...');
+
+    // Clear token state
+    setTokenState(null);
+    setUser(null);
+
+    // Clear auth token from axios
+    setAuthToken('');
+
+    // Clear cookies
+    Cookies.remove('auth_token');
+
+    // Clear any other auth-related cookies
+    document.cookie =
+      'auth_token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+
+    // Redirect to auth page
+    window.location.href = 'https://instanvi-auth.vercel.app';
+  };
+
   const isAuthenticated = !!token && !!user;
 
   return (
@@ -151,6 +190,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
         user,
         token,
         setToken,
+        signOut,
         isAuthenticated,
         isLoading,
       }}

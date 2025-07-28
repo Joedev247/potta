@@ -4,6 +4,7 @@ import { usePathname } from 'next/navigation';
 import Icon from '@potta/components/icon_fonts/icon';
 import { ContextData } from '@potta/components/context';
 import { svgIcons } from '@potta/components/svg_icons/IconsSvg';
+import SidebarProfile from './SidebarProfile';
 import {
   CreditCard,
   Banknote,
@@ -57,35 +58,22 @@ const SidebarsSettings = () => {
           const IconComponent = item.icon;
           const isActive = str[1] === item.value;
           return (
-            <MenuItem
-              key={item.value}
-              active={isActive}
-              className={`${index === 0 ? 'mt-10' : 'mt-0'}`}
-              href={`/${item.value}`}
-              icon={
-                <IconComponent size={21} color={isActive ? 'white' : 'black'} />
-              }
-            >
-              <h3 className="text-md mt-[2px]">{item.label}</h3>
-            </MenuItem>
+            // <MenuItem
+            //   key={item.value}
+            //   active={isActive}
+            //   className={`${index === 0 ? 'mt-10' : 'mt-0'}`}
+            //   href={`/${item.value}`}
+            //   icon={
+            //     <IconComponent size={21} color={isActive ? 'white' : 'black'} />
+            //   }
+            // >
+            //   <h3 className="text-md mt-[2px]">{item.label}</h3>
+            // </MenuItem>
+            <></>
           );
         })}
       </Menu>
-      <div className="absolute cursor-pointer mb-10 ml-6 bottom-0">
-        <div className="flex-1 space-y-7 flex-col">
-          <Icon
-            onClick={() => {
-              context?.setToggle && context?.setToggle(!context?.toggle);
-            }}
-            icon="Menu-1"
-            size={23}
-          />
-          <div className="flex space-x-5">
-            <img src="/icons/user.svg" className="h-10 w-10 -ml-2" alt="" />
-            <p className="mt-2 text-md ml-3 font-thin">Jamison</p>
-          </div>
-        </div>
-      </div>
+      <SidebarProfile context={context} />
     </Sidebar>
   );
 };

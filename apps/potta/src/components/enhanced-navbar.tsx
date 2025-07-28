@@ -14,6 +14,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { ContextData } from './context';
 import Select from './select';
+import { useAuth } from '../app/(routes)/auth/AuthContext';
 
 export type MenuItem = {
   title: string;
@@ -47,6 +48,7 @@ const EnhancedNavbar = () => {
   const [showSidebarMenu, setShowSidebarMenu] = useState(false);
   const pathname = usePathname();
   const context = useContext(ContextData);
+  const { signOut } = useAuth();
 
   const isHome = pathname === '/';
 
@@ -202,7 +204,14 @@ const EnhancedNavbar = () => {
                       Settings
                     </button>
                     <hr className="my-1" />
-                    <button className="flex items-center w-full px-4 py-2 text-sm text-red-600 hover:bg-gray-100">
+                    <button
+                      onClick={() => {
+                        if (confirm('Are you sure you want to sign out?')) {
+                          signOut();
+                        }
+                      }}
+                      className="flex items-center w-full px-4 py-2 text-sm text-red-600 hover:bg-gray-100"
+                    >
                       <LogOut className="h-4 w-4 mr-2" />
                       Sign out
                     </button>

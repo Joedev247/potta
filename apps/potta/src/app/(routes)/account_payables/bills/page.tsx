@@ -18,7 +18,7 @@ export default function DashboardPage() {
       <div
         className={`${
           context?.layoutMode === 'sidebar' ? 'pl-16 !mt-4' : 'pl-5 !mt-4'
-        } bg-gray-50 min-h-[92vh] space-y-14 pr-5 w-full pt-6`}
+        } min-h-[92vh] space-y-14 pr-5 w-full pt-6`}
       >
         {/* Top Row Cards (same as before) */}
 
