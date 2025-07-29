@@ -10,6 +10,7 @@ import CustomDatePicker from '@potta/components/customDatePicker';
 import axios from 'config/axios.config';
 import { useValidation } from '../hooks/useValidation';
 import { baseInfoValidationSchema } from '../validations/baseInfoValidation';
+import { useOrgRoles } from '../hooks/useOrgRoles';
 
 // Define enum for marital status
 enum MaritalStatusEnum {
@@ -38,12 +39,13 @@ interface PhoneMetadata {
   rawInput: string;
 }
 
-// Define Role interface
-interface Role {
-  uuid: string;
+// Define OrgRole interface
+interface OrgRole {
+  id: string;
   name: string;
-  description?: string;
-  is_active?: boolean;
+  organizationId: string;
+  branchId: string | null;
+  permissions: any;
 }
 
 const BaseInfo: React.FC<BaseInfoProps> = ({
@@ -58,7 +60,7 @@ const BaseInfo: React.FC<BaseInfoProps> = ({
   const [formData, setFormData] = useState({
     employmentType: 'Employee',
     jobTitle: '',
-    roleId: '',
+    roleName: '',
     firstName: '',
     lastName: '',
     phoneNumber: '',
@@ -113,12 +115,15 @@ const BaseInfo: React.FC<BaseInfoProps> = ({
     }
   }, [showValidationErrors, validate, formData]);
 
-  // State for roles
-  const [roles, setRoles] = useState<Role[]>([]);
-  const [roleOptions, setRoleOptions] = useState<
-    { label: string; value: string }[]
-  >([]);
-  const [isLoadingRoles, setIsLoadingRoles] = useState(false);
+  // Use the new org roles hook
+  const { data: orgRoles, isLoading: isLoadingRoles } = useOrgRoles();
+
+  // Create role options from org roles
+  const roleOptions =
+    orgRoles?.map((role: OrgRole) => ({
+      label: role.name,
+      value: role.name,
+    })) || [];
 
   // Track phone metadata separately to maintain all parts of the phone number
   const [phoneMetadata, setPhoneMetadata] = useState<PhoneMetadata>({
@@ -186,53 +191,17 @@ const BaseInfo: React.FC<BaseInfoProps> = ({
     return result;
   }, [validate]); // Only depends on validate
 
-  useEffect(() => {
-    const fetchRoles = async () => {
-      setIsLoadingRoles(true);
-      try {
-        const response = await axios.post(
-          '/roles/filter',
-          {},
-          {
-            params: {
-              limit: 100,
-              sortBy: 'name:ASC',
-            },
-          }
-        );
-
-        if (response.data && response.data.data) {
-          setRoles(response.data.data);
-
-          // Create options for the select component
-          const options = response.data.data.map((role: Role) => ({
-            label: role.name,
-            value: role.uuid,
-          }));
-
-          setRoleOptions(options);
-        }
-      } catch (error) {
-        console.error('Error fetching roles:', error);
-      } finally {
-        setIsLoadingRoles(false);
-        // Initialization will be handled by a separate useEffect
-      }
-    };
-
-    fetchRoles();
-  }, []);
   // Add this inside the useEffect that handles initialData
   useEffect(() => {
     if (initialData && !initializedRef.current) {
       console.log('BaseInfo received initialData:', initialData);
-      console.log('Role ID from initialData:', initialData.roleId); // Add this line
+      console.log('Role Name from initialData:', initialData.roleName); // Add this line
 
       // Create a new object with default values for any missing fields
       const newFormData = {
         employmentType: initialData.employmentType || 'Employee',
         jobTitle: initialData.jobTitle || '',
-        roleId: initialData.roleId || '',
+        roleName: initialData.roleName || '',
         firstName: initialData.firstName || '',
         lastName: initialData.lastName || '',
         phoneNumber: initialData.phoneNumber || '',
@@ -325,11 +294,8 @@ const BaseInfo: React.FC<BaseInfoProps> = ({
         const updated = { ...prev, [name]: value };
 
         // If changing the role, update the jobTitle field as well
-        if (name === 'roleId') {
-          const selectedRole = roles.find((role) => role.uuid === value);
-          if (selectedRole) {
-            updated.jobTitle = selectedRole.name;
-          }
+        if (name === 'roleName') {
+          updated.jobTitle = value;
         }
 
         // Call onChange outside of setState to prevent re-renders
@@ -342,7 +308,7 @@ const BaseInfo: React.FC<BaseInfoProps> = ({
       // Validate the field
       validateField(name, value);
     },
-    [markFieldAsTouched, roles, validateField]
+    [markFieldAsTouched, validateField]
   );
 
   // Handle date change for birthday
@@ -467,7 +433,6 @@ const BaseInfo: React.FC<BaseInfoProps> = ({
   useEffect(() => {
     if (isLoadingRoles === false && initializedRef.current) {
       const timer = setTimeout(() => {
-        // setIsInitialized(true); // This state is removed
         console.log('🟢 Component marked as fully initialized');
       }, 200); // Small delay to ensure everything is settled
 
@@ -497,11 +462,11 @@ const BaseInfo: React.FC<BaseInfoProps> = ({
           label="Job Title / Role"
           options={roleOptions}
           required
-          selectedValue={formData.roleId}
-          onChange={(value) => handleSelectChange('roleId', value)}
+          selectedValue={formData.roleName}
+          onChange={(value) => handleSelectChange('roleName', value)}
           placeholder={isLoadingRoles ? 'Loading roles...' : 'Select a role'}
           isDisabled={isLoadingRoles}
-          error={getFieldErrorIfTouched('roleId')}
+          error={getFieldErrorIfTouched('roleName')}
         />
       </div>
       <div className="grid grid-cols-2 gap-3">

@@ -16,12 +16,16 @@ import useCreateCustomer from '../hooks/useCreateCustomer';
 import toast from 'react-hot-toast';
 import { PhoneInput } from '@potta/components/phoneInput';
 // Import shadcn date picker components
-import { Calendar } from "@potta/components/shadcn/calendar";
-import { Popover, PopoverContent, PopoverTrigger } from "@potta/components/shadcn/popover";
-import { Button as ShadcnButton } from "@potta/components/shadcn/button";
-import { CalendarIcon } from "lucide-react";
-import { format } from "date-fns";
-import { cn } from "@potta/lib/utils";
+import { Calendar } from '@potta/components/shadcn/calendar';
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@potta/components/shadcn/popover';
+import { Button as ShadcnButton } from '@potta/components/shadcn/button';
+import { CalendarIcon } from 'lucide-react';
+import { format } from 'date-fns';
+import { cn } from '@potta/lib/utils';
 
 interface CustomerCreateProps {
   open?: boolean; // Optional controlled open state
@@ -46,7 +50,7 @@ const SliderCustomer: React.FC<CustomerCreateProps> = ({
   const [phoneMetadata, setPhoneMetadata] = useState<PhoneMetadata>({
     formattedValue: '',
     countryCode: '+237', // Default to Cameroon
-    rawInput: ''
+    rawInput: '',
   });
 
   // Determine which open state to use
@@ -113,7 +117,10 @@ const SliderCustomer: React.FC<CustomerCreateProps> = ({
   };
 
   // Handle phone number changes with the new API
-  const handlePhoneChange = (combinedValue: string, metadata: PhoneMetadata) => {
+  const handlePhoneChange = (
+    combinedValue: string,
+    metadata: PhoneMetadata
+  ) => {
     // Store the complete metadata for future reference
     setPhoneMetadata(metadata);
 
@@ -128,7 +135,7 @@ const SliderCustomer: React.FC<CustomerCreateProps> = ({
       setPhoneMetadata({
         formattedValue: '',
         countryCode: '+237',
-        rawInput: ''
+        rawInput: '',
       });
     }
   }, [isOpen, reset]);
@@ -233,7 +240,6 @@ const SliderCustomer: React.FC<CustomerCreateProps> = ({
             )}
           </div>
         </div>
-        
         {/* Date of Birth Field */}
         <div className="w-full mb-5">
           <div>
@@ -249,12 +255,16 @@ const SliderCustomer: React.FC<CustomerCreateProps> = ({
                     <ShadcnButton
                       variant="outline"
                       className={cn(
-                        "w-1/2 py-5  justify-start text-left font-normal",
-                        !field.value && "text-muted-foreground"
+                        'w-1/2 py-5  justify-start text-left font-normal',
+                        !field.value && 'text-muted-foreground'
                       )}
                     >
                       <CalendarIcon className="mr-2 h-4 w-4" />
-                      {field.value ? format(field.value, "PPP") : <span>Pick a date</span>}
+                      {field.value ? (
+                        format(field.value, 'PPP')
+                      ) : (
+                        <span>Pick a date</span>
+                      )}
                     </ShadcnButton>
                   </PopoverTrigger>
                   <PopoverContent className="w-auto p-0">
@@ -269,11 +279,12 @@ const SliderCustomer: React.FC<CustomerCreateProps> = ({
               )}
             />
             {errors.date_of_birth && (
-              <small className="text-red-500">{errors.date_of_birth.message}</small>
+              <small className="text-red-500">
+                {errors.date_of_birth.message}
+              </small>
             )}
           </div>
         </div>
-        
         <hr />
         <div className="mt-2">
           <h1 className="text-xl">Contact Information </h1>
@@ -294,7 +305,9 @@ const SliderCustomer: React.FC<CustomerCreateProps> = ({
                       countryCode={phoneMetadata.countryCode} // Use the country code from metadata
                     />
                     {errors.phone && (
-                      <small className="text-red-500">{errors.phone.message}</small>
+                      <small className="text-red-500">
+                        {errors.phone.message}
+                      </small>
                     )}
                   </>
                 )}
@@ -343,13 +356,7 @@ const SliderCustomer: React.FC<CustomerCreateProps> = ({
         </div>
         <div className="flex-grow" /> {/* This div takes up remaining space */}
         <div className="text-center md:text-right  md:flex  space-x-4 fixed bottom-0 left-0 right-0 justify-center bg-white p-4">
-          <div className="flex gap-2 w-full max-w-4xl justify-between">
-            <Button
-              text="Cancel"
-              type="button"
-              theme="danger"
-              onClick={() => setIsOpen(false)}
-            />
+          <div className="flex gap-2 w-full justify-end">
             <Button
               text={'Add Customer'}
               type={'submit'}

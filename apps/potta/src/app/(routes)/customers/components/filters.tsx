@@ -4,10 +4,14 @@ import Search from '@potta/components/search';
 import Select from '@potta/components/select';
 import React, { useState } from 'react';
 import SliderCustomer from './customerSlider';
-import { PopoverAction } from '@potta/components/tableActionsPopover';
-import { NextPopover } from '@potta/components/popover';
 import BulkSlider from './bulkSlider';
 import Image from 'next/image';
+import {
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuItem,
+} from '@potta/components/shadcn/dropdown';
 
 const Filter = () => {
   const [selectedValue, setSelectedValue] = useState('All Time'); // Set your default value here
@@ -22,23 +26,7 @@ const Filter = () => {
   const [isCreateOpen, setIsCreateOpen] = useState(false);
   const [isUploadOpen, setIsUploadOpen] = useState(false);
   const [isImportOpen, setIsImportOpen] = useState(false);
-  const [openPopover, setOpenPopover] = useState<string | null>(null);
-  const actions: PopoverAction[] = [
-    {
-      label: 'Single Customer',
-      onClick: () => {
-        setIsCreateOpen(true);
-      },
-      className: 'hover:bg-gray-200',
-    },
-    {
-      label: 'Import Customers',
-      onClick: () => {
-        setIsUploadOpen(true);
-      },
-      className: 'hover:bg-gray-200',
-    },
-  ];
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
   return (
     <div className="w-full flex justify-between ">
@@ -93,25 +81,50 @@ const Filter = () => {
                   height={200}
                   className="w-full h-full object-cover"
                   src="/images/export.svg"
+                  alt="Export"
                 />
               }
               theme="lightBlue"
             />
           </div>
           <div className="w-fit ml-2">
-            <NextPopover
-              rowUuid={'1'}
-              actions={actions}
-              openPopover={openPopover}
-              setOpenPopover={setOpenPopover}
-              triggerButton={
-                <Button
-                  text={'New Customer'}
-                  type={'button'}
-                  icon={<i className="ri-file-add-line"></i>}
-                />
-              }
-            />
+            <DropdownMenu
+              open={isDropdownOpen}
+              onOpenChange={setIsDropdownOpen}
+            >
+              <DropdownMenuTrigger asChild>
+                <button
+                  className="px-4 py-2.5 bg-[#005D1F] text-white hover:bg-green-900 flex items-center gap-2"
+                  onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+                >
+                  <i className="ri-file-add-line"></i>
+                  New Customer
+                </button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent
+                align="end"
+                className="w-[160px] z-[9999]"
+                sideOffset={5}
+                collisionPadding={10}
+              >
+                <DropdownMenuItem
+                  onClick={() => {
+                    setIsCreateOpen(true);
+                    setIsDropdownOpen(false);
+                  }}
+                >
+                  Single Customer
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  onClick={() => {
+                    setIsUploadOpen(true);
+                    setIsDropdownOpen(false);
+                  }}
+                >
+                  Import Customers
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
           </div>
           <SliderCustomer open={isCreateOpen} setOpen={setIsCreateOpen} />
           <BulkSlider open={isUploadOpen} setOpen={setIsUploadOpen} />

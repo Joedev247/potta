@@ -405,7 +405,7 @@ const PayBreakDown = () => {
         </div>
         <div className="h-full w-full py-5 flex justify-center">
           <div className="pl-4 border-r pr-3 w-full">
-            <p className="font-semibold">Total hours worked</p>
+            <p className="font-semibold whitespace-nowrap">Total hours worked</p>
             <h3 className="mt-1 text-green-700 text-xl">
               {formatHours(hoursWorked.hours)}
             </h3>

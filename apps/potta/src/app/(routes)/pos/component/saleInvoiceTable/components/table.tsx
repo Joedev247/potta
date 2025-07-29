@@ -1,6 +1,6 @@
 'use client';
 import React, { useEffect, useContext } from 'react';
-import MyTable from '@potta/components/table';
+import DataGrid from '@potta/app/(routes)/account_receivables/components/DataGrid';
 import { ContextData } from '@potta/components/context';
 import OrderSummary from './orderSummary';
 
@@ -145,30 +145,30 @@ const TableOPS = () => {
 
   const columns = [
     {
-      name: 'Name',
-      width: '170px',
-      selector: (row: LineItem) => row.description,
+      accessorKey: 'description',
+      header: 'Name',
+      cell: ({ row: { original } }) => original.description,
     },
     {
-      name: 'Quantity',
-      width: '110px',
-      selector: (row: LineItem) => (
+      accessorKey: 'quantity',
+      header: 'Quantity',
+      cell: ({ row: { original } }) => (
         <div className="flex space-x-1 items-center">
           <button
-            onClick={() => handleQuantityChange(row.productId, -1)}
-            disabled={row.quantity <= 1}
+            onClick={() => handleQuantityChange(original.productId, -1)}
+            disabled={original.quantity <= 1}
             className="h-[20px] bg-red-500 border-red-500 px-2 items-center border text-white flex justify-center w-[20px]"
           >
             <i className="ri-subtract-line text-lg"></i>
           </button>
           <input
             type="text"
-            value={row.quantity}
+            value={original.quantity}
             readOnly
             className="h-[26px] w-[40px] text-base bg-slate-300 outline-none pl-2"
           />
           <button
-            onClick={() => handleQuantityChange(row.productId, 1)}
+            onClick={() => handleQuantityChange(original.productId, 1)}
             className="h-[20px] bg-green-800 border-green-800 px-2 text-white border-y border-r w-[20px] items-center flex justify-center"
           >
             <i className="ri-add-line text-lg"></i>
@@ -177,26 +177,29 @@ const TableOPS = () => {
       ),
     },
     {
-      name: 'Price',
-      selector: (row: LineItem) => {
-        const price = Number(row.unitPrice);
+      accessorKey: 'unitPrice',
+      header: 'Price',
+      cell: ({ row: { original } }) => {
+        const price = Number(original.unitPrice);
         return isNaN(price) ? '0.00' : `$${price.toFixed(2)}`;
       },
     },
     {
-      name: 'Discount',
-      selector: (row: LineItem) => {
-        const discount = calculateItemDiscount(row);
+      accessorKey: 'discount',
+      header: 'Discount',
+      cell: ({ row: { original } }) => {
+        const discount = calculateItemDiscount(original);
         return isNaN(discount) ? '0.00' : `$${discount.toFixed(2)}`;
       },
     },
     {
-      name: 'Total',
-      selector: (row: LineItem) => {
-        const price = Number(row.unitPrice);
-        const quantity = Number(row.quantity);
-        const discount = calculateItemDiscount(row);
-        const taxAmount = price * quantity * (row.taxRate / 100);
+      accessorKey: 'total',
+      header: 'Total',
+      cell: ({ row: { original } }) => {
+        const price = Number(original.unitPrice);
+        const quantity = Number(original.quantity);
+        const discount = calculateItemDiscount(original);
+        const taxAmount = price * quantity * (original.taxRate / 100);
 
         if (isNaN(price) || isNaN(quantity)) {
           return '$0.00';
@@ -207,12 +210,12 @@ const TableOPS = () => {
       },
     },
     {
-      name: '',
-      width: '36px',
-      selector: (row: LineItem) => (
+      accessorKey: 'actions',
+      header: '',
+      cell: ({ row: { original } }) => (
         <button
           className="text-red-500 hover:text-red-400"
-          onClick={() => deleteItem(row.productId)}
+          onClick={() => deleteItem(original.productId)}
         >
           <i className="ri-delete-bin-line text-xl"></i>
         </button>
@@ -224,15 +227,9 @@ const TableOPS = () => {
     <>
       <div className="mt-2">
         <div className="h-[47vh]">
-          <MyTable
+          <DataGrid
             columns={columns}
-            pagination={false}
             data={Array.isArray(context?.data) ? context.data : []}
-            ExpandableComponent={null}
-            selectable={false}
-            expanded={false}
-            color
-            minHeight="47vh"
           />
         </div>
         <OrderSummary

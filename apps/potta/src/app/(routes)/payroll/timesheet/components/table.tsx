@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import MyTable from '@potta/components/table';
+import DataGrid from '@potta/app/(routes)/account_receivables/components/DataGrid';
 import { ArrowUpFromLine, CirclePlus, Download, Plus } from 'lucide-react';
 import Search from '@potta/components/search';
 import Button from '@potta/components/button';
@@ -23,10 +23,10 @@ const TimesheetTable = ({
   showControls = true, // Default to showing controls
   onAddHours,
 }: TableProps) => {
-  const [loading, setLoading] = useState({});
+  const [loading, setLoading] = useState<Record<string, boolean | string>>({});
 
   // Function to get initials from name
-  const getInitials = (name) => {
+  const getInitials = (name: string) => {
     if (!name) return '';
     const names = name.split(' ');
     if (names.length === 1) return names[0].charAt(0).toUpperCase();
@@ -34,7 +34,7 @@ const TimesheetTable = ({
   };
 
   // Handle timesheet approval
-  const handleApprove = async (row) => {
+  const handleApprove = async (row: any) => {
     // Get the timesheet ID from the row
     const timesheetId = row.timesheetId;
 
@@ -66,7 +66,7 @@ const TimesheetTable = ({
   };
 
   // Handle timesheet rejection
-  const handleReject = async (row) => {
+  const handleReject = async (row: any) => {
     // Get the timesheet ID from the row
     const timesheetId = row.timesheetId;
 
@@ -98,7 +98,7 @@ const TimesheetTable = ({
   };
 
   // Function to handle adding hours - now passes userId to parent component
-  const handleAddHours = (e, row) => {
+  const handleAddHours = (e: React.MouseEvent, row: any) => {
     e.stopPropagation();
 
     // Check if we have a userId in the row
@@ -125,56 +125,57 @@ const TimesheetTable = ({
 
   const columns = [
     {
-      name: 'Employee',
-      selector: (row) => row.employee,
-      width: '200px',
-      cell: (row) => {
+      accessorKey: 'employee',
+      header: 'Employee',
+      cell: ({ row }: { row: { original: any } }) => {
         // For the total row, show bold text
-        if (row.isTotal) {
-          return <div className="font-bold text-md">{row.employee}</div>;
+        if (row.original.isTotal) {
+          return (
+            <div className="font-bold text-md">{row.original.employee}</div>
+          );
         }
 
         return (
           <div className="flex items-center">
-            {row.avatar ? (
+            {row.original.avatar ? (
               <img
-                src={row.avatar}
-                alt={row.employee}
+                src={row.original.avatar}
+                alt={row.original.employee}
                 className="w-8 h-8 rounded-full mr-2"
               />
             ) : (
               <div className="w-8 h-8 rounded-full bg-gray-200 text-black flex items-center justify-center mr-2">
-                {getInitials(row.employee)}
+                {getInitials(row.original.employee)}
               </div>
             )}
-            <div>{row.employee}</div>
+            <div>{row.original.employee}</div>
           </div>
         );
       },
     },
     {
-      name: 'Total Hours',
-      selector: (row) => row.totalHours,
-      cell: (row) => (
-        <div className={row.isTotal ? 'font-bold text-lg' : ''}>
-          {row.totalHours}
+      accessorKey: 'totalHours',
+      header: 'Total Hours',
+      cell: ({ row }: { row: { original: any } }) => (
+        <div className={row.original.isTotal ? 'font-bold text-lg' : ''}>
+          {row.original.totalHours}
         </div>
       ),
     },
     {
-      name: 'Break',
-      selector: (row) => row.breakTime,
-      cell: (row) => (
-        <div className={row.isTotal ? 'font-bold text-lg' : ''}>
-          {row.breakTime || '0 min'}
+      accessorKey: 'breakTime',
+      header: 'Break',
+      cell: ({ row }: { row: { original: any } }) => (
+        <div className={row.original.isTotal ? 'font-bold text-lg' : ''}>
+          {row.original.breakTime || '0 min'}
         </div>
       ),
     },
     {
-      name: 'Break down',
-      selector: (row) => row.breakDown,
-      cell: (row) => {
-        if (row.isTotal) {
+      accessorKey: 'breakDown',
+      header: 'Break down',
+      cell: ({ row }: { row: { original: any } }) => {
+        if (row.original.isTotal) {
           return null;
         }
 
@@ -182,15 +183,17 @@ const TimesheetTable = ({
         let timeRanges = [];
 
         // If we have timeRanges array, use it directly
-        if (row.timeRanges && row.timeRanges.length > 0) {
-          timeRanges = row.timeRanges;
+        if (row.original.timeRanges && row.original.timeRanges.length > 0) {
+          timeRanges = row.original.timeRanges;
         }
         // If we have a string with format "XX:XX - YY:YY", parse it
         else if (
-          typeof row.breakDown === 'string' &&
-          row.breakDown.includes('-')
+          typeof row.original.breakDown === 'string' &&
+          row.original.breakDown.includes('-')
         ) {
-          const times = row.breakDown.split('-').map((t) => t.trim());
+          const times = row.original.breakDown
+            .split('-')
+            .map((t: string) => t.trim());
           if (times.length === 2) {
             timeRanges = [{ from: times[0], to: times[1] }];
           }
@@ -200,7 +203,7 @@ const TimesheetTable = ({
         if (timeRanges.length > 0) {
           return (
             <div className="flex flex-col">
-              {timeRanges.map((range, idx) => (
+              {timeRanges.map((range: any, idx: number) => (
                 <div key={idx} className="flex gap-2 items-center mb-1">
                   <span className="text-sm text-gray-500 w-fit">From</span>
                   <span className="text-sm w-fit bg-[#F3FBFB] p-1">
@@ -213,7 +216,7 @@ const TimesheetTable = ({
                 </div>
               ))}
               <button
-                onClick={(e) => handleAddHours(e, row)}
+                onClick={(e) => handleAddHours(e, row.original)}
                 className="flex items-center mx-auto w-fit text-green-600 text-sm"
               >
                 <CirclePlus size={16} className="mr-1" />
@@ -233,7 +236,7 @@ const TimesheetTable = ({
               <span className="text-sm w-fit bg-[#F3FBFB] p-1">00:00</span>
             </div>
             <button
-              onClick={(e) => handleAddHours(e, row)}
+              onClick={(e) => handleAddHours(e, row.original)}
               className="flex items-center mx-auto w-fit text-green-600 text-sm"
             >
               <CirclePlus size={16} className="mr-1" />
@@ -244,28 +247,28 @@ const TimesheetTable = ({
       },
     },
     {
-      name: 'Regular Hrs',
-      selector: (row) => row.regularHours,
-      cell: (row) => (
-        <div className={row.isTotal ? 'font-bold text-lg' : ''}>
-          {row.regularHours}
+      accessorKey: 'regularHours',
+      header: 'Regular Hrs',
+      cell: ({ row }: { row: { original: any } }) => (
+        <div className={row.original.isTotal ? 'font-bold text-lg' : ''}>
+          {row.original.regularHours}
         </div>
       ),
     },
     {
-      name: 'Overtime',
-      selector: (row) => row.overTime,
-      cell: (row) => (
-        <div className={row.isTotal ? 'font-bold text-lg' : ''}>
-          {row.overTime}
+      accessorKey: 'overTime',
+      header: 'Overtime',
+      cell: ({ row }: { row: { original: any } }) => (
+        <div className={row.original.isTotal ? 'font-bold text-lg' : ''}>
+          {row.original.overTime}
         </div>
       ),
     },
     {
-      name: 'Status',
-      selector: (row) => row.status,
-      cell: (row) => {
-        if (row.isTotal) {
+      accessorKey: 'status',
+      header: 'Status',
+      cell: ({ row }: { row: { original: any } }) => {
+        if (row.original.isTotal) {
           return null;
         }
 
@@ -300,7 +303,7 @@ const TimesheetTable = ({
           }
         };
 
-        const config = getStatusConfig(row.status);
+        const config = getStatusConfig(row.original.status);
 
         return (
           <div className="flex justify-center">
@@ -314,19 +317,18 @@ const TimesheetTable = ({
           </div>
         );
       },
-      width: '140px',
     },
     {
-      name: 'Actions',
-      selector: (row) => row.timesheetId || 'No ID',
-      cell: (row) => {
+      id: 'actions',
+      header: 'Actions',
+      cell: ({ row }: { row: { original: any } }) => {
         // Don't show actions for the total row
-        if (row.isTotal) {
+        if (row.original.isTotal) {
           return null;
         }
 
         // Check if we have a timesheet ID
-        if (!row.timesheetId) {
+        if (!row.original.timesheetId) {
           return (
             <div className="flex justify-center">
               <span className="text-gray-400 text-sm">
@@ -337,12 +339,14 @@ const TimesheetTable = ({
         }
 
         const isApproved =
-          row.status === 'Approved' || row.status === 'APPROVED';
+          row.original.status === 'Approved' ||
+          row.original.status === 'APPROVED';
         const isRejected =
-          row.status === 'Rejected' || row.status === 'REJECTED';
+          row.original.status === 'Rejected' ||
+          row.original.status === 'REJECTED';
         const isProcessing =
-          loading[row.timesheetId] === 'approving' ||
-          loading[row.timesheetId] === 'rejecting';
+          loading[row.original.timesheetId] === 'approving' ||
+          loading[row.original.timesheetId] === 'rejecting';
 
         return (
           <div className="flex justify-center gap-2">
@@ -358,10 +362,10 @@ const TimesheetTable = ({
               disabled={isApproved || isProcessing}
               onClick={(e) => {
                 e.stopPropagation();
-                handleApprove(row);
+                handleApprove(row.original);
               }}
             >
-              {loading[row.timesheetId] === 'approving'
+              {loading[row.original.timesheetId] === 'approving'
                 ? 'Processing...'
                 : 'Approve'}
             </button>
@@ -378,17 +382,16 @@ const TimesheetTable = ({
               disabled={isRejected || isProcessing}
               onClick={(e) => {
                 e.stopPropagation();
-                handleReject(row);
+                handleReject(row.original);
               }}
             >
-              {loading[row.timesheetId] === 'rejecting'
+              {loading[row.original.timesheetId] === 'rejecting'
                 ? 'Processing...'
                 : 'Reject'}
             </button>
           </div>
         );
       },
-      width: '200px',
     },
   ];
 
@@ -439,7 +442,7 @@ const TimesheetTable = ({
     }, 0);
 
     // Format total break time for display
-    const formatTotalBreakTime = (totalMinutes) => {
+    const formatTotalBreakTime = (totalMinutes: number) => {
       if (totalMinutes === 0) return '0 min';
       if (totalMinutes < 60) return `${totalMinutes} min`;
       const hours = Math.floor(totalMinutes / 60);
@@ -483,14 +486,7 @@ const TimesheetTable = ({
         </div>
       )}
 
-      <MyTable
-        columns={columns}
-        data={dataWithTotals}
-        ExpandableComponent={null}
-        expanded={false}
-        pagination={data.length > 9}
-        selectableRows
-      />
+      <DataGrid data={dataWithTotals} column={columns} loading={false} />
     </div>
   );
 };

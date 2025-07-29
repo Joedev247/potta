@@ -164,12 +164,12 @@ const Boxes = () => {
       {data.map((item) => (
         <div key={item.id} className="border p-4 h-[166px]">
           <div className="flex w-full justify-between">
-            <p style={{ color: item.color }} className="!font-bold">
+            <p style={{ color: item.color }} className="!font-semibold">
               {item.title}
             </p>
           </div>
 
-          <div className="mb-4 mt-10 text-left font-medium text-xl ">
+          <div className="mb-4 mt-10 text-left font-medium text-2xl ">
             {item.amount}
           </div>
         </div>

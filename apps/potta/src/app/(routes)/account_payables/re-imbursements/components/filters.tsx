@@ -1,116 +1,104 @@
 'use client';
 import Button from '@potta/components/button';
-import Search from '@potta/components/search';
-import Select from '@potta/components/select';
 import React, { useState } from 'react';
 import Slider from '@potta/components/slideover';
 import ReimbursementForm from './ReimbursementForm';
-
-import Link from 'next/link';
+import DynamicFilter from '@potta/components/dynamic-filter';
+import Image from 'next/image';
 
 const Filter = ({ onNew }: { onNew: (data: any) => void }) => {
   const [selectedValue, setSelectedValue] = useState('All Time');
   const [selectedValue2, setSelectedValue2] = useState('pending');
   const [sliderOpen, setSliderOpen] = useState(false);
+  const [searchValue, setSearchValue] = useState('');
 
   const statusOptions = [
+    { label: 'All', value: 'all' },
     { label: 'Pending', value: 'pending' },
     { label: 'Approved', value: 'approved' },
     { label: 'Rejected', value: 'rejected' },
   ];
-  const categoryOptions = [
-    { label: 'Travel', value: 'travel' },
-    { label: 'Meals', value: 'meals' },
-    { label: 'Office', value: 'office' },
-    { label: 'Other', value: 'other' },
+
+  const dateOptions = [
+    { label: 'All Time', value: 'All Time' },
+    { label: 'Yesterday', value: 'Yesterday' },
+    { label: 'Last 7 Days', value: 'Last 7 Days' },
+    { label: 'Last 30 Days', value: 'Last 30 Days' },
   ];
 
-  const handleChange = (value: string) => {
-    setSelectedValue(value);
-  };
-  const handleChange2 = (value: string) => {
-    setSelectedValue2(value);
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchValue(e.target.value);
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
-    // This function is no longer used in the new implementation
+  const handleSearchClear = () => {
+    setSearchValue('');
   };
+
+  const filterConfig = [
+    {
+      key: 'status',
+      label: 'Status',
+      options: statusOptions,
+      value: selectedValue2,
+      onChange: setSelectedValue2,
+      selectClassName: 'min-w-[140px]',
+    },
+    {
+      key: 'date',
+      label: 'Date',
+      options: dateOptions,
+      value: selectedValue,
+      onChange: setSelectedValue,
+      selectClassName: 'min-w-[140px]',
+    },
+  ];
 
   return (
-    <div className="w-full flex justify-between ">
-      <div className="flex space-x-2 w-[50%]">
-        <div className=" w-[50%]">
-          <Search />
-        </div>
-        <div className="flex w-[50%] space-x-2">
-          <div className="flex items-center gap-2 ">
-            <label className="text-sm font-medium whitespace-nowrap">
-              Filter:
-            </label>
-            <Select
-              options={[
-                { label: 'All', value: 'all' },
-                { label: 'Pending', value: 'pending' },
-                { label: 'Paid', value: 'paid' },
-              ]}
-              selectedValue={selectedValue2}
-              onChange={handleChange2}
-              bg=""
-              labelClass="!mb-0"
-            />
-          </div>
-
-          <div className="flex items-center gap-2">
-            <label className="text-sm font-medium whitespace-nowrap">
-              Date:
-            </label>
-            <Select
-              options={[
-                { label: 'All Time', value: 'All Time' },
-                { label: 'Yesterday', value: 'Yesterday' },
-                { label: 'Last 7 Days', value: 'Last 7 Days' },
-                { label: 'Last 30 Days', value: 'Last 30 Days' },
-              ]}
-              selectedValue={selectedValue}
-              onChange={handleChange}
-              bg=""
-            />
-          </div>
-        </div>
+    <div className="w-full flex justify-between items-center">
+      <div className="flex-1">
+        <DynamicFilter
+          searchValue={searchValue}
+          onSearchChange={handleSearchChange}
+          onSearchClear={handleSearchClear}
+          searchPlaceholder="Search reimbursements..."
+          filters={filterConfig}
+          className="p-0 bg-transparent"
+        />
       </div>
-
-      <div className="  mt-4  ">
-        <div className="flex  space-x-2">
-          <div className=" flex justify-end ">
-            <Button
-              type={'button'}
-              color
-              text="Export"
-              icon={<img src="/images/export.svg" />}
-              theme="lightBlue"
+      <div className="flex items-center space-x-3 ml-4">
+        <Button
+          type={'button'}
+          color
+          text="Export"
+          icon={
+            <Image
+              width={200}
+              height={200}
+              className="w-full h-full object-cover"
+              src="/images/export.svg"
+              alt="Export"
             />
-          </div>
-          <div className="">
-            <Button
-              text={'New'}
-              icon={<i className="ri-add-line"></i>}
-              theme="default"
-              type={'button'}
-              onClick={() => setSliderOpen(true)}
-            />
-            <Slider
-              title="New Reimbursement"
-              edit={false}
-              open={sliderOpen}
-              setOpen={setSliderOpen}
-            >
-              <ReimbursementForm
-                onSubmit={onNew}
-                onClose={() => setSliderOpen(false)}
-              />
-            </Slider>
-          </div>
-        </div>
+          }
+          theme="lightBlue"
+        />
+        <Button
+          text={'New'}
+          icon={<i className="ri-file-add-line"></i>}
+          theme="default"
+          type={'button'}
+          onClick={() => setSliderOpen(true)}
+        />
+        <Slider
+          title="New Reimbursement"
+          edit={false}
+          open={sliderOpen}
+          setOpen={setSliderOpen}
+        >
+          <ReimbursementForm
+            onSubmit={onNew}
+            onClose={() => setSliderOpen(false)}
+          />
+        </Slider>
       </div>
     </div>
   );

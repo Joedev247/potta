@@ -9,12 +9,10 @@ import useGetAllCustomers from '@potta/app/(routes)/customers/hooks/useGetAllCus
 import SliderCustomer from '@potta/app/(routes)/customers/components/customerSlider';
 import Select from '@potta/components/select';
 import { Customer } from '@potta/app/(routes)/customers/utils/types';
-import { set } from 'react-hook-form';
 import TextArea from '@potta/components/textArea';
-import useCreateInvoice from '../../_hooks/useCreateInvoice';
+import useCreateInvoice from '../../../_hooks/useCreateInvoice';
 import toast from 'react-hot-toast';
 import { DateInput } from '@potta/components/customDatePicker';
-import { useEffect as useIsomorphicLayoutEffect } from 'react';
 import { useRouter } from 'next/navigation';
 
 // Define Option interface to match the one in SearchSelect component
@@ -546,14 +544,15 @@ const Left = ({ initialInvoiceType }: LeftProps) => {
       </div>
 
       <hr className="my-5" />
-      <h3 className="text-xl font-thin my-2">Notes</h3>
+      <h3 className="text-xl  my-2">Notes</h3>
       <textarea
         value={note}
         onChange={(e) => handleInputChange('note', e.target.value)}
-        className="h-36 border p-2 w-full outline-none mt-2 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500"
+        className="h-36 border p-2 w-full outline-none mt-2 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 mb-10"
       ></textarea>
 
-      <div className="mt-5 w-full flex justify-end">
+      <div className="fixed bottom-0 left-0 right-0 p-2 bg-white border-t border-gray-200 flex justify-end space-x-3">
+        {' '}
         <Button
           text={'Save Invoice'}
           onClick={handleSaveInvoice}

@@ -1,30 +1,28 @@
 'use client';
 import React, { FC, useState } from 'react';
-import MyTable from '@potta/components/table';
+import DataGrid from '@potta/app/(routes)/account_receivables/components/DataGrid';
 import {
   getCountryCallingCode,
   parsePhoneNumberFromString,
 } from 'libphonenumber-js';
 import Flag from 'react-world-flags';
 
-import {
-  PopoverTrigger,
-  PopoverContent,
-  Popover,
-  Button,
-} from '@nextui-org/react';
 import Filter from './filters';
 import useGetAllVendors from '../hooks/useGetAllVendors';
 import ViewVendorSlider from './viewVendorSlider.tsx';
-import CustomPopover from '@potta/components/popover';
+
 import EditVendor from './updateVendorSlider';
 import DeleteModal from './deleteModal';
 import { VendorFilter } from '../utils/types';
-import { log } from 'console';
+
 import { UpdateVendorPayload, updateVendorSchema } from '../utils/validations';
-import TableActionPopover, {
-  PopoverAction,
-} from '@potta/components/tableActionsPopover';
+import {
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuItem,
+} from '@potta/components/shadcn/dropdown';
+import { ColumnDef } from '@tanstack/react-table';
 
 export const PhoneFlag = ({ phoneNumber }: { phoneNumber: string }) => {
   const phoneNumberObj = parsePhoneNumberFromString(phoneNumber);
@@ -46,7 +44,6 @@ export const PhoneFlag = ({ phoneNumber }: { phoneNumber: string }) => {
 };
 
 const TableComponents = () => {
-  const [openPopover, setOpenPopover] = useState<string | null>(null);
   const [openViewModal, setOpenViewModal] = useState<string | null>(null);
   const [openDeleteModal, setOpenDeleteModal] = useState<string | null>(null);
   const [openUpdateModal, setOpenUpdateModal] = useState<string | null>(null);
@@ -55,69 +52,80 @@ const TableComponents = () => {
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
   const [vendorDetails, setVendorDetails] =
     useState<UpdateVendorPayload | null>(null);
-  const columns = [
+
+  const columns: ColumnDef<any>[] = [
     {
-      name: 'Vendor/ Company Name',
-      selector: (row: any) => <div className="">{row.name}</div>,
+      accessorKey: 'name',
+      header: 'Vendor/ Company Name',
+      cell: ({ row: { original } }) => <div className="">{original.name}</div>,
     },
     {
-      name: 'Telephone ',
-      selector: (row: any) => <PhoneFlag phoneNumber={row.phone} />,
+      accessorKey: 'phone',
+      header: 'Telephone',
+      cell: ({ row: { original } }) => (
+        <PhoneFlag phoneNumber={original.phone} />
+      ),
     },
     {
-      name: 'Email',
-      selector: (row: any) => <div className="">{row.email}</div>,
+      accessorKey: 'email',
+      header: 'Email',
+      cell: ({ row: { original } }) => <div className="">{original.email}</div>,
     },
     {
-      name: 'Balance',
-      selector: (row: any) => (
+      accessorKey: 'openingBalance',
+      header: 'Balance',
+      cell: ({ row: { original } }) => (
         <div>
-          {row.openingBalance !== null ? row.currency : ''}
-          {row.openingBalance !== null ? row.openingBalance : 'N/A'}
+          {original.openingBalance !== null ? original.currency : ''}
+          {original.openingBalance !== null ? original.openingBalance : 'N/A'}
         </div>
       ),
     },
     {
-      name: '',
-      selector: (row: any) => {
-        const actions: PopoverAction[] = [
-          {
-            label: 'View',
-            onClick: () => {
-              setOpenViewModal(row.uuid);
-              setIsViewOpen(true);
-            },
-            className: 'hover:bg-gray-200',
-            icon: <i className="ri-eye-line" />,
-          },
-          {
-            label: 'Edit',
-            onClick: () => {
-              setOpenUpdateModal(row.uuid);
-              setVendorDetails(row);
-              setIsEditOpen(true);
-            },
-            className: 'hover:bg-gray-200',
-            icon: <i className="ri-edit-line" />,
-          },
-          {
-            label: 'Delete',
-            onClick: () => {
-              setOpenDeleteModal(row.uuid);
-              setIsDeleteOpen(true);
-            },
-            className: 'hover:bg-red-200 text-red-600',
-            icon: <i className="ri-delete-bin-line" />,
-          },
-        ];
-
+      id: 'actions',
+      header: 'Actions',
+      cell: ({ row: { original } }) => {
         return (
-          <TableActionPopover
-            actions={actions}
-            rowUuid={row.uuid}
-            openPopover={openPopover}
-            setOpenPopover={setOpenPopover}
-          />
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <button className="p-2 hover:bg-gray-100 rounded-md">
+                <i className="ri-more-2-fill text-gray-600"></i>
+              </button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="w-48">
+              <DropdownMenuItem
+                onClick={() => {
+                  setOpenViewModal(original.uuid);
+                  setIsViewOpen(true);
+                }}
+                className="cursor-pointer"
+              >
+                <i className="ri-eye-line mr-2"></i>
+                View
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                onClick={() => {
+                  setOpenUpdateModal(original.uuid);
+                  setVendorDetails(original);
+                  setIsEditOpen(true);
+                }}
+                className="cursor-pointer"
+              >
+                <i className="ri-edit-line mr-2"></i>
+                Edit
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                onClick={() => {
+                  setOpenDeleteModal(original.uuid);
+                  setIsDeleteOpen(true);
+                }}
+                className="cursor-pointer text-red-600"
+              >
+                <i className="ri-delete-bin-line mr-2"></i>
+                Delete
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         );
       },
     },
@@ -129,32 +137,30 @@ const TableComponents = () => {
   const filter: VendorFilter = { page, limit };
   const { data: vendor, isLoading, error } = useGetAllVendors(filter);
 
-  const handlePageChange = (newPage: number) => {
-    setPage(newPage);
-  };
-
-  const handlePerRowsChange = (newLimit: number, newPage: number) => {
-    setLimit(newLimit);
-    setPage(newPage); // Reset page when changing rows per page
+  const handleRowClick = (row: any) => {
+    setOpenViewModal(row.uuid);
+    setIsViewOpen(true);
   };
 
   if (error)
     return (
-      <p className="text-red-600">Error fetching vendors: {error.message}</p>
+      <div className="mt-10">
+        <Filter />
+        <div className="min-h-60 items-center flex justify-center">
+          <p className="text-red-600 text-center">
+            Error fetching vendors: {error.message}
+          </p>
+        </div>
+      </div>
     );
   return (
     <div className="mt-10">
       <Filter />
-      <MyTable
+      <DataGrid
         columns={columns}
         data={vendor?.data || []}
-        pagination
-        expanded={false}
-        pending={isLoading}
-        paginationServer
-        paginationTotalRows={vendor?.meta?.totalItems ?? 0}
-        onChangePage={handlePageChange}
-        onChangeRowsPerPage={handlePerRowsChange}
+        isLoading={isLoading}
+        onRowClick={handleRowClick}
       />
       {openDeleteModal && (
         <DeleteModal

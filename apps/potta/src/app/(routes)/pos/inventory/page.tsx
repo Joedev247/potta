@@ -17,7 +17,7 @@ const Files = () => {
         <div
           className={`${
             context?.layoutMode === 'sidebar' ? 'pl-16 !mt-4' : 'pl-5 !mt-4'
-          } pr-5 w-full mt-10`}
+          } pr-5 w-full mt-10 overflow-visible`}
         >
           {/* Tabs */}
           <div className="w-[30%] flex mb-6">

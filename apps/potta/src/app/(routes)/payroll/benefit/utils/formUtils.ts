@@ -2,6 +2,8 @@ import { BenefitType, CycleType, BenefitPayload } from './types';
 import {
   BENEFIT_CATEGORIES,
   DEFAULT_LIMITS,
+  BENEFIT_CATEGORY_ENUM,
+  getCategoryConfigByEnum,
 } from '../constants/benefitCategories';
 import { ValidationLimits } from './validations';
 
@@ -81,6 +83,7 @@ export const getCategoryConfig = (category: string) => {
 export const createBenefitPayload = (formData: {
   benefitName: string;
   benefitType: string;
+  componentType: string;
   category: string;
   rateType: string;
   cycle: string;
@@ -102,15 +105,27 @@ export const createBenefitPayload = (formData: {
     formData.customSalaryCap
   );
 
+  // Get the category configuration to extract the enum value
+  const categoryConfig = BENEFIT_CATEGORIES[formData.category];
+  const categoryEnum =
+    categoryConfig?.enumValue || BENEFIT_CATEGORY_ENUM.BASE_SALARY;
+  const isPercentage = formData.rateType === 'Percentage';
+
+  // Calculate values based on rate type
+  const value = isPercentage
+    ? parseFloat(formData.percentageValue) || 0
+    : parseFloat(formData.flatRateValue.replace(/[^0-9.]/g, '')) || 0;
+
+  // For percentage rates, store the percentage value as-is
+  // For flat rates, store the amount as-is
+  const rateValue = value;
+
   return {
     name: formData.benefitName,
-    description: formData.description || '', // Required field
+    description: formData.description || '',
     type: mapBenefitTypeToAPI(formData.benefitType),
-    value:
-      formData.rateType === 'Percentage'
-        ? parseFloat(formData.percentageValue) || 0
-        : parseFloat(formData.flatRateValue.replace(/[^0-9.]/g, '')) || 0,
-    provider: formData.provider || '', // Required field
+    componentType: categoryEnum, // Send the enum value to backend
+    value: value,
     cycle: mapCycleToAPI(formData.cycle),
     is_taxable: formData.isTaxable,
     tax_cap: formData.taxCap
@@ -121,15 +136,26 @@ export const createBenefitPayload = (formData: {
       ? parseFloat(formData.maxAmount.replace(/[^0-9.]/g, ''))
       : undefined,
     role_based: formData.isRoleBased,
-    eligible_roles: formData.isRoleBased ? [] : undefined, // TODO: Add role selection logic
+    eligible_roles: formData.isRoleBased ? [] : undefined,
     is_default: formData.isDefault,
-    rate:
-      formData.rateType === 'Percentage'
-        ? parseFloat(formData.percentageValue) || 0
-        : parseFloat(formData.flatRateValue.replace(/[^0-9.]/g, '')) || 0,
+    rate: rateValue,
+    provider: formData.provider || '',
     expires_at: formData.expiryDate
       ? new Date(formData.expiryDate.toString()).toISOString()
       : undefined,
+
+    // Additional DTO fields
+    isPercentage: isPercentage,
+    percentageOfBase: isPercentage ? value : undefined,
+    minValue: categoryConfig?.minFlatRate || categoryConfig?.minPercentage || 0,
+    maxValue:
+      categoryConfig?.maxFlatRate || categoryConfig?.maxPercentage || 1000000,
+    minimumWageCompliant: categoryEnum === BENEFIT_CATEGORY_ENUM.BASE_SALARY,
+    yearsOfServiceMin:
+      categoryEnum === BENEFIT_CATEGORY_ENUM.SENIORITY_BONUS ? 2 : undefined,
+    yearsOfServiceMax:
+      categoryEnum === BENEFIT_CATEGORY_ENUM.SENIORITY_BONUS ? 20 : undefined,
+    isNeverTaxable: !formData.isTaxable,
   };
 };
 
@@ -186,6 +212,7 @@ export const formatPercentageWithoutDecimals = (
 export const resetFormState = () => ({
   benefitName: '',
   benefitType: 'Financial',
+  componentType: 'earnings',
   category: 'Seniority Bonus',
   rateType: 'Flat Rate',
   cycle: 'MONTHLY',

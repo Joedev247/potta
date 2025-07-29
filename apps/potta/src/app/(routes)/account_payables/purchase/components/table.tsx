@@ -9,7 +9,6 @@ import Search from '@potta/components/search';
 
 import Button from '@potta/components/button';
 
-
 import useGetAllPurchaseOrders from '../hooks/useGetAllPurchaseOrders';
 import Slider from '@potta/components/slideover';
 import PurchaseOrderPage from '../new/page';
@@ -145,69 +144,31 @@ const InvoiceTable = () => {
   ];
   if (error) {
     return (
-      <div className={'w-full py-24 flex flex-col items-center justify-center'}>
-        An Error Occured
+      <div className="mt-10">
+        <Filters
+          selectedValue={selectedValue}
+          setSelectedValue={setSelectedValue}
+          options={options}
+          setIsOpen={setIsOpen}
+          isOpen={isOpen}
+        />{' '}
+        <div className="min-h-60 items-center flex justify-center">
+          <p className="text-red-600  text-center">
+            An Error occured while fetching vendors please try again later
+          </p>
+        </div>
       </div>
     );
   }
   return (
     <div className="">
-      <div className="flex justify-between w-full">
-        <div className="mt-5 w-[50%] flex items-center space-x-2">
-          <div className="w-[65%]">
-            <Search />
-          </div>
-
-          <CustomSelect
-            options={options}
-            value={selectedValue}
-            onChange={setSelectedValue}
-            placeholder="Choose an option"
-          />
-          <CustomSelect
-            options={options}
-            value={selectedValue}
-            onChange={setSelectedValue}
-            placeholder="Choose an option"
-          />
-        </div>
-        <div className="w-[50%] flex justify-end">
-          <div className="flex space-x-2">
-            <div>
-              {/*<Link href={'/invoicing/new_invoice'}>*/}
-              <Button
-                text={'Export'}
-                icon={<i className="ri-upload-2-line"></i>}
-                theme="lightBlue"
-                type={'button'}
-                color={true}
-              />
-              {/*</Link>*/}
-            </div>
-            <div>
-              <Button
-                text={'Create PurchaseOrder'}
-                icon={<i className="ri-file-add-line"></i>}
-                theme="default"
-                type={'button'}
-                onClick={() => {
-                  setIsOpen(true);
-                }}
-              />
-              <Slider
-                open={isOpen}
-                setOpen={setIsOpen}
-                edit={false}
-                title="Create Purchase Order"
-              >
-                <div className="w-full  mx-auto">
-                  <PurchaseOrderPage />
-                </div>
-              </Slider>
-            </div>
-          </div>
-        </div>
-      </div>
+      <Filters
+        selectedValue={selectedValue}
+        setSelectedValue={setSelectedValue}
+        options={options}
+        setIsOpen={setIsOpen}
+        isOpen={isOpen}
+      />
       <MyTable
         maxHeight="50vh"
         minHeight="50vh"
@@ -226,3 +187,78 @@ const InvoiceTable = () => {
 };
 
 export default InvoiceTable;
+
+interface FilterProps {
+  options?: IOption[];
+  selectedValue?: string | null;
+  setSelectedValue?: (value: string | null) => void;
+  setIsOpen?: (value: boolean) => void;
+  isOpen?: boolean;
+}
+
+const Filters = ({
+  options,
+  selectedValue,
+  setSelectedValue,
+  setIsOpen,
+  isOpen,
+}: FilterProps) => {
+  return (
+    <div className="flex justify-between w-full mb-4">
+      <div className=" w-[50%] flex items-center space-x-2">
+        <div className="w-[65%]">
+          <Search />
+        </div>
+
+        <CustomSelect
+          options={options || []}
+          value={selectedValue || null}
+          onChange={setSelectedValue || (() => {})}
+          placeholder="Choose an option"
+        />
+        <CustomSelect
+          options={options || []}
+          value={selectedValue || null}
+          onChange={setSelectedValue || (() => {})}
+          placeholder="Choose an option"
+        />
+      </div>
+      <div className="w-[50%] flex justify-end">
+        <div className="flex space-x-2">
+          <div>
+            {/*<Link href={'/invoicing/new_invoice'}>*/}
+            <Button
+              text={'Export'}
+              icon={<i className="ri-upload-2-line"></i>}
+              theme="lightBlue"
+              type={'button'}
+              color={true}
+            />
+            {/*</Link>*/}
+          </div>
+          <div>
+            <Button
+              text={'Create PurchaseOrder'}
+              icon={<i className="ri-file-add-line"></i>}
+              theme="default"
+              type={'button'}
+              onClick={() => {
+                setIsOpen?.(true);
+              }}
+            />
+            <Slider
+              open={isOpen}
+              setOpen={setIsOpen}
+              edit={false}
+              title="Create Purchase Order"
+            >
+              <div className="w-full  mx-auto">
+                <PurchaseOrderPage />
+              </div>
+            </Slider>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};

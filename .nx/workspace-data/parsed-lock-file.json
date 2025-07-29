@@ -1269,6 +1269,15 @@
         "hash": "sha512-L/B1lc/TViYk4DcpGxtAVbx0ZyiKM5ktoIyafGkH6zg/tj+mA+NE//aPYKG0k8kCHSHVJrpLpcAlOBEXQ3SavA=="
       }
     },
+    "npm:@emotion/css": {
+      "type": "npm",
+      "name": "npm:@emotion/css",
+      "data": {
+        "version": "11.13.5",
+        "packageName": "@emotion/css",
+        "hash": "sha512-wQdD0Xhkn3Qy2VNcIzbLP9MR8TafI0MJb7BEAXKp+w4+XqErksWR4OXomuDzPsN4InLdGhVe6EYcn2ZIUCpB8w=="
+      }
+    },
     "npm:@emotion/hash": {
       "type": "npm",
       "name": "npm:@emotion/hash",
@@ -1696,9 +1705,216 @@
       "type": "npm",
       "name": "npm:@headlessui/react",
       "data": {
-        "version": "2.2.0",
+        "version": "2.2.4",
         "packageName": "@headlessui/react",
-        "hash": "sha512-RzCEg+LXsuI7mHiSomsu/gBJSjpupm6A1qIZ5sWjd7JhARNlMiSA4kKfJpCKwU9tE+zMRterhhrP74PvfJrpXQ=="
+        "hash": "sha512-lz+OGcAH1dK93rgSMzXmm1qKOJkBUqZf1L4M8TWLNplftQD3IkoEDdUFNfAn4ylsN6WOTVtWaLmvmaHOUk1dTA=="
+      }
+    },
+    "npm:@react-aria/focus@3.20.5": {
+      "type": "npm",
+      "name": "npm:@react-aria/focus@3.20.5",
+      "data": {
+        "version": "3.20.5",
+        "packageName": "@react-aria/focus",
+        "hash": "sha512-JpFtXmWQ0Oca7FcvkqgjSyo6xEP7v3oQOLUId6o0xTvm4AD5W0mU2r3lYrbhsJ+XxdUUX4AVR5473sZZ85kU4A=="
+      }
+    },
+    "npm:@react-aria/focus@3.20.2": {
+      "type": "npm",
+      "name": "npm:@react-aria/focus@3.20.2",
+      "data": {
+        "version": "3.20.2",
+        "packageName": "@react-aria/focus",
+        "hash": "sha512-Q3rouk/rzoF/3TuH6FzoAIKrl+kzZi9LHmr8S5EqLAOyP9TXIKG34x2j42dZsAhrw7TbF9gA8tBKwnCNH4ZV+Q=="
+      }
+    },
+    "npm:@react-aria/focus@3.19.0": {
+      "type": "npm",
+      "name": "npm:@react-aria/focus@3.19.0",
+      "data": {
+        "version": "3.19.0",
+        "packageName": "@react-aria/focus",
+        "hash": "sha512-hPF9EXoUQeQl1Y21/rbV2H4FdUR2v+4/I0/vB+8U3bT1CJ+1AFj1hc/rqx2DqEwDlEwOHN+E4+mRahQmlybq0A=="
+      }
+    },
+    "npm:@react-aria/focus": {
+      "type": "npm",
+      "name": "npm:@react-aria/focus",
+      "data": {
+        "version": "3.20.1",
+        "packageName": "@react-aria/focus",
+        "hash": "sha512-lgYs+sQ1TtBrAXnAdRBQrBo0/7o5H6IrfDxec1j+VRpcXL0xyk0xPq+m3lZp8typzIghqDgpnKkJ5Jf4OrzPIw=="
+      }
+    },
+    "npm:@react-aria/interactions@3.25.3": {
+      "type": "npm",
+      "name": "npm:@react-aria/interactions@3.25.3",
+      "data": {
+        "version": "3.25.3",
+        "packageName": "@react-aria/interactions",
+        "hash": "sha512-J1bhlrNtjPS/fe5uJQ+0c7/jiXniwa4RQlP+Emjfc/iuqpW2RhbF9ou5vROcLzWIyaW8tVMZ468J68rAs/aZ5A=="
+      }
+    },
+    "npm:@react-aria/interactions@3.25.0": {
+      "type": "npm",
+      "name": "npm:@react-aria/interactions@3.25.0",
+      "data": {
+        "version": "3.25.0",
+        "packageName": "@react-aria/interactions",
+        "hash": "sha512-GgIsDLlO8rDU/nFn6DfsbP9rfnzhm8QFjZkB9K9+r+MTSCn7bMntiWQgMM+5O6BiA8d7C7x4zuN4bZtc0RBdXQ=="
+      }
+    },
+    "npm:@react-aria/interactions@3.22.5": {
+      "type": "npm",
+      "name": "npm:@react-aria/interactions@3.22.5",
+      "data": {
+        "version": "3.22.5",
+        "packageName": "@react-aria/interactions",
+        "hash": "sha512-kMwiAD9E0TQp+XNnOs13yVJghiy8ET8L0cbkeuTgNI96sOAp/63EJ1FSrDf17iD8sdjt41LafwX/dKXW9nCcLQ=="
+      }
+    },
+    "npm:@react-aria/interactions": {
+      "type": "npm",
+      "name": "npm:@react-aria/interactions",
+      "data": {
+        "version": "3.24.1",
+        "packageName": "@react-aria/interactions",
+        "hash": "sha512-OWEcIC6UQfWq4Td5Ptuh4PZQ4LHLJr/JL2jGYvuNL6EgL3bWvzPrRYIF/R64YbfVxIC7FeZpPSkS07sZ93/NoA=="
+      }
+    },
+    "npm:@react-aria/ssr@3.9.9": {
+      "type": "npm",
+      "name": "npm:@react-aria/ssr@3.9.9",
+      "data": {
+        "version": "3.9.9",
+        "packageName": "@react-aria/ssr",
+        "hash": "sha512-2P5thfjfPy/np18e5wD4WPt8ydNXhij1jwA8oehxZTFqlgVMGXzcWKxTb4RtJrLFsqPO7RUQTiY8QJk0M4Vy2g=="
+      }
+    },
+    "npm:@react-aria/ssr@3.9.8": {
+      "type": "npm",
+      "name": "npm:@react-aria/ssr@3.9.8",
+      "data": {
+        "version": "3.9.8",
+        "packageName": "@react-aria/ssr",
+        "hash": "sha512-lQDE/c9uTfBSDOjaZUJS8xP2jCKVk4zjQeIlCH90xaLhHDgbpCdns3xvFpJJujfj3nI4Ll9K7A+ONUBDCASOuw=="
+      }
+    },
+    "npm:@react-aria/ssr": {
+      "type": "npm",
+      "name": "npm:@react-aria/ssr",
+      "data": {
+        "version": "3.9.7",
+        "packageName": "@react-aria/ssr",
+        "hash": "sha512-GQygZaGlmYjmYM+tiNBA5C6acmiDWF52Nqd40bBp0Znk4M4hP+LTmI0lpI1BuKMw45T8RIhrAsICIfKwZvi2Gg=="
+      }
+    },
+    "npm:@react-aria/utils@3.29.1": {
+      "type": "npm",
+      "name": "npm:@react-aria/utils@3.29.1",
+      "data": {
+        "version": "3.29.1",
+        "packageName": "@react-aria/utils",
+        "hash": "sha512-yXMFVJ73rbQ/yYE/49n5Uidjw7kh192WNN9PNQGV0Xoc7EJUlSOxqhnpHmYTyO0EotJ8fdM1fMH8durHjUSI8g=="
+      }
+    },
+    "npm:@react-aria/utils@3.28.2": {
+      "type": "npm",
+      "name": "npm:@react-aria/utils@3.28.2",
+      "data": {
+        "version": "3.28.2",
+        "packageName": "@react-aria/utils",
+        "hash": "sha512-J8CcLbvnQgiBn54eeEvQQbIOfBF3A1QizxMw9P4cl9MkeR03ug7RnjTIdJY/n2p7t59kLeAB3tqiczhcj+Oi5w=="
+      }
+    },
+    "npm:@react-aria/utils@3.28.1": {
+      "type": "npm",
+      "name": "npm:@react-aria/utils@3.28.1",
+      "data": {
+        "version": "3.28.1",
+        "packageName": "@react-aria/utils",
+        "hash": "sha512-mnHFF4YOVu9BRFQ1SZSKfPhg3z+lBRYoW5mLcYTQihbKhz48+I1sqRkP7ahMITr8ANH3nb34YaMME4XWmK2Mgg=="
+      }
+    },
+    "npm:@react-aria/utils": {
+      "type": "npm",
+      "name": "npm:@react-aria/utils",
+      "data": {
+        "version": "3.26.0",
+        "packageName": "@react-aria/utils",
+        "hash": "sha512-LkZouGSjjQ0rEqo4XJosS4L3YC/zzQkfRM3KoqK6fUOmUJ9t0jQ09WjiF+uOoG9u+p30AVg3TrZRUWmoTS+koQ=="
+      }
+    },
+    "npm:@react-stately/utils@3.10.7": {
+      "type": "npm",
+      "name": "npm:@react-stately/utils@3.10.7",
+      "data": {
+        "version": "3.10.7",
+        "packageName": "@react-stately/utils",
+        "hash": "sha512-cWvjGAocvy4abO9zbr6PW6taHgF24Mwy/LbQ4TC4Aq3tKdKDntxyD+sh7AkSRfJRT2ccMVaHVv2+FfHThd3PKQ=="
+      }
+    },
+    "npm:@react-stately/utils@3.10.6": {
+      "type": "npm",
+      "name": "npm:@react-stately/utils@3.10.6",
+      "data": {
+        "version": "3.10.6",
+        "packageName": "@react-stately/utils",
+        "hash": "sha512-O76ip4InfTTzAJrg8OaZxKU4vvjMDOpfA/PGNOytiXwBbkct2ZeZwaimJ8Bt9W1bj5VsZ81/o/tW4BacbdDOMA=="
+      }
+    },
+    "npm:@react-stately/utils": {
+      "type": "npm",
+      "name": "npm:@react-stately/utils",
+      "data": {
+        "version": "3.10.5",
+        "packageName": "@react-stately/utils",
+        "hash": "sha512-iMQSGcpaecghDIh3mZEpZfoFH3ExBwTtuBEcvZ2XnGzCgQjeYXcMdIUwAfVQLXFTdHUHGF6Gu6/dFrYsCzySBQ=="
+      }
+    },
+    "npm:@react-types/shared@3.30.0": {
+      "type": "npm",
+      "name": "npm:@react-types/shared@3.30.0",
+      "data": {
+        "version": "3.30.0",
+        "packageName": "@react-types/shared",
+        "hash": "sha512-COIazDAx1ncDg046cTJ8SFYsX8aS3lB/08LDnbkH/SkdYrFPWDlXMrO/sUam8j1WWM+PJ+4d1mj7tODIKNiFog=="
+      }
+    },
+    "npm:@react-types/shared@3.29.0": {
+      "type": "npm",
+      "name": "npm:@react-types/shared@3.29.0",
+      "data": {
+        "version": "3.29.0",
+        "packageName": "@react-types/shared",
+        "hash": "sha512-IDQYu/AHgZimObzCFdNl1LpZvQW/xcfLt3v20sorl5qRucDVj4S9os98sVTZ4IRIBjmS+MkjqpR5E70xan7ooA=="
+      }
+    },
+    "npm:@react-types/shared@3.28.0": {
+      "type": "npm",
+      "name": "npm:@react-types/shared@3.28.0",
+      "data": {
+        "version": "3.28.0",
+        "packageName": "@react-types/shared",
+        "hash": "sha512-9oMEYIDc3sk0G5rysnYvdNrkSg7B04yTKl50HHSZVbokeHpnU0yRmsDaWb9B/5RprcKj8XszEk5guBO8Sa/Q+Q=="
+      }
+    },
+    "npm:@react-types/shared@3.27.0": {
+      "type": "npm",
+      "name": "npm:@react-types/shared@3.27.0",
+      "data": {
+        "version": "3.27.0",
+        "packageName": "@react-types/shared",
+        "hash": "sha512-gvznmLhi6JPEf0bsq7SwRYTHAKKq/wcmKqFez9sRdbED+SPMUmK5omfZ6w3EwUFQHbYUa4zPBYedQ7Knv70RMw=="
+      }
+    },
+    "npm:@react-types/shared": {
+      "type": "npm",
+      "name": "npm:@react-types/shared",
+      "data": {
+        "version": "3.26.0",
+        "packageName": "@react-types/shared",
+        "hash": "sha512-6FuPqvhmjjlpEDLTiYx29IJCbCNWPlsyO+ZUmCUXzhUv2ttShOXfw8CmeHWHftT/b2KweAWuzqSlfeXPR76jpw=="
       }
     },
     "npm:@heroicons/react": {
@@ -1762,87 +1978,6 @@
         "version": "3.12.4",
         "packageName": "@react-aria/i18n",
         "hash": "sha512-j9+UL3q0Ls8MhXV9gtnKlyozq4aM95YywXqnmJtzT1rYeBx7w28hooqrWkCYLfqr4OIryv1KUnPiCSLwC2OC7w=="
-      }
-    },
-    "npm:@react-aria/utils@3.28.2": {
-      "type": "npm",
-      "name": "npm:@react-aria/utils@3.28.2",
-      "data": {
-        "version": "3.28.2",
-        "packageName": "@react-aria/utils",
-        "hash": "sha512-J8CcLbvnQgiBn54eeEvQQbIOfBF3A1QizxMw9P4cl9MkeR03ug7RnjTIdJY/n2p7t59kLeAB3tqiczhcj+Oi5w=="
-      }
-    },
-    "npm:@react-aria/utils@3.28.1": {
-      "type": "npm",
-      "name": "npm:@react-aria/utils@3.28.1",
-      "data": {
-        "version": "3.28.1",
-        "packageName": "@react-aria/utils",
-        "hash": "sha512-mnHFF4YOVu9BRFQ1SZSKfPhg3z+lBRYoW5mLcYTQihbKhz48+I1sqRkP7ahMITr8ANH3nb34YaMME4XWmK2Mgg=="
-      }
-    },
-    "npm:@react-aria/utils": {
-      "type": "npm",
-      "name": "npm:@react-aria/utils",
-      "data": {
-        "version": "3.26.0",
-        "packageName": "@react-aria/utils",
-        "hash": "sha512-LkZouGSjjQ0rEqo4XJosS4L3YC/zzQkfRM3KoqK6fUOmUJ9t0jQ09WjiF+uOoG9u+p30AVg3TrZRUWmoTS+koQ=="
-      }
-    },
-    "npm:@react-types/shared@3.29.0": {
-      "type": "npm",
-      "name": "npm:@react-types/shared@3.29.0",
-      "data": {
-        "version": "3.29.0",
-        "packageName": "@react-types/shared",
-        "hash": "sha512-IDQYu/AHgZimObzCFdNl1LpZvQW/xcfLt3v20sorl5qRucDVj4S9os98sVTZ4IRIBjmS+MkjqpR5E70xan7ooA=="
-      }
-    },
-    "npm:@react-types/shared@3.28.0": {
-      "type": "npm",
-      "name": "npm:@react-types/shared@3.28.0",
-      "data": {
-        "version": "3.28.0",
-        "packageName": "@react-types/shared",
-        "hash": "sha512-9oMEYIDc3sk0G5rysnYvdNrkSg7B04yTKl50HHSZVbokeHpnU0yRmsDaWb9B/5RprcKj8XszEk5guBO8Sa/Q+Q=="
-      }
-    },
-    "npm:@react-types/shared@3.27.0": {
-      "type": "npm",
-      "name": "npm:@react-types/shared@3.27.0",
-      "data": {
-        "version": "3.27.0",
-        "packageName": "@react-types/shared",
-        "hash": "sha512-gvznmLhi6JPEf0bsq7SwRYTHAKKq/wcmKqFez9sRdbED+SPMUmK5omfZ6w3EwUFQHbYUa4zPBYedQ7Knv70RMw=="
-      }
-    },
-    "npm:@react-types/shared": {
-      "type": "npm",
-      "name": "npm:@react-types/shared",
-      "data": {
-        "version": "3.26.0",
-        "packageName": "@react-types/shared",
-        "hash": "sha512-6FuPqvhmjjlpEDLTiYx29IJCbCNWPlsyO+ZUmCUXzhUv2ttShOXfw8CmeHWHftT/b2KweAWuzqSlfeXPR76jpw=="
-      }
-    },
-    "npm:@react-aria/ssr@3.9.8": {
-      "type": "npm",
-      "name": "npm:@react-aria/ssr@3.9.8",
-      "data": {
-        "version": "3.9.8",
-        "packageName": "@react-aria/ssr",
-        "hash": "sha512-lQDE/c9uTfBSDOjaZUJS8xP2jCKVk4zjQeIlCH90xaLhHDgbpCdns3xvFpJJujfj3nI4Ll9K7A+ONUBDCASOuw=="
-      }
-    },
-    "npm:@react-aria/ssr": {
-      "type": "npm",
-      "name": "npm:@react-aria/ssr",
-      "data": {
-        "version": "3.9.7",
-        "packageName": "@react-aria/ssr",
-        "hash": "sha512-GQygZaGlmYjmYM+tiNBA5C6acmiDWF52Nqd40bBp0Znk4M4hP+LTmI0lpI1BuKMw45T8RIhrAsICIfKwZvi2Gg=="
       }
     },
     "npm:@react-aria/toolbar@3.0.0-beta.14": {
@@ -1951,24 +2086,6 @@
         "version": "3.8.6",
         "packageName": "@react-stately/tree",
         "hash": "sha512-lblUaxf1uAuIz5jm6PYtcJ+rXNNVkqyFWTIMx6g6gW/mYvm8GNx1G/0MLZE7E6CuDGaO9dkLSY2bB1uqyKHidA=="
-      }
-    },
-    "npm:@react-stately/utils@3.10.6": {
-      "type": "npm",
-      "name": "npm:@react-stately/utils@3.10.6",
-      "data": {
-        "version": "3.10.6",
-        "packageName": "@react-stately/utils",
-        "hash": "sha512-O76ip4InfTTzAJrg8OaZxKU4vvjMDOpfA/PGNOytiXwBbkct2ZeZwaimJ8Bt9W1bj5VsZ81/o/tW4BacbdDOMA=="
-      }
-    },
-    "npm:@react-stately/utils": {
-      "type": "npm",
-      "name": "npm:@react-stately/utils",
-      "data": {
-        "version": "3.10.5",
-        "packageName": "@react-stately/utils",
-        "hash": "sha512-iMQSGcpaecghDIh3mZEpZfoFH3ExBwTtuBEcvZ2XnGzCgQjeYXcMdIUwAfVQLXFTdHUHGF6Gu6/dFrYsCzySBQ=="
       }
     },
     "npm:@react-types/accordion@3.0.0-alpha.26": {
@@ -2178,33 +2295,6 @@
         "hash": "sha512-oXzjTiwVuuWjZ8muU0hp3BrDH5qjVctLOF50mjPvqUbvXQTHhoDxWweyIXPQjGshaqBd2w4pWaE4A2rG2O/apw=="
       }
     },
-    "npm:@react-aria/interactions@3.25.0": {
-      "type": "npm",
-      "name": "npm:@react-aria/interactions@3.25.0",
-      "data": {
-        "version": "3.25.0",
-        "packageName": "@react-aria/interactions",
-        "hash": "sha512-GgIsDLlO8rDU/nFn6DfsbP9rfnzhm8QFjZkB9K9+r+MTSCn7bMntiWQgMM+5O6BiA8d7C7x4zuN4bZtc0RBdXQ=="
-      }
-    },
-    "npm:@react-aria/interactions@3.22.5": {
-      "type": "npm",
-      "name": "npm:@react-aria/interactions@3.22.5",
-      "data": {
-        "version": "3.22.5",
-        "packageName": "@react-aria/interactions",
-        "hash": "sha512-kMwiAD9E0TQp+XNnOs13yVJghiy8ET8L0cbkeuTgNI96sOAp/63EJ1FSrDf17iD8sdjt41LafwX/dKXW9nCcLQ=="
-      }
-    },
-    "npm:@react-aria/interactions": {
-      "type": "npm",
-      "name": "npm:@react-aria/interactions",
-      "data": {
-        "version": "3.24.1",
-        "packageName": "@react-aria/interactions",
-        "hash": "sha512-OWEcIC6UQfWq4Td5Ptuh4PZQ4LHLJr/JL2jGYvuNL6EgL3bWvzPrRYIF/R64YbfVxIC7FeZpPSkS07sZ93/NoA=="
-      }
-    },
     "npm:@react-aria/label@3.7.17": {
       "type": "npm",
       "name": "npm:@react-aria/label@3.7.17",
@@ -2284,33 +2374,6 @@
         "version": "3.16.0",
         "packageName": "@react-aria/menu",
         "hash": "sha512-TNk+Vd3TbpBPUxEloAdHRTaRxf9JBK7YmkHYiq0Yj5Lc22KS0E2eTyhpPM9xJvEWN2TlC5TEvNfdyui2kYWFFQ=="
-      }
-    },
-    "npm:@react-aria/focus@3.20.2": {
-      "type": "npm",
-      "name": "npm:@react-aria/focus@3.20.2",
-      "data": {
-        "version": "3.20.2",
-        "packageName": "@react-aria/focus",
-        "hash": "sha512-Q3rouk/rzoF/3TuH6FzoAIKrl+kzZi9LHmr8S5EqLAOyP9TXIKG34x2j42dZsAhrw7TbF9gA8tBKwnCNH4ZV+Q=="
-      }
-    },
-    "npm:@react-aria/focus@3.19.0": {
-      "type": "npm",
-      "name": "npm:@react-aria/focus@3.19.0",
-      "data": {
-        "version": "3.19.0",
-        "packageName": "@react-aria/focus",
-        "hash": "sha512-hPF9EXoUQeQl1Y21/rbV2H4FdUR2v+4/I0/vB+8U3bT1CJ+1AFj1hc/rqx2DqEwDlEwOHN+E4+mRahQmlybq0A=="
-      }
-    },
-    "npm:@react-aria/focus": {
-      "type": "npm",
-      "name": "npm:@react-aria/focus",
-      "data": {
-        "version": "3.20.1",
-        "packageName": "@react-aria/focus",
-        "hash": "sha512-lgYs+sQ1TtBrAXnAdRBQrBo0/7o5H6IrfDxec1j+VRpcXL0xyk0xPq+m3lZp8typzIghqDgpnKkJ5Jf4OrzPIw=="
       }
     },
     "npm:@react-aria/overlays@3.27.0": {
@@ -3109,9 +3172,9 @@
       "type": "npm",
       "name": "npm:@tanstack/react-virtual",
       "data": {
-        "version": "3.13.2",
+        "version": "3.13.12",
         "packageName": "@tanstack/react-virtual",
-        "hash": "sha512-LceSUgABBKF6HSsHK2ZqHzQ37IKV/jlaWbHm+NyTa3/WNb/JZVcThDuTainf+PixltOOcFCYXwxbLpOX9sCx+g=="
+        "hash": "sha512-Gd13QdxPSukP8ZrkbgS2RwoZseTTbQPLnQEn7HY/rqtM+8Zt95f7xKC7N0EsKs7aoz0WzZ+fditZux+F8EzYxA=="
       }
     },
     "npm:@tanstack/virtual-core@3.11.3": {
@@ -3136,9 +3199,9 @@
       "type": "npm",
       "name": "npm:@tanstack/virtual-core",
       "data": {
-        "version": "3.13.2",
+        "version": "3.13.12",
         "packageName": "@tanstack/virtual-core",
-        "hash": "sha512-Qzz4EgzMbO5gKrmqUondCjiHcuu4B1ftHb0pjCut661lXZdGoHeze9f/M8iwsK1t5LGR6aNuNGU7mxkowaW6RQ=="
+        "hash": "sha512-1YBOJfRHV4sXUmWsFSf5rQor4Ss82G8dQWLRbnk3GA4jeP8hQt1hxXh0tmflpC0dz3VgEv/1+qwPyLeWkQuPFA=="
       }
     },
     "npm:@heroui/menu": {
@@ -4302,15 +4365,6 @@
         "hash": "sha512-Pdlw/oPxN+aXdmM9R00JVC9WVFoCLTKJvDVLgmJ+qAffBMxsV85l/Lu7sNx4zSzPyoL2euImuEwHhOXdEgNFZQ=="
       }
     },
-    "npm:pretty-format": {
-      "type": "npm",
-      "name": "npm:pretty-format",
-      "data": {
-        "version": "27.5.1",
-        "packageName": "pretty-format",
-        "hash": "sha512-Qb1gy5OrP5+zDf2Bvnzdl3jsTf1qXVMazbvCoKhtKqVs4/YK4ozX4gKQJJVyNe+cajNPn0KoC0MC3FUmaHWEmQ=="
-      }
-    },
     "npm:react-is@18.3.1": {
       "type": "npm",
       "name": "npm:react-is@18.3.1",
@@ -4327,15 +4381,6 @@
         "version": "16.13.1",
         "packageName": "react-is",
         "hash": "sha512-24e6ynE2H+OKt4kqsOvNd8kBpV65zoxbA4BVsEOB3ARVWQki/DHzaUoC5KuON/BiccDaCCTZBuOcfZs70kR8bQ=="
-      }
-    },
-    "npm:react-is": {
-      "type": "npm",
-      "name": "npm:react-is",
-      "data": {
-        "version": "17.0.2",
-        "packageName": "react-is",
-        "hash": "sha512-w2GsyukL62IJnlaff/nRegPQR94C/XXamvMWmSHRJ4y7Ts/4ocGRmTHvOs8PSE6pB3dWOrD/nueuU5sduBsQ4w=="
       }
     },
     "npm:@jest/environment": {
@@ -4489,6 +4534,15 @@
         "version": "1.5.0",
         "packageName": "@jridgewell/sourcemap-codec",
         "hash": "sha512-gv3ZRaISU3fjPAgNsriBRqGWQL6quFx04YMPW/zD8XMLsU32mhCCbfbO6KZFLjvYpCZ8zyDEgqsgf+PwPaM7GQ=="
+      }
+    },
+    "npm:@kurkle/color": {
+      "type": "npm",
+      "name": "npm:@kurkle/color",
+      "data": {
+        "version": "0.3.4",
+        "packageName": "@kurkle/color",
+        "hash": "sha512-M5UknZPHRu3DEDWoipU6sE8PdkZ6Z/S+v4dD+Ke8IaNlpdSQah50lz1KtcFBa2vsdOnwbbnxJwVM4wty6udA5w=="
       }
     },
     "npm:@leichtgewicht/ip-codec": {
@@ -7015,9 +7069,9 @@
       "type": "npm",
       "name": "npm:@react-stately/flags",
       "data": {
-        "version": "3.1.1",
+        "version": "3.1.2",
         "packageName": "@react-stately/flags",
-        "hash": "sha512-XPR5gi5LfrPdhxZzdIlJDz/B5cBf63l4q6/AzNqVWFKgd0QqY5LvWJftXkklaIUpKSJkIKQb8dphuZXDtkWNqg=="
+        "hash": "sha512-2HjFcZx1MyQXoPqcBGALwWWmgFVUk2TuKVIQxCbRq7fPyWXIl6VHcakCLurdtYC2Iks7zizvz0Idv48MQ38DWg=="
       }
     },
     "npm:@react-stately/grid": {
@@ -7596,15 +7650,6 @@
         "hash": "sha512-uvXk/U4cBiFMxt+p9/G7yUWI/UbHYbyghLCjlpWZ3mLeIZiUBSKcUnw9UnKkdRz7Z/N4UBuFLWQdJCjUe7HjvA=="
       }
     },
-    "npm:@testing-library/dom": {
-      "type": "npm",
-      "name": "npm:@testing-library/dom",
-      "data": {
-        "version": "10.4.0",
-        "packageName": "@testing-library/dom",
-        "hash": "sha512-pemlzrSESWbdAloYml3bAJMEfNh1Z7EduzqPKprCH5S341frlpYnUEW0H72dLxa6IsYr+mPno20GiSm+h9dEdQ=="
-      }
-    },
     "npm:@testing-library/react": {
       "type": "npm",
       "name": "npm:@testing-library/react",
@@ -7684,15 +7729,6 @@
         "version": "0.9.0",
         "packageName": "@tybys/wasm-util",
         "hash": "sha512-6+7nlbMVX/PVDCwaIQ8nTOPveOcFLSt8GcXdx8hD0bt39uWxYT88uXzqTd4fTvqta7oeUJqudepapKNt2DYJFw=="
-      }
-    },
-    "npm:@types/aria-query": {
-      "type": "npm",
-      "name": "npm:@types/aria-query",
-      "data": {
-        "version": "5.0.4",
-        "packageName": "@types/aria-query",
-        "hash": "sha512-rfT93uj5s0PRL7EzccGMs3brplhcrghnDoV26NqKhCAS1hVo+WdNsPvE/yb6ilfr5hi2MEk6d5EWJTKdxg8jVw=="
       }
     },
     "npm:@types/babel__core": {
@@ -7990,6 +8026,15 @@
         "version": "29.5.14",
         "packageName": "@types/jest",
         "hash": "sha512-ZN+4sdnLUbo8EVvVc2ao0GFW6oVrQRPn4K2lglySj7APvSrgzxHiNNK99us4WDMi57xxA2yggblIAMNhXOotLQ=="
+      }
+    },
+    "npm:@types/js-cookie": {
+      "type": "npm",
+      "name": "npm:@types/js-cookie",
+      "data": {
+        "version": "3.0.6",
+        "packageName": "@types/js-cookie",
+        "hash": "sha512-wkw9yd1kEXOPnvEeEV1Go1MmxtBJL0RR79aOTAApecWFVu7w0NNXNqhcWgvw2YgZDYadliXkl14pa3WXw5jlCQ=="
       }
     },
     "npm:@types/jsdom": {
@@ -9567,6 +9612,15 @@
         "hash": "sha512-kWWXztvZ5SBQV+eRgKFeh8q5sLuZY2+8WUIzlxWVTg+oGwY14qylx1KbKzHd8P6ZYkAg0xyIDU9JMHhyJMZ1jw=="
       }
     },
+    "npm:chart.js": {
+      "type": "npm",
+      "name": "npm:chart.js",
+      "data": {
+        "version": "4.5.0",
+        "packageName": "chart.js",
+        "hash": "sha512-aYeC/jDgSEx8SHWZvANYMioYMZ2KX02W6f6uVfyteuCGcadDLcYVHdfdygsTQkQ4TKn5lghoojAsPj5pu0SnvQ=="
+      }
+    },
     "npm:chokidar": {
       "type": "npm",
       "name": "npm:chokidar",
@@ -10825,15 +10879,6 @@
         "version": "2.1.0",
         "packageName": "doctrine",
         "hash": "sha512-35mSku4ZXK0vfCuHEDAwt55dg2jNajHZ1odvF+8SSr82EsZY4QmXfuWso8oEd8zRhVObSN18aM0CjSdoBX7zIw=="
-      }
-    },
-    "npm:dom-accessibility-api": {
-      "type": "npm",
-      "name": "npm:dom-accessibility-api",
-      "data": {
-        "version": "0.5.16",
-        "packageName": "dom-accessibility-api",
-        "hash": "sha512-X7BJ2yElsnOJ30pZF4uIIDfBEVgF4XEBxL9Bxhy6dnrm5hkzqmsWHGTiHqRiITNhMyFLyAiWndIJP7Z1NTteDg=="
       }
     },
     "npm:dom-helpers": {
@@ -13788,6 +13833,15 @@
         "hash": "sha512-/imKNG4EbWNrVjoNC/1H5/9GFy+tqjGBHCaSsN+P2RnPqjsLmv6UD3Ej+Kj8nBWaRAwyk7kK5ZUc+OEatnTR3A=="
       }
     },
+    "npm:js-cookie": {
+      "type": "npm",
+      "name": "npm:js-cookie",
+      "data": {
+        "version": "3.0.5",
+        "packageName": "js-cookie",
+        "hash": "sha512-cEiJEAEoIbWfCZYKWhVwFuvPX1gETRYPw6LlaTKoxD3s2AkXzkCjnp6h0V77ozyqj0jakteJ4YqDJT830+lVGw=="
+      }
+    },
     "npm:js-tokens": {
       "type": "npm",
       "name": "npm:js-tokens",
@@ -14281,15 +14335,6 @@
         "version": "3.5.0",
         "packageName": "luxon",
         "hash": "sha512-rh+Zjr6DNfUYR3bPwJEnuwDdqMbxZW7LOQfUN4B54+Cl+0o5zaU9RJ6bcidfDtC1cWCZXQ+nvX8bf6bAji37QQ=="
-      }
-    },
-    "npm:lz-string": {
-      "type": "npm",
-      "name": "npm:lz-string",
-      "data": {
-        "version": "1.5.0",
-        "packageName": "lz-string",
-        "hash": "sha512-h5bgJWpxJNswbU7qCrV0tIKQCaS3blPDrqKWx+QxzuzL1zGUzij9XCWLrSLsJPu5t+eWA/ycetzYAO5IOMcWAQ=="
       }
     },
     "npm:make-error": {
@@ -15822,6 +15867,15 @@
         "hash": "sha512-EJPUwuERKpApcQ9qXzdVZzddFYRT7+3R/jJ3OrTfW6m2iq+WT+CBaVB7DsQazhPRXDfMcx9+dmMmzjsmveOViQ=="
       }
     },
+    "npm:react-chartjs-2": {
+      "type": "npm",
+      "name": "npm:react-chartjs-2",
+      "data": {
+        "version": "5.3.0",
+        "packageName": "react-chartjs-2",
+        "hash": "sha512-UfZZFnDsERI3c3CZGxzvNJd02SHjaSJ8kgW1djn65H1KK8rehwTjyrRKOG3VTMG8wtHZ5rgAO5oTHtHi9GCCmw=="
+      }
+    },
     "npm:react-csv": {
       "type": "npm",
       "name": "npm:react-csv",
@@ -15919,6 +15973,15 @@
         "version": "1.1.3",
         "packageName": "react-moment",
         "hash": "sha512-8EPvlUL8u6EknPp1ISF5MQ3wx2OHJVXIP/iZc4wRh3iV3XozftZERDv9ANZeAtMlhNNQHdFoqcZHFUkBSTONfA=="
+      }
+    },
+    "npm:react-organizational-chart": {
+      "type": "npm",
+      "name": "npm:react-organizational-chart",
+      "data": {
+        "version": "2.2.1",
+        "packageName": "react-organizational-chart",
+        "hash": "sha512-JORmpLeYzCVtztdqCHsnKL8H3WiLRPHjohgh/PxQoszLuaQ+l3F8YefKSfpcBPZJhHwy3SlqjFjPC28a3Hh3QQ=="
       }
     },
     "npm:react-phone-number-input": {
@@ -20213,6 +20276,31 @@
       "type": "static"
     },
     {
+      "source": "npm:@emotion/css",
+      "target": "npm:@emotion/babel-plugin",
+      "type": "static"
+    },
+    {
+      "source": "npm:@emotion/css",
+      "target": "npm:@emotion/cache",
+      "type": "static"
+    },
+    {
+      "source": "npm:@emotion/css",
+      "target": "npm:@emotion/serialize",
+      "type": "static"
+    },
+    {
+      "source": "npm:@emotion/css",
+      "target": "npm:@emotion/sheet",
+      "type": "static"
+    },
+    {
+      "source": "npm:@emotion/css",
+      "target": "npm:@emotion/utils",
+      "type": "static"
+    },
+    {
       "source": "npm:@emotion/is-prop-valid",
       "target": "npm:@emotion/memoize",
       "type": "static"
@@ -20559,17 +20647,157 @@
     },
     {
       "source": "npm:@headlessui/react",
-      "target": "npm:@react-aria/focus",
+      "target": "npm:@react-aria/focus@3.20.5",
       "type": "static"
     },
     {
       "source": "npm:@headlessui/react",
-      "target": "npm:@react-aria/interactions",
+      "target": "npm:@react-aria/interactions@3.25.3",
       "type": "static"
     },
     {
       "source": "npm:@headlessui/react",
       "target": "npm:@tanstack/react-virtual",
+      "type": "static"
+    },
+    {
+      "source": "npm:@headlessui/react",
+      "target": "npm:use-sync-external-store",
+      "type": "static"
+    },
+    {
+      "source": "npm:@react-aria/focus@3.20.5",
+      "target": "npm:react",
+      "type": "static"
+    },
+    {
+      "source": "npm:@react-aria/focus@3.20.5",
+      "target": "npm:react-dom",
+      "type": "static"
+    },
+    {
+      "source": "npm:@react-aria/focus@3.20.5",
+      "target": "npm:@react-aria/interactions@3.25.3",
+      "type": "static"
+    },
+    {
+      "source": "npm:@react-aria/focus@3.20.5",
+      "target": "npm:@react-aria/utils@3.29.1",
+      "type": "static"
+    },
+    {
+      "source": "npm:@react-aria/focus@3.20.5",
+      "target": "npm:@react-types/shared@3.30.0",
+      "type": "static"
+    },
+    {
+      "source": "npm:@react-aria/focus@3.20.5",
+      "target": "npm:@swc/helpers",
+      "type": "static"
+    },
+    {
+      "source": "npm:@react-aria/focus@3.20.5",
+      "target": "npm:clsx",
+      "type": "static"
+    },
+    {
+      "source": "npm:@react-aria/interactions@3.25.3",
+      "target": "npm:react",
+      "type": "static"
+    },
+    {
+      "source": "npm:@react-aria/interactions@3.25.3",
+      "target": "npm:react-dom",
+      "type": "static"
+    },
+    {
+      "source": "npm:@react-aria/interactions@3.25.3",
+      "target": "npm:@react-aria/ssr@3.9.9",
+      "type": "static"
+    },
+    {
+      "source": "npm:@react-aria/interactions@3.25.3",
+      "target": "npm:@react-aria/utils@3.29.1",
+      "type": "static"
+    },
+    {
+      "source": "npm:@react-aria/interactions@3.25.3",
+      "target": "npm:@react-stately/flags",
+      "type": "static"
+    },
+    {
+      "source": "npm:@react-aria/interactions@3.25.3",
+      "target": "npm:@react-types/shared@3.30.0",
+      "type": "static"
+    },
+    {
+      "source": "npm:@react-aria/interactions@3.25.3",
+      "target": "npm:@swc/helpers",
+      "type": "static"
+    },
+    {
+      "source": "npm:@react-aria/ssr@3.9.9",
+      "target": "npm:react",
+      "type": "static"
+    },
+    {
+      "source": "npm:@react-aria/ssr@3.9.9",
+      "target": "npm:@swc/helpers",
+      "type": "static"
+    },
+    {
+      "source": "npm:@react-aria/utils@3.29.1",
+      "target": "npm:react",
+      "type": "static"
+    },
+    {
+      "source": "npm:@react-aria/utils@3.29.1",
+      "target": "npm:react-dom",
+      "type": "static"
+    },
+    {
+      "source": "npm:@react-aria/utils@3.29.1",
+      "target": "npm:@react-aria/ssr@3.9.9",
+      "type": "static"
+    },
+    {
+      "source": "npm:@react-aria/utils@3.29.1",
+      "target": "npm:@react-stately/flags",
+      "type": "static"
+    },
+    {
+      "source": "npm:@react-aria/utils@3.29.1",
+      "target": "npm:@react-stately/utils@3.10.7",
+      "type": "static"
+    },
+    {
+      "source": "npm:@react-aria/utils@3.29.1",
+      "target": "npm:@react-types/shared@3.30.0",
+      "type": "static"
+    },
+    {
+      "source": "npm:@react-aria/utils@3.29.1",
+      "target": "npm:@swc/helpers",
+      "type": "static"
+    },
+    {
+      "source": "npm:@react-aria/utils@3.29.1",
+      "target": "npm:clsx",
+      "type": "static"
+    },
+    {
+      "source": "npm:@react-stately/utils@3.10.7",
+      "target": "npm:react",
+      "type": "static"
+    },
+    {
+      "source": "npm:@react-stately/utils@3.10.7",
+      "target": "npm:@swc/helpers",
+      "type": "static"
+    },
+    {
+      "source": "npm:@react-types/shared@3.30.0",
+      "target": "npm:react",
       "type": "static"
     },
     {
@@ -56243,51 +56471,6 @@
       "type": "static"
     },
     {
-      "source": "npm:@testing-library/dom",
-      "target": "npm:@babel/code-frame",
-      "type": "static"
-    },
-    {
-      "source": "npm:@testing-library/dom",
-      "target": "npm:@babel/runtime",
-      "type": "static"
-    },
-    {
-      "source": "npm:@testing-library/dom",
-      "target": "npm:@types/aria-query",
-      "type": "static"
-    },
-    {
-      "source": "npm:@testing-library/dom",
-      "target": "npm:aria-query",
-      "type": "static"
-    },
-    {
-      "source": "npm:@testing-library/dom",
-      "target": "npm:chalk",
-      "type": "static"
-    },
-    {
-      "source": "npm:@testing-library/dom",
-      "target": "npm:dom-accessibility-api",
-      "type": "static"
-    },
-    {
-      "source": "npm:@testing-library/dom",
-      "target": "npm:lz-string",
-      "type": "static"
-    },
-    {
-      "source": "npm:@testing-library/dom",
-      "target": "npm:pretty-format",
-      "type": "static"
-    },
-    {
-      "source": "npm:@testing-library/react",
-      "target": "npm:@testing-library/dom",
-      "type": "static"
-    },
-    {
       "source": "npm:@testing-library/react",
       "target": "npm:@types/react",
       "type": "static"
@@ -58145,6 +58328,11 @@
     {
       "source": "npm:chalk",
       "target": "npm:supports-color",
+      "type": "static"
+    },
+    {
+      "source": "npm:chart.js",
+      "target": "npm:@kurkle/color",
       "type": "static"
     },
     {
@@ -62808,51 +62996,6 @@
       "type": "static"
     },
     {
-      "source": "npm:babel-plugin-macros@3.1.0",
-      "target": "npm:@babel/runtime",
-      "type": "static"
-    },
-    {
-      "source": "npm:babel-plugin-macros@3.1.0",
-      "target": "npm:cosmiconfig@7.1.0",
-      "type": "static"
-    },
-    {
-      "source": "npm:babel-plugin-macros@3.1.0",
-      "target": "npm:resolve",
-      "type": "static"
-    },
-    {
-      "source": "npm:cosmiconfig@7.1.0",
-      "target": "npm:@types/parse-json",
-      "type": "static"
-    },
-    {
-      "source": "npm:cosmiconfig@7.1.0",
-      "target": "npm:import-fresh",
-      "type": "static"
-    },
-    {
-      "source": "npm:cosmiconfig@7.1.0",
-      "target": "npm:parse-json",
-      "type": "static"
-    },
-    {
-      "source": "npm:cosmiconfig@7.1.0",
-      "target": "npm:path-type",
-      "type": "static"
-    },
-    {
-      "source": "npm:cosmiconfig@7.1.0",
-      "target": "npm:yaml@1.10.2",
-      "type": "static"
-    },
-    {
-      "source": "npm:dedent@1.5.3",
-      "target": "npm:babel-plugin-macros@3.1.0",
-      "type": "static"
-    },
-    {
       "source": "npm:pretty-format@29.7.0",
       "target": "npm:@jest/schemas",
       "type": "static"
@@ -65888,21 +66031,6 @@
       "type": "static"
     },
     {
-      "source": "npm:pretty-format",
-      "target": "npm:ansi-regex",
-      "type": "static"
-    },
-    {
-      "source": "npm:pretty-format",
-      "target": "npm:ansi-styles@5.2.0",
-      "type": "static"
-    },
-    {
-      "source": "npm:pretty-format",
-      "target": "npm:react-is",
-      "type": "static"
-    },
-    {
       "source": "npm:prompts",
       "target": "npm:kleur",
       "type": "static"
@@ -66025,6 +66153,16 @@
     {
       "source": "npm:react-barcode",
       "target": "npm:prop-types",
+      "type": "static"
+    },
+    {
+      "source": "npm:react-chartjs-2",
+      "target": "npm:chart.js",
+      "type": "static"
+    },
+    {
+      "source": "npm:react-chartjs-2",
+      "target": "npm:react",
       "type": "static"
     },
     {
@@ -66155,6 +66293,21 @@
     {
       "source": "npm:react-moment",
       "target": "npm:react",
+      "type": "static"
+    },
+    {
+      "source": "npm:react-organizational-chart",
+      "target": "npm:react",
+      "type": "static"
+    },
+    {
+      "source": "npm:react-organizational-chart",
+      "target": "npm:react-dom",
+      "type": "static"
+    },
+    {
+      "source": "npm:react-organizational-chart",
+      "target": "npm:@emotion/css",
       "type": "static"
     },
     {

@@ -1,13 +1,16 @@
 import React from 'react';
-import Table from '@potta/components/table';
+import DataGrid from '@potta/app/(routes)/account_receivables/components/DataGrid';
 import Button from '@potta/components/button';
 import useGetAllProductCategories from '../_hooks/useGetAllProductCategories';
 import useCreateProductCategory from '../_hooks/useCreateProductCategory';
 import { ProductCategory } from '../_utils/types';
 import { productCategorySchema } from '../_utils/validation';
-import TableActionPopover, {
-  PopoverAction,
-} from '@potta/components/tableActionsPopover';
+import {
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuItem,
+} from '@potta/components/shadcn/dropdown';
 import * as yup from 'yup';
 import Input from '@potta/components/input';
 import { useProductCategoryManager } from '../_hooks/useProductCategoryManager';
@@ -39,42 +42,45 @@ const CategoryManager = () => {
   } = useProductCategoryManager();
 
   const columns = [
-    { name: 'Name', selector: (row: ProductCategory) => row.name },
     {
-      name: 'Description',
-      selector: (row: ProductCategory) => row.description,
+      accessorKey: 'name',
+      header: 'Name',
+      cell: ({ row: { original } }) => original.name,
     },
     {
-      name: 'Created',
-      selector: (row: ProductCategory) =>
-        new Date(row.createdAt).toLocaleDateString(),
+      accessorKey: 'description',
+      header: 'Description',
+      cell: ({ row: { original } }) => original.description,
     },
     {
-      name: '',
-      selector: (row: ProductCategory) => {
-        const actions: PopoverAction[] = [
-          {
-            label: 'Edit',
-            onClick: () => handleEdit(row),
-            className: 'hover:bg-gray-200',
-            icon: <i className="ri-edit-line" />,
-          },
-          {
-            label: 'Delete',
-            onClick: () => setDeleteId(row.uuid),
-            className: 'hover:bg-red-200 text-red-600',
-            icon: <i className="ri-delete-bin-line" />,
-          },
-        ];
-        return (
-          <TableActionPopover
-            actions={actions}
-            rowUuid={row.uuid}
-            openPopover={openPopover}
-            setOpenPopover={setOpenPopover}
-          />
-        );
-      },
+      accessorKey: 'createdAt',
+      header: 'Created',
+      cell: ({ row: { original } }) =>
+        new Date(original.createdAt).toLocaleDateString(),
+    },
+    {
+      accessorKey: 'actions',
+      header: 'Actions',
+      cell: ({ row: { original } }) => (
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <button className="p-2 hover:bg-gray-100 rounded-full transition-colors">
+              <i className="ri-more-2-fill text-xl text-gray-600"></i>
+            </button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end" className="w-40">
+            <DropdownMenuItem onClick={() => handleEdit(original)}>
+              <i className="ri-edit-line mr-2"></i> Edit
+            </DropdownMenuItem>
+            <DropdownMenuItem 
+              onClick={() => setDeleteId(original.uuid)}
+              className="text-red-600"
+            >
+              <i className="ri-delete-bin-line mr-2"></i> Delete
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      ),
     },
   ];
 
@@ -84,17 +90,10 @@ const CategoryManager = () => {
         <h2 className="text-2xl font-semibold">Product Categories</h2>
         <Button text={'Add Category'} type="button" onClick={handleOpenModal} />
       </div>
-      <Table
+      <DataGrid
         columns={columns}
         data={data?.data || []}
-        minHeight="50vh"
-        maxHeight="60vh"
-        ExpandableComponent={null}
-        expanded={false}
-        pending={isLoading}
-        pagination
-        paginationServer
-        paginationTotalRows={data?.meta?.totalItems ?? 0}
+        isLoading={isLoading}
       />
       {/* Modal for creating or editing a category */}
       {modalOpen && (

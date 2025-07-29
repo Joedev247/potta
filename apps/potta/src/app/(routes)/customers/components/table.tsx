@@ -1,6 +1,6 @@
 'use client';
 import React, { FC, useState } from 'react';
-import MyTable from '@potta/components/table';
+import DataGrid from '@potta/app/(routes)/account_receivables/components/DataGrid';
 import {
   getCountryCallingCode,
   parsePhoneNumberFromString,
@@ -25,10 +25,14 @@ import {
   UpdateCustomerPayload,
   updateCustomerSchema,
 } from '../utils/validations';
-import TableActionPopover, {
-  PopoverAction,
-} from '@potta/components/tableActionsPopover';
+import {
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuItem,
+} from '@potta/components/shadcn/dropdown';
 import Image from 'next/image';
+import { ColumnDef } from '@tanstack/react-table';
 
 export const PhoneFlag = ({
   phoneNumber,
@@ -63,7 +67,6 @@ export const PhoneFlag = ({
 };
 
 const TableComponents = () => {
-  const [openPopover, setOpenPopover] = useState<string | null>(null);
   const [openViewModal, setOpenViewModal] = useState<string | null>(null);
   const [openDeleteModal, setOpenDeleteModal] = useState<string | null>(null);
   const [openUpdateModal, setOpenUpdateModal] = useState<string | null>(null);
@@ -72,31 +75,37 @@ const TableComponents = () => {
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
   const [customerDetails, setCustomerDetails] =
     useState<UpdateCustomerPayload | null>(null);
-  const columns = [
+
+  const columns: ColumnDef<any>[] = [
     {
-      name: 'Customer Name',
-      selector: (row: any) => (
+      accessorKey: 'firstName',
+      header: 'Customer Name',
+      cell: ({ row: { original } }) => (
         <div className="">
-          {row.firstName} {row.lastName}
+          {original.firstName} {original.lastName}
         </div>
       ),
     },
     {
-      name: 'Telephone ',
-      selector: (row: any) => <PhoneFlag phoneNumber={row.phone} />,
+      accessorKey: 'phone',
+      header: 'Telephone',
+      cell: ({ row: { original } }) => <PhoneFlag phoneNumber={original.phone} />,
     },
     {
-      name: 'Email',
-      selector: (row: any) => <div className="">{row.email}</div>,
+      accessorKey: 'email',
+      header: 'Email',
+      cell: ({ row: { original } }) => <div className="">{original.email}</div>,
     },
     {
-      name: 'Type',
-      selector: (row: any) => <div>{row.type}</div>,
+      accessorKey: 'type',
+      header: 'Type',
+      cell: ({ row: { original } }) => <div>{original.type}</div>,
     },
     {
-      name: 'Status',
-      selector: (row: any) => {
-        const status = row.status || 'enabled'; // Default to enabled if status is not provided
+      accessorKey: 'status',
+      header: 'Status',
+      cell: ({ row: { original } }) => {
+        const status = original.status || 'enabled'; // Default to enabled if status is not provided
 
         // Status color mapping based on the specific status values from validations.ts
         const statusColorMap: Record<string, string> = {
@@ -123,46 +132,50 @@ const TableComponents = () => {
       },
     },
     {
-      name: 'Actions',
-      selector: (row: any) => {
-        const actions: PopoverAction[] = [
-          {
-            label: 'View',
-            onClick: () => {
-              setOpenViewModal(row.uuid);
-              setIsViewOpen(true);
-            },
-            className: 'hover:bg-gray-200',
-            icon: <i className="ri-eye-line" />,
-          },
-          {
-            label: 'Edit',
-            onClick: () => {
-              setOpenUpdateModal(row.uuid);
-              setCustomerDetails(row);
-              setIsEditOpen(true);
-            },
-            className: 'hover:bg-gray-200',
-            icon: <i className="ri-edit-line" />,
-          },
-          {
-            label: 'Delete',
-            onClick: () => {
-              setOpenDeleteModal(row.uuid);
-              setIsDeleteOpen(true);
-            },
-            className: 'hover:bg-red-200 text-red-600',
-            icon: <i className="ri-delete-bin-line" />,
-          },
-        ];
-
+      id: 'actions',
+      header: 'Actions',
+      cell: ({ row: { original } }) => {
         return (
-          <TableActionPopover
-            actions={actions}
-            rowUuid={row.uuid}
-            openPopover={openPopover}
-            setOpenPopover={setOpenPopover}
-          />
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <button className="p-2 hover:bg-gray-100 rounded-md">
+                <i className="ri-more-2-fill text-gray-600"></i>
+              </button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="w-48">
+              <DropdownMenuItem
+                onClick={() => {
+                  setOpenViewModal(original.uuid);
+                  setIsViewOpen(true);
+                }}
+                className="cursor-pointer"
+              >
+                <i className="ri-eye-line mr-2"></i>
+                View
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                onClick={() => {
+                  setOpenUpdateModal(original.uuid);
+                  setCustomerDetails(original);
+                  setIsEditOpen(true);
+                }}
+                className="cursor-pointer"
+              >
+                <i className="ri-edit-line mr-2"></i>
+                Edit
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                onClick={() => {
+                  setOpenDeleteModal(original.uuid);
+                  setIsDeleteOpen(true);
+                }}
+                className="cursor-pointer text-red-600"
+              >
+                <i className="ri-delete-bin-line mr-2"></i>
+                Delete
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         );
       },
     },
@@ -173,15 +186,6 @@ const TableComponents = () => {
 
   const filter: CustomerFilter = { page, limit };
   const { data: customer, isLoading, error } = useGetAllCustomers(filter);
-
-  const handlePageChange = (newPage: number) => {
-    setPage(newPage);
-  };
-
-  const handlePerRowsChange = (newLimit: number, newPage: number) => {
-    setLimit(newLimit);
-    setPage(newPage); // Reset page when changing rows per page
-  };
 
   const handleRowClick = (row: any) => {
     setOpenViewModal(row.uuid);
@@ -203,19 +207,11 @@ const TableComponents = () => {
   return (
     <div className="mt-10">
       <Filter />
-      <MyTable
-        minHeight="50vh"
-        maxHeight="50vh"
+      <DataGrid
         columns={columns}
         data={customer?.data || []}
-        pagination
-        expanded={false}
-        pending={isLoading}
-        paginationServer
-        paginationTotalRows={customer?.meta?.totalItems ?? 0}
-        onChangePage={handlePageChange}
-        onChangeRowsPerPage={handlePerRowsChange}
-        onRowClicked={handleRowClick}
+        isLoading={isLoading}
+        onRowClick={handleRowClick}
       />
       {openDeleteModal && (
         <DeleteModal

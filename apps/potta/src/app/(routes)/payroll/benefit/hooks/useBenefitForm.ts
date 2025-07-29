@@ -23,6 +23,7 @@ export const useBenefitForm = () => {
   const [formData, setFormData] = useState({
     benefitName: '',
     benefitType: 'Financial',
+    componentType: 'earnings',
     category: 'Seniority Bonus',
     rateType: 'Flat Rate',
     cycle: 'MONTHLY',
@@ -255,6 +256,7 @@ export const useBenefitForm = () => {
     const formData = {
       benefitName: benefit.name || '',
       benefitType: mapAPIBenefitTypeToUI(benefit.type || 'FINANCIAL'),
+      componentType: 'earnings', // Default to earnings, can be determined from category if needed
       category: benefit.category || 'Seniority Bonus',
       rateType: rateType,
       cycle: mapAPICycleToUI(benefit.cycle || 'MONTHLY'),

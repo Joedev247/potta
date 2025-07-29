@@ -1,5 +1,5 @@
 import React from 'react';
-import MyTable from '@potta/components/table';
+import DataGrid from '@potta/app/(routes)/account_receivables/components/DataGrid';
 
 // Define the deduction type
 interface Deduction {
@@ -20,30 +20,33 @@ interface TaxTableProps {
 const TaxTable: React.FC<TaxTableProps> = ({ deductions = [], onRemove }) => {
   const columns = [
     {
-      name: 'Motif',
-      selector: (row: Deduction) => row.motif || row.Motif || '',
-      sortable: true,
-      cell: (row: Deduction) => <div>{row.motif || row.Motif}</div>,
+      accessorKey: 'motif',
+      header: 'Motif',
+      cell: ({ row: { original } }) => (
+        <div>{original.motif || original.Motif}</div>
+      ),
     },
     {
-      name: 'Type',
-      selector: (row: Deduction) => row.type || row.Type || '',
-      sortable: true,
-      cell: (row: Deduction) => <div>{row.type || row.Type}</div>,
+      accessorKey: 'type',
+      header: 'Type',
+      cell: ({ row: { original } }) => (
+        <div>{original.type || original.Type}</div>
+      ),
     },
     {
-      name: 'Rate',
-      selector: (row: Deduction) => row.rate || row.Rate || '',
-      sortable: true,
-      cell: (row: Deduction) => <div>{row.rate || row.Rate}</div>,
+      accessorKey: 'rate',
+      header: 'Rate',
+      cell: ({ row: { original } }) => (
+        <div>{original.rate || original.Rate}</div>
+      ),
     },
     {
-      name: '',
-      selector: (row: Deduction) => '', // Empty selector for action column
-      cell: (row: Deduction) => (
+      accessorKey: 'actions',
+      header: '',
+      cell: ({ row: { original } }) => (
         <div
           className="text-red-500 cursor-pointer"
-          onClick={() => onRemove && onRemove(row.id)}
+          onClick={() => onRemove && onRemove(original.id)}
         >
           Delete
         </div>
@@ -72,13 +75,7 @@ const TaxTable: React.FC<TaxTableProps> = ({ deductions = [], onRemove }) => {
 
   return (
     <div className="mt-10">
-      <MyTable
-        columns={columns}
-        data={data}
-        ExpandableComponent={null}
-        expanded={false}
-        pagination={data.length > 9}
-      />
+      <DataGrid columns={columns} data={data} />
     </div>
   );
 };

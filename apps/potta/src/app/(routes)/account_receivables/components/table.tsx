@@ -1,6 +1,7 @@
 'use client';
 import React, { useState } from 'react';
-import MyTable from '@potta/components/table';
+import DataGrid from './DataGrid';
+import { ColumnDef } from '@tanstack/react-table';
 
 import { IFilter } from '../_utils/types';
 import TableActionPopover from '@potta/components/tableActionsPopover';
@@ -121,61 +122,68 @@ const InvoiceTable = () => {
     },
   ];
 
-  const columns = [
+  const columns: ColumnDef<Invoice>[] = [
     {
-      name: 'Date',
-      selector: (row: Invoice) => (
+      accessorKey: 'issuedDate',
+      header: 'Date',
+      cell: ({ row: { original } }) => (
         <div className="text-sm text-gray-600">
-          {formatDate(row.issuedDate)}
+          {formatDate(original.issuedDate)}
         </div>
       ),
     },
     {
-      name: 'Customer',
-      selector: (row: Invoice) => (
+      accessorKey: 'customer',
+      header: 'Customer',
+      cell: ({ row: { original } }) => (
         <div className="text-sm font-medium">
-          {`${row.customer.firstName} ${row.customer.lastName}`}
+          {`${original.customer.firstName} ${original.customer.lastName}`}
         </div>
       ),
     },
     {
-      name: 'ID',
-      selector: (row: Invoice) => (
+      accessorKey: 'invoiceId',
+      header: 'ID',
+      cell: ({ row: { original } }) => (
         <div className="text-sm text-gray-500">
-          {row.invoiceId}
+          {original.invoiceId}
           <div className="text-xs text-gray-400">viewed</div>
         </div>
       ),
     },
     {
-      name: 'Title',
-      selector: (row: Invoice) => (
-        <div className="text-sm">{row.notes || 'No title'}</div>
+      accessorKey: 'notes',
+      header: 'Title',
+      cell: ({ row: { original } }) => (
+        <div className="text-sm">{original.notes || 'No title'}</div>
       ),
     },
     {
-      name: 'Status',
-      selector: (row: Invoice) => (
-        <div className={`text-sm ${getStatusStyle(row.status)}`}>
-          {row.status.toLowerCase()}
+      accessorKey: 'status',
+      header: 'Status',
+      cell: ({ row: { original } }) => (
+        <div className={`text-sm ${getStatusStyle(original.status)}`}>
+          {original.status.toLowerCase()}
           <div className="text-xs text-gray-400">viewed</div>
         </div>
       ),
     },
     {
-      name: 'Amount',
-      selector: (row: Invoice) => (
+      accessorKey: 'invoiceTotal',
+      header: 'Amount',
+      cell: ({ row: { original } }) => (
         <div className="text-sm">
           XAF{' '}
-          {row.invoiceTotal.toLocaleString(undefined, {
+          {original.invoiceTotal.toLocaleString(undefined, {
             maximumFractionDigits: 2,
           })}
         </div>
       ),
     },
     {
-      name: 'Resolution',
-      selector: (row: Invoice) => {
+      id: 'resolution',
+      header: 'Resolution',
+      cell: ({ row: { original } }) => {
         const status = 'Closed';
         return (
           <div className="border-r pr-4 flex justify-center">
@@ -188,20 +196,17 @@ const InvoiceTable = () => {
           </div>
         );
       },
-      hasBorderLeft: true, // Left border for data cells
-      headerBorderLeft: true, // Left border for header cell
-      width: '150px',
     },
     {
-      name: '',
-      selector: (row: Invoice) => (
+      id: 'actions',
+      header: '',
+      cell: ({ row: { original } }) => (
         <div className="flex justify-center">
           <button className="p-1 hover:bg-gray-100 rounded">
             <MoreVertical size={16} />
           </button>
         </div>
       ),
-      width: '50px',
     },
   ];
 
@@ -241,18 +246,10 @@ const InvoiceTable = () => {
         </div>
       </div>
 
-      <MyTable
-        maxHeight="50vh"
-        minHeight="50vh"
+      <DataGrid
         columns={columns}
-        selectable={true}
         data={data?.data || []}
-        pagination
-        pending={isLoading}
-        paginationServer
-        paginationTotalRows={data?.meta?.totalItems ?? 0}
-        onChangePage={setPage}
-        onChangeRowsPerPage={setLimit}
+        isLoading={isLoading}
       />
       <ModalInvoice isOpen={isOpen} setIsOpen={setIsOpen} />
     </div>

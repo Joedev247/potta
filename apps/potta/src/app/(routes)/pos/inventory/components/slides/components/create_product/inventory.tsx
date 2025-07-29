@@ -20,13 +20,21 @@ import Select from '@potta/components/select';
 interface CreateProductProps {
   open?: boolean;
   setOpen?: (open: boolean) => void;
-  productType?: 'PHYSICAL' | 'SERVICE';
+  productType?: 'INVENTORY' | 'NON_INVENTORY';
+  structure?: 'SIMPLE' | 'ASSEMBLY' | 'SIMPLEGROUPS';
+  isNonInventory?: boolean;
+  onProductCreated?: (id: string, data: any) => void;
+  onCancel?: () => void;
 }
 
 const CreateProduct: React.FC<CreateProductProps> = ({
   open: controlledOpen,
   setOpen: setControlledOpen,
-  productType = 'PHYSICAL',
+  productType = 'INVENTORY',
+  structure = 'SIMPLE',
+  isNonInventory = false,
+  onProductCreated,
+  onCancel,
 }) => {
   const [localOpen, setLocalOpen] = useState(false);
   const isOpen = controlledOpen ?? localOpen;
@@ -52,7 +60,7 @@ const CreateProduct: React.FC<CreateProductProps> = ({
       unitOfMeasure: '',
       cost: 0,
       sku: '',
-      inventoryLevel: productType === 'PHYSICAL' ? 0 : 0,
+      inventoryLevel: isNonInventory ? 0 : 0,
       reorderPoint: 0,
       salesPrice: 0,
       taxable: false,
@@ -60,7 +68,8 @@ const CreateProduct: React.FC<CreateProductProps> = ({
       taxId: '',
       images: [],
       type: productType,
-      structure: 'SIMPLE',
+      structure: structure,
+      components: [],
     },
   });
 
@@ -82,7 +91,9 @@ const CreateProduct: React.FC<CreateProductProps> = ({
 
       // Get images from form data
       const formImages = formData.images || [];
-      const fileUrls = formImages.filter((img) => img.startsWith('__file__:'));
+      const fileUrls = formImages.filter(
+        (img) => img && img.startsWith('__file__:')
+      );
 
       // Check if we have files to upload
       if (fileUrls.length > 0) {
@@ -119,17 +130,23 @@ const CreateProduct: React.FC<CreateProductProps> = ({
       // Ensure the payload has the correct structure
       const payload = {
         ...formData,
-        type: productType as 'PHYSICAL' | 'SERVICE',
-        structure: 'SIMPLE' as const,
-        inventoryLevel: productType === 'SERVICE' ? 0 : formData.inventoryLevel,
+        type: productType,
+        structure: structure,
+        inventoryLevel: isNonInventory ? 0 : formData.inventoryLevel,
       };
 
       console.log('Submitting product data:', payload);
       mutation.mutate(payload, {
-        onSuccess: () => {
+        onSuccess: (response) => {
           toast.success('Product created successfully!');
           reset();
-          setIsOpen(false);
+
+          if (onProductCreated) {
+            // Call the callback with the created product ID and data
+            onProductCreated(response.data?.uuid || 'temp-id', payload);
+          } else {
+            setIsOpen(false);
+          }
         },
         onError: (error) => {
           console.error('Product creation error:', error);
@@ -148,7 +165,15 @@ const CreateProduct: React.FC<CreateProductProps> = ({
       setOpen={setIsOpen}
       edit={true}
       buttonText={'Create Product'}
-      title={productType === 'PHYSICAL' ? 'Physical Item' : 'Service Item'}
+      title={
+        structure === 'ASSEMBLY'
+          ? 'Assembly Product'
+          : structure === 'SIMPLEGROUPS'
+          ? 'Group Product'
+          : isNonInventory
+          ? 'Non-Inventory Item'
+          : 'Inventory Item'
+      }
     >
       <form
         onSubmit={handleSubmit(onSubmit)}
@@ -266,17 +291,17 @@ const CreateProduct: React.FC<CreateProductProps> = ({
                 control={control}
                 render={({ field }) => (
                   <Checkbox
+                    id="taxable"
                     label="Taxable"
                     checked={field.value}
                     onChange={field.onChange}
-                   
                   />
                 )}
               />
             </div>
           </div>
         </div>
-        {productType === 'PHYSICAL' && (
+        {!isNonInventory && structure === 'SIMPLE' && (
           <div className="mt-12 pb-20">
             <div className="flex ">
               <div
@@ -297,6 +322,34 @@ const CreateProduct: React.FC<CreateProductProps> = ({
                   errors={errors}
                 />
               )}
+            </div>
+          </div>
+        )}
+
+        {(structure === 'ASSEMBLY' || structure === 'SIMPLEGROUPS') && (
+          <div className="mt-12 pb-20">
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-lg font-semibold text-gray-900">
+                {structure === 'ASSEMBLY'
+                  ? 'Assembly Components'
+                  : 'Group Components'}
+              </h3>
+              <Button
+                type="button"
+                text="Add Component"
+                onClick={() => {
+                  // TODO: Add component logic
+                  console.log('Add component clicked');
+                }}
+                theme="lightBlue"
+              />
+            </div>
+            <div className="bg-gray-50 p-4 rounded-lg">
+              <p className="text-gray-600 text-sm">
+                {structure === 'ASSEMBLY'
+                  ? 'Add the products that make up this assembly. Each component will be consumed when this product is sold.'
+                  : 'Add the products that are included in this group. These products will be sold together as a bundle.'}
+              </p>
             </div>
           </div>
         )}

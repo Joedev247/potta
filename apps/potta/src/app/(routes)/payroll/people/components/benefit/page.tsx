@@ -12,8 +12,8 @@ interface PageProps {
   searchParams: { [key: string]: string | string[] | undefined };
 }
 
-export default async function Page({ params, searchParams }: PageProps) {
-  const personId = params.personId;
+export default function Page({ params, searchParams }: PageProps) {
+  const personId = params.personId || '';
 
   return <BenefitContent personId={personId} />;
 }
@@ -138,7 +138,7 @@ const BenefitContent: React.FC<BenefitProps> = ({ personId, onComplete }) => {
               selectedValue={benefitSelectValue}
               onChange={handleBenefitChange}
               placeholder="Choose a benefit to add"
-              disabled={availableBenefitOptions.length <= 1}
+              isDisabled={availableBenefitOptions.length <= 1}
             />
           </div>
 

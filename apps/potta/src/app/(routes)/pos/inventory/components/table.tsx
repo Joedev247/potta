@@ -1,21 +1,15 @@
 'use client';
-import React, { FC, useState, useEffect } from 'react';
-import Table from '@potta/components/table';
+import React, { useState, useEffect } from 'react';
+import DataGrid from '@potta/app/(routes)/account_receivables/components/DataGrid';
 import {
-  Popover,
-  PopoverTrigger,
-  PopoverContent,
-  Button,
-} from '@nextui-org/react';
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuItem,
+} from '@potta/components/shadcn/dropdown';
 import { Filter, Product } from '../_utils/types';
-import useGetAllProducts from '../_hooks/useGetAllProducts';
+import useGetAllProducts from '../../hooks/useGetAllProducts';
 import DeleteModal from './deleteModal';
-import CustomPopover from '@potta/components/popover';
-import EditProduct from './slides/components/update_product';
-import { UpdateProductPayload } from '../_utils/validation';
-import TableActionPopover, {
-  PopoverAction,
-} from '@potta/components/tableActionsPopover';
 import ViewProductSlider from './slides/components/viewProduct';
 import { useInventory } from '../_utils/context';
 import { documentsApi } from '../_utils/api';
@@ -23,7 +17,6 @@ import Image from 'next/image';
 import ProductEditStepperModal from './ProductEditStepperModal';
 
 const InventoryTable = () => {
-  const [openPopover, setOpenPopover] = useState<string | null>(null);
   const [openViewModal, setOpenViewModal] = useState<string | null>(null);
   const [openDeleteModal, setOpenDeleteModal] = useState<string | null>(null);
   const [openUpdateModal, setOpenUpdateModal] = useState<string | null>(null);
@@ -43,123 +36,183 @@ const InventoryTable = () => {
 
   const columns = [
     {
-      name: 'Name',
-      selector: (row: Product) => (
+      accessorKey: 'name',
+      header: 'Name',
+      cell: ({ row: { original } }) => (
         <div className="flex items-center space-x-3">
           <div className="w-10 h-10 grid content-center ">
-            {/* <Image
+            <Image
               src={
-                imageUrls[row.uuid] ||
-                (Array.isArray(row.documents) &&
-                row.documents.length > 0 &&
-                row.documents[0]?.url
-                  ? row.documents[0].url
+                imageUrls[original.uuid] ||
+                (Array.isArray(original.documents) &&
+                original.documents.length > 0 &&
+                original.documents[0]?.url
+                  ? original.documents[0].url
                   : '/images/placeholder.png')
               }
               alt=""
               width={60}
               height={60}
               className="w-full h-full object-cover"
-            /> */}
+            />
           </div>
-          <p className="mt-0.5">{row.name}</p>
+          <p className="mt-0.5">{original.name}</p>
         </div>
       ),
     },
     {
-      name: 'Sku',
-      selector: (row: Product) => row.sku,
+      accessorKey: 'sku',
+      header: 'Sku',
+      cell: ({ row: { original } }) => original.sku,
     },
     {
-      name: 'Type',
-      selector: (row: Product) =>
-        row.category && typeof row.category === 'object'
-          ? row.category.name
-          : row.category || '',
+      accessorKey: 'category',
+      header: 'Category',
+      cell: ({ row: { original } }) =>
+        original.category && typeof original.category === 'object'
+          ? original.category.name
+          : original.category || '',
     },
     {
-      name: 'Tax',
-      selector: (row: Product) =>
-        row.tax && typeof row.tax === 'object' ? row.tax.name : row.tax || '',
-    },
-    {
-      name: 'Cost',
-      selector: (row: Product) => <div> {row.cost}</div>,
-    },
-    {
-      name: 'Sale Price',
-      selector: (row: Product) => <div> {row.salesPrice}</div>,
-    },
-    {
-      name: 'Inventory',
-      selector: (row: Product) => <div>{row.inventoryLevel}</div>,
-    },
-    {
-      name: 'Reorder Point',
-      selector: (row: Product) => <div className="">355</div>,
-    },
-    {
-      name: '',
-      selector: (row: any) => {
-        const actions: PopoverAction[] = [
-          {
-            label: 'View',
-            onClick: () => {
-              setOpenViewModal(row.uuid);
-              setIsViewOpen(true);
-            },
-            className: 'hover:bg-gray-200',
-            icon: <i className="ri-eye-line" />,
-          },
-          {
-            label: 'Edit',
-            onClick: () => {
-              setOpenUpdateModal(row.uuid);
-              setproductDetails({
-                ...row,
-                cost: Number(row.cost),
-                salesPrice: Number(row.salesPrice),
-                images: Array.isArray(row.documents)
-                  ? row.documents
-                      .filter(
-                        (doc: any) =>
-                          doc.mimeType && doc.mimeType.startsWith('image')
-                      )
-                      .map((doc: any) => doc.url)
-                  : [],
-              });
-              setIsEditOpen(true);
-            },
-            className: 'hover:bg-gray-200',
-            icon: <i className="ri-edit-line" />,
-          },
-          {
-            label: 'Delete',
-            onClick: () => {
-              setOpenDeleteModal(row.uuid);
-              setIsDeleteOpen(true);
-            },
-            className: 'hover:bg-red-200 text-red-600',
-            icon: <i className="ri-delete-bin-line" />,
-          },
-        ];
+      accessorKey: 'productType',
+      header: 'Product Type',
+      cell: ({ row: { original } }) => {
+        const getTypeBadge = (type: string) => {
+          const baseClasses = 'px-2 py-1 text-xs font-medium rounded-full';
+          switch (type) {
+            case 'Assembly':
+              return (
+                <span className={`${baseClasses} bg-blue-100 text-blue-800`}>
+                  Assembly
+                </span>
+              );
+            case 'Group':
+              return (
+                <span
+                  className={`${baseClasses} bg-purple-100 text-purple-800`}
+                >
+                  Group
+                </span>
+              );
+            case 'Non-Inventory':
+              return (
+                <span
+                  className={`${baseClasses} bg-orange-100 text-orange-800`}
+                >
+                  Non-Inventory
+                </span>
+              );
+            default:
+              return (
+                <span className={`${baseClasses} bg-green-100 text-green-800`}>
+                  Inventory
+                </span>
+              );
+          }
+        };
 
-        return (
-          <TableActionPopover
-            actions={actions}
-            rowUuid={row.uuid}
-            openPopover={openPopover}
-            setOpenPopover={setOpenPopover}
-          />
-        );
+        if (original.structure === 'ASSEMBLY') return getTypeBadge('Assembly');
+        if (original.structure === 'SIMPLEGROUPS') return getTypeBadge('Group');
+        if (original.type === 'NON_INVENTORY')
+          return getTypeBadge('Non-Inventory');
+        return getTypeBadge('Inventory');
       },
+    },
+    {
+      accessorKey: 'tax',
+      header: 'Tax',
+      cell: ({ row: { original } }) =>
+        original.tax && typeof original.tax === 'object'
+          ? original.tax.name
+          : original.tax || '',
+    },
+    {
+      accessorKey: 'cost',
+      header: 'Cost',
+      cell: ({ row: { original } }) => <div>XAF {original.cost}</div>,
+    },
+    {
+      accessorKey: 'salesPrice',
+      header: 'Sale Price',
+      cell: ({ row: { original } }) => <div>XAF {original.salesPrice}</div>,
+    },
+    {
+      accessorKey: 'inventoryLevel',
+      header: 'Inventory',
+      cell: ({ row: { original } }) => <div>{original.inventoryLevel}</div>,
+    },
+    {
+      accessorKey: 'reorderPoint',
+      header: 'Reorder Point',
+      cell: () => <div className="">355</div>,
+    },
+    {
+      accessorKey: 'actions',
+      header: 'Actions',
+      cell: ({ row: { original } }) => (
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <button className="p-2 hover:bg-gray-100 rounded-full transition-colors">
+              <i className="ri-more-2-fill text-xl text-gray-600"></i>
+            </button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end" className="w-40">
+            <DropdownMenuItem
+              onClick={() => {
+                setOpenViewModal(original.uuid);
+                setIsViewOpen(true);
+              }}
+            >
+              <i className="ri-eye-line mr-2"></i> View Details
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              onClick={() => {
+                setOpenUpdateModal(original.uuid);
+                setproductDetails({
+                  ...original,
+                  cost: Number(original.cost),
+                  salesPrice: Number(original.salesPrice),
+                  images: Array.isArray(original.documents)
+                    ? original.documents
+                        .filter(
+                          (doc: any) =>
+                            doc.mimeType && doc.mimeType.startsWith('image')
+                        )
+                        .map((doc: any) => doc.url)
+                    : [],
+                });
+                setIsEditOpen(true);
+              }}
+            >
+              <i className="ri-edit-line mr-2"></i> Edit
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              onClick={() => {
+                setOpenDeleteModal(original.uuid);
+                setIsDeleteOpen(true);
+              }}
+              className="text-red-600"
+            >
+              <i className="ri-delete-bin-line mr-2"></i> Delete
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      ),
     },
   ];
 
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(10);
+  const { filters } = useInventory();
 
-  const filter: Filter = { page, limit };
+  const filter: Filter = {
+    page,
+    limit,
+    search: filters.search,
+    productType:
+      filters.productType !== 'ALL' ? filters.productType : undefined,
+    sort: filters.sort,
+  };
   const { data, isLoading, error, refetch } = useGetAllProducts(filter);
 
   // Fetch signed URLs for product images
@@ -206,21 +259,11 @@ const InventoryTable = () => {
   return (
     <div className="mt-10">
       <div></div>
-      <Table
-        minHeight="70vh"
-        maxHeight="70vh"
+      <DataGrid
         columns={columns}
         data={data?.data || []}
-        ExpandableComponent={null}
-        expanded={false}
-        pagination
-        pending={isLoading}
-        paginationServer
-        paginationTotalRows={data?.meta?.totalItems ?? 0}
-        onChangePage={handlePageChange}
-        onChangeRowsPerPage={handlePerRowsChange}
-        onRowClicked={handleRowClick}
-        pointerOnHover={true}
+        isLoading={isLoading}
+        onRowClick={handleRowClick}
       />
       {openDeleteModal && (
         <DeleteModal

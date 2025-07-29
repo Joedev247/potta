@@ -19,7 +19,7 @@ const ModalInvoice: FC<IModalInvoice> = ({ isOpen, setIsOpen }) => {
         'A document issued by the seller to a buyer which indicates the quantity and cost of the product purchased',
       image: '/images/invoice/invoice.svg',
       type: 'invoice',
-      link: '/account_payables/new?type=invoice', // Unique link for regular invoice
+      link: '/account_receivables/invoice/new?type=invoice', // Unique link for regular invoice
     },
     {
       title: 'Proforma Invoice',
@@ -27,14 +27,14 @@ const ModalInvoice: FC<IModalInvoice> = ({ isOpen, setIsOpen }) => {
         'A preliminary bill of sale sent in advance of shipment or delivery of goods',
       image: '/images/invoice/budget.svg',
       type: 'proforma',
-      link: '/account_payables/new?type=proforma', // Unique link for proforma
+      link: '/account_receivables/invoice/new?type=proforma', // Unique link for proforma
     },
     {
       title: 'Prepayment Invoice',
       description: 'Record advanced payment',
       image: '/images/invoice/prepayment.svg',
       type: 'prepayment',
-      link: '/account_payables/new?type=prepayment', // Unique link for prepayment
+      link: '/account_receivables/invoice/new?type=prepayment', // Unique link for prepayment
     },
     {
       title: 'Purchase Order',
@@ -42,14 +42,14 @@ const ModalInvoice: FC<IModalInvoice> = ({ isOpen, setIsOpen }) => {
         'Create a purchase order for a seller indicating proposed goods and services, price and quantity',
       image: '/images/invoice/purchase.svg',
       type: 'purchase-order',
-      link: '/account_payables/purchase', // Unique link for purchase order
+      link: '/account_receivables/purchase', // Unique link for purchase order
     },
     {
       title: 'Credit Note',
       description: 'Issue credit against future purchases',
       image: '/images/invoice/credit note.svg',
       type: 'credit-note',
-      link: '/account_payables/credit', // Unique link for credit note
+      link: '/account_receivables/credit', // Unique link for credit note
     },
   ];
 

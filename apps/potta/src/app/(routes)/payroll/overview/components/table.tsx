@@ -1,5 +1,5 @@
 'use client';
-import MyTable from '@potta/components/table';
+import DataGrid from '@potta/app/(routes)/account_receivables/components/DataGrid';
 import React, { useEffect, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { employeeApi } from '../../utils/api';
@@ -347,88 +347,94 @@ const PayrollTable = () => {
 
   const columns = [
     {
-      name: 'Employee',
-      selector: (row) => row.employee.name,
-      width: '250px',
-      cell: (row) => (
+      accessorKey: 'employee',
+      header: 'Employee',
+      cell: ({ row }: { row: { original: any } }) => (
         <div className="flex items-center space-x-3">
           <div className="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center text-gray-600 font-medium text-sm flex-shrink-0">
-            {row.employee.initials}
+            {row.original.employee.initials}
           </div>
           <div className="min-w-0 flex-1">
             <p className="text-sm font-medium text-gray-900 truncate">
-              {row.employee.name}
+              {row.original.employee.name}
             </p>
             <p className="text-xs text-gray-500 truncate">
-              {row.employee.email}
+              {row.original.employee.email}
             </p>
           </div>
         </div>
       ),
-      sortable: true,
     },
     {
-      name: 'Today Pay',
-      selector: (row) => row.todayPay,
-      cell: (row) => <div>{row.todayPay}</div>,
-      sortable: true,
+      accessorKey: 'todayPay',
+      header: 'Today Pay',
+      cell: ({ row }: { row: { original: any } }) => (
+        <div>{row.original.todayPay}</div>
+      ),
     },
     {
-      name: 'Rate',
-      selector: (row) => row.rate,
-      cell: (row) => <div>{row.rate}</div>,
-      sortable: true,
+      accessorKey: 'rate',
+      header: 'Rate',
+      cell: ({ row }: { row: { original: any } }) => (
+        <div>{row.original.rate}</div>
+      ),
     },
     {
-      name: 'Regular hrs',
-      selector: (row) => row.regularHours,
-      cell: (row) => (
+      accessorKey: 'regularHours',
+      header: 'Regular hrs',
+      cell: ({ row }: { row: { original: any } }) => (
         <div
           title={`${
-            row.hasTimesheetData ? 'From timesheets' : 'From shifts'
-          } | ${row.shiftTimeInfo}`}
-          className={row.hasTimesheetData ? 'text-green-600 font-medium' : ''}
+            row.original.hasTimesheetData ? 'From timesheets' : 'From shifts'
+          } | ${row.original.shiftTimeInfo}`}
+          className={
+            row.original.hasTimesheetData ? 'text-green-600 font-medium' : ''
+          }
         >
-          {row.regularHours}
+          {row.original.regularHours}
         </div>
       ),
-      sortable: true,
     },
     {
-      name: 'Overtime',
-      selector: (row) => row.overtime,
-      cell: (row) => (
+      accessorKey: 'overtime',
+      header: 'Overtime',
+      cell: ({ row }: { row: { original: any } }) => (
         <div
-          className={row.hasTimesheetData ? 'text-green-600 font-medium' : ''}
+          className={
+            row.original.hasTimesheetData ? 'text-green-600 font-medium' : ''
+          }
         >
-          {row.overtime}
+          {row.original.overtime}
         </div>
       ),
-      sortable: true,
     },
     {
-      name: 'PTO hrs',
-      selector: (row) => row.ptoHours,
-      cell: (row) => <div>{row.ptoHours}</div>,
-      sortable: true,
+      accessorKey: 'ptoHours',
+      header: 'PTO hrs',
+      cell: ({ row }: { row: { original: any } }) => (
+        <div>{row.original.ptoHours}</div>
+      ),
     },
     {
-      name: 'Benefits',
-      selector: (row) => row.benefits,
-      cell: (row) => <div>{row.benefits}</div>,
-      sortable: true,
+      accessorKey: 'benefits',
+      header: 'Benefits',
+      cell: ({ row }: { row: { original: any } }) => (
+        <div>{row.original.benefits}</div>
+      ),
     },
     {
-      name: 'Payment Method',
-      selector: (row) => row.paymentMethod,
-      cell: (row) => <div>{row.paymentMethod}</div>,
-      sortable: true,
+      accessorKey: 'paymentMethod',
+      header: 'Payment Method',
+      cell: ({ row }: { row: { original: any } }) => (
+        <div>{row.original.paymentMethod}</div>
+      ),
     },
     {
-      name: 'Role',
-      selector: (row) => row.role,
-      cell: (row) => <div title={`Role ID: ${row.roleId}`}>{row.role}</div>,
-      sortable: true,
+      accessorKey: 'role',
+      header: 'Role',
+      cell: ({ row }: { row: { original: any } }) => (
+        <div title={`Role ID: ${row.original.roleId}`}>{row.original.role}</div>
+      ),
     },
   ];
 
@@ -453,12 +459,7 @@ const PayrollTable = () => {
       {isLoading ? (
         <TableSkeleton />
       ) : (
-        <MyTable
-          columns={columns}
-          data={filteredData}
-          ExpandableComponent={null}
-          expanded={false} // Not needed
-        />
+        <DataGrid data={filteredData} column={columns} loading={false} />
       )}
     </div>
   );

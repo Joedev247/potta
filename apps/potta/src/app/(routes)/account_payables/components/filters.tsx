@@ -47,6 +47,7 @@ const Filter = ({
       ],
       value: status,
       onChange: setStatus,
+      
     },
     {
       key: 'date',

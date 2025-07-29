@@ -107,10 +107,10 @@ const SearchSelect: React.FC<SearchSelectProps> = ({
       minHeight: '46px',
       padding: '0.25rem 0', // to match py-2.5
       borderRadius: '2px', // rounded-[2px]
-      borderColor: state.isFocused ? '#3b82f6' : '#e5e7eb', // border-gray-200, focus:border-blue-500
-      boxShadow: state.isFocused ? '0 0 0 2px #3b82f6' : 'none', // focus:ring-2 focus:ring-blue-500
+      borderColor: state.isFocused ? '#22c55e' : '#e5e7eb', // border-gray-200, focus:border-blue-500
+      boxShadow: state.isFocused ? '0 0 0 2px #22c55e' : 'none', // focus:ring-2 focus:ring-blue-500
       '&:hover': {
-        borderColor: state.isFocused ? '#3b82f6' : '#e5e7eb',
+        borderColor: state.isFocused ? '#22c55e' : '#e5e7eb',
       },
     }),
     valueContainer: (base: any) => ({

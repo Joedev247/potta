@@ -42,8 +42,9 @@ const EmployeeDetailsPage: React.FC<EmployeeDetailsPageProps> = ({
   const [employee, setEmployee] = useState<any>(null);
   const [activeTab, setActiveTab] = useState('Personal');
   const { data: roles = [], isLoading: loadingRoles } = useRoles();
-  const roleName =
-    roles.find((role) => role.uuid === employee?.role_id)?.name || 'Unknown';
+
+  // Use roleName directly from employee data instead of looking up by role_id
+  const roleName = employee?.role_name || 'Unknown';
 
   useEffect(() => {
     if (id) {

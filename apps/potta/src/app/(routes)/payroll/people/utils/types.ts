@@ -29,22 +29,22 @@ export interface PersonPayload {
   is_primary?: boolean;
   country?: string;
   verified?: boolean;
-  roleId?: string;
+  roleName?: string;
   isActive: boolean;
   benefits?: string[];
   address: AddressPayload;
   profilePicture?: string;
 }
 
-// Address information
+// Address payload for a person
 export interface AddressPayload {
   address: string;
   city: string;
   state: string;
   country: string;
   postalCode: string;
-  latitude?: number;
-  longitude?: number;
+  latitude: number;
+  longitude: number;
 }
 
 // Base information for a person
@@ -59,131 +59,13 @@ export interface BaseInfoPayload {
   employmentDate: string;
   maritalStatus: string;
   nationalId: string;
-  roleId?: string;
+  roleName?: string;
   taxPayerNumber: string;
   employeeId?: string;
   jobTitle?: string;
 }
 
-// Compensation information
-export interface CompensationPayload {
-  hourlyRate?: number;
-  salary?: number;
-  paymentFrequency?: string;
-  eligibleForTips?: boolean;
-  eligibleForOvertime?: boolean;
-  paid_time_off?: string[];
-}
-
-// Paid Time Off (PTO) information
-export interface PaidTimeOffPayload {
-  person_id: string;
-  type: string;
-  cycle_type: string;
-  accrual_rate: number;
-  total_entitled_days: number;
-  start_date: string;
-  end_date: string;
-  status: string;
-}
-
-// PTO item for selection
-export interface PaidTimeOffItem {
-  id: string;
-  type: string;
-  cycle_type: string;
-  accrual_rate: number;
-  total_entitled_days: number;
-}
-
-// PTO filter params
-export interface PaidTimeOffFilterParams {
-  page?: number;
-  limit?: number;
-  person_id?: string;
-  type?: string;
-  status?: string;
-  sortBy?: string;
-}
-
-// Schedule information
-export interface SchedulePayload {
-  personId?: string;
-  payScheduleId: string;
-  effectiveDate: string;
-  firstPayDate?: string;
-  endPayDate?: string;
-  payCycleName?: string;
-}
-
-// Deposit account information
-export interface DepositeAccountPayload {
-  bankName: string;
-  accountNumber: string;
-  routingNumber: string;
-  accountType: 'checking' | 'savings';
-  depositPercentage: number;
-}
-
-// Benefit information
-export interface BenefitPayload {
-  benefits: Array<{
-    benefitId: string;
-    enrollmentDate: string;
-    coverageLevel: string;
-    employeeContribution: number;
-    employerContribution: number;
-  }>;
-}
-
-// Tax information
-export interface TaxInfoPayload {
-  federalFilingStatus: string;
-  federalAllowances: number;
-  stateFilingStatus: string;
-  stateAllowances: number;
-  additionalFederalWithholding: number;
-  additionalStateWithholding: number;
-}
-
-// Filter parameters for querying persons
-export interface FilterParams {
-  page?: number;
-  pageSize?: number;
-  searchTerm?: string;
-  employmentType?: string;
-  isActive?: boolean;
-  startDateFrom?: string;
-  startDateTo?: string;
-  sortBy?: string;
-  sortDirection?: 'asc' | 'desc';
-}
-
-// Response structure for paginated results
-export interface PaginatedResponse<T> {
-  data: T[];
-  total: number;
-  page: number;
-  pageSize: number;
-  totalPages: number;
-}
-
-// API response structure
-export interface ApiResponse<T> {
-  data: T[];
-  meta: {
-    itemsPerPage: number;
-    totalItems: number;
-    currentPage: number;
-    totalPages: number;
-    sortBy: [string, string][];
-  };
-  links: {
-    current: string;
-  };
-}
-
-// Bank account payload
+// Bank account information for a person
 export interface BankAccountPayload {
   person_id: string;
   account_holder_name: string;
@@ -195,6 +77,51 @@ export interface BankAccountPayload {
   is_primary: boolean;
   country: string;
   verified: boolean;
+  country_code?: string;
+}
+
+// Compensation information for a person
+export interface CompensationPayload {
+  personId: string;
+  hourlyRate: number;
+  salary: number;
+  paymentFrequency: string;
+  eligibleForTips: boolean;
+  eligibleForOvertime: boolean;
+  paid_time_off?: any[];
+}
+
+// Schedule information for a person
+export interface SchedulePayload {
+  personId: string;
+  payScheduleId: string;
+  payCycleName: string;
+  firstPayDate: string;
+  endPayDate: string;
+  effectiveDate: string;
+}
+
+// Benefit information for a person
+export interface BenefitPayload {
+  personId: string;
+  benefits: string[];
+}
+
+// Tax information for a person
+export interface TaxInfoPayload {
+  personId: string;
+  taxInfo: any;
+}
+
+// Filter parameters for API calls
+export interface FilterParams {
+  page?: number;
+  pageSize?: number;
+  sortBy?: string;
+  sortDirection?: 'asc' | 'desc';
+  searchTerm?: string;
+  isActive?: boolean;
+  employmentType?: string;
 }
 
 export interface Employee {
@@ -219,6 +146,7 @@ export interface Employee {
   currency: string;
   is_active: boolean;
   profilePicture?: string;
+  role_name?: string; // Added role_name field
   address: {
     city: string;
     state: string;

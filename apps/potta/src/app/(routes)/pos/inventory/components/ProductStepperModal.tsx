@@ -1,28 +1,94 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Slideover from '@potta/components/slideover';
-import ProductCreateStep from './ProductCreateStep';
+import CreateProductForm from './CreateProductForm';
 import ProductUploadStep from './ProductUploadStep';
+import ProductSelectionStep from './ProductSelectionStep';
 import Button from '@potta/components/button';
 
 interface ProductStepperModalProps {
   open: boolean;
   setOpen: (open: boolean) => void;
   onComplete?: () => void;
+  productType?: 'INVENTORY' | 'NON_INVENTORY' | 'ASSEMBLY' | 'SIMPLEGROUPS';
 }
 
 const ProductStepperModal: React.FC<ProductStepperModalProps> = ({
   open,
   setOpen,
   onComplete,
+  productType = 'INVENTORY',
 }) => {
-  const [active, setActive] = useState<'create' | 'confirm' | 'upload'>(
-    'create'
-  );
+  const [active, setActive] = useState<
+    'create' | 'components' | 'confirm' | 'upload'
+  >('create');
   const [productId, setProductId] = useState<string | null>(null);
+  const [productData, setProductData] = useState<any>(null);
+  const [tempProductData, setTempProductData] = useState<any>(null);
 
-  // After product creation, go to confirm step
-  const handleProductCreated = (id: string) => {
-    setProductId(id);
+  // Reset modal state when closed
+  const handleClose = () => {
+    setOpen(false);
+    // Reset state after a short delay to ensure modal closes properly
+    setTimeout(() => {
+      setActive('create');
+      setProductId(null);
+      setProductData(null);
+      setTempProductData(null);
+    }, 300);
+  };
+
+  // Reset state when productType changes
+  useEffect(() => {
+    setActive('create');
+    setProductId(null);
+    setProductData(null);
+    setTempProductData(null);
+  }, [productType]);
+
+  // Get structure based on product type
+  const getStructure = () => {
+    switch (productType) {
+      case 'ASSEMBLY':
+        return 'ASSEMBLY';
+      case 'SIMPLEGROUPS':
+        return 'SIMPLEGROUPS';
+      default:
+        return 'SIMPLE';
+    }
+  };
+
+  const getIsNonInventory = () => {
+    return productType === 'NON_INVENTORY';
+  };
+
+  // For assembly and group products, store temp data and go to components step
+  const handleProductCreated = (id: string, data: any) => {
+    if (productType === 'ASSEMBLY' || productType === 'SIMPLEGROUPS') {
+      // Store the form data temporarily and go to components step
+      setTempProductData(data);
+      setActive('components');
+    } else {
+      // For regular products, create immediately
+      setProductId(id);
+      setProductData(data);
+      setActive('confirm');
+    }
+  };
+
+  // After components selection, create the product with components
+  const handleComponentsComplete = (components: any[]) => {
+    // Create the product with the stored data and components
+    const finalProductData = {
+      ...tempProductData,
+      components: components,
+    };
+
+    // TODO: Call the create product API with components
+    console.log('Creating product with components:', finalProductData);
+
+    // For now, simulate success
+    setProductId('temp-id');
+    setProductData(finalProductData);
     setActive('confirm');
   };
 
@@ -31,19 +97,57 @@ const ProductStepperModal: React.FC<ProductStepperModalProps> = ({
     if (upload) {
       setActive('upload');
     } else {
-      setOpen(false);
+      handleClose();
       if (onComplete) onComplete();
     }
   };
 
   // After upload, close modal
   const handleUploadComplete = () => {
-    setOpen(false);
+    handleClose();
     if (onComplete) onComplete();
   };
 
+  const getStepTitle = () => {
+    switch (productType) {
+      case 'ASSEMBLY':
+        return 'Assembly Product';
+      case 'SIMPLEGROUPS':
+        return 'Group Product';
+      case 'NON_INVENTORY':
+        return 'Non-Inventory Item';
+      default:
+        return 'Inventory Item';
+    }
+  };
+
+  const getStepDescription = (step: string) => {
+    switch (step) {
+      case 'create':
+        return 'Create Product';
+      case 'components':
+        return productType === 'ASSEMBLY'
+          ? 'Assembly Products'
+          : 'Group Products';
+      case 'confirm':
+        return 'Upload Images';
+      default:
+        return '';
+    }
+  };
+
+  // Check if upload step should be enabled
+  const isUploadStepEnabled = () => {
+    return productId !== null;
+  };
+
   return (
-    <Slideover open={open} setOpen={setOpen} edit={true} title="Add Product">
+    <Slideover
+      open={open}
+      setOpen={handleClose}
+      edit={true}
+      title={getStepTitle()}
+    >
       <div className="w-full flex min-h-[60vh]">
         {/* Stepper */}
         <div className="w-[12%] space-y-7 border-r">
@@ -56,50 +160,92 @@ const ProductStepperModal: React.FC<ProductStepperModalProps> = ({
               Create Product
             </p>
           </div>
-          <div onClick={() => productId && setActive('confirm')}>
+
+          {(productType === 'ASSEMBLY' || productType === 'SIMPLEGROUPS') && (
+            <div onClick={() => setActive('components')}>
+              <p
+                className={`whitespace-nowrap ${
+                  ['components', 'confirm', 'upload'].includes(active) &&
+                  'text-green-700 font-semibold'
+                } cursor-pointer text-left`}
+              >
+                {productType === 'ASSEMBLY'
+                  ? 'Assemble Products'
+                  : 'Group Products'}
+              </p>
+            </div>
+          )}
+
+          <div
+            onClick={() => {
+              if (isUploadStepEnabled()) {
+                setActive('confirm');
+              }
+            }}
+          >
             <p
               className={`whitespace-nowrap ${
                 ['confirm', 'upload'].includes(active) &&
                 'text-green-700 font-semibold'
-              } cursor-pointer text-left ${!productId && 'opacity-50'}`}
+              } cursor-pointer text-left ${
+                !isUploadStepEnabled() ? 'opacity-50 cursor-not-allowed' : ''
+              }`}
             >
               Upload Images
             </p>
           </div>
         </div>
+
         {/* Content */}
         <div className="w-full overflow-y-auto h-[calc(70vh)] pt-0 relative flex flex-col">
           <div className="w-full overflow-auto">
             {active === 'create' && (
-              <ProductCreateStep
-                onSuccess={handleProductCreated}
-                onCancel={() => setOpen(false)}
+              <CreateProductForm
+                productType="INVENTORY"
+                structure={getStructure()}
+                isNonInventory={getIsNonInventory()}
+                onProductCreated={handleProductCreated}
+                onCancel={handleClose}
+                key={`${productType}-${active}`} // Force re-render when productType changes
               />
             )}
-            {active === 'confirm' && (
+
+            {active === 'components' && (
+              <ProductSelectionStep
+                productId="temp"
+                productType={productType as 'ASSEMBLY' | 'SIMPLEGROUPS'}
+                onComplete={handleComponentsComplete}
+                onBack={() => setActive('create')}
+                productData={tempProductData}
+              />
+            )}
+
+            {active === 'confirm' && productId && (
               <div className="p-8 flex flex-col items-center justify-center">
-                <h2 className="text-lg font-bold mb-4">Product Created!</h2>
-                <p className="mb-6">
-                  Would you like to upload images for this product?
+                <h2 className="text-lg font-bold mb-4">
+                  Product Created Successfully!
+                </h2>
+                <p className="mb-6 text-gray-600">
+                  Would you like to add images to your product? This is
+                  optional.
                 </p>
                 <div className="flex gap-4">
                   <Button
                     type="button"
-                    text={'Yes, Upload Images'}
-                    className="btn btn-primary"
+                    text={'Add Images'}
                     onClick={() => handleConfirm(true)}
                   />
 
                   <Button
                     type="button"
-                    text={'No, Finish'}
+                    text={'Skip & Finish'}
                     theme="gray"
-                    className="btn btn-secondary"
                     onClick={() => handleConfirm(false)}
                   />
                 </div>
               </div>
             )}
+
             {active === 'upload' && productId && (
               <ProductUploadStep
                 productId={productId}

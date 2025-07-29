@@ -1,13 +1,13 @@
 'use client';
 import React from 'react';
 import Button from '@potta/components/button';
-import Select from '@potta/components/select';
-import Search from '@potta/components/search';
-import Link from 'next/link';
+import DynamicFilter from '@potta/components/dynamic-filter';
+import Image from 'next/image';
 
 interface FilterProps {
   search: string;
   onSearchChange: (value: string) => void;
+  onSearchClear: () => void;
   status: string;
   onStatusChange: (value: string) => void;
   paymentMethod: string;
@@ -24,6 +24,7 @@ const paymentMethodOptions = [
   { label: 'Credit', value: 'Credit' },
   { label: 'Other', value: 'Other' },
 ];
+
 const statusOptions = [
   { label: 'All', value: 'all' },
   { label: 'Draft', value: 'Draft' },
@@ -35,38 +36,38 @@ const statusOptions = [
 const Filter: React.FC<FilterProps> = ({
   search,
   onSearchChange,
+  onSearchClear,
   status,
   onStatusChange,
   paymentMethod,
   onPaymentMethodChange,
 }) => {
+  const filterConfig = [
+    {
+      key: 'status',
+      label: 'Status',
+      value: status,
+      options: statusOptions,
+      onChange: onStatusChange,
+    },
+    {
+      key: 'paymentMethod',
+      label: 'Payment Method',
+      value: paymentMethod,
+      options: paymentMethodOptions,
+      onChange: onPaymentMethodChange,
+    },
+  ];
+
   return (
     <div className="w-full flex flex-col md:flex-row md:justify-between md:items-center gap-4 whitespace-normal break-words">
-      <div className="flex flex-row gap-3 items-center flex-nowrap flex-1 min-w-0">
-        <div className="w-full min-w-[120px] max-w-xs">
-          <Search
-            value={search}
-            onChange={(e) => onSearchChange(e.target.value)}
-            placeholder="Search bills..."
-          />
-        </div>
-        <Select
-          outline
-          border={false}
-          options={statusOptions}
-          selectedValue={status}
-          onChange={onStatusChange}
-          bg="bg-white"
-          SelectClass="min-w-[90px] max-w-[140px]"
-        />
-        <Select
-          outline
-          border={false}
-          options={paymentMethodOptions}
-          selectedValue={paymentMethod || 'all'}
-          onChange={onPaymentMethodChange}
-          bg="bg-white"
-          SelectClass="min-w-[90px] max-w-[140px]"
+      <div className="flex-1">
+        <DynamicFilter
+          searchValue={search}
+          onSearchChange={(e) => onSearchChange(e.target.value)}
+          onSearchClear={onSearchClear}
+          searchPlaceholder="Search bills..."
+          filters={filterConfig}
         />
       </div>
       <div className="flex flex-row gap-2 justify-end items-center mt-2 md:mt-0">
@@ -74,17 +75,23 @@ const Filter: React.FC<FilterProps> = ({
           type={'button'}
           color
           text="Export"
-          icon={<img src="/images/export.svg" />}
+          icon={
+            <Image
+              src="/images/export.svg"
+              alt="Export"
+              width={16}
+              height={16}
+            />
+          }
           theme="lightBlue"
         />
-        <Link className="flex justify-end" href={'/account_payables/bills/new'}>
-          <Button
-            text={'Create New'}
-            icon={<i className="ri-file-add-line"></i>}
-            theme="default"
-            type={'button'}
-          />
-        </Link>
+        <Button
+          text={'Create New'}
+          icon={<i className="ri-file-add-line"></i>}
+          theme="default"
+          type={'button'}
+          onClick={() => (window.location.href = '/account_payables/bills/new')}
+        />
       </div>
     </div>
   );

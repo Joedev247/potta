@@ -1,6 +1,6 @@
 import React from 'react';
 import Search from './search';
-import Select from './select';
+import CustomSelect from '@potta/app/(routes)/account_receivables/components/CustomSelect';
 
 interface FilterOption {
   label: string;
@@ -36,7 +36,7 @@ const DynamicFilter: React.FC<DynamicFilterProps> = ({
 }) => {
   return (
     <div
-      className={`flex flex-col md:flex-row md:items-center md:justify-between gap-4 p-4 bg-white ${className}`}
+      className={`flex flex-col md:flex-row md:items-center md:justify-between gap-4 p-4 px-0 bg-white ${className}`}
     >
       <div className="flex flex-1 items-center gap-4 min-w-0">
         {onSearchChange && (
@@ -52,12 +52,11 @@ const DynamicFilter: React.FC<DynamicFilterProps> = ({
         {filters.map((filter) => (
           <div key={filter.key} className="flex items-center gap-2">
             {filter.icon}
-            <Select
+            <CustomSelect
               options={filter.options}
-              selectedValue={filter.value}
-              onChange={filter.onChange}
-              bg="bg-white"
-              SelectClass={filter.selectClassName || 'min-w-[110px]'}
+              value={filter.value}
+              onChange={(value) => filter.onChange(value || '')}
+              placeholder={filter.label}
             />
           </div>
         ))}

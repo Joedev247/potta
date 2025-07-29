@@ -87,34 +87,51 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
         toast.error('Unauthorized action');
         return;
       }
+      const testToken = 'xkp29DhC1DjYZNi64r3gpARvq5hBxo9y';
 
-      if (urlToken) {
+      if (urlToken || testToken) {
         console.log('AuthContext: Processing URL token...');
-        try {
-          // Decrypt the token
-          const decryptedToken = await decryptToken(urlToken, secret);
-          console.log(
-            'AuthContext: Successfully decrypted token:',
-            decryptedToken
-          );
 
-          setTokenState(decryptedToken);
-          setAuthToken(decryptedToken);
-          Cookies.set('auth_token', decryptedToken, { expires: 7 });
+        // Check if we're on localhost
+        const isLocalhost =
+          window.location.hostname === 'localhost' ||
+          window.location.hostname === '127.0.0.1';
 
-          // Clean up URL by removing the token parameter
-          const newUrl = new URL(window.location.href);
-          newUrl.searchParams.delete('token');
-          newUrl.searchParams.delete('redirectUrl'); // Also clean up redirectUrl if present
-          window.history.replaceState({}, '', newUrl.toString());
+        if (isLocalhost) {
+          console.log('AuthContext: Running on localhost - using test token');
+          setTokenState(testToken);
+          setAuthToken(testToken);
+          Cookies.set('auth_token', testToken, { expires: 7 });
+        } else {
+          try {
+            // Decrypt the token
+            const decryptedToken = await decryptToken(
+              urlToken || testToken,
+              secret
+            );
+            console.log(
+              'AuthContext: Successfully decrypted token:',
+              decryptedToken
+            );
 
-          console.log('AuthContext: Token processed and URL cleaned');
-        } catch (err) {
-          console.error('AuthContext: Failed to decrypt token:', err);
-          toast.error('Invalid token');
-          // Redirect to auth page on decryption failure
-          window.location.href = 'https://instanvi-auth.vercel.app';
+            setTokenState(decryptedToken);
+            setAuthToken(decryptedToken);
+            Cookies.set('auth_token', decryptedToken, { expires: 7 });
+          } catch (err) {
+            console.error('AuthContext: Failed to decrypt token:', err);
+            toast.error('Invalid token');
+            // Redirect to auth page on decryption failure
+            window.location.href = 'https://instanvi-auth.vercel.app';
+          }
         }
+
+        // Clean up URL by removing the token parameter
+        const newUrl = new URL(window.location.href);
+        newUrl.searchParams.delete('token');
+        newUrl.searchParams.delete('redirectUrl'); // Also clean up redirectUrl if present
+        window.history.replaceState({}, '', newUrl.toString());
+
+        console.log('AuthContext: Token processed and URL cleaned');
       } else {
         console.log('AuthContext: No URL token, checking cookies...');
         // If no token in URL, try to load from cookie
@@ -133,23 +150,31 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   }, []);
 
   useEffect(() => {
+    const devMode = process.env.NEXT_PUBLIC_DEV_MODE === 'true';
+
     if (token) {
       setAuthToken(token);
       Cookies.set('auth_token', token, { expires: 7 });
-      setIsLoading(true);
-      axios
-        .get('/whoami')
-        .then((res) => {
-          setUser(res.data.user);
-          setIsLoading(false);
-        })
-        .catch(() => {
-          setUser(null);
-          setIsLoading(false);
-          // If token is invalid, redirect to auth
-          Cookies.remove('auth_token');
-          window.location.href = 'https://instanvi-auth.vercel.app';
-        });
+
+      if (devMode) {
+        console.log('AuthContext: DEV MODE active – skipping /whoami check');
+        setUser({ name: 'Dev User', role: 'developer' }); // Dummy user
+        setIsLoading(false);
+      } else {
+        setIsLoading(true);
+        axios
+          .get('/whoami')
+          .then((res) => {
+            setUser(res.data.user);
+            setIsLoading(false);
+          })
+          .catch(() => {
+            setUser(null);
+            setIsLoading(false);
+            Cookies.remove('auth_token');
+            window.location.href = 'https://instanvi-auth.vercel.app';
+          });
+      }
     } else {
       setIsLoading(false);
     }

@@ -3,7 +3,6 @@
 import React, { useState, useContext } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import Select from '../../../../components/select';
 import { useRouter } from 'next/navigation';
 import { Bell, Inbox } from 'lucide-react'; // Import the icons
 import PosCustomersBox from './boxes/PosCustomersBox';
@@ -12,6 +11,7 @@ import { ContextData } from '../../../../components/context';
 import VouchersBox from '../../vouchers/components/boxVouchers';
 import InvoiceBox from './boxes/InvoiceBox';
 import VendorsBox from './boxes/PosVendorsBox';
+import AppLauncher from '../../../../components/AppLauncher';
 
 const urlRouters = [
   {
@@ -90,11 +90,12 @@ const routesWithoutBlueBackground = [
   { main: 'reports' },
   { main: 'settings' },
   { main: 'accounting' },
+  { main: 'invoice', sub: 'new' },
+  { main: 'account_receivables', sub: 'invoice' },
   { main: 'bank-accounts' },
   { main: 'pos' },
   { main: 'pos', sub: 'files' },
   { main: 'pos', sub: 'inventory' },
-  { main: 'invoice', sub: 'new' },
   { main: 'invoice', sub: 'recurring' },
   { main: 'invoice', sub: 'purchase' },
   { main: 'expenses', sub: 'budget' },
@@ -180,12 +181,42 @@ export default function Navbar() {
   const shouldHaveBlueBackground = () => {
     // Home page should NOT have blue background
     if (pathname === '/') return false;
+    if (
+      (str[1] === 'pos' || str[1] === 'account_receivables') &&
+      str[2] === 'customers'
+    )
+      return true;
+
+    if (
+      str[1] === 'account_receivables' &&
+      str[2] === 'invoice' &&
+      str[3] === 'new'
+    ) {
+      return false;
+    }
+    if (
+      str[1] === 'pos' &&
+      str[2] === 'sales' &&
+      str[3] === 'new'
+    ) {
+      return false;
+    }
+    if (
+      (str[1] === 'pos' || str[1] === 'account_receivables') &&
+      str[2] === 'sales'
+    )
+      return true;
+    if (str[1] === 'account_receivables' && str[2] === 'invoice') {
+      return true;
+    }
+
     // Check if the route is in the exclusion list for blue background
     return !routesWithoutBlueBackground.some((route) => {
       if (route.main && !route.sub) {
         // Exclude all subroutes under this main route
         return currentMainRoute === route.main;
       }
+
       if (route.main && route.sub) {
         // Exclude only this specific subroute or its children
         return (
@@ -239,11 +270,17 @@ export default function Navbar() {
     if (str[1] === 'account_payables' && str[2] === undefined) {
       return 'AP';
     }
+    if (str[1] === 'pos' && str[2] === undefined) {
+      return 'POS';
+    }
     if (str[1] === 'account_receivables' && str[2] === undefined) {
       return 'AR';
     }
 
-    if (str[1] === 'invoice' && str[2] === 'new') {
+    if (
+      (str[1] === 'account_receivables' && str[2] === 'invoice') ||
+      str[3] === 'new'
+    ) {
       return 'New Invoice';
     }
 
@@ -329,20 +366,8 @@ export default function Navbar() {
             <Bell size={20} className="text-gray-600 hover:text-gray-800" />
           </button>
 
-          {/* Select Component */}
-          <div className="w-full mt-2 min-w-32">
-            <div className="w-full min-w-32">
-              <Select
-                options={urlRouters}
-                selectedValue={isHome ? '' : selected}
-                SelectClass="!text-base !font-medium"
-                onChange={(value: any) => {
-                  handleSelect(value);
-                }}
-                bg={'bg-white'}
-              />
-            </div>
-          </div>
+          {/* App Launcher */}
+          <AppLauncher />
         </div>
       </div>
 

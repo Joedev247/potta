@@ -1,6 +1,6 @@
 import React from 'react';
 import moment from 'moment';
-import MyTable from '@potta/components/table';
+import DataGrid from '@potta/app/(routes)/account_receivables/components/DataGrid';
 import {
   DropdownMenu,
   DropdownMenuTrigger,
@@ -32,17 +32,15 @@ const EmployeeTable: React.FC<EmployeeTableProps> = ({
 }) => {
   const columns = [
     {
-      name: 'Employee',
-      selector: (row: Employee) => `${row.firstName} ${row.lastName}`,
-      sortable: true,
-      // width: '300px',
-      cell: (row: Employee) => (
-        <div className="flex items-center py-2">
+      accessorKey: 'employee',
+      header: 'Employee',
+      cell: ({ row }: { row: { original: Employee } }) => (
+        <div className="flex items-center">
           <div className="flex-shrink-0 h-10 w-10 bg-gray-200 rounded-full flex items-center justify-center overflow-hidden">
-            {row.profilePicture ? (
+            {row.original.profilePicture ? (
               <img
-                src={row.profilePicture}
-                alt={`${row.firstName} ${row.lastName}`}
+                src={row.original.profilePicture}
+                alt={`${row.original.firstName} ${row.original.lastName}`}
                 className="h-full w-full object-cover"
               />
             ) : (
@@ -50,110 +48,100 @@ const EmployeeTable: React.FC<EmployeeTableProps> = ({
                 src={
                   'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png'
                 }
-                alt={`${row.firstName} ${row.lastName}`}
+                alt={`${row.original.firstName} ${row.original.lastName}`}
                 className="h-full w-full object-cover"
               />
             )}
           </div>
           <div className="ml-4">
             <div className="text-sm font-medium text-gray-900">
-              {row.firstName} {row.lastName}
+              {row.original.firstName} {row.original.lastName}
             </div>
-            <div className="text-sm text-gray-500">{row.email}</div>
-            <div className="text-xs text-gray-400">{row.phone}</div>
+            <div className="text-sm text-gray-500">{row.original.email}</div>
+            <div className="text-xs text-gray-400">{row.original.phone}</div>
           </div>
         </div>
       ),
     },
     {
-      name: 'Employee ID',
-      selector: (row: Employee) => row.matricule || '',
-      sortable: true,
-      width: '140px',
-      cell: (row: Employee) => (
+      accessorKey: 'matricule',
+      header: 'Employee ID',
+      cell: ({ row }: { row: { original: Employee } }) => (
         <div className="font-mono text-sm font-medium text-gray-700">
-          {row.matricule || 'N/A'}
+          {row.original.matricule || 'N/A'}
         </div>
       ),
     },
     {
-      name: 'Department & Role',
-      selector: (row: Employee) => row.employment_type || '',
-      sortable: true,
-      width: '200px',
-      cell: (row: Employee) => (
+      accessorKey: 'employment_type',
+      header: 'Department & Role',
+      cell: ({ row }: { row: { original: Employee } }) => (
         <div>
           <div className="text-sm font-medium text-gray-900">
-            {row.employment_type}
+            {row.original.employment_type}
           </div>
           <div className="text-xs text-gray-500">
-            {row.compensation_schedule} Pay
+            {row.original.compensation_schedule} Pay
           </div>
         </div>
       ),
     },
     {
-      name: 'Location',
-      selector: (row: Employee) => row.address?.city || '',
-      sortable: true,
-      width: '150px',
-      cell: (row: Employee) => (
+      accessorKey: 'address',
+      header: 'Location',
+      cell: ({ row }: { row: { original: Employee } }) => (
         <div>
           <div className="text-sm text-gray-900">
-            {row.address?.city || 'N/A'}
+            {row.original.address?.city || 'N/A'}
           </div>
           <div className="text-xs text-gray-500">
-            {row.address?.country || 'N/A'}
+            {row.original.address?.country || 'N/A'}
           </div>
         </div>
       ),
     },
     {
-      name: 'Compensation',
-      selector: (row: Employee) => row.base_pay || row.hourly_rate || '',
-      sortable: true,
-      width: '160px',
-      cell: (row: Employee) => (
+      accessorKey: 'compensation',
+      header: 'Compensation',
+      cell: ({ row }: { row: { original: Employee } }) => (
         <div>
           <div className="text-sm font-medium text-gray-900">
-            {row.base_pay
-              ? `${row.currency} ${Number(row.base_pay).toLocaleString()}`
-              : row.hourly_rate
-              ? `${row.currency} ${row.hourly_rate}/hr`
+            {row.original.base_pay
+              ? `${row.original.currency} ${Number(
+                  row.original.base_pay
+                ).toLocaleString()}`
+              : row.original.hourly_rate
+              ? `${row.original.currency} ${row.original.hourly_rate}/hr`
               : 'N/A'}
           </div>
           <div className="text-xs text-gray-500">
-            {row.compensation_schedule}
+            {row.original.compensation_schedule}
           </div>
         </div>
       ),
     },
     {
-      name: 'Benefits',
-      selector: (row: Employee) => row.benefits?.length || 0,
-      sortable: true,
-      width: '120px',
-      cell: (row: Employee) => (
+      accessorKey: 'benefits',
+      header: 'Benefits',
+      cell: ({ row }: { row: { original: Employee } }) => (
         <div className="flex flex-col">
           <div className="text-sm font-medium text-gray-900">
-            {row.benefits?.length || 0} Benefits
+            {row.original.benefits?.length || 0} Benefits
           </div>
           <div className="text-xs text-gray-500">
-            {row.paid_time_off?.length || 0} PTO Plans
+            {row.original.paid_time_off?.length || 0} PTO Plans
           </div>
         </div>
       ),
     },
     {
-      name: 'Employment',
-      selector: (row: Employee) => row.start_date || '',
-      sortable: true,
-      width: '140px',
-      cell: (row: Employee) => (
+      accessorKey: 'start_date',
+      header: 'Employment',
+      cell: ({ row }: { row: { original: Employee } }) => (
         <div>
           <div className="text-sm text-gray-900">
-            {row.start_date
-              ? moment(row.start_date).format('MMM DD, YYYY')
+            {row.original.start_date
+              ? moment(row.original.start_date).format('MMM DD, YYYY')
               : 'N/A'}
           </div>
           <div className="text-xs text-gray-500">Start Date</div>
@@ -161,13 +149,11 @@ const EmployeeTable: React.FC<EmployeeTableProps> = ({
       ),
     },
     {
-      name: 'Status',
-      selector: (row: Employee) => (row.is_active ? 'Active' : 'Inactive'),
-      sortable: true,
-      width: '100px',
-      cell: (row: Employee) => (
+      accessorKey: 'is_active',
+      header: 'Status',
+      cell: ({ row }: { row: { original: Employee } }) => (
         <div>
-          {row.is_active ? (
+          {row.original.is_active ? (
             <span className="px-2 py-1 inline-flex text-md leading-5 font-semibold rounded-full text-green-800">
               Active
             </span>
@@ -180,10 +166,9 @@ const EmployeeTable: React.FC<EmployeeTableProps> = ({
       ),
     },
     {
-      name: 'Actions',
-      selector: (row: Employee) => '',
-      width: '100px',
-      cell: (row: Employee) => (
+      id: 'actions',
+      header: 'Actions',
+      cell: ({ row }: { row: { original: Employee } }) => (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <button className="p-2 hover:bg-gray-100 rounded-full transition-colors">
@@ -191,14 +176,14 @@ const EmployeeTable: React.FC<EmployeeTableProps> = ({
             </button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="w-40">
-            <DropdownMenuItem onClick={() => onViewEmployee(row.uuid)}>
+            <DropdownMenuItem onClick={() => onViewEmployee(row.original.uuid)}>
               <i className="ri-eye-line mr-2"></i> View Details
             </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => onEditEmployee(row.uuid)}>
+            <DropdownMenuItem onClick={() => onEditEmployee(row.original.uuid)}>
               <i className="ri-edit-line mr-2"></i> Edit
             </DropdownMenuItem>
             <DropdownMenuItem
-              onClick={() => onDeleteEmployee(row.uuid)}
+              onClick={() => onDeleteEmployee(row.original.uuid)}
               className="text-red-600"
             >
               <i className="ri-delete-bin-line mr-2"></i> Delete
@@ -211,16 +196,11 @@ const EmployeeTable: React.FC<EmployeeTableProps> = ({
 
   return (
     <div className="bg-white">
-      <MyTable
-        columns={columns}
+      <DataGrid
         data={employees}
-        ExpandableComponent={null}
-        expanded={false}
-        pagination={employees.length > 9}
-        paginationTotalRows={totalPages * pageSize}
-        onChangePage={onPageChange}
-        onRowClicked={onRowClick}
-        pointerOnHover={true}
+        columns={columns}
+        isLoading={false}
+        onRowClick={onRowClick}
       />
     </div>
   );
