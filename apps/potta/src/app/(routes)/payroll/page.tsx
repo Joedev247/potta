@@ -14,8 +14,10 @@ const Payroll = () => {
         const res = await employeeApi.filterEmployees({ limit: 1 });
         if (res?.data?.data && res.data.data.length > 0) {
           router.replace('/payroll/overview');
+          console.log("Employees found")
         } else {
           setLoading(false);
+          console.log("Employees not found")
         }
       } catch (e) {
         setLoading(false);

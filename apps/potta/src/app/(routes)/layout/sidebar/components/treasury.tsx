@@ -1,0 +1,154 @@
+import { useContext } from 'react';
+import { Sidebar, Menu, MenuItem } from 'react-pro-sidebar';
+import { usePathname } from 'next/navigation';
+import { CreditCard, BarChart2, Wallet } from 'lucide-react';
+import { ContextData } from '@potta/components/context';
+import { svgIcons } from '@potta/components/svg_icons/IconsSvg';
+import SidebarProfile from './SidebarProfile';
+import { GiReceiveMoney, GiWallet } from 'react-icons/gi';
+
+const SidebarsTreasury = () => {
+  const pathname = usePathname();
+  const str = pathname.split('/');
+  const context = useContext(ContextData);
+  const isActive = (path: string) => pathname.startsWith(path);
+
+  return (
+    <Sidebar
+      collapsedWidth="65px"
+      width="200px"
+      transitionDuration={500}
+      collapsed={context?.toggle}
+      toggled={true}
+      breakPoint="md"
+      className="relative bg-blue-500 h-[100vh] z-30 side"
+    >
+      <Menu className="relative h-[76vh]" closeOnClick>
+        <MenuItem
+          className="mt-4 font-thin"
+          href="/"
+          icon={
+            <img src="/icons/Potta.svg" className="h-16 w-16 mt-2" alt="logo" />
+          }
+        >
+          {' '}
+        </MenuItem>
+
+        {/* Treasury Dashboard */}
+        <MenuItem
+          active={
+            str[1] == 'treasury' && (str[2] == undefined || str[2] === '')
+          }
+          className="mt-8"
+          href="/treasury"
+          icon={svgIcons.dashboard(
+            str[1] === 'treasury' && str[2] == undefined ? 'white' : '#374151'
+          )}
+        >
+          <h3 className="text-md">Treasury</h3>
+        </MenuItem>
+
+        {/* Bank Accounts */}
+        <MenuItem
+          active={isActive('/treasury/bank-accounts')}
+          className=""
+          href="/treasury/bank-accounts"
+          icon={svgIcons.courthouse(
+            isActive('/treasury/bank-accounts') ? 'white' : '#374151'
+          )}
+        >
+          <h3 className="text-md">Bank Accounts</h3>
+        </MenuItem>
+
+        {/* Bank Account Transactions */}
+        <MenuItem
+          active={isActive('/treasury/account_payables')}
+          className=""
+          href="/treasury/account_payables"
+          icon={
+            <GiWallet
+              className={`h-6 w-6 ${
+                isActive('/treasury/account_payables')
+                  ? 'text-white'
+                  : 'text-gray-700'
+              }`}
+            />
+          }
+        >
+          <h3 className="text-md">AP</h3>
+        </MenuItem>
+
+        {/* account_receivables */}
+        <MenuItem
+          active={str[1] == 'treasury' && str[2] == 'account_receivables'}
+          className=""
+          href="/treasury/account_receivables"
+          icon={
+            <GiReceiveMoney
+              className={`h-6 w-6 ${
+                str[1] == 'treasury' && str[2] == 'account_receivables'
+                  ? 'text-white'
+                  : 'text-gray-700'
+              }`}
+            />
+          }
+        >
+          <h3 className="text-md">AR</h3>
+        </MenuItem>
+
+        {/* Payment Transactions */}
+        {/* <MenuItem
+          active={str[2] == 'transactions' && str[1] == 'treasury'}
+          className=""
+          href="/treasury/payments/transactions"
+          icon={
+            <CreditCard
+              className={`h-6 w-6 ${
+                str[2] == 'transactions' && str[1] == 'payments'
+                  ? 'text-white'
+                  : 'text-gray-700'
+              }`}
+            />
+          }
+        >
+          <h3 className="text-md">Payment Transactions</h3>
+        </MenuItem> */}
+
+        {/* Payment Terminals */}
+        {/* <MenuItem
+          active={str[2] == 'terminals' && str[1] == 'treasury'}
+          className=""
+          href="/treasury/payments/terminals"
+          icon={
+            str[2] == 'terminals' && str[1] == 'treasury' ? (
+              <img src="/images/sideExpensesIcons/white/flow.svg" />
+            ) : (
+              <img src="/images/sideExpensesIcons/flow.svg" />
+            )
+          }
+        >
+          <h3 className="text-md">Terminals</h3>
+        </MenuItem> */}
+
+        {/* Reports */}
+        <MenuItem
+          active={isActive('/reports')}
+          className=""
+          href="/reports"
+          icon={
+            isActive('/reports') ? (
+              <img src="/images/sideExpensesIcons/white/2.svg" />
+            ) : (
+              <img src="/images/sideDashboardIcons/dahsboard.svg" />
+            )
+          }
+        >
+          <h3 className="text-md">Reports</h3>
+        </MenuItem>
+      </Menu>
+      <SidebarProfile context={context} />
+    </Sidebar>
+  );
+};
+
+export default SidebarsTreasury;

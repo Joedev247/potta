@@ -9,7 +9,7 @@ import CardNumberInput from '@potta/components/CardNumberInput';
 import { useCreateBankAccount } from '../hooks/useCreateBankAccount';
 import { createBankAccountSchema } from '../utils/validation';
 import toast from 'react-hot-toast';
-import { accountsApi } from '../../accounting/utils/api';
+import { accountsApi } from '@potta/app/(routes)/accounting/utils/api';
 
 const accountTypeOptions = [
   { label: 'Bank Account', value: 'Bank_Account' },
@@ -540,12 +540,13 @@ const AddBankAccountSlideover = ({
             )}
           </div>
         </form>
-        <div className="w-full flex justify-end mt-8 ">
+        <div className="fixed bottom-0 left-0 right-0 p-2 bg-white border-t border-gray-200 flex justify-end space-x-3">
           <Button
             text={createBankAccount.isPending ? 'Saving...' : 'Save Account'}
             type="button"
             onClick={handleSubmit}
             disabled={createBankAccount.isPending}
+            className="!py-3 !px-6"
           />
         </div>
       </div>

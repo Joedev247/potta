@@ -8,7 +8,7 @@ import {
   DropdownMenuTrigger,
 } from '@potta/components/shadcn/dropdown';
 import moment from 'moment';
-import { accountsApi } from '../../accounting/utils/api';
+import { accountsApi } from '@potta/app/(routes)/accounting/utils/api';
 
 interface BankAccountTableProps {
   ledgerAccountId: string;

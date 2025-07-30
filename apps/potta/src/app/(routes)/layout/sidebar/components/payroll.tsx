@@ -142,7 +142,7 @@ const SidebarsPayroll = () => {
         <MenuItem
           active={str[2] == 'reports' ? true : false}
           className=""
-          href="/payroll/reports"
+          href="/reports"
           icon={svgIcons.piechart(str[2] == 'reports' ? 'white' : 'black')}
         >
           <h3 className="text-md ">Reports</h3>

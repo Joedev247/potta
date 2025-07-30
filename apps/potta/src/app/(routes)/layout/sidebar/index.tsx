@@ -14,6 +14,7 @@ import SidebarsVoucher from './components/voucher';
 import SidebarsBankAccounts from './components/bankAccounts';
 import SidebarsSettings from './components/settings';
 import SidebarsReports from './components/reports';
+import SidebarsTreasury from './components/treasury';
 const Sidebars = () => {
   const pathname = usePathname();
   const string = pathname;
@@ -35,6 +36,7 @@ const Sidebars = () => {
       {str[1] == 'accounting' && <SidebarsAccounts />}
       {str[1] == 'reports' && <SidebarsReports />}
       {str[1] == 'bank-accounts' && <SidebarsBankAccounts />}
+      {str[1] == 'treasury' && <SidebarsTreasury />}
       {str[1] == 'settings' && <SidebarsSettings />}
     </>
   );

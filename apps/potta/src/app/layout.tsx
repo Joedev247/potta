@@ -27,6 +27,11 @@ const geistMono = localFont({
 export const metadata: Metadata = {
   title: 'Potta',
   description: 'Potta App',
+  icons: {
+    icon: '/icons/Potta.svg',
+    shortcut: '/icons/Potta.svg',
+    apple: '/icons/Potta.svg',
+  },
 };
 
 export default function RootLayout({

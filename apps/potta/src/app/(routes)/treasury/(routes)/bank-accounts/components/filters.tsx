@@ -72,7 +72,7 @@ const Filter = () => {
             <Button
               type={'button'}
               text="Add Bank Account"
-              icon={<i className="ri-add-line text-white text-xl "></i>}
+              icon={<i className="ri-file-add-line"></i>}
               theme="default"
               onClick={() => setSlideoverOpen(true)}
             />

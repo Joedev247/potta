@@ -86,6 +86,7 @@ const routesWithoutBlueBackground = [
   { main: 'payments' },
   { main: 'organigrammer' },
   { main: 'account_payables' },
+  { main: 'treasury' },
   { main: 'account_receivables' },
   { main: 'reports' },
   { main: 'settings' },
@@ -194,11 +195,7 @@ export default function Navbar() {
     ) {
       return false;
     }
-    if (
-      str[1] === 'pos' &&
-      str[2] === 'sales' &&
-      str[3] === 'new'
-    ) {
+    if (str[1] === 'pos' && str[2] === 'sales' && str[3] === 'new') {
       return false;
     }
     if (
@@ -267,8 +264,17 @@ export default function Navbar() {
     if (str[1] === 'expenses' && str[2] === 'bills' && str[3] === 'new') {
       return 'New Bill';
     }
+    if (str[1] === 'pos' && str[2] === 'sales_receipts' ) {
+      return 'Sales Receipts';
+    }
     if (str[1] === 'account_payables' && str[2] === undefined) {
       return 'AP';
+    }
+    if (str[1] === 'treasury' && str[2] === 'account_payables') {
+      return 'AP Management • Treasury';
+    }
+    if (str[1] === 'treasury' && str[2] === 'account_receivables') {
+      return 'AR Management • Treasury';
     }
     if (str[1] === 'pos' && str[2] === undefined) {
       return 'POS';

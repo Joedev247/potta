@@ -326,7 +326,7 @@ const People = () => {
                 locationFilter !== 'all') && (
                 <button
                   onClick={handleClearAllFilters}
-                  className="text-sm text-blue-600 hover:text-blue-800 font-medium flex items-center gap-1"
+                  className="text-sm text-green-700 hover:text-green-800 font-medium flex items-center gap-1"
                 >
                   <i className="ri-refresh-line"></i>
                   Clear All Filters

@@ -1,6 +1,5 @@
 'use client';
 import React, { useEffect, useState } from 'react';
-import RootLayout from '../layout';
 import BankAccountCard from './components/BankAccountCard';
 import BankAccountsFilter from './components/filters';
 import CustomDeleteModal from './components/DeleteModal';
@@ -8,6 +7,7 @@ import { useGetBankAccounts } from './hooks/useGetBankAccounts';
 import { useDeleteBankAccount } from './hooks/useDeleteBankAccount';
 import toast from 'react-hot-toast';
 import { useRouter } from 'next/navigation';
+import RootLayout from '@potta/app/(routes)/layout';
 
 const PAGE_SIZE = 8;
 

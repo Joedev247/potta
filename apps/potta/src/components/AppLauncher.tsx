@@ -35,6 +35,11 @@ const AppLauncher: React.FC = () => {
       icon: AppLauncherIcons.receivables,
     },
     {
+      value: 'treasury',
+      label: 'Treasury',
+      icon: AppLauncherIcons.treasury,
+    },
+    {
       value: 'payroll',
       label: 'Payroll',
       icon: AppLauncherIcons.payroll,
@@ -151,7 +156,7 @@ const AppLauncher: React.FC = () => {
                   key={app.value}
                   onClick={() => handleAppClick(app)}
                   onKeyDown={(e) => handleKeyDown(e, app)}
-                  className={`group flex gap-1 flex-col items-center p-4 transition-all duration-200 focus:outline-none  ${
+                  className={`group flex gap-0.5 flex-col items-center p-4 transition-all duration-200 focus:outline-none  ${
                     isActive ? 'bg-[#] ' : ''
                   }`}
                   tabIndex={0}
@@ -159,16 +164,14 @@ const AppLauncher: React.FC = () => {
                 >
                   {/* App Icon */}
                   <div
-                    className={`w-[3.3em] h-[3.3em] flex items-center justify-center  group-hover:scale-[.5]transition-transform duration-200 ${
-                      isActive ? 'ring-2 ring-green-800 rounded-full' : ''
-                    }`}
+                    className={`w-[3.3em] h-[3.3em] grid place-content-center  group-hover:scale-[1.05] transition-transform duration-200`}
                   >
                     {app.icon}
                   </div>
 
                   {/* App Name */}
                   <span
-                    className={`text-sm text-center transition-colors duration-200 ${
+                    className={`text-sm text-center transition-colors font-medium duration-200 ${
                       isActive
                         ? 'text-green-700 font-medium'
                         : 'text-gray-700 group-hover:text-gray-900'
@@ -176,6 +179,9 @@ const AppLauncher: React.FC = () => {
                   >
                     {app.label}
                   </span>
+                  {isActive && (
+                    <div className="w-1 h-1 bg-green-800 rounded-full"></div>
+                  )}
                 </button>
               );
             })}
