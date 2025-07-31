@@ -47,8 +47,6 @@ const ViewBenefit: React.FC<ViewBenefitProps> = ({
   onClose,
   benefit,
 }) => {
-  if (!benefit) return null;
-
   const getStatusBadge = (status: string) => {
     const statusConfig = {
       ACTIVE: { bg: 'bg-green-100', text: 'text-green-800', label: 'Active' },
@@ -95,6 +93,49 @@ const ViewBenefit: React.FC<ViewBenefitProps> = ({
     return formatCurrencyWithoutDecimals(amount);
   };
 
+  const determineRateType = (rate: string, value: string) => {
+    const rateNum = parseFloat(rate);
+    const valueNum = parseFloat(value);
+
+    // If rate is a reasonable percentage value (1-100), it's likely a percentage
+    if (rateNum >= 1 && rateNum <= 100) {
+      return 'Percentage';
+    }
+
+    // If the rate is the same as the value, it's likely a flat rate
+    if (valueNum > 0 && Math.abs(rateNum - valueNum) < 1) {
+      return 'Flat Rate';
+    }
+
+    // If value is very large, it's likely a flat rate
+    if (valueNum > 100) {
+      return 'Flat Rate';
+    }
+
+    // Default to flat rate
+    return 'Flat Rate';
+  };
+
+  const formatRate = (rate: string, value: string) => {
+    if (!rate || rate === '0') return 'N/A';
+
+    // If rate is already a percentage (contains %), return as is
+    if (rate.includes('%')) {
+      return rate;
+    }
+
+    const rateNum = parseFloat(rate);
+    if (isNaN(rateNum)) return 'N/A';
+
+    const rateType = determineRateType(rate, value);
+
+    if (rateType === 'Percentage') {
+      return `${rateNum.toFixed(1)}%`;
+    } else {
+      return formatCurrency(rate);
+    }
+  };
+
   const formatCycle = (cycle: string) => {
     const cycleLabels = {
       DAILY: 'Daily',
@@ -115,160 +156,157 @@ const ViewBenefit: React.FC<ViewBenefitProps> = ({
       open={isOpen}
       setOpen={onClose}
       noPanelScroll={false}
+      sliderClass="transform transition duration-500 ease-in-out"
+      sliderContentClass=""
     >
-      <div className="p-6 space-y-6 w-full max-w-5xl">
-        {/* Header */}
-        <div className="flex items-start justify-between pb-4 border-b border-gray-200">
-          <div className="flex items-center space-x-4">
-            <div className="flex-shrink-0 h-12 w-12 bg-gray-100 rounded-full flex items-center justify-center text-2xl">
-              {getTypeIcon(benefit.type)}
-            </div>
-            <div>
-              <h3 className="text-xl font-semibold text-gray-900">
-                {benefit.name}
-              </h3>
-              <p className="text-sm text-gray-600 mt-1">
-                {benefit.type.charAt(0) + benefit.type.slice(1).toLowerCase()} •{' '}
-                {formatCycle(benefit.cycle)}
-              </p>
-            </div>
-          </div>
-          <div className="flex items-center space-x-3">
-            {getStatusBadge(benefit.status)}
-            {benefit.is_default && (
-              <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
-                Default
-              </span>
-            )}
+      {!benefit ? (
+        <div className="p-6 space-y-6 w-full max-w-4xl">
+          <div className="flex items-center justify-center h-32">
+            <div className="text-gray-500">Loading benefit details...</div>
           </div>
         </div>
-
-        {/* Description */}
-        {benefit.description && (
-          <div className="bg-gray-50  p-4">
-            <h4 className="text-sm font-medium text-gray-900 mb-2">
-              Description
-            </h4>
-            <p className="text-sm text-gray-700 leading-relaxed">
-              {benefit.description}
-            </p>
+      ) : (
+        <div className="p-6 space-y-6 w-full max-w-4xl">
+          {/* Header */}
+          <div className="flex items-start justify-between pb-4 border-b border-gray-200">
+            <div className="flex items-center space-x-4">
+              <div className="flex-shrink-0 h-12 w-12 bg-gray-100 rounded-full flex items-center justify-center text-2xl">
+                {getTypeIcon(benefit.type)}
+              </div>
+              <div>
+                <h3 className="text-xl font-semibold text-gray-900">
+                  {benefit.name}
+                </h3>
+                <p className="text-sm text-gray-600 mt-1">
+                  {benefit.type.charAt(0) + benefit.type.slice(1).toLowerCase()}{' '}
+                  • {formatCycle(benefit.cycle)}
+                </p>
+              </div>
+            </div>
+            <div className="flex items-center space-x-3">
+              {getStatusBadge(benefit.status)}
+              {benefit.is_default && (
+                <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                  Default
+                </span>
+              )}
+            </div>
           </div>
-        )}
 
-        {/* Main Content Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* Benefit Information */}
-          <div className="bg-white border border-gray-200  p-5">
-            <h4 className="text-base font-semibold text-gray-900 mb-4 flex items-center">
-              <i className="ri-information-line mr-2 text-blue-600"></i>
-              Benefit Information
+          {/* Description */}
+          {benefit.description && (
+            <div className="bg-gray-50 p-4 rounded-lg">
+              <h4 className="text-sm font-medium text-gray-900 mb-2">
+                Description
+              </h4>
+              <p className="text-sm text-gray-700 leading-relaxed">
+                {benefit.description}
+              </p>
+            </div>
+          )}
+
+          {/* Main Information */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+              <h4 className="text-base font-semibold text-gray-900 mb-4">
+                Benefit Information
+              </h4>
+              <dl className="space-y-4">
+                <div>
+                  <dt className="text-sm font-medium text-gray-500">Value</dt>
+                  <dd className="text-lg font-semibold text-gray-900 mt-1">
+                    {formatCurrency(benefit.value)}
+                  </dd>
+                </div>
+                <div>
+                  <dt className="text-sm font-medium text-gray-500">Rate</dt>
+                  <dd className="text-lg font-semibold text-gray-900 mt-1">
+                    {formatRate(benefit.rate, benefit.value)}
+                  </dd>
+                </div>
+                <div>
+                  <dt className="text-sm font-medium text-gray-500">Cycle</dt>
+                  <dd className="text-sm text-gray-900 mt-1">
+                    {formatCycle(benefit.cycle)}
+                  </dd>
+                </div>
+                <div>
+                  <dt className="text-sm font-medium text-gray-500">
+                    Provider
+                  </dt>
+                  <dd className="text-sm text-gray-900 mt-1">
+                    {benefit.provider || 'Internal'}
+                  </dd>
+                </div>
+              </dl>
+            </div>
+
+            <div>
+              <h4 className="text-base font-semibold text-gray-900 mb-4">
+                Financial Details
+              </h4>
+              <dl className="space-y-4">
+                <div>
+                  <dt className="text-sm font-medium text-gray-500">
+                    Tax Status
+                  </dt>
+                  <dd className="mt-1">
+                    <span
+                      className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
+                        benefit.is_taxable
+                          ? 'bg-red-100 text-red-800'
+                          : 'bg-green-100 text-green-800'
+                      }`}
+                    >
+                      {benefit.is_taxable ? 'Taxable' : 'Tax-free'}
+                    </span>
+                  </dd>
+                </div>
+                {benefit.is_taxable && benefit.tax_cap && (
+                  <div>
+                    <dt className="text-sm font-medium text-gray-500">
+                      Tax Cap
+                    </dt>
+                    <dd className="text-sm font-semibold text-gray-900 mt-1">
+                      {formatCurrency(benefit.tax_cap)}
+                    </dd>
+                  </div>
+                )}
+                <div>
+                  <dt className="text-sm font-medium text-gray-500">
+                    Salary Cap
+                  </dt>
+                  <dd className="text-sm font-semibold text-gray-900 mt-1">
+                    {formatCurrency(benefit.salary_cap)}
+                  </dd>
+                </div>
+                {benefit.max_amount && (
+                  <div>
+                    <dt className="text-sm font-medium text-gray-500">
+                      Max Amount
+                    </dt>
+                    <dd className="text-sm font-semibold text-gray-900 mt-1">
+                      {formatCurrency(benefit.max_amount)}
+                    </dd>
+                  </div>
+                )}
+              </dl>
+            </div>
+          </div>
+
+          {/* Access Information */}
+          <div>
+            <h4 className="text-base font-semibold text-gray-900 mb-4">
+              Access Information
             </h4>
             <dl className="space-y-4">
               <div>
-                <dt className="text-xs font-medium text-gray-500 uppercase tracking-wide">
-                  Value
-                </dt>
-                <dd className="text-lg font-semibold text-gray-900 mt-1">
-                  {formatCurrency(benefit.value)}
-                </dd>
-              </div>
-              <div>
-                <dt className="text-xs font-medium text-gray-500 uppercase tracking-wide">
-                  Rate
-                </dt>
-                <dd className="text-lg font-semibold text-gray-900 mt-1">
-                  {benefit.rate
-                    ? formatPercentageWithoutDecimals(benefit.rate)
-                    : 'N/A'}
-                </dd>
-              </div>
-              <div>
-                <dt className="text-xs font-medium text-gray-500 uppercase tracking-wide">
-                  Cycle
-                </dt>
-                <dd className="text-sm text-gray-900 mt-1">
-                  {formatCycle(benefit.cycle)}
-                </dd>
-              </div>
-              <div>
-                <dt className="text-xs font-medium text-gray-500 uppercase tracking-wide">
-                  Provider
-                </dt>
-                <dd className="text-sm text-gray-900 mt-1">
-                  {benefit.provider || 'Internal'}
-                </dd>
-              </div>
-            </dl>
-          </div>
-
-          {/* Financial Details */}
-          <div className="bg-white border border-gray-200  p-5">
-            <h4 className="text-base font-semibold text-gray-900 mb-4 flex items-center">
-              <i className="ri-money-dollar-circle-line mr-2 text-green-600"></i>
-              Financial Details
-            </h4>
-            <dl className="space-y-4">
-              <div>
-                <dt className="text-xs font-medium text-gray-500 uppercase tracking-wide">
-                  Taxable
-                </dt>
-                <dd className="mt-1">
-                  <span
-                    className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium ${
-                      benefit.is_taxable
-                        ? 'bg-red-100 text-red-800'
-                        : 'bg-green-100 text-green-800'
-                    }`}
-                  >
-                    {benefit.is_taxable ? 'Yes' : 'No'}
-                  </span>
-                </dd>
-              </div>
-              {benefit.is_taxable && benefit.tax_cap && (
-                <div>
-                  <dt className="text-xs font-medium text-gray-500 uppercase tracking-wide">
-                    Tax Cap
-                  </dt>
-                  <dd className="text-sm font-semibold text-gray-900 mt-1">
-                    {formatCurrency(benefit.tax_cap)}
-                  </dd>
-                </div>
-              )}
-              <div>
-                <dt className="text-xs font-medium text-gray-500 uppercase tracking-wide">
-                  Salary Cap
-                </dt>
-                <dd className="text-sm font-semibold text-gray-900 mt-1">
-                  {formatCurrency(benefit.salary_cap)}
-                </dd>
-              </div>
-              {benefit.max_amount && (
-                <div>
-                  <dt className="text-xs font-medium text-gray-500 uppercase tracking-wide">
-                    Max Amount
-                  </dt>
-                  <dd className="text-sm font-semibold text-gray-900 mt-1">
-                    {formatCurrency(benefit.max_amount)}
-                  </dd>
-                </div>
-              )}
-            </dl>
-          </div>
-
-          {/* Role & Access Information */}
-          <div className="bg-white border border-gray-200  p-5">
-            <h4 className="text-base font-semibold text-gray-900 mb-4 flex items-center">
-              <i className="ri-team-line mr-2 text-purple-600"></i>
-              Role & Access
-            </h4>
-            <div className="space-y-4">
-              <div>
-                <dt className="text-xs font-medium text-gray-500 uppercase tracking-wide">
+                <dt className="text-sm font-medium text-gray-500">
                   Access Type
                 </dt>
                 <dd className="mt-1">
                   <span
-                    className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium ${
+                    className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
                       benefit.role_based
                         ? 'bg-blue-100 text-blue-800'
                         : 'bg-gray-100 text-gray-800'
@@ -282,7 +320,7 @@ const ViewBenefit: React.FC<ViewBenefitProps> = ({
                 benefit.eligible_roles &&
                 benefit.eligible_roles.length > 0 && (
                   <div>
-                    <dt className="text-xs font-medium text-gray-500 uppercase tracking-wide mb-2">
+                    <dt className="text-sm font-medium text-gray-500 mb-2">
                       Eligible Roles
                     </dt>
                     <div className="flex flex-wrap gap-1">
@@ -297,46 +335,46 @@ const ViewBenefit: React.FC<ViewBenefitProps> = ({
                     </div>
                   </div>
                 )}
-            </div>
+            </dl>
           </div>
-        </div>
 
-        {/* Dates Section */}
-        <div className="bg-white border border-gray-200  p-5">
-          <h4 className="text-base font-semibold text-gray-900 mb-4 flex items-center">
-            <i className="ri-calendar-line mr-2 text-orange-600"></i>
-            Important Dates
-          </h4>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div>
-              <dt className="text-xs font-medium text-gray-500 uppercase tracking-wide">
-                Created
-              </dt>
-              <dd className="text-sm text-gray-900 mt-1">
-                {moment(benefit.createdAt).format('MMM DD, YYYY')}
-              </dd>
-            </div>
-            <div>
-              <dt className="text-xs font-medium text-gray-500 uppercase tracking-wide">
-                Last Updated
-              </dt>
-              <dd className="text-sm text-gray-900 mt-1">
-                {moment(benefit.updatedAt).format('MMM DD, YYYY')}
-              </dd>
-            </div>
-            {benefit.expires_at && (
+          {/* Dates */}
+          <div>
+            <h4 className="text-base font-semibold text-gray-900 mb-4">
+              Important Dates
+            </h4>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               <div>
-                <dt className="text-xs font-medium text-gray-500 uppercase tracking-wide">
-                  Expires
-                </dt>
+                <dt className="text-sm font-medium text-gray-500">Created</dt>
                 <dd className="text-sm text-gray-900 mt-1">
-                  {moment(benefit.expires_at).format('MMM DD, YYYY')}
+                  {moment(benefit.createdAt).format('MMM DD, YYYY')}
                 </dd>
               </div>
-            )}
+              <div>
+                <dt className="text-sm font-medium text-gray-500">
+                  Last Updated
+                </dt>
+                <dd className="text-sm text-gray-900 mt-1">
+                  {moment(benefit.updatedAt).format('MMM DD, YYYY')}
+                </dd>
+              </div>
+              {benefit.expires_at ? (
+                <div>
+                  <dt className="text-sm font-medium text-gray-500">Expires</dt>
+                  <dd className="text-sm text-gray-900 mt-1">
+                    {moment(benefit.expires_at).format('MMM DD, YYYY')}
+                  </dd>
+                </div>
+              ) : (
+                <div>
+                  <dt className="text-sm font-medium text-gray-500">Expiry</dt>
+                  <dd className="text-sm text-gray-900 mt-1">No expiry</dd>
+                </div>
+              )}
+            </div>
           </div>
         </div>
-      </div>
+      )}
     </Slider>
   );
 };

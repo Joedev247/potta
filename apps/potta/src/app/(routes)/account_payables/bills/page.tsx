@@ -13,12 +13,17 @@ export default function DashboardPage() {
   const [status, setStatus] = React.useState('all');
   const [paymentMethod, setPaymentMethod] = React.useState('all');
   const context = React.useContext(ContextData);
+
+  const handleSearchClear = () => {
+    setSearch('');
+  };
+
   return (
     <RootLayout>
       <div
         className={`${
           context?.layoutMode === 'sidebar' ? 'pl-16 !mt-4' : 'pl-5 !mt-4'
-        } min-h-[92vh] space-y-14 pr-5 w-full pt-6`}
+        } overflow-hidden space-y-4 pr-5 w-full `}
       >
         {/* Top Row Cards (same as before) */}
 
@@ -28,6 +33,7 @@ export default function DashboardPage() {
           <Filter
             search={search}
             onSearchChange={setSearch}
+            onSearchClear={handleSearchClear}
             status={status}
             onStatusChange={setStatus}
             paymentMethod={paymentMethod}
@@ -41,6 +47,10 @@ export default function DashboardPage() {
             search={search}
             status={status}
             paymentMethod={paymentMethod}
+            onSearchChange={setSearch}
+            onSearchClear={handleSearchClear}
+            onStatusChange={setStatus}
+            onPaymentMethodChange={setPaymentMethod}
           />
         </div>
       </div>

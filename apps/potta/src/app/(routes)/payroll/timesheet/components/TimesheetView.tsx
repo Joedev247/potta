@@ -71,7 +71,7 @@ const TimesheetView: React.FC<TimesheetViewProps> = ({
       let totalHours = 0;
       let checkInTime = timesheet.check_in_time || '';
       let checkOutTime = timesheet.check_out_time || '';
-      const employee = timesheet.employee || {};
+      const employee = timesheet.employee || ({} as any);
       if (timesheet.total_hours && parseFloat(timesheet.total_hours) > 0) {
         totalHours = parseFloat(timesheet.total_hours);
       } else if (timesheet.check_in_time && timesheet.check_out_time) {
@@ -127,12 +127,6 @@ const TimesheetView: React.FC<TimesheetViewProps> = ({
       {isLoading ? (
         <div className="mt-4">
           <CustomLoader />
-        </div>
-      ) : !processedData || processedData.length === 0 ? (
-        <div className="text-center py-10  mt-4">
-          <p className="text-gray-500">
-            No timesheet entries found for this period.
-          </p>
         </div>
       ) : (
         <TimesheetTable

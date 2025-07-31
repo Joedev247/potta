@@ -1,5 +1,5 @@
 import React from 'react';
-import MyTable from '@potta/components/table';
+import DataGrid from '@potta/app/(routes)/account_receivables/components/DataGrid';
 
 const PayInfoTab = ({ employee }: { employee: any }) => (
   <div className="mt-6">
@@ -43,16 +43,16 @@ const PayInfoTab = ({ employee }: { employee: any }) => (
     </div>
     {/* Pay History Table */}
     <div className="mt-8">
-      <MyTable
+      <DataGrid
         columns={[
-          { name: 'Date', selector: (row: any) => row.date },
-          { name: 'Total Pay', selector: (row: any) => row.totalPay },
-          { name: 'Rate', selector: (row: any) => row.rate },
-          { name: 'Regular Time', selector: (row: any) => row.regularTime },
-          { name: 'Overtime', selector: (row: any) => row.overtime },
-          { name: 'Bonuses', selector: (row: any) => row.bonuses },
-          { name: 'Deductions', selector: (row: any) => row.deductions },
-          { name: 'Taxes', selector: (row: any) => row.taxes },
+          { accessorKey: 'date', header: 'Date' },
+          { accessorKey: 'totalPay', header: 'Total Pay' },
+          { accessorKey: 'rate', header: 'Rate' },
+          { accessorKey: 'regularTime', header: 'Regular Time' },
+          { accessorKey: 'overtime', header: 'Overtime' },
+          { accessorKey: 'bonuses', header: 'Bonuses' },
+          { accessorKey: 'deductions', header: 'Deductions' },
+          { accessorKey: 'taxes', header: 'Taxes' },
         ]}
         data={[
           {
@@ -106,9 +106,6 @@ const PayInfoTab = ({ employee }: { employee: any }) => (
             taxes: 'XAF 00',
           },
         ]}
-        ExpandableComponent={null}
-        expanded={false}
-        pagination={false}
       />
     </div>
   </div>

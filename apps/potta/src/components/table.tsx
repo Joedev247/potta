@@ -46,6 +46,8 @@ interface TableProps {
   onRowClicked?: (row: any) => void; // Add row click handler
   pointerOnHover?: boolean; // Control cursor style on hover
   hoverBackgroundColor?: string; // Custom hover background color
+  persistTableHead?: boolean; // Keep headers visible when no data
+  noDataComponent?: ReactNode; // Custom no data component
 }
 
 const MyTable: FC<TableProps & { pending?: boolean }> = ({
@@ -70,6 +72,8 @@ const MyTable: FC<TableProps & { pending?: boolean }> = ({
   onRowClicked, // Row click handler
   pointerOnHover = false, // Default no pointer cursor
   hoverBackgroundColor = '#f5f5f5', // Default hover background color
+  persistTableHead = false, // Default no persistent headers
+  noDataComponent, // Custom no data component
 }) => {
   // Reference to the table container
   const tableRef = useRef<HTMLDivElement>(null);
@@ -271,6 +275,9 @@ const MyTable: FC<TableProps & { pending?: boolean }> = ({
     },
   };
 
+  // Use the same data regardless of persistTableHead - let the noDataComponent handle empty state
+  const displayData = data;
+
   return (
     <div style={{ minHeight: minHeight }} ref={tableRef}>
       {/* Add global style for scrollbars */}
@@ -279,7 +286,7 @@ const MyTable: FC<TableProps & { pending?: boolean }> = ({
       <DataTable
         customStyles={customStyles}
         columns={processedColumns}
-        data={data}
+        data={displayData}
         selectableRows={selectable}
         pagination={pagination !== false}
         expandableRows={expanded}
@@ -291,15 +298,38 @@ const MyTable: FC<TableProps & { pending?: boolean }> = ({
         progressPending={pending}
         progressComponent={<CustomLoader />}
         noDataComponent={
-          <div
-            style={{
-              padding: '24px',
-              minHeight: minHeight,
-              maxHeight: maxHeight,
-            }}
-          >
-            No records to display
-          </div>
+          persistTableHead ? (
+            <div
+              style={{
+                padding: '24px',
+                minHeight: `calc(${minHeight} - ${size ? '50px' : '58px'})`,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                color: '#666',
+                fontSize: '14px',
+              }}
+            >
+              {noDataComponent || 'No records to display'}
+            </div>
+          ) : (
+            noDataComponent || (
+              <div
+                style={{
+                  padding: '24px',
+                  minHeight: minHeight,
+                  maxHeight: maxHeight,
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  color: '#666',
+                  fontSize: '14px',
+                }}
+              >
+                No records to display
+              </div>
+            )
+          )
         }
         pointerOnHover={pointerOnHover || !!onRowClicked}
         onRowClicked={onRowClicked}

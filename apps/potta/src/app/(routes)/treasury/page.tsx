@@ -1,12 +1,21 @@
-import RootLayout from '../layout'
-import React from 'react'
- 
- const Treasury = () => {
-   return (
-     <RootLayout>
-        <div>page</div>
-     </RootLayout>
-   )
- }
- 
- export default Treasury
+'use client';
+import { ContextData } from '@potta/components/context';
+import RootLayout from '../layout';
+import React, { useContext } from 'react';
+import TreasuryMainDashboard from './components/TreasuryMainDashboard';
+
+const Treasury = () => {
+  const context = useContext(ContextData);
+
+  return (
+    <RootLayout>
+      <div
+        className={`${context?.layoutMode === 'sidebar' ? 'pl-8' : 'pl-5'}`}
+      >
+        <TreasuryMainDashboard type="treasury" />
+      </div>
+    </RootLayout>
+  );
+};
+
+export default Treasury;

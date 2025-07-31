@@ -1,8 +1,8 @@
 'use client';
 import { ContextData } from '@potta/components/context';
 import { useContext } from 'react';
-import InvoiceTableComponents from '../credit/components/table';
 import RootLayout from '../../layout';
+import InvoiceTable from '../components/table';
 const Invoice = () => {
   const context = useContext(ContextData);
 
@@ -17,7 +17,7 @@ const Invoice = () => {
           placeholder="Choose an option"
         /> */}
         <div className="">
-          <InvoiceTableComponents />
+          <InvoiceTable />
         </div>
       </div>
    </RootLayout>

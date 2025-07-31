@@ -48,6 +48,8 @@ const People = () => {
     fetchEmployees,
     deleteEmployee,
     handlePageChange,
+    updateFilters,
+    filters,
   } = useEmployeeAPI();
 
   // Client-side filtering for department and location
@@ -84,9 +86,9 @@ const People = () => {
 
   const employees = filteredEmployees;
 
-  // Fetch employees on initial load and when filters change
+  // Update filters when they change
   useEffect(() => {
-    fetchEmployees({
+    updateFilters({
       searchTerm,
       statusFilter,
       employmentTypeFilter,
@@ -94,7 +96,7 @@ const People = () => {
       locationFilter,
     });
   }, [
-    fetchEmployees,
+    updateFilters,
     searchTerm,
     statusFilter,
     employmentTypeFilter,
@@ -153,7 +155,6 @@ const People = () => {
       value: employmentTypeFilter,
       onChange: setEmploymentTypeFilter,
     },
-  
   ];
 
   // Handle search change
@@ -259,14 +260,7 @@ const People = () => {
       setShowDeleteModal(false);
       setEmployeeToDelete(null);
       setEmployeeToDeleteName('');
-      // Refresh the employee list with current filters
-      fetchEmployees({
-        searchTerm,
-        statusFilter,
-        employmentTypeFilter,
-        departmentFilter,
-        locationFilter,
-      });
+      // No need to manually refresh - React Query will handle it automatically
     }
   };
 
@@ -300,13 +294,7 @@ const People = () => {
   const handleModalComplete = () => {
     setIsEditMode(false); // Reset edit mode
     closeModalWithoutConfirmation();
-    fetchEmployees({
-      searchTerm,
-      statusFilter,
-      employmentTypeFilter,
-      departmentFilter,
-      locationFilter,
-    }); // Refresh the employee list
+    // No need to manually refresh - React Query will handle it automatically
   };
 
   return (
@@ -327,7 +315,7 @@ const People = () => {
           />
           <div className="flex justify-between items-center">
             <div className="flex items-center gap-4">
-              <div className="text-sm text-gray-600">
+              <div className="text-sm font-medium text-gray-600">
                 Showing {employees.length} employee
                 {employees.length !== 1 ? 's' : ''}
               </div>
@@ -338,7 +326,7 @@ const People = () => {
                 locationFilter !== 'all') && (
                 <button
                   onClick={handleClearAllFilters}
-                  className="text-sm text-blue-600 hover:text-blue-800 font-medium flex items-center gap-1"
+                  className="text-sm text-green-700 hover:text-green-800 font-medium flex items-center gap-1"
                 >
                   <i className="ri-refresh-line"></i>
                   Clear All Filters

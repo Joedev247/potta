@@ -112444,7 +112444,7 @@
   "17160766061106961996": {},
   "11060085106117316117": {},
   "1712015427298210958": {},
-  "11015010582868671369": {
+  "10019389808453271676": {
     "apps/potta": {
       "targets": {
         "lint": {
@@ -112528,91 +112528,5 @@
       }
     }
   },
-  "6399132175410307375": {},
-  "17375122411006215182": {
-    "apps/potta": {
-      "targets": {
-        "lint": {
-          "command": "eslint .",
-          "cache": true,
-          "options": {
-            "cwd": "apps/potta"
-          },
-          "inputs": [
-            "default",
-            "^default",
-            "{workspaceRoot}/.eslintrc.json",
-            "{projectRoot}/.eslintrc.json",
-            "{workspaceRoot}/tools/eslint-rules/**/*",
-            {
-              "externalDependencies": [
-                "eslint"
-              ]
-            }
-          ],
-          "outputs": [
-            "{options.outputFile}"
-          ],
-          "metadata": {
-            "technologies": [
-              "eslint"
-            ],
-            "description": "Runs ESLint on project",
-            "help": {
-              "command": "npx eslint --help",
-              "example": {
-                "options": {
-                  "max-warnings": 0
-                }
-              }
-            }
-          }
-        }
-      }
-    }
-  },
-  "6471282927955811811": {},
-  "8935630887716135700": {
-    "apps/potta": {
-      "targets": {
-        "lint": {
-          "command": "eslint .",
-          "cache": true,
-          "options": {
-            "cwd": "apps/potta"
-          },
-          "inputs": [
-            "default",
-            "^default",
-            "{workspaceRoot}/.eslintrc.json",
-            "{projectRoot}/.eslintrc.json",
-            "{workspaceRoot}/tools/eslint-rules/**/*",
-            {
-              "externalDependencies": [
-                "eslint"
-              ]
-            }
-          ],
-          "outputs": [
-            "{options.outputFile}"
-          ],
-          "metadata": {
-            "technologies": [
-              "eslint"
-            ],
-            "description": "Runs ESLint on project",
-            "help": {
-              "command": "npx eslint --help",
-              "example": {
-                "options": {
-                  "max-warnings": 0
-                }
-              }
-            }
-          }
-        }
-      }
-    }
-  },
-  "10160515927799364448": {}
+  "2156468718162584663": {}
 }

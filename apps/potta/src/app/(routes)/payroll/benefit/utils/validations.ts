@@ -3,6 +3,7 @@ import * as Yup from 'yup';
 export interface BenefitFormData {
   benefitName: string;
   benefitType: string;
+  componentType: string;
   category: string;
   rateType: string;
   cycle: string;
@@ -36,6 +37,10 @@ export const createBenefitValidationSchema = (limits: ValidationLimits) => {
     benefitType: Yup.string()
       .required('Benefit type is required')
       .oneOf(['Financial', 'Service', 'Redeemable'], 'Invalid benefit type'),
+
+    componentType: Yup.string()
+      .required('Component type is required')
+      .oneOf(['earnings', 'deductions'], 'Invalid component type'),
 
     category: Yup.string().required('Category is required'),
 

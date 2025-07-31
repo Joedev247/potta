@@ -172,18 +172,8 @@ const RestockModal: React.FC<RestockModalProps> = ({ open, setOpen }) => {
         </div>
 
         <div className="flex-grow" />
-        <div className="text-center md:text-right md:flex space-x-4 fixed bottom-0 left-0 right-0 justify-center bg-white p-4 border-t">
-          <div className="flex gap-2 w-full max-w-4xl justify-between">
-            <Button
-              text="Cancel"
-              type="button"
-              theme="danger"
-              onClick={() => {
-                setOpen(false);
-                reset();
-                setSelectedProduct(null);
-              }}
-            />
+        <div className="text-center md:text-right md:flex space-x-4 fixed bottom-0 left-0 right-0 justify-center bg-white  border-t">
+          <div className="flex gap-2 w-full p-4 justify-end">
             <Button
               text={isSubmitting ? 'Restocking...' : 'Restock'}
               type="submit"

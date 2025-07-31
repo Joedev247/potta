@@ -4,28 +4,40 @@ import React, { useState } from 'react';
 import { createPortal } from 'react-dom';
 
 import ProductStepperModal from './ProductStepperModal';
-import CreateProduct from './slides/components/create_product/inventory';
-import { PopoverAction } from '@potta/components/tableActionsPopover';
-import { NextPopover } from '@potta/components/popover';
-
-import CreateBundleProduct from './slides/components/create_product/bundle';
+import {
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuItem,
+} from '@potta/components/shadcn/dropdown';
 import { Proportions, SquareStack } from 'lucide-react';
 import RestockModal from './slides/components/restock';
 import { useInventory } from '../_utils/context';
 import DynamicFilter from '@potta/components/dynamic-filter';
 
 const Filter = () => {
-  const [selectedValue, setSelectedValue] = useState('createdAt:ASC');
-  const [searchValue, setSearchValue] = useState('');
-  const [isCreateOpen, setIsCreateOpen] = useState(false);
-  const [isImportOpen, setIsImportOpen] = useState(false);
-  const [isBundleOpen, setIsBundleOpen] = useState(false);
+  const { selectedProduct, filters, setFilters } = useInventory();
+
+  const [selectedValue, setSelectedValue] = useState(filters.sort);
+  const [searchValue, setSearchValue] = useState(filters.search);
+  const [selectedProductType, setSelectedProductType] = useState(
+    filters.productType
+  );
+  const [isStepperOpen, setIsStepperOpen] = useState(false);
+  const [stepperProductType, setStepperProductType] = useState<
+    'INVENTORY' | 'NON_INVENTORY' | 'ASSEMBLY' | 'SIMPLEGROUPS'
+  >('INVENTORY');
   const [isRestockOpen, setIsRestockOpen] = useState(false);
-  const [openPopover, setOpenPopover] = useState<string | null>(null);
-  const { selectedProduct } = useInventory();
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
   const handleChange = (value: string) => {
     setSelectedValue(value);
+    setFilters({ ...filters, sort: value });
+  };
+
+  const handleProductTypeChange = (value: string) => {
+    setSelectedProductType(value);
+    setFilters({ ...filters, productType: value });
   };
 
   const handleRestock = () => {
@@ -34,37 +46,29 @@ const Filter = () => {
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchValue(e.target.value);
+    setFilters({ ...filters, search: e.target.value });
   };
 
   const handleSearchClear = () => {
     setSearchValue('');
+    setFilters({ ...filters, search: '' });
   };
 
-  const actions: PopoverAction[] = [
-    {
-      label: 'Physical Item',
-      onClick: () => {
-        setIsCreateOpen(true);
-      },
-      className: 'hover:bg-gray-200',
-    },
-    {
-      label: 'Service Item',
-      onClick: () => {
-        setIsImportOpen(true);
-      },
-      className: 'hover:bg-gray-200',
-    },
-    {
-      label: 'Bundle Items',
-      onClick: () => {
-        setIsBundleOpen(true);
-      },
-      className: 'hover:bg-gray-200',
-    },
-  ];
-
   const filterConfig = [
+    {
+      key: 'productType',
+      label: 'Product Type',
+      options: [
+        { label: 'All Products', value: 'ALL' },
+        { label: 'Inventory', value: 'INVENTORY' },
+        { label: 'Non-Inventory', value: 'NON_INVENTORY' },
+        { label: 'Assembly', value: 'ASSEMBLY' },
+        { label: 'Groups', value: 'SIMPLEGROUPS' },
+      ],
+      value: selectedProductType,
+      onChange: handleProductTypeChange,
+      selectClassName: 'min-w-[160px]',
+    },
     {
       key: 'sort',
       label: 'Sort by',
@@ -82,7 +86,7 @@ const Filter = () => {
 
   return (
     <>
-      <div className="w-full flex justify-between items-center">
+      <div className="w-full flex justify-between items-center overflow-visible">
         {/* Left side - Dynamic Filter */}
         <div className="flex-1">
           <DynamicFilter
@@ -96,7 +100,7 @@ const Filter = () => {
         </div>
 
         {/* Right side - Action Buttons */}
-        <div className="flex items-center space-x-2 ml-4">
+        <div className="flex items-center space-x-2 ml-4 relative">
           <Button
             type={'button'}
             color
@@ -120,29 +124,72 @@ const Filter = () => {
             icon={<img src="/images/export.svg" />}
             theme="lightBlue"
           />
-          <NextPopover
-            rowUuid={'1'}
-            actions={actions}
-            openPopover={openPopover}
-            setOpenPopover={setOpenPopover}
-            triggerButton={
-              <Button
-                text={'New Item'}
-                type={'button'}
-                icon={<i className="ri-file-add-line"></i>}
-              />
-            }
-          />
+          <DropdownMenu open={isDropdownOpen} onOpenChange={setIsDropdownOpen}>
+            <DropdownMenuTrigger asChild>
+              <button
+                className="px-4 py-2.5 bg-[#005D1F] text-white hover:bg-green-900 flex items-center gap-2 "
+                onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+              >
+                <i className="ri-file-add-line"></i>
+                New Item
+              </button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent
+              align="end"
+              className="w-full z-[9999]"
+              sideOffset={5}
+              collisionPadding={10}
+            >
+              <DropdownMenuItem
+                onClick={() => {
+                  setStepperProductType('INVENTORY');
+                  setIsStepperOpen(true);
+                  setIsDropdownOpen(false);
+                }}
+              >
+                Inventory
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                onClick={() => {
+                  setStepperProductType('NON_INVENTORY');
+                  setIsStepperOpen(true);
+                  setIsDropdownOpen(false);
+                }}
+              >
+                Non-Inventory
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                onClick={() => {
+                  setStepperProductType('ASSEMBLY');
+                  setIsStepperOpen(true);
+                  setIsDropdownOpen(false);
+                }}
+              >
+                Assembly
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                onClick={() => {
+                  setStepperProductType('SIMPLEGROUPS');
+                  setIsStepperOpen(true);
+                  setIsDropdownOpen(false);
+                }}
+              >
+                Groups
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
       </div>
 
-      <ProductStepperModal open={isCreateOpen} setOpen={setIsCreateOpen} />
-      <CreateProduct
-        open={isImportOpen}
-        setOpen={setIsImportOpen}
-        productType="SERVICE"
+      <ProductStepperModal
+        open={isStepperOpen}
+        setOpen={setIsStepperOpen}
+        productType={stepperProductType}
+        onComplete={() => {
+          setIsStepperOpen(false);
+          // Optionally refresh the product list
+        }}
       />
-      <CreateBundleProduct open={isBundleOpen} setOpen={setIsBundleOpen} />
       {typeof window !== 'undefined' &&
         createPortal(
           <RestockModal open={isRestockOpen} setOpen={setIsRestockOpen} />,

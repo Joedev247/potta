@@ -1,6 +1,6 @@
 import React from 'react';
 import moment from 'moment';
-import MyTable from '@potta/components/table';
+import DataGrid from '@potta/app/(routes)/account_receivables/components/DataGrid';
 import {
   DropdownMenu,
   DropdownMenuTrigger,
@@ -114,116 +114,154 @@ const BenefitTable: React.FC<BenefitTableProps> = ({
     return cycleMap[cycle as keyof typeof cycleMap] || cycle;
   };
 
+  const determineRateType = (rate: string, value: string) => {
+    const rateNum = parseFloat(rate);
+    const valueNum = parseFloat(value);
+
+    // If rate is a reasonable percentage value (1-100), it's likely a percentage
+    if (rateNum >= 1 && rateNum <= 100) {
+      return 'Percentage';
+    }
+
+    // If the rate is the same as the value, it's likely a flat rate
+    if (valueNum > 0 && Math.abs(rateNum - valueNum) < 1) {
+      return 'Flat Rate';
+    }
+
+    // If value is very large, it's likely a flat rate
+    if (valueNum > 100) {
+      return 'Flat Rate';
+    }
+
+    // Default to flat rate
+    return 'Flat Rate';
+  };
+
+  const formatRate = (rate: string, value: string) => {
+    if (!rate || rate === '0') return 'N/A';
+
+    // If rate is already a percentage (contains %), return as is
+    if (rate.includes('%')) {
+      return rate;
+    }
+
+    const rateNum = parseFloat(rate);
+    if (isNaN(rateNum)) return 'N/A';
+
+    const rateType = determineRateType(rate, value);
+
+    if (rateType === 'Percentage') {
+      return `${rateNum.toFixed(1)}%`;
+    } else {
+      return formatCurrency(rate);
+    }
+  };
+
   const columns = [
     {
-      name: 'Benefit',
-      selector: (row: Benefit) => row.name,
-      sortable: true,
-      width: '250px',
-      cell: (row: Benefit) => (
+      accessorKey: 'name',
+      header: 'Benefit',
+      cell: ({ row: { original } }) => (
         <div className="flex items-center py-2">
           <div className="flex-shrink-0 h-10 w-10 bg-gray-100 rounded-full flex items-center justify-center">
-            {getBenefitTypeIcon(row.type)}
+            {getBenefitTypeIcon(original.type)}
           </div>
           <div className="ml-3">
-            <div className="text-sm font-medium text-gray-900">{row.name}</div>
+            <div className="text-sm font-medium text-gray-900">
+              {original.name}
+            </div>
             <div
               className="text-xs text-gray-500 truncate max-w-[180px]"
-              title={row.description}
+              title={original.description}
             >
-              {row.description || 'No description'}
+              {original.description || 'No description'}
             </div>
           </div>
         </div>
       ),
     },
     {
-      name: 'Type & Category',
-      selector: (row: Benefit) => row.type,
-      sortable: true,
-      cell: (row: Benefit) => (
+      accessorKey: 'type',
+      header: 'Type & Category',
+      cell: ({ row: { original } }) => (
         <div>
           <div className="text-sm font-medium text-gray-900">
-            {row.type.charAt(0) + row.type.slice(1).toLowerCase()}
-          </div>
-          <div className="text-xs text-gray-500">{formatCycle(row.cycle)}</div>
-        </div>
-      ),
-    },
-    {
-      name: 'Value & Rate',
-      selector: (row: Benefit) => row.value,
-      sortable: true,
-      cell: (row: Benefit) => (
-        <div>
-          <div className="text-sm font-medium text-gray-900">
-            {formatCurrency(row.value)}
+            {original.type.charAt(0) + original.type.slice(1).toLowerCase()}
           </div>
           <div className="text-xs text-gray-500">
-            Rate: {formatPercentageWithoutDecimals(parseFloat(row.rate))}
+            {formatCycle(original.cycle)}
           </div>
         </div>
       ),
     },
     {
-      name: 'Salary Cap',
-      selector: (row: Benefit) => row.salary_cap,
-      sortable: true,
-      cell: (row: Benefit) => (
-        <div className="text-sm text-gray-900">
-          {formatCurrency(row.salary_cap)}
+      accessorKey: 'value',
+      header: 'Value & Rate',
+      cell: ({ row: { original } }) => (
+        <div>
+          <div className="text-sm font-medium text-gray-900">
+            {formatCurrency(original.value)}
+          </div>
+          <div className="text-xs text-gray-500">
+            Rate: {formatRate(original.rate, original.value)}
+          </div>
         </div>
       ),
     },
     {
-      name: 'Tax Info',
-      selector: (row: Benefit) => row.is_taxable.toString(),
-      sortable: true,
-      cell: (row: Benefit) => (
+      accessorKey: 'salary_cap',
+      header: 'Salary Cap',
+      cell: ({ row: { original } }) => (
+        <div className="text-sm text-gray-900">
+          {formatCurrency(original.salary_cap)}
+        </div>
+      ),
+    },
+    {
+      accessorKey: 'is_taxable',
+      header: 'Tax Info',
+      cell: ({ row: { original } }) => (
         <div>
           <div className="text-sm text-gray-900">
-            {row.is_taxable ? 'Taxable' : 'Tax-free'}
+            {original.is_taxable ? 'Taxable' : 'Tax-free'}
           </div>
-          {row.is_taxable && row.tax_cap && (
+          {original.is_taxable && original.tax_cap && (
             <div className="text-xs text-gray-500">
-              Cap: {formatCurrency(row.tax_cap)}
+              Cap: {formatCurrency(original.tax_cap)}
             </div>
           )}
         </div>
       ),
     },
     {
-      name: 'Provider',
-      selector: (row: Benefit) => row.provider || '',
-      sortable: true,
-      cell: (row: Benefit) => (
+      accessorKey: 'provider',
+      header: 'Provider',
+      cell: ({ row: { original } }) => (
         <div className="text-sm text-gray-900">
-          {row.provider || 'Internal'}
+          {original.provider || 'Internal'}
         </div>
       ),
     },
     {
-      name: 'Expires',
-      selector: (row: Benefit) => row.expires_at || '',
-      sortable: true,
-      cell: (row: Benefit) => (
+      accessorKey: 'expires_at',
+      header: 'Expires',
+      cell: ({ row: { original } }) => (
         <div className="text-sm text-gray-900">
-          {row.expires_at
-            ? moment(row.expires_at).format('MMM DD, YYYY')
+          {original.expires_at
+            ? moment(original.expires_at).format('MMM DD, YYYY')
             : 'No expiry'}
         </div>
       ),
     },
     {
-      name: 'Status',
-      selector: (row: Benefit) => row.status,
-      sortable: true,
-      cell: (row: Benefit) => getStatusBadge(row.status),
+      accessorKey: 'status',
+      header: 'Status',
+      cell: ({ row: { original } }) => getStatusBadge(original.status),
     },
     {
-      name: 'Actions',
-      selector: (row: Benefit) => '',
-      cell: (row: Benefit) => (
+      accessorKey: 'actions',
+      header: 'Actions',
+      cell: ({ row: { original } }) => (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <button className="p-2 hover:bg-gray-100 rounded-full transition-colors">
@@ -231,14 +269,14 @@ const BenefitTable: React.FC<BenefitTableProps> = ({
             </button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="w-40">
-            <DropdownMenuItem onClick={() => onViewBenefit(row.uuid)}>
+            <DropdownMenuItem onClick={() => onViewBenefit(original.uuid)}>
               <i className="ri-eye-line mr-2"></i> View Details
             </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => onEditBenefit(row.uuid)}>
+            <DropdownMenuItem onClick={() => onEditBenefit(original.uuid)}>
               <i className="ri-edit-line mr-2"></i> Edit
             </DropdownMenuItem>
             {/* <DropdownMenuItem
-              onClick={() => onDeleteBenefit(row.uuid)}
+              onClick={() => onDeleteBenefit(original.uuid)}
               className="text-red-600"
             >
               <i className="ri-delete-bin-line mr-2"></i> Delete
@@ -251,17 +289,18 @@ const BenefitTable: React.FC<BenefitTableProps> = ({
 
   return (
     <div className="bg-white">
-      <MyTable
+      <DataGrid
         columns={columns}
-        data={benefits}
-        ExpandableComponent={null}
-        expanded={false}
-        pagination={benefits.length > 9}
-        paginationTotalRows={totalPages * pageSize}
-        onChangePage={onPageChange}
-        onRowClicked={onRowClick}
-        pointerOnHover={true}
-        progressPending={isLoading}
+        data={benefits || []}
+        onRowClick={onRowClick}
+        isLoading={isLoading}
+        noDataComponent={
+          <div className="flex flex-col items-center justify-center py-12 text-gray-500">
+            <i className="ri-inbox-line text-4xl mb-4"></i>
+            <p className="text-lg font-medium mb-2">No benefits found</p>
+            <p className="text-sm">Create your first benefit to get started</p>
+          </div>
+        }
       />
     </div>
   );

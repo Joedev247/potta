@@ -19,7 +19,7 @@ import {
   DropdownMenuTrigger,
 } from '@potta/components/shadcn/dropdown';
 import { Button } from '@potta/components/shadcn/button';
-import MyTable from '@potta/components/table';
+import DataGrid from '@potta/app/(routes)/account_receivables/components/DataGrid';
 import {
   PaymentMethod,
   PaymentRequest,
@@ -29,6 +29,7 @@ import RightSideModal from './RightSideModal';
 import ReimbursementDetails from './ReimbursementDetails';
 import ReimbursementForm from './ReimbursementForm';
 import Slider from '@potta/components/slideover';
+import { ColumnDef } from '@tanstack/react-table';
 
 interface PaymentRequestDataTableWrapperProps {
   requests: PaymentRequest[];
@@ -85,129 +86,107 @@ export function PaymentRequestDataTableWrapper({
   const [editOpen, setEditOpen] = useState(false);
   const [selectedRow, setSelectedRow] = useState<any>(null);
 
-  // Define columns for react-data-table-component
-  const columns = React.useMemo(
-    () => [
-      {
-        name: 'Employee',
-        selector: (row: any) => row.madeBy,
-        sortable: true,
-        cell: (row: any) => <span className="font-semibold">{row.madeBy}</span>,
-        minWidth: '120px',
-      },
-      {
-        name: 'Merchant',
-        selector: (row: any) => row.merchant,
-        sortable: true,
-        minWidth: '120px',
-      },
-      {
-        name: 'Amount',
-        selector: (row: any) => row.amount,
-        sortable: true,
-        cell: (row: any) => (
-          <span className="font-medium">
-            {row.currency} {row.amount?.toLocaleString()}
+  // Define columns for TanStack Table
+  const columns: ColumnDef<PaymentRequest>[] = [
+    {
+      accessorKey: 'madeBy',
+      header: 'Employee',
+      cell: ({ row: { original } }) => (
+        <span className="font-semibold">{original.madeBy}</span>
+      ),
+    },
+    {
+      accessorKey: 'merchant',
+      header: 'Merchant',
+      cell: ({ row: { original } }) => original.merchant,
+    },
+    {
+      accessorKey: 'amount',
+      header: 'Amount',
+      cell: ({ row: { original } }) => (
+        <span className="font-medium">
+          {original.currency} {original.amount?.toLocaleString()}
+        </span>
+      ),
+    },
+    {
+      accessorKey: 'memo',
+      header: 'Memo',
+      cell: ({ row: { original } }) => original.memo,
+    },
+    {
+      accessorKey: 'status',
+      header: 'Status',
+      cell: ({ row: { original } }) => {
+        let color = 'text-yellow-700';
+        if (original.status?.toLowerCase() === 'approved')
+          color = 'text-green-700';
+        if (original.status?.toLowerCase() === 'rejected')
+          color = 'text-red-700';
+        return (
+          <span className={`text-sm font-bold ${color}`}>
+            {original.status?.charAt(0).toUpperCase() +
+              original.status?.slice(1)}
           </span>
-        ),
-        minWidth: '100px',
+        );
       },
-      {
-        name: 'Memo',
-        selector: (row: any) => row.memo,
-        sortable: false,
-        minWidth: '120px',
-      },
-      {
-        name: 'Status',
-        selector: (row: any) => row.status,
-        sortable: true,
-        cell: (row: any) => {
-          let color = 'text-yellow-700';
-          if (row.status?.toLowerCase() === 'approved')
-            color = 'text-green-700';
-          if (row.status?.toLowerCase() === 'rejected') color = 'text-red-700';
-          return (
-            <span className={`text-sm font-bold ${color}`}>
-              {row.status?.charAt(0).toUpperCase() + row.status?.slice(1)}
-            </span>
-          );
-        },
-        minWidth: '100px',
-      },
-      {
-        name: 'Category',
-        selector: (row: any) => row.type,
-        sortable: true,
-        cell: (row: any) => (
-          <span className="capitalize">{row.type?.replace(/_/g, ' ')}</span>
-        ),
-        minWidth: '120px',
-      },
-      {
-        name: 'Actions',
-        button: true,
-        allowOverflow: true,
-        ignoreRowClick: true,
-        width: '80px',
-        cell: (row: any) => (
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button
-                variant="ghost"
-                className="h-8 w-8 p-0 text-gray-500 hover:text-gray-800 hover:bg-transparent focus:bg-transparent active:bg-transparent"
-              >
-                <span className="sr-only">Open menu</span>
-                <MoreVertical className="h-4 w-4" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              <DropdownMenuItem
-                onClick={() => {
-                  setSelectedRow(row);
-                  setDetailsOpen(true);
-                }}
-              >
-                View Details
-              </DropdownMenuItem>
-              <DropdownMenuItem
-                onClick={() => {
-                  setSelectedRow(row);
-                  setEditOpen(true);
-                }}
-              >
-                Edit
-              </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => alert(`Rejecting ${row.id}`)}>
-                Reject
-              </DropdownMenuItem>
-              <DropdownMenuItem
-                className="text-red-600"
-                onClick={() => alert(`Deleting ${row.id}`)}
-              >
-                Delete
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-        ),
-      },
-    ],
-    []
-  );
+    },
+    {
+      accessorKey: 'type',
+      header: 'Category',
+      cell: ({ row: { original } }) => (
+        <span className="capitalize">{original.type?.replace(/_/g, ' ')}</span>
+      ),
+    },
+    {
+      id: 'actions',
+      header: 'Actions',
+      cell: ({ row: { original } }) => (
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button
+              variant="ghost"
+              className="h-8 w-8 p-0 text-gray-500 hover:text-gray-800 hover:bg-transparent focus:bg-transparent active:bg-transparent"
+            >
+              <span className="sr-only">Open menu</span>
+              <MoreVertical className="h-4 w-4" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            <DropdownMenuItem
+              onClick={() => {
+                setSelectedRow(original);
+                setDetailsOpen(true);
+              }}
+            >
+              View Details
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              onClick={() => {
+                setSelectedRow(original);
+                setEditOpen(true);
+              }}
+            >
+              Edit
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={() => alert(`Rejecting ${original.id}`)}>
+              Reject
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              className="text-red-600"
+              onClick={() => alert(`Deleting ${original.id}`)}
+            >
+              Delete
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      ),
+    },
+  ];
 
   return (
     <>
-      <MyTable
-        columns={columns}
-        data={requests}
-        selectable={true}
-        pagination={false}
-        pending={isLoading}
-        color={false}
-        size={false}
-        expanded={false}
-        ExpandableComponent={null}
-      />
+      <DataGrid columns={columns} data={requests} isLoading={isLoading} />
       <RightSideModal
         open={detailsOpen}
         setOpen={setDetailsOpen}

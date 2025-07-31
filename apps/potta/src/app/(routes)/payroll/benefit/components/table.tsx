@@ -121,21 +121,17 @@ const TableBenefit = () => {
         />
       </div>
 
-      {isFetching ? (
-        <CustomLoader />
-      ) : (
-        <BenefitTable
-          benefits={benefits}
-          onViewBenefit={handleViewBenefit}
-          onEditBenefit={handleEditBenefit}
-          onDeleteBenefit={handleDeleteBenefit}
-          onRowClick={handleRowClick}
-          totalPages={totalPages}
-          pageSize={pageSize}
-          onPageChange={handlePageChange}
-          isLoading={isFetching}
-        />
-      )}
+      <BenefitTable
+        benefits={benefits || []}
+        onViewBenefit={handleViewBenefit}
+        onEditBenefit={handleEditBenefit}
+        onDeleteBenefit={handleDeleteBenefit}
+        onRowClick={handleRowClick}
+        totalPages={totalPages}
+        pageSize={pageSize}
+        onPageChange={handlePageChange}
+        isLoading={isFetching}
+      />
 
       {/* Action Modals */}
       <ViewBenefit

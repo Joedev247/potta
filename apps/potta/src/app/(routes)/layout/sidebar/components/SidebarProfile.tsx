@@ -50,23 +50,31 @@ const SidebarProfile: React.FC<SidebarProfileProps> = ({ context }) => {
 
   return (
     <>
-      <div className="absolute cursor-pointer mb-10 ml-6 bottom-0">
-        <div className="flex-1 space-y-7 flex-col">
-          <Icon
-            onClick={() => {
-              context?.setToggle(!context?.toggle);
-            }}
-            icon="Menu-1"
-            size={23}
-          />
+      <div className="absolute bottom-0 left-0 right-0 p-4">
+        <div className="flex flex-col items-center space-y-4">
+          {/* Menu Toggle Button */}
+          <div className="w-full">
+            <button
+              onClick={() => {
+                context?.setToggle(!context?.toggle);
+              }}
+              className={`p-2 hover:bg-white/10 rounded-md transition-colors w-full ${
+                context?.toggle ? 'flex justify-center' : 'flex justify-start'
+              }`}
+            >
+              <Icon icon="Menu-1" size={23} className="" />
+            </button>
+          </div>
 
           {/* Profile Section */}
-          <div className="relative">
+          <div className="relative w-full">
             <button
               ref={buttonRef}
               onClick={() => setShowUserMenu(!showUserMenu)}
-              className={`flex items-center rounded-sm -ml-[5px] transition-all duration-200 group w-full ${
-                context?.toggle ? 'justify-start' : 'space-x-3'
+              className={`flex items-center rounded-md transition-all duration-200 group w-full ${
+                context?.toggle
+                  ? 'justify-center px-2'
+                  : 'justify-start  space-x-3'
               }`}
             >
               {/* {user?.branch?.organization?.logo ? (
@@ -82,23 +90,23 @@ const SidebarProfile: React.FC<SidebarProfileProps> = ({ context }) => {
               )} */}
 
               {/* Profile Icon with Green Border */}
-              <div className="h-10 min-w-10 bg-white rounded-full flex items-center justify-center shadow-sm border-2 border-green-500">
-                <User className="h-5 min-w-5 text-green-500" />
+              <div className="h-10 w-10 bg-white rounded-full flex items-center justify-center shadow-sm border-2 border-green-800 flex-shrink-0">
+                <User className="h-5 w-5 text-green-800" />
               </div>
 
               {!context?.toggle && (
-                <div className="flex-1 text-left">
-                  <p className="text-sm font-medium truncate">
+                <div className="flex-1 text-left min-w-0">
+                  <p className="text-sm font-medium  truncate">
                     {user?.user?.firstName || user?.user?.username || 'User'}
                   </p>
-                  <p className="text-xs text-gray-400 truncate">
+                  <p className="text-xs text-gray-600 truncate">
                     {user?.user?.email || ''}
                   </p>
                 </div>
               )}
 
               {!context?.toggle && (
-                <ChevronDown className="h-4 w-4 text-white transition-transform duration-200 group-hover:rotate-180" />
+                <ChevronDown className="h-4 w-4 text-white transition-transform duration-200 group-hover:rotate-180 flex-shrink-0" />
               )}
             </button>
 
@@ -106,11 +114,11 @@ const SidebarProfile: React.FC<SidebarProfileProps> = ({ context }) => {
             {showUserMenu && (
               <div
                 ref={dropdownRef}
-                className="absolute bottom-full left-0 mb-2 w-56 bg-white shadow-lg border border-gray-200 z-[9999]"
+                className="absolute mb-2 w-56 bg-white shadow-sm border border-gray-200 rounded-sm z-[9999]"
                 style={{
                   position: 'fixed',
-                  bottom: '80px',
-                  left: context?.toggle ? '80px' : '200px',
+                  bottom: '1px',
+                  left: context?.toggle ? '70px' : '100px',
                   zIndex: 9999,
                 }}
               >

@@ -3,7 +3,7 @@ import React, { useContext, useState } from 'react';
 import { ContextData } from '@potta/components/context';
 import HoldOrderButton from '../holdOn';
 import { toast } from 'sonner';
-import ReceiptPrinter from '../../../print/page';
+import { ReceiptPrinter } from '../../../print/receiptPrinter';
 import { LineItem, PaymentMethod } from '@potta/app/(routes)/pos/utils/types';
 import { SalesReceiptPayload } from '@potta/app/(routes)/pos/utils/validation';
 import { posApi } from '@potta/app/(routes)/pos/utils/api';
@@ -148,71 +148,87 @@ const PayCash = () => {
   };
 
   return (
-    <div className="p-10 h-[60vh] space-y-40">
-      <div className="flex justify-between items-center">
-        <h3 className="text-xl">Cash Payment</h3>
+    <div className="p-8 h-full bg-white rounded-lg shadow-sm border border-gray-100">
+      <div className="flex justify-between items-center mb-8">
+        <h3 className="text-2xl font-semibold text-gray-800">Cash Payment</h3>
         {lastOrderData && (
           <button
             onClick={handleReprint}
-            className="flex items-center gap-2 px-4 py-2 text-sm text-gray-600 hover:text-gray-900"
+            className="flex items-center gap-2 px-4 py-2 text-sm text-gray-600 hover:text-gray-900 bg-gray-100 rounded-lg transition-colors"
           >
             <i className="w-4 h-4 ri-printer-line"></i>
             Reprint Last Receipt
           </button>
         )}
       </div>
-      <div className="w-full">
-        <div className="w-full min-h-28">
-          <span className="mb-3 text-gray-900 font-medium">
-            Enter Cash Amount
-          </span>
-          <input
-            id="cash_amount"
-            placeholder="00.00"
-            type="number"
-            name="cashAmount"
-            value={cashAmount || ''}
-            onChange={handleCashInput}
-            className="w-full py-2.5 px-4 border border-gray-200 rounded-[2px] outline-none mt-2 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500
-   "
-          />
-          {error ? (
-            <small className="col-span-2 text-red-500">{error}</small>
-          ) : null}
-        </div>
-      </div>
-      <div className="w-full flex justify-between my-10">
-        <HoldOrderButton />
-        <div className="w-96 flex-col space-y-4">
-          <div className="w-full flex justify-between border-b py-2">
-            <span className="font-thin">Total</span>
-            <p className="font-semibold text-lg">{total.toFixed(2)} XAF</p>
-          </div>
-          <div className="w-full flex justify-between border-b py-2">
-            <span className="font-thin">Cash Amount</span>
-            <p className="font-semibold text-lg">{cashAmount.toFixed(2)} XAF</p>
-          </div>
-          <div className="w-full flex justify-between py-2">
-            <span className="font-thin">Change</span>
-            <p
-              className={`font-semibold text-lg ${
-                change < 0 ? 'text-red-500' : ''
-              }`}
-            >
-              {change.toFixed(2)} XAF
-            </p>
-          </div>
-          <div className="w-full mt-5">
-            <Button
-              width="full"
-              text={isProcessing ? 'Processing...' : 'Complete'}
-              type="button"
-              onClick={handleComplete}
-              disabled={cashAmount < total || cashAmount === 0 || isProcessing}
+
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        {/* Left Column - Cash Input */}
+        <div className="space-y-6">
+          <div className="bg-gray-50 rounded-lg p-6">
+            <h4 className="text-lg font-medium text-gray-800 mb-4">
+              Enter Cash Amount
+            </h4>
+            <input
+              id="cash_amount"
+              placeholder="00.00"
+              type="number"
+              name="cashAmount"
+              value={cashAmount || ''}
+              onChange={handleCashInput}
+              className="w-full py-3 px-4 border border-gray-300 rounded-lg outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 text-lg font-medium"
             />
+            {error ? (
+              <small className="text-red-500 mt-2 block">{error}</small>
+            ) : null}
+          </div>
+
+          <HoldOrderButton />
+        </div>
+
+        {/* Right Column - Payment Summary */}
+        <div className="bg-gray-50 rounded-lg p-6">
+          <h4 className="text-lg font-medium text-gray-800 mb-4">
+            Payment Summary
+          </h4>
+          <div className="space-y-4">
+            <div className="w-full flex justify-between py-3 border-b border-gray-200">
+              <span className="font-medium text-gray-600">Total</span>
+              <p className="font-semibold text-lg text-gray-800">
+                {total.toFixed(2)} XAF
+              </p>
+            </div>
+            <div className="w-full flex justify-between py-3 border-b border-gray-200">
+              <span className="font-medium text-gray-600">Cash Amount</span>
+              <p className="font-semibold text-lg text-gray-800">
+                {cashAmount.toFixed(2)} XAF
+              </p>
+            </div>
+            <div className="w-full flex justify-between py-3 bg-green-50 rounded-lg px-3">
+              <span className="font-semibold text-gray-800">Change</span>
+              <p
+                className={`font-bold text-xl ${
+                  change < 0 ? 'text-red-500' : 'text-green-700'
+                }`}
+              >
+                {change.toFixed(2)} XAF
+              </p>
+            </div>
+            <div className="w-full mt-6">
+              <Button
+                width="full"
+                text={isProcessing ? 'Processing...' : 'Complete Payment'}
+                type="button"
+                onClick={handleComplete}
+                disabled={
+                  cashAmount < total || cashAmount === 0 || isProcessing
+                }
+              />
+            </div>
           </div>
         </div>
       </div>
+
       {printer.getIframeElement()}
     </div>
   );

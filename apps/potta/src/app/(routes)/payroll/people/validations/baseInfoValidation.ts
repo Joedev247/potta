@@ -46,7 +46,7 @@ export const baseInfoValidationSchema = yup.object().shape({
       }
       return age >= 16;
     }),
-  roleId: yup.string().required('Job Title / Role is required'),
+  roleName: yup.string().required('Job Title / Role is required'),
   employmentType: yup.string().required('Employment type is required'),
 
   employmentDate: yup

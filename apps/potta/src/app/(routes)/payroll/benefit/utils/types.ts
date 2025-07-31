@@ -12,6 +12,7 @@ export interface BenefitPayload {
   name: string;
   description: string;
   type: BenefitType;
+  componentType?: string; // BENEFIT_CATEGORY_ENUM value
   value: number;
   cycle?: CycleType;
   is_taxable?: boolean;
@@ -24,6 +25,16 @@ export interface BenefitPayload {
   salary_cap?: number;
   max_amount?: number;
   provider: string;
+
+  // Additional DTO fields
+  isPercentage?: boolean;
+  percentageOfBase?: number;
+  minValue?: number;
+  maxValue?: number;
+  minimumWageCompliant?: boolean;
+  yearsOfServiceMin?: number;
+  yearsOfServiceMax?: number;
+  isNeverTaxable?: boolean;
 }
 
 export interface FilterParams {

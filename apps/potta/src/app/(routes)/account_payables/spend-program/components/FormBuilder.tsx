@@ -24,13 +24,12 @@ import {
 import Select from '@potta/components/select';
 import { defaultQuestions } from '../utils/values';
 import { FormQuestion, QuestionType } from '../utils/types';
-
+import { DivideCircle } from 'lucide-react';
 
 interface FormBuilderProps {
   formState: { questions: FormQuestion[] };
   setFormState: (state: { questions: FormQuestion[] }) => void;
 }
-
 
 const BASIC_TYPES = [
   { type: 'text', label: 'Text', icon: <FiType /> },
@@ -154,8 +153,24 @@ const FormBuilder: React.FC<FormBuilderProps> = ({
 
   return (
     <div className="bg-white border border-gray-200 p-6 min-h-[400px] w-full pb-0">
-      <h3 className="text-xl font-semibold mb-2">Request form</h3>
-      <div className="text-gray-600 mb-6">Add questions</div>
+      <div className="flex items-center mb-4 justify-between">
+        <div className="">
+          <h3 className="text-xl font-semibold mb-2">Request form</h3>
+          <div className="text-gray-600">Add questions</div>
+        </div>
+        <div className='flex items-center gap-2'>
+          {' '}
+          <button
+            className="flex items-center justify-center w-10 h-10 rounded-full bg-green-700 hover:bg-green-800 text-white text-2xl shadow transition-all focus:outline-none focus:ring-2 focus:ring-green-400"
+            onClick={() => setShowTypeModal(true)}
+            aria-label="Add question"
+            type="button"
+          >
+            <FiPlus />
+          </button>
+          <label className="block text-sm font-medium">Add question</label>
+        </div>
+      </div>
       {/* Make the question cards scrollable */}
       <div className="flex flex-col gap-6 overflow-y-auto max-h-[65vh] custom-scrollbar">
         {questions.map((q, idx) => (
@@ -172,15 +187,6 @@ const FormBuilder: React.FC<FormBuilderProps> = ({
         ))}
       </div>
       <div className="mt-2 flex items-center gap-2">
-        <button
-          className="flex items-center justify-center w-10 h-10 rounded-full bg-green-700 hover:bg-green-800 text-white text-2xl shadow transition-all focus:outline-none focus:ring-2 focus:ring-green-400"
-          onClick={() => setShowTypeModal(true)}
-          aria-label="Add question"
-          type="button"
-        >
-          <FiPlus />
-        </button>
-        <label className="block text-sm font-medium">Add question</label>
         {/* Popover/modal for type selection */}
         {showTypeModal && (
           <>

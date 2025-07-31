@@ -15,7 +15,7 @@ interface CurrencyInfo {
 // Currency Input Component
 interface CurrencyInputProps {
   label?: string;
-  value?: string;
+  value?: string | number;
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   currency?: string;
   placeholder?: string;

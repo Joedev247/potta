@@ -1,23 +1,21 @@
 import React from 'react';
-import MyTable from '@potta/components/table';
+import DataGrid from '@potta/app/(routes)/account_receivables/components/DataGrid';
 
 const ShiftsTab = ({ employee }: { employee: any }) => (
   <div className="mt-6">
-    <MyTable
+    <DataGrid
       columns={[
-        { name: 'Name', selector: (row: any) => row.name },
-        { name: 'Start Time', selector: (row: any) => row.start_time },
-        { name: 'End Time', selector: (row: any) => row.end_time },
-        { name: 'Break (min)', selector: (row: any) => row.break_minutes },
+        { accessorKey: 'name', header: 'Name' },
+        { accessorKey: 'start_time', header: 'Start Time' },
+        { accessorKey: 'end_time', header: 'End Time' },
+        { accessorKey: 'break_minutes', header: 'Break (min)' },
         {
-          name: 'Active',
-          selector: (row: any) => (row.is_active ? 'Yes' : 'No'),
+          accessorKey: 'is_active',
+          header: 'Active',
+          cell: ({ row: { original } }) => (original.is_active ? 'Yes' : 'No'),
         },
       ]}
       data={employee?.shifts || []}
-      ExpandableComponent={null}
-      expanded={false}
-      pagination={(employee?.shifts?.length || 0) > 9}
     />
   </div>
 );

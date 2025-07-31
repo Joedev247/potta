@@ -269,7 +269,7 @@ export const useEmployeeForm = () => {
             nationalId: data.national_identification_number || '',
             employeeId: data.uuid || '',
             jobTitle: data.jobTitle || '',
-            roleId: data.role_id || '',
+            roleName: data.role_name || '',
           };
           setBaseInfo(newBaseInfo);
         }
@@ -445,7 +445,7 @@ export const useEmployeeForm = () => {
       payScheduleId: schedule?.payScheduleId,
       tax_payer_number: baseInfo.taxPayerNumber,
       national_identification_number: baseInfo.nationalId,
-      roleId: baseInfo.roleId,
+      roleName: baseInfo.roleName,
       isActive: true,
       address: {
         address: address.address,

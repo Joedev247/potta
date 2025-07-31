@@ -1,6 +1,6 @@
 // apps/potta/src/app/(routes)/payroll/people/components/benefit/components/benefitTable.tsx
 
-import MyTable from '@potta/components/table';
+import DataGrid from '@potta/app/(routes)/account_receivables/components/DataGrid';
 import React from 'react';
 
 // Define the benefit type to match the parent component
@@ -28,36 +28,42 @@ const BenefitTable: React.FC<BenefitTableProps> = ({
 }) => {
   const columns = [
     {
-      name: 'Benefit',
-      selector: (row: Benefit) => row.name || row.Benefit || '',
-      sortable: true,
-      cell: (row: Benefit) => <div>{row.name || row.Benefit}</div>,
+      accessorKey: 'name',
+      header: 'Benefit',
+      cell: ({ row: { original } }) => (
+        <div>{original.name || original.Benefit}</div>
+      ),
     },
     {
-      name: 'Type',
-      selector: (row: Benefit) => row.type || row.Type || '',
-      sortable: true,
-      cell: (row: Benefit) => <div>{row.type || row.Type}</div>,
+      accessorKey: 'type',
+      header: 'Type',
+      cell: ({ row: { original } }) => (
+        <div>{original.type || original.Type}</div>
+      ),
     },
     {
-      name: 'Rate',
-      selector: (row: Benefit) => row.rate || row.Rate || '',
-      sortable: true,
-      cell: (row: Benefit) => <div>{row.rate || row.Rate}</div>,
+      accessorKey: 'rate',
+      header: 'Rate',
+      cell: ({ row: { original } }) => (
+        <div>{original.rate || original.Rate}</div>
+      ),
     },
     {
-      name: 'Provider',
-      selector: (row: Benefit) => row.provider || row.Provider || '',
-      sortable: true,
-      cell: (row: Benefit) => <div>{row.provider || row.Provider}</div>,
+      accessorKey: 'provider',
+      header: 'Provider',
+      cell: ({ row: { original } }) => (
+        <div>{original.provider || original.Provider}</div>
+      ),
     },
     {
-      name: '',
-      selector: (row: Benefit) => '', // Empty selector for action column
-      cell: (row: Benefit) => (
+      accessorKey: 'actions',
+      header: '',
+      cell: ({ row: { original } }) => (
         <div
           className="text-red-500 cursor-pointer"
-          onClick={() => onRemove && onRemove(row.uuid || row.id || '')}
+          onClick={() =>
+            onRemove && onRemove(original.uuid || original.id || '')
+          }
         >
           Delete
         </div>
@@ -70,13 +76,7 @@ const BenefitTable: React.FC<BenefitTableProps> = ({
 
   return (
     <div className="mt-10">
-      <MyTable
-        columns={columns}
-        data={data}
-        ExpandableComponent={null}
-        expanded={false}
-        pagination={data.length > 9}
-      />
+      <DataGrid columns={columns} data={data} />
     </div>
   );
 };

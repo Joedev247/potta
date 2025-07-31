@@ -1,0 +1,334 @@
+import React, { useState, useMemo } from 'react';
+import { ColumnDef } from '@tanstack/react-table';
+import DataGrid from '@potta/app/(routes)/account_receivables/components/DataGrid';
+import DynamicFilter from '@potta/components/dynamic-filter';
+import { Filter, Calendar, DollarSign, Eye, CreditCard } from 'lucide-react';
+import Button from '@potta/components/button';
+import moment from 'moment';
+
+interface PaidInvoice {
+  id: string;
+  invoiceNumber: string;
+  customerName: string;
+  customerEmail: string;
+  amount: number;
+  currency: string;
+  status: string;
+  issueDate: string;
+  dueDate: string;
+  paidDate: string;
+  type: string;
+  description: string;
+  paymentMethod?: string;
+}
+
+const PaidInvoicesTable: React.FC = () => {
+  const [searchValue, setSearchValue] = useState('');
+  const [dateFilter, setDateFilter] = useState('all');
+  const [amountFilter, setAmountFilter] = useState('all');
+
+  // Mock data - replace with actual API call
+  const mockData: PaidInvoice[] = [
+    {
+      id: '1',
+      invoiceNumber: 'INV-2024-001',
+      customerName: 'John Smith',
+      customerEmail: 'john.smith@email.com',
+      amount: 25000.0,
+      currency: 'XAF',
+      status: 'paid',
+      issueDate: '2024-01-15',
+      dueDate: '2024-02-15',
+      paidDate: '2024-02-10',
+      type: 'Service',
+      description: 'Consulting services for Q1',
+      paymentMethod: 'mtn',
+    },
+    {
+      id: '2',
+      invoiceNumber: 'INV-2024-002',
+      customerName: 'Sarah Johnson',
+      customerEmail: 'sarah.johnson@email.com',
+      amount: 18000.0,
+      currency: 'XAF',
+      status: 'paid',
+      issueDate: '2024-01-20',
+      dueDate: '2024-02-20',
+      paidDate: '2024-02-18',
+      type: 'Product',
+      description: 'Software license renewal',
+      paymentMethod: 'orange',
+    },
+    {
+      id: '3',
+      invoiceNumber: 'INV-2024-003',
+      customerName: 'Mike Wilson',
+      customerEmail: 'mike.wilson@email.com',
+      amount: 32000.0,
+      currency: 'XAF',
+      status: 'paid',
+      issueDate: '2024-01-10',
+      dueDate: '2024-02-10',
+      paidDate: '2024-02-05',
+      type: 'Service',
+      description: 'Technical support services',
+      paymentMethod: 'mtn',
+    },
+    {
+      id: '4',
+      invoiceNumber: 'INV-2024-004',
+      customerName: 'Emily Davis',
+      customerEmail: 'emily.davis@email.com',
+      amount: 15000.0,
+      currency: 'XAF',
+      status: 'paid',
+      issueDate: '2024-01-25',
+      dueDate: '2024-02-25',
+      paidDate: '2024-02-22',
+      type: 'Product',
+      description: 'Hardware equipment',
+      paymentMethod: 'orange',
+    },
+  ];
+
+  const formatCurrency = (amount: number, currency: string) => {
+    if (currency === 'XAF') {
+      return new Intl.NumberFormat('en-US', {
+        style: 'currency',
+        currency: 'XAF',
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 0,
+      }).format(amount);
+    }
+    return new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: currency,
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    }).format(amount);
+  };
+
+  const filteredData = useMemo(() => {
+    return mockData.filter((invoice) => {
+      const searchMatch =
+        !searchValue ||
+        invoice.customerName
+          .toLowerCase()
+          .includes(searchValue.toLowerCase()) ||
+        invoice.customerEmail
+          .toLowerCase()
+          .includes(searchValue.toLowerCase()) ||
+        invoice.invoiceNumber.toLowerCase().includes(searchValue.toLowerCase());
+
+      let dateMatch = true;
+      if (dateFilter !== 'all') {
+        const paidDate = new Date(invoice.paidDate);
+        const now = new Date();
+        const diffDays = Math.ceil(
+          (now.getTime() - paidDate.getTime()) / (1000 * 60 * 60 * 24)
+        );
+
+        switch (dateFilter) {
+          case 'today':
+            dateMatch = diffDays === 0;
+            break;
+          case 'week':
+            dateMatch = diffDays <= 7;
+            break;
+          case 'month':
+            dateMatch = diffDays <= 30;
+            break;
+          case 'quarter':
+            dateMatch = diffDays <= 90;
+            break;
+        }
+      }
+
+      let amountMatch = true;
+      if (amountFilter !== 'all') {
+        const amount = invoice.amount;
+        switch (amountFilter) {
+          case 'low':
+            amountMatch = amount < 10000;
+            break;
+          case 'medium':
+            amountMatch = amount >= 10000 && amount < 50000;
+            break;
+          case 'high':
+            amountMatch = amount >= 50000;
+            break;
+        }
+      }
+
+      return searchMatch && dateMatch && amountMatch;
+    });
+  }, [searchValue, dateFilter, amountFilter]);
+
+  const filterConfig = [
+    {
+      key: 'date',
+      label: 'Paid Date',
+      icon: <Calendar className="w-4 h-4 text-gray-400" />,
+      options: [
+        { label: 'All', value: 'all' },
+        { label: 'Today', value: 'today' },
+        { label: 'This Week', value: 'week' },
+        { label: 'This Month', value: 'month' },
+        { label: 'This Quarter', value: 'quarter' },
+      ],
+      value: dateFilter,
+      onChange: setDateFilter,
+    },
+    {
+      key: 'amount',
+      label: 'Amount',
+      icon: <DollarSign className="w-4 h-4 text-gray-400" />,
+      options: [
+        { label: 'All', value: 'all' },
+        { label: 'Low (< 10,000 XAF)', value: 'low' },
+        { label: 'Medium (10,000 - 50,000 XAF)', value: 'medium' },
+        { label: 'High (> 50,000 XAF)', value: 'high' },
+      ],
+      value: amountFilter,
+      onChange: setAmountFilter,
+    },
+  ];
+
+  const columns: ColumnDef<PaidInvoice>[] = [
+    {
+      accessorKey: 'invoiceNumber',
+      header: 'Invoice Number',
+      cell: ({ row }) => (
+        <div className="font-mono text-sm text-gray-900 font-medium">
+          {row.getValue('invoiceNumber')}
+        </div>
+      ),
+    },
+    {
+      accessorKey: 'customerName',
+      header: 'Customer Name',
+      cell: ({ row }) => (
+        <div className="font-medium text-gray-900">
+          {row.getValue('customerName')}
+        </div>
+      ),
+    },
+    {
+      accessorKey: 'customerEmail',
+      header: 'Customer Email',
+      cell: ({ row }) => (
+        <div className="text-gray-600">{row.getValue('customerEmail')}</div>
+      ),
+    },
+    {
+      accessorKey: 'type',
+      header: 'Type',
+      cell: ({ row }) => (
+        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
+          {row.getValue('type')}
+        </span>
+      ),
+    },
+    {
+      accessorKey: 'paidDate',
+      header: 'Paid Date',
+      cell: ({ row }) => (
+        <div className="text-gray-900">
+          {moment(row.getValue('paidDate')).format('MMM DD, YYYY')}
+        </div>
+      ),
+    },
+    {
+      accessorKey: 'paymentMethod',
+      header: 'Payment Method',
+      cell: ({ row }) => {
+        const paymentMethod = row.getValue('paymentMethod') as string;
+        if (!paymentMethod) return <div className="text-gray-400">-</div>;
+
+        return (
+          <div className="flex items-center space-x-2">
+            {paymentMethod === 'mtn' && (
+              <img
+                src="/icons/mtn.svg"
+                alt="MTN Mobile Money"
+                className="w-6 h-6"
+              />
+            )}
+            {paymentMethod === 'orange' && (
+              <img src="/icons/om.svg" alt="Orange Money" className="w-6 h-6" />
+            )}
+            <span className="text-sm text-gray-600">
+              {paymentMethod === 'mtn'
+                ? 'MTN Mobile Money'
+                : paymentMethod === 'orange'
+                ? 'Orange Money'
+                : paymentMethod}
+            </span>
+          </div>
+        );
+      },
+    },
+    {
+      accessorKey: 'amount',
+      header: 'Amount',
+      cell: ({ row }) => (
+        <div className="font-medium text-gray-900">
+          {formatCurrency(row.getValue('amount'), row.original.currency)}
+        </div>
+      ),
+    },
+    {
+      id: 'actions',
+      header: '',
+      cell: ({ row }) => (
+        <Button
+          text="View"
+          type="button"
+          icon={<Eye className="w-3 h-3 mr-1" />}
+          onClick={() => console.log('View paid invoice:', row.original)}
+        />
+      ),
+    },
+  ];
+
+  const handlePayClick = () => {
+    console.log('Pay button clicked - redirect to payment page');
+    // Add payment logic here
+  };
+
+  return (
+    <div className="bg-white p-6 border border-gray-200">
+      <div className="flex items-center justify-between mb-6">
+        <div>
+          <h2 className="text-xl font-semibold text-gray-900">Paid Invoices</h2>
+          <span className="text-sm text-gray-500">
+            {filteredData.length} of {mockData.length} paid invoices
+          </span>
+        </div>
+        <Button
+          text="Pay"
+          type="button"
+          icon={<CreditCard className="w-4 h-4 mr-1" />}
+          onClick={handlePayClick}
+        />
+      </div>
+
+      <DynamicFilter
+        searchValue={searchValue}
+        onSearchChange={(e) => setSearchValue(e.target.value)}
+        onSearchClear={() => setSearchValue('')}
+        searchPlaceholder="Search paid invoices, customers..."
+        filters={filterConfig}
+        className="mb-6"
+      />
+
+      <DataGrid
+        data={filteredData}
+        columns={columns}
+        onRowClick={(row) => console.log('Clicked:', row)}
+      />
+    </div>
+  );
+};
+
+export default PaidInvoicesTable;

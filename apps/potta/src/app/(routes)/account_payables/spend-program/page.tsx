@@ -11,16 +11,46 @@ import {
 } from '@potta/components/shadcn/dropdown';
 import Button from '@potta/components/button';
 import NewSpendProgramSlideover from './components/NewSpendProgramSlideover';
-import { ChevronDown } from 'lucide-react';
+import { ChevronDown, CreditCard, FileText } from 'lucide-react';
 import { ContextData } from '@potta/components/context';
 import { useQuery } from '@tanstack/react-query';
 import { getSpendPrograms } from './utils/api';
 import { Skeleton } from '@potta/components/shadcn/skeleton';
+import { SpendProgram, SpendProgramType } from './utils/types';
 
 const filterOptions = [
   { label: 'All programs', value: 'all' },
-  // Add more filters if needed
+  { label: 'Card programs', value: 'CARD' },
+  { label: 'Procurement programs', value: 'PROCUREMENT' },
 ];
+
+// Helper function to get icon based on program type
+const getProgramIcon = (type: SpendProgramType) => {
+  switch (type) {
+    case 'CARD':
+      return <CreditCard className="w-6 h-6 text-green-600" />;
+    case 'PROCUREMENT':
+      return <FileText className="w-6 h-6 text-blue-600" />;
+    default:
+      return <FileText className="w-6 h-6 text-gray-600" />;
+  }
+};
+
+// Helper function to get status color
+const getStatusColor = (status: string) => {
+  switch (status) {
+    case 'active':
+      return 'bg-green-100 text-green-800';
+    case 'inactive':
+      return 'bg-gray-100 text-gray-800';
+    case 'draft':
+      return 'bg-yellow-100 text-yellow-800';
+    case 'archived':
+      return 'bg-red-100 text-red-800';
+    default:
+      return 'bg-gray-100 text-gray-800';
+  }
+};
 
 const SpendProgramPage = () => {
   const [search, setSearch] = useState('');
@@ -40,9 +70,15 @@ const SpendProgramPage = () => {
     queryFn: getSpendPrograms,
   });
 
-  const filteredPrograms = spendPrograms.filter((program) =>
-    program.name.toLowerCase().includes(search.toLowerCase())
-  );
+  // Filter programs based on search and active filter
+  const filteredPrograms = spendPrograms.filter((program: SpendProgram) => {
+    const matchesSearch =
+      program.name.toLowerCase().includes(search.toLowerCase()) ||
+      program.description.toLowerCase().includes(search.toLowerCase());
+    const matchesFilter =
+      activeFilter === 'all' || program.type === activeFilter;
+    return matchesSearch && matchesFilter;
+  });
 
   return (
     <RootLayout>
@@ -132,17 +168,23 @@ const SpendProgramPage = () => {
             // 3 per row on large screens, autofill on resize
           }}
         >
-          {filteredPrograms.map((program) => (
+          {filteredPrograms.map((program: SpendProgram) => (
             <div
               key={program.id}
               className="bg-white border cursor-pointer border-gray-200 p-6 flex flex-col gap-4 hover:shadow-sm transition-shadow"
             >
               <div className="flex items-center gap-3 mb-2">
-                <div className="bg-green-50 p-2 rounded">{program.icon}</div>
+                <div className="bg-green-50 p-2 rounded">
+                  {getProgramIcon(program.type)}
+                </div>
                 <h2 className="text-lg font-semibold text-gray-900 flex-1">
                   {program.name}
                 </h2>
-                <Badge className="bg-green-100 text-green-800 font-medium px-3 py-1 rounded-full text-xs">
+                <Badge
+                  className={`${getStatusColor(
+                    program.status
+                  )} font-medium px-3 py-1 rounded-full text-xs`}
+                >
                   {program.status}
                 </Badge>
               </div>

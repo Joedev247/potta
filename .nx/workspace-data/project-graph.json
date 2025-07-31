@@ -18786,6 +18786,11 @@
       },
       {
         "source": "potta",
+        "target": "npm:next",
+        "type": "static"
+      },
+      {
+        "source": "potta",
         "target": "npm:@nx/next",
         "type": "static"
       },
@@ -18801,12 +18806,12 @@
       },
       {
         "source": "potta",
-        "target": "npm:next",
+        "target": "npm:lucide-react",
         "type": "static"
       },
       {
         "source": "potta",
-        "target": "npm:lucide-react",
+        "target": "npm:@tanstack/react-table",
         "type": "static"
       },
       {
@@ -18821,12 +18826,12 @@
       },
       {
         "source": "potta",
-        "target": "npm:@tanstack/react-query",
+        "target": "npm:yup",
         "type": "static"
       },
       {
         "source": "potta",
-        "target": "npm:yup",
+        "target": "npm:@tanstack/react-query",
         "type": "static"
       },
       {
@@ -18851,27 +18856,22 @@
       },
       {
         "source": "potta",
-        "target": "npm:@headlessui/react",
-        "type": "static"
-      },
-      {
-        "source": "potta",
-        "target": "npm:@tanstack/react-table",
-        "type": "static"
-      },
-      {
-        "source": "potta",
         "target": "npm:react-hook-form",
         "type": "static"
       },
       {
         "source": "potta",
-        "target": "npm:@nextui-org/react",
+        "target": "npm:@hookform/resolvers",
         "type": "static"
       },
       {
         "source": "potta",
-        "target": "npm:@hookform/resolvers",
+        "target": "npm:@headlessui/react",
+        "type": "static"
+      },
+      {
+        "source": "potta",
+        "target": "npm:@nextui-org/react",
         "type": "static"
       },
       {
@@ -18927,11 +18927,6 @@
       {
         "source": "potta",
         "target": "npm:react-pro-sidebar",
-        "type": "static"
-      },
-      {
-        "source": "potta",
-        "target": "npm:react-organizational-chart",
         "type": "static"
       },
       {
@@ -56809,5 +56804,5 @@
   },
   "version": "6.0",
   "errors": [],
-  "computedAt": 1753474779363
+  "computedAt": 1753815537379
 }

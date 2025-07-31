@@ -58,7 +58,7 @@ const CreateBundleProduct: React.FC<CreateBundleProductProps> = ({
       taxable: false,
       categoryId: '',
       images: [],
-      type: 'PHYSICAL',
+      type: 'INVENTORY',
       structure: 'BUNDLE',
       reorderPoint: 0,
       components: [],
@@ -90,8 +90,8 @@ const CreateBundleProduct: React.FC<CreateBundleProductProps> = ({
   );
 
   const typeOptions = [
-    { label: 'Physical', value: 'PHYSICAL' },
-    { label: 'Service', value: 'SERVICE' },
+    { label: 'Inventory', value: 'INVENTORY' },
+    { label: 'Non-Inventory', value: 'NON_INVENTORY' },
   ];
 
   const unitOptions = [
@@ -296,7 +296,7 @@ const CreateBundleProduct: React.FC<CreateBundleProductProps> = ({
               </div>
             </div>
 
-            {watchedType === 'PHYSICAL' && (
+            {watchedType === 'INVENTORY' && (
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
                 <Input
                   label="Inventory Level"

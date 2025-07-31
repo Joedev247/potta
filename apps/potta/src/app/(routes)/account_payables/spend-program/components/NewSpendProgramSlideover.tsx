@@ -7,7 +7,16 @@ import { FiEye, FiEyeOff } from 'react-icons/fi';
 import RightSideModal from '../../re-imbursements/components/RightSideModal';
 import Select from '@potta/components/select';
 import PreSpendControlsForm from './PreSpendControlsForm';
-import { createSpendProgram } from '../utils/api';
+import {
+  createSpendProgram,
+  convertFormQuestionsToBackend,
+} from '../utils/api';
+import {
+  SpendProgramType,
+  FormBuilderState,
+  CreateSpendProgramDTO,
+} from '../utils/types';
+import toast from 'react-hot-toast';
 
 interface NewSpendProgramSlideoverProps {
   open: boolean;
@@ -17,7 +26,7 @@ interface NewSpendProgramSlideoverProps {
 
 const programTypes = [
   {
-    key: 'card',
+    key: 'CARD',
     label: 'Card program',
     description: 'Issue cards for benefits, stipends, etc.',
     icon: (
@@ -38,7 +47,7 @@ const programTypes = [
     plus: false,
   },
   {
-    key: 'procurement',
+    key: 'PROCUREMENT',
     label: 'Procurement',
     description: 'Manage procurement requests for software, contractors, etc.',
     icon: (
@@ -64,9 +73,8 @@ const programTypes = [
 ];
 
 // Example form state structure
-const initialFormState = {
+const initialFormState: FormBuilderState = {
   questions: [],
-  // Add more fields as needed
 };
 
 const NewSpendProgramSlideover: React.FC<NewSpendProgramSlideoverProps> = ({
@@ -75,8 +83,9 @@ const NewSpendProgramSlideover: React.FC<NewSpendProgramSlideoverProps> = ({
   onCreated,
 }) => {
   const [step, setStep] = useState(0);
-  const [selected, setSelected] = useState<string>('');
-  const [formState, setFormState] = useState<any>(initialFormState);
+  const [selected, setSelected] = useState<SpendProgramType | ''>('');
+  const [formState, setFormState] =
+    useState<FormBuilderState>(initialFormState);
   const [showPreview, setShowPreview] = useState(false);
   const [programName, setProgramName] = useState('');
   const [description, setDescription] = useState('');
@@ -85,6 +94,7 @@ const NewSpendProgramSlideover: React.FC<NewSpendProgramSlideoverProps> = ({
   const [showPreviewModal, setShowPreviewModal] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
+  const formRef = React.useRef<{ submit: () => void }>(null);
 
   // Step 0: Type selection
   // Step 1: Form builder + preview
@@ -93,20 +103,38 @@ const NewSpendProgramSlideover: React.FC<NewSpendProgramSlideoverProps> = ({
   const handleCreate = async (preSpendControls: any) => {
     setIsSubmitting(true);
     setSubmitError(null);
+
     try {
-      await createSpendProgram({
-        type: selected as 'procurement' | 'card',
+      const payload: CreateSpendProgramDTO = {
+        type: selected as SpendProgramType,
         name: programName,
         description,
-        form: formState.questions,
+        status: 'active',
+        unit: 'USD', // Default unit
+        purchaseOrders: 0, // Default value
+        form: convertFormQuestionsToBackend(formState.questions),
         preSpendControls,
-      });
+      };
+
+      await createSpendProgram(payload);
+      toast.success('Spend program created successfully!');
       setIsSubmitting(false);
       setOpen(false);
       if (onCreated) onCreated();
     } catch (err: any) {
       setIsSubmitting(false);
-      setSubmitError(err?.message || 'Failed to create spend program');
+      const errorMessage =
+        err?.response?.data?.message ||
+        err?.message ||
+        'Failed to create spend program';
+      setSubmitError(errorMessage);
+      toast.error(errorMessage);
+    }
+  };
+
+  const handleCreateClick = () => {
+    if (formRef.current) {
+      formRef.current.submit();
     }
   };
 
@@ -118,8 +146,8 @@ const NewSpendProgramSlideover: React.FC<NewSpendProgramSlideoverProps> = ({
       open={open}
       setOpen={setOpen}
       noPanelScroll
-      sliderClass="!py-0"
-      sliderContentClass="!mt-1"
+      sliderClass="!py-0 "
+      sliderContentClass="!mt-1 !mb-20"
     >
       {step === 0 && (
         <div className="w-full max-w-xl mx-auto py-8 px-2">
@@ -155,7 +183,7 @@ const NewSpendProgramSlideover: React.FC<NewSpendProgramSlideoverProps> = ({
                     type="radio"
                     name="programType"
                     checked={selected === type.key}
-                    onChange={() => setSelected(type.key)}
+                    onChange={() => setSelected(type.key as SpendProgramType)}
                     className="ml-4 h-5 w-5 accent-green-700"
                   />
                 </label>
@@ -163,7 +191,7 @@ const NewSpendProgramSlideover: React.FC<NewSpendProgramSlideoverProps> = ({
             </div>
           </div>
           {/* Show procurement-specific form if procurement is selected */}
-          {selected === 'procurement' && (
+          {selected === 'PROCUREMENT' && (
             <div className="">
               <div className="">
                 <div className="text-2xl font-semibold mb-4">
@@ -245,65 +273,14 @@ const NewSpendProgramSlideover: React.FC<NewSpendProgramSlideoverProps> = ({
               </div>
             </div>
           )}
-          <Button
-            type="submit"
-            text="Next"
-            onClick={() => {
-              if (!selected) return;
-              if (selected === 'procurement') {
-                let hasError = false;
-                if (!programName.trim()) {
-                  setShowProgramNameError(true);
-                  hasError = true;
-                }
-                if (!description.trim()) {
-                  setShowDescriptionError(true);
-                  hasError = true;
-                }
-                if (hasError) return;
-              }
-              setStep(1);
-            }}
-            disabled={
-              !selected ||
-              (selected === 'procurement' &&
-                (!programName.trim() || !description.trim()))
-            }
-          />
+        
         </div>
       )}
       {step === 1 && (
         <div className="w-full max-w-[1200px] mx-auto">
-          <div className="flex items-center justify-between mb-4">
-            <button
-              className="text-sm text-gray-500 hover:underline"
-              onClick={() => setStep(0)}
-            >
-              &larr; Previous
-            </button>
-            <div className="flex items-center gap-2">
-              <Button
-                text={`Create "${programName}"`}
-                type="button"
-                className="text-sm"
-                onClick={() => setStep(2)}
-                icon={<i className="ri-file-add-line"></i>}
-              />
-              <Button
-                text={showPreviewModal ? 'Hide preview' : 'View preview'}
-                type="button"
-                className="text-sm"
-                onClick={() => setShowPreviewModal(true)}
-                icon={showPreviewModal ? <FiEyeOff /> : <FiEye />}
-              />
-            </div>
-          </div>
+          {/* Remove the old navigation section from step 1 */}
           <div className=" px-2 h-full w-full flex justify-center transition-all duration-300 ease-in-out">
-            <FormBuilder
-              formState={formState}
-              setFormState={setFormState}
-              programName={programName}
-            />
+            <FormBuilder formState={formState} setFormState={setFormState} />
           </div>
           <RightSideModal
             open={showPreviewModal}
@@ -320,12 +297,10 @@ const NewSpendProgramSlideover: React.FC<NewSpendProgramSlideoverProps> = ({
           <PreSpendControlsForm
             programName={programName}
             onCreate={handleCreate}
-            onBack={() => setStep(1)}
-            onPreview={() => setShowPreviewModal(true)}
-            showPreviewModal={showPreviewModal}
             isSubmitting={isSubmitting}
+            formRef={formRef}
           />
-          {submitError && <div className="text-red-500 p-2">{submitError}</div>}
+
           <RightSideModal
             open={showPreviewModal}
             setOpen={setShowPreviewModal}
@@ -336,6 +311,97 @@ const NewSpendProgramSlideover: React.FC<NewSpendProgramSlideoverProps> = ({
           </RightSideModal>
         </>
       )}
+
+      {/* Fixed bottom navigation for all steps */}
+      <div className="fixed bottom-0 left-0 right-0 p-4 bg-white border-t border-gray-200 flex justify-between items-center">
+        <div>
+          {step > 0 && (
+            <button
+              className="text-sm text-gray-500 hover:underline flex items-center gap-1"
+              onClick={() => setStep(step - 1)}
+            >
+              &larr; Previous
+            </button>
+          )}
+        </div>
+
+        <div className="flex items-center gap-2">
+          {step === 0 && (
+            <Button
+              type="submit"
+              text="Next"
+              className="!py-3 !px-6"
+              onClick={() => {
+                if (!selected) return;
+                if (selected === 'PROCUREMENT') {
+                  let hasError = false;
+                  if (!programName.trim()) {
+                    setShowProgramNameError(true);
+                    hasError = true;
+                  }
+                  if (!description.trim()) {
+                    setShowDescriptionError(true);
+                    hasError = true;
+                  }
+                  if (hasError) return;
+                }
+                setStep(1);
+              }}
+              disabled={
+                !selected ||
+                (selected === 'PROCUREMENT' &&
+                  (!programName.trim() || !description.trim()))
+              }
+            />
+          )}
+
+          {step === 1 && (
+            <>
+              <Button
+                text={showPreviewModal ? 'Hide preview' : 'View preview'}
+                type="button"
+                className="text-sm"
+                onClick={() => setShowPreviewModal(true)}
+                icon={showPreviewModal ? <FiEyeOff /> : <FiEye />}
+              />
+              <Button
+                text="Next"
+                type="button"
+                className="text-sm"
+                onClick={() => setStep(2)}
+                icon={<i className="ri-arrow-right-line"></i>}
+              />
+            </>
+          )}
+
+          {step === 2 && (
+            <>
+              <Button
+                text={showPreviewModal ? 'Hide preview' : 'View preview'}
+                type="button"
+                className="text-sm"
+                onClick={() => setShowPreviewModal(true)}
+                icon={showPreviewModal ? <FiEyeOff /> : <FiEye />}
+              />
+              <Button
+                text={isSubmitting ? 'Creating...' : `Create "${programName}"`}
+                type="button"
+                className="text-sm"
+                onClick={() => formRef.current?.submit()}
+                icon={
+                  isSubmitting ? (
+                    <i className="ri-loader-4-line animate-spin"></i>
+                  ) : (
+                    <i className="ri-file-add-line"></i>
+                  )
+                }
+                disabled={isSubmitting}
+                isLoading={isSubmitting}
+              />
+            </>
+          )}
+        </div>
+      </div>
     </Slider>
   );
 };

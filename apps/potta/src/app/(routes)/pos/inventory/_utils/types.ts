@@ -4,6 +4,8 @@ export type Filter = {
   sortBy?: 'updatedAt' | 'createdAt';
   sortOrder?: 'ASC' | 'DESC';
   search?: string;
+  productType?: 'INVENTORY' | 'NON_INVENTORY' | 'ASSEMBLY' | 'SIMPLEGROUPS';
+  sort?: string;
 };
 
 export type Product = {
@@ -28,8 +30,8 @@ export type Product = {
   tax?: { name: string } | null;
   images: any[] | null;
   status: string;
-  type?: 'PHYSICAL' | 'SERVICE';
-  structure?: 'SIMPLE' | 'BUNDLE';
+  type?: 'INVENTORY' | 'NON_INVENTORY';
+  structure?: 'SIMPLE' | 'ASSEMBLY' | 'SIMPLEGROUPS';
   reorderPoint?: number;
   components?: ProductComponent[];
 };

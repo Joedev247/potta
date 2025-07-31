@@ -13,10 +13,9 @@ const SaleInvoiceTable = () => {
   const context = useContext(ContextData);
   const [selected, setSelected] = useState([]);
   return (
-    <div className="w-full  h-[92.3vh] py-1 ">
+    <div className="w-full h-[85vh] py-1 ">
       {context?.itemSelected == 'cart' && (
-        <div className="h-[84vh] w-full pt-2 px-6 overflow-y-auto border-b ">
-         
+        <div className="h-[77vh] w-full pt-2 px-6 overflow-y-auto border-b ">
           <div className="w-full">
             <div className="h-full w-full  overflow-y-auto">
               <TableOPS />
@@ -26,17 +25,17 @@ const SaleInvoiceTable = () => {
       )}
 
       {context?.itemSelected == 'calculate' && (
-        <div className=" w-full h-[84vh] pt-10 px-3 overflow-y-auto border-b">
+        <div className="w-full h-[77vh] pt-10 px-3 overflow-y-auto border-b">
           <Calculator />
         </div>
       )}
       {context?.itemSelected == 'other' && (
-        <div className="h-[84vh] w-full pt-10 px-3 overflow-y-auto border-b">
+        <div className="h-[77vh] w-full pt-10 px-3 overflow-y-auto border-b">
           <OtherMethod />
         </div>
       )}
       {context?.itemSelected == 'cash' && (
-        <div className="h-[84vh] w-full pt-5 px-3 overflow-y-auto border-b">
+        <div className="h-[77vh] w-full pt-5 px-3 overflow-y-auto border-b">
           <CashPayment />
         </div>
       )}

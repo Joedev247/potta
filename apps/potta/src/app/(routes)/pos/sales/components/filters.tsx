@@ -18,69 +18,59 @@ const Filter = () => {
   };
 
   return (
-    <div className="w-full flex justify-between ">
-      <div className="flex space-x-2 w-[60%]">
-        <div className=" w-[60%]">
+    <div className="w-full flex justify-between items-center">
+      <div className="flex items-center space-x-4 w-[60%]">
+        <div className="w-[40%]">
           <Search />
         </div>
-        <div className="flex mt-4 w-[40%] space-x-2 ">
-          <div className="flex h-[47px]  w-full px-2 border items-center">
-            <p className="text-[17px] -mt-1">Filter&nbsp;: </p>
-            <div className="-mt-3">
-              <Select
-                outline
-                border={true}
-                options={[
-                  { label: 'All', value: 'all' },
-                  { label: 'Pending', value: 'pending' },
-                  { label: 'Paid', value: 'paid' },
-                ]}
-                selectedValue={selectedValue2}
-                onChange={handleChange2}
-                bg=" " // Add your desired background class here
-              />
-            </div>
+        <div className="flex items-center space-x-3 w-[60%]">
+          <div className="flex items-center space-x-2">
+            <p className="text-sm font-medium text-gray-700">Filter:</p>
+            <Select
+              outline
+              border={true}
+              options={[
+                { label: 'All', value: 'all' },
+                { label: 'Pending', value: 'pending' },
+                { label: 'Paid', value: 'paid' },
+              ]}
+              selectedValue={selectedValue2}
+              onChange={handleChange2}
+              bg=" "
+            />
           </div>
-          <div className="flex h-[47px] py-3.5 items-center space-x-1 w-full px-2 border">
-            <p className="text-[17px] -mt-1">Date&nbsp;: </p>
-            <div className="-mt-3">
-              <Select
-                outline
-                border={true}
-                options={[
-                  { label: 'All Time', value: 'All Time' },
-                  { label: 'Yesterday', value: 'Yesterday' },
-                ]}
-                selectedValue={selectedValue}
-                onChange={handleChange}
-                bg=" " // Add your desired background class here
-              />
-            </div>
+          <div className="flex items-center space-x-2">
+            <p className="text-sm font-medium text-gray-700">Date:</p>
+            <Select
+              outline
+              border={true}
+              options={[
+                { label: 'All Time', value: 'All Time' },
+                { label: 'Yesterday', value: 'Yesterday' },
+              ]}
+              selectedValue={selectedValue}
+              onChange={handleChange}
+              bg=" "
+            />
           </div>
         </div>
       </div>
-      <div className=" w-1/2 flex items-center justify-end">
-        <div className="flex justify-end ">
-          <div className="w-fit  flex justify-end ">
-            <Button
-              type={'button'}
-              color
-              text="Export"
-              icon={<img src="/images/export.svg" />}
-              theme="lightBlue"
-            />
-          </div>
-          <div className="w-fit ml-2">
-            <Link className="flex justify-end" href={'/pos/sales/new'}>
-              <Button
-                text={'Create Sale'}
-                icon={<i className="ri-file-add-line"></i>}
-                theme="default"
-                type={'button'}
-              />
-            </Link>
-          </div>
-        </div>
+      <div className="flex items-center space-x-3">
+        <Button
+          type={'button'}
+          color
+          text="Export"
+          icon={<img src="/images/export.svg" />}
+          theme="lightBlue"
+        />
+        <Link href={'/pos/sales/new'}>
+          <Button
+            text={'Create Sale'}
+            icon={<i className="ri-file-add-line"></i>}
+            theme="default"
+            type={'button'}
+          />
+        </Link>
       </div>
     </div>
   );

@@ -475,11 +475,12 @@ const CreateBudgetModal: React.FC<CreateBudgetModalProps> = ({
         </div>
 
         {/* Footer */}
-        <div className="fixed bottom-0 left-0 right-0 p-6 bg-white border-t border-gray-200 flex justify-end space-x-3">
+        <div className="fixed bottom-0 left-0 right-0 p-2 bg-white border-t border-gray-200 flex justify-end space-x-3">
           <Button
             height={true}
             text={createBudgetLoading ? 'Saving...' : 'Save'}
             type="button"
+            className='!py-3 !px-6'
             onClick={handleSave}
             disabled={createBudgetLoading}
           />

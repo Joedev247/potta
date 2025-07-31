@@ -1,19 +1,16 @@
 import React from 'react';
-import MyTable from '@potta/components/table';
+import DataGrid from '@potta/app/(routes)/account_receivables/components/DataGrid';
 
 const BenefitsTab = ({ employee }: { employee: any }) => (
   <div className="mt-6">
-    <MyTable
+    <DataGrid
       columns={[
-        { name: 'Name', selector: (row: any) => row.name },
-        { name: 'Type', selector: (row: any) => row.type },
-        { name: 'Value', selector: (row: any) => row.value },
-        { name: 'Provider', selector: (row: any) => row.provider },
+        { accessorKey: 'name', header: 'Name' },
+        { accessorKey: 'type', header: 'Type' },
+        { accessorKey: 'value', header: 'Value' },
+        { accessorKey: 'provider', header: 'Provider' },
       ]}
       data={employee?.benefits || []}
-      ExpandableComponent={null}
-      expanded={false}
-      pagination={(employee?.benefits?.length || 0) > 9}
     />
   </div>
 );

@@ -15,9 +15,24 @@ export const productSchema = yup.object().shape({
   images: yup.array().of(yup.string()).default([]),
   type: yup
     .string()
-    .oneOf(['PHYSICAL', 'SERVICE'])
+    .oneOf(['INVENTORY', 'NON_INVENTORY'])
     .required('type is required'),
-  structure: yup.string().oneOf(['SIMPLE', 'BUNDLE']).default('SIMPLE'),
+  structure: yup
+    .string()
+    .oneOf(['SIMPLE', 'ASSEMBLY', 'SIMPLEGROUPS'])
+    .default('SIMPLE'),
+  components: yup
+    .array()
+    .of(
+      yup.object().shape({
+        productId: yup.string().required('Product ID is required'),
+        quantity: yup
+          .number()
+          .required('Quantity is required')
+          .min(1, 'Quantity must be at least 1'),
+      })
+    )
+    .default([]),
 });
 
 export const bundleSchema = yup.object().shape({
@@ -33,9 +48,12 @@ export const bundleSchema = yup.object().shape({
   images: yup.array().of(yup.string()).default([]),
   type: yup
     .string()
-    .oneOf(['PHYSICAL', 'SERVICE'])
+    .oneOf(['INVENTORY', 'NON_INVENTORY'])
     .required('type is required'),
-  structure: yup.string().oneOf(['SIMPLE', 'BUNDLE']).default('BUNDLE'),
+  structure: yup
+    .string()
+    .oneOf(['SIMPLE', 'ASSEMBLY', 'SIMPLEGROUPS'])
+    .default('ASSEMBLY'),
   reorderPoint: yup.number(),
   components: yup
     .array()

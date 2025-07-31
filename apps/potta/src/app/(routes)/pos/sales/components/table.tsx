@@ -1,16 +1,22 @@
 'use client';
 import React, { useState } from 'react';
-import MyTable from '@potta/components/table';
+import DataGrid from '@potta/app/(routes)/account_receivables/components/DataGrid';
 import { useGetAllSalesReceipts } from '../hooks/useGetAllReceipts';
 import { Filters, SalesReceipt } from '../utils/types';
-import TableActionPopover, {
-  PopoverAction,
-} from '@potta/components/tableActionsPopover';
-import Filter from './filters';
+import DynamicFilter from '@potta/components/dynamic-filter';
 import { Icon } from '@iconify/react';
 import { CloudDownload, FileDown } from 'lucide-react';
 import ViewReceiptSlider from './viewSlider';
 import DeleteModal from './deleteModal';
+import Button from '@potta/components/button';
+import {
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuItem,
+} from '@potta/components/shadcn/dropdown';
+import { ColumnDef } from '@tanstack/react-table';
+import Link from 'next/link';
 
 // Updated type to match the actual response structure
 type ResponseSalesReceipt = {
@@ -63,7 +69,6 @@ type ResponseSalesReceipt = {
 };
 
 const SaleTable = () => {
-  const [openPopover, setOpenPopover] = useState<string | null>(null);
   const [openViewModal, setOpenViewModal] = useState<string | null>(null);
   const [openDeleteModal, setOpenDeleteModal] = useState<string | null>(null);
   const [openUpdateModal, setOpenUpdateModal] = useState<string | null>(null);
@@ -72,6 +77,12 @@ const SaleTable = () => {
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
   const [receiptDetails, setReceiptDetails] =
     useState<ResponseSalesReceipt | null>(null);
+
+  // Filter state
+  const [searchValue, setSearchValue] = useState('');
+  const [statusFilter, setStatusFilter] = useState('all');
+  const [dateFilter, setDateFilter] = useState('all');
+  const [sortBy, setSortBy] = useState('createdAt:DESC');
 
   // Pagination state
   const [page, setPage] = useState(1);
@@ -87,65 +98,127 @@ const SaleTable = () => {
 
   // Fetch receipts data using the hook
   const { data, isLoading, error } = useGetAllSalesReceipts(filter);
+
   const handleRowClick = (row: ResponseSalesReceipt) => {
     setOpenViewModal(row.uuid);
     setIsViewOpen(true);
   };
 
-  const columns = [
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchValue(e.target.value);
+  };
+
+  const handleSearchClear = () => {
+    setSearchValue('');
+  };
+
+  const filterConfig = [
     {
-      name: 'Date',
-      selector: (row: ResponseSalesReceipt) => (
-        <div className="">{new Date(row.saleDate).toLocaleDateString()}</div>
-      ),
+      key: 'status',
+      label: 'Status',
+      options: [
+        { label: 'All Status', value: 'all' },
+        { label: 'Pending', value: 'pending' },
+        { label: 'Paid', value: 'paid' },
+        { label: 'Completed', value: 'completed' },
+      ],
+      value: statusFilter,
+      onChange: setStatusFilter,
+      selectClassName: 'min-w-[120px]',
     },
     {
-      name: 'Type',
-      selector: (row: ResponseSalesReceipt) => <div className="">Sale</div>,
+      key: 'date',
+      label: 'Date',
+      options: [
+        { label: 'All Time', value: 'all' },
+        { label: 'Today', value: 'today' },
+        { label: 'Yesterday', value: 'yesterday' },
+        { label: 'This Week', value: 'this_week' },
+        { label: 'This Month', value: 'this_month' },
+      ],
+      value: dateFilter,
+      onChange: setDateFilter,
+      selectClassName: 'min-w-[140px]',
     },
     {
-      name: 'Customer',
-      selector: (row: ResponseSalesReceipt) => (
+      key: 'sort',
+      label: 'Sort by',
+      options: [
+        { label: 'Newest First', value: 'createdAt:DESC' },
+        { label: 'Oldest First', value: 'createdAt:ASC' },
+        { label: 'Sale Date', value: 'saleDate:DESC' },
+        { label: 'Amount High to Low', value: 'totalAmount:DESC' },
+        { label: 'Amount Low to High', value: 'totalAmount:ASC' },
+      ],
+      value: sortBy,
+      onChange: setSortBy,
+      selectClassName: 'min-w-[140px]',
+    },
+  ];
+
+  const columns: ColumnDef<ResponseSalesReceipt>[] = [
+    {
+      accessorKey: 'saleDate',
+      header: 'Date',
+      cell: ({ row: { original } }) => (
         <div className="">
-          {row.customer.firstName} {row.customer.lastName}
+          {new Date(original.saleDate).toLocaleDateString()}
         </div>
       ),
     },
     {
-      name: 'Method',
-      selector: (row: ResponseSalesReceipt) => (
-        <div className="">{row.paymentMethod}</div>
+      accessorKey: 'type',
+      header: 'Type',
+      cell: () => <div className="">Sale</div>,
+    },
+    {
+      accessorKey: 'customer',
+      header: 'Customer',
+      cell: ({ row: { original } }) => (
+        <div className="">
+          {original.customer.firstName} {original.customer.lastName}
+        </div>
       ),
     },
     {
-      name: 'Memo',
-      selector: (row: ResponseSalesReceipt) => (
-        <div className="">{row.notes || '-'}</div>
-      ),
-    },
-
-    {
-      name: 'Balance',
-      selector: (row: ResponseSalesReceipt) => <div className="">XAF 0</div>,
-    },
-    {
-      name: 'Total',
-      selector: (row: ResponseSalesReceipt) => (
-        <div className="">XAF {row.totalAmount.toLocaleString()}</div>
+      accessorKey: 'paymentMethod',
+      header: 'Method',
+      cell: ({ row: { original } }) => (
+        <div className="">{original.paymentMethod}</div>
       ),
     },
     {
-      name: ``,
-      selector: (row: ResponseSalesReceipt) => (
+      accessorKey: 'notes',
+      header: 'Memo',
+      cell: ({ row: { original } }) => (
+        <div className="">{original.notes || '-'}</div>
+      ),
+    },
+    {
+      accessorKey: 'balance',
+      header: 'Balance',
+      cell: () => <div className="">XAF 0</div>,
+    },
+    {
+      accessorKey: 'totalAmount',
+      header: 'Total',
+      cell: ({ row: { original } }) => (
+        <div className="">XAF {original.totalAmount.toLocaleString()}</div>
+      ),
+    },
+    {
+      id: 'download',
+      header: '',
+      cell: () => (
         <div className="">
           <FileDown />
         </div>
       ),
-      width: '50px',
     },
     {
-      name: 'Resolution',
-      selector: (row: ResponseSalesReceipt) => {
+      id: 'resolution',
+      header: 'Resolution',
+      cell: () => {
         const status = 'Closed';
         return (
           <div className="border-r pr-4 flex justify-center">
@@ -158,64 +231,59 @@ const SaleTable = () => {
           </div>
         );
       },
-      hasBorderLeft: true, // Left border for data cells
-      headerBorderLeft: true, // Left border for header cell
-      width: '150px',
     },
     {
-      name: '',
-      selector: (row: ResponseSalesReceipt) => {
-        const actions: PopoverAction[] = [
-          {
-            label: 'View',
-            onClick: () => {
-              setOpenViewModal(row.uuid);
-              setReceiptDetails(row);
-              setIsViewOpen(true);
-            },
-            className: 'hover:bg-gray-200',
-            icon: <i className="ri-eye-line" />,
-          },
-          {
-            label: 'Delete',
-            onClick: () => {
-              setOpenDeleteModal(row.uuid);
-              setReceiptDetails(row);
-              setIsDeleteOpen(true);
-            },
-            className: 'hover:bg-red-200 text-red-600',
-            icon: <i className="ri-delete-bin-line" />,
-          },
-        ];
-
+      id: 'actions',
+      header: 'Actions',
+      cell: ({ row: { original } }) => {
         return (
-          <TableActionPopover
-            actions={actions}
-            rowUuid={row.uuid}
-            openPopover={openPopover}
-            setOpenPopover={setOpenPopover}
-          />
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <button className="p-2 hover:bg-gray-100 rounded-md">
+                <i className="ri-more-2-fill text-gray-600"></i>
+              </button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="w-48">
+              <DropdownMenuItem
+                onClick={() => {
+                  setOpenViewModal(original.uuid);
+                  setReceiptDetails(original);
+                  setIsViewOpen(true);
+                }}
+                className="cursor-pointer"
+              >
+                <i className="ri-eye-line mr-2"></i>
+                View
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                onClick={() => {
+                  setOpenDeleteModal(original.uuid);
+                  setReceiptDetails(original);
+                  setIsDeleteOpen(true);
+                }}
+                className="cursor-pointer text-red-600"
+              >
+                <i className="ri-delete-bin-line mr-2"></i>
+                Delete
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         );
       },
-      width: '70px',
     },
   ];
-
-  // Pagination handlers
-  const handlePageChange = (newPage: number) => {
-    setPage(newPage);
-  };
-
-  const handlePerRowsChange = (newLimit: number, newPage: number) => {
-    setLimit(newLimit);
-    setPage(newPage);
-  };
 
   // Error handling
   if (error) {
     return (
-      <div className="mt-10">
-        <Filter />
+      <div className="mt-4">
+        <DynamicFilter
+          searchValue={searchValue}
+          onSearchChange={handleSearchChange}
+          onSearchClear={handleSearchClear}
+          searchPlaceholder="Search receipts by customer, ID, or memo..."
+          filters={filterConfig}
+        />  
         <div className="min-h-60 items-center flex justify-center">
           <p className="text-red-600 text-center">
             An error occurred while fetching receipts. Please try again later.
@@ -229,22 +297,45 @@ const SaleTable = () => {
   const receiptsData = data?.data || [];
 
   return (
-    <div className="mt-10">
-      <Filter />
-      <MyTable
-        maxHeight="50vh"
-        minHeight="50vh"
+    <div className="">
+      <div className="flex justify-between items-center w-full">
+        {/* Left side - Dynamic Filter */}
+        <div className="flex-1">
+          <DynamicFilter
+            searchValue={searchValue}
+            onSearchChange={handleSearchChange}
+            onSearchClear={handleSearchClear}
+            searchPlaceholder="Search receipts by customer, ID, or memo..."
+            filters={filterConfig}
+            className="p-0 bg-transparent"
+          />
+        </div>
+
+        {/* Right side - Action Buttons */}
+        <div className="flex items-center space-x-2 ml-4">
+          <Button
+            text={'Export'}
+            icon={<img src="/images/export.svg" />}
+            theme="lightBlue"
+            type={'button'}
+            color={true}
+          />
+          <Link href={'/pos/sales/new'}>
+            <Button
+              text={'Create Sale'}
+              icon={<i className="ri-file-add-line"></i>}
+              theme="default"
+              type={'button'}
+            />
+          </Link>
+        </div>
+      </div>
+
+      <DataGrid
         columns={columns}
-        selectable={true}
         data={receiptsData}
-        pagination
-        expanded={false}
-        pending={isLoading}
-        paginationServer
-        paginationTotalRows={data?.meta?.totalItems ?? 0}
-        onChangePage={handlePageChange}
-        onChangeRowsPerPage={handlePerRowsChange}
-        onRowClicked={handleRowClick}
+        onRowClick={handleRowClick}
+        isLoading={isLoading}
       />
 
       {/* Add your modal components here when implemented */}
