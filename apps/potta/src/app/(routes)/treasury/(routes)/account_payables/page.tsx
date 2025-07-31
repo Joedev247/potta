@@ -59,7 +59,7 @@ const AccountPayablesPage = () => {
 
     if (selectedSubmenu === 'credit_notes') {
       return (
-        <div className="p-6">
+        <div className="p-3">
           <CreditNotesTable />
         </div>
       );

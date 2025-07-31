@@ -156,15 +156,13 @@ const AppLauncher: React.FC = () => {
                   key={app.value}
                   onClick={() => handleAppClick(app)}
                   onKeyDown={(e) => handleKeyDown(e, app)}
-                  className={`group flex gap-0.5 flex-col items-center p-4 transition-all duration-200 focus:outline-none  ${
-                    isActive ? 'bg-[#] ' : ''
-                  }`}
+                  className={`group flex gap-0.5 flex-col items-center p-4 transition-all duration-200 !focus:outline-none !focus:ring-0 !focus:border-0 `}
                   tabIndex={0}
                   aria-label={`Open ${app.label}`}
                 >
                   {/* App Icon */}
                   <div
-                    className={`w-[3.3em] h-[3.3em] grid place-content-center  group-hover:scale-[1.05] transition-transform duration-200`}
+                    className={`w-[3.3em] h-[3.3em] grid place-content-center  group-hover:scale-[1.05] transition-transform duration-200 focus:outline-none focus:ring-0 focus:border-0`}
                   >
                     {app.icon}
                   </div>

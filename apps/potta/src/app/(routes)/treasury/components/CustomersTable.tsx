@@ -15,20 +15,8 @@ import {
   parsePhoneNumberFromString,
 } from 'libphonenumber-js';
 import Image from 'next/image';
-import useGetAllVendors from '../../vendors/hooks/useGetAllVendors';
-import { VendorFilter } from '../../vendors/utils/types';
-
-interface Vendor {
-  id: string;
-  uuid: string;
-  name: string;
-  phone: string;
-  email: string;
-  openingBalance: number;
-  currency: string;
-  status: string;
-  createdAt: string;
-}
+import useGetAllCustomers from '../../customers/hooks/useGetAllCustomers';
+import { CustomerFilter } from '../../customers/utils/types';
 
 const PhoneFlag = ({ phoneNumber }: { phoneNumber: string | number }) => {
   const convertToE164 = (phoneNumber: string | number) => {
@@ -58,15 +46,15 @@ const PhoneFlag = ({ phoneNumber }: { phoneNumber: string | number }) => {
   );
 };
 
-const VendorsTable: React.FC = () => {
+const CustomersTable: React.FC = () => {
   const [searchValue, setSearchValue] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
   const [typeFilter, setTypeFilter] = useState('all');
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(10);
 
-  const filter: VendorFilter = { page, limit };
-  const { data: vendor, isLoading, error } = useGetAllVendors(filter);
+  const filter: CustomerFilter = { page, limit };
+  const { data: customer, isLoading, error } = useGetAllCustomers(filter);
 
   const formatCurrency = (amount: number, currency: string) => {
     return new Intl.NumberFormat('en-US', {
@@ -86,22 +74,23 @@ const VendorsTable: React.FC = () => {
   };
 
   const filteredData = React.useMemo(() => {
-    if (!vendor?.data) return [];
+    if (!customer?.data) return [];
 
-    return vendor.data.filter((vendor) => {
+    return customer.data.filter((customer) => {
       const searchMatch =
         !searchValue ||
-        vendor.name?.toLowerCase().includes(searchValue.toLowerCase()) ||
-        vendor.email?.toLowerCase().includes(searchValue.toLowerCase()) ||
-        vendor.phone?.includes(searchValue);
+        customer.firstName?.toLowerCase().includes(searchValue.toLowerCase()) ||
+        customer.lastName?.toLowerCase().includes(searchValue.toLowerCase()) ||
+        customer.email?.toLowerCase().includes(searchValue.toLowerCase()) ||
+        customer.phone?.includes(searchValue);
 
       const statusMatch =
-        statusFilter === 'all' || vendor.status === statusFilter;
-      const typeMatch = typeFilter === 'all' || vendor.type === typeFilter;
+        statusFilter === 'all' || customer.status === statusFilter;
+      const typeMatch = typeFilter === 'all' || customer.type === typeFilter;
 
       return searchMatch && statusMatch && typeMatch;
     });
-  }, [vendor?.data, searchValue, statusFilter, typeFilter]);
+  }, [customer?.data, searchValue, statusFilter, typeFilter]);
 
   const filterConfig = [
     {
@@ -134,10 +123,12 @@ const VendorsTable: React.FC = () => {
 
   const columns: ColumnDef<any>[] = [
     {
-      accessorKey: 'name',
-      header: 'Vendor/ Company Name',
+      accessorKey: 'firstName',
+      header: 'Customer Name',
       cell: ({ row: { original } }) => (
-        <div className="font-medium text-gray-900">{original.name}</div>
+        <div className="font-medium text-gray-900">
+          {original.firstName} {original.lastName}
+        </div>
       ),
     },
     {
@@ -164,15 +155,12 @@ const VendorsTable: React.FC = () => {
       ),
     },
     {
-      accessorKey: 'openingBalance',
-      header: 'Balance',
+      accessorKey: 'creditLimit',
+      header: 'Credit Limit',
       cell: ({ row: { original } }) => (
         <div className="font-medium">
-          {original.openingBalance
-            ? formatCurrency(
-                parseFloat(original.openingBalance),
-                original.currency
-              )
+          {original.creditLimit
+            ? formatCurrency(original.creditLimit, 'EUR')
             : 'N/A'}
         </div>
       ),
@@ -228,20 +216,20 @@ const VendorsTable: React.FC = () => {
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <DropdownMenuItem
-              onClick={() => console.log('View vendor:', original.uuid)}
+              onClick={() => console.log('View customer:', original.uuid)}
             >
               <i className="ri-eye-line mr-2"></i>
               View
             </DropdownMenuItem>
             <DropdownMenuItem
-              onClick={() => console.log('Edit vendor:', original.uuid)}
+              onClick={() => console.log('Edit customer:', original.uuid)}
             >
               <i className="ri-edit-line mr-2"></i>
               Edit
             </DropdownMenuItem>
             <DropdownMenuItem
               className="text-red-600"
-              onClick={() => console.log('Delete vendor:', original.uuid)}
+              onClick={() => console.log('Delete customer:', original.uuid)}
             >
               <i className="ri-delete-bin-line mr-2"></i>
               Delete
@@ -256,11 +244,11 @@ const VendorsTable: React.FC = () => {
     return (
       <div className="bg-white p-6 border border-gray-200">
         <div className="flex items-center justify-between mb-6">
-          <h2 className="text-xl font-semibold text-gray-900">Vendors</h2>
+          <h2 className="text-xl font-semibold text-gray-900">Customers</h2>
         </div>
         <div className="min-h-60 items-center flex justify-center">
           <p className="text-red-600 text-center">
-            An error occurred while fetching vendors. Please try again later.
+            An error occurred while fetching customers. Please try again later.
           </p>
         </div>
       </div>
@@ -270,9 +258,9 @@ const VendorsTable: React.FC = () => {
   return (
     <div className="bg-white p-6 border border-gray-200">
       <div className="flex items-center justify-between mb-6">
-        <h2 className="text-xl font-semibold text-gray-900">Vendors</h2>
+        <h2 className="text-xl font-semibold text-gray-900">Customers</h2>
         <span className="text-sm text-gray-500">
-          {filteredData.length} of {vendor?.data?.length || 0} vendors
+          {filteredData.length} of {customer?.data?.length || 0} customers
         </span>
       </div>
 
@@ -280,7 +268,7 @@ const VendorsTable: React.FC = () => {
         searchValue={searchValue}
         onSearchChange={(e) => setSearchValue(e.target.value)}
         onSearchClear={() => setSearchValue('')}
-        searchPlaceholder="Search vendors, emails, or phone numbers..."
+        searchPlaceholder="Search customers, emails, or phone numbers..."
         filters={filterConfig}
         className="mb-6"
       />
@@ -289,10 +277,10 @@ const VendorsTable: React.FC = () => {
         columns={columns}
         data={filteredData}
         isLoading={isLoading}
-        onRowClick={(row) => console.log('Clicked vendor:', row)}
+        onRowClick={(row) => console.log('Clicked customer:', row)}
       />
     </div>
   );
 };
 
-export default VendorsTable;
+export default CustomersTable;

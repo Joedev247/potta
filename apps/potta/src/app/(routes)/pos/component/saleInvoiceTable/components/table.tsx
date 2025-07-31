@@ -225,30 +225,41 @@ const TableOPS = () => {
 
   return (
     <>
-      <div className="mt-2">
-        <div className="h-[47vh]">
-          <DataGrid
-            columns={columns}
-            data={Array.isArray(context?.data) ? context.data : []}
+      <div className="mt-2 bg-white rounded-lg shadow-sm border border-gray-100">
+        <div className="h-[47vh] p-4">
+          <div className="mb-4">
+            <h3 className="text-lg font-semibold text-gray-800 mb-2">
+              Cart Items
+            </h3>
+            <div className="h-[40vh]">
+              <DataGrid
+                columns={columns}
+                data={Array.isArray(context?.data) ? context.data : []}
+              />
+            </div>
+          </div>
+        </div>
+        <div className="border-t border-gray-100 p-4">
+          <OrderSummary
+            subtotal={context?.orderSummary?.subtotal || 0}
+            discount={context?.orderSummary?.discount || 0}
+            itemDiscounts={context?.orderSummary?.itemDiscounts || 0}
+            tax={context?.orderSummary?.tax || 0}
+            total={context?.orderSummary?.total || 0}
+            setDiscount={(newDiscount: number) => {
+              if (context?.setOrderSummary) {
+                context.setOrderSummary((prev) => ({
+                  ...prev,
+                  discount: newDiscount,
+                  total:
+                    prev.subtotal +
+                    prev.tax -
+                    (prev.itemDiscounts + newDiscount),
+                }));
+              }
+            }}
           />
         </div>
-        <OrderSummary
-          subtotal={context?.orderSummary?.subtotal || 0}
-          discount={context?.orderSummary?.discount || 0}
-          itemDiscounts={context?.orderSummary?.itemDiscounts || 0}
-          tax={context?.orderSummary?.tax || 0}
-          total={context?.orderSummary?.total || 0}
-          setDiscount={(newDiscount: number) => {
-            if (context?.setOrderSummary) {
-              context.setOrderSummary((prev) => ({
-                ...prev,
-                discount: newDiscount,
-                total:
-                  prev.subtotal + prev.tax - (prev.itemDiscounts + newDiscount),
-              }));
-            }
-          }}
-        />
       </div>
     </>
   );

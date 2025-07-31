@@ -4,6 +4,9 @@ import { ContextData } from '@potta/components/context';
 import RootLayout from '../../../layout';
 import TreasurySidebar from '../../components/TreasurySidebar';
 import TreasuryOverview from '../../components/TreasuryOverview';
+import CustomerInvoicesTable from '../../components/CustomerInvoicesTable';
+import PaidInvoicesTable from '../../components/PaidInvoicesTable';
+import CustomersTable from '../../components/CustomersTable';
 
 const AccountReceivablesPage = () => {
   const context = useContext(ContextData);
@@ -14,30 +17,11 @@ const AccountReceivablesPage = () => {
   const menuStructure = {
     customer_invoices: {
       id: 'customer_invoices',
-      submenus: [
-        'pending_invoices',
-        'sent_invoices',
-        'paid_invoices',
-        'overdue_invoices',
-      ],
+      submenus: [],
     },
     customers: {
       id: 'customers',
-      submenus: [
-        'customer_list',
-        'customer_balances',
-        'customer_history',
-        'credit_limits',
-      ],
-    },
-    vendors: {
-      id: 'vendors',
-      submenus: [
-        'vendor_list',
-        'vendor_balances',
-        'vendor_history',
-        'payment_terms',
-      ],
+      submenus: [],
     },
   };
 
@@ -59,6 +43,34 @@ const AccountReceivablesPage = () => {
   };
 
   const renderContent = () => {
+    if (activeTab === 'overview') {
+      return <TreasuryOverview type="ar" />;
+    }
+
+    if (activeTab === 'customer_invoices') {
+      return (
+        <div className="p-3">
+          <CustomerInvoicesTable />
+        </div>
+      );
+    }
+
+    if (activeTab === 'paid_invoices') {
+      return (
+        <div className="p-3">
+          <PaidInvoicesTable />
+        </div>
+      );
+    }
+
+    if (activeTab === 'customers') {
+      return (
+        <div className="p-3">
+          <CustomersTable />
+        </div>
+      );
+    }
+
     if (selectedSubmenu) {
       return (
         <div className="p-6">

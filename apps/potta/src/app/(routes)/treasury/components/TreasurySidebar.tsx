@@ -54,10 +54,16 @@ const TreasurySidebar: React.FC<TreasurySidebarProps> = ({
   const getCategories = () => {
     if (type === 'ar') {
       return [
+        { id: 'overview', label: 'Overview', icon: BarChart3 },
         {
           id: 'customer_invoices',
           label: 'Customer Invoices',
           icon: FileText,
+        },
+        {
+          id: 'paid_invoices',
+          label: 'Paid Invoices',
+          icon: CheckCircle,
         },
         {
           id: 'customers',

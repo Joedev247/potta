@@ -264,7 +264,7 @@ export default function Navbar() {
     if (str[1] === 'expenses' && str[2] === 'bills' && str[3] === 'new') {
       return 'New Bill';
     }
-    if (str[1] === 'pos' && str[2] === 'sales_receipts' ) {
+    if (str[1] === 'pos' && str[2] === 'sales_receipts') {
       return 'Sales Receipts';
     }
     if (str[1] === 'account_payables' && str[2] === undefined) {
@@ -354,9 +354,7 @@ export default function Navbar() {
 
   return (
     <nav className={`w-full sticky z-20 top-0 ${bgColorClass} space-y-10`}>
-      <div
-        className={`flex sticky top-0 left-0 z-20 justify-between ${bgColorClass}`}
-      >
+      <div className={`flex justify-between ${bgColorClass}`}>
         <div className="flex ml-16 items-start gap-20 py-4">
           <h1 className="font-medium text-3xl text-start capitalize">
             {getTitle()}

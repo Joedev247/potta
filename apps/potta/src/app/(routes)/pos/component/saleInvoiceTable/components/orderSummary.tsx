@@ -25,10 +25,10 @@ const OrderSummary: React.FC<OrderSummaryProps> = ({
   const totalDiscount = discount + itemDiscounts;
 
   return (
-    <div>
-      <div>
+    <div className="space-y-6">
+      <div className="flex justify-center">
         <button
-          className="px-4 py-3 flex items-center text-purple-400 border-purple-400 border hover:bg-purple-400 hover:text-white shadow-md"
+          className="px-6 py-3 flex items-center text-purple-600 border-2 border-purple-600 rounded-lg hover:bg-purple-600 hover:text-white transition-all duration-200 shadow-sm hover:shadow-md"
           onClick={() => setIsModalOpen(true)}
         >
           <i className="ri-coupon-3-line mr-2 text-xl"></i>Add Coupon
@@ -39,20 +39,25 @@ const OrderSummary: React.FC<OrderSummaryProps> = ({
           onApplyCoupon={(amount) => setDiscount(amount)}
         />
       </div>
-      <div className="mt-4 w-full flex justify-between items-end">
+
+      <div className="w-full flex justify-between items-end">
         <HoldOrderButton />
         <div className="w-1/2">
-          <div className="w-full flex justify-end ">
-            <div className="w-96 flex-col space-y-2">
-              <div className="w-full flex justify-between border-b py-2">
-                <span className="font-thin">Subtotal</span>
-                <p className="font-semibold text-lg">${subtotal.toFixed(2)}</p>
+          <div className="w-full flex justify-end">
+            <div className="w-96 bg-gray-50 rounded-lg p-4 space-y-3">
+              <div className="w-full flex justify-between py-2 border-b border-gray-200">
+                <span className="font-medium text-gray-600">Subtotal</span>
+                <p className="font-semibold text-lg text-gray-800">
+                  ${subtotal.toFixed(2)}
+                </p>
               </div>
 
               {/* Show item discounts if any */}
               {itemDiscounts > 0 && (
-                <div className="w-full flex justify-between border-b py-2">
-                  <span className="font-thin">Item Discounts</span>
+                <div className="w-full flex justify-between py-2 border-b border-gray-200">
+                  <span className="font-medium text-gray-600">
+                    Item Discounts
+                  </span>
                   <p className="font-semibold text-red-500 text-lg">
                     -${itemDiscounts.toFixed(2)}
                   </p>
@@ -61,8 +66,10 @@ const OrderSummary: React.FC<OrderSummaryProps> = ({
 
               {/* Show coupon discount if any */}
               {discount > 0 && (
-                <div className="w-full flex justify-between border-b py-2">
-                  <span className="font-thin">Coupon Discount</span>
+                <div className="w-full flex justify-between py-2 border-b border-gray-200">
+                  <span className="font-medium text-gray-600">
+                    Coupon Discount
+                  </span>
                   <p className="font-semibold text-red-500 text-lg">
                     -${discount.toFixed(2)}
                   </p>
@@ -71,27 +78,29 @@ const OrderSummary: React.FC<OrderSummaryProps> = ({
 
               {/* Show total discount row only if there are discounts */}
               {totalDiscount > 0 && (
-                <div className="w-full flex justify-between border-b py-2">
-                  <span className="font-thin">Total Discount</span>
+                <div className="w-full flex justify-between py-2 border-b border-gray-200">
+                  <span className="font-medium text-gray-600">
+                    Total Discount
+                  </span>
                   <p className="font-semibold text-red-500 text-lg">
                     -${totalDiscount.toFixed(2)}
                   </p>
                 </div>
               )}
 
-              <div className="w-full flex justify-between py-2 border-b">
-                <span className="font-thin">Tax</span>
-                <p className="font-semibold text-lg">${tax.toFixed(2)}</p>
+              <div className="w-full flex justify-between py-2 border-b border-gray-200">
+                <span className="font-medium text-gray-600">Tax</span>
+                <p className="font-semibold text-lg text-gray-800">
+                  ${tax.toFixed(2)}
+                </p>
               </div>
-              <div className="w-full flex justify-between py-2 border-b">
-                <span className="font-thin">Total</span>
-                <p className="font-semibold text-lg">${total.toFixed(2)}</p>
+              <div className="w-full flex justify-between py-3 bg-green-50 rounded-lg px-3">
+                <span className="font-semibold text-gray-800">Total</span>
+                <p className="font-bold text-xl text-green-700">
+                  ${total.toFixed(2)}
+                </p>
               </div>
             </div>
-          </div>
-
-          <div className="flex justify-between mt-4">
-            {/* Print button section if needed */}
           </div>
         </div>
       </div>

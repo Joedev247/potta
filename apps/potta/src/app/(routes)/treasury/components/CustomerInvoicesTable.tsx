@@ -2,11 +2,12 @@ import React, { useState, useMemo } from 'react';
 import { ColumnDef } from '@tanstack/react-table';
 import DataGrid from '@potta/app/(routes)/account_receivables/components/DataGrid';
 import DynamicFilter from '@potta/components/dynamic-filter';
-import { Filter, Calendar, DollarSign, Eye, CreditCard } from 'lucide-react';
+import { Filter, Calendar, DollarSign, Eye } from 'lucide-react';
 import Button from '@potta/components/button';
 import moment from 'moment';
+import InvoiceModal from './InvoiceModal';
 
-interface PaidInvoice {
+interface CustomerInvoice {
   id: string;
   invoiceNumber: string;
   customerName: string;
@@ -16,19 +17,22 @@ interface PaidInvoice {
   status: string;
   issueDate: string;
   dueDate: string;
-  paidDate: string;
   type: string;
   description: string;
   paymentMethod?: string;
 }
 
-const PaidInvoicesTable: React.FC = () => {
+const CustomerInvoicesTable: React.FC = () => {
   const [searchValue, setSearchValue] = useState('');
+  const [statusFilter, setStatusFilter] = useState('all');
   const [dateFilter, setDateFilter] = useState('all');
   const [amountFilter, setAmountFilter] = useState('all');
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedInvoice, setSelectedInvoice] =
+    useState<CustomerInvoice | null>(null);
 
   // Mock data - replace with actual API call
-  const mockData: PaidInvoice[] = [
+  const mockData: CustomerInvoice[] = [
     {
       id: '1',
       invoiceNumber: 'INV-2024-001',
@@ -36,10 +40,9 @@ const PaidInvoicesTable: React.FC = () => {
       customerEmail: 'john.smith@email.com',
       amount: 25000.0,
       currency: 'XAF',
-      status: 'paid',
+      status: 'pending',
       issueDate: '2024-01-15',
-      dueDate: '2024-02-15',
-      paidDate: '2024-02-10',
+      dueDate: '2025-07-31',
       type: 'Service',
       description: 'Consulting services for Q1',
       paymentMethod: 'mtn',
@@ -51,10 +54,9 @@ const PaidInvoicesTable: React.FC = () => {
       customerEmail: 'sarah.johnson@email.com',
       amount: 18000.0,
       currency: 'XAF',
-      status: 'paid',
+      status: 'pending',
       issueDate: '2024-01-20',
-      dueDate: '2024-02-20',
-      paidDate: '2024-02-18',
+      dueDate: '2025-08-02',
       type: 'Product',
       description: 'Software license renewal',
       paymentMethod: 'orange',
@@ -66,10 +68,9 @@ const PaidInvoicesTable: React.FC = () => {
       customerEmail: 'mike.wilson@email.com',
       amount: 32000.0,
       currency: 'XAF',
-      status: 'paid',
+      status: 'pending',
       issueDate: '2024-01-10',
-      dueDate: '2024-02-10',
-      paidDate: '2024-02-05',
+      dueDate: '2025-08-05',
       type: 'Service',
       description: 'Technical support services',
       paymentMethod: 'mtn',
@@ -81,10 +82,9 @@ const PaidInvoicesTable: React.FC = () => {
       customerEmail: 'emily.davis@email.com',
       amount: 15000.0,
       currency: 'XAF',
-      status: 'paid',
+      status: 'overdue',
       issueDate: '2024-01-25',
-      dueDate: '2024-02-25',
-      paidDate: '2024-02-22',
+      dueDate: '2025-02-25',
       type: 'Product',
       description: 'Hardware equipment',
       paymentMethod: 'orange',
@@ -108,6 +108,41 @@ const PaidInvoicesTable: React.FC = () => {
     }).format(amount);
   };
 
+  const formatRemainingTime = (dueDate: string) => {
+    const now = moment();
+    const due = moment(dueDate);
+    const diff = due.diff(now, 'days');
+
+    if (diff < 0) {
+      // Overdue
+      const overdueDays = Math.abs(diff);
+      if (overdueDays === 1) return '1 day overdue';
+      if (overdueDays < 7) return `${overdueDays} days overdue`;
+      if (overdueDays < 30)
+        return `${Math.ceil(overdueDays / 7)} weeks overdue`;
+      return `${Math.ceil(overdueDays / 30)} months overdue`;
+    } else if (diff === 0) {
+      return 'Due today';
+    } else {
+      // Due in the future
+      if (diff === 1) return 'Due tomorrow';
+      if (diff < 7) return `${diff} days`;
+      if (diff < 30) return `${Math.ceil(diff / 7)} weeks`;
+      return `${Math.ceil(diff / 30)} months`;
+    }
+  };
+
+  const getRemainingTimeColor = (dueDate: string) => {
+    const now = moment();
+    const due = moment(dueDate);
+    const diff = due.diff(now, 'days');
+
+    if (diff < 0) return 'text-red-600 font-semibold'; // Overdue
+    if (diff <= 3) return 'text-orange-600 font-semibold'; // Due soon
+    if (diff <= 7) return 'text-yellow-600 font-semibold'; // Due this week
+    return 'text-gray-600'; // Normal
+  };
+
   const filteredData = useMemo(() => {
     return mockData.filter((invoice) => {
       const searchMatch =
@@ -120,12 +155,15 @@ const PaidInvoicesTable: React.FC = () => {
           .includes(searchValue.toLowerCase()) ||
         invoice.invoiceNumber.toLowerCase().includes(searchValue.toLowerCase());
 
+      const statusMatch =
+        statusFilter === 'all' || invoice.status === statusFilter;
+
       let dateMatch = true;
       if (dateFilter !== 'all') {
-        const paidDate = new Date(invoice.paidDate);
+        const invoiceDate = new Date(invoice.issueDate);
         const now = new Date();
         const diffDays = Math.ceil(
-          (now.getTime() - paidDate.getTime()) / (1000 * 60 * 60 * 24)
+          (now.getTime() - invoiceDate.getTime()) / (1000 * 60 * 60 * 24)
         );
 
         switch (dateFilter) {
@@ -149,25 +187,39 @@ const PaidInvoicesTable: React.FC = () => {
         const amount = invoice.amount;
         switch (amountFilter) {
           case 'low':
-            amountMatch = amount < 10000;
+            amountMatch = amount < 1000;
             break;
           case 'medium':
-            amountMatch = amount >= 10000 && amount < 50000;
+            amountMatch = amount >= 1000 && amount < 5000;
             break;
           case 'high':
-            amountMatch = amount >= 50000;
+            amountMatch = amount >= 5000;
             break;
         }
       }
 
-      return searchMatch && dateMatch && amountMatch;
+      return searchMatch && statusMatch && dateMatch && amountMatch;
     });
-  }, [searchValue, dateFilter, amountFilter]);
+  }, [searchValue, statusFilter, dateFilter, amountFilter]);
 
   const filterConfig = [
     {
+      key: 'status',
+      label: 'Status',
+      icon: <Filter className="w-4 h-4 text-gray-400" />,
+      options: [
+        { label: 'All Status', value: 'all' },
+        { label: 'Pending', value: 'pending' },
+        { label: 'Sent', value: 'sent' },
+        { label: 'Paid', value: 'paid' },
+        { label: 'Overdue', value: 'overdue' },
+      ],
+      value: statusFilter,
+      onChange: setStatusFilter,
+    },
+    {
       key: 'date',
-      label: 'Paid Date',
+      label: 'Issue Date',
       icon: <Calendar className="w-4 h-4 text-gray-400" />,
       options: [
         { label: 'All', value: 'all' },
@@ -185,16 +237,16 @@ const PaidInvoicesTable: React.FC = () => {
       icon: <DollarSign className="w-4 h-4 text-gray-400" />,
       options: [
         { label: 'All', value: 'all' },
-        { label: 'Low (< 10,000 XAF)', value: 'low' },
-        { label: 'Medium (10,000 - 50,000 XAF)', value: 'medium' },
-        { label: 'High (> 50,000 XAF)', value: 'high' },
+        { label: 'Low (< €1,000)', value: 'low' },
+        { label: 'Medium (€1,000 - €5,000)', value: 'medium' },
+        { label: 'High (> €5,000)', value: 'high' },
       ],
       value: amountFilter,
       onChange: setAmountFilter,
     },
   ];
 
-  const columns: ColumnDef<PaidInvoice>[] = [
+  const columns: ColumnDef<CustomerInvoice>[] = [
     {
       accessorKey: 'invoiceNumber',
       header: 'Invoice Number',
@@ -221,6 +273,36 @@ const PaidInvoicesTable: React.FC = () => {
       ),
     },
     {
+      accessorKey: 'status',
+      header: 'Status',
+      cell: ({ row }) => {
+        const status = row.getValue('status') as string;
+        const getStatusColor = (status: string) => {
+          switch (status) {
+            case 'pending':
+              return 'bg-yellow-100 text-yellow-800';
+            case 'sent':
+              return 'bg-blue-100 text-blue-800';
+            case 'paid':
+              return 'bg-green-100 text-green-800';
+            case 'overdue':
+              return 'bg-red-100 text-red-800';
+            default:
+              return 'bg-gray-100 text-gray-800';
+          }
+        };
+        return (
+          <span
+            className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getStatusColor(
+              status
+            )}`}
+          >
+            {status.charAt(0).toUpperCase() + status.slice(1)}
+          </span>
+        );
+      },
+    },
+    {
       accessorKey: 'type',
       header: 'Type',
       cell: ({ row }) => (
@@ -230,11 +312,15 @@ const PaidInvoicesTable: React.FC = () => {
       ),
     },
     {
-      accessorKey: 'paidDate',
-      header: 'Paid Date',
+      accessorKey: 'dueDate',
+      header: 'Due Date',
       cell: ({ row }) => (
-        <div className="text-gray-900">
-          {moment(row.getValue('paidDate')).format('MMM DD, YYYY')}
+        <div
+          className={`text-sm ${getRemainingTimeColor(
+            row.getValue('dueDate')
+          )}`}
+        >
+          {formatRemainingTime(row.getValue('dueDate'))}
         </div>
       ),
     },
@@ -285,39 +371,28 @@ const PaidInvoicesTable: React.FC = () => {
           text="View"
           type="button"
           icon={<Eye className="w-3 h-3 mr-1" />}
-          onClick={() => console.log('View paid invoice:', row.original)}
+          onClick={() => {
+            setSelectedInvoice(row.original);
+            setIsModalOpen(true);
+          }}
         />
       ),
     },
   ];
 
-  const handlePayClick = () => {
-    console.log('Pay button clicked - redirect to payment page');
-    // Add payment logic here
-  };
-
   return (
     <div className="bg-white p-6 border border-gray-200">
       <div className="flex items-center justify-between mb-6">
-        <div>
-          <h2 className="text-xl font-semibold text-gray-900">Paid Invoices</h2>
-          <span className="text-sm text-gray-500">
-            {filteredData.length} of {mockData.length} paid invoices
-          </span>
-        </div>
-        <Button
-          text="Pay"
-          type="button"
-          icon={<CreditCard className="w-4 h-4 mr-1" />}
-          onClick={handlePayClick}
-        />
+        <h2 className="text-xl font-semibold text-gray-900">
+          Customer Invoices
+        </h2>
       </div>
 
       <DynamicFilter
         searchValue={searchValue}
         onSearchChange={(e) => setSearchValue(e.target.value)}
         onSearchClear={() => setSearchValue('')}
-        searchPlaceholder="Search paid invoices, customers..."
+        searchPlaceholder="Search invoices, customers..."
         filters={filterConfig}
         className="mb-6"
       />
@@ -327,8 +402,15 @@ const PaidInvoicesTable: React.FC = () => {
         columns={columns}
         onRowClick={(row) => console.log('Clicked:', row)}
       />
+
+      {/* Invoice Modal */}
+      <InvoiceModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        invoice={selectedInvoice}
+      />
     </div>
   );
 };
 
-export default PaidInvoicesTable;
+export default CustomerInvoicesTable;
