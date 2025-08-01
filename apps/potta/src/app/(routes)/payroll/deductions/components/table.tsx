@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import DataGrid from '@potta/app/(routes)/account_receivables/components/DataGrid';
+import DataGrid from '@potta/app/(routes)/account_receivables/invoice/components/DataGrid';
 import { IColumnDef } from '@potta/app/(routes)/account_receivables/_utils/types';
 import { EllipsisVertical } from 'lucide-react';
 import {

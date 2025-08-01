@@ -1,5 +1,5 @@
 'use client';
-import DataGrid from '@potta/app/(routes)/account_receivables/components/DataGrid';
+import DataGrid from '@potta/app/(routes)/account_receivables/invoice/components/DataGrid';
 import React, { useEffect, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { employeeApi } from '../../utils/api';

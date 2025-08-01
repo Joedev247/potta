@@ -1,6 +1,6 @@
 'use client';
 import React, { useState, useEffect } from 'react';
-import DataGrid from '@potta/app/(routes)/account_receivables/components/DataGrid';
+import DataGrid from '@potta/app/(routes)/account_receivables/invoice/components/DataGrid';
 import {
   DropdownMenu,
   DropdownMenuTrigger,

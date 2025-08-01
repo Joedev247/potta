@@ -1,6 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import { ColumnDef } from '@tanstack/react-table';
-import DataGrid from '@potta/app/(routes)/account_receivables/components/DataGrid';
+import DataGrid from '@potta/app/(routes)/account_receivables/invoice/components/DataGrid';
 import DynamicFilter from '@potta/components/dynamic-filter';
 import { Filter, Calendar, DollarSign } from 'lucide-react';
 

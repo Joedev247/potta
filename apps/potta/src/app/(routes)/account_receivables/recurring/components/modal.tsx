@@ -70,7 +70,7 @@ const ModalInvoice: FC<IModalInvoice> = ({ isOpen, setIsOpen }) => {
               <div
                 key={index}
                 onClick={() => handleInvoiceClick(item.link)}
-                className="flex items-start justify-center space-x-4 p-4 rounded hover:shadow-md shadow-sm transition-all cursor-pointer
+                className="flex bg-red-500 items-start justify-center space-x-4 p-4 rounded hover:shadow-md shadow-sm transition-all cursor-pointer
                          hover:bg-gray-50 active:bg-gray-100 h-full"
               >
                 <div className="flex-shrink-0 relative w-16 h-16">

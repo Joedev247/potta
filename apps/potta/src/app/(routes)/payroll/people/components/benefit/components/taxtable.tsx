@@ -1,5 +1,5 @@
 import React from 'react';
-import DataGrid from '@potta/app/(routes)/account_receivables/components/DataGrid';
+import DataGrid from '@potta/app/(routes)/account_receivables/invoice/components/DataGrid';
 
 // Define the deduction type
 interface Deduction {

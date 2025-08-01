@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import DataGrid from '@potta/app/(routes)/account_receivables/components/DataGrid';
+import DataGrid from '@potta/app/(routes)/account_receivables/invoice/components/DataGrid';
 import { ArrowUpFromLine, CirclePlus, Download, Plus } from 'lucide-react';
 import Search from '@potta/components/search';
 import Button from '@potta/components/button';

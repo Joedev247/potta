@@ -1,6 +1,6 @@
 'use client';
 import React, { FC, useState } from 'react';
-import DataGrid from '@potta/app/(routes)/account_receivables/components/DataGrid';
+import DataGrid from '@potta/app/(routes)/account_receivables/invoice/components/DataGrid';
 import {
   getCountryCallingCode,
   parsePhoneNumberFromString,

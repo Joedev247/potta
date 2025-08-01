@@ -2,26 +2,32 @@
 import { ContextData } from '@potta/components/context';
 import { useContext } from 'react';
 import RootLayout from '../../layout';
-import InvoiceTable from '../components/table';
+import InvoiceTable from './components/table';
+import { InvoiceFilterProvider } from './_context/InvoiceFilterContext';
+
+// Move the context provider to a higher level component
+const InvoiceWithProvider = () => {
+  return (
+    <InvoiceFilterProvider>
+      <Invoice />
+    </InvoiceFilterProvider>
+  );
+};
+
 const Invoice = () => {
   const context = useContext(ContextData);
 
   return (
-   <RootLayout>
-      <div className={`${context?.layoutMode === 'sidebar' ? 'px-14' : 'px-5'}`}>
-        {/* <CustomInput />
-        <CustomSelect
-          options={options}
-          value={selectedValue}
-          onChange={setSelectedValue}
-          placeholder="Choose an option"
-        /> */}
+    <RootLayout>
+      <div
+        className={`${context?.layoutMode === 'sidebar' ? 'px-14' : 'px-5'}`}
+      >
         <div className="">
           <InvoiceTable />
         </div>
       </div>
-   </RootLayout>
+    </RootLayout>
   );
 };
 
-export default Invoice;
+export default InvoiceWithProvider;

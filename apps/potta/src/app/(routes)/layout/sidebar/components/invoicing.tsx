@@ -61,11 +61,7 @@ const Sidebarsinvoicing = () => {
           <h3 className="text-md mt-[2px]">Dashboard</h3>{' '}
         </MenuItem>
         <MenuItem
-          active={
-            (str[2] == 'invoice' && str[3] == undefined) || str[3] == 'new'
-              ? true
-              : false
-          }
+          active={isActive('/account_receivables/invoice')}
           className="text-md"
           href="/account_receivables/invoice"
           icon={
@@ -73,9 +69,7 @@ const Sidebarsinvoicing = () => {
               icon="file-invoice-dollar"
               size={23}
               color={
-                (str[2] == 'invoice' && str[3] == undefined) || str[3] == 'new'
-                  ? 'white'
-                  : 'black'
+                isActive('/account_receivables/invoice') ? 'white' : 'black'
               }
             />
           }

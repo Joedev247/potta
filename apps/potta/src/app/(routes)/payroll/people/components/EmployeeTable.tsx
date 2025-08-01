@@ -1,6 +1,6 @@
 import React from 'react';
 import moment from 'moment';
-import DataGrid from '@potta/app/(routes)/account_receivables/components/DataGrid';
+import DataGrid from '@potta/app/(routes)/account_receivables/invoice/components/DataGrid';
 import {
   DropdownMenu,
   DropdownMenuTrigger,

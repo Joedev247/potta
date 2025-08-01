@@ -19,11 +19,11 @@ const AppLauncher: React.FC = () => {
 
   // Use only the urlRouters array from navbar with custom icons
   const apps: AppItem[] = [
-    {
-      value: '',
-      label: 'Home',
-      icon: AppLauncherIcons.home,
-    },
+    // {
+    //   value: '',
+    //   label: 'Home',
+    //   icon: AppLauncherIcons.home,
+    // },
     {
       value: 'account_payables',
       label: 'AP',
@@ -119,7 +119,11 @@ const AppLauncher: React.FC = () => {
         aria-label="Open app launcher"
       >
         {/* Current App Icon */}
-        <div className="w-10 h-10 flex items-center justify-center">
+        <div
+          className={`flex items-center justify-center ${
+            currentApp.value === '' ? 'w-8 h-2' : 'w-10 h-10'
+          }`}
+        >
           {currentApp.icon}
         </div>
 
@@ -162,7 +166,8 @@ const AppLauncher: React.FC = () => {
                 >
                   {/* App Icon */}
                   <div
-                    className={`w-[3.3em] h-[3.3em] grid place-content-center  group-hover:scale-[1.05] transition-transform duration-200 focus:outline-none focus:ring-0 focus:border-0`}
+                    className={`grid place-content-center group-hover:scale-[1.05] transition-transform duration-200 focus:outline-none focus:ring-0 focus:border-0 w-[3.3em] h-[3.3em]
+                      `}
                   >
                     {app.icon}
                   </div>

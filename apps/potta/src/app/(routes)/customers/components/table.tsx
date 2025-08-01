@@ -1,6 +1,6 @@
 'use client';
 import React, { FC, useState } from 'react';
-import DataGrid from '@potta/app/(routes)/account_receivables/components/DataGrid';
+import DataGrid from '@potta/app/(routes)/account_receivables/invoice/components/DataGrid';
 import {
   getCountryCallingCode,
   parsePhoneNumberFromString,
@@ -89,7 +89,9 @@ const TableComponents = () => {
     {
       accessorKey: 'phone',
       header: 'Telephone',
-      cell: ({ row: { original } }) => <PhoneFlag phoneNumber={original.phone} />,
+      cell: ({ row: { original } }) => (
+        <PhoneFlag phoneNumber={original.phone} />
+      ),
     },
     {
       accessorKey: 'email',
@@ -123,7 +125,7 @@ const TableComponents = () => {
           statusColorMap[status.toLowerCase()] || 'bg-gray-100 text-gray-800'; // Default styling
         return (
           <div
-            className={`px-3 py-1 rounded-full text-xs font-medium ${colorClass}`}
+            className={`px-3 py-1 rounded-full w-fit text-xs font-medium ${colorClass}`}
           >
             {status.charAt(0).toUpperCase() + status.slice(1)}{' '}
             {/* Capitalize first letter */}

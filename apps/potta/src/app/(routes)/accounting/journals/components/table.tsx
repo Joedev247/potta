@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import { Button } from '@potta/components/shadcn/button';
 import { Eye } from 'lucide-react';
-import DataGrid from '@potta/app/(routes)/account_receivables/components/DataGrid';
+import DataGrid from '@potta/app/(routes)/account_receivables/invoice/components/DataGrid';
 import useGetGeneralLedger from '../hooks/useGetGeneralLedger';
 import CustomLoader from '@potta/components/loader';
 

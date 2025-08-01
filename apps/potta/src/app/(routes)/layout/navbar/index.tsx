@@ -8,7 +8,7 @@ import { Bell, Inbox } from 'lucide-react'; // Import the icons
 import PosCustomersBox from './boxes/PosCustomersBox';
 import PosSalesBox from './boxes/PosSalesBox';
 import { ContextData } from '../../../../components/context';
-import VouchersBox from '../../vouchers/components/boxVouchers';
+import VouchersBox from '../../account_receivables/vouchers/components/boxVouchers';
 import InvoiceBox from './boxes/InvoiceBox';
 import VendorsBox from './boxes/PosVendorsBox';
 import AppLauncher from '../../../../components/AppLauncher';
@@ -195,14 +195,20 @@ export default function Navbar() {
     ) {
       return false;
     }
+    if (
+      str[1] === 'account_receivables' &&
+      str[2] === 'vouchers' &&
+      str[3] === 'new'
+    ) {
+      return false;
+    }
+    if (str[1] === 'account_receivables' && str[2] === 'vouchers') {
+      return true;
+    }
     if (str[1] === 'pos' && str[2] === 'sales' && str[3] === 'new') {
       return false;
     }
-    if (
-      (str[1] === 'pos' || str[1] === 'account_receivables') &&
-      str[2] === 'sales'
-    )
-      return true;
+    if (str[1] === 'pos' && str[2] === 'sales') return true;
     if (str[1] === 'account_receivables' && str[2] === 'invoice') {
       return true;
     }
@@ -259,6 +265,9 @@ export default function Navbar() {
     }
     // Special case for /pos/new route
     if (str[1] === 'pos' && str[2] === 'sales' && str[3] === 'new') {
+      return 'New Sales ';
+    }
+    if (str[1] === 'account_receivables' && str[2] === 'sales_receipts' && str[3] === 'new') {
       return 'New Sales Receipt';
     }
     if (str[1] === 'expenses' && str[2] === 'bills' && str[3] === 'new') {
@@ -282,12 +291,22 @@ export default function Navbar() {
     if (str[1] === 'account_receivables' && str[2] === undefined) {
       return 'AR';
     }
-
+    if (str[1] === 'account_receivables' && str[2] === 'sales_receipts') {
+      return 'Sales Receipts';
+    }
     if (
-      (str[1] === 'account_receivables' && str[2] === 'invoice') ||
+      str[1] === 'account_receivables' &&
+      str[2] === 'invoice' &&
       str[3] === 'new'
     ) {
       return 'New Invoice';
+    }
+    if (
+      str[1] === 'account_receivables' &&
+      str[2] === 'vouchers' &&
+      str[3] === 'new'
+    ) {
+      return 'New Voucher';
     }
 
     if (str[1] === 'reports' && str[2] === undefined) {

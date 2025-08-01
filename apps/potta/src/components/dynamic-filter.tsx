@@ -1,6 +1,6 @@
 import React from 'react';
 import Search from './search';
-import CustomSelect from '@potta/app/(routes)/account_receivables/components/CustomSelect';
+import CustomSelect from '@potta/app/(routes)/account_receivables/invoice/components/CustomSelect';
 
 interface FilterOption {
   label: string;

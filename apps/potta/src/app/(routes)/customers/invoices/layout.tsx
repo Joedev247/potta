@@ -1,7 +1,7 @@
 'use client';
 import React, { FC, ReactNode } from 'react';
 import RootLayout from '../layout';
-import NextUiProvider from '@potta/app/(routes)/account_receivables/components/provider';
+import NextUiProvider from '@potta/app/(routes)/account_receivables/invoice/components/provider';
 
 interface Props {
   children: ReactNode;

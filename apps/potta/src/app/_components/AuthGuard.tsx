@@ -23,13 +23,13 @@ const AuthGuard: React.FC<AuthGuardProps> = ({ children }) => {
     }
 
     // If not loading and no token, redirect to auth
-    if (!isLoading && !token) {
-      console.log('AuthGuard: No token found, redirecting to auth...');
-      const currentUrl = window.location.href;
-      const authUrl = new URL('https://instanvi-auth.vercel.app');
-      authUrl.searchParams.set('redirectUrl', currentUrl);
-      window.location.href = authUrl.toString();
-    }
+    // if (!isLoading && !token) {
+    //   console.log('AuthGuard: No token found, redirecting to auth...');
+    //   const currentUrl = window.location.href;
+    //   const authUrl = new URL('https://instanvi-auth.vercel.app');
+    //   authUrl.searchParams.set('redirectUrl', currentUrl);
+    //   window.location.href = authUrl.toString();
+    // }
   }, [token, isLoading]);
 
   // Show loading state while checking authentication

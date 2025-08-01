@@ -1,6 +1,6 @@
 // apps/potta/src/app/(routes)/payroll/people/components/benefit/components/benefitTable.tsx
 
-import DataGrid from '@potta/app/(routes)/account_receivables/components/DataGrid';
+import DataGrid from '@potta/app/(routes)/account_receivables/invoice/components/DataGrid';
 import React from 'react';
 
 // Define the benefit type to match the parent component

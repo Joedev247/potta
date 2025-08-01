@@ -8,11 +8,9 @@ import Search from '@potta/components/search';
 import Select from '@potta/components/select';
 import Button from '@potta/components/button';
 import { useState } from 'react';
-import ModalInvoice from '@potta/app/(routes)/account_receivables/components/modal';
-import useGetAllInvoice from '@potta/app/(routes)/account_receivables/_hooks/useGetAllInvoice';
+import ModalInvoice from '@potta/app/(routes)/account_receivables/invoice/components/modal';
+import useGetAllInvoice from '@potta/app/(routes)/account_receivables/invoice/_hooks/useGetAllInvoice';
 import { v4 as uuid } from 'uuid';
-import DataGrid from './components/DataGrid';
-import CustomInput from './components/CustomInput';
 import CustomSelect, { IOption } from './components/CustomSelect';
 const Invoice = () => {
   const [detailsModal, setDetailsModal] = useState<boolean>(false);

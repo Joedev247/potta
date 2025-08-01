@@ -12,7 +12,7 @@ import Button from '@potta/components/button';
 import useGetAllPurchaseOrders from '../hooks/useGetAllPurchaseOrders';
 import Slider from '@potta/components/slideover';
 import PurchaseOrderPage from '../new/page';
-import CustomSelect from '@potta/app/(routes)/account_receivables/components/CustomSelect';
+import CustomSelect from '@potta/app/(routes)/account_receivables/invoice/components/CustomSelect';
 import { IOption } from '@potta/app/(routes)/policies/utils/types';
 
 // Define types for purchase order
