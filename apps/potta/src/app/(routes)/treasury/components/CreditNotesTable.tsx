@@ -70,7 +70,7 @@ const CreditNotesTable: React.FC = () => {
   const formatCurrency = (amount: number) => {
     return new Intl.NumberFormat('en-US', {
       style: 'currency',
-      currency: 'EUR',
+      currency: 'XAF',
       minimumFractionDigits: 2,
       maximumFractionDigits: 2,
     }).format(amount);

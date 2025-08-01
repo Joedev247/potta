@@ -106,15 +106,15 @@ const DeductionTable = () => {
 
   return (
     <>
-      <DataGrid data={deductions} column={columns} loading={isLoading} />
-      
+      <DataGrid data={deductions} columns={columns} loading={isLoading} />
+
       {/* View Deduction Modal */}
       <ViewDeductionModal
         open={!!viewId}
         setOpen={(open) => !open && setViewId(null)}
         deductionId={viewId}
       />
-      
+
       {/* Modals/Slideover for edit, delete will go here */}
     </>
   );

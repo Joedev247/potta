@@ -19,11 +19,11 @@ const AppLauncher: React.FC = () => {
 
   // Use only the urlRouters array from navbar with custom icons
   const apps: AppItem[] = [
-    // {
-    //   value: '',
-    //   label: 'Home',
-    //   icon: AppLauncherIcons.home,
-    // },
+    {
+      value: '',
+      label: 'Home',
+      icon: AppLauncherIcons.home,
+    },
     {
       value: 'account_payables',
       label: 'AP',

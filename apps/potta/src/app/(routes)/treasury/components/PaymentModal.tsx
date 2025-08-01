@@ -34,19 +34,37 @@ const PaymentModal: React.FC<PaymentModalProps> = ({
   const paymentMethods = [
     {
       id: 'mobile_money',
-      name: 'Mobile Money',
-      icon: <Smartphone className="w-6 h-6" />,
-      description: 'Pay with Mobile Money',
+      name: 'MTN Mobile Money',
+      icon: (
+        <img src="/icons/mtn.svg" alt="MTN Mobile Money" className="w-6 h-6" />
+      ),
+      description: 'Pay with MTN Mobile Money',
       color: 'bg-green-50 border-green-200 text-green-700',
       hoverColor: 'hover:bg-green-100',
     },
     {
       id: 'orange_money',
       name: 'Orange Money',
-      icon: <Smartphone className="w-6 h-6" />,
+      icon: <img src="/icons/om.svg" alt="Orange Money" className="w-6 h-6" />,
       description: 'Pay with Orange Money',
       color: 'bg-orange-50 border-orange-200 text-orange-700',
       hoverColor: 'hover:bg-orange-100',
+    },
+    {
+      id: 'check',
+      name: 'Check',
+      icon: <DollarSign className="w-6 h-6" />,
+      description: 'Pay with Check',
+      color: 'bg-blue-50 border-blue-200 text-blue-700',
+      hoverColor: 'hover:bg-blue-100',
+    },
+    {
+      id: 'bank_transfer',
+      name: 'Bank Transfer',
+      icon: <CreditCard className="w-6 h-6" />,
+      description: 'Pay with Bank Transfer',
+      color: 'bg-purple-50 border-purple-200 text-purple-700',
+      hoverColor: 'hover:bg-purple-100',
     },
   ];
 
@@ -104,7 +122,7 @@ const PaymentModal: React.FC<PaymentModalProps> = ({
   const formatCurrency = (amount: number) => {
     return new Intl.NumberFormat('en-US', {
       style: 'currency',
-      currency: 'EUR',
+      currency: 'XAF',
       minimumFractionDigits: 2,
       maximumFractionDigits: 2,
     }).format(amount);
@@ -171,7 +189,7 @@ const PaymentModal: React.FC<PaymentModalProps> = ({
                 <div className="space-y-6">
                   {/* Invoice Details */}
                   {selectedInvoice && (
-                    <div className="bg-gray-50 p-4 rounded-lg">
+                    <div className="bg-gray-50 p-4 ">
                       <h3 className="font-semibold text-gray-900 mb-2">
                         Invoice Details
                       </h3>
@@ -208,7 +226,7 @@ const PaymentModal: React.FC<PaymentModalProps> = ({
                         <button
                           key={method.id}
                           onClick={() => setPaymentMethod(method.id)}
-                          className={`w-full p-4 border-2 rounded-lg flex items-center space-x-3 transition-colors ${
+                          className={`w-full p-4 border-2  flex items-center space-x-3 transition-colors ${
                             paymentMethod === method.id
                               ? `${method.color} border-current`
                               : 'border-gray-200 hover:border-gray-300'
@@ -218,9 +236,6 @@ const PaymentModal: React.FC<PaymentModalProps> = ({
                           {method.icon}
                           <div className="text-left">
                             <div className="font-medium">{method.name}</div>
-                            <div className="text-sm opacity-75">
-                              {method.description}
-                            </div>
                           </div>
                         </button>
                       ))}
@@ -230,49 +245,185 @@ const PaymentModal: React.FC<PaymentModalProps> = ({
                   {/* Payment Form */}
                   {paymentMethod && (
                     <div className="space-y-4">
-                      <Input
-                        label="Phone Number"
-                        type="tel"
-                        name="phoneNumber"
-                        placeholder="Enter phone number"
-                        value={phoneNumber}
-                        onchange={(e) => setPhoneNumber(e.target.value)}
-                        required
-                        disabled={isProcessing}
-                      />
+                      {/* Mobile Money Fields */}
+                      {(paymentMethod === 'mobile_money' ||
+                        paymentMethod === 'orange_money') && (
+                        <>
+                          <Input
+                            label="Phone Number"
+                            type="tel"
+                            name="phoneNumber"
+                            placeholder="Enter phone number"
+                            value={phoneNumber}
+                            onchange={(e) => setPhoneNumber(e.target.value)}
+                            required
+                            disabled={isProcessing}
+                          />
 
-                      <Input
-                        label="Amount (EUR)"
-                        type="number"
-                        name="amount"
-                        placeholder="0.00"
-                        value={amount}
-                        onchange={(e) => setAmount(e.target.value)}
-                        step="0.01"
-                        min="0"
-                        required
-                        disabled={isProcessing}
-                      />
+                          <Input
+                            label="Amount (XAF)"
+                            type="number"
+                            name="amount"
+                            placeholder="0.00"
+                            value={amount}
+                            onchange={(e) => setAmount(e.target.value)}
+                            step="0.01"
+                            min="0"
+                            required
+                            disabled={isProcessing}
+                          />
 
-                      {/* Payment Instructions */}
-                      <div className="p-4 bg-blue-50 rounded-lg">
-                        <h4 className="font-medium text-blue-900 mb-2">
-                          Payment Instructions
-                        </h4>
-                        <ul className="text-sm text-blue-800 space-y-1">
-                          <li>
-                            • Enter your phone number registered with{' '}
-                            {paymentMethod === 'mobile_money'
-                              ? 'Mobile Money'
-                              : 'Orange Money'}
-                          </li>
-                          <li>
-                            • You will receive a payment prompt on your phone
-                          </li>
-                          <li>• Enter your PIN to complete the transaction</li>
-                          <li>• Payment will be processed immediately</li>
-                        </ul>
-                      </div>
+                          {/* Payment Instructions */}
+                          <div className="p-4 bg-blue-50 ">
+                            <h4 className="font-medium text-blue-900 mb-2">
+                              Payment Instructions
+                            </h4>
+                            <ul className="text-sm text-blue-800 space-y-1">
+                              <li>
+                                • Enter your phone number registered with{' '}
+                                {paymentMethod === 'mobile_money'
+                                  ? 'MTN Mobile Money'
+                                  : 'Orange Money'}
+                              </li>
+                              <li>
+                                • You will receive a payment prompt on your
+                                phone
+                              </li>
+                              <li>
+                                • Enter your PIN to complete the transaction
+                              </li>
+                              <li>• Payment will be processed immediately</li>
+                            </ul>
+                          </div>
+                        </>
+                      )}
+
+                      {/* Check Fields */}
+                      {paymentMethod === 'check' && (
+                        <>
+                          <Input
+                            label="Check Number"
+                            type="text"
+                            name="checkNumber"
+                            placeholder="Enter check number"
+                            value={phoneNumber}
+                            onchange={(e) => setPhoneNumber(e.target.value)}
+                            required
+                            disabled={isProcessing}
+                          />
+
+                          <Input
+                            label="Amount (XAF)"
+                            type="number"
+                            name="amount"
+                            placeholder="0.00"
+                            value={amount}
+                            onchange={(e) => setAmount(e.target.value)}
+                            step="0.01"
+                            min="0"
+                            required
+                            disabled={isProcessing}
+                          />
+
+                          <Input
+                            label="Bank Name"
+                            type="text"
+                            name="bankName"
+                            placeholder="Enter bank name"
+                            value=""
+                            onchange={() => {}}
+                            required
+                            disabled={isProcessing}
+                          />
+
+                          {/* Payment Instructions */}
+                          <div className="p-4 bg-blue-50 ">
+                            <h4 className="font-medium text-blue-900 mb-2">
+                              Check Payment Instructions
+                            </h4>
+                            <ul className="text-sm text-blue-800 space-y-1">
+                              <li>• Enter the check number from your check</li>
+                              <li>
+                                • Provide the bank name that issued the check
+                              </li>
+                              <li>
+                                • Payment will be processed within 2-3 business
+                                days
+                              </li>
+                              <li>
+                                • Ensure check is properly signed and dated
+                              </li>
+                            </ul>
+                          </div>
+                        </>
+                      )}
+
+                      {/* Bank Transfer Fields */}
+                      {paymentMethod === 'bank_transfer' && (
+                        <>
+                          <Input
+                            label="Account Number"
+                            type="text"
+                            name="accountNumber"
+                            placeholder="Enter account number"
+                            value={phoneNumber}
+                            onchange={(e) => setPhoneNumber(e.target.value)}
+                            required
+                            disabled={isProcessing}
+                          />
+
+                          <Input
+                            label="Amount (XAF)"
+                            type="number"
+                            name="amount"
+                            placeholder="0.00"
+                            value={amount}
+                            onchange={(e) => setAmount(e.target.value)}
+                            step="0.01"
+                            min="0"
+                            required
+                            disabled={isProcessing}
+                          />
+
+                          <Input
+                            label="Bank Name"
+                            type="text"
+                            name="bankName"
+                            placeholder="Enter bank name"
+                            value=""
+                            onchange={() => {}}
+                            required
+                            disabled={isProcessing}
+                          />
+
+                          <Input
+                            label="Reference Number"
+                            type="text"
+                            name="referenceNumber"
+                            placeholder="Enter reference number"
+                            value=""
+                            onchange={() => {}}
+                            required
+                            disabled={isProcessing}
+                          />
+
+                          {/* Payment Instructions */}
+                          <div className="p-4 bg-blue-50 ">
+                            <h4 className="font-medium text-blue-900 mb-2">
+                              Bank Transfer Instructions
+                            </h4>
+                            <ul className="text-sm text-blue-800 space-y-1">
+                              <li>• Enter your bank account number</li>
+                              <li>• Provide the bank name for the transfer</li>
+                              <li>• Include a reference number for tracking</li>
+                              <li>
+                                • Transfer will be processed within 1-2 business
+                                days
+                              </li>
+                            </ul>
+                          </div>
+                        </>
+                      )}
                     </div>
                   )}
 

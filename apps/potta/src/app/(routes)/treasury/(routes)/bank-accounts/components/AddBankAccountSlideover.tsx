@@ -25,7 +25,7 @@ const cardTypeOptions = [
 ];
 const currencyOptions = [
   { label: 'US Dollar (USD)', value: 'USD' },
-  { label: 'Euro (EUR)', value: 'EUR' },
+  { label: 'Central African CFA franc (XAF)', value: 'XAF' },
   { label: 'British Pound (GBP)', value: 'GBP' },
   { label: 'Central African CFA franc (XAF)', value: 'XAF' },
   { label: 'Nigerian Naira (NGN)', value: 'NGN' },

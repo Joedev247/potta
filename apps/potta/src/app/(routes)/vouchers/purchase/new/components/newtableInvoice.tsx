@@ -31,8 +31,8 @@ const getCurrencySymbol = (currencyCode: string): string => {
       return '€';
     case 'GBP':
       return '£';
-    case 'FCFA':
-      return 'FCFA';
+    case 'XAF':
+      return 'XAF';
     default:
       return currencyCode;
   }

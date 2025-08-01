@@ -160,7 +160,7 @@ const CustomersTable: React.FC = () => {
       cell: ({ row: { original } }) => (
         <div className="font-medium">
           {original.creditLimit
-            ? formatCurrency(original.creditLimit, 'EUR')
+            ? formatCurrency(original.creditLimit, 'XAF')
             : 'N/A'}
         </div>
       ),

@@ -38,7 +38,7 @@ const TreasuryOverviewMetrics: React.FC<TreasuryOverviewMetricsProps> = ({
   const formatCurrency = (amount: number) =>
     new Intl.NumberFormat('en-US', {
       style: 'currency',
-      currency: 'EUR',
+      currency: 'XAF',
       minimumFractionDigits: 2,
       maximumFractionDigits: 2,
     }).format(amount);

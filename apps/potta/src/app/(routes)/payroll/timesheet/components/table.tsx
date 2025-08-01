@@ -486,7 +486,7 @@ const TimesheetTable = ({
         </div>
       )}
 
-      <DataGrid data={dataWithTotals} column={columns} loading={false} />
+      <DataGrid data={dataWithTotals} columns={columns} loading={false} />
     </div>
   );
 };

@@ -5,6 +5,7 @@ import DynamicFilter from '@potta/components/dynamic-filter';
 import { Filter, Calendar, DollarSign, Eye, CreditCard } from 'lucide-react';
 import Button from '@potta/components/button';
 import moment from 'moment';
+import PaidInvoiceModal from './PaidInvoiceModal';
 
 interface PaidInvoice {
   id: string;
@@ -26,6 +27,10 @@ const PaidInvoicesTable: React.FC = () => {
   const [searchValue, setSearchValue] = useState('');
   const [dateFilter, setDateFilter] = useState('all');
   const [amountFilter, setAmountFilter] = useState('all');
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedInvoice, setSelectedInvoice] = useState<PaidInvoice | null>(
+    null
+  );
 
   // Mock data - replace with actual API call
   const mockData: PaidInvoice[] = [
@@ -285,7 +290,10 @@ const PaidInvoicesTable: React.FC = () => {
           text="View"
           type="button"
           icon={<Eye className="w-3 h-3 mr-1" />}
-          onClick={() => console.log('View paid invoice:', row.original)}
+          onClick={() => {
+            setSelectedInvoice(row.original);
+            setIsModalOpen(true);
+          }}
         />
       ),
     },
@@ -326,6 +334,13 @@ const PaidInvoicesTable: React.FC = () => {
         data={filteredData}
         columns={columns}
         onRowClick={(row) => console.log('Clicked:', row)}
+      />
+
+      {/* Paid Invoice Modal */}
+      <PaidInvoiceModal
+        open={isModalOpen}
+        setOpen={setIsModalOpen}
+        invoice={selectedInvoice}
       />
     </div>
   );

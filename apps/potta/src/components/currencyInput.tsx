@@ -34,7 +34,7 @@ const getFlagUrl = (isoCode: string): string => {
 
 // Map of currency codes to symbols
 const currencySymbols: Record<string, string> = {
-  XAF: 'FCFA',
+  XAF: 'XAF',
   USD: '$',
   EUR: '€',
   GBP: '£',
@@ -166,7 +166,7 @@ const CurrencyInput = forwardRef<HTMLInputElement, CurrencyInputProps>(
             {
               code: 'XAF',
               name: 'Central African CFA franc',
-              symbol: 'FCFA',
+              symbol: 'XAF',
               flag: getFlagUrl('CM'),
               country: 'Cameroon',
               id: 'CM-XAF',

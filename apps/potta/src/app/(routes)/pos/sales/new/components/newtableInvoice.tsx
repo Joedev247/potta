@@ -3,7 +3,6 @@ import { ContextData } from '@potta/components/context';
 import SearchSelect, { Option } from '@potta/components/search-select'; // Import Option type
 import useGetAllProducts from '@potta/app/(routes)/pos/inventory/_hooks/useGetAllProducts';
 
-
 interface Product {
   uuid: string;
   name: string;
