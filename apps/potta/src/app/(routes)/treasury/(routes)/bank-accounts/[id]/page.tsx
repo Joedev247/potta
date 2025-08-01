@@ -1,6 +1,6 @@
 'use client';
 import React, { useState } from 'react';
-import RootLayout from '../../layout';
+import RootLayout from '@potta/app/(routes)/layout';
 import BankAccountCard from '../components/BankAccountCard';
 import BankAccountTable from '../components/BankAccountTable';
 import { useParams } from 'next/navigation';

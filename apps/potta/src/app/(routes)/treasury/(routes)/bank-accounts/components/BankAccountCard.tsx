@@ -62,7 +62,7 @@ const BankAccountCard: React.FC<BankAccountCardProps> = ({
     if (onViewDetails) {
       onViewDetails();
     } else {
-      router.push(`/bank-accounts/${id || last4}`);
+      router.push(`/treasury/bank-accounts/${id || last4}`);
     }
   };
 

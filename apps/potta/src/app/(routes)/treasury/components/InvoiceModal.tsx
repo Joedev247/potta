@@ -23,8 +23,8 @@ interface CustomerInvoice {
 }
 
 interface InvoiceModalProps {
-  isOpen: boolean;
-  onClose: () => void;
+  open: boolean;
+  setOpen: (open: boolean) => void;
   invoice: CustomerInvoice | null;
 }
 
@@ -57,8 +57,8 @@ const createMockInvoiceData = (invoice: CustomerInvoice) => ({
 });
 
 const InvoiceModal: React.FC<InvoiceModalProps> = ({
-  isOpen,
-  onClose,
+  open,
+  setOpen,
   invoice,
 }) => {
   if (!invoice) return null;
@@ -68,7 +68,7 @@ const InvoiceModal: React.FC<InvoiceModalProps> = ({
 
   // Simple Approval View Component (Right Panel)
   const ApprovalView = () => (
-    <div className="w-full h-full bg-gray-50 p-6">
+    <div className="w-full h-full bg-gray-50 p-6 overflow-y-auto">
       <div className="mb-6">
         <h3 className="text-2xl font-bold text-gray-900 mb-2">
           Invoice Approval
@@ -211,17 +211,16 @@ const InvoiceModal: React.FC<InvoiceModalProps> = ({
 
   return (
     <Slider
-      open={isOpen}
-      setOpen={onClose}
+      open={open}
+      setOpen={setOpen}
       title="Invoice Review"
       edit={false}
-      closeButton={true}
       sliderClass="w-full"
       sliderContentClass="w-full h-full"
     >
       <div className="w-full h-full">
         <ResizablePanelGroup direction="horizontal" className="h-full">
-          <ResizablePanel defaultSize={70} minSize={50}>
+          <ResizablePanel defaultSize={50} minSize={50}>
             {/* Left Panel - Invoice PDF View */}
             <div className="w-full h-full bg-[#F2F2F2] overflow-y-auto">
               {/* We'll need to create a custom PdfView component that accepts data as props */}
@@ -258,9 +257,9 @@ const InvoiceModal: React.FC<InvoiceModalProps> = ({
                       <div className="flex w-[40%] space-x-2">
                         <h3 className="font-bold">From: </h3>
                         <div className="space-y-2 text-sm text-gray-600 flex-col">
-                          <p>ABC Company</p>
-                          <p>hello@ABCcompany.com</p>
-                          <p>ABC, Street, D'la Cameroon</p>
+                          <p>Instanvi Sarl</p>
+                          <p>hello@instanvi.com</p>
+                          <p>Douala, quatre etage, D'la Cameroon</p>
                           <p>+237 695904751</p>
                         </div>
                       </div>
@@ -380,7 +379,7 @@ const InvoiceModal: React.FC<InvoiceModalProps> = ({
             </div>
           </ResizablePanel>
           <ResizableHandle withHandle />
-          <ResizablePanel defaultSize={30} minSize={25}>
+          <ResizablePanel defaultSize={50} minSize={50}>
             <ApprovalView />
           </ResizablePanel>
         </ResizablePanelGroup>

@@ -67,7 +67,7 @@ const AccountReceivablesDashboard: React.FC<
   const formatCurrency = (amount: number) => {
     return new Intl.NumberFormat('en-US', {
       style: 'currency',
-      currency: 'EUR',
+      currency: 'XAF',
       minimumFractionDigits: 0,
       maximumFractionDigits: 0,
     }).format(amount);
@@ -76,7 +76,7 @@ const AccountReceivablesDashboard: React.FC<
   const formatCurrencyWithDecimals = (amount: number) => {
     return new Intl.NumberFormat('en-US', {
       style: 'currency',
-      currency: 'EUR',
+      currency: 'XAF',
       minimumFractionDigits: 2,
       maximumFractionDigits: 2,
     }).format(amount);

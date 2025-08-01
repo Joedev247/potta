@@ -25,7 +25,10 @@ const PdfView = () => {
 
   // Track customer ID changes from context
   useEffect(() => {
-    if (contextData.customerName && contextData.customerName !== currentCustomerId) {
+    if (
+      contextData.customerName &&
+      contextData.customerName !== currentCustomerId
+    ) {
       setCurrentCustomerId(contextData.customerName);
     }
   }, [contextData.customerName]);
@@ -38,8 +41,8 @@ const PdfView = () => {
         return '€';
       case 'GBP':
         return '£';
-      case 'FCFA':
-        return 'FCFA';
+      case 'XAF':
+        return 'XAF';
       default:
         return currencyCode;
     }
@@ -151,7 +154,7 @@ const PdfView = () => {
                 const totalWithTax = itemTotal + itemTax;
 
                 return (
-                  <tr className='h-fit' key={item.id || index}>
+                  <tr className="h-fit" key={item.id || index}>
                     <td className="border-b px-4 h-fit">{index + 1}</td>
                     <td className="border-b px-4 h-fit">{item.name}</td>
                     <td className="border-b px-4 h-fit">{qty}</td>
@@ -159,7 +162,9 @@ const PdfView = () => {
                       {price.toFixed(2)}
                       {currencySymbol}
                     </td>
-                    <td className="border-b px-4 h-fit">{itemTax.toFixed(2)}</td>
+                    <td className="border-b px-4 h-fit">
+                      {itemTax.toFixed(2)}
+                    </td>
                     <td className="border-b px-4 h-fit">
                       {totalWithTax.toFixed(2)}
                       {currencySymbol}

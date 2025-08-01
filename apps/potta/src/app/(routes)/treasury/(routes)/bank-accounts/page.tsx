@@ -1,6 +1,7 @@
 'use client';
 import React, { useEffect, useState } from 'react';
 import BankAccountCard from './components/BankAccountCard';
+import BankAccountCardSkeleton from './components/BankAccountCardSkeleton';
 import BankAccountsFilter from './components/filters';
 import CustomDeleteModal from './components/DeleteModal';
 import { useGetBankAccounts } from './hooks/useGetBankAccounts';
@@ -98,7 +99,13 @@ const BankAccountsPage = () => {
 
         {/* Accounts Grid */}
         <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-          {isLoading && <div>Loading accounts...</div>}
+          {isLoading && (
+            <>
+              {Array.from({ length: 8 }).map((_, index) => (
+                <BankAccountCardSkeleton key={index} />
+              ))}
+            </>
+          )}
           {isError && (
             <div className="text-red-500">Failed to load accounts.</div>
           )}

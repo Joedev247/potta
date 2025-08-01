@@ -324,36 +324,36 @@ const CustomerInvoicesTable: React.FC = () => {
         </div>
       ),
     },
-    {
-      accessorKey: 'paymentMethod',
-      header: 'Payment Method',
-      cell: ({ row }) => {
-        const paymentMethod = row.getValue('paymentMethod') as string;
-        if (!paymentMethod) return <div className="text-gray-400">-</div>;
+    // {
+    //   accessorKey: 'paymentMethod',
+    //   header: 'Payment Method',
+    //   cell: ({ row }) => {
+    //     const paymentMethod = row.getValue('paymentMethod') as string;
+    //     if (!paymentMethod) return <div className="text-gray-400">-</div>;
 
-        return (
-          <div className="flex items-center space-x-2">
-            {paymentMethod === 'mtn' && (
-              <img
-                src="/icons/mtn.svg"
-                alt="MTN Mobile Money"
-                className="w-6 h-6"
-              />
-            )}
-            {paymentMethod === 'orange' && (
-              <img src="/icons/om.svg" alt="Orange Money" className="w-6 h-6" />
-            )}
-            <span className="text-sm text-gray-600">
-              {paymentMethod === 'mtn'
-                ? 'MTN Mobile Money'
-                : paymentMethod === 'orange'
-                ? 'Orange Money'
-                : paymentMethod}
-            </span>
-          </div>
-        );
-      },
-    },
+    //     return (
+    //       <div className="flex items-center space-x-2">
+    //         {paymentMethod === 'mtn' && (
+    //           <img
+    //             src="/icons/mtn.svg"
+    //             alt="MTN Mobile Money"
+    //             className="w-6 h-6"
+    //           />
+    //         )}
+    //         {paymentMethod === 'orange' && (
+    //           <img src="/icons/om.svg" alt="Orange Money" className="w-6 h-6" />
+    //         )}
+    //         <span className="text-sm text-gray-600">
+    //           {paymentMethod === 'mtn'
+    //             ? 'MTN Mobile Money'
+    //             : paymentMethod === 'orange'
+    //             ? 'Orange Money'
+    //             : paymentMethod}
+    //         </span>
+    //       </div>
+    //     );
+    //   },
+    // },
     {
       accessorKey: 'amount',
       header: 'Amount',
@@ -405,8 +405,8 @@ const CustomerInvoicesTable: React.FC = () => {
 
       {/* Invoice Modal */}
       <InvoiceModal
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
+        open={isModalOpen}
+        setOpen={setIsModalOpen}
         invoice={selectedInvoice}
       />
     </div>
