@@ -34,22 +34,24 @@ const Button = ({
   color,
   type,
   isLoading,
+  disabled,
   width,
   height,
   rounded,
-  className
+  className,
 }: Props) => {
   return (
     <button
       type={type}
+      disabled={disabled}
       className={`whitespace-nowrap ${
         color ? 'text-black' : 'text-white'
-      } items-center text-center gap-2 cursor-pointer ${
-        width ? 'w-full text-center' : 'flex text-center justify-end'
-      } ${theme ? themes[theme] : themes.default} ${
-        rounded && 'rounded-full'
-      }  ${height ? 'py-1.5' : 'py-2.5'}  px-6 ${
-        isLoading ? 'opacity-65' : 'opacity-none'
+      } items-center text-center gap-2 ${
+        disabled ? 'cursor-not-allowed' : 'cursor-pointer'
+      } ${width ? 'w-full text-center' : 'flex text-center justify-end'} ${
+        theme ? themes[theme] : themes.default
+      } ${rounded && 'rounded-full'}  ${height ? 'py-1.5' : 'py-2.5'}  px-6 ${
+        isLoading || disabled ? 'opacity-65' : 'opacity-100'
       } ${className}`}
       onClick={onClick}
     >

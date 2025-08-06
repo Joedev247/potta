@@ -4,6 +4,7 @@ import { useAuth } from '../../../auth/AuthContext';
 import Icon from '@potta/components/icon_fonts/icon';
 import { ContextData } from '@potta/components/context';
 import { useContext } from 'react';
+import { useRouter } from 'next/navigation';
 
 interface SidebarProfileProps {
   context: any;
@@ -15,7 +16,7 @@ const SidebarProfile: React.FC<SidebarProfileProps> = ({ context }) => {
   const { user, signOut } = useAuth();
   const buttonRef = useRef<HTMLButtonElement>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
-
+  const router = useRouter();
   // Close dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -135,7 +136,7 @@ const SidebarProfile: React.FC<SidebarProfileProps> = ({ context }) => {
                     <User className="h-4 w-4 mr-3 text-gray-500" />
                     Profile
                   </button>
-                  <button className="flex items-center w-full px-3 py-2.5 text-sm text-gray-700 hover:bg-gray-50 transition-colors duration-200">
+                  <button onClick={() => router.push('/settings')} className="flex items-center w-full px-3 py-2.5 text-sm text-gray-700 hover:bg-gray-50 transition-colors duration-200">
                     <Settings className="h-4 w-4 mr-3 text-gray-500" />
                     Settings
                   </button>

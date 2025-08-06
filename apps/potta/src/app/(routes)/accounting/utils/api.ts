@@ -2,10 +2,7 @@ import axios from 'config/axios.config';
 import { AxiosResponse } from 'axios';
 import { accountPayload, accountUpdatePayload } from './validations';
 
-// Define constant IDs for organization and branch
-const ORGANIZATION_ID = 'f7b1b3b0-0b1b-4b3b-8b1b-0b1b3b0b1b3c';
-const BRANCH_ID = 'f7b1b3b0-0b1b-4b3b-8b1b-0b1b3b0b1b3b';
-
+//
 interface AccountsQueryParams {
   page?: number;
   limit?: number;
@@ -14,18 +11,12 @@ interface AccountsQueryParams {
   filter?: string[];
 }
 
-// Helper function to get standard headers
-const getHeaders = () => ({
-  organizationId: ORGANIZATION_ID,
-  BranchId: BRANCH_ID,
-});
+
 
 export const accountsApi = {
   // Get the full hierarchical Chart of Accounts tree
   getAll: async () => {
-    const result = await axios.get('/accounting/accounts/tree', {
-      headers: getHeaders(),
-    });
+    const result = await axios.get('/accounting/accounts/tree');
     return result.data;
   },
 
@@ -54,9 +45,7 @@ export const accountsApi = {
     const queryString = queryParams.toString();
     const endpoint = `/accounting${queryString ? `?${queryString}` : ''}`;
 
-    const result = await axios.get(endpoint, {
-      headers: getHeaders(),
-    });
+    const result = await axios.get(endpoint);
     return result.data;
   },
 
@@ -83,68 +72,49 @@ export const accountsApi = {
 
     const endpoint = `/accounting?${queryParams.toString()}`;
 
-    const result = await axios.get(endpoint, {
-      headers: getHeaders(),
-    });
+    const result = await axios.get(endpoint);
     return result.data;
   },
 
   // Get a specific account by ID
   getOne: async (accountId: string) => {
-    const result = await axios.get(`/accounting/accounts/${accountId}`, {
-      headers: getHeaders(),
-    });
+    const result = await axios.get(`/accounting/accounts/${accountId}`);
     return result.data;
   },
 
   // Get descendants of a specific account
   getDescendants: async (accountId: string) => {
-    const result = await axios.get(
-      `/accounting/accounts/${accountId}/descendants`,
-      { headers: getHeaders() }
-    );
+    const result = await axios.get(`/accounting/accounts/${accountId}/descendants`);
     return result.data;
   },
 
   // Create a new OHADA-compliant account
   create: async (data: accountPayload) => {
-    const result = await axios.post('/accounting/accounts', data, {
-      headers: getHeaders(),
-    });
+    const result = await axios.post('/accounting/accounts', data);
     return result.data;
   },
 
   // Update an existing account
   update: async (accountId: string, data: accountUpdatePayload) => {
-    const result = await axios.put(`/accounting/accounts/${accountId}`, data, {
-      headers: getHeaders(),
-    });
+    const result = await axios.put(`/accounting/accounts/${accountId}`, data);
     return result.data;
   },
 
   // Delete an account
   delete: async (accountId: string) => {
-    const result = await axios.delete(`/accounting/accounts/${accountId}`, {
-      headers: getHeaders(),
-    });
+    const result = await axios.delete(`/accounting/accounts/${accountId}`);
     return result.data;
   },
 
   // Get account balance
   getBalance: async (accountId: string) => {
-    const result = await axios.get(
-      `/accounting/ledger/account/${accountId}/balance`,
-      { headers: getHeaders() }
-    );
+    const result = await axios.get(`/accounting/ledger/account/${accountId}/balance`);
     return result.data;
   },
 
   // Get account transactions (ledger view)
   getTransactions: async (accountId: string) => {
-    const result = await axios.get(
-      `/accounting/ledger/account/${accountId}/transactions`,
-      { headers: getHeaders() }
-    );
+    const result = await axios.get(`/accounting/ledger/account/${accountId}/transactions`);
     return result.data;
   },
 
@@ -160,8 +130,7 @@ export const accountsApi = {
     }).toString();
 
     const result = await axios.get(
-      `/accounting/ledger/account/${accountId}/period-balance?${queryParams}`,
-      { headers: getHeaders() }
+      `/accounting/ledger/account/${accountId}/period-balance?${queryParams}`
     );
     return result.data;
   },

@@ -9,7 +9,7 @@ const useApproveInvoice = () => {
     onSuccess: () => {
       // Invalidate and refetch invoice data
       queryClient.invalidateQueries({ queryKey: ['get-all-invoicing-stats'] });
-      queryClient.invalidateQueries({ queryKey: ['get-all-invoice'] });
+      queryClient.invalidateQueries({ queryKey: ['get-all-invoicing'] });
     },
     onError: (error) => {
       console.error('Error approving invoice:', error);

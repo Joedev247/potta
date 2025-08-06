@@ -16,8 +16,6 @@ export interface BudgetFilter {
 
 export const useBudgets = (initialFilter: BudgetFilter = {}) => {
   // Default organization and branch IDs - in a real app, these would come from user context/auth
-  const DEFAULT_ORGANIZATION_ID = 'f7b1b3b0-0b1b-4b3b-8b1b-0b1b3b0b1b3c';
-  const DEFAULT_BRANCH_ID = 'f7b1b3b0-0b1b-4b3b-8b1b-0b1b3b0b1b3b';
 
   // Set default filter values
   const defaultFilter: BudgetFilter = {
@@ -25,8 +23,7 @@ export const useBudgets = (initialFilter: BudgetFilter = {}) => {
     limit: 20,
     sortBy: 'createdAt',
     sortOrder: 'DESC',
-    organizationId: DEFAULT_ORGANIZATION_ID,
-    branchId: DEFAULT_BRANCH_ID,
+
     ...initialFilter,
   };
 

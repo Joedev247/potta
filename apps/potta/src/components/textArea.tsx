@@ -11,6 +11,7 @@ type Props = {
   onchange?: (event: React.ChangeEvent<HTMLTextAreaElement>) => void;
   value?: string | number;
   height?: boolean;
+  disabled?: boolean;
 };
 
 const TextArea: React.FC<Props> = ({
@@ -23,6 +24,7 @@ const TextArea: React.FC<Props> = ({
   value,
   height,
   onchange,
+  disabled,
 }) => {
   return (
     <div className={`w-full ${className}`}>
@@ -32,9 +34,12 @@ const TextArea: React.FC<Props> = ({
         placeholder={placeholder}
         {...(register ? register(name) : {})}
         onChange={onchange}
+        disabled={disabled}
         className={`w-full ${
           height ? 'py-1.5' : 'py-2.5'
-        } px-4 border border-gray-200 rounded-[2px] outline-none mt-2 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500
+        } px-4 border border-gray-200 rounded-[2px] outline-none mt-2 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 ${
+          disabled ? 'bg-gray-100 cursor-not-allowed opacity-60' : ''
+        }
    `}
       />
       {errors ? (

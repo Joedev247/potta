@@ -8,7 +8,8 @@ const useGetOneVendor = (vendor_id: string) => {
     queryFn: async () => {
       const response = await vendorApi.getOne(vendor_id);
       return response as unknown as Vendor;
-    }
+    },
+    enabled: !!vendor_id, // Only fetch if vendor_id is provided
   });
 };
 

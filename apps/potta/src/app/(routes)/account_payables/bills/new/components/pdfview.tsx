@@ -63,11 +63,11 @@ const PdfView = () => {
     <div className=" flex min-h-full flex-col items-center justify-center overflow-y-auto  w-full bg-[#F2F2F2]">
       <div className="flex  min-w-[45rem]  justify-between w-full p-8">
         <h3 className="text-xl font-semibold">PDF Preview</h3>
-        <Button
+        {/* <Button
           text={'Download'}
           icon={<i className="ri-download-line"></i>}
           type={'submit'}
-        />
+        /> */}
       </div>
       <div className=" max-w-[48rem] bg-white space-y-8 min-w-[45rem] w-full">
         <div className=" h-36 w-full flex items-center justify-between px-4 bg-green-800">

@@ -27,6 +27,7 @@ const settingsRoutes = [
   { value: 'invoice', label: 'Invoice', icon: FileText },
   // { value: 'taxation', label: 'Taxation', icon: Shield },
   { value: 'payroll', label: 'Payroll', icon: Users },
+  { value: 'policies', label: 'Policies', icon: Shield },
 ];
 
 const SidebarsSettings = () => {

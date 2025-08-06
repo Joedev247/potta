@@ -19,6 +19,7 @@ interface SelectProps {
   labelClass?: string;
   isDisabled?: boolean;
   SelectClass?: string;
+  error?: string; // Add error prop
 }
 
 const Select: React.FC<SelectProps> = ({
@@ -34,6 +35,7 @@ const Select: React.FC<SelectProps> = ({
   SelectClass,
   labelClass,
   isDisabled = false,
+  error,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
 
@@ -63,7 +65,7 @@ const Select: React.FC<SelectProps> = ({
       <div
         className={`relative  inline-block ${
           border ? '' : 'border'
-        } w-full md:w-full ${SelectClass}`}
+        } w-full md:w-full ${SelectClass} ${error ? 'border-red-500' : ''}`}
       >
         <div
           onClick={toggleDropdown}
@@ -71,10 +73,12 @@ const Select: React.FC<SelectProps> = ({
           className={`${bg} relative ${
             isDisabled ? 'cursor-not-allowed opacity-60' : 'cursor-pointer'
           } px-3 py-2.5 pr-8 ${
-            !outline && !isDisabled
+            error
+              ? 'border-red-500 focus:ring-red-500 focus:border-red-500 focus:outline-none focus:ring-2'
+              : !outline && !isDisabled
               ? 'focus:ring-green-500 focus:border-green-500 focus:outline-none focus:ring-2'
               : ''
-          } w-full`}
+          } w-full ${error ? 'border-2' : ''}`}
           aria-disabled={isDisabled}
         >
           <span className="block truncate">
@@ -116,6 +120,7 @@ const Select: React.FC<SelectProps> = ({
           </ul>
         )}
       </div>
+      {error && <p className="mt-1 text-sm text-red-500">{error}</p>}
     </>
   );
 };

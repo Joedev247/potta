@@ -8,6 +8,7 @@ const useDeleteInvoice = () => {
     mutationFn: invoiceApi.delete,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['get-all-invoicing'] });
+      queryClient.invalidateQueries({ queryKey: ['get-all-invoicing-stats'] });
     },
   });
 };

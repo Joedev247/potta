@@ -295,7 +295,7 @@ const Left = () => {
         <div className={`${errors.receiptNumber ? 'error-field' : ''}`}>
           <Input
             type="text"
-            label="Receipt Number"
+            label="Bill Number"
             name="receiptNumber"
             value={invoiceNumber}
             onchange={(e: any) =>

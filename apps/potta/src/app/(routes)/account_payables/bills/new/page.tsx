@@ -71,8 +71,8 @@ const NewSalesReciept = () => {
             >
               <div
                 className={`${
-                  !showPreview ? 'pl-16' : 'pl-5'
-                } py-8 h-[92.7vh] flex justify-center`}
+                  !showPreview ? 'pl-16' : 'pl-8'
+                } py-8 pt-0 h-[92.7vh] flex justify-center`}
               >
                 <Left />
               </div>

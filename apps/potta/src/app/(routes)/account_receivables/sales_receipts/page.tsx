@@ -3,7 +3,7 @@
 import React from 'react';
 import RootLayout from '../../layout';
 import { ContextData } from '@potta/components/context';
-import SaleTable from '../../pos/sales/components/table';
+import SaleTable from './components/table';
 
 const Files = () => {
   const context = React.useContext(ContextData);

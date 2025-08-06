@@ -37,14 +37,6 @@ const ModalInvoice: FC<IModalInvoice> = ({ isOpen, setIsOpen }) => {
       link: '/account_receivables/invoice/new?type=prepayment', // Unique link for prepayment
     },
     {
-      title: 'Purchase Order',
-      description:
-        'Create a purchase order for a seller indicating proposed goods and services, price and quantity',
-      image: '/images/invoice/purchase.svg',
-      type: 'purchase-order',
-      link: '/account_receivables/purchase', // Unique link for purchase order
-    },
-    {
       title: 'Credit Note',
       description: 'Issue credit against future purchases',
       image: '/images/invoice/credit note.svg',

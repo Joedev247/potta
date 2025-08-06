@@ -9,10 +9,9 @@ const useAddInvoiceLineItem = (invoice_id: string, user_id: string) => {
       invoiceApi.addLineItem(invoice_id, user_id, data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['get-all-invoicing'] });
+      queryClient.invalidateQueries({ queryKey: ['get-all-invoicing-stats'] });
     },
   });
 };
-
-
 
 export default useAddInvoiceLineItem;

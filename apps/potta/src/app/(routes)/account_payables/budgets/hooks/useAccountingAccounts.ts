@@ -34,10 +34,6 @@ export interface Account {
 }
 
 export const useAccountingAccounts = (initialFilter: AccountFilter = {}) => {
-  // Default organization and branch IDs - in a real app, these would come from user context/auth
-  const DEFAULT_ORGANIZATION_ID = 'f7b1b3b0-0b1b-4b3b-8b1b-0b1b3b0b1b3c';
-  const DEFAULT_BRANCH_ID = 'f7b1b3b0-0b1b-4b3b-8b1b-0b1b3b0b1b3b';
-
   // Set default filter values
   const defaultFilter: AccountFilter = {
     page: 1,
@@ -45,8 +41,6 @@ export const useAccountingAccounts = (initialFilter: AccountFilter = {}) => {
     sortBy: 'createdAt',
     sortOrder: 'DESC',
     searchBy: ['name', 'code', 'type'],
-    organizationId: DEFAULT_ORGANIZATION_ID,
-    branchId: DEFAULT_BRANCH_ID,
     ...initialFilter,
   };
 
@@ -60,7 +54,7 @@ export const useAccountingAccounts = (initialFilter: AccountFilter = {}) => {
     try {
       setLoading(true);
       setError(null);
-      
+
       const queryParams = new URLSearchParams();
 
       // Add pagination params
@@ -69,10 +63,10 @@ export const useAccountingAccounts = (initialFilter: AccountFilter = {}) => {
 
       // Add search param
       if (filter.search) queryParams.append('search', filter.search);
-      
+
       // Add searchBy param
       if (filter.searchBy && filter.searchBy.length > 0) {
-        filter.searchBy.forEach(field => {
+        filter.searchBy.forEach((field) => {
           queryParams.append('searchBy', field);
         });
       }
@@ -87,13 +81,8 @@ export const useAccountingAccounts = (initialFilter: AccountFilter = {}) => {
         queryParams.append('filter', `type:$eq:${filter.type}`);
       }
 
-      const response = await axios.get(`/accounting?${queryParams.toString()}`, {
-        headers: {
-          organizationId: filter.organizationId || DEFAULT_ORGANIZATION_ID,
-          BranchId: filter.branchId || DEFAULT_BRANCH_ID,
-        },
-      });
-      
+      const response = await axios.get(`/accounting?${queryParams.toString()}`);
+
       setAccounts(response.data.data);
       setMeta(response.data.meta);
     } catch (err) {

@@ -1,7 +1,17 @@
 'use client';
-import React, { useEffect } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import { useAuth } from '../(routes)/auth/AuthContext';
 import PottaLoader from '@potta/components/pottaloader';
+
+// Configuration constants
+const AUTH_REDIRECT_URL =
+  process.env.NEXT_PUBLIC_AUTH_URL || 'https://instanvi-auth.vercel.app';
+const BYPASS_AUTH_ROUTES = [
+  '/vendor-portal',
+  // Add more routes here as needed
+  // '/client-portal',
+  // '/public-api',
+];
 
 interface AuthGuardProps {
   children: React.ReactNode;
@@ -10,30 +20,38 @@ interface AuthGuardProps {
 const AuthGuard: React.FC<AuthGuardProps> = ({ children }) => {
   const { token, isLoading, isAuthenticated } = useAuth();
 
-  useEffect(() => {
-    // Check if there's a token in the URL
-    const urlToken = new URLSearchParams(window.location.search).get('token');
+  // Memoized route detection to avoid unnecessary recalculations
+  const isBypassRoute = useMemo(() => {
+    if (typeof window === 'undefined') return false;
 
-    // If there's a URL token, don't redirect - let AuthContext handle it
-    if (urlToken) {
-      console.log(
-        'AuthGuard: Found URL token, waiting for AuthContext to process...'
-      );
+    const currentPath = window.location.pathname;
+    return BYPASS_AUTH_ROUTES.some((route) => currentPath.includes(route));
+  }, []);
+
+  useEffect(() => {
+    // Skip auth check for bypass routes
+    if (isBypassRoute) {
+      if (process.env.NODE_ENV === 'development') {
+        console.log('AuthGuard: Bypass route detected, skipping auth check');
+      }
       return;
     }
 
-    // If not loading and no token, redirect to auth
-    // if (!isLoading && !token) {
-    //   console.log('AuthGuard: No token found, redirecting to auth...');
-    //   const currentUrl = window.location.href;
-    //   const authUrl = new URL('https://instanvi-auth.vercel.app');
-    //   authUrl.searchParams.set('redirectUrl', currentUrl);
-    //   window.location.href = authUrl.toString();
-    // }
-  }, [token, isLoading]);
+    // Redirect to auth if no token and not loading
+    if (!isLoading && !token) {
+      if (process.env.NODE_ENV === 'development') {
+        console.log('AuthGuard: No token found, redirecting to auth...');
+      }
 
-  // Show loading state while checking authentication
-  if (isLoading) {
+      const currentUrl = window.location.href;
+      const authUrl = new URL(AUTH_REDIRECT_URL);
+      authUrl.searchParams.set('redirectUrl', currentUrl);
+      window.location.href = authUrl.toString();
+    }
+  }, [token, isLoading, isBypassRoute]);
+
+  // Show loading state while checking authentication (only for non-bypass routes)
+  if (isLoading && !isBypassRoute) {
     return (
       <div className="flex items-center justify-center h-screen">
         <PottaLoader size="lg" />
@@ -41,12 +59,17 @@ const AuthGuard: React.FC<AuthGuardProps> = ({ children }) => {
     );
   }
 
-  // If not authenticated, don't render children (will redirect)
+  // Allow access for bypass routes regardless of auth state
+  if (isBypassRoute) {
+    return <>{children}</>;
+  }
+
+  // Don't render children if not authenticated (will redirect)
   if (!isAuthenticated) {
     return null;
   }
 
-  // If authenticated, render children
+  // Render children for authenticated users
   return <>{children}</>;
 };
 

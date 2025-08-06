@@ -21,6 +21,39 @@ const PdfView = () => {
   const tableData: TableItem[] = contextData.table || [];
   const customerId = contextData.customerName; // Get customer ID from context
 
+  // User information is already loaded in AuthGuard and available in context
+  console.log('PDF View Context Data:', contextData);
+  console.log('User Permissions:', contextData.userPermissions);
+  console.log('Organization Info:', {
+    name: contextData.organizationName,
+    branch: contextData.branchName,
+    address: contextData.branchAddress,
+  });
+
+  // Get user role information
+  const userRole =
+    contextData.userPermissions?.[0]?.roleName ||
+    contextData.userRole ||
+    'User';
+  const userName = `${contextData.userFirstName || 'Abayo'} ${
+    contextData.userLastName || 'Joram'
+  }`;
+
+  // State for invoice color
+  const [invoiceColor, setInvoiceColor] = useState('#059669'); // Default green-700
+
+  // Predefined color options for companies
+  const colorOptions = [
+    { name: 'Green', value: '#059669', class: 'bg-green-700' },
+    { name: 'Blue', value: '#1d4ed8', class: 'bg-blue-700' },
+    { name: 'Purple', value: '#7c3aed', class: 'bg-purple-700' },
+    { name: 'Red', value: '#dc2626', class: 'bg-red-700' },
+    { name: 'Orange', value: '#ea580c', class: 'bg-orange-700' },
+    { name: 'Teal', value: '#0f766e', class: 'bg-teal-700' },
+    { name: 'Indigo', value: '#4338ca', class: 'bg-indigo-700' },
+    { name: 'Pink', value: '#be185d', class: 'bg-pink-700' },
+  ];
+
   // Format dates if they exist
   const formattedIssueDate = contextData.issueDate
     ? new Date(contextData.issueDate).toLocaleDateString()
@@ -77,13 +110,47 @@ const PdfView = () => {
   const total = subtotal + totalTax;
 
   return (
-    <div className="flex min-h-full flex-col items-center justify-center overflow-y-auto w-full scroll bg-[#F2F2F2]">
-      <div className="flex min-w-[45rem] justify-between w-full p-8">
+    <div className="flex min-h-full flex-col items-start justify-center overflow-y-auto w-full scroll bg-[#F2F2F2]">
+      <div className="flex min-w-[45rem] justify-between w-full p-8 pb-2">
         <h3 className="text-xl font-semibold">PDF Preview</h3>
+      </div>
 
+      {/* Color Selection */}
+      <div className="flex items-center px-8 pb-2 space-x-4">
+        <span className="text-sm font-medium text-gray-700">
+          Invoice Color:
+        </span>
+        <div className="flex space-x-2">
+          {colorOptions.map((color) => (
+            <button
+              key={color.value}
+              onClick={() => setInvoiceColor(color.value)}
+              className={`w-8 h-8 rounded-full border-2 transition-all ${
+                invoiceColor === color.value
+                  ? 'border-gray-800 scale-110'
+                  : 'border-gray-300 hover:border-gray-500'
+              }`}
+              style={{ backgroundColor: color.value }}
+              title={color.name}
+            />
+          ))}
+          {/* Custom Color Picker */}
+          <div className="relative">
+            <input
+              type="color"
+              value={invoiceColor}
+              onChange={(e) => setInvoiceColor(e.target.value)}
+              className="w-8 h-8 rounded-full border-2 border-gray-300 cursor-pointer"
+              title="Custom Color"
+            />
+          </div>
+        </div>
       </div>
       <div className="max-w-[48rem] bg-white space-y-8 min-w-[45rem] w-full mb-10">
-        <div className="h-36 w-full flex items-center justify-between px-8 bg-green-700">
+        <div
+          className="h-36 w-full flex items-center justify-between px-8"
+          style={{ backgroundColor: invoiceColor }}
+        >
           <div>
             <p className="text-3xl font-semibold text-white">{invoiceType}</p>
             <p className="text-white mt-2">#{invoiceNumber}</p>
@@ -105,10 +172,30 @@ const PdfView = () => {
             <div className="flex w-[40%] space-x-2">
               <h3 className="font-bold">From: </h3>
               <div className="space-y-2 text-sm text-gray-600 flex-col">
-                <p>ABC Company</p>
-                <p>hello@ABCcompany.com</p>
-                <p>ABC, Street, D'la Cameroon</p>
-                <p>+237 695904751</p>
+                <p className="font-semibold">
+                  {contextData.organizationName ||
+                    contextData.companyName ||
+                    'Instanvi Inc'}
+                </p>
+                <p>{contextData.branchName || 'Headquarters'}</p>
+                <p>
+                  {contextData.branchAddress ||
+                    contextData.companyAddress ||
+                    'Quartre-etage, bonaberi, Douala'}
+                </p>
+                <p>
+                  {contextData.userEmail ||
+                    contextData.companyEmail ||
+                    'abayojoram696@gmail.com'}
+                </p>
+                <p>
+                  {contextData.userPhone ||
+                    contextData.companyPhone ||
+                    'No phone'}
+                </p>
+                <p className="text-xs text-gray-500 mt-2">
+                  Created by: {userName} ({userRole})
+                </p>
               </div>
             </div>
             <div className="flex space-x-2">

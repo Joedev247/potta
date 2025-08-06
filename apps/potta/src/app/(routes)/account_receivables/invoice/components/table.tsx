@@ -117,7 +117,7 @@ const InvoiceTable = () => {
     let filtered = data.data;
 
     // Filter by status
-    if (statusFilter !== 'All') {
+    if (statusFilter !== 'all') {
       filtered = filtered.filter(
         (invoice: Invoice) =>
           invoice.status.toLowerCase() === statusFilter.toLowerCase()
@@ -128,7 +128,35 @@ const InvoiceTable = () => {
     if (dateRange?.from && dateRange?.to) {
       filtered = filtered.filter((invoice: Invoice) => {
         const invoiceDate = new Date(invoice.issuedDate);
-        return invoiceDate >= dateRange.from && invoiceDate <= dateRange.to;
+
+        // Create date objects for comparison (ignore time)
+        const invoiceDateOnly = new Date(
+          invoiceDate.getFullYear(),
+          invoiceDate.getMonth(),
+          invoiceDate.getDate()
+        );
+        const fromDateOnly = new Date(
+          dateRange.from!.getFullYear(),
+          dateRange.from!.getMonth(),
+          dateRange.from!.getDate()
+        );
+        const toDateOnly = new Date(
+          dateRange.to!.getFullYear(),
+          dateRange.to!.getMonth(),
+          dateRange.to!.getDate()
+        );
+
+        console.log('Table filtering invoice:', {
+          invoiceId: invoice.invoiceId,
+          issuedDate: invoice.issuedDate,
+          invoiceDateOnly: invoiceDateOnly.toISOString(),
+          fromDateOnly: fromDateOnly.toISOString(),
+          toDateOnly: toDateOnly.toISOString(),
+          isInRange:
+            invoiceDateOnly >= fromDateOnly && invoiceDateOnly <= toDateOnly,
+        });
+
+        return invoiceDateOnly >= fromDateOnly && invoiceDateOnly <= toDateOnly;
       });
     }
 
@@ -282,11 +310,14 @@ const InvoiceTable = () => {
     try {
       await approveInvoiceMutation.mutateAsync(invoiceId);
       toast.success('Invoice approved successfully!', { id: loadingToast });
-    } catch (error) {
+    } catch (error: any) {
       console.error('Failed to approve invoice:', error);
-      toast.error(error.message, {
-        id: loadingToast,
-      });
+      toast.error(
+        error?.response?.data?.message || 'Failed to approve invoice',
+        {
+          id: loadingToast,
+        }
+      );
     }
   };
 
@@ -342,7 +373,7 @@ const InvoiceTable = () => {
       key: 'status',
       label: 'Status',
       options: [
-        { label: 'All Status', value: 'All' },
+        { label: 'All Status', value: 'all' },
         { label: 'Draft', value: 'draft' },
         { label: 'Issued', value: 'issued' },
         { label: 'Paid', value: 'paid' },
@@ -354,7 +385,7 @@ const InvoiceTable = () => {
       value: statusFilter,
       onChange: setStatusFilter,
       selectClassName: 'min-w-[120px]',
-    }
+    },
   ];
 
   const columns: ColumnDef<Invoice>[] = [
@@ -500,13 +531,6 @@ const InvoiceTable = () => {
             filters={filterConfig}
             className="p-0 bg-transparent"
           />
-          {/* Show active filter indicator */}
-          {dateRange && (
-            <div className="mt-2 text-sm text-blue-600">
-              📅 Filtered by date range: {dateRange.from?.toLocaleDateString()}{' '}
-              - {dateRange.to?.toLocaleDateString()}
-            </div>
-          )}
         </div>
 
         {/* Right side - Action Buttons */}

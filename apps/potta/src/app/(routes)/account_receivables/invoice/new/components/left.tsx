@@ -14,6 +14,17 @@ import toast from 'react-hot-toast';
 import { DateInput } from '@potta/components/customDatePicker';
 import { useRouter } from 'next/navigation';
 import useCreateInvoice from '../../_hooks/useCreateInvoice';
+import useUpdateInvoice from '../../_hooks/useUpdateInvoice';
+import SearchableSelect from '@potta/components/searchableSelect';
+import { format } from 'date-fns';
+import Checkbox from '@potta/components/checkbox';
+import {
+  validateInvoiceForm,
+  fieldSchemas,
+} from '../validations/invoiceValidation';
+
+// Import Option interface from SearchableSelect to avoid conflicts
+import type { Option as SearchableSelectOption } from '@potta/components/searchableSelect';
 
 // Define Option interface to match the one in SearchSelect component
 interface Option {
@@ -45,19 +56,47 @@ interface LineItemsDto {
 
 // Add validation errors interface
 interface ValidationErrors {
+  // Basic Information Section
   issueDate?: string;
   dueDate?: string;
   customerName?: string;
+  currency?: string;
+
+  // Address Section
   billingAddress?: string;
+  shippingAddress?: string;
+
+  // Line Items Section
   lineItems?: string;
+
+  // Payment Section
   paymentMethod?: string;
+  paymentReference?: string;
+  taxRate?: string;
+  paymentTerms?: string;
+
+  // Notes Section
+  notes?: string;
+
+  // General Section Errors
+  basicInfo?: string;
+  addresses?: string;
+  payment?: string;
 }
 
 interface LeftProps {
   initialInvoiceType?: string | null;
+  isEditMode?: boolean;
+  originalInvoice?: any;
+  onSave?: () => void;
 }
 
-const Left = ({ initialInvoiceType }: LeftProps) => {
+const Left = ({
+  initialInvoiceType,
+  isEditMode = false,
+  originalInvoice,
+  onSave,
+}: LeftProps) => {
   const context = useContext(ContextData);
   const router = useRouter();
   const [selectedPaymentMethod, setSelectedPaymentMethod] =
@@ -93,14 +132,16 @@ const Left = ({ initialInvoiceType }: LeftProps) => {
   // Use a ref to track if initial selection has been made
   const initialSelectionMade = useRef(false);
 
-  // Create customer options with proper typing
-  const customerOptions: Option[] = customers.map((customer: Customer) => ({
-    label:
-      customer.firstName ||
-      customer.lastName ||
-      `Customer ${customer.customerId || customer.uuid.slice(0, 8)}`,
-    value: customer.uuid,
-  }));
+  // Create customer options with proper typing for SearchableSelect
+  const customerOptions: SearchableSelectOption[] = customers.map(
+    (customer: Customer) => ({
+      label:
+        customer.firstName ||
+        customer.lastName ||
+        `Customer ${customer.customerId || customer.uuid.slice(0, 8)}`,
+      value: customer.uuid, // UUID is already a string
+    })
+  );
 
   // Set default customer only once when data first loads
   useEffect(() => {
@@ -148,6 +189,41 @@ const Left = ({ initialInvoiceType }: LeftProps) => {
     }
   }
 
+  // Map display labels to API values
+  function mapInvoiceTypeToApiValue(displayType: string): string {
+    switch (displayType) {
+      case 'Invoice':
+        return 'INVOICE';
+      case 'Performa Invoice':
+        return 'PROFORMA_INVOICE';
+      case 'Prepayment Invoice':
+        return 'PREPAYMENT_INVOICE';
+      default:
+        return 'INVOICE';
+    }
+  }
+
+  function mapPaymentMethodToApiValue(displayMethod: string): string {
+    switch (displayMethod) {
+      case 'Credit Card':
+        return 'CREDIT_CARD';
+      case 'Bank Transfer':
+        return 'BANK_TRANSFER';
+      case 'ACH Transfer':
+        return 'ACH_TRANSFER'; // Fixed typo: was ACH_TRANSAFER
+      case 'Mobile Money':
+        return 'MOBILE_MONEY';
+      case 'Cash':
+        return 'CASH';
+      case 'Credit':
+        return 'CREDIT';
+      case 'Other':
+        return 'OTHER';
+      default:
+        return 'OTHER';
+    }
+  }
+
   // If the initialInvoiceType changes (shouldn't, but for safety), update state
   useEffect(() => {
     if (initialInvoiceType) {
@@ -174,12 +250,24 @@ const Left = ({ initialInvoiceType }: LeftProps) => {
     }
   }, [context?.data]);
 
-  const handleInputChange = (key: string, value: any) => {
+  const handleInputChange = async (key: string, value: any) => {
     console.log(`Changing ${key} to:`, value);
 
     // Clear error for this field if it exists
     if (errors[key as keyof ValidationErrors]) {
       setErrors((prev) => ({ ...prev, [key]: undefined }));
+    }
+
+    // Real-time validation for specific fields
+    if (fieldSchemas[key as keyof typeof fieldSchemas]) {
+      try {
+        await fieldSchemas[key as keyof typeof fieldSchemas].validate(value);
+        // Clear error if validation passes
+        setErrors((prev) => ({ ...prev, [key]: undefined }));
+      } catch (error: any) {
+        // Set error if validation fails
+        setErrors((prev) => ({ ...prev, [key]: error.message }));
+      }
     }
 
     // Update local state
@@ -253,31 +341,47 @@ const Left = ({ initialInvoiceType }: LeftProps) => {
     }));
   };
 
-  const validateForm = () => {
-    const newErrors: ValidationErrors = {};
+  const validateForm = async () => {
+    const tableData: TableItem[] = context?.data?.table || [];
 
-    // Required field validation
-    if (!issueDate) newErrors.issueDate = 'Issue date is required';
-    if (!dueDate) newErrors.dueDate = 'Due date is required';
-    if (!customerName) newErrors.customerName = 'Customer is required';
-    // Removed billing address validation as it's no longer required
-    if (!selectedPaymentMethod)
-      newErrors.paymentMethod = 'Payment method is required';
+    const formData = {
+      issueDate,
+      dueDate,
+      customerName,
+      currency,
+      invoiceNumber,
+      invoiceType,
+      billingAddress,
+      shippingAddress,
+      lineItems: tableData,
+      paymentMethod: selectedPaymentMethod,
+      paymentReference,
+      taxRate: Number(taxRate),
+      paymentTerms,
+      notes: note,
+    };
 
-    // Check if there are line items
-    const tableData = context?.data?.table || [];
-    if (tableData.length === 0)
-      newErrors.lineItems = 'At least one item is required';
+    const result = await validateInvoiceForm(formData, {
+      validateAddresses: true,
+      validatePaymentTerms: true,
+      validateNotes: true,
+    });
 
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
+    if (!result.isValid) {
+      setErrors(result.errors as ValidationErrors);
+      return false;
+    }
+
+    setErrors({});
+    return true;
   };
-  const mutation = useCreateInvoice();
-  const handleSaveInvoice = () => {
+  const createMutation = useCreateInvoice();
+  const updateMutation = useUpdateInvoice(originalInvoice?.uuid || '');
+  const handleSaveInvoice = async () => {
     setFormSubmitted(true);
 
     // Validate form
-    const isValid = validateForm();
+    const isValid = await validateForm();
     if (!isValid) {
       // Scroll to the first error
       const firstErrorField = document.querySelector('.error-field');
@@ -295,7 +399,7 @@ const Left = ({ initialInvoiceType }: LeftProps) => {
       description: item.name,
       quantity: item.qty,
       discountCap: 0,
-      discountType: 'PercentageWithCap',
+      discountType: 'PERCENTAGE_WITH_CAP', // Fixed enum value
       unitPrice: Number(item.price),
       taxRate: item.tax,
       discountRate: 0,
@@ -314,14 +418,14 @@ const Left = ({ initialInvoiceType }: LeftProps) => {
       dueDate: dueDate, // Convert string to Date object
       shippingAddress: shippingAddress,
       billingAddress: billingAddress,
-      invoiceType: invoiceType,
+      invoiceType: mapInvoiceTypeToApiValue(invoiceType), // Map to API value
       currency: currency,
       taxRate: Number(taxRate),
       // totalAmount: totalAmount,
       paymentTerms: paymentTerms,
       paymentReference: paymentReference, // or generate a unique reference
       notes: note,
-      paymentMethod: selectedPaymentMethod,
+      paymentMethod: mapPaymentMethodToApiValue(selectedPaymentMethod), // Map to API value
       invoiceNumber: invoiceNumber,
       // discountAmount: 0, // Add default or actual value if available
       customerId: customerName, // Using the customer UUID as customerId
@@ -336,20 +440,172 @@ const Left = ({ initialInvoiceType }: LeftProps) => {
     }));
 
     console.log('Raw Sale Receipt Data:', InvoiceData);
-    mutation.mutate(InvoiceData, {
-      onSuccess: () => {
-        toast.success(`${InvoiceData.invoiceType} created successfully`);
-        router.push('/account_receivables');
-        // You can add navigation or other actions here after successful creation
-        // For example: router.push('/pos/sales');
-      },
-      onError: (error: any) => {
-        toast.error(
-          `Failed to create Invoice: ${error.message || 'Unknown error'}`
-        );
-        console.error('Error creating Invoice Please Try again later:', error);
-      },
-    });
+
+    if (isEditMode) {
+      updateMutation.mutate(InvoiceData, {
+        onSuccess: () => {
+          toast.success('Invoice updated successfully!');
+          onSave?.();
+        },
+        onError: (error: any) => {
+          // Handle backend validation errors for update
+          if (error.data?.message && Array.isArray(error.data.message)) {
+            const backendErrors: ValidationErrors = {};
+            error.data.message.forEach((errorMessage: string) => {
+              // Map backend error messages to form fields
+              if (
+                errorMessage.includes('notes') ||
+                errorMessage.includes('Notes')
+              ) {
+                backendErrors.notes = errorMessage;
+              } else if (
+                errorMessage.includes('issueDate') ||
+                errorMessage.includes('issuedDate')
+              ) {
+                backendErrors.issueDate = errorMessage;
+              } else if (errorMessage.includes('dueDate')) {
+                backendErrors.dueDate = errorMessage;
+              } else if (
+                errorMessage.includes('customerId') ||
+                errorMessage.includes('customer')
+              ) {
+                backendErrors.customerName = errorMessage;
+              } else if (errorMessage.includes('currency')) {
+                backendErrors.currency = errorMessage;
+              } else if (errorMessage.includes('paymentMethod')) {
+                backendErrors.paymentMethod = errorMessage;
+              } else if (errorMessage.includes('paymentReference')) {
+                backendErrors.paymentReference = errorMessage;
+              } else if (errorMessage.includes('taxRate')) {
+                backendErrors.taxRate = errorMessage;
+              } else if (errorMessage.includes('paymentTerms')) {
+                backendErrors.paymentTerms = errorMessage;
+              } else if (errorMessage.includes('lineItems')) {
+                backendErrors.lineItems = errorMessage;
+              } else if (errorMessage.includes('billingAddress')) {
+                backendErrors.billingAddress = errorMessage;
+              } else if (errorMessage.includes('shippingAddress')) {
+                backendErrors.shippingAddress = errorMessage;
+              } else if (errorMessage.includes('invoiceType')) {
+                backendErrors.basicInfo = errorMessage;
+              } else if (errorMessage.includes('invoiceNumber')) {
+                backendErrors.basicInfo = errorMessage;
+              }
+            });
+            setErrors(backendErrors);
+            const firstErrorField = document.querySelector('.error-field');
+            if (firstErrorField) {
+              firstErrorField.scrollIntoView({
+                behavior: 'smooth',
+                block: 'center',
+              });
+            }
+          } else {
+            toast.error(
+              `Failed to update Invoice: ${
+                error.data?.message || error.message || 'Unknown error'
+              }`
+            );
+          }
+        },
+      });
+    } else {
+      createMutation.mutate(InvoiceData, {
+        onSuccess: () => {
+          toast.success(
+            `${
+              InvoiceData.invoiceType.toLowerCase().charAt(0).toUpperCase() +
+              InvoiceData.invoiceType.slice(1)
+            } created successfully`
+          );
+          router.push('/account_receivables/invoice');
+          // You can add navigation or other actions here after successful creation
+          // For example: router.push('/pos/sales');
+        },
+        onError: (error: any) => {
+          // Handle backend validation errors
+          if (error.data?.message && Array.isArray(error.data.message)) {
+            const backendErrors: ValidationErrors = {};
+
+            console.log(
+              'Backend validation errors received:',
+              error.data.message
+            );
+
+            error.data.message.forEach((errorMessage: string) => {
+              // Map backend error messages to form fields and sections
+              if (
+                errorMessage.includes('notes') ||
+                errorMessage.includes('Notes')
+              ) {
+                backendErrors.notes = errorMessage;
+              } else if (
+                errorMessage.includes('issueDate') ||
+                errorMessage.includes('issuedDate')
+              ) {
+                backendErrors.issueDate = errorMessage;
+              } else if (errorMessage.includes('dueDate')) {
+                backendErrors.dueDate = errorMessage;
+              } else if (
+                errorMessage.includes('customerId') ||
+                errorMessage.includes('customer')
+              ) {
+                backendErrors.customerName = errorMessage;
+              } else if (errorMessage.includes('currency')) {
+                backendErrors.currency = errorMessage;
+              } else if (errorMessage.includes('paymentMethod')) {
+                backendErrors.paymentMethod = errorMessage;
+              } else if (errorMessage.includes('paymentReference')) {
+                backendErrors.paymentReference = errorMessage;
+              } else if (errorMessage.includes('taxRate')) {
+                backendErrors.taxRate = errorMessage;
+              } else if (errorMessage.includes('paymentTerms')) {
+                backendErrors.paymentTerms = errorMessage;
+              } else if (errorMessage.includes('lineItems')) {
+                backendErrors.lineItems = errorMessage;
+              } else if (errorMessage.includes('billingAddress')) {
+                backendErrors.billingAddress = errorMessage;
+              } else if (errorMessage.includes('shippingAddress')) {
+                backendErrors.shippingAddress = errorMessage;
+              } else if (errorMessage.includes('invoiceType')) {
+                backendErrors.basicInfo = errorMessage;
+              } else if (errorMessage.includes('invoiceNumber')) {
+                backendErrors.basicInfo = errorMessage;
+              } else {
+                // For any unmapped errors, add them to a general field
+                console.log('Unmapped error:', errorMessage);
+              }
+            });
+
+            // Log the mapped errors for debugging
+            console.log('Mapped backend errors:', backendErrors);
+
+            // Set the backend errors
+            setErrors(backendErrors);
+
+            // Scroll to the first error field
+            const firstErrorField = document.querySelector('.error-field');
+            if (firstErrorField) {
+              firstErrorField.scrollIntoView({
+                behavior: 'smooth',
+                block: 'center',
+              });
+            }
+          } else {
+            // Handle general errors
+            toast.error(
+              `Failed to create Invoice: ${
+                error.data?.message || error.message || 'Unknown error'
+              }`
+            );
+          }
+          console.error(
+            'Error creating Invoice Please Try again later:',
+            error
+          );
+        },
+      });
+    }
     // Also log the raw data object if needed
   };
 
@@ -357,136 +613,166 @@ const Left = ({ initialInvoiceType }: LeftProps) => {
   const RequiredMark = () => <span className="text-red-500 ml-1">*</span>;
 
   return (
-    <div className="max-w-5xl min-w-5xl px-2 bg-transparent overflow-y-auto scroll bg-white ">
-      <div className="w-full grid grid-cols-4 gap-4">
-        <div>
-          <Select
-            label="Currency"
-            options={[
-              { label: 'USD($)', value: 'USD' },
-              { label: 'EUR(€)', value: 'EUR' },
-              { label: 'XAF', value: 'XAF' },
-            ]}
-            selectedValue={currency}
-            onChange={(value: any) => handleInputChange('currency', value)}
-            bg={''}
-          />
-        </div>
-        <div className={`${errors.issueDate ? 'error-field' : ''}`}>
-          <DateInput
-            label="Issued Date"
-            name="issueDate"
-            value={issueDate ? new Date(issueDate) : undefined}
-            onChange={(date) =>
-              handleInputChange(
-                'issueDate',
-                date ? date.toISOString().slice(0, 10) : ''
-              )
-            }
-            placeholder="Select issue date"
-            required
-            errors={errors.issueDate as any}
-          />
-        </div>
-        <div className={`${errors.dueDate ? 'error-field' : ''}`}>
-          <DateInput
-            label="Due Date"
-            name="dueDate"
-            value={dueDate ? new Date(dueDate) : undefined}
-            onChange={(date) =>
-              handleInputChange(
-                'dueDate',
-                date ? date.toISOString().slice(0, 10) : ''
-              )
-            }
-            placeholder="Select due date"
-            required
-            errors={errors.dueDate as any}
-          />
-        </div>
-      </div>
-
-      <div className="mt-3 w-full flex flex-col">
-        <div
-          className={`w-[50%] flex items-center space-x-3 ${
-            errors.customerName ? 'error-field' : ''
-          }`}
-        >
-          <div className="w-full">
-            <SearchSelect
-              label="Customer"
-              options={customerOptions}
-              value={selectedCustomer}
-              onChange={(option: Option | null) => {
-                console.log('SearchSelect onChange called with:', option);
-                setSelectedCustomer(option);
-                handleInputChange('customerName', option?.value || '');
-              }}
-              isLoading={customersLoading}
-              placeholder="Select a customer..."
-              isClearable={true}
-              isSearchable={true}
+    <div className="max-w-5xl min-w-5xl p-4 bg-transparent overflow-y-auto scroll bg-white ">
+      {/* Basic Information Section */}
+      <div className="mb-6">
+        <div className="w-full grid grid-cols-4 gap-4">
+          <div className={`${errors.currency ? 'error-field' : ''}`}>
+            <Select
+              label="Currency"
+              options={[
+                { label: 'USD($)', value: 'USD' },
+                { label: 'EUR(€)', value: 'EUR' },
+                { label: 'XAF', value: 'XAF' },
+              ]}
+              selectedValue={currency}
+              onChange={(value: any) => handleInputChange('currency', value)}
+              bg={''}
+              error={errors.currency}
             />
-            {errors.customerName && (
-              <p className="text-red-500 text-sm mt-1">{errors.customerName}</p>
-            )}
           </div>
-          <div className="h-full mt-8 flex items-center">
-            <button
-              type="button"
-              onClick={() => setIsAddCustomerDrawer(true)}
-              className="flex items-center justify-center text-white bg-green-700 rounded-full size-10"
+          <div className={`${errors.issueDate ? 'error-field' : ''}`}>
+            <DateInput
+              label="Issued Date"
+              name="issueDate"
+              value={issueDate ? new Date(issueDate) : undefined}
+              onChange={(date) =>
+                handleInputChange(
+                  'issueDate',
+                  date ? format(date, 'yyyy-MM-dd') : ''
+                )
+              }
+              placeholder="Select issue date"
+              required
+              errors={errors.issueDate as any}
+            />
+          </div>
+          <div className={`${errors.dueDate ? 'error-field' : ''}`}>
+            <DateInput
+              label="Due Date"
+              name="dueDate"
+              value={dueDate ? new Date(dueDate) : undefined}
+              onChange={(date) =>
+                handleInputChange(
+                  'dueDate',
+                  date ? format(date, 'yyyy-MM-dd') : ''
+                )
+              }
+              placeholder="Select due date"
+              required
+              errors={errors.dueDate as any}
+            />
+          </div>
+        </div>
+
+        <div className="mt-3 w-full flex flex-col">
+          <div
+            className={`w-[50%] flex items-center space-x-3 ${
+              errors.customerName ? 'error-field' : ''
+            }`}
+          >
+            <div className="w-full">
+              <SearchableSelect
+                label="Customer"
+                options={customerOptions}
+                selectedValue={customerName}
+                onChange={(value: string) => {
+                  console.log('SearchableSelect onChange called with:', value);
+                  handleInputChange('customerName', value);
+                  // Find and set the selected customer option
+                  const selectedOption = customerOptions.find(
+                    (option) => option.value === value
+                  );
+                  setSelectedCustomer(
+                    selectedOption
+                      ? {
+                          label: selectedOption.label,
+                          value: selectedOption.value,
+                        }
+                      : null
+                  );
+                }}
+                placeholder="Select a customer..."
+                isDisabled={customersLoading}
+                required
+              />
+              {errors.customerName && (
+                <p className="text-red-500 text-sm mt-1">
+                  {errors.customerName}
+                </p>
+              )}
+            </div>
+            <div className="h-full mt-8 flex items-center">
+              <button
+                type="button"
+                onClick={() => setIsAddCustomerDrawer(true)}
+                className="flex items-center justify-center text-white bg-green-700 rounded-full size-10"
+              >
+                <i className="ri-add-line text-3xl"></i>
+              </button>
+            </div>
+          </div>
+          <div className="flex space-x-4 mt-4">
+            <div
+              className={`w-full ${errors.billingAddress ? 'error-field' : ''}`}
             >
-              <i className="ri-add-line text-3xl"></i>
-            </button>
+              <Input
+                type="text"
+                label="Billing Address"
+                name="billing"
+                value={billingAddress}
+                onchange={(e: any) =>
+                  handleInputChange('billing', e.target.value)
+                }
+                errors={errors.billingAddress}
+              />
+            </div>
+            <div
+              className={`w-full ${
+                errors.shippingAddress ? 'error-field' : ''
+              }`}
+            >
+              <Input
+                type="text"
+                label="Shipping Address"
+                name="shipping"
+                value={shippingAddress}
+                onchange={(e: any) =>
+                  handleInputChange('shipping', e.target.value)
+                }
+                errors={errors.shippingAddress}
+              />
+            </div>
           </div>
         </div>
-        <div className="flex space-x-4 mt-4">
-          <div className="w-full">
-            <Input
-              type="text"
-              label="Billing Address"
-              name="billing"
-              value={billingAddress}
-              onchange={(e: any) =>
-                handleInputChange('billing', e.target.value)
-              }
-            />
-          </div>
-          <div className="w-full">
-            <Input
-              type="text"
-              label="Shipping Address"
-              name="shipping"
-              value={shippingAddress}
-              onchange={(e: any) =>
-                handleInputChange('shipping', e.target.value)
-              }
-            />
-          </div>
-        </div>
-      </div>
 
-      <div className="my-5 pt-10">
-        <h3 className="text-lg mb-2 text-gray-900 font-medium">
-          Line Items
+        <div className="my-5 pt-10">
+          <h3 className="text-lg mb-2 text-gray-900 font-medium">
+            Line Items
+            <RequiredMark />
+          </h3>
+          <DynamicTable />
+          {errors.lineItems && (
+            <p className="text-red-500 text-sm mt-1">{errors.lineItems}</p>
+          )}
+        </div>
+
+        <hr className="my-5" />
+        <h3 className="text-lg font-medium my-2">
+          Payment Methods
           <RequiredMark />
         </h3>
-        <DynamicTable />
-        {errors.lineItems && (
-          <p className="text-red-500 text-sm mt-1">{errors.lineItems}</p>
-        )}
-      </div>
-
-      <hr className="my-5" />
-      <h3 className="text-lg font-medium my-2">
-        Payment Methods
-        <RequiredMark />
-      </h3>
-      <div className={`mt-2 ${errors.paymentMethod ? 'error-field' : ''}`}>
-        <div className="grid grid-cols-2 py-4 gap-4">
-          {['Credit Card', 'Bank Transfer', 'Other', 'ACH Transfer'].map(
-            (option) => (
+        <div className={`mt-2 ${errors.paymentMethod ? 'error-field' : ''}`}>
+          <div className="grid grid-cols-2 py-4 gap-4">
+            {[
+              'Credit Card',
+              'Bank Transfer',
+              'ACH Transfer',
+              'Mobile Money',
+              'Cash',
+              'Credit',
+              'Other',
+            ].map((option) => (
               <div
                 key={option}
                 onClick={() => handlePaymentMethodClick(option)}
@@ -499,70 +785,99 @@ const Left = ({ initialInvoiceType }: LeftProps) => {
                 }`}
               >
                 <div className="flex items-center">
-                  <input
-                    type="checkbox"
+                  <Checkbox
+                    id={`payment-${option}`}
+                    label={option.replace(/([A-Z])/g, ' $1').toUpperCase()}
                     checked={selectedPaymentMethod === option}
                     onChange={() => handlePaymentMethodClick(option)}
-                    className="mr-2 text-xl"
-                    name="paymentMethod"
                   />
-                  <span>{option.replace(/([A-Z])/g, ' $1').toUpperCase()}</span>
                 </div>
               </div>
-            )
-          )}
-          {errors.paymentMethod && (
-            <p className="text-red-500 text-sm col-span-2">
-              {errors.paymentMethod}
-            </p>
+            ))}
+            {errors.paymentMethod && (
+              <p className="text-red-500 text-sm col-span-2">
+                {errors.paymentMethod}
+              </p>
+            )}
+          </div>
+          <div className={`${errors.paymentReference ? 'error-field' : ''}`}>
+            <Input
+              type="text"
+              label="Payment Reference"
+              name="paymentReference"
+              value={paymentReference}
+              onchange={(e: any) =>
+                handleInputChange('paymentReference', e.target.value)
+              }
+              errors={errors.paymentReference}
+            />
+          </div>
+          <div className={`${errors.taxRate ? 'error-field' : ''}`}>
+            <Input
+              type="number"
+              label="Tax Rate"
+              name="taxRate"
+              value={taxRate}
+              onchange={(e: any) =>
+                handleInputChange('taxRate', e.target.value)
+              }
+              errors={errors.taxRate}
+            />
+          </div>
+          <div className={`${errors.paymentTerms ? 'error-field' : ''}`}>
+            <TextArea
+              label="Payment Terms"
+              name="paymentTerms"
+              value={paymentTerms}
+              onchange={(e: any) =>
+                handleInputChange('paymentTerms', e.target.value)
+              }
+              errors={errors.paymentTerms}
+            />
+          </div>
+        </div>
+
+        <hr className="my-5" />
+        <h3 className="text-xl  my-2">Notes</h3>
+        <div className={`${errors.notes ? 'error-field' : ''}`}>
+          <textarea
+            value={note}
+            onChange={(e) => handleInputChange('note', e.target.value)}
+            className={`h-36 border p-2 w-full outline-none mt-2 focus:outline-none focus:ring-2 mb-10 ${
+              errors.notes
+                ? 'border-red-500 focus:ring-red-500 focus:border-red-500'
+                : 'focus:ring-green-500 focus:border-green-500'
+            }`}
+          ></textarea>
+          {errors.notes && (
+            <p className="text-red-500 text-sm mt-1">{errors.notes}</p>
           )}
         </div>
-        <Input
-          type="text"
-          label="Payment Reference"
-          name="paymentReference"
-          value={paymentReference}
-          onchange={(e: any) =>
-            handleInputChange('paymentReference', e.target.value)
-          }
-        />
-        <Input
-          type="number"
-          label="Tax Rate"
-          name="taxRate"
-          value={taxRate}
-          onchange={(e: any) => handleInputChange('taxRate', e.target.value)}
-        />
-        <TextArea
-          label="Payment Terms"
-          name="paymentTerms"
-          value={paymentTerms}
-          onchange={(e: any) =>
-            handleInputChange('paymentTerms', e.target.value)
-          }
+
+        <div className="fixed bottom-0 left-0 right-0 p-2 bg-white border-t border-gray-200 flex justify-end space-x-3">
+          {' '}
+          <Button
+            text={
+              isEditMode
+                ? updateMutation.isPending
+                  ? 'Updating Invoice...'
+                  : 'Update Invoice'
+                : createMutation.isPending
+                ? 'Creating Invoice...'
+                : 'Save Invoice'
+            }
+            onClick={handleSaveInvoice}
+            type={'button'}
+            disabled={
+              isEditMode ? updateMutation.isPending : createMutation.isPending
+            }
+          />
+        </div>
+        <SliderCustomer
+          open={isAddCustomerDrawer}
+          setOpen={setIsAddCustomerDrawer}
         />
       </div>
-
-      <hr className="my-5" />
-      <h3 className="text-xl  my-2">Notes</h3>
-      <textarea
-        value={note}
-        onChange={(e) => handleInputChange('note', e.target.value)}
-        className="h-36 border p-2 w-full outline-none mt-2 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 mb-10"
-      ></textarea>
-
-      <div className="fixed bottom-0 left-0 right-0 p-2 bg-white border-t border-gray-200 flex justify-end space-x-3">
-        {' '}
-        <Button
-          text={'Save Invoice'}
-          onClick={handleSaveInvoice}
-          type={'button'}
-        />
-      </div>
-      <SliderCustomer
-        open={isAddCustomerDrawer}
-        setOpen={setIsAddCustomerDrawer}
-      />
     </div>
   );
 };

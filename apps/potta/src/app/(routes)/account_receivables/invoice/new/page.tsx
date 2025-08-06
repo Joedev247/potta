@@ -102,7 +102,7 @@ const NewInvoiceInner = () => {
               style={{ transition: 'flex-basis 300ms ease-in-out' }}
             >
               <div
-                className={`py-8 ${
+                className={`py- ${
                   context?.layoutMode === 'sidebar' ? 'px-8' : 'px-5'
                 } pr-0 h-[92.7vh] overflow-y-auto flex justify-center`}
               >

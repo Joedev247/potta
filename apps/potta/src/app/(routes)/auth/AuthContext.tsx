@@ -1,10 +1,20 @@
 'use client';
-import React, { createContext, useContext, useEffect, useState } from 'react';
+import React, { createContext, useContext, useEffect, useState, useMemo } from 'react';
 import axios, { setAuthToken } from '../../../../config/axios.config';
 import Cookies from 'js-cookie';
 import { useRouter } from 'next/navigation';
 import toast from 'react-hot-toast';
 
+// Configuration constants
+const AUTH_REDIRECT_URL = process.env.NEXT_PUBLIC_AUTH_URL || 'https://instanvi-auth.vercel.app';
+const BYPASS_AUTH_ROUTES = [
+  '/vendor-portal',
+  // Add more routes here as needed
+  // '/client-portal',
+  // '/public-api',
+];
+
+// Types
 type User = any; // Accept any structure for user data
 
 interface AuthContextType {
@@ -70,27 +80,50 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   const [isLoading, setIsLoading] = useState(true);
   const router = useRouter();
 
+  // Memoized route detection to avoid unnecessary recalculations
+  const isBypassRoute = useMemo(() => {
+    if (typeof window === 'undefined') return false;
+    
+    const currentPath = window.location.pathname;
+    return BYPASS_AUTH_ROUTES.some(route => currentPath.includes(route));
+  }, []);
+
   useEffect(() => {
     const handleToken = async () => {
-      console.log('AuthContext: Starting token handling...');
+      if (process.env.NODE_ENV === 'development') {
+        console.log('AuthContext: Starting token handling...');
+      }
+
+      // Skip token processing for bypass routes
+      if (isBypassRoute) {
+        if (process.env.NODE_ENV === 'development') {
+          console.log('AuthContext: Bypass route detected, skipping token processing');
+        }
+        setIsLoading(false);
+        return;
+      }
 
       // Extract token from URL
       const url = new URL(window.location.href);
       const urlToken = url.searchParams.get('token');
       const secret = process.env.NEXT_PUBLIC_ENCRYPTION_SECRET ?? '';
 
-      console.log('AuthContext: URL token found:', !!urlToken);
-      console.log('AuthContext: Secret available:', !!secret);
+      if (process.env.NODE_ENV === 'development') {
+        console.log('AuthContext: URL token found:', !!urlToken);
+        console.log('AuthContext: Secret available:', !!secret);
+      }
 
       if (!secret) {
         console.error('AuthContext: No encryption secret found');
         toast.error('Unauthorized action');
         return;
       }
-      const testToken = 'fBvi2vOVcW856X6gNkNScouXTdEr6jMj';
+      const testToken = 'u5C1SFsSKG3lGPMx2QMiu9lSjzeVboAI';
 
       if (urlToken || testToken) {
-        console.log('AuthContext: Processing URL token...');
+        if (process.env.NODE_ENV === 'development') {
+          console.log('AuthContext: Processing URL token...');
+        }
 
         // Check if we're on localhost
         const isLocalhost =
@@ -98,7 +131,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
           window.location.hostname === '127.0.0.1';
 
         if (isLocalhost) {
-          console.log('AuthContext: Running on localhost - using test token');
+          if (process.env.NODE_ENV === 'development') {
+            console.log('AuthContext: Running on localhost - using test token');
+          }
           setTokenState(testToken);
           setAuthToken(testToken);
           Cookies.set('auth_token', testToken, { expires: 7 });
@@ -109,10 +144,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
               urlToken || testToken,
               secret
             );
-            console.log(
-              'AuthContext: Successfully decrypted token:',
-              decryptedToken
-            );
+            if (process.env.NODE_ENV === 'development') {
+              console.log('AuthContext: Successfully decrypted token:', decryptedToken);
+            }
 
             setTokenState(decryptedToken);
             setAuthToken(decryptedToken);
@@ -121,7 +155,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
             console.error('AuthContext: Failed to decrypt token:', err);
             toast.error('Invalid token');
             // Redirect to auth page on decryption failure
-            window.location.href = 'https://instanvi-auth.vercel.app';
+            window.location.href = AUTH_REDIRECT_URL;
           }
         }
 
@@ -131,23 +165,31 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
         newUrl.searchParams.delete('redirectUrl'); // Also clean up redirectUrl if present
         window.history.replaceState({}, '', newUrl.toString());
 
-        console.log('AuthContext: Token processed and URL cleaned');
+        if (process.env.NODE_ENV === 'development') {
+          console.log('AuthContext: Token processed and URL cleaned');
+        }
       } else {
-        console.log('AuthContext: No URL token, checking cookies...');
+        if (process.env.NODE_ENV === 'development') {
+          console.log('AuthContext: No URL token, checking cookies...');
+        }
         // If no token in URL, try to load from cookie
         const cookieToken = Cookies.get('auth_token');
         if (cookieToken) {
-          console.log('AuthContext: Found token in cookies');
+          if (process.env.NODE_ENV === 'development') {
+            console.log('AuthContext: Found token in cookies');
+          }
           setTokenState(cookieToken);
           setAuthToken(cookieToken);
         } else {
-          console.log('AuthContext: No token found in cookies');
+          if (process.env.NODE_ENV === 'development') {
+            console.log('AuthContext: No token found in cookies');
+          }
         }
       }
     };
 
     handleToken();
-  }, []);
+  }, [isBypassRoute]);
 
   useEffect(() => {
     const devMode = process.env.NEXT_PUBLIC_DEV_MODE === 'true';
@@ -157,7 +199,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
       Cookies.set('auth_token', token, { expires: 7 });
 
       if (devMode) {
-        console.log('AuthContext: DEV MODE active – skipping /whoami check');
+        if (process.env.NODE_ENV === 'development') {
+          console.log('AuthContext: DEV MODE active – skipping /whoami check');
+        }
         setUser({ name: 'Dev User', role: 'developer' }); // Dummy user
         setIsLoading(false);
       } else {
@@ -172,7 +216,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
             setUser(null);
             setIsLoading(false);
             Cookies.remove('auth_token');
-            window.location.href = 'https://instanvi-auth.vercel.app';
+            window.location.href = AUTH_REDIRECT_URL;
           });
       }
     } else {
@@ -187,7 +231,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   };
 
   const signOut = () => {
-    console.log('AuthContext: Signing out...');
+    if (process.env.NODE_ENV === 'development') {
+      console.log('AuthContext: Signing out...');
+    }
 
     // Clear token state
     setTokenState(null);
@@ -204,7 +250,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
       'auth_token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
 
     // Redirect to auth page
-    window.location.href = 'https://instanvi-auth.vercel.app';
+    window.location.href = AUTH_REDIRECT_URL;
   };
 
   const isAuthenticated = !!token && !!user;

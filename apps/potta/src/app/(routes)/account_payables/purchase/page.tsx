@@ -12,7 +12,7 @@ const Invoice = () => {
   const context = useContext(ContextData);
   return (
     <div
-      className={`${context?.layoutMode === 'sidebar' ? ' pl-16' : 'p-5'} pr-5`}
+      className={`${context?.layoutMode === 'sidebar' ? ' pl-12' : 'p-5'} pr-5`}
     >
       {/* <CustomInput />
       <CustomSelect
@@ -21,7 +21,7 @@ const Invoice = () => {
         onChange={setSelectedValue}
         placeholder="Choose an option"
       /> */}
-      <div className="mt-5">
+      <div className="mt-5 overflow-y-hidden ">
         <InvoiceTableComponents />
       </div>
     </div>

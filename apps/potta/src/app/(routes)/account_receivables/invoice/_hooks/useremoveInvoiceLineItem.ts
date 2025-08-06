@@ -7,8 +7,10 @@ const useRemoveInvoiceLineItem = (invoice_id: string) => {
     mutationKey: ['remove-invoicing-line-item'],
     mutationFn: (lineItemId: string) =>
       invoiceApi.removeLineItem(invoice_id, lineItemId),
-    onSuccess: () =>
-      queryClient.invalidateQueries({ queryKey: ['get-all-invoicing'] }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['get-all-invoicing'] });
+      queryClient.invalidateQueries({ queryKey: ['get-all-invoicing-stats'] });
+    },
   });
 };
 

@@ -9,6 +9,8 @@ interface TableItem {
   productId: string;
   uuid: string;
   id: number;
+  price: number;
+  tax: number;
 }
 
 const PdfView = () => {
@@ -26,15 +28,31 @@ const PdfView = () => {
     ? new Date(contextData.requiredDate).toLocaleDateString()
     : 'Not set';
 
-  const orderNumber = contextData.orderNumber || '';
-  const shoppingAddress = contextData.shoppingAddress || '';
+  const shippingAddress = contextData.shippingAddress || '';
   const paymentTerms = contextData.paymentTerms || '';
   const paymentMethod = contextData.paymentMethod || '';
+  const vendorName = contextData.vendorName || '';
+
+  // Format payment method for display
+  const formatPaymentMethod = (method: string): string => {
+    const methodMap: { [key: string]: string } = {
+      CREDIT_CARD: 'Credit Card',
+      BANK_TRANSFER: 'Bank Transfer',
+      ACH_TRANSAFER: 'ACH Transfer',
+      MOBILE_MONEY: 'Mobile Money',
+      CASH: 'Cash',
+      CREDIT: 'Credit',
+      OTHER: 'Other',
+    };
+    return methodMap[method] || method;
+  };
 
   // Use the getOneVendor hook with the vendor ID
-  const { data: vendorData, isLoading: vendorLoading } = useGetOneVendor(
-    vendorId || ''
-  );
+  const {
+    data: vendorData,
+    isLoading: vendorLoading,
+    error: vendorError,
+  } = useGetOneVendor(vendorId || '');
   const vendorDetails = vendorData || null;
 
   return (
@@ -42,12 +60,12 @@ const PdfView = () => {
       <div className="flex min-w-[45rem] justify-between w-full p-8">
         <h3 className="text-xl font-semibold">Purchase Order Preview</h3>
       </div>
-      
+
       <div className="max-w-[48rem] bg-white space-y-8 min-w-[45rem] w-full mb-10">
         <div className="h-36 w-full flex items-center justify-between px-8 bg-green-800">
           <div>
             <p className="text-3xl font-semibold text-white">Purchase Order</p>
-            <p className="text-white mt-2">#{orderNumber}</p>
+            {/* <p className="text-white mt-2">Draft</p> */}
           </div>
           <div className="text-right text-white">
             <p>
@@ -58,7 +76,7 @@ const PdfView = () => {
             </p>
           </div>
         </div>
-        
+
         <div className="p-5 space-y-8 bg-white">
           <div className="grid grid-cols-2 gap-8">
             <div>
@@ -68,20 +86,32 @@ const PdfView = () => {
                   <p>Loading vendor details...</p>
                 ) : vendorDetails ? (
                   <>
-                    <p className="font-medium text-gray-800">{vendorDetails.name}</p>
+                    <p className="font-medium text-gray-800">
+                      {vendorDetails.name || vendorName || 'Vendor Name'}
+                    </p>
                     <p>{vendorDetails.email || 'No email'}</p>
-                    <p>{vendorDetails.address.address || 'No address'}</p>
+                    <p>{vendorDetails.address?.address || 'No address'}</p>
                     <p>{vendorDetails.phone || 'No phone'}</p>
+                    {vendorDetails.contactPerson && (
+                      <p>Contact: {vendorDetails.contactPerson}</p>
+                    )}
+                  </>
+                ) : vendorName ? (
+                  <>
+                    <p className="font-medium text-gray-800">{vendorName}</p>
+                    <p>Loading vendor details...</p>
                   </>
                 ) : (
                   <p>No vendor selected</p>
                 )}
               </div>
             </div>
-            
+
             <div>
               <h3 className="font-bold text-gray-700 mb-2">Ship To:</h3>
-              <p className="text-sm text-gray-600">{shoppingAddress || 'No shipping address specified'}</p>
+              <p className="text-sm text-gray-600">
+                {shippingAddress || 'No shipping address specified'}
+              </p>
             </div>
           </div>
 
@@ -94,26 +124,100 @@ const PdfView = () => {
                 <th className="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider border">
                   Qty
                 </th>
+                <th className="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider border">
+                  Unit Price
+                </th>
+                <th className="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider border">
+                  Tax %
+                </th>
+                <th className="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider border">
+                  Total
+                </th>
               </tr>
             </thead>
             <tbody>
-              {tableData.map((item: TableItem, index: number) => (
-                <tr key={item.id || index} className={index % 2 === 0 ? 'bg-white' : 'bg-gray-50'}>
-                  <td className="border px-6 py-3">
-                    <p className="font-medium">{item.name}</p>
-                    <p className="text-xs text-gray-500">ID: {item.productId}</p>
-                  </td>
-                  <td className="border px-4 py-3 text-center">{item.qty}</td>
-                </tr>
-              ))}
+              {tableData.map((item: TableItem, index: number) => {
+                const itemTotal = item.qty * item.price;
+                const itemTax = (itemTotal * item.tax) / 100;
+                const totalWithTax = itemTotal + itemTax;
+
+                return (
+                  <tr
+                    key={item.id || index}
+                    className={index % 2 === 0 ? 'bg-white' : 'bg-gray-50'}
+                  >
+                    <td className="border px-6 py-3">
+                      <p className="font-medium">{item.name}</p>
+                      <p className="text-xs text-gray-500">
+                        ID: {item.productId}
+                      </p>
+                    </td>
+                    <td className="border px-4 py-3 text-center">{item.qty}</td>
+                    <td className="border px-4 py-3 text-center">
+                      XAF {item.price.toFixed(2)}
+                    </td>
+                    <td className="border px-4 py-3 text-center">
+                      {item.tax}%
+                    </td>
+                    <td className="border px-4 py-3 text-center">
+                      XAF {totalWithTax.toFixed(2)}
+                    </td>
+                  </tr>
+                );
+              })}
             </tbody>
           </table>
-          
+
+          {/* Order Totals */}
+          <div className="mt-8 pt-6 border-t">
+            <div className="flex justify-end">
+              <div className="w-64 space-y-2">
+                <div className="flex justify-between">
+                  <span className="font-medium">Subtotal:</span>
+                  <span>
+                    XAF{' '}
+                    {tableData
+                      .reduce((sum, item) => sum + item.qty * item.price, 0)
+                      .toFixed(2)}
+                  </span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="font-medium">Tax:</span>
+                  <span>
+                    XAF{' '}
+                    {tableData
+                      .reduce((sum, item) => {
+                        const itemTotal = item.qty * item.price;
+                        return sum + (itemTotal * item.tax) / 100;
+                      }, 0)
+                      .toFixed(2)}
+                  </span>
+                </div>
+                <div className="flex justify-between border-t pt-2">
+                  <span className="font-bold">Total:</span>
+                  <span className="font-bold">
+                    XAF{' '}
+                    {tableData
+                      .reduce((sum, item) => {
+                        const itemTotal = item.qty * item.price;
+                        const itemTax = (itemTotal * item.tax) / 100;
+                        return sum + itemTotal + itemTax;
+                      }, 0)
+                      .toFixed(2)}
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+
           <div className="grid grid-cols-2 gap-8 mt-8 pt-6 border-t">
             <div>
-              <h3 className="font-bold text-gray-700 mb-2">Payment Information:</h3>
+              <h3 className="font-bold text-gray-700 mb-2">
+                Payment Information:
+              </h3>
               <p className="text-sm">
-                <span className="font-medium">Method:</span> {paymentMethod || 'Not specified'}
+                <span className="font-medium">Method:</span>{' '}
+                {formatPaymentMethod(paymentMethod) || 'Not specified'}
               </p>
               {paymentTerms && (
                 <div className="mt-2">
@@ -122,7 +226,7 @@ const PdfView = () => {
                 </div>
               )}
             </div>
-            
+
             {contextData.note && (
               <div>
                 <h3 className="font-bold text-gray-700 mb-2">Notes:</h3>
@@ -130,10 +234,16 @@ const PdfView = () => {
               </div>
             )}
           </div>
-          
+
           <div className="text-center text-xs text-gray-500 pt-6 border-t">
-            <p>This purchase order is subject to the terms and conditions agreed upon by both parties.</p>
-            <p className="mt-2">Generated on {new Date().toLocaleDateString()} at {new Date().toLocaleTimeString()}</p>
+            <p>
+              This purchase order is subject to the terms and conditions agreed
+              upon by both parties.
+            </p>
+            <p className="mt-2">
+              Generated on {new Date().toLocaleDateString()} at{' '}
+              {new Date().toLocaleTimeString()}
+            </p>
           </div>
         </div>
       </div>

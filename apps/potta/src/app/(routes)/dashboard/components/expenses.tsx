@@ -1,37 +1,81 @@
 'use client';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo, useCallback } from 'react';
 import Chart from './dashboardChart';
 import BalanceBox from './balanceBoxes';
 import PieChart from '../../../charts/piechart';
 import { useQuery } from '@tanstack/react-query';
 import axios from 'config/axios.config';
+import { CalendarIcon } from 'lucide-react';
+import { format } from 'date-fns';
+import { DateRange } from 'react-day-picker';
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@potta/components/shadcn/popover';
+import { Calendar } from '@potta/components/shadcn/calendar';
+
+const periods = ['Yesterday', 'Today', 'This week', 'This Month', 'Custom'];
+
+// Helper function to get date range based on period
+const getDateRange = (period: string, customDate?: DateRange): DateRange => {
+  const today = new Date();
+  const yesterday = new Date(today);
+  yesterday.setDate(yesterday.getDate() - 1);
+
+  const startOfWeek = new Date(today);
+  startOfWeek.setDate(today.getDate() - today.getDay());
+
+  const startOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+
+  switch (period) {
+    case 'Yesterday':
+      return { from: yesterday, to: yesterday };
+    case 'Today':
+      return { from: today, to: today };
+    case 'This week':
+      return { from: startOfWeek, to: today };
+    case 'This Month':
+      return { from: startOfMonth, to: today };
+    case 'Custom':
+      return customDate || { from: today, to: today };
+    default:
+      return { from: today, to: today };
+  }
+};
 
 const DashboardExpenses = () => {
-  const DEFAULT_ORGANIZATION_ID = 'f7b1b3b0-0b1b-4b3b-8b1b-0b1b3b0b1b3c';
-  const DEFAULT_BRANCH_ID = 'f7b1b3b0-0b1b-4b3b-8b1b-0b1b3b0b1b3b';
+  const [selectedPeriod, setSelectedPeriod] = useState(periods[0]);
+  const [customDate, setCustomDate] = useState<DateRange | undefined>();
 
-  // Fetch bills and budgets
+  // Memoize the date range calculation to prevent unnecessary re-renders
+  const calculatedDateRange = useMemo(() => {
+    return getDateRange(selectedPeriod, customDate);
+  }, [
+    selectedPeriod,
+    customDate?.from?.toDateString(),
+    customDate?.to?.toDateString(),
+  ]);
+
+  // Fetch bills and budgets with date filtering
   const { data: billsData, isLoading: billsLoading } = useQuery({
-    queryKey: ['bills-dashboard'],
+    queryKey: ['bills-dashboard', calculatedDateRange],
     queryFn: async () => {
-      const response = await axios.get('/bills', {
-        headers: {
-          organizationId: DEFAULT_ORGANIZATION_ID,
-          BranchId: DEFAULT_BRANCH_ID,
-        },
-      });
+      const filter =
+        calculatedDateRange?.from && calculatedDateRange?.to
+          ? {
+              fromDate: calculatedDateRange.from.toISOString(),
+              toDate: calculatedDateRange.to.toISOString(),
+            }
+          : {};
+      const response = await axios.get('/bills', { params: filter });
       return response.data;
     },
   });
   const { data: budgetsData, isLoading: budgetsLoading } = useQuery({
     queryKey: ['budgets-dashboard'],
     queryFn: async () => {
-      const response = await axios.get('/budgets', {
-        headers: {
-          organizationId: DEFAULT_ORGANIZATION_ID,
-          BranchId: DEFAULT_BRANCH_ID,
-        },
-      });
+      const response = await axios.get('/budgets');
       return response.data;
     },
   });
@@ -83,12 +127,104 @@ const DashboardExpenses = () => {
     }).format(amount);
   };
 
+  // Memoize the date range formatting
+  const formatDateRange = useCallback(() => {
+    if (!customDate?.from) return '';
+    if (!customDate?.to) return format(customDate.from, 'PPP');
+    return `${format(customDate.from, 'PPP')} - ${format(
+      customDate.to,
+      'PPP'
+    )}`;
+  }, [customDate?.from?.toDateString(), customDate?.to?.toDateString()]);
+
+  // Memoize the custom button text
+  const getCustomButtonText = useCallback(() => {
+    if (selectedPeriod === 'Custom' && customDate?.from) {
+      // Show abbreviated date format on the button
+      if (!customDate.to) return format(customDate.from, 'MMM d, yyyy');
+      if (
+        customDate.from.getFullYear() === customDate.to.getFullYear() &&
+        customDate.from.getMonth() === customDate.to.getMonth()
+      ) {
+        // Same month and year
+        return `${format(customDate.from, 'MMM d')} - ${format(
+          customDate.to,
+          'd, yyyy'
+        )}`;
+      }
+      return `${format(customDate.from, 'MMM d')} - ${format(
+        customDate.to,
+        'MMM d, yyyy'
+      )}`;
+    }
+    return 'Custom';
+  }, [
+    selectedPeriod,
+    customDate?.from?.toDateString(),
+    customDate?.to?.toDateString(),
+  ]);
+
+  // Memoize the period change handler
+  const handlePeriodChange = useCallback((period: string) => {
+    setSelectedPeriod(period);
+    if (period !== 'Custom') {
+      setCustomDate(undefined);
+    }
+  }, []);
+
+  // Handle custom date selection
+  const handleCustomDateChange = useCallback(
+    (newDate: DateRange | undefined) => {
+      setCustomDate(newDate);
+    },
+    []
+  );
+
   if (billsLoading || budgetsLoading) {
     return (
-      <div className="pt-3 animate-pulse">
+      <div className="pt-3 ">
         <div className="flex flex-col grow h-full">
+          {/* Date Filter Buttons - Keep them visible during loading */}
+          <div className="flex gap-2 mb-2">
+            {periods.map((period) => {
+              if (period !== 'Custom') {
+                return (
+                  <button
+                    key={period}
+                    disabled
+                    className={`px-4 py-2 flex rounded-full items-center text-sm font-medium transition-colors ${
+                      selectedPeriod === period
+                        ? 'bg-green-900 text-white'
+                        : 'bg-white text-gray-700 hover:bg-gray-100'
+                    }`}
+                  >
+                    {period}
+                  </button>
+                );
+              } else {
+                return (
+                  <button
+                    key={period}
+                    disabled
+                    className={`px-4 py-2 flex rounded-full items-center text-sm font-medium transition-colors ${
+                      selectedPeriod === period
+                        ? 'bg-green-900 text-white'
+                        : 'bg-white text-gray-700 hover:bg-gray-100'
+                    }`}
+                  >
+                    {getCustomButtonText()}
+                    <CalendarIcon className="ml-2 h-4 w-4" />
+                  </button>
+                );
+              }
+            })}
+          </div>
+
           <div>
-            <BalanceBox />
+            <BalanceBox
+              dateRange={calculatedDateRange}
+              isLoading={billsLoading || budgetsLoading}
+            />
           </div>
           <div className="w-full flex space-x-5">
             <div className="mt-5 w-[50%] w-full py-2">
@@ -150,8 +286,82 @@ const DashboardExpenses = () => {
     <div className="">
       <div className="pt-3">
         <div className="flex flex-col grow h-full">
+          {/* Date Filter Buttons */}
+          <div className="flex gap-2 mb-2">
+            {periods.map((period) => {
+              if (period !== 'Custom') {
+                return (
+                  <button
+                    key={period}
+                    onClick={() => handlePeriodChange(period)}
+                    className={`px-4 py-2 flex rounded-full items-center text-sm font-medium transition-colors ${
+                      selectedPeriod === period
+                        ? 'bg-green-900 text-white'
+                        : 'bg-white text-gray-700 hover:bg-gray-100'
+                    }`}
+                  >
+                    {period}
+                  </button>
+                );
+              } else {
+                return (
+                  <Popover key={period}>
+                    <PopoverTrigger>
+                      <button
+                        onClick={() => handlePeriodChange(period)}
+                        className={`px-4 py-2 flex rounded-full items-center text-sm font-medium transition-colors ${
+                          selectedPeriod === period
+                            ? 'bg-green-900 text-white'
+                            : 'bg-white text-gray-700 hover:bg-gray-100'
+                        }`}
+                      >
+                        {getCustomButtonText()}
+                        <CalendarIcon className="ml-2 h-4 w-4" />
+                      </button>
+                    </PopoverTrigger>
+                    <PopoverContent
+                      className="w-auto p-0 bg-white border border-gray-200 shadow-lg rounded-md"
+                      align="start"
+                    >
+                      {/* Date range header */}
+                      <div className="p-3 border-b border-gray-200 bg-gray-50 rounded-t-md">
+                        <h3 className="font-medium text-center">
+                          {formatDateRange()}
+                        </h3>
+                      </div>
+                      <div className="p-3">
+                        <Calendar
+                          mode="range"
+                          defaultMonth={customDate?.from}
+                          selected={customDate}
+                          onSelect={handleCustomDateChange}
+                          numberOfMonths={2}
+                          className="bg-white"
+                        />
+                        <div className="flex justify-end mt-4">
+                          <button
+                            className="bg-green-900 text-white px-4 py-2 rounded-md text-sm"
+                            onClick={() => {
+                              // Handle applying the date range
+                              console.log('Selected date range:', customDate);
+                            }}
+                          >
+                            Apply
+                          </button>
+                        </div>
+                      </div>
+                    </PopoverContent>
+                  </Popover>
+                );
+              }
+            })}
+          </div>
+
           <div>
-            <BalanceBox />
+            <BalanceBox
+              dateRange={calculatedDateRange}
+              isLoading={billsLoading || budgetsLoading}
+            />
           </div>
           <div className="w-full flex space-x-5">
             <div className="mt-5 w-[50%] w-full py-2">
@@ -160,7 +370,7 @@ const DashboardExpenses = () => {
             </div>
             <div className="w-[50%] mt-2">
               <div className="grid grid-cols-1 md:grid-cols-1 gap-4 mt-5 pb-5 grow">
-                <div className="flex flex-col border grow">
+                <div className="flex flex-col border grow bg-white">
                   <div className="flex border-b items-center p-4">
                     <h1 className="text-[18px]">Total Expenses by Person</h1>
                   </div>
@@ -204,7 +414,7 @@ const DashboardExpenses = () => {
             <div className="flex space-x-5 w-full px-2">
               <div className="my-5 w-[50%]">
                 {/* Pass real pie chart data */}
-                {/* <PieChart
+          {/* <PieChart
                   data={pieChartData}
                   title="Expenses by Category"
                   width={200}
@@ -224,7 +434,7 @@ const DashboardExpenses = () => {
                 </div>
               </div>
             </div>
-          </div> */} 
+          </div> */}
           {/* <div className="w-[50%] border">
             <div className="w-full border-b py-3 bg-[#F3FBFB]">
               <h3>Expenses by Category</h3>

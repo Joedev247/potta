@@ -61,7 +61,7 @@ export default function RootLayout({
               useSidebar
                 ? context?.toggle
                   ? 'flex w-full pl-[35px]'
-                  : 'pl-[150px] w-full'
+                  : 'pl-[170px] w-full'
                 : 'w-full pl-5'
             }`}
           >

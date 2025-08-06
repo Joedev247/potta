@@ -1,6 +1,7 @@
 'use client';
 import React from 'react';
 import ReactSelect, { Props as ReactSelectProps } from 'react-select';
+import AsyncSelect from 'react-select/async';
 
 export interface Option {
   value: string;
@@ -23,6 +24,8 @@ interface SearchableSelectSingleProps
   required?: boolean;
   error?: string;
   multiple?: false;
+  loadOptions?: (inputValue: string) => Promise<Option[]>;
+  minInputLength?: number;
 }
 // Overload for multi select
 interface SearchableSelectMultiProps
@@ -40,6 +43,8 @@ interface SearchableSelectMultiProps
   required?: boolean;
   error?: string;
   multiple: true;
+  loadOptions?: (inputValue: string) => Promise<Option[]>;
+  minInputLength?: number;
 }
 
 type SearchableSelectProps =
@@ -109,8 +114,70 @@ const SearchableSelect: React.FC<SearchableSelectProps> = ({
   required = false,
   error,
   multiple = false,
+  loadOptions,
+  minInputLength = 2,
   ...rest
 }) => {
+  // If loadOptions is provided, use AsyncSelect
+  if (loadOptions) {
+    return (
+      <div className="w-full">
+        {label && (
+          <label className={`block mb-2 ${labelClass} !font-medium`}>
+            {label} {required && <span className="text-red-500">*</span>}
+          </label>
+        )}
+        <AsyncSelect
+          loadOptions={loadOptions}
+          defaultOptions={options}
+          value={
+            multiple
+              ? options.filter((option) =>
+                  Array.isArray(selectedValue)
+                    ? selectedValue.includes(option.value)
+                    : false
+                )
+              : options.find((option) => option.value === selectedValue) || null
+          }
+          onChange={(option) => {
+            if (multiple) {
+              if (Array.isArray(option)) {
+                (onChange as (value: string[]) => void)(
+                  option.map((o) => o.value)
+                );
+              } else {
+                (onChange as (value: string[]) => void)([]);
+              }
+            } else {
+              if (option) {
+                (onChange as (value: string) => void)((option as Option).value);
+              } else {
+                (onChange as (value: string) => void)('');
+              }
+            }
+          }}
+          placeholder={placeholder}
+          isDisabled={isDisabled}
+          isClearable
+          isSearchable
+          cacheOptions={false}
+          styles={{
+            ...customStyles,
+            control: (provided: any, state: any) =>
+              customStyles.control(provided, state, { error }),
+          }}
+          className={`react-select-container ${
+            isDisabled ? 'opacity-50 cursor-not-allowed' : ''
+          }`}
+          classNamePrefix="react-select"
+          {...rest}
+        />
+        {error && <p className="mt-1 text-sm text-red-500">{error}</p>}
+      </div>
+    );
+  }
+
+  // Otherwise use regular ReactSelect
   return (
     <div className="w-full">
       {label && (

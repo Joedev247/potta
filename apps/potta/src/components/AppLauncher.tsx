@@ -46,14 +46,14 @@ const AppLauncher: React.FC = () => {
     },
     {
       value: 'pos',
-      label: 'POS',
+      label: 'Trade',
       icon: AppLauncherIcons.pos,
     },
-    // {
-    //   value: 'accounting',
-    //   label: 'Accounting',
-    //   icon: AppLauncherIcons.accounting,
-    // },
+    {
+      value: 'accounting',
+      label: 'Accounting',
+      icon: AppLauncherIcons.accounting,
+    },
     {
       value: 'reports',
       label: 'FP & A',

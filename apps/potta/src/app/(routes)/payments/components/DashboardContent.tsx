@@ -71,7 +71,7 @@ const DashboardContent = () => {
                     <div className="flex items-center gap-2">
                       <img src={data.image} className="h-10 w-10" alt="" />
                       <div className="ml-4">
-                        <div className="font-thin text-gray-900">
+                        <div className=" text-gray-900">
                           {data.transactionName}
                         </div>
                       </div>
@@ -99,7 +99,7 @@ const DashboardContent = () => {
                     >
                       <div className="flex items-center gap-2">
                         <div className="ml-4">
-                          <div className="font-thin text-gray-900">
+                          <div className=" text-gray-900">
                             {data.transactionName}{' '}
                           </div>
                         </div>

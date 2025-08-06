@@ -6,8 +6,10 @@ const useUpdateInvoice = (invoice_id: string) => {
   return useMutation({
     mutationKey: ['update-invoicing'],
     mutationFn: (data) => invoiceApi.update(invoice_id, data),
-    onSuccess: () =>
-      queryClient.invalidateQueries({ queryKey: ['get-all-invoicing'] }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['get-all-invoicing'] });
+      queryClient.invalidateQueries({ queryKey: ['get-all-invoicing-stats'] });
+    },
   });
 };
 

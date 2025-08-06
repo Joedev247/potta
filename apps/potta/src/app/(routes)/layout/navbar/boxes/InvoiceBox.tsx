@@ -58,14 +58,16 @@ const InvoiceBox: FC = () => {
     statusFilter,
     setStatusFilter,
   } = useInvoiceFilter();
-  const [selectedPeriod, setSelectedPeriod] = useState(periods[0]);
+  const [selectedPeriod, setSelectedPeriod] = useState(periods[1]); // Set to "Today" instead of "Yesterday"
   const [customDate, setCustomDate] = useState<DateRange | undefined>(
     contextDateRange
   );
 
   // Memoize the date range calculation to prevent unnecessary re-renders
   const calculatedDateRange = useMemo(() => {
-    return getDateRange(selectedPeriod, customDate);
+    const range = getDateRange(selectedPeriod, customDate);
+    console.log('Calculated date range for period:', selectedPeriod, range);
+    return range;
   }, [
     selectedPeriod,
     customDate?.from?.toDateString(),

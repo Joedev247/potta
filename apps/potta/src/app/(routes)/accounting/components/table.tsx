@@ -1,4 +1,4 @@
-import React, { useState, useEffect, ChangeEvent } from 'react';
+import React, { useState, useEffect, ChangeEvent, useRef } from 'react';
 import {
   ChevronDown,
   ChevronRight,
@@ -43,6 +43,8 @@ interface AccountNode {
 }
 
 const TableAccount = () => {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [availableHeight, setAvailableHeight] = useState(400);
   const [accounts, setAccounts] = useState<AccountNode[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isCreateDrawer, setCreateDrawer] = useState(false);
@@ -131,6 +133,45 @@ const TableAccount = () => {
     };
 
     fetchAccounts();
+  }, []);
+
+  // Calculate available height for the table
+  useEffect(() => {
+    const calculateHeight = () => {
+      if (containerRef?.current) {
+        // Calculate height based on container position
+        const containerRect = containerRef.current.getBoundingClientRect();
+        const viewportHeight = window.innerHeight;
+        const containerTop = containerRect.top;
+        const padding = 100; // Account for bottom padding and other elements
+        const calculatedHeight = viewportHeight - containerTop - padding;
+        setAvailableHeight(Math.max(calculatedHeight, 400));
+      } else {
+        // Fallback to viewport-based calculation with better offset
+        const viewportHeight = window.innerHeight;
+        const offset = 200; // Reduced offset for better calculation
+        const calculatedHeight = viewportHeight - offset;
+        setAvailableHeight(Math.max(calculatedHeight, 400));
+      }
+    };
+
+    calculateHeight();
+
+    // Use ResizeObserver for more responsive height calculation
+    let resizeObserver: ResizeObserver | null = null;
+    if (containerRef?.current && window.ResizeObserver) {
+      resizeObserver = new ResizeObserver(calculateHeight);
+      resizeObserver.observe(containerRef.current);
+    }
+
+    window.addEventListener('resize', calculateHeight);
+
+    return () => {
+      window.removeEventListener('resize', calculateHeight);
+      if (resizeObserver) {
+        resizeObserver.disconnect();
+      }
+    };
   }, []);
 
   // Filter accounts by type and search term
@@ -423,7 +464,7 @@ const TableAccount = () => {
   };
 
   return (
-    <div className="flex flex-col bg-white h-full">
+    <div className="flex flex-col bg-white h-full" ref={containerRef}>
       <div className="p-4 flex-shrink-0">
         <div className="flex justify-between mb-4">
           <div className="relative w-1/3">
@@ -505,7 +546,10 @@ const TableAccount = () => {
           </table>
         </div>
 
-        <div className="flex-1 overflow-y-auto border border-gray-200 border-t-0">
+        <div
+          className="flex-1 overflow-y-auto"
+          style={{ maxHeight: `${availableHeight}px` }}
+        >
           <table className="w-full table-fixed">
             <colgroup>
               <col style={{ width: '30%' }} />

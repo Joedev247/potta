@@ -22,7 +22,7 @@ const SidebarsExpenses = () => {
       collapsed={context?.toggle}
       toggled={true}
       breakPoint="md"
-      className=" relative bg-blue-500  h-[100vh] z-30  side "
+      className=" relative  h-[100vh] z-30  side "
     >
       <Menu className="relative h-[76vh]" closeOnClick>
         <MenuItem

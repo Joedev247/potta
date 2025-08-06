@@ -365,7 +365,7 @@ export default function DynamicTable() {
                     !selectedProduct
                       ? 'bg-gray-400 cursor-not-allowed'
                       : 'bg-green-600 hover:bg-green-700'
-                  } text-white px-3 py-2.5 text-sm font-medium transition-colors rounded-md duration-200 inline-flex items-center justify-center w-full`}
+                  } text-white px-3 py-3 text-sm font-medium transition-colors  duration-200 inline-flex items-center justify-center w-full`}
                   disabled={!selectedProduct}
                 >
                   <i className="ri-add-line mr-1"></i>

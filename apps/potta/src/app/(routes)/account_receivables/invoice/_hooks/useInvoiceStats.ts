@@ -80,7 +80,35 @@ const useInvoiceStats = (dateRange?: { from: Date; to: Date }) => {
     if (dateRange?.from && dateRange?.to) {
       filteredInvoices = invoices.filter((invoice: any) => {
         const invoiceDate = new Date(invoice.issuedDate);
-        return invoiceDate >= dateRange.from && invoiceDate <= dateRange.to;
+
+        // Create date objects for comparison (ignore time)
+        const invoiceDateOnly = new Date(
+          invoiceDate.getFullYear(),
+          invoiceDate.getMonth(),
+          invoiceDate.getDate()
+        );
+        const fromDateOnly = new Date(
+          dateRange.from.getFullYear(),
+          dateRange.from.getMonth(),
+          dateRange.from.getDate()
+        );
+        const toDateOnly = new Date(
+          dateRange.to.getFullYear(),
+          dateRange.to.getMonth(),
+          dateRange.to.getDate()
+        );
+
+        console.log('Filtering invoice:', {
+          invoiceId: invoice.invoiceId,
+          issuedDate: invoice.issuedDate,
+          invoiceDateOnly: invoiceDateOnly.toISOString(),
+          fromDateOnly: fromDateOnly.toISOString(),
+          toDateOnly: toDateOnly.toISOString(),
+          isInRange:
+            invoiceDateOnly >= fromDateOnly && invoiceDateOnly <= toDateOnly,
+        });
+
+        return invoiceDateOnly >= fromDateOnly && invoiceDateOnly <= toDateOnly;
       });
     }
 

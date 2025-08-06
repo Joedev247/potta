@@ -68,7 +68,7 @@ const NewInvoice = () => {
             defaultSize={showPreview ? 50 : 100}
             style={{ transition: 'flex-basis 300ms ease-in-out' }}
           >
-            <div className={`${!showPreview ? 'pl-16' : 'pl-5'} py-8 h-[92.7vh] overflow-y-auto flex justify-center`}>
+            <div className={`${!showPreview ? 'pl-16' : ''} pb-8 h-[92.7vh] overflow-y-auto flex justify-center`}>
               <Left />
             </div>
           </ResizablePanel>

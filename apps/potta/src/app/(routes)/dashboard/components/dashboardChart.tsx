@@ -15,19 +15,11 @@ interface ChartProps {}
 const ApexChart = dynamic(() => import('react-apexcharts'), { ssr: false });
 
 const Chart: FC<ChartProps> = () => {
-  const DEFAULT_ORGANIZATION_ID = 'f7b1b3b0-0b1b-4b3b-8b1b-0b1b3b0b1b3c';
-  const DEFAULT_BRANCH_ID = 'f7b1b3b0-0b1b-4b3b-8b1b-0b1b3b0b1b3b';
-
   // Fetch budgets data
   const { data: budgetsData, isLoading } = useQuery({
     queryKey: ['budgets-chart'],
     queryFn: async () => {
-      const response = await axios.get('/budgets', {
-        headers: {
-          organizationId: DEFAULT_ORGANIZATION_ID,
-          BranchId: DEFAULT_BRANCH_ID,
-        },
-      });
+      const response = await axios.get('/budgets');
       return response.data;
     },
   });
@@ -135,7 +127,7 @@ const Chart: FC<ChartProps> = () => {
   }
 
   return (
-    <div className="border p-3">
+    <div className="border p-3 bg-white">
       <ApexChart type="bar" options={options} series={series} height={500} />
     </div>
   );

@@ -4,6 +4,12 @@ import { Dialog, DialogPanel, DialogTitle } from '@headlessui/react';
 import { XMarkIcon } from '@heroicons/react/24/outline';
 import Button from './button';
 
+interface Tab {
+  id: string;
+  label: string;
+  content: ReactNode;
+}
+
 interface props {
   children: ReactNode;
   edit: boolean;
@@ -16,6 +22,8 @@ interface props {
   noPanelScroll?: boolean;
   sliderClass?: string;
   sliderContentClass?: string;
+  tabs?: Tab[];
+  defaultTab?: string;
 }
 
 const Slider: FC<props> = ({
@@ -30,9 +38,14 @@ const Slider: FC<props> = ({
   sliderClass,
   noPanelScroll,
   sliderContentClass,
+  tabs,
+  defaultTab,
 }) => {
   // Internal state for when open/setOpen aren't provided
   const [internalOpen, setInternalOpen] = useState(false);
+  const [activeTab, setActiveTab] = useState(
+    defaultTab || (tabs && tabs.length > 0 ? tabs[0].id : '')
+  );
 
   // Determine if we're in controlled or uncontrolled mode
   const isControlled =
@@ -176,15 +189,39 @@ const Slider: FC<props> = ({
                 style={noPanelScroll ? { overflowY: 'visible' } : {}}
               >
                 <div
-                  className={`flex h-full flex-col bg-gray-50 py-6 shadow-xl${
+                  className={`flex h-full flex-col bg-white py-6 ${tabs && "!py-0"}  ${
                     noPanelScroll ? '' : ' overflow-y-auto'
                   } ${sliderClass}`}
                 >
                   <div className="flex justify-center items-center ">
-                    <div className="flex py-2 px-4 w-full border-b justify-between">
-                      <DialogTitle className="text-xl leading-6 !font-semibold text-gray-900">
-                        {title}
-                      </DialogTitle>
+                    <div
+                      className={`flex px-4 w-full border-b justify-between ${
+                        tabs && 'py-2'
+                      }`}
+                    >
+                      <div className="flex-1 flex gap-10 items-end">
+                        <DialogTitle className="text-xl !font-semibold text-gray-900">
+                          {title}
+                        </DialogTitle>
+                        {/* Tabs */}
+                        {tabs && tabs.length > 0 && (
+                          <div className="flex w-fit mt-4">
+                            {tabs.map((tab) => (
+                              <button
+                                key={tab.id}
+                                type="button"
+                                onClick={() => setActiveTab(tab.id)}
+                                className={`px-4  text-gray-500 duration-500 ease-in-out ${
+                                  activeTab === tab.id &&
+                                  'border-b-2 border-[#154406] text-[#154406] font-medium'
+                                } cursor-pointer flex items-center`}
+                              >
+                                <p>{tab.label}</p>
+                              </button>
+                            ))}
+                          </div>
+                        )}
+                      </div>
                       <div className="ml-3 flex h-7 items-center">
                         {!closeButton && (
                           <button
@@ -201,9 +238,12 @@ const Slider: FC<props> = ({
                     </div>
                   </div>
                   <div
-                    className={`relative mt-6 flex-1 px-4 sm:px-6 overflow-y-auto flex custom-scrollbar justify-center ${sliderContentClass}`}
+                    className={` mt-6 flex-1 px-4 sm:px-6 overflow-y-auto flex custom-scrollbar justify-center ${sliderContentClass}`}
                   >
-                    {children}
+                    {tabs && tabs.length > 0
+                      ? tabs.find((tab) => tab.id === activeTab)?.content ||
+                        children
+                      : children}
                   </div>
                 </div>
               </DialogPanel>

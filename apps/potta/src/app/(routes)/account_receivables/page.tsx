@@ -11,7 +11,7 @@ const AccountReceivablesDashboard = () => {
       {/* <CustomerContent /> */}
       <div
         className={`${
-          context?.layoutMode === 'sidebar' ? 'pl-16' : 'pl-5'
+          context?.layoutMode === 'sidebar' ? 'pl-12' : 'pl-5'
         } pr-5`}
       >
         <DashboardCollection />

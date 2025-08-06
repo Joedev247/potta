@@ -1,6 +1,5 @@
 'use client';
 import React, { useState } from 'react';
-import DataGrid from '@potta/app/(routes)/account_receivables/components/DataGrid';
 import { useGetAllSalesReceipts } from '../hooks/useGetAllReceipts';
 import { Filters, SalesReceipt } from '../utils/types';
 import DynamicFilter from '@potta/components/dynamic-filter';
@@ -17,6 +16,7 @@ import {
 } from '@potta/components/shadcn/dropdown';
 import { ColumnDef } from '@tanstack/react-table';
 import Link from 'next/link';
+import DataGrid from '@potta/app/(routes)/account_receivables/invoice/components/DataGrid';
 
 // Updated type to match the actual response structure
 type ResponseSalesReceipt = {

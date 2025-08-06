@@ -9,6 +9,7 @@ const useCreateInvoice = () => {
     mutationFn: (data: IInvoicePayload) => invoiceApi.create(data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['get-all-invoicing'] });
+      queryClient.invalidateQueries({ queryKey: ['get-all-invoicing-stats'] });
     },
   });
 };

@@ -1,6 +1,7 @@
 import React from 'react';
 import Search from './search';
 import CustomSelect from '@potta/app/(routes)/account_receivables/invoice/components/CustomSelect';
+import SearchableSelect from './searchableSelect';
 
 interface FilterOption {
   label: string;
@@ -15,6 +16,9 @@ interface FilterConfig {
   value: string;
   onChange: (value: string) => void;
   selectClassName?: string;
+  isSearchable?: boolean;
+  loadOptions?: (inputValue: string) => Promise<FilterOption[]>;
+  minInputLength?: number;
 }
 
 interface DynamicFilterProps {
@@ -36,7 +40,7 @@ const DynamicFilter: React.FC<DynamicFilterProps> = ({
 }) => {
   return (
     <div
-      className={`flex flex-col md:flex-row md:items-center md:justify-between gap-4 p-4 px-0 bg-white ${className}`}
+      className={`flex flex-col md:flex-row md:items-center md:justify-between gap-4 p-4 px-0 ${className}`}
     >
       <div className="flex flex-1 items-center gap-4 min-w-0">
         {onSearchChange && (
@@ -44,6 +48,7 @@ const DynamicFilter: React.FC<DynamicFilterProps> = ({
             <Search
               placeholder={searchPlaceholder}
               value={searchValue}
+              className="bg-white"
               onChange={onSearchChange}
               onClear={onSearchClear}
             />
@@ -52,12 +57,24 @@ const DynamicFilter: React.FC<DynamicFilterProps> = ({
         {filters.map((filter) => (
           <div key={filter.key} className="flex items-center gap-2">
             {filter.icon}
-            <CustomSelect
-              options={filter.options}
-              value={filter.value}
-              onChange={(value) => filter.onChange(value || '')}
-              placeholder={filter.label}
-            />
+            {filter.isSearchable ? (
+              <SearchableSelect
+                options={filter.options}
+                selectedValue={filter.value}
+                onChange={filter.onChange}
+                placeholder={filter.label}
+                className={filter.selectClassName}
+                loadOptions={filter.loadOptions}
+                minInputLength={filter.minInputLength}
+              />
+            ) : (
+              <CustomSelect
+                options={filter.options}
+                value={filter.value}
+                onChange={(value) => filter.onChange(value || '')}
+                placeholder={filter.label}
+              />
+            )}
           </div>
         ))}
       </div>

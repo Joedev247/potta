@@ -1,12 +1,9 @@
 import axios from '../../../../../../config/axios.config';
-
-export interface PurchaseOrderFilter {
-  page?: number;
-  limit?: number;
-  sortBy?: string[];
-  search?: string;
-  searchBy?: string[];
-}
+import {
+  PurchaseOrderFilter,
+  CreatePurchaseOrderData,
+  PurchaseOrderDetails,
+} from './types';
 
 export async function fetchPurchaseOrders(filter: PurchaseOrderFilter) {
   const response = await axios.post(
@@ -21,6 +18,40 @@ export async function fetchPurchaseOrders(filter: PurchaseOrderFilter) {
         searchBy: filter.searchBy,
       },
     }
+  );
+  return response.data;
+}
+
+export async function createPurchaseOrder(
+  data: CreatePurchaseOrderData,
+  userId: string,
+  branchId: string
+) {
+  const response = await axios.post('/purchase-order', {
+    ...data,
+    userId,
+    branchId,
+  });
+  return response.data;
+}
+
+export async function approvePurchaseOrder(purchaseOrderId: string) {
+  const response = await axios.post(
+    `/purchase-order/${purchaseOrderId}/approve`
+  );
+  return response.data;
+}
+
+export async function deletePurchaseOrder(purchaseOrderId: string) {
+  const response = await axios.delete(`/purchase-order/${purchaseOrderId}`);
+  return response.data;
+}
+
+export async function getPurchaseOrderDetails(
+  purchaseOrderId: string
+): Promise<PurchaseOrderDetails> {
+  const response = await axios.get(
+    `/purchase-order/details/${purchaseOrderId}`
   );
   return response.data;
 }
