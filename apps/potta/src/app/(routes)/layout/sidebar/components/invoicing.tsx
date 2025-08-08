@@ -69,7 +69,7 @@ const Sidebarsinvoicing = () => {
               icon="file-invoice-dollar"
               size={23}
               color={
-                isActive('/account_receivables/invoice') ? 'white' : 'black'
+                isActive('/account_receivables/invoice') ? 'white' : '#6b7280'
               }
             />
           }
@@ -101,7 +101,7 @@ const Sidebarsinvoicing = () => {
               className={`h-6 w-6 ${
                 isActive('/account_receivables/customers')
                   ? 'text-white'
-                  : 'text-gray-900'
+                  : '#6b7280'
               }`}
             />
           }
@@ -116,7 +116,7 @@ const Sidebarsinvoicing = () => {
             <LuTicket
               size={23}
               color={
-                isActive('/account_receivables/vouchers') ? 'white' : 'black'
+                isActive('/account_receivables/vouchers') ? 'white' : '#6b7280'
               }
             />
           }
@@ -150,7 +150,7 @@ const Sidebarsinvoicing = () => {
               color={
                 isActive('/account_receivables/sales_receipts')
                   ? 'white'
-                  : 'black'
+                  : '#6b7280'
               }
             />
           }
@@ -180,7 +180,7 @@ const Sidebarsinvoicing = () => {
           icon={
             <ChartPie
               className={`h-6 w-6 ${
-                isActive('/reports') ? 'text-white' : 'text-gray-900'
+                isActive('/reports') ? 'text-white' : '#6b7280'
               }`}
             />
           }

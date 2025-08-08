@@ -388,9 +388,7 @@ const DashboardExpenses = () => {
                               .join('')}
                           </div>
                           <div className="ml-4">
-                            <div className="font-thin text-gray-900">
-                              {data.name}
-                            </div>
+                            <div className=" text-gray-900">{data.name}</div>
                           </div>
                         </div>
                         <div className="ml-4 mt-2">

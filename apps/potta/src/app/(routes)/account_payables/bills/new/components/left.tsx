@@ -14,6 +14,7 @@ import { DateInput } from '@potta/components/customDatePicker';
 import NewTableFreeEntry from './newtableFreeEntry';
 import { useRouter } from 'next/navigation';
 import useCreateBill from '../hooks/useCreateBill';
+import TextArea from '@potta/components/textArea';
 interface Option {
   label: string;
   value: string | number;
@@ -436,18 +437,15 @@ const Left = () => {
         />
       </div>
       <hr className="my-5" />
-      <h3 className="text-lg font-thin my-2">Notes</h3>
-      <textarea
+      <TextArea
         value={note}
-        onChange={(e) => handleInputChange('notes', e.target.value)}
-        className="h-36 border p-2 w-full outline-none mt-2 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500
-   "
-      ></textarea>
-      {errors.notes && (
-        <p className="text-red-500 text-sm mt-1">{errors.notes}</p>
-      )}
+        label="Notes"
+        onchange={(e: any) => handleInputChange('notes', e.target.value)}
+        placeholder="Enter notes"
+        errors={errors.notes ? { message: errors.notes } : undefined}
+      />
 
-      <div className="mt-5 w-full flex justify-end">
+      <div className="fixed bottom-0 left-0 right-0 p-2 bg-white border-t border-gray-200 flex justify-end space-x-3">
         <Button
           text={'Save Bill'}
           onClick={handleSaveInvoice}

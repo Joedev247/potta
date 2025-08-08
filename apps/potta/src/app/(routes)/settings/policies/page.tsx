@@ -46,6 +46,15 @@ export const policyCategories = [
     ],
   },
   {
+    id: 'risk',
+    label: 'Risk Policies',
+    icon: Shield,
+    submenus: [
+      { id: 'risk_management', label: 'Risk Management', type: 'risk' },
+      { id: 'risk_approval', label: 'Risk Approval', type: 'riskApproval' },
+    ],
+  },
+  {
     id: 'general',
     label: 'General Policies',
     icon: Settings,

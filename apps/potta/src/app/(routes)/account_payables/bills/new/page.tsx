@@ -39,7 +39,7 @@ const NewSalesReciept = () => {
 
   return (
     <RootLayout>
-      <div className="max-h-[92.7vh] relative">
+      <div className="max-h-[92.7vh]  relative">
         {/* Preview toggle button with fade transition */}
         <div
           className={`absolute top-4 right-4 z-10 transition-opacity duration-300 ease-in-out ${
@@ -72,7 +72,7 @@ const NewSalesReciept = () => {
               <div
                 className={`${
                   !showPreview ? 'pl-16' : 'pl-8'
-                } py-8 pt-0 h-[92.7vh] flex justify-center`}
+                } py-8 pt-0 h-[92.7vh] mb-10  flex justify-center`}
               >
                 <Left />
               </div>
@@ -95,7 +95,7 @@ const NewSalesReciept = () => {
                 opacity: showPreview ? 1 : 0,
               }}
             >
-              <div className="h-[92.7vh] bg-[#F2F2F2] overflow-hidden">
+              <div className="h-[92.7vh] bg-[#F2F2F2] overflow-y-auto">
                 {/* Only render PdfView when preview is showing for performance */}
                 {showPreview && <PdfView />}
               </div>

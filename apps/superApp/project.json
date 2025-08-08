@@ -6,9 +6,68 @@
   "tags": [],
   "// targets": "to see all targets run: nx show project superApp --web",
   "targets": {
-    "dev": {
+    "build": {
+      "executor": "@nx/next:build",
+      "outputs": ["{options.outputPath}"],
+      "defaultConfiguration": "production",
       "options": {
+        "outputPath": "dist/apps/superApp"
+      },
+      "configurations": {
+        "development": {
+          "outputPath": "apps/superApp"
+        },
+        "production": {}
+      }
+    },
+    "serve": {
+      "executor": "@nx/next:server",
+      "defaultConfiguration": "development",
+      "options": {
+        "buildTarget": "superApp:build",
+        "dev": true
+      },
+      "configurations": {
+        "development": {
+          "buildTarget": "superApp:build:development",
+          "dev": true
+        },
+        "production": {
+          "buildTarget": "superApp:build:production",
+          "dev": false
+        }
+      }
+    },
+    "export": {
+      "executor": "@nx/next:export",
+      "options": {
+        "buildTarget": "superApp:build:production"
+      }
+    },
+    "dev": {
+      "executor": "@nx/next:server",
+      "options": {
+        "buildTarget": "superApp:build",
+        "dev": true,
         "port": 4200
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint",
+      "outputs": ["{options.outputFile}"]
+    },
+    "test": {
+      "executor": "@nx/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
+      "options": {
+        "jestConfig": "apps/superApp/jest.config.ts",
+        "passWithNoTests": true
+      },
+      "configurations": {
+        "ci": {
+          "ci": true,
+          "codeCoverage": true
+        }
       }
     }
   }

@@ -22,7 +22,7 @@ export default function DashboardPage() {
     <RootLayout>
       <div
         className={`${
-          context?.layoutMode === 'sidebar' ? 'pl-16 !mt-4' : 'pl-5 !mt-4'
+          context?.layoutMode === 'sidebar' ? 'pl-16' : 'pl-5'
         } overflow-hidden space-y-4 pr-5 w-full `}
       >
         {/* Top Row Cards (same as before) */}

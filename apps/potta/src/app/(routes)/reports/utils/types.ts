@@ -10,7 +10,11 @@ export type ReportCategoryId =
   | 'expense'
   | 'inventory'
   | 'tax'
-  | 'vendor';
+  | 'vendor'
+  | 'revenue_analytics'
+  | 'expense_analytics'
+  | 'financial_analytics'
+  | 'api_debug';
 
 export interface Report {
   id: string;
@@ -20,11 +24,21 @@ export interface Report {
   dataType?: 'payment' | 'budget';
 }
 
+export interface ReportSubmenu {
+  id: string;
+  label: string;
+  chartKey: string;
+  factName?: string;
+  metrics?: string[];
+  dimensions?: string[];
+}
+
 export interface ReportCategory {
   id: ReportCategoryId;
   label: string;
   icon: React.ReactNode;
   folderName?: string;
+  submenus?: ReportSubmenu[];
 }
 
 export interface ReportDataType {

@@ -51,7 +51,7 @@ const SidebarsExpenses = () => {
           {' '}
           <h3 className="text-md mt-[2px]">Dashboard</h3>{' '}
         </MenuItem>
-        <MenuItem
+        {/* <MenuItem
           active={str[2] == 'policies' ? true : false}
           className=" "
           href="/account_payables/policies"
@@ -64,7 +64,7 @@ const SidebarsExpenses = () => {
           }
         >
           <h3 className="text-md mt-1.5">Policies</h3>
-        </MenuItem>
+        </MenuItem> */}
         <MenuItem
           active={str[2] == 'budgets' ? true : false}
           className=""

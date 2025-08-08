@@ -28,6 +28,7 @@ import useRejectBill from '../new/hooks/useRejectBill';
 import toast from 'react-hot-toast';
 import BillDetailsSlideover from './BillDetailsSlideover';
 import Filter from './filters';
+import Image from 'next/image';
 
 interface PaymentRequestDataTableWrapperProps {
   search: string;
@@ -41,48 +42,103 @@ interface PaymentRequestDataTableWrapperProps {
 
 // --- Helper Functions (can be moved to utils) ---
 
-// Helper for currency format (same as before)
+// Helper for currency format (improved like PaidInvoicesTable)
 const formatTableCurrency = (amount: number, currencyCode: string = 'XAF') => {
+  if (currencyCode === 'XAF') {
+    return new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: 'XAF',
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0,
+    }).format(amount);
+  }
   return new Intl.NumberFormat('en-US', {
-    style: 'decimal',
-    minimumFractionDigits: 0,
-    maximumFractionDigits: 0,
+    style: 'currency',
+    currency: currencyCode,
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
   }).format(amount);
 };
 
 // --- Status Color Mapping ---
 const statusColorMap: Record<
   string,
-  { bg: string; text: string; border: string }
+  { bg: string; text: string; border: string; icon: string; iconColor: string }
 > = {
-  Draft: {
-    bg: 'bg-gray-100',
-    text: 'text-gray-700',
-    border: 'border-gray-400',
+  DRAFT: {
+    bg: 'bg-gray-50',
+    text: 'text-gray-600',
+    border: 'border-gray-200',
+    icon: 'mdi:pencil-outline',
+    iconColor: 'text-gray-400',
   },
-  Issued: {
-    bg: 'bg-blue-100',
+  PENDING: {
+    bg: 'bg-yellow-50',
+    text: 'text-yellow-700',
+    border: 'border-yellow-200',
+    icon: 'mdi:clock-outline',
+    iconColor: 'text-yellow-500',
+  },
+  ISSUED: {
+    bg: 'bg-blue-50',
     text: 'text-blue-700',
-    border: 'border-blue-400',
+    border: 'border-blue-200',
+    icon: 'mdi:file-document-outline',
+    iconColor: 'text-blue-500',
   },
-  Paid: {
-    bg: 'bg-green-100',
+  APPROVED: {
+    bg: 'bg-green-50',
     text: 'text-green-700',
-    border: 'border-green-400',
+    border: 'border-green-200',
+    icon: 'material-symbols:check',
+    iconColor: 'text-green-500',
   },
-  Overdue: { bg: 'bg-red-100', text: 'text-red-700', border: 'border-red-400' },
+  REJECTED: {
+    bg: 'bg-red-50',
+    text: 'text-red-700',
+    border: 'border-red-200',
+    icon: 'mdi:close',
+    iconColor: 'text-red-500',
+  },
+  PAID: {
+    bg: 'bg-emerald-50',
+    text: 'text-emerald-700',
+    border: 'border-emerald-200',
+    icon: 'mdi:check-circle',
+    iconColor: 'text-emerald-500',
+  },
+  OVERDUE: {
+    bg: 'bg-orange-50',
+    text: 'text-orange-700',
+    border: 'border-orange-200',
+    icon: 'mdi:alert-circle',
+    iconColor: 'text-orange-500',
+  },
+  CANCELLED: {
+    bg: 'bg-gray-50',
+    text: 'text-gray-500',
+    border: 'border-gray-200',
+    icon: 'mdi:cancel',
+    iconColor: 'text-gray-400',
+  },
 };
 
 // --- Payment Method Image Mapping ---
-const paymentMethodImageMap: Record<string, string> = {
-  'Credit Card': 'https://upload.wikimedia.org/wikipedia/commons/0/04/Visa.svg',
-  'Bank Transfer': 'https://cdn-icons-png.flaticon.com/512/483/483361.png',
-  'ACH Transfer': 'https://cdn-icons-png.flaticon.com/512/483/483361.png',
-  'Mobile Money':
-    'https://upload.wikimedia.org/wikipedia/commons/6/6b/Mobile_Money_logo.png',
-  Cash: 'https://cdn-icons-png.flaticon.com/512/2331/2331943.png',
-  Credit: 'https://cdn-icons-png.flaticon.com/512/483/483361.png',
-  Other: 'https://cdn-icons-png.flaticon.com/512/565/565547.png',
+const paymentMethodImageMap: Record<string, { icon: string; label: string }> = {
+  CREDIT_CARD: { icon: '/icons/credit-card.svg', label: 'Credit Card' },
+  BANK_TRANSFER: { icon: '/icons/bank.svg', label: 'Bank Transfer' },
+  ACH_TRANSFER: { icon: '/icons/bank.svg', label: 'ACH Transfer' },
+  MOBILE_MONEY: { icon: '/icons/mtn.svg', label: 'Mobile Money' },
+  MTN_MOBILE_MONEY: { icon: '/icons/mtn.svg', label: 'MTN Mobile Money' },
+  ORANGE_MONEY: { icon: '/icons/om.svg', label: 'Orange Money' },
+  CASH: { icon: '/icons/cash.svg', label: 'Cash' },
+  CREDIT: { icon: '/icons/credit.svg', label: 'Credit' },
+  mtn: { icon: '/icons/mtn.svg', label: 'MTN Mobile Money' },
+  orange: { icon: '/icons/om.svg', label: 'Orange Money' },
+  'Credit Card': { icon: '/icons/credit-card.svg', label: 'Credit Card' },
+  'Bank Transfer': { icon: '/icons/bank.svg', label: 'Bank Transfer' },
+  'Mobile Money': { icon: '/icons/mobile-money.svg', label: 'Mobile Money' },
+  Other: { icon: '/icons/payment.svg', label: 'Other' },
 };
 
 const PaymentMethodIcon: React.FC<{ method?: { name?: string } }> = ({
@@ -90,16 +146,39 @@ const PaymentMethodIcon: React.FC<{ method?: { name?: string } }> = ({
 }) => {
   if (!method || !method.name) {
     return (
-      <div className="h-7 w-7 rounded-full flex items-center justify-center bg-gray-100">
-        <span className="text-xs font-medium">?</span>
+      <div className="flex items-center space-x-2">
+        <div className="h-6 w-6 rounded-full flex items-center justify-center bg-gray-100">
+          <span className="text-xs font-medium text-gray-500">?</span>
+        </div>
+        <span className="text-sm text-gray-400">-</span>
       </div>
     );
   }
-  const img =
+
+  const paymentInfo =
     paymentMethodImageMap[method.name] || paymentMethodImageMap['Other'];
+
   return (
-    <div className="h-7 w-7 rounded-full flex items-center justify-center bg-gray-100 overflow-hidden">
-      <img src={img} alt={method.name} className="h-5 w-5 object-contain" />
+    <div className="flex items-center space-x-2">
+      <div className="h-6 w-6 rounded-full flex items-center justify-center bg-gray-100 overflow-hidden">
+        <Image
+          src={paymentInfo.icon}
+          alt={paymentInfo.label}
+          width={24}
+          height={24}
+          className="h-full w-full object-contain"
+          onError={(e) => {
+            // Fallback to text if image fails to load
+            const target = e.target as HTMLImageElement;
+            target.style.display = 'none';
+            target.nextElementSibling?.classList.remove('hidden');
+          }}
+        />
+        <span className="text-xs font-medium text-gray-500 hidden">
+          {method.name.charAt(0).toUpperCase()}
+        </span>
+      </div>
+      <span className="text-sm text-gray-600">{paymentInfo.label}</span>
     </div>
   );
 };
@@ -118,7 +197,7 @@ export function PaymentRequestDataTableWrapper({
   // Map status filter
   let statusFilter: any = {};
   if (status !== 'all') {
-    statusFilter.status = status.charAt(0).toUpperCase() + status.slice(1); // API expects 'Pending', 'Paid', etc.
+    statusFilter.status = status.toUpperCase(); // API expects 'PENDING', 'PAID', etc.
   }
 
   // Remove search and paymentMethod from API call for client-side filtering
@@ -130,18 +209,19 @@ export function PaymentRequestDataTableWrapper({
   // Map API bills to table rows
   const requests = bills.map((bill: any) => ({
     id: bill.uuid,
-    ref: bill.invoiceNumber || bill.invoiceId,
-    madeTo: bill.customer?.firstName
-      ? `${bill.customer.firstName} ${bill.customer.lastName}`
-      : bill.vendor?.name || '-',
+    ref: bill.invoiceId || bill.invoiceNumber || '-',
+    madeTo: bill.vendor?.name || bill.customer?.name || '-',
     category: bill.invoiceType || '-',
-    amount: bill.invoiceTotal,
+    amount: bill.invoiceTotal || 0,
     currency: bill.currency || 'XAF',
     method: { name: bill.paymentMethod },
     status: bill.status,
     date: bill.issuedDate
       ? new Date(bill.issuedDate).toLocaleDateString()
       : '-',
+    dueDate: bill.dueDate ? new Date(bill.dueDate).toLocaleDateString() : '-',
+    vendorInvoiceNumber: bill.vendorInvoiceNumber || '-',
+    notes: bill.notes || '-',
   }));
 
   // Approve/Reject hooks (handle cache invalidation internally)
@@ -191,9 +271,9 @@ export function PaymentRequestDataTableWrapper({
         accessorKey: 'amount',
         header: 'Amount',
         cell: ({ row }) => (
-          <span className="font-medium">
-            {row.original.currency} {formatTableCurrency(row.original.amount)}
-          </span>
+          <div className="font-medium text-gray-900">
+            {formatTableCurrency(row.original.amount, row.original.currency)}
+          </div>
         ),
       },
       {
@@ -205,38 +285,32 @@ export function PaymentRequestDataTableWrapper({
         accessorKey: 'status',
         header: 'Request Status',
         cell: ({ row }) => {
-          const color =
-            statusColorMap[row.original.status] || statusColorMap['Draft'];
-          const isDraft = row.original.status === 'Draft';
+          const status = row.original.status;
+          const statusConfig =
+            statusColorMap[status] || statusColorMap['DRAFT'];
+
+          // Format status for display (convert ISSUED to Issued)
+          const displayStatus =
+            status.charAt(0).toUpperCase() + status.slice(1).toLowerCase();
+
           return (
-            <div className="border-r pr-8 border-black">
+            <div className="flex items-center">
               <div
-                className={`flex items-center gap-2 w-fit px-3 py-1 rounded-full text-sm font-medium
-                  ${
-                    isDraft
-                      ? 'bg-gray-50 text-gray-500 border border-gray-200'
-                      : `${color.bg} ${color.text} ${color.border}`
-                  }
+                className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-sm font-medium border
+                  ${statusConfig.bg} ${statusConfig.text} ${statusConfig.border}
                 `}
               >
-                <span className="flex items-center justify-center rounded-full size-5 bg-white/80">
-                  {isDraft ? (
-                    <Icon
-                      icon="mdi:pencil-outline"
-                      width="18"
-                      height="18"
-                      className="text-gray-400"
-                    />
-                  ) : (
-                    <Icon
-                      icon="material-symbols:check"
-                      width="18"
-                      height="18"
-                      className="text-green-600"
-                    />
-                  )}
-                </span>
-                {row.original.status}
+                <div
+                  className={`flex items-center justify-center rounded-full size-5 ${statusConfig.bg}`}
+                >
+                  <Icon
+                    icon={statusConfig.icon}
+                    width="16"
+                    height="16"
+                    className={statusConfig.iconColor}
+                  />
+                </div>
+                <span>{displayStatus}</span>
               </div>
             </div>
           );
@@ -270,8 +344,8 @@ export function PaymentRequestDataTableWrapper({
               >
                 View Details
               </DropdownMenuItem>
-              {row.original.status !== 'Approved' &&
-                row.original.status !== 'Rejected' && (
+              {row.original.status !== 'APPROVED' &&
+                row.original.status !== 'REJECTED' && (
                   <>
                     <DropdownMenuItem
                       onClick={async () => {

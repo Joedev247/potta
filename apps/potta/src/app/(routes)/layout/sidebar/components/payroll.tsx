@@ -41,7 +41,7 @@ const SidebarsPayroll = () => {
           active={str[2] == 'overview' ? true : false}
           className="mt-8"
           href="/payroll/overview"
-          icon={svgIcons.dashboard(str[2] == 'overview' ? 'white' : 'black')}
+          icon={svgIcons.dashboard(str[2] == 'overview' ? 'white' : '#6b7280')}
         >
           {' '}
           <h3 className="text-md mt-[2px]">Dashboard</h3>{' '}
@@ -49,7 +49,7 @@ const SidebarsPayroll = () => {
         <MenuItem
           active={str[2] == 'people' ? true : false}
           href="/payroll/people"
-          icon={svgIcons.users(str[2] == 'people' ? 'white' : 'black')}
+          icon={svgIcons.users(str[2] == 'people' ? 'white' : '#6b7280')}
         >
           <h3 className="text-md ">Employees</h3>
         </MenuItem>
@@ -58,7 +58,7 @@ const SidebarsPayroll = () => {
         <SubMenu
           label={<h3 className="text-md">Time Management</h3>}
           icon={svgIcons.clock(
-            str[2] == 'timesheet' || str[2] == 'shifts' ? 'white' : 'black'
+            str[2] == 'timesheet' || str[2] == 'shifts' ? 'white' : '#6b7280'
           )}
           className={` ${
             str[2] == 'timesheet' || str[2] == 'shifts' ? 'active-parent' : ''
@@ -85,7 +85,7 @@ const SidebarsPayroll = () => {
           active={str[2] == 'benefit' ? true : false}
           href="/payroll/benefit"
           icon={
-            <Heart size={21} color={str[2] == 'benefit' ? 'white' : 'black'} />
+            <Heart size={21} color={str[2] == 'benefit' ? 'white' : '#6b7280'} />
           }
         >
           <h3 className="text-md ">Benefit</h3>
@@ -94,7 +94,7 @@ const SidebarsPayroll = () => {
         <MenuItem
           active={str[2] == 'pto' ? true : false}
           href="/payroll/pto"
-          icon={svgIcons.pto(str[2] == 'pto' ? 'white' : 'black')}
+          icon={svgIcons.pto(str[2] == 'pto' ? 'white' : '#6b7280')}
         >
           <h3 className="text-md ">PTO</h3>
         </MenuItem>
@@ -102,7 +102,7 @@ const SidebarsPayroll = () => {
           active={str[2] == 'deductions'}
           className=""
           href="/payroll/deductions"
-          icon={svgIcons.dollarcoin(str[2] == 'deductions' ? 'white' : 'black')}
+          icon={svgIcons.dollarcoin(str[2] == 'deductions' ? 'white' : '#6b7280')}
         >
           <h3 className="text-md ">Deductions</h3>
         </MenuItem>
@@ -143,7 +143,7 @@ const SidebarsPayroll = () => {
           active={str[2] == 'reports' ? true : false}
           className=""
           href="/reports"
-          icon={svgIcons.piechart(str[2] == 'reports' ? 'white' : 'black')}
+          icon={svgIcons.piechart(str[2] == 'reports' ? 'white' : '#6b7280')}
         >
           <h3 className="text-md ">Reports</h3>
         </MenuItem>

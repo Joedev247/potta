@@ -5,6 +5,9 @@
   "scripts": {
     "build:superApp": "nx run superApp:build",
     "start:superApp": "nx run superApp:start",
+    "dev": "cd apps/potta && next dev -p 4300",
+    "dev:potta": "cd apps/potta && next dev -p 4300",
+    "dev:superApp": "cd apps/superApp && next dev -p 4200",
     "reset": "nx reset"
   },
   "private": true,

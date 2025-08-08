@@ -9,6 +9,8 @@ import {
   UserCheck,
   TrendingUp,
   User,
+  TestTube,
+  Bug,
 } from 'lucide-react';
 
 export const reportCategories = [
@@ -303,6 +305,124 @@ export const reportCategories = [
       },
     ],
   },
+  {
+    id: 'revenue_analytics',
+    label: 'Revenue Analytics',
+    icon: TrendingUp,
+    submenus: [
+      {
+        id: 'revenue_overview',
+        label: 'Revenue Overview',
+        chartKey: 'revenue_overview',
+        factName: 'revenue',
+        metrics: ['total_revenue'],
+        dimensions: ['time'],
+      },
+      {
+        id: 'revenue_by_customer',
+        label: 'Revenue by Customer',
+        chartKey: 'revenue_by_customer',
+        factName: 'revenue',
+        metrics: ['total_revenue'],
+        dimensions: ['time', 'customer'],
+      },
+      {
+        id: 'revenue_by_product',
+        label: 'Revenue by Product',
+        chartKey: 'revenue_by_product',
+        factName: 'revenue',
+        metrics: ['total_revenue'],
+        dimensions: ['time', 'product'],
+      },
+      {
+        id: 'revenue_by_account',
+        label: 'Revenue by Account',
+        chartKey: 'revenue_by_account',
+        factName: 'revenue',
+        metrics: ['total_revenue'],
+        dimensions: ['time', 'account'],
+      },
+    ],
+  },
+  {
+    id: 'expense_analytics',
+    label: 'Expense Analytics',
+    icon: DollarSign,
+    submenus: [
+      {
+        id: 'opex_overview',
+        label: 'Operating Expenses',
+        chartKey: 'opex_overview',
+        factName: 'opex',
+        metrics: ['opex_amount'],
+        dimensions: ['time'],
+      },
+      {
+        id: 'cogs_overview',
+        label: 'Cost of Goods Sold',
+        chartKey: 'cogs_overview',
+        factName: 'cogs',
+        metrics: ['total_cost'],
+        dimensions: ['time'],
+      },
+      {
+        id: 'cogs_by_product',
+        label: 'COGS by Product',
+        chartKey: 'cogs_by_product',
+        factName: 'cogs',
+        metrics: ['total_cost'],
+        dimensions: ['time', 'product'],
+      },
+      {
+        id: 'cogs_by_vendor',
+        label: 'COGS by Vendor',
+        chartKey: 'cogs_by_vendor',
+        factName: 'cogs',
+        metrics: ['total_cost'],
+        dimensions: ['time', 'vendor'],
+      },
+    ],
+  },
+  {
+    id: 'financial_analytics',
+    label: 'Financial Analytics',
+    icon: BarChart4,
+    submenus: [
+      {
+        id: 'net_income',
+        label: 'Net Income',
+        chartKey: 'net_income',
+        factName: 'net_income',
+        metrics: ['net_income_after_tax'],
+        dimensions: ['time'],
+      },
+      {
+        id: 'cash_equivalent',
+        label: 'Cash Flow',
+        chartKey: 'cash_equivalent',
+        factName: 'cash_equivalent',
+        metrics: ['net_cash_movement'],
+        dimensions: ['time'],
+      },
+      {
+        id: 'ar_balance',
+        label: 'Accounts Receivable',
+        chartKey: 'ar_balance',
+        factName: 'ar_balance',
+        metrics: ['customer_running_balance'],
+        dimensions: ['time'],
+      },
+      {
+        id: 'ap_balance',
+        label: 'Accounts Payable',
+        chartKey: 'ap_balance',
+        factName: 'ap_balance',
+        metrics: ['vendor_running_balance'],
+        dimensions: ['time'],
+      },
+    ],
+  },
+     
 ];
 
 export const reportData: ReportDataType = {

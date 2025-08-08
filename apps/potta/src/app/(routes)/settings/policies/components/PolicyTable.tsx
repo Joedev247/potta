@@ -147,7 +147,11 @@ const PolicyCard = ({
               {policy.name}
             </CardTitle>
             <div className="flex items-center gap-2 mb-2">
-              <span className={`px-2 py-1 text-xs font-medium rounded-full ${getStatusColor(policy.status)}`}>
+              <span
+                className={`px-2 py-1 text-xs font-medium rounded-full ${getStatusColor(
+                  policy.status
+                )}`}
+              >
                 {policy.status || 'Active'}
               </span>
               <span className="text-xs text-gray-500 capitalize">
@@ -178,7 +182,9 @@ const PolicyCard = ({
         <div className="space-y-3">
           {/* Requirements */}
           <div>
-            <h4 className="text-sm font-medium text-gray-700 mb-2">Requirements</h4>
+            <h4 className="text-sm font-medium text-gray-700 mb-2">
+              Requirements
+            </h4>
             <div className="flex flex-wrap gap-1">
               {policy.requireReceipt && (
                 <span className="inline-flex items-center px-2 py-1 rounded-md text-xs font-medium bg-blue-100 text-blue-800">
@@ -210,13 +216,17 @@ const PolicyCard = ({
           {/* Rules Summary */}
           <div>
             <h4 className="text-sm font-medium text-gray-700 mb-1">Rules</h4>
-            <p className="text-sm text-gray-600">{getRulesSummary(policy.rules)}</p>
+            <p className="text-sm text-gray-600">
+              {getRulesSummary(policy.rules)}
+            </p>
           </div>
 
           {/* Additional Requirements */}
           {policy.additionalRequirements && (
             <div>
-              <h4 className="text-sm font-medium text-gray-700 mb-1">Additional Requirements</h4>
+              <h4 className="text-sm font-medium text-gray-700 mb-1">
+                Additional Requirements
+              </h4>
               <p className="text-sm text-gray-600 line-clamp-2">
                 {policy.additionalRequirements}
               </p>
@@ -228,7 +238,10 @@ const PolicyCard = ({
   );
 };
 
-const PolicyTable: React.FC<PolicyTableProps> = ({ activeTab, activeSubmenu }) => {
+const PolicyTable: React.FC<PolicyTableProps> = ({
+  activeTab,
+  activeSubmenu,
+}) => {
   const [searchValue, setSearchValue] = useState('');
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [isViewModalOpen, setIsViewModalOpen] = useState(false);
@@ -305,7 +318,9 @@ const PolicyTable: React.FC<PolicyTableProps> = ({ activeTab, activeSubmenu }) =
         const policyType = policy.transactionType || policy.type;
         switch (activeTab) {
           case 'expense':
-            return ['reimbursement', 'bills', 'spendRequests'].includes(policyType);
+            return ['reimbursement', 'bills', 'spendRequests'].includes(
+              policyType
+            );
           case 'mileage':
             return ['mileage', 'travel'].includes(policyType);
           case 'vendor':
@@ -322,10 +337,13 @@ const PolicyTable: React.FC<PolicyTableProps> = ({ activeTab, activeSubmenu }) =
 
     // Filter by search value
     if (searchValue) {
-      filtered = filtered.filter((policy: Policy) =>
-        policy.name.toLowerCase().includes(searchValue.toLowerCase()) ||
-        policy.transactionType?.toLowerCase().includes(searchValue.toLowerCase()) ||
-        policy.type?.toLowerCase().includes(searchValue.toLowerCase())
+      filtered = filtered.filter(
+        (policy: Policy) =>
+          policy.name.toLowerCase().includes(searchValue.toLowerCase()) ||
+          policy.transactionType
+            ?.toLowerCase()
+            .includes(searchValue.toLowerCase()) ||
+          policy.type?.toLowerCase().includes(searchValue.toLowerCase())
       );
     }
 
@@ -336,7 +354,9 @@ const PolicyTable: React.FC<PolicyTableProps> = ({ activeTab, activeSubmenu }) =
     return (
       <div className="mt-10">
         <div className="text-center text-gray-500 py-8">
-          <p className="text-red-600">An error occurred while fetching policies. Please try again later.</p>
+          <p className="text-red-600">
+            An error occurred while fetching policies. Please try again later.
+          </p>
         </div>
       </div>
     );
@@ -357,7 +377,7 @@ const PolicyTable: React.FC<PolicyTableProps> = ({ activeTab, activeSubmenu }) =
         <div className="flex items-center gap-2">
           <Button
             text="Create Policy"
-            icon={<Plus className="h-4 w-4" />}
+            icon={<i className="ri-file-add-line"></i>}
             theme="default"
             type="button"
             onClick={() => setIsCreateModalOpen(true)}
@@ -402,7 +422,9 @@ const PolicyTable: React.FC<PolicyTableProps> = ({ activeTab, activeSubmenu }) =
       ) : (
         <div className="mt-10 flex items-center justify-center h-48">
           <p className="text-gray-500">
-            {searchValue ? 'No policies found matching your search' : 'No policies found'}
+            {searchValue
+              ? 'No policies found matching your search'
+              : 'No policies found'}
           </p>
         </div>
       )}

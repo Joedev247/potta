@@ -5,7 +5,8 @@ import { CreditCard, BarChart2, Wallet } from 'lucide-react';
 import { ContextData } from '@potta/components/context';
 import { svgIcons } from '@potta/components/svg_icons/IconsSvg';
 import SidebarProfile from './SidebarProfile';
-import { GiReceiveMoney, GiWallet } from 'react-icons/gi';
+import { GiReceiveMoney } from 'react-icons/gi';
+import { SlWallet } from "react-icons/sl";
 
 const SidebarsTreasury = () => {
   const pathname = usePathname();
@@ -66,7 +67,7 @@ const SidebarsTreasury = () => {
           className=""
           href="/treasury/account_payables"
           icon={
-            <GiWallet
+            <SlWallet
               className={`h-6 w-6 ${
                 isActive('/treasury/account_payables')
                   ? 'text-white'

@@ -1,33 +1,15 @@
 import { useContext } from 'react';
 import { Sidebar, Menu, MenuItem } from 'react-pro-sidebar';
 import { usePathname } from 'next/navigation';
-import Icon from '@potta/components/icon_fonts/icon';
 import { ContextData } from '@potta/components/context';
-import { svgIcons } from '@potta/components/svg_icons/IconsSvg';
 import SidebarProfile from './SidebarProfile';
-import {
-  CreditCard,
-  Banknote,
-  Ticket,
-  ShoppingCart,
-  FileText,
-  Shield,
-  PieChart,
-  Wallet,
-  Users,
-} from 'lucide-react';
+import { AiOutlineFileProtect } from 'react-icons/ai';
+
+import { FiLayout } from 'react-icons/fi';
 
 const settingsRoutes = [
-  { value: 'accounts', label: 'Accounts', icon: Wallet },
-  // { value: 'reports', label: 'Reports', icon: PieChart },
-  { value: 'payments', label: 'Payments', icon: CreditCard },
-  { value: 'expenses', label: 'Expenses', icon: Banknote },
-  { value: 'vouchers', label: 'Vouchers', icon: Ticket },
-  { value: 'pos', label: 'POS', icon: ShoppingCart },
-  { value: 'invoice', label: 'Invoice', icon: FileText },
-  // { value: 'taxation', label: 'Taxation', icon: Shield },
-  { value: 'payroll', label: 'Payroll', icon: Users },
-  { value: 'policies', label: 'Policies', icon: Shield },
+  { value: '', label: 'Config', icon: FiLayout },
+  { value: '/policies', label: 'Policies', icon: AiOutlineFileProtect },
 ];
 
 const SidebarsSettings = () => {
@@ -57,20 +39,24 @@ const SidebarsSettings = () => {
         </MenuItem>
         {settingsRoutes.map((item, index) => {
           const IconComponent = item.icon;
-          const isActive = str[1] === item.value;
+          // For Config (empty value), check if we're at /settings
+          // For Policies, check if we're at /settings/policies
+          const isActive =
+            item.value === ''
+              ? str.length === 2 && str[1] === 'settings'
+              : str[2] === item.value.replace('/', '');
           return (
-            // <MenuItem
-            //   key={item.value}
-            //   active={isActive}
-            //   className={`${index === 0 ? 'mt-10' : 'mt-0'}`}
-            //   href={`/${item.value}`}
-            //   icon={
-            //     <IconComponent size={21} color={isActive ? 'white' : 'black'} />
-            //   }
-            // >
-            //   <h3 className="text-md mt-[2px]">{item.label}</h3>
-            // </MenuItem>
-            <></>
+            <MenuItem
+              key={item.value}
+              active={isActive}
+              className={`${index === 0 ? 'mt-10' : 'mt-0'}`}
+              href={`/settings${item.value}`}
+              icon={
+                <IconComponent size={21} color={isActive ? 'white' : '#6b7280'} />
+              }
+            >
+              <h3 className="text-md mt-[2px]">{item.label}</h3>
+            </MenuItem>
           );
         })}
       </Menu>

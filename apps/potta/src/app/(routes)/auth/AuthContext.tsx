@@ -52,7 +52,7 @@ async function decryptToken(
   const key = await crypto.subtle.deriveKey(
     {
       name: 'PBKDF2',
-      salt: enc.encode(process.env.NEXT_PUBLIC_SALT),
+      salt: enc.encode(process.env.NEXT_PUBLIC_SALT || 'default-salt'),
       iterations: 100000,
       hash: 'SHA-256',
     },
@@ -103,7 +103,25 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
         return;
       }
 
-      // Extract token from URL
+      // Check if we're on localhost
+      const isLocalhost =
+        window.location.hostname === 'localhost' ||
+        window.location.hostname === '127.0.0.1';
+
+      if (isLocalhost) {
+        // Use test token for localhost development
+        const testToken = 'rOmcZB3lBRFHP49y0Bp1LzIAVwIrXmuw';
+        if (process.env.NODE_ENV === 'development') {
+          console.log('AuthContext: Running on localhost - using test token');
+        }
+        setTokenState(testToken);
+        setAuthToken(testToken);
+        Cookies.set('auth_token', testToken, { expires: 7 });
+        setIsLoading(false);
+        return;
+      }
+
+      // Extract token from URL for production
       const url = new URL(window.location.href);
       const urlToken = url.searchParams.get('token');
       const secret = process.env.NEXT_PUBLIC_ENCRYPTION_SECRET ?? '';
@@ -113,66 +131,32 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
         console.log('AuthContext: Secret available:', !!secret);
       }
 
-      if (!secret) {
-        console.error('AuthContext: No encryption secret found');
-        toast.error('Unauthorized action');
-        return;
-      }
-      const testToken = 'u5C1SFsSKG3lGPMx2QMiu9lSjzeVboAI';
-
-      if (urlToken || testToken) {
-        if (process.env.NODE_ENV === 'development') {
-          console.log('AuthContext: Processing URL token...');
-        }
-
-        // Check if we're on localhost
-        const isLocalhost =
-          window.location.hostname === 'localhost' ||
-          window.location.hostname === '127.0.0.1';
-
-        if (isLocalhost) {
+      if (urlToken && secret) {
+        try {
+          // Decrypt the token
+          const decryptedToken = await decryptToken(urlToken, secret);
           if (process.env.NODE_ENV === 'development') {
-            console.log('AuthContext: Running on localhost - using test token');
+            console.log('AuthContext: Successfully decrypted token:', decryptedToken);
           }
-          setTokenState(testToken);
-          setAuthToken(testToken);
-          Cookies.set('auth_token', testToken, { expires: 7 });
-        } else {
-          try {
-            // Decrypt the token
-            const decryptedToken = await decryptToken(
-              urlToken || testToken,
-              secret
-            );
-            if (process.env.NODE_ENV === 'development') {
-              console.log('AuthContext: Successfully decrypted token:', decryptedToken);
-            }
 
-            setTokenState(decryptedToken);
-            setAuthToken(decryptedToken);
-            Cookies.set('auth_token', decryptedToken, { expires: 7 });
-          } catch (err) {
-            console.error('AuthContext: Failed to decrypt token:', err);
-            toast.error('Invalid token');
-            // Redirect to auth page on decryption failure
-            window.location.href = AUTH_REDIRECT_URL;
-          }
-        }
+          setTokenState(decryptedToken);
+          setAuthToken(decryptedToken);
+          Cookies.set('auth_token', decryptedToken, { expires: 7 });
 
-        // Clean up URL by removing the token parameter
-        const newUrl = new URL(window.location.href);
-        newUrl.searchParams.delete('token');
-        newUrl.searchParams.delete('redirectUrl'); // Also clean up redirectUrl if present
-        window.history.replaceState({}, '', newUrl.toString());
-
-        if (process.env.NODE_ENV === 'development') {
-          console.log('AuthContext: Token processed and URL cleaned');
+          // Clean up URL by removing the token parameter
+          const newUrl = new URL(window.location.href);
+          newUrl.searchParams.delete('token');
+          newUrl.searchParams.delete('redirectUrl');
+          window.history.replaceState({}, '', newUrl.toString());
+        } catch (err) {
+          console.error('AuthContext: Failed to decrypt token:', err);
+          toast.error('Invalid token');
         }
       } else {
+        // If no token in URL, try to load from cookie
         if (process.env.NODE_ENV === 'development') {
           console.log('AuthContext: No URL token, checking cookies...');
         }
-        // If no token in URL, try to load from cookie
         const cookieToken = Cookies.get('auth_token');
         if (cookieToken) {
           if (process.env.NODE_ENV === 'development') {
@@ -186,6 +170,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
           }
         }
       }
+
+      setIsLoading(false);
     };
 
     handleToken();
@@ -216,7 +202,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
             setUser(null);
             setIsLoading(false);
             Cookies.remove('auth_token');
-            window.location.href = AUTH_REDIRECT_URL;
           });
       }
     } else {
@@ -248,9 +233,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     // Clear any other auth-related cookies
     document.cookie =
       'auth_token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
-
-    // Redirect to auth page
-    window.location.href = AUTH_REDIRECT_URL;
   };
 
   const isAuthenticated = !!token && !!user;

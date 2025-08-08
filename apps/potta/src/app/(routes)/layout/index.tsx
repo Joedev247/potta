@@ -41,6 +41,7 @@ export default function RootLayout({
 
   // Determine if sidebar should be forced
   const forceSidebar = isReports;
+  const isSettingsPolicies = pathname.startsWith('/settings/policies');
   const useSidebar = forceSidebar || context?.layoutMode === 'sidebar';
 
   return (
@@ -61,6 +62,8 @@ export default function RootLayout({
               useSidebar
                 ? context?.toggle
                   ? 'flex w-full pl-[35px]'
+                  : isSettingsPolicies || isReports
+                  ? 'pl-[150px] w-full'
                   : 'pl-[170px] w-full'
                 : 'w-full pl-5'
             }`}

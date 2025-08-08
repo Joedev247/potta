@@ -38,7 +38,7 @@ const SettingsPage = () => {
       <Card className="">
         <CardHeader>
           <div className="flex items-center gap-3">
-            <div className="w-8 h-8 bg-slate-100 rounded-md flex items-center justify-center">
+            <div className="w-8 h-8 bg-slate-100 flex items-center justify-center">
               <Layout className="h-4 w-4 text-slate-600" />
             </div>
             <div>
@@ -73,7 +73,7 @@ const SettingsPage = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {/* Sidebar Layout Preview */}
               <div
-                className={`border-2 rounded-lg p-4 transition-all duration-200 cursor-pointer ${
+                className={`border-2  p-4 transition-all duration-200 cursor-pointer ${
                   context?.layoutMode === 'sidebar'
                     ? 'border-green-500 bg-green-50/30'
                     : 'border-slate-200 bg-slate-50'
@@ -88,12 +88,12 @@ const SettingsPage = () => {
                   )}
                 </div>
                 <div
-                  className="relative bg-white border border-slate-200 rounded-md overflow-hidden"
+                  className="relative bg-white border border-slate-200  overflow-hidden"
                   style={{ height: '200px' }}
                 >
                   {/* Sidebar */}
                   <div className="absolute left-0 top-0 w-16 h-full bg-slate-800 flex flex-col items-center py-3">
-                    <div className="w-8 h-8 bg-slate-700 rounded-md mb-4"></div>
+                    <div className="w-8 h-8 bg-slate-700  mb-4"></div>
                     <div className="space-y-3">
                       <div className="w-6 h-6 bg-slate-600 rounded-sm"></div>
                       <div className="w-6 h-6 bg-slate-600 rounded-sm"></div>
@@ -125,7 +125,7 @@ const SettingsPage = () => {
 
               {/* Navbar Layout Preview */}
               <div
-                className={`border-2 rounded-lg p-4 transition-all duration-200 cursor-pointer ${
+                className={`border-2  p-4 transition-all duration-200 cursor-pointer ${
                   context?.layoutMode === 'navbar'
                     ? 'border-green-500 bg-green-50/30'
                     : 'border-slate-200 bg-slate-50'
@@ -140,13 +140,13 @@ const SettingsPage = () => {
                   )}
                 </div>
                 <div
-                  className="relative bg-white border border-slate-200 rounded-md overflow-hidden"
+                  className="relative bg-white border border-slate-200  overflow-hidden"
                   style={{ height: '200px' }}
                 >
                   {/* Top Navbar */}
                   <div className="h-12 bg-slate-800 flex items-center justify-between px-4">
                     <div className="flex items-center gap-4">
-                      <div className="w-8 h-8 bg-slate-700 rounded-md"></div>
+                      <div className="w-8 h-8 bg-slate-700 "></div>
                       <div className="w-16 h-4 bg-slate-600 rounded-sm"></div>
                     </div>
                     <div className="flex items-center gap-3">
@@ -180,7 +180,7 @@ const SettingsPage = () => {
 
           <Separator />
 
-          <div className="bg-slate-50 p-4 rounded-md">
+          <div className="bg-slate-50 p-4 ">
             <div className="flex items-start gap-3">
               <div className="w-6 h-6 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
                 <SettingsIcon className="h-3 w-3 text-blue-600" />
@@ -205,7 +205,7 @@ const SettingsPage = () => {
       <Card className="border border-slate-200">
         <CardHeader>
           <div className="flex items-center gap-3">
-            <div className="w-8 h-8 bg-slate-100 rounded-md flex items-center justify-center">
+            <div className="w-8 h-8 bg-slate-100  flex items-center justify-center">
               <Monitor className="h-4 w-4 text-slate-600" />
             </div>
             <div>

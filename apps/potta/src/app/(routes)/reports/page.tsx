@@ -4,11 +4,13 @@ import React, { useState, useEffect, useContext, useRef } from 'react';
 import Sidebar from './components/Sidebar';
 import SearchBar from './components/SearchBar';
 import { reportCategories, reportData } from './utils/dummyData';
-import { ReportCategoryId, ReportCategory } from './utils/types';
+import { ReportCategoryId, ReportCategory, Report } from './utils/types';
 import { ContextData } from '@potta/components/context';
 import { reportCharts } from './components/DashboardSampleCards';
 import ReportChartCard from './components/ReportChartCard';
 import RootLayout from '../layout';
+import ApiDebugTest from './analytics/ApiDebugTest';
+import AnalyticsChartCard from './analytics/AnalyticsChartCard';
 
 const ReportsPage: React.FC = () => {
   const context = useContext(ContextData);
@@ -31,6 +33,7 @@ const ReportsPage: React.FC = () => {
     if (activeTab === 'all') {
       return getAllReports();
     }
+    return [];
   };
 
   // Filter reports based on search query
@@ -108,7 +111,37 @@ const ReportsPage: React.FC = () => {
           </div>
 
           {/* Reports grid with more dummy chart cards */}
-          {activeTab === 'all' ? (
+          {activeTab === 'api_debug' ? (
+            <ApiDebugTest />
+          ) : [
+              'revenue_analytics',
+              'expense_analytics',
+              'financial_analytics',
+            ].includes(activeTab) ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-8">
+              {activeTabInfo?.submenus?.map((submenu) => {
+                const analyticsSubmenu = submenu as any;
+                return (
+                  <div
+                    key={submenu.id}
+                    id={`card-${submenu.id}`}
+                    ref={(el) => {
+                      cardRefs.current[submenu.id] = el;
+                    }}
+                  >
+                    <AnalyticsChartCard
+                      title={submenu.label}
+                      description={`${submenu.label} analytics data`}
+                      factName={analyticsSubmenu.factName || 'revenue'}
+                      metrics={analyticsSubmenu.metrics || ['total_revenue']}
+                      dimensions={analyticsSubmenu.dimensions || ['time']}
+                      chartType="bar"
+                    />
+                  </div>
+                );
+              })}
+            </div>
+          ) : activeTab === 'all' ? (
             <div className="flex flex-col gap-8">
               {reportCategories
                 .filter((cat) => cat.id !== 'all')
@@ -139,10 +172,9 @@ const ReportsPage: React.FC = () => {
                       </div>
                       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-8">
                         {firstTwo.map((submenu) => {
-                          const chartConfig =
-                            reportCharts[
-                              submenu.chartKey as keyof typeof reportCharts
-                            ];
+                          const chartConfig = reportCharts[
+                            submenu.chartKey as keyof typeof reportCharts
+                          ] as any;
                           return (
                             <div key={submenu.id}>
                               {chartConfig ? (
@@ -170,7 +202,7 @@ const ReportsPage: React.FC = () => {
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-8">
               {activeTabInfo?.submenus?.map((submenu) => {
-                const chartConfig = reportCharts[submenu.chartKey];
+                const chartConfig = (reportCharts as any)[submenu.chartKey];
                 return (
                   <div
                     key={submenu.id}

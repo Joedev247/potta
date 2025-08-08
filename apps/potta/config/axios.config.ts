@@ -27,10 +27,16 @@ export function setAuthToken(token: string) {
   authToken = token;
 }
 
-function getTokenFromUrl(): string | null {
+function getTokenFromCookies(): string | null {
   if (typeof window !== 'undefined') {
-    const url = new URL(window.location.href);
-    return url.searchParams.get('token');
+    // Get token from cookies
+    const cookies = document.cookie.split(';');
+    const authCookie = cookies.find((cookie) =>
+      cookie.trim().startsWith('auth_token')
+    );
+    if (authCookie) {
+      return authCookie.split('=')[1];
+    }
   }
   return null;
 }
@@ -51,10 +57,11 @@ function clearAuthCookies(): void {
     'auth_token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
 }
 
-function redirectToAuth(): void {
+function redirectToUnauthorized(): void {
   if (typeof window === 'undefined') return;
 
-  window.location.href = AUTH_REDIRECT_URL;
+  // Instead of redirecting to auth, redirect to unauthorized page
+  window.location.href = '/unauthorized';
 }
 
 // Request interceptor
@@ -78,7 +85,7 @@ axios.interceptors.request.use((config: InternalAxiosRequestConfig) => {
   }
 
   // Add authorization header for non-vendor portal routes
-  const token = authToken || getTokenFromUrl();
+  const token = authToken || getTokenFromCookies();
   const isVendorPortal = isBypassRoute();
 
   if (token && !isVendorPortal) {
@@ -132,6 +139,10 @@ axios.interceptors.response.use(
     // Handle 401 Unauthorized responses
     if (error.response?.status === 401) {
       const isBypass = isBypassRoute();
+      const isLocalhost =
+        typeof window !== 'undefined' &&
+        (window.location.hostname === 'localhost' ||
+          window.location.hostname === '127.0.0.1');
 
       if (isBypass) {
         // For bypass routes, let component handle the error
@@ -139,11 +150,19 @@ axios.interceptors.response.use(
           'Bypass route detected: Invalid token, not redirecting to auth'
         );
         return Promise.reject(error);
+      } else if (isLocalhost) {
+        // For localhost development, show unauthorized page instead of redirecting
+        console.log(
+          'Localhost detected: Invalid token, redirecting to unauthorized page'
+        );
+
+        redirectToUnauthorized();
+        return Promise.reject(error);
       } else {
-        // For regular routes, clear cookies and redirect
-        console.log('Regular route: Invalid token, redirecting to auth');
+        // For production, clear cookies and redirect to auth
+        console.log('Production: Invalid token, redirecting to auth');
         clearAuthCookies();
-        redirectToAuth();
+        window.location.href = AUTH_REDIRECT_URL;
         return Promise.reject(error);
       }
     }
