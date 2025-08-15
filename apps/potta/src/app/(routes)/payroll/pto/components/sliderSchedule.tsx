@@ -353,7 +353,7 @@ const SliderSchedule = () => {
           </div>
         </div>
 
-        <div className="flex justify-end mt-4">
+        <div className="fixed bottom-0 left-0 right-0 p-2 bg-white border-t border-gray-200 flex justify-end space-x-3">
           <Button
             text={isSubmitting ? 'Adding...' : 'Add Policy'}
             type={'button'}

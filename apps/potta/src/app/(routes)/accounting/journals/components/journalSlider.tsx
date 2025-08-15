@@ -337,7 +337,7 @@ const JournalSlider: React.FC<JournalSliderProps> = ({
       >
         <form
           onSubmit={handleSubmit(onSubmit)}
-          className="relative overflow-hidden w-full max-w-6xl"
+          className="relative overflow-hidden w-full max-w-6xl h-full"
         >
           <div className="grid grid-cols-2 overflow-hidden min-h-full gap-4 p-4">
             {/* Left Column */}
@@ -573,13 +573,7 @@ const JournalSlider: React.FC<JournalSliderProps> = ({
 
           <div className="flex-grow" />
           <div className="text-center md:text-right md:flex space-x-4 fixed bottom-0 left-0 right-0 justify-center bg-white p-4">
-            <div className="flex gap-2 w-full max-w-6xl justify-between">
-              <Button
-                text="Cancel"
-                type="button"
-                theme="danger"
-                onClick={() => setIsOpen(false)}
-              />
+            <div className="fixed bottom-0 left-0 right-0 p-2 bg-white border-t border-gray-200 flex justify-end space-x-3">
               <Button
                 text="Create Journal Entry"
                 type="submit"

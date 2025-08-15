@@ -7,6 +7,7 @@ import Icon from '@potta/components/icon_fonts/icon';
 import { MdPolicy } from 'react-icons/md';
 import { FaHandHoldingDollar } from 'react-icons/fa6';
 import { TbShoppingCartCog } from 'react-icons/tb';
+import { svgIcons } from '@potta/components/svg_icons/IconsSvg';
 
 const SidebarsExpenses = () => {
   const pathname = usePathname();
@@ -41,11 +42,7 @@ const SidebarsExpenses = () => {
           className="mt-8  "
           href="/account_payables"
           icon={
-            str[1] == 'account_payables' && str[2] == undefined ? (
-              <img src="/images/sideExpensesIcons/white/1.svg" />
-            ) : (
-              <img src="/images/sideDashboardIcons/schedule.svg" />
-            )
+            svgIcons.dashboard(str[1] == 'account_payables' && str[2] == undefined ? 'white' : '#6b7280')
           }
         >
           {' '}
@@ -69,13 +66,7 @@ const SidebarsExpenses = () => {
           active={str[2] == 'budgets' ? true : false}
           className=""
           href="/account_payables/budgets"
-          icon={
-            str[2] == 'budgets' ? (
-              <img src="/images/sideExpensesIcons/dash.svg" />
-            ) : (
-              <img src="/images/sideExpensesIcons/white/8.svg" />
-            )
-          }
+          icon={svgIcons.budgets(str[2] == 'budgets' ? 'white' : '#6b7280')}
         >
           <h3 className="text-md mt-1.5">Budget</h3>
         </MenuItem>
@@ -87,7 +78,7 @@ const SidebarsExpenses = () => {
               className={
                 str[2] === 'spend-program' || str[2] === 'purchase'
                   ? 'text-white'
-                  : ''
+                  : '!text-gray-500'
               }
             />
           }
@@ -105,7 +96,7 @@ const SidebarsExpenses = () => {
             icon={
               <FaHandHoldingDollar
                 size={24}
-                className={`${str[2] === 'spend-program' && 'text-white'}`}
+                className={`${str[2] === 'spend-program' ? 'text-white' : '#6b7280'}`}
               />
             }
           >
@@ -133,13 +124,7 @@ const SidebarsExpenses = () => {
           active={str[2] == 're-imbursements' ? true : false}
           className=" "
           href="/account_payables/re-imbursements"
-          icon={
-            str[2] == 're-imbursements' ? (
-              <img src="/images/sideExpensesIcons/white/3.svg" />
-            ) : (
-              <img src="/images/sideExpensesIcons/retunbook.svg" />
-            )
-          }
+          icon={svgIcons.reImbursement(str[2] == 're-imbursements' ? 'white' : '#6b7280')}
         >
           <h3 className="text-md mt-1.5">ReImbursement</h3>
         </MenuItem>
@@ -147,13 +132,7 @@ const SidebarsExpenses = () => {
           active={str[2] == 'bills' ? true : false}
           className=" "
           href="/account_payables/bills"
-          icon={
-            str[2] == 'bills' ? (
-              <img src="/images/sideExpensesIcons/white/6.svg" />
-            ) : (
-              <img src="/images/sideExpensesIcons/book.svg" />
-            )
-          }
+          icon={svgIcons.bill(str[2] == 'bills' ? 'white' : '#6b7280')}
         >
           <h3 className="text-md mt-1.5">Biils </h3>
         </MenuItem>
@@ -175,13 +154,7 @@ const SidebarsExpenses = () => {
           active={str[1] == 'reports' ? true : false}
           className=" "
           href="/reports"
-          icon={
-            str[2] == 'reports' ? (
-              <img src="/images/sideExpensesIcons/white/2.svg" />
-            ) : (
-              <img src="/images/sideDashboardIcons/dahsboard.svg" />
-            )
-          }
+          icon={svgIcons.reports(str[2] == 'reports' ? 'white' : '#6b7280')}
         >
           <h3 className="text-md mt-1.5">Report</h3>
         </MenuItem>

@@ -3,11 +3,12 @@ import { Inter } from 'next/font/google';
 import ImprovedCustomNavbar from '../../../components/improved-custom-navbar';
 import Sidebars from './sidebar';
 import Navbar from './navbar';
-import { useContext, useState } from 'react';
+import { useContext, useState, useEffect } from 'react';
 import { usePathname } from 'next/navigation';
 import { ContextData } from '../../../components/context';
 import { Toaster } from 'sonner';
 import PottaLoader from '../../../components/pottaloader';
+import ChatAI from '../../../app/chatai';
 import React from 'react';
 
 // Force dynamic rendering
@@ -29,6 +30,10 @@ export default function RootLayout({
   const isReports = pathname.startsWith('/reports');
   const context = useContext(ContextData);
 
+  const toggleChatAI = () => {
+    setShow(!show);
+  };
+
   console.log(context?.layoutMode);
   // Show loader until layout is loaded from localStorage
   if (!context?.isLayoutLoaded) {
@@ -48,7 +53,7 @@ export default function RootLayout({
     <div className="relative flex w-full h-screen">
       <div className="transition-all flex duration-500 ease-in-out w-full">
         <div className="w-full h-screen overflow-x-hidden overflow-y-auto scroll z-10 flex">
-          {/* Sidebar */}
+          {/* Sidebar - always show but collapsed when ChatAI is open */}
           {useSidebar && (
             <div className="fixed z-50">
               <Sidebars />
@@ -60,25 +65,90 @@ export default function RootLayout({
               isOrganigrammer ? '!pl-0' : ''
             } ${
               useSidebar
-                ? context?.toggle
-                  ? 'flex w-full pl-[35px]'
+                ? show || context?.toggle
+                  ? 'flex w-full pl-[35px]' // When ChatAI is open OR sidebar is collapsed
                   : isSettingsPolicies || isReports
                   ? 'pl-[150px] w-full'
                   : 'pl-[170px] w-full'
-                : 'w-full pl-5'
+                : 'w-full'
             }`}
           >
             <div className="w-full relative mx-0">
               {/* Navigation Bar */}
               {/* {!isHome && ( */}
               <>
-                {useSidebar && <Navbar />}
+                {useSidebar && <Navbar showChatAI={show} />}
                 {!useSidebar && <ImprovedCustomNavbar />}
               </>
               {/* )} */}
 
               <Toaster position="top-center" />
               {children}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* ChatAI Sidebar */}
+      <div
+        className={`${
+          show ? 'w-[400px]' : 'w-0'
+        } transition-all duration-500 ease-in-out overflow-hidden border-l border-gray-200 fixed right-0 top-0 h-full z-50`}
+      >
+        <ChatAI onClose={toggleChatAI} />
+      </div>
+
+      {/* ChatAI Toggle Button */}
+      <div className={`w-[2.5%] z-40 ${show ? 'fixed' : ''} right-0`}>
+        <div className={`bg-white h-screen border-l flex justify-center`}>
+          <div>
+            <div className="">
+              <div className="mt-12">
+                <div className="cursor-pointer flex justify-center w-10 items-center hover:bg-gray-200 h-10">
+                  <img
+                    src={'/icons/instanvi.svg'}
+                    alt="logo"
+                    width={20}
+                    height={20}
+                  />
+                </div>
+                <div className="cursor-pointer flex justify-center w-10 items-center hover:bg-gray-200 h-10">
+                  <img
+                    src={'/icons/talk.svg'}
+                    alt="logo"
+                    width={20}
+                    height={20}
+                  />
+                </div>
+                <div className="cursor-pointer flex justify-center w-10 items-center hover:bg-gray-200 h-10">
+                  <img
+                    src={'/icons/Tribu.svg'}
+                    alt="logo"
+                    width={20}
+                    height={20}
+                  />
+                </div>
+                <div className="cursor-pointer flex justify-center w-10 items-center hover:bg-gray-200 h-10">
+                  <img
+                    src={'/icons/Potta.svg'}
+                    alt="logo"
+                    width={16}
+                    height={16}
+                  />
+                </div>
+              </div>
+            </div>
+            <div className="mt-[30vh] ml-1.5">
+              <button
+                onClick={toggleChatAI}
+                className="bg-green-700 text-white h-7 w-7 flex justify-center items-center"
+              >
+                {show ? (
+                  <i className="ri-subtract-line text-lg"></i>
+                ) : (
+                  <i className="ri-add-line text-lg"></i>
+                )}
+              </button>
             </div>
           </div>
         </div>

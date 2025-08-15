@@ -388,7 +388,7 @@ const PayBreakDown = () => {
 
   return (
     <div className="">
-      <div className="w-full border-r border-l  bg-[#F3FBFB] border-t font-bold px-4 py-2 ">
+      <div className="w-full border-r border-l  bg-white border-t font-bold px-4 py-2 ">
         <p>Pay Breakdown</p>
       </div>
       <div className="w-full text-center grid grid-cols-4 border max-h-[126px] min-h-[126px]">

@@ -34,6 +34,7 @@ const SidebarsPayroll = () => {
             <img src="/icons/Potta.svg" className="h-16 w-16 mt-2" alt="logo" />
           }
         >
+          {/* MdOutlineSpaceDashboard */}
           {' '}
         </MenuItem>
 

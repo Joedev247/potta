@@ -669,7 +669,7 @@ const SliderBenefit: React.FC<SliderBenefitProps> = ({
         </div>
 
         {/* Form Actions */}
-        <div className="flex justify-end space-x-4 pt-6 border-t border-gray-200">
+        <div className="fixed bottom-0 left-0 right-0 p-2 bg-white border-t border-gray-200 flex justify-end space-x-3">
           <Button
             type="submit"
             text={

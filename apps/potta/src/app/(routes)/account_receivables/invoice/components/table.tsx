@@ -192,7 +192,7 @@ const InvoiceTable = () => {
         return {
           primary: 'Issued',
           secondary: 'Pending approval',
-          className: 'text-blue-600',
+          className: 'text-yellow-600',
         };
       case 'OVERDUE':
         return {
@@ -247,7 +247,7 @@ const InvoiceTable = () => {
         return {
           status: 'Approved',
           icon: <CheckCircle className="h-4 w-4" />,
-          className: 'bg-blue-50 text-blue-700 border-blue-500',
+          className: 'bg-green-50 text-green-700 border-green-500',
         };
       case 'REJECTED':
         return {

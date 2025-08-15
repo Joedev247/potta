@@ -7,7 +7,7 @@ const DeductionFilters = () => {
   const [isCreateOpen, setIsCreateOpen] = useState(false);
 
   return (
-    <div className="w-full flex items-center justify-between">
+    <div className="w-full flex mb-2 items-center justify-between">
       <div className="flex space-x-2 w-[50%]">
         <div className="w-1/2">
           <Search placeholder="Search deductions..." />

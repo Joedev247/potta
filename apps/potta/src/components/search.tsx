@@ -19,7 +19,7 @@ const Search = ({
   className,
 }: SearchProps) => {
   return (
-    <div className={`relative bg-white flex items-center w-full ${className || ''}`}>
+    <div className={`relative bg-white flex items-center w-fit ${className || ''}`}>
       <RiSearchLine className="absolute left-3 text-gray-400 text-lg pointer-events-none" />
       <Input
         type="text"

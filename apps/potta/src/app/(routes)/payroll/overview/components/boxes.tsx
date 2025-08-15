@@ -162,7 +162,7 @@ const Boxes = () => {
   return (
     <div className="grid grid-cols-2 gap-5">
       {data.map((item) => (
-        <div key={item.id} className="border p-4 h-[166px]">
+        <div key={item.id} className="border bg-white p-4 h-[166px]">
           <div className="flex w-full justify-between">
             <p style={{ color: item.color }} className="!font-semibold">
               {item.title}

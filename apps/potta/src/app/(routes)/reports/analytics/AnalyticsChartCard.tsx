@@ -50,6 +50,7 @@ interface AnalyticsChartCardProps {
     | 'polarArea'
     | 'scatter'
     | 'bubble';
+  module?: 'finance' | 'human_capital' | 'sales_inventory';
 }
 
 const AnalyticsChartCard: React.FC<AnalyticsChartCardProps> = ({
@@ -59,6 +60,7 @@ const AnalyticsChartCard: React.FC<AnalyticsChartCardProps> = ({
   metrics,
   dimensions,
   chartType = 'bar',
+  module = 'finance',
 }) => {
   const [data, setData] = useState<any>(null);
   const [loading, setLoading] = useState(true);
@@ -71,12 +73,55 @@ const AnalyticsChartCard: React.FC<AnalyticsChartCardProps> = ({
         setLoading(true);
         setError(null);
 
-        const response = await pottaAnalyticsService.getAnalytics(factName, {
-          metrics,
-          dimensions,
-          time_granularity: 'monthly',
-          use_mock_data: true,
-        });
+        // Determine which service to use based on module or fact name
+        let response;
+        if (
+          module === 'human_capital' ||
+          factName === 'headcount' ||
+          factName === 'payroll' ||
+          factName === 'employees' ||
+          factName === 'salary_expenses' ||
+          factName === 'benefit_expenses'
+        ) {
+          response = await pottaAnalyticsService.humanCapital.getAnalytics(
+            factName,
+            {
+              metrics,
+              dimensions,
+              time_granularity: 'monthly',
+              use_mock_data: true,
+            }
+          );
+        } else if (
+          module === 'sales_inventory' ||
+          factName === 'sales' ||
+          factName === 'inventory' ||
+          factName === 'products' ||
+          factName === 'units_sold' ||
+          factName === 'new_customers' ||
+          factName === 'sales_performance'
+        ) {
+          response = await pottaAnalyticsService.salesInventory.getAnalytics(
+            factName,
+            {
+              metrics,
+              dimensions,
+              time_granularity: 'monthly',
+              use_mock_data: true,
+            }
+          );
+        } else {
+          // Default to finance
+          response = await pottaAnalyticsService.finance.getAnalytics(
+            factName,
+            {
+              metrics,
+              dimensions,
+              time_granularity: 'monthly',
+              use_mock_data: true,
+            }
+          );
+        }
 
         const transformedData = ChartDataTransformer.transformAnalyticsData(
           response.data,
@@ -109,9 +154,28 @@ const AnalyticsChartCard: React.FC<AnalyticsChartCardProps> = ({
     fetchData();
   }, [factName, metrics, dimensions]);
 
+  // Determine if we should use horizontal bar chart based on dimensions
+  const shouldUseHorizontalBar = () => {
+    const individualDimensions = [
+      'customer',
+      'product',
+      'employee',
+      'role',
+      'vendor',
+      'location',
+      'department',
+    ];
+    return dimensions.some((dim) =>
+      individualDimensions.includes(dim.toLowerCase())
+    );
+  };
+
+  const isHorizontalBar = chartType === 'bar' && shouldUseHorizontalBar();
+
   const chartOptions = {
     responsive: true,
     maintainAspectRatio: false,
+    indexAxis: isHorizontalBar ? 'y' : 'x', // This makes it horizontal
     plugins: {
       legend: {
         display: false,
@@ -123,23 +187,39 @@ const AnalyticsChartCard: React.FC<AnalyticsChartCardProps> = ({
         enabled: true,
       },
     },
+    elements: {
+      line: {
+        borderWidth: 3, // Thicker lines for line charts
+      },
+      bar: {
+        borderWidth: 1, // Slight border for bars
+      },
+    },
     scales: {
       x: {
         grid: { display: false },
         ticks: {
           color: '#000000',
           font: { weight: 700 },
-          maxRotation: 45,
+          maxRotation: isHorizontalBar ? 0 : 45,
           minRotation: 0,
         },
+        ...(isHorizontalBar && {
+          beginAtZero: true,
+          grid: { color: '#e6f9ed' },
+        }),
       },
       y: {
-        beginAtZero: true,
-        grid: { color: '#e6f9ed' },
+        grid: { display: !isHorizontalBar },
         ticks: {
           color: '#000000',
           font: { weight: 700 },
+          maxRotation: isHorizontalBar ? 0 : 0,
         },
+        ...(!isHorizontalBar && {
+          beginAtZero: true,
+          grid: { color: '#e6f9ed' },
+        }),
       },
     },
   };

@@ -300,7 +300,7 @@ const SliderAccount: React.FC<SliderAccountProps> = ({
           </div>
         </div>
 
-        <div className="flex justify-between mt-8">
+        <div className="fixed bottom-0 left-0 right-0 p-2 bg-white border-t border-gray-200 flex justify-end space-x-3">
           <Button
             type="submit"
             text={isLoading ? 'Creating Account...' : 'Create Account'}

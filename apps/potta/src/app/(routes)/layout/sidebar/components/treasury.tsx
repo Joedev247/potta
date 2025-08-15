@@ -136,13 +136,7 @@ const SidebarsTreasury = () => {
           active={isActive('/reports')}
           className=""
           href="/reports"
-          icon={
-            isActive('/reports') ? (
-              <img src="/images/sideExpensesIcons/white/2.svg" />
-            ) : (
-              <img src="/images/sideDashboardIcons/dahsboard.svg" />
-            )
-          }
+          icon={svgIcons.reports(isActive('/reports') ? 'white' : '#6b7280')}
         >
           <h3 className="text-md">Reports</h3>
         </MenuItem>

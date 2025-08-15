@@ -480,7 +480,7 @@ const AddAssetSlideover = ({
             />
           </div>
         </form>
-        <div className="w-full flex justify-end mt-8">
+        <div className="fixed bottom-0 left-0 right-0 p-2 bg-white border-t border-gray-200 flex justify-end space-x-3">
           <Button
             onClick={handleAssetSubmit as any}
             text="Save Asset"

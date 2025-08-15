@@ -15,7 +15,7 @@ const SidebarsReports = () => {
   const str = pathname.split('/');
   const context = useContext(ContextData);
 
-  return (
+return (
     <Sidebar
       collapsedWidth="65px"
       width="180px"
@@ -36,8 +36,17 @@ const SidebarsReports = () => {
           {' '}
         </MenuItem>
         <MenuItem
-          active={str[1] === 'reports' && !str[2]}
+          active={str[2] == 'dashboard' ? true : false}
           className="mt-8"
+          href="/reports/dashboard"
+          icon={svgIcons.dashboard(str[2] == 'dashboard' ? 'white' : '#6b7280')}
+        >
+          {' '}
+          <h3 className="text-md mt-[2px]">Dashboard</h3>{' '}
+        </MenuItem>
+        <MenuItem
+          active={str[1] === 'reports' && !str[2]}
+          className=""
           href="/reports"
           icon={
             <LuChartPie

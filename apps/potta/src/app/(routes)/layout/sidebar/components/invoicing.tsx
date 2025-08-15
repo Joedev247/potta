@@ -13,6 +13,7 @@ import {
 } from 'lucide-react';
 import { LuTicket } from 'react-icons/lu';
 import { FileText } from 'lucide-react';
+import { svgIcons } from '@potta/components/svg_icons/IconsSvg';
 const Sidebarsinvoicing = () => {
   const pathname = usePathname();
   const string = pathname;
@@ -49,13 +50,11 @@ const Sidebarsinvoicing = () => {
           }
           className="mt-8  "
           href="/account_receivables"
-          icon={
-            str[1] == 'account_receivables' && str[2] == undefined ? (
-              <img src="/images/sideExpensesIcons/white/1.svg" />
-            ) : (
-              <img src="/images/sideDashboardIcons/schedule.svg" />
-            )
-          }
+          icon={svgIcons.dashboard(
+            str[1] == 'account_receivables' && str[2] == undefined
+              ? 'white'
+              : '#6b7280'
+          )}
         >
           {' '}
           <h3 className="text-md mt-[2px]">Dashboard</h3>{' '}
@@ -96,15 +95,9 @@ const Sidebarsinvoicing = () => {
           active={isActive('/account_receivables/customers')}
           className="text-md"
           href="/account_receivables/customers"
-          icon={
-            <Users
-              className={`h-6 w-6 ${
-                isActive('/account_receivables/customers')
-                  ? 'text-white'
-                  : '#6b7280'
-              }`}
-            />
-          }
+          icon={svgIcons.people(
+            isActive('/account_receivables/customers') ? 'white' : '#6b7280'
+          )}
         >
           <h3 className="text-lg mt-1.5">Customers</h3>
         </MenuItem>
@@ -112,14 +105,9 @@ const Sidebarsinvoicing = () => {
           active={isActive('/account_receivables/vouchers')}
           className="text-md"
           href="/account_receivables/vouchers"
-          icon={
-            <LuTicket
-              size={23}
-              color={
-                isActive('/account_receivables/vouchers') ? 'white' : '#6b7280'
-              }
-            />
-          }
+          icon={svgIcons.ticket(
+            isActive('/account_receivables/vouchers') ? 'white' : '#6b7280'
+          )}
         >
           <h3 className="text-lg mt-1.5">Vouchers</h3>
         </MenuItem>
@@ -177,13 +165,7 @@ const Sidebarsinvoicing = () => {
           active={isActive('/reports')}
           className="text-md"
           href="/reports"
-          icon={
-            <ChartPie
-              className={`h-6 w-6 ${
-                isActive('/reports') ? 'text-white' : '#6b7280'
-              }`}
-            />
-          }
+          icon={svgIcons.reports(isActive('/reports') ? 'white' : '#6b7280')}
         >
           <h3 className="text-lg mt-1.5">Reports</h3>
         </MenuItem>

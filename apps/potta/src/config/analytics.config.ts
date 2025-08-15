@@ -7,7 +7,7 @@ import axios, {
 // Potta FP&A Analytics API Configuration
 const ANALYTICS_BASE_URL =
   process.env.ANALYTICS_BASE_URL ||
-  'https://tribu.dev.instanvi.com/corelytics/api/finance/v1';
+  'https://tribu.dev.instanvi.com/corelytics';
 const ANALYTICS_TIMEOUT = 30000; // 30 seconds
 
 // Create dedicated Axios instance for Analytics API

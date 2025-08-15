@@ -110,7 +110,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 
       if (isLocalhost) {
         // Use test token for localhost development
-        const testToken = 'rOmcZB3lBRFHP49y0Bp1LzIAVwIrXmuw';
+        const testToken = 'Imri5dthC8rhyw5TO3Q0BptsocM0yWt7';
         if (process.env.NODE_ENV === 'development') {
           console.log('AuthContext: Running on localhost - using test token');
         }

@@ -156,7 +156,7 @@ axios.interceptors.response.use(
           'Localhost detected: Invalid token, redirecting to unauthorized page'
         );
 
-        redirectToUnauthorized();
+        // redirectToUnauthorized();
         return Promise.reject(error);
       } else {
         // For production, clear cookies and redirect to auth

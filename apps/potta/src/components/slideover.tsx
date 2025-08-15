@@ -195,8 +195,8 @@ const Slider: FC<props> = ({
                 >
                   <div className="flex justify-center items-center ">
                     <div
-                      className={`flex px-4 w-full border-b justify-between ${
-                        tabs && 'py-2'
+                      className={`flex px-4 w-full  border-b justify-between ${
+                        tabs ? 'py-2' : 'py-4'
                       }`}
                     >
                       <div className="flex-1 flex gap-10 items-end">

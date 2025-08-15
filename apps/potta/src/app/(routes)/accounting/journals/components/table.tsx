@@ -85,7 +85,7 @@ const GeneralLedgerTable = () => {
   return (
     <DataGrid
       data={ledgerResponse?.data || []}
-      column={columns}
+      columns={columns}
       loading={isLoading}
       progressComponent={<CustomLoader />}
     />

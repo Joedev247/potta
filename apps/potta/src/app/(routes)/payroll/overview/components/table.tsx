@@ -469,16 +469,7 @@ const PayrollTable = () => {
       {isLoading ? (
         <TableSkeleton />
       ) : (
-        <>
-          <div className="mb-4 p-2 bg-gray-100 rounded">
-            <p>Debug Info:</p>
-            <p>Employees loaded: {employeesResponse?.data?.length || 0}</p>
-            <p>Processed data: {processedData.length}</p>
-            <p>Filtered data: {filteredData.length}</p>
-            <p>Is loading: {isLoading ? 'Yes' : 'No'}</p>
-          </div>
-          <DataGrid data={filteredData} column={columns} loading={false} />
-        </>
+        <DataGrid data={filteredData} columns={columns} loading={false} />
       )}
     </div>
   );

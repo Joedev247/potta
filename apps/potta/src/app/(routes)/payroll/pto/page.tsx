@@ -53,13 +53,13 @@ const PtoContent = () => {
     setCurrentPage(page);
   }, []);
 
-  if (isLoading) {
-    return (
-      <div className="fixed z-[9999] backdrop-blur-sm top-0 left-0 h-screen w-screen grid place-content-center">
-        <PottaLoader />
-      </div>
-    );
-  }
+  // if (isLoading) {
+  //   return (
+  //     <div className="fixed z-[9999] backdrop-blur-sm top-0 left-0 h-screen w-screen grid place-content-center">
+  //       <PottaLoader />
+  //     </div>
+  //   );
+  // }
 
   if (error) {
     return (
@@ -87,7 +87,11 @@ const PtoContent = () => {
   const currentPolicies = filteredPolicies?.slice(startIndex, endIndex) || [];
 
   return (
-    <div className={`${context?.layoutMode === 'sidebar' ? 'w-full p-5 pl-12' : 'w-full p-5'}`}>
+    <div
+      className={`${
+        context?.layoutMode === 'sidebar' ? 'w-full p-5 pl-12' : 'w-full p-5'
+      }`}
+    >
       {/* Header Section */}
       <div className="mb-2">
         <div className="flex justify-between items-center">
@@ -96,6 +100,7 @@ const PtoContent = () => {
             onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
               setSearchQuery(e.target.value)
             }
+            className="!w-fit"
             value={searchQuery}
           />
           <SliderSchedule />

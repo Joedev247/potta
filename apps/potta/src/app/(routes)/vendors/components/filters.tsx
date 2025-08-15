@@ -17,7 +17,7 @@ const Filter = () => {
   };
 
   return (
-    <div className="w-full flex justify-between ">
+    <div className="w-full mb-4 flex justify-between ">
       <div className="flex space-x-2 w-[50%]">
         <div className="w-1/2">
           <Search />

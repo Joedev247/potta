@@ -14,6 +14,15 @@ export type ReportCategoryId =
   | 'revenue_analytics'
   | 'expense_analytics'
   | 'financial_analytics'
+  | 'human_capital'
+  | 'sales_inventory'
+  | 'budget_analytics'
+  | 'billings'
+  | 'bookings'
+  | 'cashflow'
+  | 'headcount'
+  | 'revenue'
+  | 'sales'
   | 'api_debug';
 
 export interface Report {
@@ -31,6 +40,7 @@ export interface ReportSubmenu {
   factName?: string;
   metrics?: string[];
   dimensions?: string[];
+  module?: 'finance' | 'human_capital' | 'sales_inventory';
 }
 
 export interface ReportCategory {

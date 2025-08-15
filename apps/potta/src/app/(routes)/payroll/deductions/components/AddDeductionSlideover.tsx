@@ -123,7 +123,7 @@ const AddDeductionSlideover = ({
       title="Add Deduction"
     >
       <form
-        className="grid grid-cols-2 gap-4 w-full max-w-4xl p-4"
+        className="grid h-fit grid-cols-2 gap-4 w-full max-w-4xl p-4"
         onSubmit={handleSubmit}
       >
         <div className="col-span-2">
@@ -287,7 +287,7 @@ const AddDeductionSlideover = ({
             onChange={setIsEditable}
           />
         </div>
-        <div className="col-span-2 w-full flex justify-end mt-8">
+        <div className="fixed bottom-0 left-0 right-0 p-2 bg-white border-t border-gray-200 flex justify-end space-x-3">
           <Button
             text="Save Deduction"
             type="submit"

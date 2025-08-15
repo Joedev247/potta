@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import DataGrid from '@potta/app/(routes)/account_receivables/invoice/components/DataGrid';
-import { IColumnDef } from '@potta/app/(routes)/account_receivables/_utils/types';
 import { EllipsisVertical } from 'lucide-react';
 import {
   DropdownMenu,
@@ -13,6 +12,7 @@ import ViewAssetModal from './ViewAssetModal';
 import EditAssetSlideover from './EditAssetSlideover';
 import DisposeAssetModal from './DisposeAssetModal';
 import DeleteAssetModal from './DeleteAssetModal';
+import { IColumnDef } from '@potta/app/(routes)/account_receivables/credit/_utils/types';
 
 const AssetTable = () => {
   const { data, isLoading, refetch } = useGetAssets();
@@ -115,7 +115,7 @@ const AssetTable = () => {
 
   return (
     <>
-      <DataGrid data={assets} column={columns} loading={isLoading} />
+      <DataGrid data={assets} columns={columns} loading={isLoading} />
       {/* Modals/Slideover */}
       <ViewAssetModal
         open={!!viewId}
