@@ -215,18 +215,18 @@ const ChatAI = ({ onClose }: ChatAIProps) => {
   };
 
   return (
-    <div className="h-full w-full flex flex-col bg-white">
+    <div className="h-full w-[400px] flex flex-col bg-white">
       {/* Header */}
       <div className="flex items-center justify-between p-4 border-b border-gray-200 bg-gray-50">
         <div className="flex items-center space-x-3">
-          <div className="w-8 h-8 bg-green-600 flex items-center justify-center">
+          <div className="w-8 h-8 bg-green-600 flex rounded-full items-center justify-center">
             <Bot className="w-5 h-5 text-white" />
           </div>
           <div>
             <h3 className="font-semibold text-gray-900">AI Assistant</h3>
             <div className="flex items-center space-x-2">
               <div
-                className={`w-2 h-2 ${
+                className={`w-2 rounded-full h-2 ${
                   isConnected ? 'bg-green-500' : 'bg-red-500'
                 }`}
               ></div>
@@ -271,9 +271,9 @@ const ChatAI = ({ onClose }: ChatAIProps) => {
                     {message.timestamp.toLocaleTimeString()}
                   </p>
                 </div>
-                {message.type === 'user' && (
+                {/* {message.type === 'user' && (
                   <User className="w-4 h-4 mt-0.5 text-white flex-shrink-0" />
-                )}
+                )} */}
               </div>
             </div>
           </div>

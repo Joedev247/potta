@@ -89,15 +89,12 @@ const DashboardPage: React.FC = () => {
             ))}
           </div>
         </div>
-
-        {/* Time Period Selector - Under the tabs */}
-        <div className="flex items-center justify-between">
-          {activeTab !== 'general' && (
+        {activeTab !== 'general' && (
+          <div className="flex items-center justify-between">
             <h1 className="text-2xl w-full font-bold text-gray-900">
               {dashboardTabs.find((tab) => tab.id === activeTab)?.name}
             </h1>
-          )}
-          {activeTab !== 'general' && (
+
             <div className="w-48">
               <SearchableSelect
                 options={[
@@ -113,8 +110,8 @@ const DashboardPage: React.FC = () => {
                 labelClass="text-sm text-gray-700"
               />
             </div>
-          )}
-        </div>
+          </div>
+        )}
 
         {/* Dashboard Content */}
         {/* Conditional Dashboard Rendering */}

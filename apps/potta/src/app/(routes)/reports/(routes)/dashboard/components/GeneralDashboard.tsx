@@ -54,7 +54,7 @@ const GeneralDashboard: React.FC<GeneralDashboardProps> = ({
     { title: 'Net Burn', value: 'FCFAO', trendPercent: 0, icon: Info },
   ];
 
-  // Explore Tyms Data
+  // Explore potta Data
   const exploreTymsData = [
     {
       title: 'Setup chart of accounts',
@@ -111,7 +111,7 @@ const GeneralDashboard: React.FC<GeneralDashboardProps> = ({
     trendPercent: number;
     icon: any;
   }) => (
-    <Card className="bg-white border-0 transition-shadow duration-300">
+    <Card className="bg-white border-0 duration-300">
       <CardContent className="p-6">
         <div className="space-y-4">
           <div className="flex items-center justify-between">
@@ -260,14 +260,14 @@ const GeneralDashboard: React.FC<GeneralDashboardProps> = ({
         </CardContent>
       </Card>
 
-      {/* Explore Tyms Section */}
+      {/* Explore potta Section */}
       <div className="space-y-6">
-        <h2 className="text-xl font-semibold text-gray-900">Explore Tyms</h2>
+        <h2 className="text-xl font-semibold text-gray-900">Explore Potta</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {exploreTymsData.map((item, index) => (
             <Card
               key={index}
-              className="bg-white border-0 hover:shadow-lg transition-shadow duration-300"
+              className="bg-white border-0  duration-300"
             >
               <CardContent className="p-6">
                 <div className="space-y-4">
