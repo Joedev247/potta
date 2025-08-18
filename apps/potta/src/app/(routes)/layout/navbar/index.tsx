@@ -360,6 +360,9 @@ export default function Navbar({
     if (str[1] === 'invoice' && str[2] === 'recurring' && str[3] === 'new') {
       return 'New Recurring Invoice';
     }
+    if (str[1] === 'reports' && str[2] === 'dashboard') {
+      return 'Executive Dashboard';
+    }
     if (str[1] === 'pos' && str[2] === 'files') {
       return 'File Manager';
     }

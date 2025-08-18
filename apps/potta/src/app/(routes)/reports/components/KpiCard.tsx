@@ -52,11 +52,16 @@ const KpiCard: React.FC<KpiCardProps> = ({
           use_mock_data: useMockData,
         };
 
+        console.log(`Fetching KPI ${kpiName}:`, request);
+
         const response = await pottaAnalyticsService.kpi.calculateKpi(request);
+
+        console.log(`KPI ${kpiName} response:`, response);
 
         if (response.results && response.results.length > 0) {
           setKpiData(response.results[0]);
         } else {
+          console.warn(`KPI ${kpiName} returned no results:`, response);
           setError('No KPI data available');
         }
       } catch (err) {
@@ -80,7 +85,7 @@ const KpiCard: React.FC<KpiCardProps> = ({
   ]);
 
   const formatValue = (value: number, unit: string) => {
-    if (unit === 'currency') {
+    if (unit === 'currency' || unit === 'money') {
       return new Intl.NumberFormat('en-US', {
         style: 'currency',
         currency: 'XAF',
@@ -171,19 +176,23 @@ const KpiCard: React.FC<KpiCardProps> = ({
           <CardTitle className="text-lg font-semibold">{displayName}</CardTitle>
           {getTrendIcon(kpiData?.calculation_details?.trend)}
         </div>
-        <span
-          className={`inline-flex items-center px-2.5 py-0.5 w-fit text-xs font-medium ${getCategoryColor(
-            category
-          )}`}
-        >
-          {category.replace('_', ' ').toUpperCase()}
-        </span>
+        <div className="flex items-center gap-2">
+          <span
+            className={`inline-flex items-center px-2.5 py-0.5 w-fit text-xs font-medium ${getCategoryColor(
+              category
+            )}`}
+          >
+            {category.replace('_', ' ').toUpperCase()}
+          </span>
+        </div>
       </CardHeader>
       <CardContent>
         <div className="space-y-4">
           <div className="text-center">
             <div className="text-3xl font-bold text-gray-900">
-              {formatValue(kpiData?.value || 0, kpiData?.unit || 'number')}
+              {kpiData?.value !== undefined && kpiData?.value !== null
+                ? formatValue(kpiData.value, kpiData?.unit || 'number')
+                : 'No data available'}
             </div>
             <div className="text-sm text-gray-500 mt-1">
               {kpiData?.period || 'Current Period'}
