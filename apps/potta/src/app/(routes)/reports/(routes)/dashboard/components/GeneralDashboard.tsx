@@ -12,11 +12,12 @@ import {
   LinearScale,
   PointElement,
   LineElement,
+  BarElement,
   Title,
   Tooltip,
   Legend,
 } from 'chart.js';
-import { Line } from 'react-chartjs-2';
+import { Bar } from 'react-chartjs-2';
 import {
   Info,
   FileText,
@@ -34,6 +35,7 @@ ChartJS.register(
   LinearScale,
   PointElement,
   LineElement,
+  BarElement,
   Title,
   Tooltip,
   Legend
@@ -255,20 +257,17 @@ const GeneralDashboard: React.FC<GeneralDashboardProps> = ({
         </CardHeader>
         <CardContent className="p-6">
           <div className="h-80">
-            <Line data={cashflowData} options={chartOptions} />
+            <Bar data={cashflowData} options={chartOptions} />
           </div>
         </CardContent>
       </Card>
 
       {/* Explore potta Section */}
-      <div className="space-y-6">
+      {/* <div className="space-y-6">
         <h2 className="text-xl font-semibold text-gray-900">Explore Potta</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {exploreTymsData.map((item, index) => (
-            <Card
-              key={index}
-              className="bg-white border-0  duration-300"
-            >
+            <Card key={index} className="bg-white border-0  duration-300">
               <CardContent className="p-6">
                 <div className="space-y-4">
                   <div className="flex items-center space-x-3">
@@ -293,7 +292,7 @@ const GeneralDashboard: React.FC<GeneralDashboardProps> = ({
             </Card>
           ))}
         </div>
-      </div>
+      </div> */}
     </div>
   );
 };

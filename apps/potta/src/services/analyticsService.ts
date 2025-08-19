@@ -549,6 +549,50 @@ class SalesInventoryAnalyticsService extends BaseAnalyticsService {
     super('/api/sales-inventory/v1');
   }
 
+  async getAvailableKpis(): Promise<Record<string, any>> {
+    return this.get('/kpis');
+  }
+
+  async calculateKpi(
+    kpiName: string,
+    options: {
+      time_granularity?:
+        | 'daily'
+        | 'weekly'
+        | 'monthly'
+        | 'quarterly'
+        | 'yearly';
+      organization_id?: string;
+      start_date?: string;
+      end_date?: string;
+      dimensions?: string;
+      use_mock_data?: boolean;
+    } = {}
+  ): Promise<any> {
+    const params: Record<string, any> = {};
+
+    if (options.time_granularity) {
+      params.time_granularity = options.time_granularity;
+    }
+    if (options.organization_id) {
+      params.organization_id = options.organization_id;
+    }
+    if (options.start_date) {
+      params.start_date = options.start_date;
+    }
+    if (options.end_date) {
+      params.end_date = options.end_date;
+    }
+    if (options.dimensions) {
+      params.dimensions = options.dimensions;
+    }
+    if (options.use_mock_data !== undefined) {
+      params.use_mock_data = options.use_mock_data;
+    }
+
+    return this.post(`/kpis/${kpiName}`, {}, params);
+  }
+
   // Helper methods for common sales & inventory use cases
   async getSalesData(
     timeGranularity:
@@ -614,6 +658,56 @@ class SalesInventoryAnalyticsService extends BaseAnalyticsService {
     return this.getAnalytics('units_purchased', {
       metrics: ['total_units_purchased', 'total_cost'],
       dimensions: ['time', 'product', 'vendor'],
+      time_granularity: timeGranularity,
+      use_mock_data: true,
+    });
+  }
+
+  // Additional inventory-specific methods
+  async getInventoryBalanceData(
+    timeGranularity:
+      | 'daily'
+      | 'weekly'
+      | 'monthly'
+      | 'quarterly'
+      | 'yearly' = 'monthly'
+  ) {
+    return this.getAnalytics('units_sold', {
+      metrics: ['total_units_sold'],
+      dimensions: ['time'],
+      time_granularity: timeGranularity,
+      use_mock_data: true,
+    });
+  }
+
+  async getCogsData(
+    timeGranularity:
+      | 'daily'
+      | 'weekly'
+      | 'monthly'
+      | 'quarterly'
+      | 'yearly' = 'monthly'
+  ) {
+    return this.getAnalytics('units_purchased', {
+      metrics: ['total_cost'],
+      dimensions: ['time'],
+      time_granularity: timeGranularity,
+      use_mock_data: true,
+    });
+  }
+
+  async getSalesRevenueData(
+    timeGranularity:
+      | 'daily'
+      | 'weekly'
+      | 'monthly'
+      | 'quarterly'
+      | 'yearly' = 'monthly'
+  ) {
+    // NOTE: sales_performance fact table may cause 400 errors - handle gracefully in components
+    return this.getAnalytics('sales_performance', {
+      metrics: ['total_revenue'],
+      dimensions: ['time'],
       time_granularity: timeGranularity,
       use_mock_data: true,
     });

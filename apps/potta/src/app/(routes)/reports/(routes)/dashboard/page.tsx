@@ -1,12 +1,6 @@
 'use client';
 import React, { useState, useEffect } from 'react';
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from '@potta/components/card';
-import KpiCard from '../../components/KpiCard';
+
 import {
   pottaAnalyticsService,
   KpiCategory,
@@ -20,6 +14,11 @@ import ExpensesDashboard from './components/ExpensesDashboard';
 import SalesDashboard from './components/SalesDashboard';
 import CFODashboard from './components/CFODashboard';
 import GeneralDashboard from './components/GeneralDashboard';
+import BudgetingDashboard from './components/BudgetingDashboard';
+import RevenueDashboard from './components/RevenueDashboard';
+import InvestorDashboard from './components/InvestorDashboard';
+import FinancialDashboard from './components/FinancialDashboard';
+import HeadcountDashboard from './components/HeadcountDashboard';
 
 const DashboardPage: React.FC = () => {
   const [availableKpis, setAvailableKpis] = useState<KpiDefinition[]>([]);
@@ -36,6 +35,11 @@ const DashboardPage: React.FC = () => {
     { id: 'expenses', name: 'Expenses Dashboard' },
     { id: 'inventory', name: 'Inventory Dashboard' },
     { id: 'cfo', name: 'CFO Dashboard' },
+    { id: 'budgeting', name: 'Budgeting and Forecasting' },
+    { id: 'revenue', name: 'Revenue Planning' },
+    { id: 'investor', name: 'Investor Reporting' },
+    { id: 'financial', name: 'P&L, BS, CF' },
+    { id: 'headcount', name: 'Headcount Planning' },
   ];
 
   // Load KPI data
@@ -68,7 +72,7 @@ const DashboardPage: React.FC = () => {
     <RootLayout>
       <div
         className={`space-y-6  ${
-          context?.layoutMode === 'sidebar' ? 'pl-10 ' : 'pl-5'
+          context?.layoutMode === 'sidebar' ? 'pl-8 ' : 'pl-5'
         } h-full pr-2 w-full`}
       >
         {/* Category Tabs */}
@@ -125,6 +129,16 @@ const DashboardPage: React.FC = () => {
           <SalesDashboard timeGranularity={timeGranularity} />
         ) : activeTab === 'cfo' ? (
           <CFODashboard timeGranularity={timeGranularity} />
+        ) : activeTab === 'budgeting' ? (
+          <BudgetingDashboard timeGranularity={timeGranularity} />
+        ) : activeTab === 'revenue' ? (
+          <RevenueDashboard timeGranularity={timeGranularity} />
+        ) : activeTab === 'investor' ? (
+          <InvestorDashboard timeGranularity={timeGranularity} />
+        ) : activeTab === 'financial' ? (
+          <FinancialDashboard timeGranularity={timeGranularity} />
+        ) : activeTab === 'headcount' ? (
+          <HeadcountDashboard timeGranularity={timeGranularity} />
         ) : (
           <div className="space-y-8">
             <div className="text-center py-12">

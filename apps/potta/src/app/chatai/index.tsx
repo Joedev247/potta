@@ -223,7 +223,7 @@ const ChatAI = ({ onClose }: ChatAIProps) => {
             <Bot className="w-5 h-5 text-white" />
           </div>
           <div>
-            <h3 className="font-semibold text-gray-900">AI Assistant</h3>
+            <h3 className="font-semibold text-gray-900">Livra AI</h3>
             <div className="flex items-center space-x-2">
               <div
                 className={`w-2 rounded-full h-2 ${
@@ -284,7 +284,9 @@ const ChatAI = ({ onClose }: ChatAIProps) => {
             <div className="bg-gray-100 p-3 rounded-md">
               <div className="flex items-center space-x-2">
                 <Loader2 className="w-4 h-4 animate-spin text-gray-600" />
-                <span className="text-sm text-gray-600">AI is thinking...</span>
+                <span className="text-sm text-gray-600">
+                  Livra is thinking...
+                </span>
               </div>
             </div>
           </div>
