@@ -131,7 +131,7 @@ export const breakEvenData = [
   { label: 'Variable Cost per Unit', value: 200 },
   { label: 'Selling Price per Unit', value: 500 },
   { label: 'Break-even Units', value: 34 },
-  { label: 'Break-even Sales (XAF)', value: 17000 },
+  { label: 'Break-even Sales (FCFA)', value: 17000 },
 ];
 
 export const scenarioAnalysisData = [
@@ -142,21 +142,21 @@ export const scenarioAnalysisData = [
 
 export const plColumns = [
   { key: 'label', label: 'Description' },
-  { key: 'value', label: 'Amount (XAF)', align: 'right' as const },
+  { key: 'value', label: 'Amount (FCFA)', align: 'right' as const },
   { key: 'percent', label: '% of Revenue', align: 'right' as const },
 ];
 export const balanceSheetColumns = [
   { key: 'label', label: 'Description' },
-  { key: 'value', label: 'Amount (XAF)', align: 'right' as const },
+  { key: 'value', label: 'Amount (FCFA)', align: 'right' as const },
 ];
 export const cashFlowColumns = [
   { key: 'label', label: 'Description' },
-  { key: 'value', label: 'Amount (XAF)', align: 'right' as const },
+  { key: 'value', label: 'Amount (FCFA)', align: 'right' as const },
 ];
 export const budgetActualsColumns = [
   { key: 'label', label: 'Description' },
-  { key: 'budget', label: 'Budget (XAF)', align: 'right' as const },
-  { key: 'actual', label: 'Actual (XAF)', align: 'right' as const },
+  { key: 'budget', label: 'Budget (FCFA)', align: 'right' as const },
+  { key: 'actual', label: 'Actual (FCFA)', align: 'right' as const },
 ];
 export const financialRatiosColumns = [
   { key: 'label', label: 'Ratio' },
@@ -164,7 +164,7 @@ export const financialRatiosColumns = [
 ];
 export const salesForecastColumns = [
   { key: 'period', label: 'Period' },
-  { key: 'sales', label: 'Sales (XAF)', align: 'right' as const },
+  { key: 'sales', label: 'Sales (FCFA)', align: 'right' as const },
 ];
 export const breakEvenColumns = [
   { key: 'label', label: 'Description' },
@@ -172,6 +172,6 @@ export const breakEvenColumns = [
 ];
 export const scenarioAnalysisColumns = [
   { key: 'scenario', label: 'Scenario' },
-  { key: 'revenue', label: 'Revenue (XAF)', align: 'right' as const },
-  { key: 'profit', label: 'Net Profit (XAF)', align: 'right' as const },
+  { key: 'revenue', label: 'Revenue (FCFA)', align: 'right' as const },
+  { key: 'profit', label: 'Net Profit (FCFA)', align: 'right' as const },
 ];

@@ -88,7 +88,7 @@ const KpiCard: React.FC<KpiCardProps> = ({
     if (unit === 'currency' || unit === 'money') {
       return new Intl.NumberFormat('en-US', {
         style: 'currency',
-        currency: 'XAF',
+        currency: 'FCFA',
         minimumFractionDigits: 0,
         maximumFractionDigits: 0,
       }).format(value);

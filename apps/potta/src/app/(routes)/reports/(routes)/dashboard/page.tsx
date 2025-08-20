@@ -72,7 +72,7 @@ const DashboardPage: React.FC = () => {
     <RootLayout>
       <div
         className={`space-y-6  ${
-          context?.layoutMode === 'sidebar' ? 'pl-8 ' : 'pl-5'
+          context?.layoutMode === 'sidebar' ? 'pl-10 ' : 'pl-5'
         } h-full pr-2 w-full`}
       >
         {/* Category Tabs */}

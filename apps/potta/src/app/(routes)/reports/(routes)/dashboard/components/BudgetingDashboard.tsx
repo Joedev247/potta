@@ -43,7 +43,7 @@ const BudgetingDashboard: React.FC<BudgetingDashboardProps> = ({
   const [kpiData, setKpiData] = useState([
     {
       title: 'Revenue FY',
-      value: '0 XAF',
+      value: '0 FCFA',
       trend: '0% vs Base Scenario',
       isPositive: true,
       icon: TrendingUp,
@@ -57,7 +57,7 @@ const BudgetingDashboard: React.FC<BudgetingDashboardProps> = ({
     },
     {
       title: 'Opex FY',
-      value: '0 XAF',
+      value: '0 FCFA',
       trend: '0% vs Base Scenario',
       isPositive: false,
       icon: TrendingDown,
@@ -134,7 +134,7 @@ const BudgetingDashboard: React.FC<BudgetingDashboardProps> = ({
           color: '#6b7280',
           font: { weight: 500, size: 12 },
           callback: function (value: any) {
-            return `${value.toLocaleString()} XAF`;
+            return `${value.toLocaleString()} FCFA`;
           },
         },
         beginAtZero: true,
@@ -145,58 +145,58 @@ const BudgetingDashboard: React.FC<BudgetingDashboardProps> = ({
   const [plData, setPlData] = useState([
     {
       item: 'Revenue',
-      budget: '0 XAF',
-      scenario: '0 XAF',
-      variance: '0 XAF',
+      budget: '0 FCFA',
+      scenario: '0 FCFA',
+      variance: '0 FCFA',
       percentage: '0.00%',
       isPositive: true,
     },
     {
       item: 'Cost of Sales',
-      budget: '0 XAF',
-      scenario: '0 XAF',
-      variance: '0 XAF',
+      budget: '0 FCFA',
+      scenario: '0 FCFA',
+      variance: '0 FCFA',
       percentage: '0.00%',
       isPositive: false,
     },
     {
       item: 'Gross Profit',
-      budget: '0 XAF',
-      scenario: '0 XAF',
-      variance: '0 XAF',
+      budget: '0 FCFA',
+      scenario: '0 FCFA',
+      variance: '0 FCFA',
       percentage: '0.00%',
       isPositive: true,
     },
     {
       item: 'Total Expenses',
-      budget: '0 XAF',
-      scenario: '0 XAF',
-      variance: '0 XAF',
+      budget: '0 FCFA',
+      scenario: '0 FCFA',
+      variance: '0 FCFA',
       percentage: '0.00%',
       isPositive: false,
       isExpandable: true,
       subItems: [
         {
           item: 'R&D',
-          budget: '0 XAF',
-          scenario: '0 XAF',
-          variance: '0 XAF',
+          budget: '0 FCFA',
+          scenario: '0 FCFA',
+          variance: '0 FCFA',
           percentage: '0.00%',
           isPositive: true,
         },
         {
           item: 'S&M',
-          budget: '0 XAF',
-          scenario: '0 XAF',
-          variance: '0 XAF',
+          budget: '0 FCFA',
+          scenario: '0 FCFA',
+          variance: '0 FCFA',
           percentage: '0.00%',
           isPositive: false,
         },
         {
           item: 'G&A',
-          budget: '0 XAF',
-          scenario: '0 XAF',
-          variance: '0 XAF',
+          budget: '0 FCFA',
+          scenario: '0 FCFA',
+          variance: '0 FCFA',
           percentage: '0.00%',
           isPositive: true,
         },
@@ -271,7 +271,7 @@ const BudgetingDashboard: React.FC<BudgetingDashboardProps> = ({
             item.title === 'Revenue FY'
               ? {
                   ...item,
-                  value: `${currentRevenue.toLocaleString()} XAF`,
+                  value: `${currentRevenue.toLocaleString()} FCFA`,
                   trend: `${
                     revenueGrowth >= 0 ? '+' : ''
                   }${revenueGrowth.toFixed(1)}% vs Base Scenario`,
@@ -300,9 +300,9 @@ const BudgetingDashboard: React.FC<BudgetingDashboardProps> = ({
             item.item === 'Revenue'
               ? {
                   ...item,
-                  budget: `${currentRevenue.toLocaleString()} XAF`,
-                  scenario: `${(currentRevenue * 1.15).toLocaleString()} XAF`,
-                  variance: `${(currentRevenue * 0.15).toLocaleString()} XAF`,
+                  budget: `${currentRevenue.toLocaleString()} FCFA`,
+                  scenario: `${(currentRevenue * 1.15).toLocaleString()} FCFA`,
+                  variance: `${(currentRevenue * 0.15).toLocaleString()} FCFA`,
                   percentage: '15.00%',
                 }
               : item
@@ -341,7 +341,7 @@ const BudgetingDashboard: React.FC<BudgetingDashboardProps> = ({
             item.title === 'Opex FY'
               ? {
                   ...item,
-                  value: `${currentOpex.toLocaleString()} XAF`,
+                  value: `${currentOpex.toLocaleString()} FCFA`,
                   trend: `${opexGrowth >= 0 ? '+' : ''}${opexGrowth.toFixed(
                     1
                   )}% vs Base Scenario`,
@@ -356,9 +356,9 @@ const BudgetingDashboard: React.FC<BudgetingDashboardProps> = ({
             item.item === 'Total Expenses'
               ? {
                   ...item,
-                  budget: `${currentOpex.toLocaleString()} XAF`,
-                  scenario: `${(currentOpex * 1.04).toLocaleString()} XAF`,
-                  variance: `${(currentOpex * 0.04).toLocaleString()} XAF`,
+                  budget: `${currentOpex.toLocaleString()} FCFA`,
+                  scenario: `${(currentOpex * 1.04).toLocaleString()} FCFA`,
+                  variance: `${(currentOpex * 0.04).toLocaleString()} FCFA`,
                   percentage: '4.00%',
                 }
               : item
@@ -376,27 +376,27 @@ const BudgetingDashboard: React.FC<BudgetingDashboardProps> = ({
                       const rndAmount = currentOpex * 0.4;
                       return {
                         ...subItem,
-                        budget: `${rndAmount.toLocaleString()} XAF`,
-                        scenario: `${(rndAmount * 1.04).toLocaleString()} XAF`,
-                        variance: `${(rndAmount * 0.04).toLocaleString()} XAF`,
+                        budget: `${rndAmount.toLocaleString()} FCFA`,
+                        scenario: `${(rndAmount * 1.04).toLocaleString()} FCFA`,
+                        variance: `${(rndAmount * 0.04).toLocaleString()} FCFA`,
                         percentage: '4.00%',
                       };
                     } else if (subItem.item === 'S&M') {
                       const smAmount = currentOpex * 0.25;
                       return {
                         ...subItem,
-                        budget: `${smAmount.toLocaleString()} XAF`,
-                        scenario: `${(smAmount * 1.04).toLocaleString()} XAF`,
-                        variance: `${(smAmount * 0.04).toLocaleString()} XAF`,
+                        budget: `${smAmount.toLocaleString()} FCFA`,
+                        scenario: `${(smAmount * 1.04).toLocaleString()} FCFA`,
+                        variance: `${(smAmount * 0.04).toLocaleString()} FCFA`,
                         percentage: '4.00%',
                       };
                     } else if (subItem.item === 'G&A') {
                       const gaAmount = currentOpex * 0.35;
                       return {
                         ...subItem,
-                        budget: `${gaAmount.toLocaleString()} XAF`,
-                        scenario: `${(gaAmount * 1.04).toLocaleString()} XAF`,
-                        variance: `${(gaAmount * 0.04).toLocaleString()} XAF`,
+                        budget: `${gaAmount.toLocaleString()} FCFA`,
+                        scenario: `${(gaAmount * 1.04).toLocaleString()} FCFA`,
+                        variance: `${(gaAmount * 0.04).toLocaleString()} FCFA`,
                         percentage: '4.00%',
                       };
                     }
@@ -417,9 +417,9 @@ const BudgetingDashboard: React.FC<BudgetingDashboardProps> = ({
             item.item === 'Cost of Sales'
               ? {
                   ...item,
-                  budget: `${currentCogs.toLocaleString()} XAF`,
-                  scenario: `${(currentCogs * 1.1).toLocaleString()} XAF`,
-                  variance: `${(currentCogs * 0.1).toLocaleString()} XAF`,
+                  budget: `${currentCogs.toLocaleString()} FCFA`,
+                  scenario: `${(currentCogs * 1.1).toLocaleString()} FCFA`,
+                  variance: `${(currentCogs * 0.1).toLocaleString()} FCFA`,
                   percentage: '10.00%',
                 }
               : item
@@ -438,11 +438,11 @@ const BudgetingDashboard: React.FC<BudgetingDashboardProps> = ({
               item.item === 'Gross Profit'
                 ? {
                     ...item,
-                    budget: `${grossProfit.toLocaleString()} XAF`,
-                    scenario: `${grossProfitScenario.toLocaleString()} XAF`,
+                    budget: `${grossProfit.toLocaleString()} FCFA`,
+                    scenario: `${grossProfitScenario.toLocaleString()} FCFA`,
                     variance: `${(
                       grossProfitScenario - grossProfit
-                    ).toLocaleString()} XAF`,
+                    ).toLocaleString()} FCFA`,
                     percentage: '15.00%',
                   }
                 : item

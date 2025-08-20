@@ -65,7 +65,7 @@ const PLAccountTable: React.FC<PLAccountTableProps> = ({ data }) => {
             </td>
             <td className="py-2 px-4 truncate text-right font-medium">
               {row.value !== undefined
-                ? `${row.value.toLocaleString()} XAF`
+                ? `${row.value.toLocaleString()} FCFA`
                 : ''}
             </td>
             <td className="py-2 px-4 truncate text-right font-medium">
@@ -93,7 +93,9 @@ const PLAccountTable: React.FC<PLAccountTableProps> = ({ data }) => {
             <th className="text-left font-semibold py-2 px-4 text-gray-800">
               Description
             </th>
-            <th className="text-right py-2 px-4 text-gray-800">Amount (XAF)</th>
+            <th className="text-right py-2 px-4 text-gray-800">
+              Amount (FCFA)
+            </th>
             <th className="text-right py-2 px-4 text-gray-800">% of Revenue</th>
           </tr>
         </thead>

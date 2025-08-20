@@ -103,7 +103,7 @@ const FinancialDashboard: React.FC<FinancialDashboardProps> = ({
     {
       item: 'Revenue',
       actuals: 0,
-      budget: 0.077, // 46.6m USD = ~77k XAF (assuming 1 USD = 600 XAF)
+      budget: 0.077, // 46.6m USD = ~77k FCFA (assuming 1 USD = 600 FCFA)
       variance: 0,
       variancePercent: 0.0,
       isNegative: false,
@@ -111,7 +111,7 @@ const FinancialDashboard: React.FC<FinancialDashboardProps> = ({
     {
       item: 'Cost of Sales',
       actuals: 0,
-      budget: 0.02, // 11.8m USD = ~20k XAF
+      budget: 0.02, // 11.8m USD = ~20k FCFA
       variance: 0,
       variancePercent: 0.0,
       isNegative: false,
@@ -119,7 +119,7 @@ const FinancialDashboard: React.FC<FinancialDashboardProps> = ({
     {
       item: 'Gross Profit',
       actuals: 0,
-      budget: 0.058, // 34.8m USD = ~58k XAF
+      budget: 0.058, // 34.8m USD = ~58k FCFA
       variance: 0,
       variancePercent: 0.0,
       isNegative: false,
@@ -127,7 +127,7 @@ const FinancialDashboard: React.FC<FinancialDashboardProps> = ({
     {
       item: 'Total Expenses',
       actuals: 0,
-      budget: 0.037, // 22.1m USD = ~37k XAF
+      budget: 0.037, // 22.1m USD = ~37k FCFA
       variance: 0,
       variancePercent: 0.0,
       isNegative: false,
@@ -135,7 +135,7 @@ const FinancialDashboard: React.FC<FinancialDashboardProps> = ({
         {
           item: 'R&D',
           actuals: 0,
-          budget: 0.009, // 5.2m USD = ~9k XAF
+          budget: 0.009, // 5.2m USD = ~9k FCFA
           variance: 0,
           variancePercent: 0.0,
           isNegative: false,
@@ -143,7 +143,7 @@ const FinancialDashboard: React.FC<FinancialDashboardProps> = ({
         {
           item: 'S&M',
           actuals: 0,
-          budget: 0.01, // 5.7m USD = ~10k XAF
+          budget: 0.01, // 5.7m USD = ~10k FCFA
           variance: 0,
           variancePercent: 0.0,
           isNegative: false,
@@ -151,7 +151,7 @@ const FinancialDashboard: React.FC<FinancialDashboardProps> = ({
         {
           item: 'G&A',
           actuals: 0,
-          budget: 0.019, // 11.2m USD = ~19k XAF
+          budget: 0.019, // 11.2m USD = ~19k FCFA
           variance: 0,
           variancePercent: 0.0,
           isNegative: false,
@@ -161,7 +161,7 @@ const FinancialDashboard: React.FC<FinancialDashboardProps> = ({
     {
       item: 'EBITDA',
       actuals: 0,
-      budget: 0.021, // 12.7m USD = ~21k XAF
+      budget: 0.021, // 12.7m USD = ~21k FCFA
       variance: 0,
       variancePercent: 0.0,
       isNegative: false,
@@ -169,7 +169,7 @@ const FinancialDashboard: React.FC<FinancialDashboardProps> = ({
     {
       item: 'Depreciation and Amortization',
       actuals: 0,
-      budget: 0.0004, // 261k USD = ~0.4k XAF
+      budget: 0.0004, // 261k USD = ~0.4k FCFA
       variance: 0,
       variancePercent: 0.0,
       isNegative: false,
@@ -230,7 +230,7 @@ const FinancialDashboard: React.FC<FinancialDashboardProps> = ({
             const value = context.parsed.y;
             return `${context.label}: ${value >= 0 ? '+' : ''}${Math.abs(
               value
-            ).toLocaleString()} XAF`;
+            ).toLocaleString()} FCFA`;
           },
         },
       },
@@ -246,12 +246,12 @@ const FinancialDashboard: React.FC<FinancialDashboardProps> = ({
           color: '#6b7280',
           font: { weight: 500, size: 12 },
           callback: function (value: any) {
-            return `${value.toLocaleString()} XAF`;
+            return `${value.toLocaleString()} FCFA`;
           },
         },
         beginAtZero: false,
-        min: 0, // Start from 0 XAF
-        max: 10000, // Go up to 10,000 XAF for better waterfall visualization
+        min: 0, // Start from 0 FCFA
+        max: 10000, // Go up to 10,000 FCFA for better waterfall visualization
       },
     },
     elements: {
@@ -287,7 +287,7 @@ const FinancialDashboard: React.FC<FinancialDashboardProps> = ({
             const percentage = ((value / total) * 100).toFixed(1);
             return `${
               context.label
-            }: ${value.toLocaleString()} XAF (${percentage}%)`;
+            }: ${value.toLocaleString()} FCFA (${percentage}%)`;
           },
         },
       },
@@ -302,11 +302,11 @@ const FinancialDashboard: React.FC<FinancialDashboardProps> = ({
 
   const formatCurrency = (value: number) => {
     if (value >= 1) {
-      return `${value.toFixed(1)}m XAF`;
+      return `${value.toFixed(1)}m FCFA`;
     } else if (value >= 0.001) {
-      return `${(value * 1000).toFixed(0)}k XAF`;
+      return `${(value * 1000).toFixed(0)}k FCFA`;
     } else {
-      return `${(value * 1000000).toFixed(0)} XAF`;
+      return `${(value * 1000000).toFixed(0)} FCFA`;
     }
   };
 
@@ -615,7 +615,7 @@ const FinancialDashboard: React.FC<FinancialDashboardProps> = ({
 
         console.log('💰 Current cash:', currentCash);
         console.log('💰 Previous cash:', previousCash);
-        console.log('💰 Current cash in XAF:', currentCash);
+        console.log('💰 Current cash in FCFA:', currentCash);
 
         const cashTrend =
           previousCash > 0
@@ -630,8 +630,8 @@ const FinancialDashboard: React.FC<FinancialDashboardProps> = ({
                 ...item,
                 value:
                   currentCash > 0
-                    ? `${currentCash.toLocaleString()} XAF`
-                    : '0 XAF',
+                    ? `${currentCash.toLocaleString()} FCFA`
+                    : '0 FCFA',
                 trend:
                   currentCash > 0
                     ? `${cashTrend >= 0 ? '↑' : '↓'} ${Math.abs(
@@ -644,8 +644,8 @@ const FinancialDashboard: React.FC<FinancialDashboardProps> = ({
                 ...item,
                 value:
                   currentCash > 0
-                    ? `${currentCash.toLocaleString()} XAF`
-                    : '0 XAF',
+                    ? `${currentCash.toLocaleString()} FCFA`
+                    : '0 FCFA',
                 trend:
                   currentCash > 0
                     ? `${cashTrend >= 0 ? '↑' : '↓'} ${Math.abs(
@@ -677,7 +677,7 @@ const FinancialDashboard: React.FC<FinancialDashboardProps> = ({
             if (item.title === 'Cash and Equivalents') {
               return {
                 ...item,
-                value: `${currentCash.toLocaleString()} XAF`,
+                value: `${currentCash.toLocaleString()} FCFA`,
                 trend: `${cashTrend >= 0 ? '↑' : '↓'} ${Math.abs(
                   cashTrend
                 ).toFixed(1)}% vs Plan`,
@@ -697,7 +697,7 @@ const FinancialDashboard: React.FC<FinancialDashboardProps> = ({
               const equity = assets - liabilities;
               return {
                 ...item,
-                value: `${equity.toLocaleString()} XAF`,
+                value: `${equity.toLocaleString()} FCFA`,
                 trend: `${equity >= 0 ? '↑' : '↓'} ${Math.abs(equity).toFixed(
                   1
                 )}% vs Plan`,
@@ -722,7 +722,7 @@ const FinancialDashboard: React.FC<FinancialDashboardProps> = ({
             item.title === 'Total Assets'
               ? {
                   ...item,
-                  value: `${currentAR.toLocaleString()} XAF`,
+                  value: `${currentAR.toLocaleString()} FCFA`,
                   trend: `${arTrend >= 0 ? '↑' : '↓'} ${Math.abs(
                     arTrend
                   ).toFixed(1)}% vs Plan`,
@@ -750,12 +750,12 @@ const FinancialDashboard: React.FC<FinancialDashboardProps> = ({
             {
               ...prev.datasets[0],
               data: [
-                currentCash, // Opening (actual XAF value)
-                currentRevenue, // Revenue (actual XAF value)
-                -currentCogs, // COGS (negative, actual XAF value)
-                -currentOpex, // OPEX (negative, actual XAF value)
-                -500, // Other (placeholder, actual XAF value)
-                currentCash + currentRevenue - currentCogs - currentOpex - 500, // Closing (actual XAF value)
+                currentCash, // Opening (actual FCFA value)
+                currentRevenue, // Revenue (actual FCFA value)
+                -currentCogs, // COGS (negative, actual FCFA value)
+                -currentOpex, // OPEX (negative, actual FCFA value)
+                -500, // Other (placeholder, actual FCFA value)
+                currentCash + currentRevenue - currentCogs - currentOpex - 500, // Closing (actual FCFA value)
               ],
             },
           ],
@@ -930,7 +930,7 @@ const FinancialDashboard: React.FC<FinancialDashboardProps> = ({
           <Card className="bg-white border-0">
             <CardHeader className="pb-4">
               <CardTitle className="text-lg font-semibold text-gray-900">
-                Consolidated Income Statement - FY'25 (XAF)
+                Consolidated Income Statement - FY'25 (FCFA)
               </CardTitle>
             </CardHeader>
             <CardContent>
@@ -952,7 +952,7 @@ const FinancialDashboard: React.FC<FinancialDashboardProps> = ({
           <Card className="bg-white border-0">
             <CardHeader className="pb-4">
               <CardTitle className="text-lg font-semibold text-gray-900">
-                OPEX Summary - Jan'25 (XAF)
+                OPEX Summary - Jan'25 (FCFA)
               </CardTitle>
             </CardHeader>
             <CardContent>
@@ -1001,8 +1001,6 @@ const FinancialDashboard: React.FC<FinancialDashboardProps> = ({
 
   return (
     <div className="space-y-8">
-   
-
       {/* Top Section - Cash Flow and Balance Sheet Metrics */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Consolidated Cash Flow Metrics */}
@@ -1092,7 +1090,7 @@ const FinancialDashboard: React.FC<FinancialDashboardProps> = ({
         <Card className="bg-white border-0">
           <CardHeader className="pb-4">
             <CardTitle className="text-lg font-semibold text-gray-900">
-              Consolidated Income Statement - FY'25 (XAF)
+              Consolidated Income Statement - FY'25 (FCFA)
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -1188,7 +1186,7 @@ const FinancialDashboard: React.FC<FinancialDashboardProps> = ({
         <Card className="bg-white border-0">
           <CardHeader className="pb-4">
             <CardTitle className="text-lg font-semibold text-gray-900">
-              OPEX Summary - Jan'25 (XAF)
+              OPEX Summary - Jan'25 (FCFA)
             </CardTitle>
           </CardHeader>
           <CardContent>

@@ -67,12 +67,12 @@ const plTableColumns = [
     ),
   },
   {
-    name: 'Amount (XAF)',
+    name: 'Amount (FCFA)',
     selector: (row: PLRow) => row.value,
     sortable: false,
     width: '30%',
     cell: (row: PLRow) =>
-      row.value !== undefined ? `${row.value.toLocaleString()} XAF` : '',
+      row.value !== undefined ? `${row.value.toLocaleString()} FCFA` : '',
     right: true,
   },
   {
