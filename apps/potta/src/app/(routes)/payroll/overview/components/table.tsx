@@ -469,7 +469,7 @@ const PayrollTable = () => {
       {isLoading ? (
         <TableSkeleton />
       ) : (
-        <DataGrid data={filteredData} columns={columns} loading={false} />
+        <DataGrid data={filteredData} columns={columns} loading={false}/>
       )}
     </div>
   );
