@@ -7,6 +7,7 @@ export interface OrganizationalStructure {
   level: number;
   parent_structure_id?: string;
   location_id?: string;
+  sub_business_unit_id?: string; // Updated field name
   current_employees: number;
   max_employees: number;
   budget: number;
@@ -48,6 +49,7 @@ export interface Location {
   website?: string;
   description?: string;
   capacity?: number;
+  geo_unit_id?: string; // Updated field name
   organization_id: string;
   organ_structure_template_id?: string;
   created_at?: string;
@@ -129,9 +131,47 @@ export interface Template {
   updated_at?: string;
 }
 
-export interface OrgChartNode extends OrganizationalStructure {
-  children: OrgChartNode[];
-  employees: UserAssignment[];
+// New interface for the main organization
+export interface Organization {
+  id: string;
+  name: string;
+  logo?: string;
+  description?: string;
+  headquarters_location?: string;
+  total_employees?: number;
+  annual_revenue?: number;
+  established_year?: number;
+  is_active: boolean;
+  created_at?: string;
+  updated_at?: string;
+}
+
+// Updated OrgChartNode to support different node types
+export interface OrgChartNode {
+  id: string;
+  type:
+    | 'organization'
+    | 'geographical'
+    | 'location'
+    | 'business'
+    | 'structure'
+    | 'employee';
+  data: {
+    label: string;
+    description?: string;
+    icon?: string;
+    color?: string;
+    entity?:
+      | Organization
+      | GeographicalUnit
+      | Location
+      | SubBusiness
+      | OrganizationalStructure
+      | UserAssignment;
+  };
+  position: { x: number; y: number };
+  children?: OrgChartNode[];
+  employees?: UserAssignment[];
   expanded?: boolean;
 }
 
@@ -141,7 +181,13 @@ export interface OrgChartFilters {
   geographicalUnit: string;
 }
 
-export type ViewMode = 'hierarchy' | 'location' | 'business' | 'geographical';
+// Updated ViewMode to match our new structure
+export type ViewMode =
+  | 'general'
+  | 'geographical'
+  | 'business'
+  | 'organizational'
+  | 'employees';
 
 export interface OrgChartApiResponse<T> {
   data: T;
@@ -156,3 +202,12 @@ export interface PaginatedResponse<T> {
   limit: number;
   totalPages: number;
 }
+
+// Node action types
+export type NodeAction =
+  | 'assign_employee'
+  | 'edit'
+  | 'delete'
+  | 'view_details'
+  | 'add_child'
+  | 'copy_info';

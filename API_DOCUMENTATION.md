@@ -191,15 +191,16 @@ POST /api/organizations/{organizationId}/organizational-structures
 
 ```json
 {
-  "department_name": "Engineering Department",
-  "description": "Software engineering and development team",
-  "structure_type": "TECH_STARTUP",
+  "department_name": "Primary School",
+  "description": "Primary education in Akwa",
+  "structure_type": "DIVISION",
   "parent_structure_id": "123e4567-e89b-12d3-a456-426614174000",
   "location_id": "123e4567-e89b-12d3-a456-426614174000",
+  "sub_business_unit_id": "123e4567-e89b-12d3-a456-426614174000",
   "organization_id": "123e4567-e89b-12d3-a456-426614174000",
-  "max_employees": 25,
-  "current_employees": 15,
-  "budget": 500000,
+  "max_employees": 50,
+  "current_employees": 25,
+  "budget": 1000000,
   "is_active": true
 }
 ```
@@ -209,17 +210,18 @@ POST /api/organizations/{organizationId}/organizational-structures
 ```json
 {
   "id": "123e4567-e89b-12d3-a456-426614174000",
-  "department_name": "Engineering Department",
-  "description": "Software engineering and development team",
-  "structure_type": "TECH_STARTUP",
-  "path": "root.engineering",
+  "department_name": "Primary School",
+  "description": "Primary education in Akwa",
+  "structure_type": "DIVISION",
+  "path": "root.primary-school",
   "level": 2,
   "parent_structure_id": "123e4567-e89b-12d3-a456-426614174000",
   "location_id": "123e4567-e89b-12d3-a456-426614174000",
+  "sub_business_unit_id": "123e4567-e89b-12d3-a456-426614174000",
   "organization_id": "123e4567-e89b-12d3-a456-426614174000",
-  "max_employees": 25,
-  "current_employees": 15,
-  "budget": 500000,
+  "max_employees": 50,
+  "current_employees": 25,
+  "budget": 1000000,
   "is_active": true,
   "createdAt": "2024-01-01T00:00:00.000Z",
   "updatedAt": "2024-01-01T00:00:00.000Z"
@@ -248,14 +250,15 @@ PATCH /api/organizations/{organizationId}/organizational-structures/{id}
 
 ```json
 {
-  "department_name": "Engineering Department",
-  "description": "Software engineering and development team",
-  "structure_type": "TECH_STARTUP",
+  "department_name": "Primary School",
+  "description": "Primary education in Akwa",
+  "structure_type": "DIVISION",
   "parent_structure_id": "123e4567-e89b-12d3-a456-426614174000",
   "location_id": "123e4567-e89b-12d3-a456-426614174000",
-  "max_employees": 25,
-  "current_employees": 15,
-  "budget": 500000,
+  "sub_business_unit_id": "123e4567-e89b-12d3-a456-426614174000",
+  "max_employees": 50,
+  "current_employees": 25,
+  "budget": 1000000,
   "is_active": true
 }
 ```
@@ -401,8 +404,8 @@ POST /api/organizations/{organizationId}/locations
 
 ```json
 {
-  "location_name": "Instanvi Douala Office",
-  "address": "123 Rue de la Paix, Douala, Cameroon",
+  "location_name": "Akwa",
+  "address": "Akwa, Douala, Cameroon",
   "city": "Douala",
   "state": "Littoral",
   "country": "Cameroon",
@@ -410,10 +413,11 @@ POST /api/organizations/{organizationId}/locations
   "latitude": 4.0511,
   "longitude": 9.7679,
   "phone": "+237 123 456 789",
-  "email": "douala@instanvi.com",
-  "website": "https://instanvi.com/douala",
-  "description": "Main office for Instanvi in Douala",
-  "capacity": 50,
+  "email": "akwa@instanvi.com",
+  "website": "https://instanvi.com/akwa",
+  "description": "Akwa neighborhood in Douala",
+  "capacity": 100,
+  "geo_unit_id": "123e4567-e89b-12d3-a456-426614174000",
   "organization_id": "123e4567-e89b-12d3-a456-426614174000"
 }
 ```
@@ -434,8 +438,8 @@ PUT /api/organizations/{organizationId}/locations/{id}
 
 ```json
 {
-  "location_name": "Instanvi Douala Office",
-  "address": "123 Rue de la Paix, Douala, Cameroon",
+  "location_name": "Akwa",
+  "address": "Akwa, Douala, Cameroon",
   "city": "Douala",
   "state": "Littoral",
   "country": "Cameroon",
@@ -443,10 +447,11 @@ PUT /api/organizations/{organizationId}/locations/{id}
   "latitude": 4.0511,
   "longitude": 9.7679,
   "phone": "+237 123 456 789",
-  "email": "douala@instanvi.com",
-  "website": "https://instanvi.com/douala",
-  "description": "Main office for Instanvi in Douala",
-  "capacity": 50
+  "email": "akwa@instanvi.com",
+  "website": "https://instanvi.com/akwa",
+  "description": "Akwa neighborhood in Douala",
+  "capacity": 100,
+  "geo_unit_id": "123e4567-e89b-12d3-a456-426614174000"
 }
 ```
 

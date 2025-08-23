@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { IoClose } from 'react-icons/io5';
 import { SubBusiness } from '../types';
 import { orgChartApi } from '../utils/api';
 
@@ -18,34 +19,63 @@ export default function SubBusinessModal({
   onSave,
 }: SubBusinessModalProps) {
   const [formData, setFormData] = useState<Partial<SubBusiness>>({
-    business_name: '',
+    sub_business_name: '',
     description: '',
-    business_type: 'DIVISION',
-    parent_business_id: '',
-    level: 1,
-    organization_id: '8f79d19a-5319-4783-8ddc-c863d98ecc16', // Default org ID
+    industry: 'Technology',
+    parent_sub_business_id: '',
+    organization_id: '500e05a0-c688-4c4a-9661-ae152e00d0c5', // Default org ID
+    max_employees: 50,
+    annual_revenue: 5000000,
+    established_year: new Date().getFullYear(),
+    is_active: true,
+    website: '',
+    contact_email: '',
+    contact_phone: '',
   });
 
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const [availableSubBusinesses, setAvailableSubBusinesses] = useState<
+    SubBusiness[]
+  >([]);
 
   useEffect(() => {
     if (isOpen) {
+      loadSubBusinesses();
       if (subBusiness) {
         setFormData(subBusiness);
       } else {
         setFormData({
-          business_name: '',
+          sub_business_name: '',
           description: '',
-          business_type: 'DIVISION',
-          parent_business_id: '',
-          level: 1,
-          organization_id: '8f79d19a-5319-4783-8ddc-c863d98ecc16', // Default org ID
+          industry: 'Technology',
+          parent_sub_business_id: '',
+          organization_id: '500e05a0-c688-4c4a-9661-ae152e00d0c5',
+          max_employees: 50,
+          current_employees: 0,
+          annual_revenue: 5000000,
+          established_year: new Date().getFullYear(),
+          is_active: true,
+          website: '',
+          contact_email: '',
+          contact_phone: '',
         });
       }
       setErrors({});
     }
   }, [isOpen, subBusiness]);
+
+  const loadSubBusinesses = async () => {
+    try {
+      const response = await orgChartApi.getSubBusinesses();
+      const subBusinessesData = Array.isArray(response.data)
+        ? response.data
+        : (response.data as any)?.data || [];
+      setAvailableSubBusinesses(subBusinessesData);
+    } catch (error) {
+      console.error('Error loading sub-businesses:', error);
+    }
+  };
 
   const handleInputChange = (field: string, value: any) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
@@ -57,12 +87,23 @@ export default function SubBusinessModal({
   const validateForm = () => {
     const newErrors: Record<string, string> = {};
 
-    if (!formData.business_name?.trim()) {
-      newErrors.business_name = 'Business name is required';
+    if (!formData.sub_business_name?.trim()) {
+      newErrors.sub_business_name = 'Sub-business name is required';
     }
 
     if (!formData.description?.trim()) {
       newErrors.description = 'Description is required';
+    }
+
+    if (formData.max_employees && formData.max_employees <= 0) {
+      newErrors.max_employees = 'Max employees must be greater than 0';
+    }
+
+    if (
+      formData.contact_email &&
+      !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.contact_email)
+    ) {
+      newErrors.contact_email = 'Please enter a valid email address';
     }
 
     setErrors(newErrors);
@@ -101,42 +142,32 @@ export default function SubBusinessModal({
               onClick={onClose}
               className="text-gray-400 hover:text-gray-600"
             >
-              <svg
-                className="w-6 h-6"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M6 18L18 6M6 6l12 12"
-                />
-              </svg>
+              <IoClose className="w-6 h-6" />
             </button>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-6">
-            {/* Business Name */}
+            {/* Sub-Business Name */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                Business Name *
+                Sub-Business Name *
               </label>
               <input
                 type="text"
-                value={formData.business_name || ''}
+                value={formData.sub_business_name || ''}
                 onChange={(e) =>
-                  handleInputChange('business_name', e.target.value)
+                  handleInputChange('sub_business_name', e.target.value)
                 }
                 className={`w-full px-3 py-2 border focus:ring-2 focus:ring-[#237804] focus:border-transparent ${
-                  errors.business_name ? 'border-red-500' : 'border-gray-300'
+                  errors.sub_business_name
+                    ? 'border-red-500'
+                    : 'border-gray-300'
                 }`}
-                placeholder="Enter business name"
+                placeholder="Enter sub-business name"
               />
-              {errors.business_name && (
+              {errors.sub_business_name && (
                 <p className="mt-1 text-sm text-red-600">
-                  {errors.business_name}
+                  {errors.sub_business_name}
                 </p>
               )}
             </div>
@@ -164,27 +195,183 @@ export default function SubBusinessModal({
               )}
             </div>
 
-            {/* Business Type */}
+            {/* Industry */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                Business Type
+                Industry
+              </label>
+              <input
+                type="text"
+                value={formData.industry || ''}
+                onChange={(e) => handleInputChange('industry', e.target.value)}
+                className="w-full px-3 py-2 border border-gray-300 focus:ring-2 focus:ring-[#237804] focus:border-transparent"
+                placeholder="e.g., Technology, Finance, Healthcare"
+              />
+            </div>
+
+            {/* Parent Sub-Business */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Parent Sub-Business
               </label>
               <select
-                value={formData.business_type || 'DIVISION'}
+                value={formData.parent_sub_business_id || ''}
                 onChange={(e) =>
-                  handleInputChange('business_type', e.target.value)
+                  handleInputChange(
+                    'parent_sub_business_id',
+                    e.target.value || null
+                  )
                 }
                 className="w-full px-3 py-2 border border-gray-300 focus:ring-2 focus:ring-[#237804] focus:border-transparent"
               >
-                <option value="DIVISION">Division</option>
-                <option value="DEPARTMENT">Department</option>
-                <option value="UNIT">Unit</option>
-                <option value="TEAM">Team</option>
-                <option value="PROJECT">Project</option>
+                <option value="">No Parent</option>
+                {availableSubBusinesses.map((subBusiness) => (
+                  <option key={subBusiness.id} value={subBusiness.id}>
+                    {subBusiness.sub_business_name}
+                  </option>
+                ))}
               </select>
             </div>
 
-            
+            {/* Max Employees */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Max Employees
+              </label>
+              <input
+                type="number"
+                value={formData.max_employees || ''}
+                onChange={(e) =>
+                  handleInputChange(
+                    'max_employees',
+                    parseInt(e.target.value) || 0
+                  )
+                }
+                className={`w-full px-3 py-2 border focus:ring-2 focus:ring-[#237804] focus:border-transparent ${
+                  errors.max_employees ? 'border-red-500' : 'border-gray-300'
+                }`}
+                placeholder="50"
+                min="1"
+              />
+              {errors.max_employees && (
+                <p className="mt-1 text-sm text-red-600">
+                  {errors.max_employees}
+                </p>
+              )}
+            </div>
+
+            {/* Annual Revenue */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Annual Revenue
+              </label>
+              <input
+                type="number"
+                value={formData.annual_revenue || ''}
+                onChange={(e) =>
+                  handleInputChange(
+                    'annual_revenue',
+                    parseInt(e.target.value) || 0
+                  )
+                }
+                className="w-full px-3 py-2 border border-gray-300 focus:ring-2 focus:ring-[#237804] focus:border-transparent"
+                placeholder="5000000"
+                min="0"
+              />
+            </div>
+
+            {/* Established Year */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Established Year
+              </label>
+              <input
+                type="number"
+                value={formData.established_year || ''}
+                onChange={(e) =>
+                  handleInputChange(
+                    'established_year',
+                    parseInt(e.target.value) || new Date().getFullYear()
+                  )
+                }
+                className="w-full px-3 py-2 border border-gray-300 focus:ring-2 focus:ring-[#237804] focus:border-transparent"
+                placeholder={new Date().getFullYear().toString()}
+                min="1900"
+                max={new Date().getFullYear()}
+              />
+            </div>
+
+            {/* Website */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Website
+              </label>
+              <input
+                type="url"
+                value={formData.website || ''}
+                onChange={(e) => handleInputChange('website', e.target.value)}
+                className="w-full px-3 py-2 border border-gray-300 focus:ring-2 focus:ring-[#237804] focus:border-transparent"
+                placeholder="https://example.com"
+              />
+            </div>
+
+            {/* Contact Email */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Contact Email
+              </label>
+              <input
+                type="email"
+                value={formData.contact_email || ''}
+                onChange={(e) =>
+                  handleInputChange('contact_email', e.target.value)
+                }
+                className={`w-full px-3 py-2 border focus:ring-2 focus:ring-[#237804] focus:border-transparent ${
+                  errors.contact_email ? 'border-red-500' : 'border-gray-300'
+                }`}
+                placeholder="contact@example.com"
+              />
+              {errors.contact_email && (
+                <p className="mt-1 text-sm text-red-600">
+                  {errors.contact_email}
+                </p>
+              )}
+            </div>
+
+            {/* Contact Phone */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Contact Phone
+              </label>
+              <input
+                type="tel"
+                value={formData.contact_phone || ''}
+                onChange={(e) =>
+                  handleInputChange('contact_phone', e.target.value)
+                }
+                className="w-full px-3 py-2 border border-gray-300 focus:ring-2 focus:ring-[#237804] focus:border-transparent"
+                placeholder="+1234567890"
+              />
+            </div>
+
+            {/* Is Active */}
+            <div className="flex items-center">
+              <input
+                type="checkbox"
+                id="is_active"
+                checked={formData.is_active || false}
+                onChange={(e) =>
+                  handleInputChange('is_active', e.target.checked)
+                }
+                className="h-4 w-4 text-[#237804] focus:ring-[#237804] border-gray-300"
+              />
+              <label
+                htmlFor="is_active"
+                className="ml-2 block text-sm text-gray-900"
+              >
+                Active
+              </label>
+            </div>
 
             {/* Action Buttons */}
             <div className="flex justify-end space-x-3 pt-6 border-t border-gray-200">
@@ -203,8 +390,8 @@ export default function SubBusinessModal({
                 {loading
                   ? 'Saving...'
                   : subBusiness
-                  ? 'Update Business'
-                  : 'Create Business'}
+                  ? 'Update Sub-Business'
+                  : 'Create Sub-Business'}
               </button>
             </div>
           </form>

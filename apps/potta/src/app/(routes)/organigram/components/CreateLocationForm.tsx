@@ -1,7 +1,8 @@
 'use client';
 
-import { Location } from '../types';
-import { useState } from 'react';
+import { Location, GeographicalUnit } from '../types';
+import { useState, useEffect } from 'react';
+import { orgChartApi } from '../utils/api';
 
 interface CreateLocationFormProps {
   onSubmit: (data: Partial<Location>) => Promise<void>;
@@ -19,12 +20,35 @@ export default function CreateLocationForm({
     lng: number;
   } | null>(null);
   const [address, setAddress] = useState('');
+  const [geographicalUnits, setGeographicalUnits] = useState<
+    GeographicalUnit[]
+  >([]);
+
+  // Load geographical units for the dropdown
+  useEffect(() => {
+    const loadGeographicalUnits = async () => {
+      try {
+        console.log('📍 Loading geographical units...');
+        const response = await orgChartApi.getGeographicalUnits();
+        console.log('📍 Geographical units loaded:', response.data);
+        setGeographicalUnits(response.data);
+      } catch (error) {
+        console.error('Error loading geographical units:', error);
+      }
+    };
+
+    loadGeographicalUnits();
+  }, []);
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
 
-    onSubmit({
+    const geoUnitId = formData.get('geo_unit_id') as string;
+    console.log('📍 Form submission - geo_unit_id:', geoUnitId);
+    console.log('📍 Available geographical units:', geographicalUnits);
+
+    const submitData = {
       location_name: formData.get('location_name') as string,
       address: formData.get('address') as string,
       city: formData.get('city') as string,
@@ -38,7 +62,12 @@ export default function CreateLocationForm({
       website: (formData.get('website') as string) || undefined,
       description: (formData.get('description') as string) || undefined,
       capacity: parseInt(formData.get('capacity') as string) || undefined,
-    });
+      geo_unit_id: geoUnitId || undefined,
+      organization_id: '876ca221-9ced-4388-8a98-019d2fdd3399', // Default org ID
+    };
+
+    console.log('📍 Submitting location data:', submitData);
+    onSubmit(submitData);
   };
 
   const handleAddressSearch = async () => {
@@ -153,6 +182,23 @@ export default function CreateLocationForm({
             className="w-full px-3 py-2 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#237804]"
             placeholder="Enter postal code"
           />
+        </div>
+
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">
+            Geographical Unit
+          </label>
+          <select
+            name="geo_unit_id"
+            className="w-full px-3 py-2 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#237804]"
+          >
+            <option value="">Select a geographical unit</option>
+            {geographicalUnits.map((unit) => (
+              <option key={unit.id} value={unit.id}>
+                {unit.geo_unit_name}
+              </option>
+            ))}
+          </select>
         </div>
 
         <div>

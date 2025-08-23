@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { IoClose } from 'react-icons/io5';
 import { GeographicalUnit } from '../types';
 import { orgChartApi } from '../utils/api';
 
@@ -18,15 +19,35 @@ export default function GeographicalUnitModal({
   onSave,
 }: GeographicalUnitModalProps) {
   const [formData, setFormData] = useState<Partial<GeographicalUnit>>({
-    unit_name: '',
+    geo_unit_name: '',
     description: '',
-    parent_unit_id: '',
+    parent_geo_unit_id: '',
     level: 1,
-    organization_id: '8f79d19a-5319-4783-8ddc-c863d98ecc16', // Default org ID
+    is_active: true,
+    organization_id: '500e05a0-c688-4c4a-9661-ae152e00d0c5', // Default org ID
   });
 
+  const [parentUnits, setParentUnits] = useState<GeographicalUnit[]>([]);
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
+
+  // Load parent units for dropdown
+  useEffect(() => {
+    const loadParentUnits = async () => {
+      try {
+        const response = await orgChartApi.getGeographicalUnits();
+        if (response.success && response.data) {
+          setParentUnits(response.data);
+        }
+      } catch (error) {
+        console.error('Error loading parent units:', error);
+      }
+    };
+
+    if (isOpen) {
+      loadParentUnits();
+    }
+  }, [isOpen]);
 
   useEffect(() => {
     if (isOpen) {
@@ -34,11 +55,12 @@ export default function GeographicalUnitModal({
         setFormData(geographicalUnit);
       } else {
         setFormData({
-          unit_name: '',
+          geo_unit_name: '',
           description: '',
-          parent_unit_id: '',
+          parent_geo_unit_id: '',
           level: 1,
-          organization_id: '8f79d19a-5319-4783-8ddc-c863d98ecc16', // Default org ID
+          is_active: true,
+          organization_id: '500e05a0-c688-4c4a-9661-ae152e00d0c5', // Default org ID
         });
       }
       setErrors({});
@@ -55,8 +77,8 @@ export default function GeographicalUnitModal({
   const validateForm = () => {
     const newErrors: Record<string, string> = {};
 
-    if (!formData.unit_name?.trim()) {
-      newErrors.unit_name = 'Unit name is required';
+    if (!formData.geo_unit_name?.trim()) {
+      newErrors.geo_unit_name = 'Unit name is required';
     }
 
     if (!formData.description?.trim()) {
@@ -93,7 +115,7 @@ export default function GeographicalUnitModal({
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div className="bg-white w-full max-w-2xl max-h-[90vh] overflow-y-auto">
+      <div className="bg-white w-full max-w-2xl max-h-[90vh] overflow-y-auto rounded-lg shadow-xl">
         <div className="p-6">
           <div className="flex justify-between items-center mb-6">
             <h2 className="text-2xl font-bold text-gray-900">
@@ -103,21 +125,9 @@ export default function GeographicalUnitModal({
             </h2>
             <button
               onClick={onClose}
-              className="text-gray-400 hover:text-gray-600"
+              className="text-gray-400 hover:text-gray-600 transition-colors"
             >
-              <svg
-                className="w-6 h-6"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M6 18L18 6M6 6l12 12"
-                />
-              </svg>
+              <IoClose className="w-6 h-6" />
             </button>
           </div>
 
@@ -129,15 +139,19 @@ export default function GeographicalUnitModal({
               </label>
               <input
                 type="text"
-                value={formData.unit_name || ''}
-                onChange={(e) => handleInputChange('unit_name', e.target.value)}
-                className={`w-full px-3 py-2 border focus:ring-2 focus:ring-[#237804] focus:border-transparent ${
-                  errors.unit_name ? 'border-red-500' : 'border-gray-300'
+                value={formData.geo_unit_name || ''}
+                onChange={(e) =>
+                  handleInputChange('geo_unit_name', e.target.value)
+                }
+                className={`w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-[#237804] focus:border-transparent transition-colors ${
+                  errors.geo_unit_name ? 'border-red-500' : 'border-gray-300'
                 }`}
                 placeholder="Enter geographical unit name"
               />
-              {errors.unit_name && (
-                <p className="mt-1 text-sm text-red-600">{errors.unit_name}</p>
+              {errors.geo_unit_name && (
+                <p className="mt-1 text-sm text-red-600">
+                  {errors.geo_unit_name}
+                </p>
               )}
             </div>
 
@@ -152,7 +166,7 @@ export default function GeographicalUnitModal({
                   handleInputChange('description', e.target.value)
                 }
                 rows={3}
-                className={`w-full px-3 py-2 border focus:ring-2 focus:ring-[#237804] focus:border-transparent ${
+                className={`w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-[#237804] focus:border-transparent transition-colors ${
                   errors.description ? 'border-red-500' : 'border-gray-300'
                 }`}
                 placeholder="Enter description"
@@ -162,6 +176,30 @@ export default function GeographicalUnitModal({
                   {errors.description}
                 </p>
               )}
+            </div>
+
+            {/* Parent Unit */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Parent Unit (Optional)
+              </label>
+              <select
+                value={formData.parent_geo_unit_id || ''}
+                onChange={(e) =>
+                  handleInputChange(
+                    'parent_geo_unit_id',
+                    e.target.value || undefined
+                  )
+                }
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#237804] focus:border-transparent transition-colors"
+              >
+                <option value="">No Parent Unit</option>
+                {parentUnits.map((unit) => (
+                  <option key={unit.id} value={unit.id}>
+                    {unit.geo_unit_name}
+                  </option>
+                ))}
+              </select>
             </div>
 
             {/* Level */}
@@ -176,7 +214,7 @@ export default function GeographicalUnitModal({
                   handleInputChange('level', parseInt(e.target.value) || 1)
                 }
                 min="1"
-                className={`w-full px-3 py-2 border focus:ring-2 focus:ring-[#237804] focus:border-transparent ${
+                className={`w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-[#237804] focus:border-transparent transition-colors ${
                   errors.level ? 'border-red-500' : 'border-gray-300'
                 }`}
                 placeholder="1"
@@ -186,21 +224,36 @@ export default function GeographicalUnitModal({
               )}
             </div>
 
-            
+            {/* Active Status */}
+            <div>
+              <label className="flex items-center">
+                <input
+                  type="checkbox"
+                  checked={formData.is_active ?? true}
+                  onChange={(e) =>
+                    handleInputChange('is_active', e.target.checked)
+                  }
+                  className="rounded border-gray-300 text-[#237804] focus:ring-[#237804]"
+                />
+                <span className="ml-2 text-sm font-medium text-gray-700">
+                  Active
+                </span>
+              </label>
+            </div>
 
             {/* Action Buttons */}
             <div className="flex justify-end space-x-3 pt-6 border-t border-gray-200">
               <button
                 type="button"
                 onClick={onClose}
-                className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 hover:bg-gray-50 transition-colors"
+                className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 transition-colors"
               >
                 Cancel
               </button>
               <button
                 type="submit"
                 disabled={loading}
-                className="px-4 py-2 text-sm font-medium text-white bg-[#237804] hover:bg-[#1D6303] disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                className="px-4 py-2 text-sm font-medium text-white bg-[#237804] rounded-md hover:bg-[#1D6303] disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
               >
                 {loading
                   ? 'Saving...'

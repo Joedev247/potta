@@ -20,9 +20,7 @@ interface OrgChartActionsProps {
   onAddLocation: () => void;
   onAddGeographicalUnit: () => void;
   onAddSubBusiness: () => void;
-  onAddRole: () => void;
-  onAddTemplate: () => void;
-  onAddBusinessGeoAssignment: () => void;
+  onAddUserAssignment: () => void;
   onExportData: () => void;
   onImportData: () => void;
   onRefreshData: () => void;
@@ -36,9 +34,7 @@ export default function OrgChartActions({
   onAddLocation,
   onAddGeographicalUnit,
   onAddSubBusiness,
-  onAddRole,
-  onAddTemplate,
-  onAddBusinessGeoAssignment,
+  onAddUserAssignment,
   onExportData,
   onImportData,
   onRefreshData,
@@ -81,9 +77,8 @@ export default function OrgChartActions({
         structure_type: data.structure_type || 'STANDARD_OFFICE',
         parent_structure_id: data.parent_structure_id || undefined,
         location_id: data.location_id || undefined,
-        organization_id: '500e05a0-c688-4c4a-9661-ae152e00d0c5',
+        organization_id: '876ca221-9ced-4388-8a98-019d2fdd3399',
         max_employees: data.max_employees || 25,
-        current_employees: data.current_employees || 0,
         budget: data.budget || 500000,
         is_active: true,
       };
@@ -147,10 +142,15 @@ export default function OrgChartActions({
         website: data.website || '',
         description: data.description || `${data.location_name} office`,
         capacity: data.capacity || 50,
-        organization_id: '500e05a0-c688-4c4a-9661-ae152e00d0c5',
+        geo_unit_id: data.geo_unit_id || undefined,
+        organization_id: '876ca221-9ced-4388-8a98-019d2fdd3399',
       };
 
       console.log('✅ Validated location data:', createData);
+      console.log(
+        '📍 About to send location creation request with geo_unit_id:',
+        createData.geo_unit_id
+      );
       const result = await orgChartApi.createLocation(createData);
       console.log('✅ Location created:', result);
 
@@ -173,7 +173,7 @@ export default function OrgChartActions({
       console.log('💼 Creating sub-business with validation:', data);
 
       // Validation logic
-      if (!data.business_name || data.business_name.trim().length < 2) {
+      if (!data.sub_business_name || data.sub_business_name.trim().length < 2) {
         toast.error('Business name must be at least 2 characters long');
         return;
       }
@@ -185,13 +185,13 @@ export default function OrgChartActions({
 
       // Prepare create data according to API docs
       const createData = {
-        sub_business_name: data.business_name,
-        description: data.description || `${data.business_name} business unit`,
+        sub_business_name: data.sub_business_name,
+        description:
+          data.description || `${data.sub_business_name} business unit`,
         industry: data.industry || 'Technology',
         parent_sub_business_id: data.parent_sub_business_id || undefined,
-        organization_id: '500e05a0-c688-4c4a-9661-ae152e00d0c5',
+        organization_id: '876ca221-9ced-4388-8a98-019d2fdd3399',
         max_employees: data.max_employees || 50,
-        current_employees: data.current_employees || 0,
         annual_revenue: data.annual_revenue || 5000000,
         established_year: data.established_year || new Date().getFullYear(),
         is_active: true,
@@ -205,7 +205,7 @@ export default function OrgChartActions({
       console.log('✅ Sub-business created:', result);
 
       toast.success(
-        `Business Unit "${createData.sub_business_name}" created successfully!`
+        `Business unit "${createData.sub_business_name}" created successfully!`
       );
       onRefreshData();
       setShowCreateModal(false);
@@ -225,23 +225,19 @@ export default function OrgChartActions({
       console.log('🌍 Creating geographical unit with validation:', data);
 
       // Validation logic
-      if (!data.unit_name || data.unit_name.trim().length < 2) {
-        toast.error('Unit name must be at least 2 characters long');
-        return;
-      }
-
-      if (data.level && data.level <= 0) {
-        toast.error('Level must be greater than 0');
+      if (!data.geo_unit_name || data.geo_unit_name.trim().length < 2) {
+        toast.error(
+          'Geographical unit name must be at least 2 characters long'
+        );
         return;
       }
 
       // Prepare create data according to API docs
       const createData = {
-        geo_unit_name: data.unit_name,
-        description: data.description || `${data.unit_name} geographical unit`,
+        geo_unit_name: data.geo_unit_name,
+        description: data.description || `${data.geo_unit_name} region`,
         parent_geo_unit_id: data.parent_geo_unit_id || undefined,
-        organization_id: '500e05a0-c688-4c4a-9661-ae152e00d0c5',
-        level: data.level || 1,
+        organization_id: '876ca221-9ced-4388-8a98-019d2fdd3399',
         is_active: true,
       };
 
@@ -250,7 +246,7 @@ export default function OrgChartActions({
       console.log('✅ Geographical unit created:', result);
 
       toast.success(
-        `Geographical Unit "${createData.geo_unit_name}" created successfully!`
+        `Geographical unit "${createData.geo_unit_name}" created successfully!`
       );
       onRefreshData();
       setShowCreateModal(false);
@@ -284,7 +280,7 @@ export default function OrgChartActions({
         description: data.description,
         template_type: data.template_type || 'STANDARD',
         structure_definition: data.structure_definition || {},
-        organization_id: '500e05a0-c688-4c4a-9661-ae152e00d0c5',
+        organization_id: '876ca221-9ced-4388-8a98-019d2fdd3399',
         is_active: true,
       };
 
@@ -326,7 +322,7 @@ export default function OrgChartActions({
         role_name: data.role_name,
         description: data.description,
         permissions: data.permissions || [],
-        organization_id: '500e05a0-c688-4c4a-9661-ae152e00d0c5',
+        organization_id: '876ca221-9ced-4388-8a98-019d2fdd3399',
         is_active: true,
       };
 
@@ -386,7 +382,7 @@ export default function OrgChartActions({
       const createData = {
         sub_business_id: data.sub_business_id,
         geographical_unit_id: data.geographical_unit_id,
-        organization_id: '500e05a0-c688-4c4a-9661-ae152e00d0c5',
+        organization_id: '876ca221-9ced-4388-8a98-019d2fdd3399',
         operation_type: data.operation_type || 'Regional Office',
         description: data.description || 'Business-Geographical assignment',
         start_date: data.start_date || new Date().toISOString(),
@@ -471,6 +467,8 @@ export default function OrgChartActions({
         onCreateGeographicalUnit={handleCreateGeographicalUnit}
         onCreateTemplate={handleCreateTemplate}
         onCreateRole={handleCreateRole}
+        onCreateBusinessGeoAssignment={handleCreateBusinessGeoAssignment}
+        onCreateUserAssignment={onAddUserAssignment}
       />
 
       {/* Help Guide */}

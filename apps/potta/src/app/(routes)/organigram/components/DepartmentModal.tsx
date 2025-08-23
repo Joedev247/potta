@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { IoClose } from 'react-icons/io5';
 import { OrganizationalStructure, Location } from '../types';
 import { orgChartApi } from '../utils/api';
 
@@ -26,7 +27,6 @@ export default function DepartmentModal({
     parent_structure_id: '',
     location_id: '',
     max_employees: 10,
-    current_employees: 0,
     budget: 0,
     is_active: true,
   });
@@ -48,7 +48,6 @@ export default function DepartmentModal({
           parent_structure_id: parentStructure?.id || '',
           location_id: '',
           max_employees: 10,
-          current_employees: 0,
           budget: 0,
           is_active: true,
         });
@@ -94,19 +93,6 @@ export default function DepartmentModal({
       newErrors.max_employees = 'Max employees must be at least 1';
     }
 
-    if (formData.current_employees && formData.current_employees < 0) {
-      newErrors.current_employees = 'Current employees cannot be negative';
-    }
-
-    if (
-      formData.max_employees &&
-      formData.current_employees &&
-      formData.current_employees > formData.max_employees
-    ) {
-      newErrors.current_employees =
-        'Current employees cannot exceed max employees';
-    }
-
     if (formData.budget && formData.budget < 0) {
       newErrors.budget = 'Budget cannot be negative';
     }
@@ -147,19 +133,7 @@ export default function DepartmentModal({
               onClick={onClose}
               className="text-gray-400 hover:text-gray-600"
             >
-              <svg
-                className="w-6 h-6"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M6 18L18 6M6 6l12 12"
-                />
-              </svg>
+              <IoClose className="w-6 h-6" />
             </button>
           </div>
 

@@ -9,11 +9,22 @@ import {
   Template,
   OrgChartApiResponse,
   PaginatedResponse,
+  Organization,
 } from '../types';
 
-const organizationId = '500e05a0-c688-4c4a-9661-ae152e00d0c5'; // Default org ID from config
+const organizationId = '876ca221-9ced-4388-8a98-019d2fdd3399'; // Default org ID from config
 
 export const orgChartApi = {
+  // Organization
+  getOrganization: async (orgId: string = organizationId) => {
+    const result = await axios.get<Organization>(`/organizations/${orgId}`);
+    return {
+      data: result.data,
+      success: true,
+      message: 'Organization loaded successfully',
+    };
+  },
+
   // Organizational Structures
   getStructures: async (orgId: string = organizationId) => {
     const result = await axios.get<OrganizationalStructure[]>(
@@ -376,7 +387,7 @@ export const orgChartApi = {
     data: Partial<GeographicalUnit>,
     orgId: string = organizationId
   ) => {
-    const result = await axios.put<GeographicalUnit>(
+    const result = await axios.patch<GeographicalUnit>(
       `/organizations/${orgId}/geographical-units/${id}`,
       data
     );

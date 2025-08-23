@@ -1,7 +1,8 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Location } from '../types';
+import { IoClose } from 'react-icons/io5';
+import { GeographicalUnit, Location } from '../types';
 import { orgChartApi } from '../utils/api';
 
 interface LocationModalProps {
@@ -31,11 +32,15 @@ export default function LocationModal({
     website: '',
     description: '',
     capacity: 0,
-    organization_id: '8f79d19a-5319-4783-8ddc-c863d98ecc16', // Default org ID
+    geo_unit_id: '',
+    organization_id: '876ca221-9ced-4388-8a98-019d2fdd3399', // Default org ID
   });
 
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const [geographicalUnits, setGeographicalUnits] = useState<
+    GeographicalUnit[]
+  >([]);
 
   useEffect(() => {
     if (isOpen) {
@@ -56,12 +61,29 @@ export default function LocationModal({
           website: '',
           description: '',
           capacity: 0,
-          organization_id: '8f79d19a-5319-4783-8ddc-c863d98ecc16', // Default org ID
+          geo_unit_id: '',
+          organization_id: '876ca221-9ced-4388-8a98-019d2fdd3399', // Default org ID
         });
       }
       setErrors({});
     }
   }, [isOpen, location]);
+
+  // Load geographical units for the dropdown
+  useEffect(() => {
+    const loadGeographicalUnits = async () => {
+      try {
+        const response = await orgChartApi.getGeographicalUnits();
+        setGeographicalUnits(response.data);
+      } catch (error) {
+        console.error('Error loading geographical units:', error);
+      }
+    };
+
+    if (isOpen) {
+      loadGeographicalUnits();
+    }
+  }, [isOpen]);
 
   const handleInputChange = (field: string, value: any) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
@@ -141,19 +163,7 @@ export default function LocationModal({
               onClick={onClose}
               className="text-gray-400 hover:text-gray-600"
             >
-              <svg
-                className="w-6 h-6"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M6 18L18 6M6 6l12 12"
-                />
-              </svg>
+              <IoClose className="w-6 h-6" />
             </button>
           </div>
 
@@ -266,6 +276,27 @@ export default function LocationModal({
                 className="w-full px-3 py-2 border border-gray-300 focus:ring-2 focus:ring-[#237804] focus:border-transparent"
                 placeholder="Postal Code"
               />
+            </div>
+
+            {/* Geographical Unit */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Geographical Unit
+              </label>
+              <select
+                value={formData.geo_unit_id || ''}
+                onChange={(e) =>
+                  handleInputChange('geo_unit_id', e.target.value)
+                }
+                className="w-full px-3 py-2 border border-gray-300 focus:ring-2 focus:ring-[#237804] focus:border-transparent"
+              >
+                <option value="">Select a geographical unit</option>
+                {geographicalUnits.map((unit) => (
+                  <option key={unit.id} value={unit.id}>
+                    {unit.geo_unit_name}
+                  </option>
+                ))}
+              </select>
             </div>
 
             {/* Contact Information */}

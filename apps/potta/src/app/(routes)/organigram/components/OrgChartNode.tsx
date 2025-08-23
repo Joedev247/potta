@@ -1,164 +1,192 @@
 'use client';
 
-import { memo } from 'react';
+import { memo, useState } from 'react';
 import { Handle, Position, NodeProps } from 'reactflow';
-import { OrgChartNode as OrgChartNodeType } from '../types';
+import {
+  IoChevronDown,
+  IoChevronForward,
+  IoAdd,
+  IoPencil,
+  IoTrash,
+  IoPeople,
+} from 'react-icons/io5';
 
-interface CustomNodeProps extends NodeProps {
-  data: OrgChartNodeType;
-  onToggle?: (nodeId: string) => void;
-  onClick?: (node: OrgChartNodeType) => void;
+interface OrgChartNodeData {
+  id: string;
+  label: string;
+  position?: string;
+  employeeCount?: number;
+  maxEmployees?: number;
+  budget?: number;
+  isExpanded?: boolean;
+  hasChildren?: boolean;
+  entity?: any;
+  onToggleExpand?: (nodeId: string) => void;
+  onAddChild?: (parentId: string) => void;
+  onEdit?: (nodeId: string, entity: any) => void;
+  onDelete?: (nodeId: string, entity: any) => void;
+  onViewEmployees?: (nodeId: string, entity: any) => void;
 }
 
-const OrgChartNode = memo(({ data, onToggle, onClick }: CustomNodeProps) => {
-  const hasChildren = data.children && data.children.length > 0;
-  const isExpanded = data.expanded;
+interface OrgChartNodeProps extends NodeProps {
+  data: OrgChartNodeData;
+}
 
-  const handleToggle = (e: React.MouseEvent) => {
+const OrgChartNode = memo(({ data }: OrgChartNodeProps) => {
+  const [isHovered, setIsHovered] = useState(false);
+
+  const handleToggleExpand = (e: React.MouseEvent) => {
     e.stopPropagation();
-    if (onToggle) {
-      onToggle(data.id);
+    if (data.onToggleExpand) {
+      data.onToggleExpand(data.id);
     }
   };
 
-  const handleClick = () => {
-    if (onClick) {
-      onClick(data);
+  const handleAddChild = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (data.onAddChild) {
+      data.onAddChild(data.id);
     }
   };
 
-  const getLevelColor = (level: number) => {
-    const colors = [
-      'bg-[#237804]', // CEO - Primary green
-      'bg-[#3C9D39]', // VP - Darker green
-      'bg-[#53B550]', // Director - Medium green
-      'bg-[#78C576]', // Manager - Light green
-      'bg-[#9DD59C]', // Team Lead - Lighter green
-      'bg-[#C2E5C1]', // Employee - Lightest green
-    ];
-    return colors[Math.min(level - 1, colors.length - 1)];
+  const handleEdit = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (data.onEdit) {
+      data.onEdit(data.id, data.entity);
+    }
+  };
+
+  const handleDelete = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (data.onDelete) {
+      data.onDelete(data.id, data.entity);
+    }
+  };
+
+  const handleViewEmployees = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (data.onViewEmployees) {
+      data.onViewEmployees(data.id, data.entity);
+    }
   };
 
   return (
-    <div className="relative">
+    <div className="relative group">
       <Handle
         type="target"
         position={Position.Top}
-        className="w-3 h-3 bg-gray-400"
+        className="w-3 h-3 bg-white border-2 border-gray-300 shadow-sm"
+        style={{ top: '-6px' }}
       />
 
       <div
         className={`
-          bg-white border-2 border-gray-200 rounded-lg shadow-md p-4 min-w-[200px] max-w-[250px]
-          hover:shadow-lg transition-all duration-200 cursor-pointer
-          ${data.is_active ? 'border-[#237804]' : 'border-gray-300 opacity-75'}
+          bg-white border border-gray-200 shadow-sm
+          min-w-[200px] max-w-[280px]
+          transition-all duration-200 ease-in-out
+          ${isHovered ? 'shadow-md border-gray-300' : ''}
         `}
-        onClick={handleClick}
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={() => setIsHovered(false)}
       >
-        {/* Department Header */}
-        <div className="flex items-center justify-between mb-3">
+        {/* Header */}
+        <div className="flex items-center justify-between p-3 border-b border-gray-100">
           <div className="flex items-center space-x-2">
-            <div
-              className={`w-3 h-3 rounded-full ${getLevelColor(data.level)}`}
-            />
-            <h3 className="font-semibold text-gray-900 text-sm truncate">
-              {data.department_name}
-            </h3>
-          </div>
-          {hasChildren && (
-            <button
-              onClick={handleToggle}
-              className="text-gray-500 hover:text-gray-700 transition-colors"
-            >
-              <svg
-                className={`w-4 h-4 transform transition-transform ${
-                  isExpanded ? 'rotate-90' : ''
-                }`}
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
+            {data.hasChildren && (
+              <button
+                onClick={handleToggleExpand}
+                className="p-1 hover:bg-gray-100 rounded transition-colors"
               >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M9 5l7 7-7 7"
-                />
-              </svg>
-            </button>
-          )}
-        </div>
-
-        {/* Employee Count */}
-        <div className="flex items-center justify-between mb-2">
-          <span className="text-xs text-gray-600">Employees</span>
-          <span className="text-sm font-medium text-gray-900">
-            {data.current_employees}/{data.max_employees}
-          </span>
-        </div>
-
-        {/* Budget */}
-        <div className="flex items-center justify-between mb-3">
-          <span className="text-xs text-gray-600">Budget</span>
-          <span className="text-sm font-medium text-[#237804]">
-            ${data.budget.toLocaleString()}
-          </span>
-        </div>
-
-        {/* Employee List */}
-        {data.employees.length > 0 && (
-          <div className="border-t border-gray-100 pt-2">
-            <div className="text-xs text-gray-500 mb-1">Team Members:</div>
-            <div className="space-y-1 max-h-20 overflow-y-auto">
-              {data.employees.slice(0, 3).map((employee) => (
-                <div
-                  key={employee.id}
-                  className="flex items-center space-x-2 text-xs"
-                >
-                  <div className="w-2 h-2 rounded-full bg-[#237804]" />
-                  <span className="text-gray-700 truncate">
-                    {employee.job_title || 'Employee'}
-                  </span>
-                  <span
-                    className={`px-1 py-0.5 rounded text-xs ${
-                      employee.assignment_type === 'PRIMARY'
-                        ? 'bg-[#237804] text-white'
-                        : employee.assignment_type === 'SECONDARY'
-                        ? 'bg-[#A0E86F] text-black'
-                        : 'bg-gray-100 text-gray-800'
-                    }`}
-                  >
-                    {employee.assignment_type}
-                  </span>
-                </div>
-              ))}
-              {data.employees.length > 3 && (
-                <div className="text-xs text-gray-500">
-                  +{data.employees.length - 3} more
-                </div>
+                {data.isExpanded ? (
+                  <IoChevronDown className="w-4 h-4 text-gray-600" />
+                ) : (
+                  <IoChevronForward className="w-4 h-4 text-gray-600" />
+                )}
+              </button>
+            )}
+            <div className="flex-1 min-w-0">
+              <h3 className="font-semibold text-gray-900 text-sm truncate">
+                {data.label}
+              </h3>
+              {data.position && (
+                <p className="text-xs text-gray-500 truncate">
+                  {data.position}
+                </p>
               )}
             </div>
           </div>
-        )}
+        </div>
 
-        {/* Status Badge */}
-        <div className="absolute top-2 right-2">
-          <span
-            className={`px-2 py-1 rounded-full text-xs font-medium ${
-              data.is_active
-                ? 'bg-[#E6F4E6] text-[#237804]'
-                : 'bg-gray-100 text-gray-600'
-            }`}
-          >
-            {data.is_active ? 'Active' : 'Inactive'}
-          </span>
+        {/* Content */}
+        <div className="p-3">
+          {/* Employee Count */}
+          {data.employeeCount !== undefined && (
+            <div className="flex items-center justify-between mb-2">
+              <div className="flex items-center space-x-1">
+                <IoPeople className="w-4 h-4 text-gray-400" />
+                <span className="text-xs text-gray-600">Employees</span>
+              </div>
+              <span className="text-sm font-medium text-gray-900">
+                {data.employeeCount}
+                {data.maxEmployees && `/${data.maxEmployees}`}
+              </span>
+            </div>
+          )}
+
+          {/* Budget */}
+          {data.budget && (
+            <div className="flex items-center justify-between mb-2">
+              <span className="text-xs text-gray-600">Budget</span>
+              <span className="text-sm font-medium text-gray-900">
+                ${(data.budget / 1000).toFixed(0)}k
+              </span>
+            </div>
+          )}
+
+          {/* Action Buttons */}
+          {isHovered && (
+            <div className="flex items-center justify-between pt-2 border-t border-gray-100">
+              <div className="flex space-x-1">
+                <button
+                  onClick={handleAddChild}
+                  className="p-1 hover:bg-blue-50 text-blue-600 rounded transition-colors"
+                  title="Add Child"
+                >
+                  <IoAdd className="w-3 h-3" />
+                </button>
+                <button
+                  onClick={handleEdit}
+                  className="p-1 hover:bg-gray-50 text-gray-600 rounded transition-colors"
+                  title="Edit"
+                >
+                  <IoPencil className="w-3 h-3" />
+                </button>
+                <button
+                  onClick={handleDelete}
+                  className="p-1 hover:bg-red-50 text-red-600 rounded transition-colors"
+                  title="Delete"
+                >
+                  <IoTrash className="w-3 h-3" />
+                </button>
+              </div>
+              {data.employeeCount && data.employeeCount > 0 && (
+                <button
+                  onClick={handleViewEmployees}
+                  className="text-xs text-blue-600 hover:text-blue-700 font-medium"
+                >
+                  View Team
+                </button>
+              )}
+            </div>
+          )}
         </div>
       </div>
 
       <Handle
         type="source"
         position={Position.Bottom}
-        className="w-3 h-3 bg-gray-400"
+        className="w-3 h-3 bg-white border-2 border-gray-300 shadow-sm"
+        style={{ bottom: '-6px' }}
       />
     </div>
   );

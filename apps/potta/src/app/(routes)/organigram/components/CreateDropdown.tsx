@@ -109,6 +109,16 @@ export default function CreateDropdown({
             >
               <span>Template</span>
             </button>
+
+            <div className="text-xs font-medium text-gray-500 uppercase tracking-wide mb-2 px-2 mt-3">
+              Employee Management
+            </div>
+            <button
+              onClick={() => onSelectType('user-assignment')}
+              className="w-full text-left px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center space-x-2"
+            >
+              <span>Assign Employee</span>
+            </button>
           </div>
         </div>
       )}

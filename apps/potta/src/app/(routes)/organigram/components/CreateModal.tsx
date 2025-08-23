@@ -5,7 +5,7 @@ import CreateLocationForm from './CreateLocationForm';
 import CreateSubBusinessForm from './CreateSubBusinessForm';
 import CreateGeographicalUnitForm from './CreateGeographicalUnitForm';
 import CreateTemplateForm from './CreateTemplateForm';
-import CreateRoleForm from './CreateRoleForm';
+// import CreateRoleForm from './CreateRoleForm';
 import CreateBusinessGeoAssignmentForm from './CreateBusinessGeoAssignmentForm';
 import {
   OrganizationalStructure,
@@ -29,6 +29,7 @@ interface CreateModalProps {
   onCreateBusinessGeoAssignment: (
     data: Partial<BusinessGeoAssignment>
   ) => Promise<void>;
+  onCreateUserAssignment: () => void;
 }
 
 export default function CreateModal({
@@ -43,6 +44,7 @@ export default function CreateModal({
   onCreateTemplate,
   onCreateRole,
   onCreateBusinessGeoAssignment,
+  onCreateUserAssignment,
 }: CreateModalProps) {
   const getModalTitle = () => {
     switch (createType) {
@@ -60,12 +62,14 @@ export default function CreateModal({
         return 'Create New Role';
       case 'business-geo-assignment':
         return 'Create Business-Geographical Assignment';
+      case 'user-assignment':
+        return 'Assign Employee';
       default:
         return 'Create New Item';
     }
   };
 
-  // no we just fetch roles pls we dont create it here we will just be assigning roles 
+  // no we just fetch roles pls we dont create it here we will just be assigning roles
   const renderForm = () => {
     switch (createType) {
       case 'department':
@@ -110,11 +114,12 @@ export default function CreateModal({
         );
       case 'role':
         return (
-          <CreateRoleForm
-            onSubmit={onCreateRole}
-            onCancel={onClose}
-            isCreating={isCreating}
-          />
+          // <CreateRoleForm
+          //   onSubmit={onCreateRole}
+          //   onCancel={onClose}
+          //   isCreating={isCreating}
+          // />
+          null
         );
       case 'business-geo-assignment':
         return (
@@ -124,6 +129,11 @@ export default function CreateModal({
             isCreating={isCreating}
           />
         );
+      case 'user-assignment':
+        // For user assignments, we'll call the parent handler to open the UserAssignmentModal
+        onCreateUserAssignment();
+        onClose();
+        return null;
       default:
         return null;
     }
