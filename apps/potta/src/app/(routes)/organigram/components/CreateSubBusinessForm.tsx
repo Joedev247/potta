@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { SubBusiness } from '../types';
+import { SubBusiness, Location } from '../types';
 import { orgChartApi } from '../utils/api';
 
 interface CreateSubBusinessFormProps {
@@ -18,6 +18,7 @@ export default function CreateSubBusinessForm({
   const [availableSubBusinesses, setAvailableSubBusinesses] = useState<
     SubBusiness[]
   >([]);
+  const [availableLocations, setAvailableLocations] = useState<Location[]>([]);
 
   useEffect(() => {
     const loadSubBusinesses = async () => {
@@ -31,7 +32,21 @@ export default function CreateSubBusinessForm({
         console.error('Error loading sub-businesses:', error);
       }
     };
+
+    const loadLocations = async () => {
+      try {
+        const response = await orgChartApi.getLocations();
+        const locationsData = Array.isArray(response.data)
+          ? response.data
+          : (response.data as any)?.data || [];
+        setAvailableLocations(locationsData);
+      } catch (error) {
+        console.error('Error loading locations:', error);
+      }
+    };
+
     loadSubBusinesses();
+    loadLocations();
   }, []);
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -44,6 +59,7 @@ export default function CreateSubBusinessForm({
       industry: formData.get('industry') as string,
       parent_sub_business_id:
         (formData.get('parent_sub_business_id') as string) || undefined,
+      location_id: (formData.get('location_id') as string) || undefined,
       max_employees: parseInt(formData.get('max_employees') as string) || 0,
       current_employees:
         parseInt(formData.get('current_employees') as string) || 0,
@@ -108,6 +124,22 @@ export default function CreateSubBusinessForm({
             {availableSubBusinesses.map((subBusiness) => (
               <option key={subBusiness.id} value={subBusiness.id}>
                 {subBusiness.sub_business_name}
+              </option>
+            ))}
+          </select>
+        </div>
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">
+            Location
+          </label>
+          <select
+            name="location_id"
+            className="w-full px-3 py-2 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#237804]"
+          >
+            <option value="">No Location</option>
+            {availableLocations.map((location) => (
+              <option key={location.id} value={location.id}>
+                {location.location_name} - {location.city}, {location.country}
               </option>
             ))}
           </select>

@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { IoClose } from 'react-icons/io5';
-import { OrganizationalStructure, Location } from '../types';
+import { OrganizationalStructure, Location, SubBusiness } from '../types';
 import { orgChartApi } from '../utils/api';
 
 interface DepartmentModalProps {
@@ -32,12 +32,14 @@ export default function DepartmentModal({
   });
 
   const [locations, setLocations] = useState<Location[]>([]);
+  const [subBusinesses, setSubBusinesses] = useState<SubBusiness[]>([]);
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
 
   useEffect(() => {
     if (isOpen) {
       loadLocations();
+      loadSubBusinesses();
       if (department) {
         setFormData(department);
       } else {
@@ -47,6 +49,7 @@ export default function DepartmentModal({
           structure_type: 'STANDARD_OFFICE',
           parent_structure_id: parentStructure?.id || '',
           location_id: '',
+          sub_business_unit_id: '',
           max_employees: 10,
           budget: 0,
           is_active: true,
@@ -64,6 +67,17 @@ export default function DepartmentModal({
       }
     } catch (error) {
       console.error('Error loading locations:', error);
+    }
+  };
+
+  const loadSubBusinesses = async () => {
+    try {
+      const response = await orgChartApi.getSubBusinesses();
+      if (response.success) {
+        setSubBusinesses(response.data);
+      }
+    } catch (error) {
+      console.error('Error loading sub-businesses:', error);
     }
   };
 
@@ -198,9 +212,7 @@ export default function DepartmentModal({
               >
                 <option value="STANDARD_OFFICE">Standard Office</option>
                 <option value="TECH_STARTUP">Tech Startup</option>
-                <option value="ENTERPRISE">Enterprise</option>
-                <option value="NON_PROFIT">Non-Profit</option>
-                <option value="GOVERNMENT">Government</option>
+                <option value="REGIONAL_OFFICE">Regional Office</option>
               </select>
             </div>
 
@@ -246,6 +258,27 @@ export default function DepartmentModal({
                   {errors.location_id}
                 </p>
               )}
+            </div>
+
+            {/* Sub-Business Unit */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Sub-Business Unit
+              </label>
+              <select
+                value={formData.sub_business_unit_id || ''}
+                onChange={(e) =>
+                  handleInputChange('sub_business_unit_id', e.target.value)
+                }
+                className="w-full px-3 py-2 border border-gray-300 focus:ring-2 focus:ring-[#237804] focus:border-transparent"
+              >
+                <option value="">No Sub-Business Unit</option>
+                {subBusinesses.map((subBusiness) => (
+                  <option key={subBusiness.id} value={subBusiness.id}>
+                    {subBusiness.sub_business_name}
+                  </option>
+                ))}
+              </select>
             </div>
 
             {/* Employee Counts */}

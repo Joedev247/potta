@@ -2,7 +2,7 @@ export interface OrganizationalStructure {
   id: string;
   department_name: string;
   description?: string;
-  structure_type?: string;
+  structure_type?: 'STANDARD_OFFICE' | 'TECH_STARTUP' | 'REGIONAL_OFFICE';
   path: string;
   level: number;
   parent_structure_id?: string;
@@ -76,6 +76,7 @@ export interface SubBusiness {
   industry?: string;
   parent_sub_business_id?: string;
   organization_id: string;
+  location_id?: string; // Added location_id field
   max_employees?: number;
   current_employees?: number;
   annual_revenue?: number;

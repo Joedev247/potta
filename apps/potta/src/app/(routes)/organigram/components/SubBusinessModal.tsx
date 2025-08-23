@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { IoClose } from 'react-icons/io5';
-import { SubBusiness } from '../types';
+import { SubBusiness, Location } from '../types';
 import { orgChartApi } from '../utils/api';
 
 interface SubBusinessModalProps {
@@ -38,10 +38,12 @@ export default function SubBusinessModal({
   const [availableSubBusinesses, setAvailableSubBusinesses] = useState<
     SubBusiness[]
   >([]);
+  const [availableLocations, setAvailableLocations] = useState<Location[]>([]);
 
   useEffect(() => {
     if (isOpen) {
       loadSubBusinesses();
+      loadLocations();
       if (subBusiness) {
         setFormData(subBusiness);
       } else {
@@ -50,7 +52,8 @@ export default function SubBusinessModal({
           description: '',
           industry: 'Technology',
           parent_sub_business_id: '',
-          organization_id: '500e05a0-c688-4c4a-9661-ae152e00d0c5',
+          location_id: '',
+          organization_id: '876ca221-9ced-4388-8a98-019d2fdd3399',
           max_employees: 50,
           current_employees: 0,
           annual_revenue: 5000000,
@@ -74,6 +77,18 @@ export default function SubBusinessModal({
       setAvailableSubBusinesses(subBusinessesData);
     } catch (error) {
       console.error('Error loading sub-businesses:', error);
+    }
+  };
+
+  const loadLocations = async () => {
+    try {
+      const response = await orgChartApi.getLocations();
+      const locationsData = Array.isArray(response.data)
+        ? response.data
+        : (response.data as any)?.data || [];
+      setAvailableLocations(locationsData);
+    } catch (error) {
+      console.error('Error loading locations:', error);
     }
   };
 
@@ -228,6 +243,28 @@ export default function SubBusinessModal({
                 {availableSubBusinesses.map((subBusiness) => (
                   <option key={subBusiness.id} value={subBusiness.id}>
                     {subBusiness.sub_business_name}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            {/* Location */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Location
+              </label>
+              <select
+                value={formData.location_id || ''}
+                onChange={(e) =>
+                  handleInputChange('location_id', e.target.value || null)
+                }
+                className="w-full px-3 py-2 border border-gray-300 focus:ring-2 focus:ring-[#237804] focus:border-transparent"
+              >
+                <option value="">No Location</option>
+                {availableLocations.map((location) => (
+                  <option key={location.id} value={location.id}>
+                    {location.location_name} - {location.city},{' '}
+                    {location.country}
                   </option>
                 ))}
               </select>

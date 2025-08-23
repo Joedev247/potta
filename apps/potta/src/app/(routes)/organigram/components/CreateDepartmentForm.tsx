@@ -105,13 +105,9 @@ export default function CreateDepartmentForm({
             className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#237804] focus:border-transparent"
           >
             <option value="">Select structure type</option>
-            <option value="DIVISION">Division</option>
-            <option value="DEPARTMENT">Department</option>
-            <option value="UNIT">Unit</option>
-            <option value="TEAM">Team</option>
-            <option value="SECTION">Section</option>
-            <option value="BRANCH">Branch</option>
-            <option value="OFFICE">Office</option>
+            <option value="STANDARD_OFFICE">Standard Office</option>
+            <option value="TECH_STARTUP">Tech Startup</option>
+            <option value="REGIONAL_OFFICE">Regional Office</option>
           </select>
         </div>
 

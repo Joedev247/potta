@@ -437,78 +437,124 @@ export default function OrgChartFlowComponent({
                     style: { stroke: '#10b981', strokeWidth: 2 },
                   });
 
-                  // Add business units under this location
+                  // Add business units under this location (from departments)
                   const locationStructures = filteredData.structures.filter(
                     (s) => s.location_id === location.id
                   );
 
-                  if (locationStructures.length > 0) {
+                  console.log(
+                    `📍 Structures for location ${location.location_name} (${location.id}):`,
+                    locationStructures
+                  );
+
+                  // Add business units that are directly linked to this location
+                  const locationSubBusinesses =
+                    filteredData.subBusinesses.filter(
+                      (b) => b.location_id === location.id
+                    );
+
+                  console.log(
+                    `📍 SubBusinesses for location ${location.location_name} (${location.id}):`,
+                    locationSubBusinesses
+                  );
+
+                  // Combine both types of business units
+                  const allBusinessUnits: Array<
+                    | {
+                        id: string;
+                        name: string;
+                        type: 'from_structure';
+                        structure: OrganizationalStructure;
+                      }
+                    | {
+                        id: string;
+                        name: string;
+                        type: 'direct';
+                        business: SubBusiness;
+                      }
+                  > = [
+                    ...locationStructures.map((structure) => ({
+                      id: structure.sub_business_unit_id || structure.id,
+                      name: structure.sub_business_unit_id
+                        ? filteredData.subBusinesses.find(
+                            (b) => b.id === structure.sub_business_unit_id
+                          )?.sub_business_name || 'Business Unit'
+                        : 'Business Unit',
+                      type: 'from_structure' as const,
+                      structure: structure,
+                    })),
+                    ...locationSubBusinesses.map((business) => ({
+                      id: business.id,
+                      name: business.sub_business_name,
+                      type: 'direct' as const,
+                      business: business,
+                    })),
+                  ];
+
+                  // Remove duplicates based on ID
+                  const uniqueBusinessUnits = allBusinessUnits.filter(
+                    (unit, index, self) =>
+                      index === self.findIndex((u) => u.id === unit.id)
+                  );
+
+                  if (uniqueBusinessUnits.length > 0) {
                     const businessSpacing = 180;
                     let businessX =
                       locationX -
-                      ((locationStructures.length - 1) * businessSpacing) / 2;
+                      ((uniqueBusinessUnits.length - 1) * businessSpacing) / 2;
 
-                    locationStructures.forEach((structure) => {
+                    uniqueBusinessUnits.forEach((unit) => {
                       const businessNode: Node = {
-                        id: `business-${
-                          structure.sub_business_unit_id || structure.id
-                        }`,
+                        id: `business-${unit.id}`,
                         type: 'headerValueNode',
                         position: { x: businessX, y: 50 + (level + 2) * 120 },
                         data: {
                           header: 'Business Unit',
-                          value: structure.sub_business_unit_id
-                            ? filteredData.subBusinesses.find(
-                                (b) => b.id === structure.sub_business_unit_id
-                              )?.sub_business_name || 'Business Unit'
-                            : 'Business Unit',
+                          value: unit.name,
                           icon: '🏢',
                           color: '#f59e0b',
-                          entity: structure,
+                          entity:
+                            unit.type === 'direct'
+                              ? unit.business
+                              : unit.structure,
                         },
                       };
                       treeNodes.push(businessNode);
 
                       // Connect business unit to location
                       treeEdges.push({
-                        id: `edge-location-${location.id}-business-${
-                          structure.sub_business_unit_id || structure.id
-                        }`,
+                        id: `edge-location-${location.id}-business-${unit.id}`,
                         source: `location-${location.id}`,
-                        target: `business-${
-                          structure.sub_business_unit_id || structure.id
-                        }`,
+                        target: `business-${unit.id}`,
                         type: 'orgEdge',
                         style: { stroke: '#f59e0b', strokeWidth: 2 },
                       });
 
-                      // Add department under business unit
-                      const departmentNode: Node = {
-                        id: `structure-${structure.id}`,
-                        type: 'headerValueNode',
-                        position: { x: businessX, y: 50 + (level + 3) * 120 },
-                        data: {
-                          header: 'Department',
-                          value: structure.department_name,
-                          icon: '📊',
-                          color: '#8b5cf6',
-                          entity: structure,
-                        },
-                      };
-                      treeNodes.push(departmentNode);
+                      // If this business unit came from a structure, add the department under it
+                      if (unit.type === 'from_structure') {
+                        const departmentNode: Node = {
+                          id: `structure-${unit.structure.id}`,
+                          type: 'headerValueNode',
+                          position: { x: businessX, y: 50 + (level + 3) * 120 },
+                          data: {
+                            header: 'Department',
+                            value: unit.structure.department_name,
+                            icon: '📊',
+                            color: '#8b5cf6',
+                            entity: unit.structure,
+                          },
+                        };
+                        treeNodes.push(departmentNode);
 
-                      // Connect department to business unit
-                      treeEdges.push({
-                        id: `edge-business-${
-                          structure.sub_business_unit_id || structure.id
-                        }-structure-${structure.id}`,
-                        source: `business-${
-                          structure.sub_business_unit_id || structure.id
-                        }`,
-                        target: `structure-${structure.id}`,
-                        type: 'orgEdge',
-                        style: { stroke: '#8b5cf6', strokeWidth: 2 },
-                      });
+                        // Connect department to business unit
+                        treeEdges.push({
+                          id: `edge-business-${unit.id}-structure-${unit.structure.id}`,
+                          source: `business-${unit.id}`,
+                          target: `structure-${unit.structure.id}`,
+                          type: 'orgEdge',
+                          style: { stroke: '#8b5cf6', strokeWidth: 2 },
+                        });
+                      }
 
                       businessX += businessSpacing;
                     });
