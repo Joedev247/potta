@@ -1,15 +1,18 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { IoClose } from 'react-icons/io5';
+import { IoClose, IoLocation, IoSearch } from 'react-icons/io5';
 import { GeographicalUnit, Location } from '../types';
 import { orgChartApi } from '../utils/api';
+import { cleanFormData } from '../utils/formUtils';
 
 interface LocationModalProps {
   isOpen: boolean;
   onClose: () => void;
   location?: Location | null;
   onSave: (location: Partial<Location>) => void;
+  mode?: 'create' | 'edit'; // Add mode prop to distinguish create vs edit
+  parentGeographicalUnit?: GeographicalUnit | null; // Add parent geographical unit prop
 }
 
 export default function LocationModal({
@@ -17,6 +20,8 @@ export default function LocationModal({
   onClose,
   location,
   onSave,
+  mode = 'edit', // Default to edit mode
+  parentGeographicalUnit,
 }: LocationModalProps) {
   const [formData, setFormData] = useState<Partial<Location>>({
     location_name: '',
@@ -37,6 +42,7 @@ export default function LocationModal({
   });
 
   const [loading, setLoading] = useState(false);
+  const [geocodingLoading, setGeocodingLoading] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [geographicalUnits, setGeographicalUnits] = useState<
     GeographicalUnit[]
@@ -61,13 +67,13 @@ export default function LocationModal({
           website: '',
           description: '',
           capacity: 0,
-          geo_unit_id: '',
+          geo_unit_id: parentGeographicalUnit?.id || '',
           organization_id: '876ca221-9ced-4388-8a98-019d2fdd3399', // Default org ID
         });
       }
       setErrors({});
     }
-  }, [isOpen, location]);
+  }, [isOpen, location, parentGeographicalUnit]);
 
   // Load geographical units for the dropdown
   useEffect(() => {
@@ -92,6 +98,72 @@ export default function LocationModal({
     }
   };
 
+  // Geocoding function to get coordinates from address
+  const getCoordinatesFromAddress = async () => {
+    const { address, city, state, country, postal_code } = formData;
+
+    if (!address || !city || !country) {
+      setErrors((prev) => ({
+        ...prev,
+        geocoding: 'Please enter address, city, and country to get coordinates',
+      }));
+      return;
+    }
+
+    setGeocodingLoading(true);
+    setErrors((prev) => ({ ...prev, geocoding: '' }));
+
+    try {
+      // Build the full address string
+      const fullAddress = [address, city, state, postal_code, country]
+        .filter(Boolean)
+        .join(', ');
+
+      // Use a free geocoding service (Nominatim/OpenStreetMap)
+      const response = await fetch(
+        `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(
+          fullAddress
+        )}&limit=1`
+      );
+
+      if (!response.ok) {
+        throw new Error('Geocoding service unavailable');
+      }
+
+      const data = await response.json();
+
+      if (data && data.length > 0) {
+        const { lat, lon } = data[0];
+        setFormData((prev) => ({
+          ...prev,
+          latitude: parseFloat(lat),
+          longitude: parseFloat(lon),
+        }));
+
+        // Show success message
+        setErrors((prev) => ({
+          ...prev,
+          geocoding: '✅ Coordinates found successfully!',
+        }));
+      } else {
+        setErrors((prev) => ({
+          ...prev,
+          geocoding:
+            '❌ Could not find coordinates for this address. Please check the address and try again.',
+        }));
+      }
+    } catch (error) {
+      console.error('Geocoding error:', error);
+      setErrors((prev) => ({
+        ...prev,
+        geocoding:
+          '❌ Error getting coordinates. Please try again or enter manually.',
+      }));
+    } finally {
+      setGeocodingLoading(false);
+    }
+  };
+
   const validateForm = () => {
     const newErrors: Record<string, string> = {};
 
@@ -111,12 +183,9 @@ export default function LocationModal({
       newErrors.country = 'Country is required';
     }
 
-    if (formData.latitude === undefined || formData.latitude === null) {
-      newErrors.latitude = 'Latitude is required';
-    }
-
-    if (formData.longitude === undefined || formData.longitude === null) {
-      newErrors.longitude = 'Longitude is required';
+    // Check if coordinates are set
+    if (formData.latitude === 0 && formData.longitude === 0) {
+      newErrors.coordinates = 'Please get coordinates for this location';
     }
 
     if (formData.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
@@ -140,7 +209,10 @@ export default function LocationModal({
 
     setLoading(true);
     try {
-      await onSave(formData);
+      // Filter out empty values before sending
+      const cleanedData = cleanFormData(formData);
+
+      await onSave(cleanedData);
       onClose();
     } catch (error) {
       console.error('Error saving location:', error);
@@ -157,7 +229,7 @@ export default function LocationModal({
         <div className="p-6">
           <div className="flex justify-between items-center mb-6">
             <h2 className="text-2xl font-bold text-gray-900">
-              {location ? 'Edit Location' : 'Add New Location'}
+              {mode === 'create' ? 'Create New Location' : 'Edit Location'}
             </h2>
             <button
               onClick={onClose}
@@ -278,6 +350,64 @@ export default function LocationModal({
               />
             </div>
 
+            {/* Get Coordinates Button */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Location Coordinates
+              </label>
+              <div className="flex items-center space-x-3">
+                <button
+                  type="button"
+                  onClick={getCoordinatesFromAddress}
+                  disabled={
+                    geocodingLoading ||
+                    !formData.address ||
+                    !formData.city ||
+                    !formData.country
+                  }
+                  className="flex items-center space-x-2 px-4 py-2 bg-[#237804] text-white hover:bg-[#1D6303] disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors "
+                >
+                  <IoSearch className="w-4 h-4" />
+                  <span>
+                    {geocodingLoading
+                      ? 'Getting Coordinates...'
+                      : 'Get Coordinates'}
+                  </span>
+                </button>
+
+                {formData.latitude &&
+                  formData.longitude &&
+                  formData.latitude !== 0 &&
+                  formData.longitude !== 0 && (
+                    <div className="flex items-center space-x-2 text-sm text-gray-600">
+                      <IoLocation className="w-4 h-4 text-green-600" />
+                      <span>
+                        {formData.latitude.toFixed(6)},{' '}
+                        {formData.longitude.toFixed(6)}
+                      </span>
+                    </div>
+                  )}
+              </div>
+
+              {errors.geocoding && (
+                <p
+                  className={`mt-1 text-sm ${
+                    errors.geocoding.includes('✅')
+                      ? 'text-green-600'
+                      : 'text-red-600'
+                  }`}
+                >
+                  {errors.geocoding}
+                </p>
+              )}
+
+              {errors.coordinates && (
+                <p className="mt-1 text-sm text-red-600">
+                  {errors.coordinates}
+                </p>
+              )}
+            </div>
+
             {/* Geographical Unit */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -330,67 +460,6 @@ export default function LocationModal({
                 {errors.email && (
                   <p className="mt-1 text-sm text-red-600">{errors.email}</p>
                 )}
-              </div>
-            </div>
-
-            {/* Coordinates */}
-            <div>
-              <p className="text-sm text-gray-600 mb-3">
-                Enter the geographical coordinates for this location. You can
-                find coordinates using Google Maps or other mapping services.
-              </p>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Latitude *
-                  </label>
-                  <input
-                    type="number"
-                    step="any"
-                    value={formData.latitude || ''}
-                    onChange={(e) =>
-                      handleInputChange(
-                        'latitude',
-                        parseFloat(e.target.value) || 0
-                      )
-                    }
-                    className={`w-full px-3 py-2 border focus:ring-2 focus:ring-[#237804] focus:border-transparent ${
-                      errors.latitude ? 'border-red-500' : 'border-gray-300'
-                    }`}
-                    placeholder="0.0000"
-                  />
-                  {errors.latitude && (
-                    <p className="mt-1 text-sm text-red-600">
-                      {errors.latitude}
-                    </p>
-                  )}
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Longitude *
-                  </label>
-                  <input
-                    type="number"
-                    step="any"
-                    value={formData.longitude || ''}
-                    onChange={(e) =>
-                      handleInputChange(
-                        'longitude',
-                        parseFloat(e.target.value) || 0
-                      )
-                    }
-                    className={`w-full px-3 py-2 border focus:ring-2 focus:ring-[#237804] focus:border-transparent ${
-                      errors.longitude ? 'border-red-500' : 'border-gray-300'
-                    }`}
-                    placeholder="0.0000"
-                  />
-                  {errors.longitude && (
-                    <p className="mt-1 text-sm text-red-600">
-                      {errors.longitude}
-                    </p>
-                  )}
-                </div>
               </div>
             </div>
 
@@ -462,9 +531,9 @@ export default function LocationModal({
               >
                 {loading
                   ? 'Saving...'
-                  : location
-                  ? 'Update Location'
-                  : 'Create Location'}
+                  : mode === 'create'
+                  ? 'Create Location'
+                  : 'Update Location'}
               </button>
             </div>
           </form>

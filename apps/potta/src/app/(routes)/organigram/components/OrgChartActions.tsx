@@ -2,16 +2,9 @@
 
 import { useState } from 'react';
 import { toast } from 'react-hot-toast';
+
 import { orgChartApi } from '../utils/api';
-import {
-  OrganizationalStructure,
-  Location,
-  SubBusiness,
-  GeographicalUnit,
-} from '../types';
 import CreateDropdown from './CreateDropdown';
-import CreateModal from './CreateModal';
-import HelpGuide from './HelpGuide';
 
 interface OrgChartActionsProps {
   onAddDepartment: () => void;
@@ -21,10 +14,9 @@ interface OrgChartActionsProps {
   onAddGeographicalUnit: () => void;
   onAddSubBusiness: () => void;
   onAddUserAssignment: () => void;
-  onExportData: () => void;
   onImportData: () => void;
+  onExportData: () => void;
   onRefreshData: () => void;
-  structures?: any[];
 }
 
 export default function OrgChartActions({
@@ -35,65 +27,40 @@ export default function OrgChartActions({
   onAddGeographicalUnit,
   onAddSubBusiness,
   onAddUserAssignment,
-  onExportData,
   onImportData,
+  onExportData,
   onRefreshData,
-  structures = [],
 }: OrgChartActionsProps) {
-  const [showActions, setShowActions] = useState(false);
   const [showCreateMenu, setShowCreateMenu] = useState(false);
-  const [showCreateModal, setShowCreateModal] = useState(false);
-  const [createType, setCreateType] = useState<string>('');
+  const [showActions, setShowActions] = useState(false);
   const [isCreating, setIsCreating] = useState(false);
 
-  // Enhanced create functions with proper validation
-  const handleCreateDepartment = async (
-    data: Partial<OrganizationalStructure>
-  ) => {
+  const handleCreateDepartment = async (data: any) => {
     try {
       setIsCreating(true);
-      console.log('➕ Creating department with validation:', data);
+      console.log('✅ Creating department with data:', data);
 
-      // Validation logic
-      if (!data.department_name || data.department_name.trim().length < 2) {
-        toast.error('Department name must be at least 2 characters long');
-        return;
-      }
-
-      if (data.max_employees && data.max_employees <= 0) {
-        toast.error('Max employees must be greater than 0');
-        return;
-      }
-
-      if (data.budget && data.budget < 0) {
-        toast.error('Budget cannot be negative');
-        return;
-      }
-
-      // Prepare create data with proper defaults according to API docs
+      // Prepare create data
       const createData = {
         department_name: data.department_name,
-        description: data.description || `${data.department_name} department`,
+        description: data.description,
         structure_type: data.structure_type || 'STANDARD_OFFICE',
-        parent_structure_id: data.parent_structure_id || undefined,
-        location_id: data.location_id || undefined,
-        sub_business_unit_id: data.sub_business_unit_id || undefined,
-        organization_id: '876ca221-9ced-4388-8a98-019d2fdd3399',
+        parent_structure_id: data.parent_structure_id || null,
+        location_id: data.location_id || null,
+        sub_business_unit_id: data.sub_business_unit_id || null,
         max_employees: data.max_employees || 25,
         budget: data.budget || 500000,
         is_active: true,
+        organization_id: '876ca221-9ced-4388-8a98-019d2fdd3399',
       };
 
       console.log('✅ Validated department data:', createData);
       const result = await orgChartApi.createStructure(createData);
       console.log('✅ Department created:', result);
 
-      toast.success(
-        `Department "${createData.department_name}" created successfully!`
-      );
-
+      toast.success('Department created successfully!');
       onRefreshData();
-      setShowCreateModal(false);
+      setShowCreateMenu(false);
     } catch (err) {
       console.error('Error creating department:', err);
       toast.error('Failed to create department. Please try again.');
@@ -102,64 +69,37 @@ export default function OrgChartActions({
     }
   };
 
-  const handleCreateLocation = async (data: Partial<Location>) => {
+  const handleCreateLocation = async (data: any) => {
     try {
       setIsCreating(true);
-      console.log('📍 Creating location with validation:', data);
+      console.log('✅ Creating location with data:', data);
 
-      // Validation logic
-      if (!data.location_name || data.location_name.trim().length < 2) {
-        toast.error('Location name must be at least 2 characters long');
-        return;
-      }
-
-      if (!data.address || data.address.trim().length < 5) {
-        toast.error('Address must be at least 5 characters long');
-        return;
-      }
-
-      if (!data.city || data.city.trim().length < 2) {
-        toast.error('City must be at least 2 characters long');
-        return;
-      }
-
-      if (!data.country || data.country.trim().length < 2) {
-        toast.error('Country must be at least 2 characters long');
-        return;
-      }
-
-      // Prepare create data according to API docs
+      // Prepare create data
       const createData = {
         location_name: data.location_name,
         address: data.address,
         city: data.city,
-        state: data.state || '',
+        state: data.state || null,
         country: data.country,
-        postal_code: data.postal_code || '',
+        postal_code: data.postal_code || null,
         latitude: data.latitude || 0,
         longitude: data.longitude || 0,
-        phone: data.phone || '',
-        email: data.email || '',
-        website: data.website || '',
-        description: data.description || `${data.location_name} office`,
-        capacity: data.capacity || 50,
-        geo_unit_id: data.geo_unit_id || undefined,
+        phone: data.phone || null,
+        email: data.email || null,
+        website: data.website || null,
+        description: data.description || null,
+        capacity: data.capacity || null,
+        geo_unit_id: data.geo_unit_id || null,
         organization_id: '876ca221-9ced-4388-8a98-019d2fdd3399',
       };
 
       console.log('✅ Validated location data:', createData);
-      console.log(
-        '📍 About to send location creation request with geo_unit_id:',
-        createData.geo_unit_id
-      );
       const result = await orgChartApi.createLocation(createData);
       console.log('✅ Location created:', result);
 
-      toast.success(
-        `Location "${createData.location_name}" created successfully!`
-      );
+      toast.success('Location created successfully!');
       onRefreshData();
-      setShowCreateModal(false);
+      setShowCreateMenu(false);
     } catch (err) {
       console.error('Error creating location:', err);
       toast.error('Failed to create location. Please try again.');
@@ -168,49 +108,36 @@ export default function OrgChartActions({
     }
   };
 
-  const handleCreateSubBusiness = async (data: Partial<SubBusiness>) => {
+  const handleCreateSubBusiness = async (data: any) => {
     try {
       setIsCreating(true);
-      console.log('💼 Creating sub-business with validation:', data);
+      console.log('✅ Creating sub-business with data:', data);
 
-      // Validation logic
-      if (!data.sub_business_name || data.sub_business_name.trim().length < 2) {
-        toast.error('Business name must be at least 2 characters long');
-        return;
-      }
-
-      if (data.max_employees && data.max_employees <= 0) {
-        toast.error('Max employees must be greater than 0');
-        return;
-      }
-
-      // Prepare create data according to API docs
+      // Prepare create data
       const createData = {
         sub_business_name: data.sub_business_name,
-        description:
-          data.description || `${data.sub_business_name} business unit`,
+        description: data.description || null,
         industry: data.industry || 'Technology',
-        parent_sub_business_id: data.parent_sub_business_id || undefined,
-        location_id: data.location_id || undefined,
-        organization_id: '876ca221-9ced-4388-8a98-019d2fdd3399',
+        parent_sub_business_id: data.parent_sub_business_id || null,
+        location_id: data.location_id || null,
         max_employees: data.max_employees || 50,
+        current_employees: data.current_employees || 0,
         annual_revenue: data.annual_revenue || 5000000,
         established_year: data.established_year || new Date().getFullYear(),
         is_active: true,
-        website: data.website || '',
-        contact_email: data.contact_email || '',
-        contact_phone: data.contact_phone || '',
+        website: data.website || null,
+        contact_email: data.contact_email || null,
+        contact_phone: data.contact_phone || null,
+        organization_id: '876ca221-9ced-4388-8a98-019d2fdd3399',
       };
 
       console.log('✅ Validated sub-business data:', createData);
       const result = await orgChartApi.createSubBusiness(createData);
       console.log('✅ Sub-business created:', result);
 
-      toast.success(
-        `Business unit "${createData.sub_business_name}" created successfully!`
-      );
+      toast.success('Business unit created successfully!');
       onRefreshData();
-      setShowCreateModal(false);
+      setShowCreateMenu(false);
     } catch (err) {
       console.error('Error creating sub-business:', err);
       toast.error('Failed to create business unit. Please try again.');
@@ -219,26 +146,18 @@ export default function OrgChartActions({
     }
   };
 
-  const handleCreateGeographicalUnit = async (
-    data: Partial<GeographicalUnit>
-  ) => {
+  const handleCreateGeographicalUnit = async (data: any) => {
     try {
       setIsCreating(true);
-      console.log('🌍 Creating geographical unit with validation:', data);
+      console.log('✅ Creating geographical unit with data:', data);
 
-      // Validation logic
-      if (!data.geo_unit_name || data.geo_unit_name.trim().length < 2) {
-        toast.error(
-          'Geographical unit name must be at least 2 characters long'
-        );
-        return;
-      }
-
-      // Prepare create data according to API docs
+      // Prepare create data
       const createData = {
         geo_unit_name: data.geo_unit_name,
-        description: data.description || `${data.geo_unit_name} region`,
-        parent_geo_unit_id: data.parent_geo_unit_id || undefined,
+        description: data.description || null,
+        parent_geo_unit_id: data.parent_geo_unit_id || null,
+        level: data.level || 1,
+        path: data.path || data.geo_unit_name,
         organization_id: '876ca221-9ced-4388-8a98-019d2fdd3399',
         is_active: true,
       };
@@ -247,11 +166,9 @@ export default function OrgChartActions({
       const result = await orgChartApi.createGeographicalUnit(createData);
       console.log('✅ Geographical unit created:', result);
 
-      toast.success(
-        `Geographical unit "${createData.geo_unit_name}" created successfully!`
-      );
+      toast.success('Geographical unit created successfully!');
       onRefreshData();
-      setShowCreateModal(false);
+      setShowCreateMenu(false);
     } catch (err) {
       console.error('Error creating geographical unit:', err);
       toast.error('Failed to create geographical unit. Please try again.');
@@ -263,38 +180,23 @@ export default function OrgChartActions({
   const handleCreateTemplate = async (data: any) => {
     try {
       setIsCreating(true);
-      console.log('📋 Creating template with validation:', data);
-
-      // Validation logic
-      if (!data.template_name || data.template_name.trim().length < 2) {
-        toast.error('Template name must be at least 2 characters long');
-        return;
-      }
-
-      if (!data.description || data.description.trim().length < 10) {
-        toast.error('Description must be at least 10 characters long');
-        return;
-      }
+      console.log('✅ Creating template with data:', data);
 
       // Prepare create data
       const createData = {
         template_name: data.template_name,
-        description: data.description,
-        template_type: data.template_type || 'STANDARD',
-        structure_definition: data.structure_definition || {},
+        template_type: data.template_type || 'STANDARD_OFFICE',
+        structure_data: data.structure_data || {},
         organization_id: '876ca221-9ced-4388-8a98-019d2fdd3399',
-        is_active: true,
       };
 
       console.log('✅ Validated template data:', createData);
       const result = await orgChartApi.createTemplate(createData);
       console.log('✅ Template created:', result);
 
-      toast.success(
-        `Template "${createData.template_name}" created successfully!`
-      );
+      toast.success('Template created successfully!');
       onRefreshData();
-      setShowCreateModal(false);
+      setShowCreateMenu(false);
     } catch (err) {
       console.error('Error creating template:', err);
       toast.error('Failed to create template. Please try again.');
@@ -306,35 +208,26 @@ export default function OrgChartActions({
   const handleCreateRole = async (data: any) => {
     try {
       setIsCreating(true);
-      console.log('👤 Creating role with validation:', data);
-
-      // Validation logic
-      if (!data.role_name || data.role_name.trim().length < 2) {
-        toast.error('Role name must be at least 2 characters long');
-        return;
-      }
-
-      if (!data.description || data.description.trim().length < 10) {
-        toast.error('Description must be at least 10 characters long');
-        return;
-      }
+      console.log('✅ Creating role with data:', data);
 
       // Prepare create data
       const createData = {
-        role_name: data.role_name,
-        description: data.description,
-        permissions: data.permissions || [],
+        name: data.name,
+        permissions: data.permissions || {
+          users: [],
+          invoices: [],
+          reports: [],
+        },
         organization_id: '876ca221-9ced-4388-8a98-019d2fdd3399',
-        is_active: true,
       };
 
       console.log('✅ Validated role data:', createData);
-      const result = await orgChartApi.createRole(createData);
-      console.log('✅ Role created:', result);
+      // const result = await orgChartApi.createRole(createData);
+      // console.log('✅ Role created:', result);
 
-      toast.success(`Role "${createData.role_name}" created successfully!`);
+      toast.success('Role creation functionality coming soon!');
       onRefreshData();
-      setShowCreateModal(false);
+      setShowCreateMenu(false);
     } catch (err) {
       console.error('Error creating role:', err);
       toast.error('Failed to create role. Please try again.');
@@ -343,42 +236,10 @@ export default function OrgChartActions({
     }
   };
 
-  // Export/Import functionality
-  const handleExportData = () => {
-    try {
-      console.log('📤 Exporting organigram data...');
-      onExportData();
-    } catch (err) {
-      console.error('Error exporting data:', err);
-      toast.error('Failed to export data. Please try again.');
-    }
-  };
-
-  const handleImportData = () => {
-    try {
-      console.log('📥 Importing organigram data...');
-      onImportData();
-    } catch (err) {
-      console.error('Error importing data:', err);
-      toast.error('Failed to import data. Please try again.');
-    }
-  };
-
   const handleCreateBusinessGeoAssignment = async (data: any) => {
     try {
       setIsCreating(true);
-      console.log('🔗 Creating business-geo assignment with validation:', data);
-
-      // Validation logic
-      if (!data.sub_business_id) {
-        toast.error('Business unit is required');
-        return;
-      }
-
-      if (!data.geographical_unit_id) {
-        toast.error('Geographical unit is required');
-        return;
-      }
+      console.log('✅ Creating business-geo assignment with data:', data);
 
       // Prepare create data
       const createData = {
@@ -404,7 +265,7 @@ export default function OrgChartActions({
 
       toast.success('Business-Geographical assignment created successfully!');
       onRefreshData();
-      setShowCreateModal(false);
+      setShowCreateMenu(false);
     } catch (err) {
       console.error('Error creating business-geo assignment:', err);
       toast.error(
@@ -416,9 +277,28 @@ export default function OrgChartActions({
   };
 
   const openCreateModal = (type: string) => {
-    setCreateType(type);
-    setShowCreateModal(true);
     setShowCreateMenu(false);
+
+    // Call the appropriate parent handler based on type
+    switch (type) {
+      case 'department':
+        onAddDepartment();
+        break;
+      case 'location':
+        onAddLocation();
+        break;
+      case 'sub-business':
+        onAddSubBusiness();
+        break;
+      case 'geographical-unit':
+        onAddGeographicalUnit();
+        break;
+      case 'user-assignment':
+        onAddUserAssignment();
+        break;
+      default:
+        console.warn('Unknown create type:', type);
+    }
   };
 
   return (
@@ -457,24 +337,7 @@ export default function OrgChartActions({
         </button>
       </div>
 
-      {/* Create Modal */}
-      <CreateModal
-        isOpen={showCreateModal}
-        createType={createType}
-        isCreating={isCreating}
-        onClose={() => setShowCreateModal(false)}
-        onCreateDepartment={handleCreateDepartment}
-        onCreateLocation={handleCreateLocation}
-        onCreateSubBusiness={handleCreateSubBusiness}
-        onCreateGeographicalUnit={handleCreateGeographicalUnit}
-        onCreateTemplate={handleCreateTemplate}
-        onCreateRole={handleCreateRole}
-        onCreateBusinessGeoAssignment={handleCreateBusinessGeoAssignment}
-        onCreateUserAssignment={onAddUserAssignment}
-      />
-
       {/* Help Guide */}
-      <HelpGuide isVisible={showActions} />
     </div>
   );
 }

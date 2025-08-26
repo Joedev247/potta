@@ -12,7 +12,7 @@ import {
   Organization,
 } from '../types';
 
-const organizationId = '876ca221-9ced-4388-8a98-019d2fdd3399'; // Default org ID from config
+const organizationId = '4c926765-d683-4e66-a62f-382d5b54c47a';
 
 export const orgChartApi = {
   // Organization
@@ -52,9 +52,13 @@ export const orgChartApi = {
     data: Partial<OrganizationalStructure>,
     orgId: string = organizationId
   ) => {
+    const payload = {
+      ...data,
+      organization_id: orgId,
+    };
     const result = await axios.post<OrganizationalStructure>(
       `/organizations/${orgId}/organizational-structures`,
-      data
+      payload
     );
     return {
       data: result.data,
@@ -68,9 +72,13 @@ export const orgChartApi = {
     data: Partial<OrganizationalStructure>,
     orgId: string = organizationId
   ) => {
+    const payload = {
+      ...data,
+      organization_id: orgId,
+    };
     const result = await axios.patch<OrganizationalStructure>(
       `/organizations/${orgId}/organizational-structures/${id}`,
-      data
+      payload
     );
     return {
       data: result.data,
@@ -222,9 +230,13 @@ export const orgChartApi = {
     data: Partial<UserAssignment>,
     orgId: string = organizationId
   ) => {
+    const payload = {
+      ...data,
+      organization_id: orgId,
+    };
     const result = await axios.post<UserAssignment>(
       `/organizations/${orgId}/user-assignments`,
-      data
+      payload
     );
     return {
       data: result.data,
@@ -238,9 +250,13 @@ export const orgChartApi = {
     data: Partial<UserAssignment>,
     orgId: string = organizationId
   ) => {
+    const payload = {
+      ...data,
+      organization_id: orgId,
+    };
     const result = await axios.put<UserAssignment>(
       `/organizations/${orgId}/user-assignments/${id}`,
-      data
+      payload
     );
     return {
       data: result.data,
@@ -284,9 +300,13 @@ export const orgChartApi = {
     data: Partial<Location>,
     orgId: string = organizationId
   ) => {
+    const payload = {
+      ...data,
+      organization_id: orgId,
+    };
     const result = await axios.post<Location>(
       `/organizations/${orgId}/locations`,
-      data
+      payload
     );
     return {
       data: result.data,
@@ -300,9 +320,13 @@ export const orgChartApi = {
     data: Partial<Location>,
     orgId: string = organizationId
   ) => {
+    const payload = {
+      ...data,
+      organization_id: orgId,
+    };
     const result = await axios.put<Location>(
       `/organizations/${orgId}/locations/${id}`,
-      data
+      payload
     );
     return {
       data: result.data,
@@ -371,9 +395,13 @@ export const orgChartApi = {
     data: Partial<GeographicalUnit>,
     orgId: string = organizationId
   ) => {
+    const payload = {
+      ...data,
+      organization_id: orgId,
+    };
     const result = await axios.post<GeographicalUnit>(
       `/organizations/${orgId}/geographical-units`,
-      data
+      payload
     );
     return {
       data: result.data,
@@ -387,7 +415,7 @@ export const orgChartApi = {
     data: Partial<GeographicalUnit>,
     orgId: string = organizationId
   ) => {
-    const result = await axios.patch<GeographicalUnit>(
+    const result = await axios.put<GeographicalUnit>(
       `/organizations/${orgId}/geographical-units/${id}`,
       data
     );
@@ -436,9 +464,13 @@ export const orgChartApi = {
     data: Partial<SubBusiness>,
     orgId: string = organizationId
   ) => {
+    const payload = {
+      ...data,
+      organization_id: orgId,
+    };
     const result = await axios.post<SubBusiness>(
       `/organizations/${orgId}/sub-businesses`,
-      data
+      payload
     );
     return {
       data: result.data,
@@ -452,9 +484,13 @@ export const orgChartApi = {
     data: Partial<SubBusiness>,
     orgId: string = organizationId
   ) => {
+    const payload = {
+      ...data,
+      organization_id: orgId,
+    };
     const result = await axios.put<SubBusiness>(
       `/organizations/${orgId}/sub-businesses/${id}`,
-      data
+      payload
     );
     return {
       data: result.data,
@@ -606,7 +642,11 @@ export const orgChartApi = {
   },
 
   createRole: async (data: any, orgId: string = organizationId) => {
-    const result = await axios.post(`/organizations/${orgId}/roles`, data);
+    const payload = {
+      ...data,
+      organization_id: orgId,
+    };
+    const result = await axios.post(`/organizations/${orgId}/roles`, payload);
     return {
       data: result.data,
       success: true,
@@ -615,7 +655,14 @@ export const orgChartApi = {
   },
 
   updateRole: async (id: string, data: any, orgId: string = organizationId) => {
-    const result = await axios.put(`/organizations/${orgId}/roles/${id}`, data);
+    const payload = {
+      ...data,
+      organization_id: orgId,
+    };
+    const result = await axios.put(
+      `/organizations/${orgId}/roles/${id}`,
+      payload
+    );
     return {
       data: result.data,
       success: true,

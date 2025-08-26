@@ -259,38 +259,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 
         if (encryptedToken) {
           devLog('Found encrypted token in URL');
-          devLog('Encryption secret available:', !!config.encryptionSecret);
-          devLog('Config:', config);
 
           try {
-            // Check if we have the encryption secret
-            if (!config.encryptionSecret) {
-              devLog(
-                'No encryption secret available, using token as-is for testing'
-              );
-              // For testing, try to use the token directly
-              const testToken = encryptedToken;
-
-              // Validate token
-              const isValid = await validateToken(testToken);
-              if (!isValid) {
-                throw new Error('Token validation failed');
-              }
-
-              // Store and use token
-              storeToken(testToken);
-              setTokenState(testToken);
-              await fetchUserData(testToken);
-
-              // Clean URL
-              url.searchParams.delete('token');
-              window.history.replaceState({}, '', url.toString());
-
-              devLog('Successfully authenticated with test token');
-              setIsLoading(false);
-              return;
-            }
-
             // Decrypt token
             const decryptedToken = await decryptToken(
               encryptedToken,
@@ -317,9 +287,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
             devLog('Failed to process URL token', err);
             setError(AUTH_ERRORS.TOKEN_INVALID);
             clearStoredTokens();
-            // Set loading to false so AuthGuard can proceed
-            setIsLoading(false);
-            return;
           }
         } else {
           // Check for stored token
@@ -394,9 +361,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 
     // Redirect to auth if not on bypass route
     if (!isBypassRoute && typeof window !== 'undefined') {
-      const authUrl = new URL(
-        config.authUrl || 'https://instanvi-auth.vercel.app'
-      );
+      const authUrl = new URL(config.authUrl);
       authUrl.searchParams.set('redirectUrl', window.location.href);
       window.location.href = authUrl.toString();
     }

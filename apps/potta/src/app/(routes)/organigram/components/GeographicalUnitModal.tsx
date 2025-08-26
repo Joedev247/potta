@@ -10,6 +10,8 @@ interface GeographicalUnitModalProps {
   onClose: () => void;
   geographicalUnit?: GeographicalUnit | null;
   onSave: (geographicalUnit: Partial<GeographicalUnit>) => void;
+  mode?: 'create' | 'edit'; // Add mode prop to distinguish create vs edit
+  parentGeographicalUnit?: GeographicalUnit | null; // Add parent geographical unit prop
 }
 
 export default function GeographicalUnitModal({
@@ -17,14 +19,13 @@ export default function GeographicalUnitModal({
   onClose,
   geographicalUnit,
   onSave,
+  mode = 'edit', // Default to edit mode
+  parentGeographicalUnit,
 }: GeographicalUnitModalProps) {
   const [formData, setFormData] = useState<Partial<GeographicalUnit>>({
     geo_unit_name: '',
     description: '',
     parent_geo_unit_id: '',
-    level: 1,
-    is_active: true,
-    organization_id: '500e05a0-c688-4c4a-9661-ae152e00d0c5', // Default org ID
   });
 
   const [parentUnits, setParentUnits] = useState<GeographicalUnit[]>([]);
@@ -57,15 +58,12 @@ export default function GeographicalUnitModal({
         setFormData({
           geo_unit_name: '',
           description: '',
-          parent_geo_unit_id: '',
-          level: 1,
-          is_active: true,
-          organization_id: '500e05a0-c688-4c4a-9661-ae152e00d0c5', // Default org ID
+          parent_geo_unit_id: parentGeographicalUnit?.id || '',
         });
       }
       setErrors({});
     }
-  }, [isOpen, geographicalUnit]);
+  }, [isOpen, geographicalUnit, parentGeographicalUnit]);
 
   const handleInputChange = (field: string, value: any) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
@@ -85,10 +83,6 @@ export default function GeographicalUnitModal({
       newErrors.description = 'Description is required';
     }
 
-    if (formData.level && formData.level < 1) {
-      newErrors.level = 'Level must be at least 1';
-    }
-
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -102,7 +96,18 @@ export default function GeographicalUnitModal({
 
     setLoading(true);
     try {
-      await onSave(formData);
+      // Filter out unnecessary fields for update and empty values
+      const payload = {
+        geo_unit_name: formData.geo_unit_name,
+        description: formData.description,
+        ...(mode === 'create' &&
+          formData.parent_geo_unit_id &&
+          formData.parent_geo_unit_id.trim() !== '' && {
+            parent_geo_unit_id: formData.parent_geo_unit_id,
+          }),
+      };
+
+      await onSave(payload);
       onClose();
     } catch (error) {
       console.error('Error saving geographical unit:', error);
@@ -115,13 +120,13 @@ export default function GeographicalUnitModal({
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div className="bg-white w-full max-w-2xl max-h-[90vh] overflow-y-auto rounded-lg shadow-xl">
+      <div className="bg-white w-full max-w-2xl max-h-[90vh] overflow-y-auto  shadow-xl">
         <div className="p-6">
           <div className="flex justify-between items-center mb-6">
             <h2 className="text-2xl font-bold text-gray-900">
-              {geographicalUnit
-                ? 'Edit Geographical Unit'
-                : 'Add New Geographical Unit'}
+              {mode === 'create'
+                ? 'Create New Geographical Unit'
+                : 'Edit Geographical Unit'}
             </h2>
             <button
               onClick={onClose}
@@ -143,7 +148,7 @@ export default function GeographicalUnitModal({
                 onChange={(e) =>
                   handleInputChange('geo_unit_name', e.target.value)
                 }
-                className={`w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-[#237804] focus:border-transparent transition-colors ${
+                className={`w-full px-3 py-2 border  focus:ring-2 focus:ring-[#237804] focus:border-transparent transition-colors ${
                   errors.geo_unit_name ? 'border-red-500' : 'border-gray-300'
                 }`}
                 placeholder="Enter geographical unit name"
@@ -166,7 +171,7 @@ export default function GeographicalUnitModal({
                   handleInputChange('description', e.target.value)
                 }
                 rows={3}
-                className={`w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-[#237804] focus:border-transparent transition-colors ${
+                className={`w-full px-3 py-2 border  focus:ring-2 focus:ring-[#237804] focus:border-transparent transition-colors ${
                   errors.description ? 'border-red-500' : 'border-gray-300'
                 }`}
                 placeholder="Enter description"
@@ -178,88 +183,54 @@ export default function GeographicalUnitModal({
               )}
             </div>
 
-            {/* Parent Unit */}
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Parent Unit (Optional)
-              </label>
-              <select
-                value={formData.parent_geo_unit_id || ''}
-                onChange={(e) =>
-                  handleInputChange(
-                    'parent_geo_unit_id',
-                    e.target.value || undefined
-                  )
-                }
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#237804] focus:border-transparent transition-colors"
-              >
-                <option value="">No Parent Unit</option>
-                {parentUnits.map((unit) => (
-                  <option key={unit.id} value={unit.id}>
-                    {unit.geo_unit_name}
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            {/* Level */}
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Level
-              </label>
-              <input
-                type="number"
-                value={formData.level || ''}
-                onChange={(e) =>
-                  handleInputChange('level', parseInt(e.target.value) || 1)
-                }
-                min="1"
-                className={`w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-[#237804] focus:border-transparent transition-colors ${
-                  errors.level ? 'border-red-500' : 'border-gray-300'
-                }`}
-                placeholder="1"
-              />
-              {errors.level && (
-                <p className="mt-1 text-sm text-red-600">{errors.level}</p>
-              )}
-            </div>
-
-            {/* Active Status */}
-            <div>
-              <label className="flex items-center">
-                <input
-                  type="checkbox"
-                  checked={formData.is_active ?? true}
+            {/* Parent Unit - Only show when creating */}
+            {mode === 'create' && (
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Parent Unit (Optional)
+                </label>
+                <select
+                  value={formData.parent_geo_unit_id || ''}
                   onChange={(e) =>
-                    handleInputChange('is_active', e.target.checked)
+                    handleInputChange(
+                      'parent_geo_unit_id',
+                      e.target.value || undefined
+                    )
                   }
-                  className="rounded border-gray-300 text-[#237804] focus:ring-[#237804]"
-                />
-                <span className="ml-2 text-sm font-medium text-gray-700">
-                  Active
-                </span>
-              </label>
-            </div>
+                  className="w-full px-3 py-2 border border-gray-300  focus:ring-2 focus:ring-[#237804] focus:border-transparent transition-colors"
+                >
+                  <option value="">No Parent Unit</option>
+                  {parentUnits.map((unit) => (
+                    <option key={unit.id} value={unit.id}>
+                      {unit.geo_unit_name}
+                    </option>
+                  ))}
+                </select>
+                <p className="mt-1 text-sm text-gray-500">
+                  Select a parent unit to create a hierarchical structure
+                </p>
+              </div>
+            )}
 
             {/* Action Buttons */}
             <div className="flex justify-end space-x-3 pt-6 border-t border-gray-200">
               <button
                 type="button"
                 onClick={onClose}
-                className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 transition-colors"
+                className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 hover:bg-gray-50 transition-colors"
               >
                 Cancel
               </button>
               <button
                 type="submit"
                 disabled={loading}
-                className="px-4 py-2 text-sm font-medium text-white bg-[#237804] rounded-md hover:bg-[#1D6303] disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                className="px-4 py-2 text-sm font-medium text-white bg-[#237804] hover:bg-[#1D6303] disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
               >
                 {loading
                   ? 'Saving...'
-                  : geographicalUnit
-                  ? 'Update Unit'
-                  : 'Create Unit'}
+                  : mode === 'create'
+                  ? 'Create Geographical Unit'
+                  : 'Update Geographical Unit'}
               </button>
             </div>
           </form>

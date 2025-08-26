@@ -180,6 +180,43 @@ export interface OrgChartFilters {
   location: string;
   businessUnit: string;
   geographicalUnit: string;
+  // New enhanced filters
+  department?: string;
+  employeeStatus?: 'active' | 'inactive' | 'all';
+  structureType?: string;
+  dateRange?: {
+    start: Date | null;
+    end: Date | null;
+  };
+  maxEmployees?: number;
+  budgetRange?: {
+    min: number | null;
+    max: number | null;
+  };
+  // Hierarchical filters
+  showOnlyActive?: boolean;
+  showOnlyWithEmployees?: boolean;
+  showOnlyWithBudget?: boolean;
+  // View-specific filters
+  viewDepth?: number; // How many levels deep to show
+  groupBy?: 'location' | 'business' | 'geography' | 'department' | 'none';
+}
+
+// New filter state management
+export interface FilterState {
+  filters: OrgChartFilters;
+  isActive: boolean;
+  appliedCount: number;
+  lastApplied: Date | null;
+}
+
+// Filter preset for quick access
+export interface FilterPreset {
+  id: string;
+  name: string;
+  description: string;
+  filters: OrgChartFilters;
+  isDefault?: boolean;
 }
 
 // Updated ViewMode to match our new structure
@@ -211,4 +248,29 @@ export type NodeAction =
   | 'delete'
   | 'view_details'
   | 'add_child'
-  | 'copy_info';
+  | 'copy_info'
+  | 'view_employees'
+  | 'view_departments'
+  | 'view_locations'
+  | 'view_geo_assignments'
+  | 'view_business_assignments'
+  | 'get_coordinates'
+  | 'deactivate'
+  | 'view_user_details'
+  | 'view_department'
+  | 'view_location'
+  // Specific entity actions
+  | 'edit_department'
+  | 'edit_location'
+  | 'edit_business'
+  | 'edit_geo_unit'
+  | 'edit_employee'
+  | 'delete_department'
+  | 'delete_location'
+  | 'delete_business'
+  | 'delete_geo_unit'
+  | 'delete_employee'
+  | 'add_child_department'
+  | 'add_child_location'
+  | 'add_child_business'
+  | 'add_child_geo_unit';

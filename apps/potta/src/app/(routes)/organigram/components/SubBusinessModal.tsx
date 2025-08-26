@@ -4,12 +4,15 @@ import { useState, useEffect } from 'react';
 import { IoClose } from 'react-icons/io5';
 import { SubBusiness, Location } from '../types';
 import { orgChartApi } from '../utils/api';
+import { cleanFormData } from '../utils/formUtils';
 
 interface SubBusinessModalProps {
   isOpen: boolean;
   onClose: () => void;
   subBusiness?: SubBusiness | null;
   onSave: (subBusiness: Partial<SubBusiness>) => void;
+  mode?: 'create' | 'edit'; // Add mode prop to distinguish create vs edit
+  parentSubBusiness?: SubBusiness | null; // Add parent sub business prop
 }
 
 export default function SubBusinessModal({
@@ -17,6 +20,8 @@ export default function SubBusinessModal({
   onClose,
   subBusiness,
   onSave,
+  mode = 'edit', // Default to edit mode
+  parentSubBusiness,
 }: SubBusinessModalProps) {
   const [formData, setFormData] = useState<Partial<SubBusiness>>({
     sub_business_name: '',
@@ -51,11 +56,10 @@ export default function SubBusinessModal({
           sub_business_name: '',
           description: '',
           industry: 'Technology',
-          parent_sub_business_id: '',
+          parent_sub_business_id: parentSubBusiness?.id || '',
           location_id: '',
           organization_id: '876ca221-9ced-4388-8a98-019d2fdd3399',
           max_employees: 50,
-          current_employees: 0,
           annual_revenue: 5000000,
           established_year: new Date().getFullYear(),
           is_active: true,
@@ -66,7 +70,7 @@ export default function SubBusinessModal({
       }
       setErrors({});
     }
-  }, [isOpen, subBusiness]);
+  }, [isOpen, subBusiness, parentSubBusiness]);
 
   const loadSubBusinesses = async () => {
     try {
@@ -134,7 +138,10 @@ export default function SubBusinessModal({
 
     setLoading(true);
     try {
-      await onSave(formData);
+      // Filter out empty values before sending
+      const cleanedData = cleanFormData(formData);
+
+      await onSave(cleanedData);
       onClose();
     } catch (error) {
       console.error('Error saving sub-business:', error);
@@ -151,7 +158,9 @@ export default function SubBusinessModal({
         <div className="p-6">
           <div className="flex justify-between items-center mb-6">
             <h2 className="text-2xl font-bold text-gray-900">
-              {subBusiness ? 'Edit Sub-Business' : 'Add New Sub-Business'}
+              {mode === 'create'
+                ? 'Create New Business Unit'
+                : 'Edit Business Unit'}
             </h2>
             <button
               onClick={onClose}
@@ -426,9 +435,9 @@ export default function SubBusinessModal({
               >
                 {loading
                   ? 'Saving...'
-                  : subBusiness
-                  ? 'Update Sub-Business'
-                  : 'Create Sub-Business'}
+                  : mode === 'create'
+                  ? 'Create Business Unit'
+                  : 'Update Business Unit'}
               </button>
             </div>
           </form>

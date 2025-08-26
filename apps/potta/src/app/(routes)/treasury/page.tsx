@@ -9,9 +9,7 @@ const Treasury = () => {
 
   return (
     <RootLayout>
-      <div
-        className={`${context?.layoutMode === 'sidebar' ? 'pl-8' : 'pl-5'}`}
-      >
+      <div className={`${context?.layoutMode === 'sidebar' ? 'pl-8' : 'pl-5'}`}>
         <TreasuryMainDashboard type="treasury" />
       </div>
     </RootLayout>

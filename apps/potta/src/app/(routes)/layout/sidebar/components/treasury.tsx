@@ -6,7 +6,7 @@ import { ContextData } from '@potta/components/context';
 import { svgIcons } from '@potta/components/svg_icons/IconsSvg';
 import SidebarProfile from './SidebarProfile';
 import { GiReceiveMoney } from 'react-icons/gi';
-import { SlWallet } from "react-icons/sl";
+import { SlWallet } from 'react-icons/sl';
 
 const SidebarsTreasury = () => {
   const pathname = usePathname();
@@ -59,6 +59,32 @@ const SidebarsTreasury = () => {
           )}
         >
           <h3 className="text-md">Bank Accounts</h3>
+        </MenuItem>
+
+        {/* Cash Flow Forecast */}
+        <MenuItem
+          active={isActive('/treasury/cashflow')}
+          className=""
+          href="/treasury/cashflow"
+          icon={
+            <svg
+              className={`h-6 w-6 ${
+                isActive('/treasury/cashflow') ? 'text-white' : 'text-gray-700'
+              }`}
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"
+              />
+            </svg>
+          }
+        >
+          <h3 className="text-md">Cash Flow</h3>
         </MenuItem>
 
         {/* Bank Account Transactions */}

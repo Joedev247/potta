@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { IoClose } from 'react-icons/io5';
 import { OrganizationalStructure, Location, SubBusiness } from '../types';
 import { orgChartApi } from '../utils/api';
+import { cleanFormData } from '../utils/formUtils';
 
 interface DepartmentModalProps {
   isOpen: boolean;
@@ -11,6 +12,7 @@ interface DepartmentModalProps {
   department?: OrganizationalStructure | null;
   onSave: (department: Partial<OrganizationalStructure>) => void;
   parentStructure?: OrganizationalStructure | null;
+  mode?: 'create' | 'edit'; // Add mode prop to distinguish create vs edit
 }
 
 export default function DepartmentModal({
@@ -19,6 +21,7 @@ export default function DepartmentModal({
   department,
   onSave,
   parentStructure,
+  mode = 'edit', // Default to edit mode
 }: DepartmentModalProps) {
   const [formData, setFormData] = useState<Partial<OrganizationalStructure>>({
     department_name: '',
@@ -31,6 +34,10 @@ export default function DepartmentModal({
     is_active: true,
   });
 
+  const [departmentType, setDepartmentType] = useState<
+    'standalone' | 'under_business'
+  >(parentStructure ? 'under_business' : 'standalone');
+
   const [locations, setLocations] = useState<Location[]>([]);
   const [subBusinesses, setSubBusinesses] = useState<SubBusiness[]>([]);
   const [loading, setLoading] = useState(false);
@@ -42,6 +49,12 @@ export default function DepartmentModal({
       loadSubBusinesses();
       if (department) {
         setFormData(department);
+        // Determine department type based on existing data
+        if (department.sub_business_unit_id) {
+          setDepartmentType('under_business');
+        } else {
+          setDepartmentType('standalone');
+        }
       } else {
         setFormData({
           department_name: '',
@@ -54,6 +67,7 @@ export default function DepartmentModal({
           budget: 0,
           is_active: true,
         });
+        setDepartmentType(parentStructure ? 'under_business' : 'standalone');
       }
       setErrors({});
     }
@@ -88,6 +102,24 @@ export default function DepartmentModal({
     }
   };
 
+  const handleDepartmentTypeChange = (
+    type: 'standalone' | 'under_business'
+  ) => {
+    setDepartmentType(type);
+    // Clear related fields when switching types
+    if (type === 'under_business') {
+      setFormData((prev) => ({ ...prev, location_id: '' }));
+    } else {
+      setFormData((prev) => ({ ...prev, sub_business_unit_id: '' }));
+    }
+    // Clear related errors
+    setErrors((prev) => ({
+      ...prev,
+      location_id: '',
+      sub_business_unit_id: '',
+    }));
+  };
+
   const validateForm = () => {
     const newErrors: Record<string, string> = {};
 
@@ -99,8 +131,14 @@ export default function DepartmentModal({
       newErrors.description = 'Description is required';
     }
 
-    if (!formData.location_id) {
-      newErrors.location_id = 'Location is required';
+    // Location is only required for standalone departments
+    if (departmentType === 'standalone' && !formData.location_id) {
+      newErrors.location_id = 'Location is required for standalone departments';
+    }
+
+    // Sub-business unit is required when creating under business unit
+    if (departmentType === 'under_business' && !formData.sub_business_unit_id) {
+      newErrors.sub_business_unit_id = 'Business unit is required';
     }
 
     if (formData.max_employees && formData.max_employees < 1) {
@@ -124,7 +162,10 @@ export default function DepartmentModal({
 
     setLoading(true);
     try {
-      await onSave(formData);
+      // Filter out empty values before sending
+      const cleanedData = cleanFormData(formData);
+
+      await onSave(cleanedData);
       onClose();
     } catch (error) {
       console.error('Error saving department:', error);
@@ -141,7 +182,7 @@ export default function DepartmentModal({
         <div className="p-6">
           <div className="flex justify-between items-center mb-6">
             <h2 className="text-2xl font-bold text-gray-900">
-              {department ? 'Edit Department' : 'Add New Department'}
+              {mode === 'create' ? 'Create New Department' : 'Edit Department'}
             </h2>
             <button
               onClick={onClose}
@@ -152,6 +193,49 @@ export default function DepartmentModal({
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-6">
+            {/* Department Type Selection - Only show for create mode when no parent */}
+            {mode === 'create' && !department && !parentStructure && (
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Department Type *
+                </label>
+                <div className="grid grid-cols-2 gap-4">
+                  <button
+                    type="button"
+                    onClick={() => handleDepartmentTypeChange('standalone')}
+                    className={`p-4 border-2 rounded-lg text-left transition-colors ${
+                      departmentType === 'standalone'
+                        ? 'border-[#237804] bg-green-50'
+                        : 'border-gray-300 hover:border-gray-400'
+                    }`}
+                  >
+                    <div className="font-medium text-gray-900">
+                      Standalone Department
+                    </div>
+                    <div className="text-sm text-gray-600 mt-1">
+                      Create a department with its own location
+                    </div>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => handleDepartmentTypeChange('under_business')}
+                    className={`p-4 border-2 rounded-lg text-left transition-colors ${
+                      departmentType === 'under_business'
+                        ? 'border-[#237804] bg-green-50'
+                        : 'border-gray-300 hover:border-gray-400'
+                    }`}
+                  >
+                    <div className="font-medium text-gray-900">
+                      Under Business Unit
+                    </div>
+                    <div className="text-sm text-gray-600 mt-1">
+                      Create a department within an existing business unit
+                    </div>
+                  </button>
+                </div>
+              </div>
+            )}
+
             {/* Department Name */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -231,109 +315,93 @@ export default function DepartmentModal({
               </div>
             )}
 
-            {/* Location */}
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Location *
-              </label>
-              <select
-                value={formData.location_id || ''}
-                onChange={(e) =>
-                  handleInputChange('location_id', e.target.value)
-                }
-                className={`w-full px-3 py-2 border focus:ring-2 focus:ring-[#237804] focus:border-transparent ${
-                  errors.location_id ? 'border-red-500' : 'border-gray-300'
-                }`}
-              >
-                <option value="">Select a location</option>
-                {locations.map((location) => (
-                  <option key={location.id} value={location.id}>
-                    {location.location_name} - {location.city},{' '}
-                    {location.country}
-                  </option>
-                ))}
-              </select>
-              {errors.location_id && (
-                <p className="mt-1 text-sm text-red-600">
-                  {errors.location_id}
-                </p>
-              )}
-            </div>
-
-            {/* Sub-Business Unit */}
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Sub-Business Unit
-              </label>
-              <select
-                value={formData.sub_business_unit_id || ''}
-                onChange={(e) =>
-                  handleInputChange('sub_business_unit_id', e.target.value)
-                }
-                className="w-full px-3 py-2 border border-gray-300 focus:ring-2 focus:ring-[#237804] focus:border-transparent"
-              >
-                <option value="">No Sub-Business Unit</option>
-                {subBusinesses.map((subBusiness) => (
-                  <option key={subBusiness.id} value={subBusiness.id}>
-                    {subBusiness.sub_business_name}
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            {/* Employee Counts */}
-            <div className="grid grid-cols-2 gap-4">
+            {/* Location - Only for standalone departments */}
+            {departmentType === 'standalone' && (
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Max Employees
+                  Location *
                 </label>
-                <input
-                  type="number"
-                  value={formData.max_employees || ''}
+                <select
+                  value={formData.location_id || ''}
                   onChange={(e) =>
-                    handleInputChange(
-                      'max_employees',
-                      parseInt(e.target.value) || 0
-                    )
+                    handleInputChange('location_id', e.target.value)
                   }
-                  min="1"
                   className={`w-full px-3 py-2 border focus:ring-2 focus:ring-[#237804] focus:border-transparent ${
-                    errors.max_employees ? 'border-red-500' : 'border-gray-300'
+                    errors.location_id ? 'border-red-500' : 'border-gray-300'
                   }`}
-                />
-                {errors.max_employees && (
+                >
+                  <option value="">Select a location</option>
+                  {locations.map((location) => (
+                    <option key={location.id} value={location.id}>
+                      {location.location_name} - {location.city},{' '}
+                      {location.country}
+                    </option>
+                  ))}
+                </select>
+                {errors.location_id && (
                   <p className="mt-1 text-sm text-red-600">
-                    {errors.max_employees}
+                    {errors.location_id}
                   </p>
                 )}
               </div>
+            )}
 
+            {/* Sub-Business Unit - Only for departments under business unit */}
+            {departmentType === 'under_business' && (
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Current Employees
+                  Business Unit *
                 </label>
-                <input
-                  type="number"
-                  value={formData.current_employees || ''}
+                <select
+                  value={formData.sub_business_unit_id || ''}
                   onChange={(e) =>
-                    handleInputChange(
-                      'current_employees',
-                      parseInt(e.target.value) || 0
-                    )
+                    handleInputChange('sub_business_unit_id', e.target.value)
                   }
-                  min="0"
                   className={`w-full px-3 py-2 border focus:ring-2 focus:ring-[#237804] focus:border-transparent ${
-                    errors.current_employees
+                    errors.sub_business_unit_id
                       ? 'border-red-500'
                       : 'border-gray-300'
                   }`}
-                />
-                {errors.current_employees && (
+                >
+                  <option value="">Select a business unit</option>
+                  {subBusinesses.map((subBusiness) => (
+                    <option key={subBusiness.id} value={subBusiness.id}>
+                      {subBusiness.sub_business_name}
+                    </option>
+                  ))}
+                </select>
+                {errors.sub_business_unit_id && (
                   <p className="mt-1 text-sm text-red-600">
-                    {errors.current_employees}
+                    {errors.sub_business_unit_id}
                   </p>
                 )}
               </div>
+            )}
+
+            {/* Max Employees */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Max Employees
+              </label>
+              <input
+                type="number"
+                value={formData.max_employees || ''}
+                onChange={(e) =>
+                  handleInputChange(
+                    'max_employees',
+                    parseInt(e.target.value) || 0
+                  )
+                }
+                min="1"
+                className={`w-full px-3 py-2 border focus:ring-2 focus:ring-[#237804] focus:border-transparent ${
+                  errors.max_employees ? 'border-red-500' : 'border-gray-300'
+                }`}
+              />
+              {errors.max_employees && (
+                <p className="mt-1 text-sm text-red-600">
+                  {errors.max_employees}
+                </p>
+              )}
             </div>
 
             {/* Budget */}
@@ -394,9 +462,9 @@ export default function DepartmentModal({
               >
                 {loading
                   ? 'Saving...'
-                  : department
-                  ? 'Update Department'
-                  : 'Create Department'}
+                  : mode === 'create'
+                  ? 'Create Department'
+                  : 'Update Department'}
               </button>
             </div>
           </form>

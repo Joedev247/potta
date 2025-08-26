@@ -40,12 +40,21 @@ const nodeTypes = {
   headerValueNode: HeaderValueNode,
 };
 
+// Spacing constants to prevent node overlap
+const NODE_SPACING = {
+  HORIZONTAL: 500, // Minimum horizontal space between nodes (increased from 400)
+  VERTICAL: 250, // Minimum vertical space between levels (increased from 200)
+  NODE_WIDTH: 280, // Approximate node width
+  NODE_HEIGHT: 120, // Approximate node height
+  MAX_CHILDREN_PER_ROW: 8, // Maximum children per row before creating new rows
+};
+
 interface OrgChartFlowComponentProps {
   viewMode: ViewMode;
   searchTerm: string;
   filters: OrgChartFilters;
   refreshTrigger: number;
-  onNodeSelect?: (node: any) => void;
+  onNodeSelect?: (node: any, event?: React.MouseEvent) => void;
   onViewModeChange?: (mode: ViewMode) => void;
   onAction?: (action: string, nodeId: string, entity?: any) => void;
   onViewEmployees?: (filters: any) => void;
@@ -72,11 +81,6 @@ export default function OrgChartFlowComponent({
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [selectedNode, setSelectedNode] = useState<string | null>(null);
-  const [hierarchicalGeoData, setHierarchicalGeoData] = useState<{
-    nodes: Node[];
-    edges: Edge[];
-    geoUnitTree: (GeographicalUnit & { children: GeographicalUnit[] })[];
-  } | null>(null);
 
   // Load data
   useEffect(() => {
@@ -98,7 +102,7 @@ export default function OrgChartFlowComponent({
           orgChartApi.getAssignments(),
           orgChartApi.getLocations(),
           orgChartApi.getSubBusinesses(),
-          orgChartApi.getGeographicalUnitsHierarchy(), // Use hierarchy endpoint for proper tree structure
+          orgChartApi.getGeographicalUnitsHierarchy(),
         ]);
 
         const organizationData = organizationRes.data;
@@ -167,7 +171,6 @@ export default function OrgChartFlowComponent({
         children: GeographicalUnit[];
       })[];
 
-      // Include unit if it matches search OR has matching children
       if (matchesSearch || filteredChildren.length > 0) {
         return {
           ...unit,
@@ -220,17 +223,49 @@ export default function OrgChartFlowComponent({
       );
     }
 
-    // Apply location filter
+    // Apply geographical unit filter first (higher level)
+    if (filters.geographicalUnit) {
+      // Filter locations that belong to this geographical unit
+      filteredLocations = filteredLocations.filter(
+        (l) => l.geo_unit_id === filters.geographicalUnit
+      );
+
+      // Filter assignments that belong to this geographical unit
+      filteredAssignments = filteredAssignments.filter(
+        (a) => a.geographical_unit_id === filters.geographicalUnit
+      );
+
+      // Filter structures that are in locations belonging to this geographical unit
+      const locationIdsInGeoUnit = filteredLocations.map((l) => l.id);
+      filteredStructures = filteredStructures.filter(
+        (s) => s.location_id && locationIdsInGeoUnit.includes(s.location_id)
+      );
+
+      // Filter business units that are in locations belonging to this geographical unit
+      filteredSubBusinesses = filteredSubBusinesses.filter(
+        (b) => b.location_id && locationIdsInGeoUnit.includes(b.location_id)
+      );
+    }
+
+    // Apply location filter (more specific)
     if (filters.location) {
+      // Filter structures that belong to this specific location
       filteredStructures = filteredStructures.filter(
         (s) => s.location_id === filters.location
       );
+
+      // Filter business units that belong to this specific location
+      filteredSubBusinesses = filteredSubBusinesses.filter(
+        (b) => b.location_id === filters.location
+      );
+
+      // Filter assignments that belong to this specific location
       filteredAssignments = filteredAssignments.filter(
         (a) => a.location_id === filters.location
       );
     }
 
-    // Apply business unit filter
+    // Apply business unit filter (most specific)
     if (filters.businessUnit) {
       filteredStructures = filteredStructures.filter(
         (s) => s.sub_business_unit_id === filters.businessUnit
@@ -240,13 +275,96 @@ export default function OrgChartFlowComponent({
       );
     }
 
-    // Apply geographical unit filter
-    if (filters.geographicalUnit) {
-      filteredLocations = filteredLocations.filter(
-        (l) => l.geo_unit_id === filters.geographicalUnit
+    // Apply enhanced filters
+    // Department filter
+    if (filters.department) {
+      filteredStructures = filteredStructures.filter(
+        (s) => s.id === filters.department
       );
       filteredAssignments = filteredAssignments.filter(
-        (a) => a.geographical_unit_id === filters.geographicalUnit
+        (a) => a.organizational_structure_id === filters.department
+      );
+    }
+
+    // Employee status filter
+    if (filters.employeeStatus && filters.employeeStatus !== 'all') {
+      filteredAssignments = filteredAssignments.filter((a) => {
+        if (filters.employeeStatus === 'active') {
+          return a.is_active !== false; // Show active (true or undefined)
+        } else if (filters.employeeStatus === 'inactive') {
+          return a.is_active === false; // Show only inactive
+        }
+        return true;
+      });
+    }
+
+    // Structure type filter
+    if (filters.structureType) {
+      filteredStructures = filteredStructures.filter(
+        (s) => s.structure_type === filters.structureType
+      );
+    }
+
+    // Show only active structures
+    if (filters.showOnlyActive) {
+      filteredStructures = filteredStructures.filter(
+        (s) => s.is_active !== false
+      );
+      filteredSubBusinesses = filteredSubBusinesses.filter(
+        (b) => b.is_active !== false
+      );
+      // Note: Location interface doesn't have is_active property, so we skip it
+      filteredGeoUnits = filteredGeoUnits.filter((g) => g.is_active !== false);
+    }
+
+    // Show only structures with employees
+    if (filters.showOnlyWithEmployees) {
+      const structuresWithEmployees = new Set(
+        filteredAssignments.map((a) => a.organizational_structure_id)
+      );
+      filteredStructures = filteredStructures.filter((s) =>
+        structuresWithEmployees.has(s.id)
+      );
+    }
+
+    // Show only structures with budget
+    if (filters.showOnlyWithBudget) {
+      filteredStructures = filteredStructures.filter(
+        (s) => s.budget && s.budget > 0
+      );
+    }
+
+    // Max employees filter
+    if (filters.maxEmployees) {
+      filteredStructures = filteredStructures.filter(
+        (s) => !s.max_employees || s.max_employees <= filters.maxEmployees!
+      );
+    }
+
+    // Budget range filter
+    if (filters.budgetRange) {
+      filteredStructures = filteredStructures.filter((s) => {
+        if (!s.budget) return false;
+        const budget = s.budget;
+        const min = filters.budgetRange!.min;
+        const max = filters.budgetRange!.max;
+
+        if (min !== null && budget < min) return false;
+        if (max !== null && budget > max) return false;
+        return true;
+      });
+    }
+
+    // Debug log for employees view
+    if (viewMode === 'employees') {
+      console.log('Employees View - Filters applied:', filters);
+      console.log(
+        'Employees View - Filtered assignments count:',
+        filteredAssignments.length
+      );
+      console.log(
+        'Employees View - All assignments count:',
+        assignments.length
       );
     }
 
@@ -267,36 +385,70 @@ export default function OrgChartFlowComponent({
     filters,
   ]);
 
-  // Action handlers for enhanced nodes
-  const handleNodeAction = useCallback(
-    (action: string, nodeId: string, entity?: any) => {
-      if (onAction) {
-        onAction(action, nodeId, entity);
-      }
-    },
-    [onAction]
-  );
+  // Helper function to calculate tree layout positions with better space distribution
+  const calculateTreeLayout = (
+    children: any[],
+    parentX: number,
+    level: number,
+    maxChildrenPerRow: number = NODE_SPACING.MAX_CHILDREN_PER_ROW,
+    availableWidth?: number
+  ) => {
+    if (children.length === 0) return [];
 
-  const handleViewEmployees = useCallback(
-    (filters: any) => {
-      if (onViewEmployees) {
-        onViewEmployees(filters);
-      }
-      if (onViewModeChange) {
-        onViewModeChange('employees');
-      }
-    },
-    [onViewEmployees, onViewModeChange]
-  );
+    const positions: Array<{ x: number; y: number; index: number }> = [];
+
+    // For root level children (level 1), use wider spacing to prevent collision
+    const horizontalSpacing =
+      level === 1 ? NODE_SPACING.HORIZONTAL * 1.6 : NODE_SPACING.HORIZONTAL;
+    const effectiveWidth =
+      availableWidth || children.length * horizontalSpacing;
+
+    if (children.length <= maxChildrenPerRow) {
+      // Single row layout with better distribution
+      const totalWidth = (children.length - 1) * horizontalSpacing;
+      const startX = parentX - totalWidth / 2;
+
+      children.forEach((_, index) => {
+        positions.push({
+          x: startX + index * horizontalSpacing,
+          y: 100 + level * NODE_SPACING.VERTICAL, // Ensure no nodes above main org (y=50)
+          index,
+        });
+      });
+    } else {
+      // Multi-row layout - ALWAYS start from the top of the level, never center vertically
+      const rows = Math.ceil(children.length / maxChildrenPerRow);
+      const startY = 100 + level * NODE_SPACING.VERTICAL; // Start from the top of the level
+
+      children.forEach((_, index) => {
+        const row = Math.floor(index / maxChildrenPerRow);
+        const col = index % maxChildrenPerRow;
+        const childrenInThisRow = Math.min(
+          maxChildrenPerRow,
+          children.length - row * maxChildrenPerRow
+        );
+
+        const totalWidth = (childrenInThisRow - 1) * horizontalSpacing;
+        const startX = parentX - totalWidth / 2;
+
+        positions.push({
+          x: startX + col * horizontalSpacing,
+          y: startY + row * NODE_SPACING.VERTICAL, // Each row goes down from the start
+          index,
+        });
+      });
+    }
+
+    return positions;
+  };
 
   // Create nodes based on view mode
   const nodes = useMemo(() => {
     if (loading) return [];
 
     const reactFlowNodes: Node[] = [];
-    let nodeId = 0;
 
-    // Always start with the main organization
+    // Always start with the main organization at the top
     const mainOrgNode: Node = {
       id: 'main-org',
       type: 'headerValueNode',
@@ -318,32 +470,10 @@ export default function OrgChartFlowComponent({
           const treeEdges: Edge[] = [];
 
           // Level 0: Main Organization (Root)
-          const mainOrgNode: Node = {
-            id: 'main-org',
-            type: 'headerValueNode',
-            position: { x: 400, y: 50 },
-            data: {
-              header: 'Main Organization',
-              value: organization?.name || 'Organization',
-              icon: '🏢',
-              color: '#1f2937',
-            },
-          };
           treeNodes.push(mainOrgNode);
 
           // Level 1: Geographical Units (Hierarchical)
           const geoUnitTree = filteredData.geoUnits;
-
-          // Debug logs
-          console.log('=== GENERAL VIEW DEBUG ===');
-          console.log('Geo unit tree:', geoUnitTree);
-          console.log('Filtered locations:', filteredData.locations);
-          console.log('Filtered structures:', filteredData.structures);
-          console.log('Filtered sub businesses:', filteredData.subBusinesses);
-          console.log('======================');
-
-          let geoXOffset = 0;
-          const geoSpacing = 300;
 
           const createGeoUnitTree = (
             units: any[],
@@ -351,13 +481,21 @@ export default function OrgChartFlowComponent({
             parentX: number = 400,
             parentId?: string
           ) => {
-            let currentX = parentX - ((units.length - 1) * geoSpacing) / 2;
+            // Calculate positions using tree layout algorithm with wider spacing for root level
+            const positions = calculateTreeLayout(
+              units,
+              parentX,
+              level,
+              8,
+              level === 1 ? 1600 : undefined
+            );
 
-            units.forEach((unit) => {
+            units.forEach((unit, index) => {
+              const position = positions[index];
               const geoNode: Node = {
                 id: `geo-${unit.id}`,
                 type: 'headerValueNode',
-                position: { x: currentX, y: 50 + level * 120 },
+                position: { x: position.x, y: position.y },
                 data: {
                   header: 'Geographical Unit',
                   value: unit.geo_unit_name,
@@ -393,7 +531,7 @@ export default function OrgChartFlowComponent({
                 createGeoUnitTree(
                   unit.children,
                   level + 1,
-                  currentX,
+                  position.x,
                   `geo-${unit.id}`
                 );
               }
@@ -403,21 +541,21 @@ export default function OrgChartFlowComponent({
                 (l) => l.geo_unit_id === unit.id
               );
 
-              console.log(
-                `Locations for geo unit ${unit.geo_unit_name} (${unit.id}):`,
-                unitLocations
-              );
-
               if (unitLocations.length > 0) {
-                const locationSpacing = 200;
-                let locationX =
-                  currentX - ((unitLocations.length - 1) * locationSpacing) / 2;
+                // Calculate location positions using tree layout
+                const locationPositions = calculateTreeLayout(
+                  unitLocations,
+                  position.x,
+                  level + 1,
+                  3
+                );
 
                 unitLocations.forEach((location, locIndex) => {
+                  const locationPosition = locationPositions[locIndex];
                   const locationNode: Node = {
                     id: `location-${location.id}`,
                     type: 'headerValueNode',
-                    position: { x: locationX, y: 50 + (level + 1) * 120 },
+                    position: { x: locationPosition.x, y: locationPosition.y },
                     data: {
                       header: 'Location',
                       value: location.location_name,
@@ -437,28 +575,25 @@ export default function OrgChartFlowComponent({
                     style: { stroke: '#10b981', strokeWidth: 2 },
                   });
 
-                  // Add business units under this location (from departments)
+                  // Add departments and business units under this location
                   const locationStructures = filteredData.structures.filter(
                     (s) => s.location_id === location.id
                   );
 
-                  console.log(
-                    `📍 Structures for location ${location.location_name} (${location.id}):`,
-                    locationStructures
-                  );
-
-                  // Add business units that are directly linked to this location
                   const locationSubBusinesses =
                     filteredData.subBusinesses.filter(
                       (b) => b.location_id === location.id
                     );
 
-                  console.log(
-                    `📍 SubBusinesses for location ${location.location_name} (${location.id}):`,
-                    locationSubBusinesses
+                  // Separate departments that belong to business units vs standalone departments
+                  const departmentsUnderBusiness = locationStructures.filter(
+                    (s) => s.sub_business_unit_id
+                  );
+                  const standaloneDepartments = locationStructures.filter(
+                    (s) => !s.sub_business_unit_id
                   );
 
-                  // Combine both types of business units
+                  // Create business units (both direct and from departments)
                   const allBusinessUnits: Array<
                     | {
                         id: string;
@@ -473,13 +608,12 @@ export default function OrgChartFlowComponent({
                         business: SubBusiness;
                       }
                   > = [
-                    ...locationStructures.map((structure) => ({
-                      id: structure.sub_business_unit_id || structure.id,
-                      name: structure.sub_business_unit_id
-                        ? filteredData.subBusinesses.find(
-                            (b) => b.id === structure.sub_business_unit_id
-                          )?.sub_business_name || 'Business Unit'
-                        : 'Business Unit',
+                    ...departmentsUnderBusiness.map((structure) => ({
+                      id: structure.sub_business_unit_id!,
+                      name:
+                        filteredData.subBusinesses.find(
+                          (b) => b.id === structure.sub_business_unit_id
+                        )?.sub_business_name || 'Business Unit',
                       type: 'from_structure' as const,
                       structure: structure,
                     })),
@@ -497,17 +631,64 @@ export default function OrgChartFlowComponent({
                       index === self.findIndex((u) => u.id === unit.id)
                   );
 
-                  if (uniqueBusinessUnits.length > 0) {
-                    const businessSpacing = 180;
-                    let businessX =
-                      locationX -
-                      ((uniqueBusinessUnits.length - 1) * businessSpacing) / 2;
+                  // Add standalone departments directly under location
+                  if (standaloneDepartments.length > 0) {
+                    const departmentPositions = calculateTreeLayout(
+                      standaloneDepartments,
+                      position.x,
+                      level + 2,
+                      8
+                    );
 
-                    uniqueBusinessUnits.forEach((unit) => {
+                    standaloneDepartments.forEach((department, deptIndex) => {
+                      const departmentPosition = departmentPositions[deptIndex];
+                      const departmentNode: Node = {
+                        id: `structure-${department.id}`,
+                        type: 'headerValueNode',
+                        position: {
+                          x: departmentPosition.x,
+                          y: departmentPosition.y,
+                        },
+                        data: {
+                          header: 'Department',
+                          value: department.department_name,
+                          icon: '📊',
+                          color: '#8b5cf6',
+                          entity: department,
+                        },
+                      };
+                      treeNodes.push(departmentNode);
+
+                      // Connect department directly to location
+                      treeEdges.push({
+                        id: `edge-location-${location.id}-structure-${department.id}`,
+                        source: `location-${location.id}`,
+                        target: `structure-${department.id}`,
+                        type: 'orgEdge',
+                        style: { stroke: '#8b5cf6', strokeWidth: 2 },
+                      });
+                    });
+                  }
+
+                  // Add business units
+                  if (uniqueBusinessUnits.length > 0) {
+                    // Calculate business unit positions using tree layout
+                    const businessPositions = calculateTreeLayout(
+                      uniqueBusinessUnits,
+                      position.x,
+                      level + 2,
+                      8
+                    );
+
+                    uniqueBusinessUnits.forEach((unit, businessIndex) => {
+                      const businessPosition = businessPositions[businessIndex];
                       const businessNode: Node = {
                         id: `business-${unit.id}`,
                         type: 'headerValueNode',
-                        position: { x: businessX, y: 50 + (level + 2) * 120 },
+                        position: {
+                          x: businessPosition.x,
+                          y: businessPosition.y,
+                        },
                         data: {
                           header: 'Business Unit',
                           value: unit.name,
@@ -535,7 +716,10 @@ export default function OrgChartFlowComponent({
                         const departmentNode: Node = {
                           id: `structure-${unit.structure.id}`,
                           type: 'headerValueNode',
-                          position: { x: businessX, y: 50 + (level + 3) * 120 },
+                          position: {
+                            x: businessPosition.x,
+                            y: businessPosition.y + NODE_SPACING.VERTICAL,
+                          },
                           data: {
                             header: 'Department',
                             value: unit.structure.department_name,
@@ -555,16 +739,10 @@ export default function OrgChartFlowComponent({
                           style: { stroke: '#8b5cf6', strokeWidth: 2 },
                         });
                       }
-
-                      businessX += businessSpacing;
                     });
                   }
-
-                  locationX += locationSpacing;
                 });
               }
-
-              currentX += geoSpacing;
             });
           };
 
@@ -588,21 +766,28 @@ export default function OrgChartFlowComponent({
           const geoEdges: Edge[] = [];
 
           const geoUnitTree = filteredData.geoUnits;
-          const geoSpacing = 300;
 
           const createGeoHierarchy = (
             units: any[],
-            level: number = 0,
+            level: number = 1, // Start at level 1 to ensure below main org
             parentX: number = 400,
             parentId?: string
           ) => {
-            let currentX = parentX - ((units.length - 1) * geoSpacing) / 2;
+            // Calculate positions using tree layout algorithm with wider spacing for root level
+            const positions = calculateTreeLayout(
+              units,
+              parentX,
+              level,
+              8,
+              level === 1 ? 1600 : undefined
+            );
 
-            units.forEach((unit) => {
+            units.forEach((unit, index) => {
+              const position = positions[index];
               const geoNode: Node = {
                 id: `geo-${unit.id}`,
                 type: 'headerValueNode',
-                position: { x: currentX, y: 50 + level * 120 },
+                position: { x: position.x, y: position.y },
                 data: {
                   header: 'Geographical Unit',
                   value: unit.geo_unit_name,
@@ -638,7 +823,7 @@ export default function OrgChartFlowComponent({
                 createGeoHierarchy(
                   unit.children,
                   level + 1,
-                  currentX,
+                  position.x,
                   `geo-${unit.id}`
                 );
               }
@@ -649,15 +834,20 @@ export default function OrgChartFlowComponent({
               );
 
               if (unitLocations.length > 0) {
-                const locationSpacing = 200;
-                let locationX =
-                  currentX - ((unitLocations.length - 1) * locationSpacing) / 2;
+                // Calculate location positions using tree layout
+                const locationPositions = calculateTreeLayout(
+                  unitLocations,
+                  position.x,
+                  level + 1,
+                  3
+                );
 
-                unitLocations.forEach((location) => {
+                unitLocations.forEach((location, locIndex) => {
+                  const locationPosition = locationPositions[locIndex];
                   const locationNode: Node = {
                     id: `location-${location.id}`,
                     type: 'headerValueNode',
-                    position: { x: locationX, y: 50 + (level + 1) * 120 },
+                    position: { x: locationPosition.x, y: locationPosition.y },
                     data: {
                       header: 'Location',
                       value: location.location_name,
@@ -676,12 +866,8 @@ export default function OrgChartFlowComponent({
                     type: 'orgEdge',
                     style: { stroke: '#10b981', strokeWidth: 2 },
                   });
-
-                  locationX += locationSpacing;
                 });
               }
-
-              currentX += geoSpacing;
             });
           };
 
@@ -697,49 +883,261 @@ export default function OrgChartFlowComponent({
         break;
 
       case 'business':
-        // Show business units
-        const businessNodes = filteredData.subBusinesses.map(
-          (business, index) => ({
-            id: `business-${business.id}`,
-            type: 'headerValueNode',
-            position: { x: 200 + index * 300, y: 150 },
-            data: {
-              header: 'Business Unit',
-              value: business.sub_business_name,
-              icon: '🏢',
-              color: '#f59e0b',
-              entity: business,
-            },
-          })
-        );
-        reactFlowNodes.push(...businessNodes);
+        // Show business units with complete hierarchy (Business Units → Departments → Employees)
+        const createBusinessTree = () => {
+          const businessNodes: Node[] = [];
+          const businessEdges: Edge[] = [];
+
+          if (filteredData.subBusinesses.length > 0) {
+            const businessPositions = calculateTreeLayout(
+              filteredData.subBusinesses,
+              400,
+              1,
+              8
+            );
+
+            filteredData.subBusinesses.forEach((business, index) => {
+              const position = businessPositions[index];
+              const businessNode: Node = {
+                id: `business-${business.id}`,
+                type: 'headerValueNode',
+                position: { x: position.x, y: position.y },
+                data: {
+                  header: 'Business Unit',
+                  value: business.sub_business_name,
+                  icon: '🏢',
+                  color: '#f59e0b',
+                  entity: business,
+                },
+              };
+              businessNodes.push(businessNode);
+
+              // Connect business unit to main org
+              businessEdges.push({
+                id: `edge-main-org-business-${business.id}`,
+                source: 'main-org',
+                target: `business-${business.id}`,
+                type: 'orgEdge',
+                style: { stroke: '#f59e0b', strokeWidth: 2 },
+              });
+
+              // Add departments under this business unit
+              const businessDepartments = filteredData.structures.filter(
+                (s) => s.sub_business_unit_id === business.id
+              );
+
+              if (businessDepartments.length > 0) {
+                const departmentPositions = calculateTreeLayout(
+                  businessDepartments,
+                  position.x,
+                  2,
+                  8
+                );
+
+                businessDepartments.forEach((department, deptIndex) => {
+                  const departmentPosition = departmentPositions[deptIndex];
+                  const departmentNode: Node = {
+                    id: `structure-${department.id}`,
+                    type: 'headerValueNode',
+                    position: {
+                      x: departmentPosition.x,
+                      y: departmentPosition.y,
+                    },
+                    data: {
+                      header: 'Department',
+                      value: department.department_name,
+                      icon: '📊',
+                      color: '#8b5cf6',
+                      entity: department,
+                    },
+                  };
+                  businessNodes.push(departmentNode);
+
+                  // Connect department to business unit
+                  businessEdges.push({
+                    id: `edge-business-${business.id}-structure-${department.id}`,
+                    source: `business-${business.id}`,
+                    target: `structure-${department.id}`,
+                    type: 'orgEdge',
+                    style: { stroke: '#8b5cf6', strokeWidth: 2 },
+                  });
+
+                  // Add employees under this department
+                  const departmentEmployees = filteredData.assignments.filter(
+                    (a) => a.organizational_structure_id === department.id
+                  );
+
+                  if (departmentEmployees.length > 0) {
+                    const employeePositions = calculateTreeLayout(
+                      departmentEmployees,
+                      departmentPosition.x,
+                      3,
+                      8
+                    );
+
+                    departmentEmployees.forEach((employee, empIndex) => {
+                      const employeePosition = employeePositions[empIndex];
+                      const employeeNode: Node = {
+                        id: `employee-${employee.id}`,
+                        type: 'headerValueNode',
+                        position: {
+                          x: employeePosition.x,
+                          y: employeePosition.y,
+                        },
+                        data: {
+                          header: 'Employee',
+                          value: employee.job_title || 'Employee',
+                          icon: '👤',
+                          color: '#ec4899',
+                          entity: employee,
+                        },
+                      };
+                      businessNodes.push(employeeNode);
+
+                      // Connect employee to department
+                      businessEdges.push({
+                        id: `edge-structure-${department.id}-employee-${employee.id}`,
+                        source: `structure-${department.id}`,
+                        target: `employee-${employee.id}`,
+                        type: 'orgEdge',
+                        style: { stroke: '#ec4899', strokeWidth: 1.5 },
+                      });
+                    });
+                  }
+                });
+              }
+            });
+          }
+
+          return { nodes: businessNodes, edges: businessEdges };
+        };
+
+        const businessTreeResult = createBusinessTree();
+        reactFlowNodes.push(...businessTreeResult.nodes);
+        (window as any).businessTreeEdges = businessTreeResult.edges;
         break;
 
       case 'organizational':
-        // Show organizational structures with hierarchy
-        const orgNodes = filteredData.structures.map((structure, index) => {
-          const employeeCount = filteredData.assignments.filter(
-            (a) => a.organizational_structure_id === structure.id
-          ).length;
+        // Show departments grouped by business units with complete hierarchy
+        const createOrganizationalTree = () => {
+          const orgNodes: Node[] = [];
+          const orgEdges: Edge[] = [];
 
-          return {
-            id: `org-${structure.id}`,
-            type: 'headerValueNode',
-            position: { x: 200 + index * 300, y: 150 },
-            data: {
-              header: 'Department',
-              value: structure.department_name,
-              icon: '📊',
-              color: '#8b5cf6',
-              entity: structure,
+          // Group departments by business units
+          const departmentsByBusiness = filteredData.structures.reduce(
+            (groups, structure) => {
+              const businessId = structure.sub_business_unit_id || 'standalone';
+              if (!groups[businessId]) {
+                groups[businessId] = [];
+              }
+              groups[businessId].push(structure);
+              return groups;
             },
-          };
-        });
-        reactFlowNodes.push(...orgNodes);
+            {} as Record<string, OrganizationalStructure[]>
+          );
+
+          // Get business unit names for grouping
+          const businessUnits = filteredData.subBusinesses;
+          const businessPositions = calculateTreeLayout(
+            Object.keys(departmentsByBusiness),
+            400,
+            1,
+            8
+          );
+
+          Object.entries(departmentsByBusiness).forEach(
+            ([businessId, departments], index) => {
+              const position = businessPositions[index];
+              const businessUnit = businessUnits.find(
+                (b) => b.id === businessId
+              );
+              const businessName = businessUnit
+                ? businessUnit.sub_business_name
+                : 'Standalone Departments';
+
+              // Add business unit node (or standalone group)
+              const businessNode: Node = {
+                id: `business-group-${businessId}`,
+                type: 'headerValueNode',
+                position: { x: position.x, y: position.y },
+                data: {
+                  header: businessUnit ? 'Business Unit' : 'Department Group',
+                  value: businessName,
+                  icon: businessUnit ? '🏢' : '📊',
+                  color: businessUnit ? '#f59e0b' : '#06b6d4', // Different color for standalone departments
+                  entity: businessUnit || {
+                    id: businessId,
+                    name: businessName,
+                  },
+                },
+              };
+              orgNodes.push(businessNode);
+
+              // Connect business unit to main org
+              orgEdges.push({
+                id: `edge-main-org-business-group-${businessId}`,
+                source: 'main-org',
+                target: `business-group-${businessId}`,
+                type: 'orgEdge',
+                style: {
+                  stroke: businessUnit ? '#f59e0b' : '#06b6d4', // Different color for standalone departments
+                  strokeWidth: 2,
+                },
+              });
+
+              // Add departments under this business unit
+              if (departments.length > 0) {
+                const departmentPositions = calculateTreeLayout(
+                  departments,
+                  position.x,
+                  2,
+                  8
+                );
+
+                departments.forEach((department, deptIndex) => {
+                  const departmentPosition = departmentPositions[deptIndex];
+                  const departmentNode: Node = {
+                    id: `structure-${department.id}`,
+                    type: 'headerValueNode',
+                    position: {
+                      x: departmentPosition.x,
+                      y: departmentPosition.y,
+                    },
+                    data: {
+                      header: 'Department',
+                      value: department.department_name,
+                      icon: '📊',
+                      color: '#8b5cf6',
+                      entity: department,
+                    },
+                  };
+                  orgNodes.push(departmentNode);
+
+                  // Connect department to business unit
+                  orgEdges.push({
+                    id: `edge-business-group-${businessId}-structure-${department.id}`,
+                    source: `business-group-${businessId}`,
+                    target: `structure-${department.id}`,
+                    type: 'orgEdge',
+                    style: { stroke: '#8b5cf6', strokeWidth: 2 },
+                  });
+
+                  // Note: Employees are not shown in organizational view to keep it focused on department structure
+                });
+              }
+            }
+          );
+
+          return { nodes: orgNodes, edges: orgEdges };
+        };
+
+        const orgTreeResult = createOrganizationalTree();
+        reactFlowNodes.push(...orgTreeResult.nodes);
+        (window as any).orgTreeEdges = orgTreeResult.edges;
         break;
 
       case 'employees':
-        // Show employees grouped by department
+        // Show employees grouped by department with tree layout
         const employeeGroups = filteredData.assignments.reduce(
           (groups, assignment) => {
             const structure = filteredData.structures.find(
@@ -755,53 +1153,68 @@ export default function OrgChartFlowComponent({
           {} as Record<string, UserAssignment[]>
         );
 
-        let employeeIndex = 0;
-        Object.entries(employeeGroups).forEach(
-          ([deptName, deptEmployees], deptIndex) => {
-            // Add department node
-            const deptNode: Node = {
-              id: `dept-${deptIndex}`,
-              type: 'headerValueNode',
-              position: { x: 200 + deptIndex * 400, y: 150 },
-              data: {
-                header: 'Department',
-                value: deptName,
-                icon: '📊',
-                color: '#8b5cf6',
-                entity: {
-                  department_name: deptName,
-                  employee_count: deptEmployees.length,
-                },
-              },
-            };
-            reactFlowNodes.push(deptNode);
+        // Calculate department positions using tree layout
+        const departmentNames = Object.keys(employeeGroups);
+        if (departmentNames.length > 0) {
+          const deptPositions = calculateTreeLayout(departmentNames, 400, 1, 8);
 
-            // Add employee nodes under department
-            deptEmployees.forEach((employee, empIndex) => {
-              const employeeNode: Node = {
-                id: `employee-${employee.id}`,
+          Object.entries(employeeGroups).forEach(
+            ([deptName, deptEmployees], deptIndex) => {
+              const deptPosition = deptPositions[deptIndex];
+
+              // Add department node
+              const deptNode: Node = {
+                id: `dept-${deptIndex}`,
                 type: 'headerValueNode',
-                position: {
-                  x: 150 + deptIndex * 400 + (empIndex % 3) * 120,
-                  y: 250 + Math.floor(empIndex / 3) * 80,
-                },
+                position: { x: deptPosition.x, y: deptPosition.y },
                 data: {
-                  header: 'Employee',
-                  value: employee.job_title || 'Employee',
-                  icon: '👤',
-                  color: '#ec4899',
-                  entity: employee,
+                  header: 'Department',
+                  value: deptName,
+                  icon: '📊',
+                  color: '#8b5cf6',
+                  entity: {
+                    department_name: deptName,
+                    employee_count: deptEmployees.length,
+                  },
                 },
               };
-              reactFlowNodes.push(employeeNode);
-            });
-          }
-        );
+              reactFlowNodes.push(deptNode);
+
+              // Calculate employee positions using tree layout
+              if (deptEmployees.length > 0) {
+                const employeePositions = calculateTreeLayout(
+                  deptEmployees,
+                  deptPosition.x,
+                  2,
+                  8
+                );
+
+                // Add employee nodes under department
+                deptEmployees.forEach((employee, empIndex) => {
+                  const employeePosition = employeePositions[empIndex];
+                  const employeeNode: Node = {
+                    id: `employee-${employee.id}`,
+                    type: 'headerValueNode',
+                    position: { x: employeePosition.x, y: employeePosition.y },
+                    data: {
+                      header: 'Employee',
+                      value: employee.job_title || 'Employee',
+                      icon: '👤',
+                      color: '#ec4899',
+                      entity: employee,
+                    },
+                  };
+                  reactFlowNodes.push(employeeNode);
+                });
+              }
+            }
+          );
+        }
         break;
     }
 
     return reactFlowNodes;
-  }, [viewMode, filteredData, loading]);
+  }, [viewMode, filteredData, loading, organization]);
 
   // Create edges based on view mode
   const edges = useMemo(() => {
@@ -821,29 +1234,15 @@ export default function OrgChartFlowComponent({
         break;
 
       case 'business':
-        // Connect main org to business units
-        filteredData.subBusinesses.forEach((business) => {
-          reactFlowEdges.push({
-            id: `main-to-business-${business.id}`,
-            source: 'main-org',
-            target: `business-${business.id}`,
-            type: 'orgEdge',
-            style: { stroke: '#f59e0b', strokeWidth: 2 },
-          });
-        });
+        // Use the business tree edges created in the nodes useMemo
+        const businessTreeEdges = (window as any).businessTreeEdges || [];
+        reactFlowEdges.push(...businessTreeEdges);
         break;
 
       case 'organizational':
-        // Connect main org to organizational structures
-        filteredData.structures.forEach((structure) => {
-          reactFlowEdges.push({
-            id: `main-to-org-${structure.id}`,
-            source: 'main-org',
-            target: `org-${structure.id}`,
-            type: 'orgEdge',
-            style: { stroke: '#8b5cf6', strokeWidth: 2 },
-          });
-        });
+        // Use the organizational tree edges created in the nodes useMemo
+        const orgTreeEdges = (window as any).orgTreeEdges || [];
+        reactFlowEdges.push(...orgTreeEdges);
         break;
 
       case 'employees':
@@ -944,28 +1343,50 @@ export default function OrgChartFlowComponent({
       };
 
       if (onNodeSelect) {
-        onNodeSelect(nodeData);
+        onNodeSelect(nodeData, event);
       }
 
       // Add double-click functionality for "View Employees"
       if (event.detail === 2) {
         // Double click - switch to employees view with filters
-        if (nodeData.type === 'structure' || nodeData.type === 'business') {
+        if (
+          nodeData.type === 'structure' ||
+          nodeData.type === 'business' ||
+          nodeData.type === 'location'
+        ) {
           const entity = nodeData.data.entity as any;
-          const filters = {
-            location: entity?.location_id || '',
-            businessUnit: entity?.sub_business_unit_id || entity?.id || '',
-            geographicalUnit: entity?.geo_unit_id || '',
-          };
 
-          // Trigger view mode change to employees
-          if (onViewModeChange) {
-            onViewModeChange('employees');
+          // Call the onViewEmployees callback with proper filters
+          if (onViewEmployees) {
+            const filters: any = {};
+
+            // For locations, set both location and geographical unit filters
+            if (nodeData.type === 'location') {
+              filters.location = entity.id; // Use the location's own ID
+              filters.geographicalUnit = entity.geo_unit_id; // Also set the geographical unit
+            } else {
+              // For other entity types, use the existing logic
+              if (entity?.location_id) {
+                filters.location = entity.location_id;
+              }
+              if (entity?.sub_business_unit_id) {
+                filters.businessUnit = entity.sub_business_unit_id;
+              } else if (entity?.id && entity?.sub_business_name) {
+                // If it's a business unit entity itself
+                filters.businessUnit = entity.id;
+              }
+              if (entity?.geo_unit_id) {
+                filters.geographicalUnit = entity.geo_unit_id;
+              }
+            }
+
+            onViewEmployees(filters);
           }
 
-          // You can also update the filters here if needed
           toast.success(
-            `Switched to Employees view for ${nodeData.data.label}`
+            `Switched to Employees view for ${
+              nodeData.data.value || nodeData.data.label
+            }`
           );
         }
       }

@@ -18,6 +18,7 @@ import {
   type WebSocketResponse,
   type WebSocketError,
 } from './websocket';
+import Cookies from 'js-cookie';
 
 interface Message {
   id: string;

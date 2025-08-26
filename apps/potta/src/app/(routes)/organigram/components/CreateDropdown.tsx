@@ -87,28 +87,6 @@ export default function CreateDropdown({
             >
               <span>Sub-Business</span>
             </button>
-            <button
-              onClick={() => onSelectType('business-geo-assignment')}
-              className="w-full text-left px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center space-x-2"
-            >
-              <span>Business-Geo Assignment</span>
-            </button>
-
-            <div className="text-xs font-medium text-gray-500 uppercase tracking-wide mb-2 px-2 mt-3">
-              Roles & Templates
-            </div>
-            <button
-              onClick={() => onSelectType('role')}
-              className="w-full text-left px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center space-x-2"
-            >
-              <span>Role</span>
-            </button>
-            <button
-              onClick={() => onSelectType('template')}
-              className="w-full text-left px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center space-x-2"
-            >
-              <span>Template</span>
-            </button>
 
             <div className="text-xs font-medium text-gray-500 uppercase tracking-wide mb-2 px-2 mt-3">
               Employee Management

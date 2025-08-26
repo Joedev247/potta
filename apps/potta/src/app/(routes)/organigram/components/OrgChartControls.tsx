@@ -86,7 +86,7 @@ export default function OrgChartControls({
               { key: 'business', label: 'Business', icon: IoBusiness },
               {
                 key: 'organizational',
-                label: 'Organizational',
+                label: 'Departments',
                 icon: IoStatsChart,
               },
               { key: 'employees', label: 'Employees', icon: IoPeople },

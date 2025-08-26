@@ -28,6 +28,13 @@ const AuthGuard: React.FC<AuthGuardProps> = ({ children }) => {
     return BYPASS_AUTH_ROUTES.some((route) => currentPath.includes(route));
   }, []);
 
+  // Check if there's a token in the URL
+  const hasUrlToken = useMemo(() => {
+    if (typeof window === 'undefined') return false;
+    const url = new URL(window.location.href);
+    return url.searchParams.has('token');
+  }, []);
+
   useEffect(() => {
     // Skip auth check for bypass routes
     if (isBypassRoute) {
@@ -37,8 +44,18 @@ const AuthGuard: React.FC<AuthGuardProps> = ({ children }) => {
       return;
     }
 
-    // Redirect to auth if no token and not loading
-    if (!isLoading && !token) {
+    // Don't redirect if there's a token in URL (AuthContext is processing it)
+    if (hasUrlToken) {
+      if (process.env.NODE_ENV === 'development') {
+        console.log(
+          'AuthGuard: Token found in URL, waiting for AuthContext to process...'
+        );
+      }
+      return;
+    }
+
+    // Redirect to auth if no token and not loading and no URL token
+    if (!isLoading && !token && !hasUrlToken) {
       if (process.env.NODE_ENV === 'development') {
         console.log('AuthGuard: No token found, redirecting to auth...');
       }
@@ -48,7 +65,7 @@ const AuthGuard: React.FC<AuthGuardProps> = ({ children }) => {
       authUrl.searchParams.set('redirectUrl', currentUrl);
       window.location.href = authUrl.toString();
     }
-  }, [token, isLoading, isBypassRoute]);
+  }, [token, isLoading, isBypassRoute, hasUrlToken]);
 
   // Show loading state while checking authentication (only for non-bypass routes)
   if (isLoading && !isBypassRoute) {
@@ -64,8 +81,17 @@ const AuthGuard: React.FC<AuthGuardProps> = ({ children }) => {
     return <>{children}</>;
   }
 
-  // Don't render children if not authenticated (will redirect)
-  if (!isAuthenticated) {
+  // If there's a token in URL, show loading while AuthContext processes it
+  if (hasUrlToken && !isAuthenticated) {
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <PottaLoader size="lg" />
+      </div>
+    );
+  }
+
+  // Don't render children if not authenticated and no URL token (will redirect)
+  if (!isAuthenticated && !hasUrlToken) {
     return null;
   }
 
