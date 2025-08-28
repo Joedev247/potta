@@ -1,15 +1,6 @@
 import React, { useState } from 'react';
 import { FieldError, UseFormRegister } from 'react-hook-form';
-import { format } from 'date-fns';
-import { Calendar as CalendarIcon } from 'lucide-react';
-import { cn } from '@potta/lib/utils';
-import { Button } from '@potta/components/shadcn/button';
-import { Calendar } from '@potta/components/shadcn/calendar';
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from '@potta/components/shadcn/popover';
+
 
 // Create a custom error type that can handle both FieldError and simple message objects
 type CustomError = FieldError | { message: string };

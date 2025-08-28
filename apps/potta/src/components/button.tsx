@@ -24,6 +24,7 @@ const themes = {
   gray: 'bg-gray-300',
   dark: 'bg-gray-900',
   danger: 'bg-red-500',
+  outline: 'border border-green-600 text-green-600 bg-transparent !py-[5.5px]',
 };
 
 const Button = ({

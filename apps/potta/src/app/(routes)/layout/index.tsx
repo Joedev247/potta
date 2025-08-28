@@ -93,14 +93,14 @@ export default function RootLayout({
       <div
         className={`${
           show ? 'w-[400px]' : 'w-0'
-        } transition-all duration-500 ease-in-out overflow-hidden border-l border-gray-200 fixed right-0 top-0 h-full z-50`}
+        } transition-all duration-500 ease-in-out overflow-hidden  fixed right-0 top-0 h-full z-50`}
       >
         <ChatAI onClose={toggleChatAI} />
       </div>
 
       {/* ChatAI Toggle Button */}
       <div className={`w-[2.5%] z-40 ${show ? 'fixed' : ''} right-0`}>
-        <div className={`bg-white h-screen border-l flex justify-center`}>
+        <div className={`bg-white h-screen flex justify-center`}>
           <div>
             <div className="">
               <div className="mt-12">

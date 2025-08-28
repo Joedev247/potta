@@ -2,6 +2,40 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Print styles for cash flow reports */
+@media print {
+  .print\\:hidden {
+    display: none !important;
+  }
+
+  .print\\:p-4 {
+    padding: 1rem !important;
+  }
+
+  .print\\:space-y-4 > * + * {
+    margin-top: 1rem !important;
+  }
+
+  body {
+    font-size: 12px !important;
+    line-height: 1.4 !important;
+  }
+
+  .bg-gradient-to-br,
+  .bg-green-50,
+  .bg-red-50,
+  .bg-blue-50 {
+    background: white !important;
+  }
+
+  .border-green-200,
+  .border-red-200,
+  .border-blue-200,
+  .border-gray-200 {
+    border: 1px solid #000 !important;
+  }
+}
+
 @font-face {
   font-family: 'Sohne';
   src: url('/fonts/Sohne-Buch.otf') format('opentype');
