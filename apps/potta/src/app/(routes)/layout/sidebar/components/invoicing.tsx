@@ -30,7 +30,7 @@ const Sidebarsinvoicing = () => {
       collapsed={context?.toggle}
       toggled={true}
       breakPoint="md"
-      className=" relative !bg-white  h-[100vh] z-[100]  side "
+      className=" relative !bg-white !border-none  h-[100vh] z-[100]  side "
     >
       <Menu className="relative h-[76vh]" closeOnClick>
         <MenuItem

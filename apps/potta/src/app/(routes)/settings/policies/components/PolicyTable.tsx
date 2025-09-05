@@ -5,14 +5,11 @@ import { useGetPolicies } from '../../../policies/hooks/policyHooks';
 import Search from '@potta/components/search';
 import Button from '@potta/components/button';
 import { Icon } from '@iconify/react';
-import { IFilter } from '../../../policies/utils/types';
 import CreateRuleModal from '../../../policies/components/createRuleModal';
 import ViewPolicyModal from '../../../policies/components/viewPolicyModal';
 import DeletePolicyModal from '../../../policies/components/deletePolicyModal';
 import { ExtendedApprovalRule } from '../../../policy/types/approval-rule';
-import DataGrid from '../../../account_receivables/invoice/components/DataGrid';
-import { IColumnDef } from '../../../account_receivables/_utils/types';
-import { HeaderContext } from '@tanstack/react-table';
+import RiskPolicyTable from '../../../policies/components/RiskPolicyTable';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -242,6 +239,12 @@ const PolicyTable: React.FC<PolicyTableProps> = ({
   activeTab,
   activeSubmenu,
 }) => {
+  // For risk policies, use the new RiskPolicyTable component
+  if (activeTab === 'risk') {
+    return (
+      <RiskPolicyTable activeTab={activeTab} activeSubmenu={activeSubmenu} />
+    );
+  }
   const [searchValue, setSearchValue] = useState('');
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [isViewModalOpen, setIsViewModalOpen] = useState(false);

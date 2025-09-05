@@ -562,12 +562,12 @@ const PolicyTable = () => {
           </DialogHeader>
           {selectedPolicy && (
             <div className="space-y-6">
-              <div className="bg-gray-50 p-4 rounded-lg">
+              <div className="bg-gray-50 p-4 ">
                 <h3 className="font-medium text-lg mb-2">Policy Overview</h3>
                 <p className="text-gray-600">{selectedPolicy.name}</p>
               </div>
 
-              <div className="bg-gray-50 p-4 rounded-lg">
+              <div className="bg-gray-50 p-4 ">
                 <h3 className="font-medium text-lg mb-2">Requirements</h3>
                 <ul className="list-disc list-inside text-gray-600">
                   {selectedPolicy.requireReceipt && <li>Receipt Required</li>}
@@ -581,7 +581,7 @@ const PolicyTable = () => {
                 </ul>
               </div>
 
-              <div className="bg-gray-50 p-4 rounded-lg">
+              <div className="bg-gray-50 p-4 ">
                 <h3 className="font-medium text-lg mb-2">Rules</h3>
                 {selectedPolicy.rules.map((rule, index) => (
                   <div key={rule.id} className="mb-4 last:mb-0">
@@ -610,7 +610,7 @@ const PolicyTable = () => {
               </div>
 
               {selectedPolicy.additionalRequirements && (
-                <div className="bg-gray-50 p-4 rounded-lg">
+                <div className="bg-gray-50 p-4 ">
                   <h3 className="font-medium text-lg mb-2">
                     Additional Requirements
                   </h3>

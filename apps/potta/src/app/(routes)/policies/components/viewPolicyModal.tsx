@@ -11,7 +11,7 @@ import {
   Info,
 } from 'lucide-react';
 import moment from 'moment';
-import { GrDocumentText } from "react-icons/gr";
+import { GrDocumentText } from 'react-icons/gr';
 import { Policy } from '../utils/types';
 import { PolicySummaryView } from './PolicySummaryView';
 
@@ -178,10 +178,10 @@ const ViewPolicyModal = ({ open, setOpen, policy }: ViewPolicyModalProps) => {
                       </p>
                     </div>
                   </div>
-                 
+
                   <div className="flex items-center gap-3">
                     <div className="p-2 bg-gray-50">
-                      <GrDocumentText  className="h-4 w-4" />
+                      <GrDocumentText className="h-4 w-4" />
                     </div>
                     <div>
                       <p className="text-sm font-medium text-gray-500">Rules</p>

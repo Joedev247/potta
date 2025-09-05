@@ -6,19 +6,11 @@ import { Filter, Calendar, DollarSign, CreditCard } from 'lucide-react';
 import Slider from '@potta/components/slideover';
 import Button from '@potta/components/button';
 import PaymentModal from './PaymentModal';
+import { useGetApprovedBills } from '../hooks/useBills';
+import { Bill } from '../utils/bills-api';
 
-interface VendorInvoice {
-  id: string;
-  title: string;
-  type: string;
-  beneficiary: string;
-  invoiceNumber: string;
-  billingDate: string;
-  dueDate: string;
-  status: string;
-  amountExclTax: number;
-  amountInclTax: number;
-}
+// Using the Bill interface from the API
+type VendorInvoice = Bill;
 
 const VendorInvoicesTable: React.FC = () => {
   // Filter states
@@ -30,57 +22,18 @@ const VendorInvoicesTable: React.FC = () => {
   const [selectedInvoice, setSelectedInvoice] = useState<VendorInvoice | null>(
     null
   );
-  // Mock data - replace with actual API call
-  const mockData: VendorInvoice[] = [
-    {
-      id: '1',
-      title: 'Office Supplies Invoice',
-      type: 'Bill',
-      beneficiary: 'Office Supplies Co.',
-      invoiceNumber: 'INV-2024-001',
-      billingDate: '2024-01-15',
-      dueDate: '2024-02-15',
-      status: 'active',
-      amountExclTax: 1500.0,
-      amountInclTax: 1650.0,
-    },
-    {
-      id: '2',
-      title: 'Software License Renewal',
-      type: 'Bill',
-      beneficiary: 'Tech Solutions Ltd.',
-      invoiceNumber: 'INV-2024-002',
-      billingDate: '2024-01-20',
-      dueDate: '2024-02-20',
-      status: 'paid',
-      amountExclTax: 2500.0,
-      amountInclTax: 2750.0,
-    },
-    {
-      id: '3',
-      title: 'Marketing Services',
-      type: 'Bill',
-      beneficiary: 'Marketing Pro Agency',
-      invoiceNumber: 'INV-2024-003',
-      billingDate: '2024-01-25',
-      dueDate: '2024-02-25',
-      status: 'active',
-      amountExclTax: 3000.0,
-      amountInclTax: 3300.0,
-    },
-    {
-      id: '4',
-      title: 'Equipment Purchase',
-      type: 'Bill',
-      beneficiary: 'Hardware Store Inc.',
-      invoiceNumber: 'INV-2024-004',
-      billingDate: '2024-01-30',
-      dueDate: '2024-02-28',
-      status: 'active',
-      amountExclTax: 5000.0,
-      amountInclTax: 5500.0,
-    },
-  ];
+
+  // Fetch approved bills from API
+  const {
+    data: billsData,
+    isLoading,
+    error,
+  } = useGetApprovedBills({
+    limit: 100,
+    sortBy: ['issuedDate:DESC'],
+  });
+
+  const bills = billsData?.data || [];
 
   const formatCurrency = (amount: number) => {
     return new Intl.NumberFormat('en-US', {
@@ -99,29 +52,42 @@ const VendorInvoicesTable: React.FC = () => {
     });
   };
 
-  // Filter data based on search and filters - only show active invoices
+  // Filter data based on search and filters - only show approved bills
   const filteredData = useMemo(() => {
-    return mockData.filter((invoice) => {
-      // Only show active invoices
-      if (invoice.status !== 'active') {
+    return bills.filter((bill) => {
+      // Only show approved bills (already filtered by API, but double-check)
+      if (bill.status !== 'APPROVED') {
         return false;
       }
 
       // Search filter
       const searchMatch =
         !searchValue ||
-        invoice.title.toLowerCase().includes(searchValue.toLowerCase()) ||
-        invoice.beneficiary.toLowerCase().includes(searchValue.toLowerCase()) ||
-        invoice.invoiceNumber.toLowerCase().includes(searchValue.toLowerCase());
+        (bill.invoiceType &&
+          bill.invoiceType.toLowerCase().includes(searchValue.toLowerCase())) ||
+        (bill.vendor?.name &&
+          bill.vendor.name.toLowerCase().includes(searchValue.toLowerCase())) ||
+        (bill.customer?.name &&
+          bill.customer.name
+            .toLowerCase()
+            .includes(searchValue.toLowerCase())) ||
+        (bill.invoiceNumber &&
+          bill.invoiceNumber
+            .toLowerCase()
+            .includes(searchValue.toLowerCase())) ||
+        (bill.vendorInvoiceNumber &&
+          bill.vendorInvoiceNumber
+            .toLowerCase()
+            .includes(searchValue.toLowerCase()));
 
-      // Status filter
+      // Status filter (all approved bills should match)
       const statusMatch =
-        statusFilter === 'all' || invoice.status === statusFilter;
+        statusFilter === 'all' || bill.status === statusFilter;
 
       // Date filter
       let dateMatch = true;
-      if (dateFilter !== 'all') {
-        const invoiceDate = new Date(invoice.billingDate);
+      if (dateFilter !== 'all' && bill.issuedDate) {
+        const invoiceDate = new Date(bill.issuedDate);
         const now = new Date();
         const diffDays = Math.ceil(
           (now.getTime() - invoiceDate.getTime()) / (1000 * 60 * 60 * 24)
@@ -146,7 +112,7 @@ const VendorInvoicesTable: React.FC = () => {
       // Amount filter
       let amountMatch = true;
       if (amountFilter !== 'all') {
-        const amount = invoice.amountInclTax;
+        const amount = bill.invoiceTotal;
         switch (amountFilter) {
           case 'low':
             amountMatch = amount < 1000;
@@ -162,7 +128,7 @@ const VendorInvoicesTable: React.FC = () => {
 
       return searchMatch && statusMatch && dateMatch && amountMatch;
     });
-  }, [searchValue, statusFilter, dateFilter, amountFilter]);
+  }, [bills, searchValue, statusFilter, dateFilter, amountFilter]);
 
   // Filter configurations
   const filterConfig = [
@@ -197,72 +163,76 @@ const VendorInvoicesTable: React.FC = () => {
 
   const columns: ColumnDef<VendorInvoice>[] = [
     {
-      accessorKey: 'title',
-      header: 'Title',
-      cell: ({ row }) => (
-        <div className="font-medium text-gray-900">{row.getValue('title')}</div>
-      ),
-    },
-    {
-      accessorKey: 'type',
+      accessorKey: 'invoiceType',
       header: 'Type',
       cell: ({ row }) => (
-        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
-          {row.getValue('type')}
-        </span>
+        <div className="font-medium text-gray-900">
+          {row.getValue('invoiceType') || 'Bill'}
+        </div>
       ),
     },
     {
-      accessorKey: 'beneficiary',
-      header: 'Beneficiary',
-      cell: ({ row }) => (
-        <div className="text-gray-900">{row.getValue('beneficiary')}</div>
-      ),
+      accessorKey: 'vendor',
+      header: 'Vendor',
+      cell: ({ row }) => {
+        const bill = row.original;
+        const vendorName =
+          bill.vendor?.name || bill.customer?.name || 'Unknown';
+        return <div className="text-gray-900">{vendorName}</div>;
+      },
     },
     {
       accessorKey: 'invoiceNumber',
       header: 'Invoice Number',
-      cell: ({ row }) => (
-        <div className="font-mono text-sm text-gray-600">
-          {row.getValue('invoiceNumber')}
-        </div>
-      ),
+      cell: ({ row }) => {
+        const bill = row.original;
+        const invoiceNumber =
+          bill.invoiceNumber ||
+          bill.vendorInvoiceNumber ||
+          bill.invoiceId ||
+          '-';
+        return (
+          <div className="font-mono text-sm text-gray-600">{invoiceNumber}</div>
+        );
+      },
     },
     {
-      accessorKey: 'billingDate',
+      accessorKey: 'issuedDate',
       header: 'Billing Date',
-      cell: ({ row }) => (
-        <div className="text-gray-900">
-          {formatDate(row.getValue('billingDate'))}
-        </div>
-      ),
+      cell: ({ row }) => {
+        const date = row.getValue('issuedDate') as string;
+        return (
+          <div className="text-gray-900">{date ? formatDate(date) : '-'}</div>
+        );
+      },
     },
     {
       accessorKey: 'dueDate',
       header: 'Due Date',
-      cell: ({ row }) => (
-        <div className="text-gray-900">
-          {formatDate(row.getValue('dueDate'))}
-        </div>
-      ),
+      cell: ({ row }) => {
+        const date = row.getValue('dueDate') as string;
+        return (
+          <div className="text-gray-900">{date ? formatDate(date) : '-'}</div>
+        );
+      },
     },
     {
-      accessorKey: 'amountExclTax',
-      header: 'Amount (excl. tax)',
-      cell: ({ row }) => (
-        <div className="text-gray-900 font-medium">
-          {formatCurrency(row.getValue('amountExclTax'))}
-        </div>
-      ),
-    },
-    {
-      accessorKey: 'amountInclTax',
-      header: 'Amount (incl. tax)',
-      cell: ({ row }) => (
-        <div className="text-gray-900 font-medium">
-          {formatCurrency(row.getValue('amountInclTax'))}
-        </div>
-      ),
+      accessorKey: 'invoiceTotal',
+      header: 'Amount',
+      cell: ({ row }) => {
+        const amount = row.getValue('invoiceTotal') as number;
+        const currency = row.original.currency || 'XAF';
+        return (
+          <div className="text-gray-900 font-medium">
+            {new Intl.NumberFormat('en-US', {
+              style: 'currency',
+              currency: currency,
+              minimumFractionDigits: 2,
+              maximumFractionDigits: 2,
+            }).format(amount)}
+          </div>
+        );
+      },
     },
     {
       accessorKey: 'status',
@@ -271,14 +241,14 @@ const VendorInvoicesTable: React.FC = () => {
         const status = row.getValue('status') as string;
         const getStatusColor = (status: string) => {
           switch (status) {
-            case 'active':
-              return 'bg-blue-100 text-blue-800';
-            case 'paid':
+            case 'APPROVED':
               return 'bg-green-100 text-green-800';
-            case 'pending':
+            case 'PENDING':
               return 'bg-yellow-100 text-yellow-800';
-            case 'overdue':
+            case 'REJECTED':
               return 'bg-red-100 text-red-800';
+            case 'PAID':
+              return 'bg-blue-100 text-blue-800';
             default:
               return 'bg-gray-100 text-gray-800';
           }
@@ -289,7 +259,7 @@ const VendorInvoicesTable: React.FC = () => {
               status
             )}`}
           >
-            {status.charAt(0).toUpperCase() + status.slice(1)}
+            {status.charAt(0).toUpperCase() + status.slice(1).toLowerCase()}
           </span>
         );
       },
@@ -298,14 +268,14 @@ const VendorInvoicesTable: React.FC = () => {
       id: 'actions',
       header: '',
       cell: ({ row }) => {
-        const invoice = row.original;
+        const bill = row.original;
         return (
           <Button
             text="Pay"
             type="button"
             icon={<CreditCard className="w-3 h-3 mr-1" />}
             onClick={() => {
-              setSelectedInvoice(invoice);
+              setSelectedInvoice(bill);
               setIsPaymentModalOpen(true);
             }}
           />
@@ -327,18 +297,37 @@ const VendorInvoicesTable: React.FC = () => {
     setSearchValue('');
   };
 
+  // Show loading state
+  if (isLoading) {
+    return (
+      <div className="bg-white p-6 border border-gray-200">
+        <div className="flex items-center justify-center h-64">
+          <div className="text-gray-500">Loading approved bills...</div>
+        </div>
+      </div>
+    );
+  }
+
+  // Show error state
+  if (error) {
+    return (
+      <div className="bg-white p-6 border border-gray-200">
+        <div className="flex items-center justify-center h-64">
+          <div className="text-red-500">
+            Error loading bills. Please try again.
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <>
       <div className="bg-white p-6 border border-gray-200">
         <div className="flex items-center justify-between mb-6">
           <h2 className="text-xl font-semibold text-gray-900">
-            Vendor Invoices
+            Approved Bills ({filteredData.length})
           </h2>
-          <div className="flex items-center space-x-2">
-            <span className="text-sm text-gray-500">
-              {filteredData.length} of {mockData.length} invoices
-            </span>
-          </div>
         </div>
 
         {/* Dynamic Filters */}
@@ -351,11 +340,17 @@ const VendorInvoicesTable: React.FC = () => {
           className="mb-6"
         />
 
-        <DataGrid
-          data={filteredData}
-          columns={columns}
-          onRowClick={handleRowClick}
-        />
+        {filteredData.length === 0 ? (
+          <div className="flex items-center justify-center h-32">
+            <div className="text-gray-500">No approved bills found.</div>
+          </div>
+        ) : (
+          <DataGrid
+            data={filteredData}
+            columns={columns}
+            onRowClick={handleRowClick}
+          />
+        )}
       </div>
 
       {/* Payment Modal */}

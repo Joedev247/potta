@@ -12,20 +12,17 @@ import * as yup from 'yup';
 import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { reimbursementSchema } from '../utils/validations';
-
-const typeOptions = [
-  { label: 'Out of Pocket', value: 'out_of_pocket' },
-  { label: 'Mileage', value: 'mileage' },
-];
-
-const typeToCategory = {
-  out_of_pocket: 'Out of Pocket',
-  mileage: 'Mileage',
-};
-
-// Yup validation schema
-
-type ReimbursementFormData = yup.InferType<typeof reimbursementSchema>;
+import {
+  useCreateReimbursement,
+  useUpdateReimbursement,
+  useGetEmployees,
+} from '../hooks/useReimbursements';
+import {
+  Reimbursement,
+  CreateReimbursementRequest,
+  REIMBURSEMENT_TYPE_OPTIONS,
+  EXPENSE_TYPE_OPTIONS,
+} from '../utils/api-types';
 
 // Helper to convert Date to CalendarDate
 function dateToCalendarDate(date: Date | undefined): CalendarDate | null {
@@ -37,24 +34,19 @@ function dateToCalendarDate(date: Date | undefined): CalendarDate | null {
   );
 }
 
-// Mock employee data - replace with actual API call
-const employeeOptions = [
-  { label: 'John Doe', value: 'john-doe' },
-  { label: 'Jane Smith', value: 'jane-smith' },
-  { label: 'Mike Johnson', value: 'mike-johnson' },
-  { label: 'Sarah Wilson', value: 'sarah-wilson' },
-  { label: 'David Brown', value: 'david-brown' },
-];
+type ReimbursementFormData = yup.InferType<typeof reimbursementSchema>;
+
+interface ReimbursementFormProps {
+  onSubmit: (data: any) => void;
+  onClose: () => void;
+  initialData?: Reimbursement;
+}
 
 const ReimbursementForm = ({
   onSubmit,
   onClose,
   initialData,
-}: {
-  onSubmit: (data: any) => void;
-  onClose: () => void;
-  initialData?: any;
-}) => {
+}: ReimbursementFormProps) => {
   const {
     control,
     handleSubmit,
@@ -65,23 +57,52 @@ const ReimbursementForm = ({
   } = useForm<ReimbursementFormData>({
     resolver: yupResolver(reimbursementSchema),
     defaultValues: {
-      madeBy: initialData?.madeBy ? [initialData.madeBy] : [],
-      merchant: initialData?.merchant || '',
-      amount: initialData?.amount || '',
-      date: initialData?.date ? new Date(initialData.date) : undefined,
-      memo: initialData?.memo || '',
-      status: initialData?.status || 'pending',
-      type: initialData?.type || 'out_of_pocket',
-      account: initialData?.account || '',
-      receiptFiles: initialData?.receiptFiles || [],
+      employeeId: initialData?.employeeId || '',
+      amount: initialData?.amount || 0,
+      type: initialData?.type || 'mileage',
+      expenseType: initialData?.expenseType || '',
+      description: initialData?.description || '',
+      date: initialData?.createdAt
+        ? new Date(initialData.createdAt)
+        : undefined,
     },
   });
 
   const watchedType = watch('type');
 
-  // Category is always derived from type
-  const category =
-    typeToCategory[watchedType as keyof typeof typeToCategory] || '';
+  // API hooks
+  const createMutation = useCreateReimbursement();
+  const updateMutation = useUpdateReimbursement();
+  const { data: employees, isLoading: employeesLoading } = useGetEmployees({
+    limit: 100,
+    sortBy: ['firstName:ASC'],
+  });
+
+  // Get expense type options based on selected type
+  const expenseTypeOptions =
+    EXPENSE_TYPE_OPTIONS[watchedType as keyof typeof EXPENSE_TYPE_OPTIONS] ||
+    [];
+
+  // Convert employees to options
+  const employeeOptions =
+    employees?.data?.map((emp: any) => ({
+      label: `${emp.firstName} ${emp.lastName}`,
+      value: emp.uuid,
+    })) || [];
+
+  // Reset expense type when type changes
+  useEffect(() => {
+    if (watchedType && expenseTypeOptions.length > 0) {
+      const currentExpenseType = watch('expenseType');
+      const isValidExpenseType = expenseTypeOptions.some(
+        (option) => option.value === currentExpenseType
+      );
+
+      if (!isValidExpenseType) {
+        setValue('expenseType', expenseTypeOptions[0].value);
+      }
+    }
+  }, [watchedType, expenseTypeOptions, setValue, watch]);
 
   // Fetch expense accounts
   const [accountOptions, setAccountOptions] = useState<
@@ -96,7 +117,6 @@ const ReimbursementForm = ({
     accountsApi
       .getByType('Expense')
       .then((data) => {
-        // Assume data.data is the array of accounts
         const accounts = data.data || data;
         setAccountOptions(
           accounts.map((acc: any) => ({
@@ -122,14 +142,37 @@ const ReimbursementForm = ({
     }
   };
 
-  const handleFileChange = (files: File[]) => {
-    setValue('receiptFiles', files);
-  };
-
   const onFormSubmit = (data: ReimbursementFormData) => {
-    onSubmit({ ...data, category });
-    onClose();
-    reset();
+    const submitData: CreateReimbursementRequest = {
+      employeeId: data.employeeId,
+      amount: Number(data.amount),
+      type: data.type as any,
+      expenseType: data.expenseType,
+      description: data.description,
+    };
+
+    if (initialData) {
+      // Update existing reimbursement
+      updateMutation.mutate(
+        { uuid: initialData.uuid, data: submitData },
+        {
+          onSuccess: () => {
+            onSubmit(submitData);
+            onClose();
+            reset();
+          },
+        }
+      );
+    } else {
+      // Create new reimbursement
+      createMutation.mutate(submitData, {
+        onSuccess: () => {
+          onSubmit(submitData);
+          onClose();
+          reset();
+        },
+      });
+    }
   };
 
   return (
@@ -139,17 +182,17 @@ const ReimbursementForm = ({
     >
       <div className="flex flex-col gap-4">
         <Controller
-          name="madeBy"
+          name="employeeId"
           control={control}
           render={({ field }) => (
             <SearchableSelect
               label="Employee"
               options={employeeOptions}
               selectedValue={field.value}
-              onChange={(val: string[]) => field.onChange(val)}
-              multiple={true}
-              placeholder="Select employee(s)"
-              error={errors.madeBy?.message}
+              onChange={(val: string) => field.onChange(val)}
+              placeholder="Select employee"
+              error={errors.employeeId?.message}
+              isLoading={employeesLoading}
             />
           )}
         />
@@ -160,7 +203,7 @@ const ReimbursementForm = ({
           render={({ field }) => (
             <Select
               label="Type"
-              options={typeOptions}
+              options={REIMBURSEMENT_TYPE_OPTIONS}
               selectedValue={field.value}
               onChange={(val: string) => field.onChange(val)}
               bg=""
@@ -169,24 +212,20 @@ const ReimbursementForm = ({
           )}
         />
 
-        {watchedType === 'out_of_pocket' && (
-          <Controller
-            name="merchant"
-            control={control}
-            render={({ field }) => (
-              <Input
-                name="merchant"
-                label="Merchant"
-                value={field.value}
-                onchange={(e) => field.onChange(e.target.value)}
-                placeholder="Merchant"
-                required
-                type="text"
-                errors={errors.merchant?.message}
-              />
-            )}
-          />
-        )}
+        <Controller
+          name="expenseType"
+          control={control}
+          render={({ field }) => (
+            <Select
+              label="Expense Type"
+              options={expenseTypeOptions}
+              selectedValue={field.value}
+              onChange={(val: string) => field.onChange(val)}
+              bg=""
+              error={errors.expenseType?.message}
+            />
+          )}
+        />
 
         <Controller
           name="amount"
@@ -221,88 +260,37 @@ const ReimbursementForm = ({
 
       <div className="flex flex-col gap-4">
         <Controller
-          name="memo"
+          name="description"
           control={control}
           render={({ field }) => (
             <Input
-              name="memo"
-              label="Memo"
+              name="description"
+              label="Description"
               value={field.value}
               onchange={(e) => field.onChange(e.target.value)}
-              placeholder="Memo"
+              placeholder="Description"
               type="text"
-              errors={errors.memo?.message}
+              required
+              errors={errors.description?.message}
             />
           )}
         />
 
-        <Controller
-          name="status"
-          control={control}
-          render={({ field }) => (
-            <Input
-              name="status"
-              label="Status"
-              value={field.value}
-              onchange={(e) => field.onChange(e.target.value)}
-              placeholder="Status"
-              type="text"
-              disabled
-              errors={errors.status?.message}
-            />
-          )}
-        />
-
-        <Input
-          name="category"
-          label="Category"
-          value={category}
-          onchange={() => {}}
-          placeholder="Category"
-          type="text"
-          disabled
-        />
-
-        <Controller
-          name="account"
-          control={control}
-          render={({ field }) => (
-            <SearchableSelect
-              label="Select Account"
-              options={accountOptions}
-              selectedValue={field.value}
-              onChange={(val: string) => field.onChange(val)}
-              isLoading={accountsLoading}
-              disabled={accountsLoading}
-              placeholder={
-                accountsLoading
-                  ? 'Loading accounts...'
-                  : accountsError || 'Select account'
-              }
-              error={errors.account?.message}
-            />
-          )}
-        />
-
-        <Controller
-          name="receiptFiles"
-          control={control}
-          render={({ field }) => (
-            <FileUpload
-              files={field.value}
-              setFiles={handleFileChange}
-              label="Upload Receipt"
-            />
-          )}
-        />
+        <div className="text-sm text-gray-500 p-3 bg-gray-50 rounded">
+          <p>
+            <strong>Note:</strong> This reimbursement will be submitted for
+            approval.
+          </p>
+        </div>
       </div>
 
       <div className="fixed bottom-0 left-0 right-0 p-2 bg-white border-t border-gray-200 flex justify-end space-x-3">
         <Button
           type="submit"
           className="!py-3 !px-6"
-          text="Submit"
+          text={initialData ? 'Update' : 'Submit'}
           theme="default"
+          disabled={createMutation.isPending || updateMutation.isPending}
         />
       </div>
     </form>

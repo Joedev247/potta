@@ -1,6 +1,6 @@
 'use client';
 import React from 'react';
-import { Users, TrendingUp } from 'lucide-react';
+import { Users } from 'lucide-react';
 
 interface TopCustomersProps {
   data: Record<string, number>;
@@ -18,17 +18,17 @@ const TopCustomers: React.FC<TopCustomersProps> = ({
     .slice(0, 5);
 
   return (
-    <div className="bg-white p-6 rounded-lg border border-gray-200 shadow-sm">
+    <div className="bg-white p-6 shadow-sm">
       <div className="flex items-center justify-between mb-6">
         <h2 className="text-xl font-semibold text-gray-900">
           Top Revenue Sources
         </h2>
-        <div className="flex items-center space-x-2">
-          <div className="p-2 bg-green-100 rounded-lg">
-            <Users className="h-5 w-5 text-green-600" />
-          </div>
-          <TrendingUp className="h-4 w-4 text-green-500" />
-        </div>
+        <button
+          onClick={() => (window.location.href = '/customers')}
+          className="text-sm text-blue-600 hover:text-blue-800 underline cursor-pointer"
+        >
+          View All Customers
+        </button>
       </div>
 
       <div className="space-y-3">

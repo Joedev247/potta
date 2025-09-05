@@ -1,74 +1,85 @@
 'use client';
 import Button from '@potta/components/button';
-import Search from '@potta/components/search';
-import Select from '@potta/components/select';
 import React, { useState } from 'react';
 import SliderVendor from './vendorSlider';
+import DynamicFilter from '@potta/components/dynamic-filter';
 
-const Filter = () => {
-  const [selectedValue, setSelectedValue] = useState('All Time'); // Set your default value here
-  const [selectedValue2, setSelectedValue2] = useState('pending'); // Set your default value here
+interface FilterProps {
+  searchValue: string;
+  onSearchChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onSearchClear: () => void;
+  statusFilter: string;
+  onStatusFilterChange: (value: string) => void;
+  kycFilter: string;
+  onKycFilterChange: (value: string) => void;
+}
 
-  const handleChange = (value: string) => {
-    setSelectedValue(value);
-  };
-  const handleChange2 = (value: string) => {
-    setSelectedValue2(value);
-  };
+const Filter: React.FC<FilterProps> = ({
+  searchValue,
+  onSearchChange,
+  onSearchClear,
+  statusFilter,
+  onStatusFilterChange,
+  kycFilter,
+  onKycFilterChange,
+}) => {
+  const filterConfig = [
+    {
+      key: 'status',
+      label: 'Status',
+      options: [
+        { label: 'All Status', value: 'all' },
+        { label: 'Pending', value: 'PENDING' },
+        { label: 'Approved', value: 'APPROVED' },
+        { label: 'Rejected', value: 'REJECTED' },
+        { label: 'Active', value: 'ACTIVE' },
+        { label: 'Inactive', value: 'INACTIVE' },
+      ],
+      value: statusFilter,
+      onChange: onStatusFilterChange,
+      selectClassName: 'min-w-[120px]',
+    },
+    {
+      key: 'kyc',
+      label: 'KYC Status',
+      options: [
+        { label: 'All KYC', value: 'all' },
+        { label: 'Verified', value: 'verified' },
+        { label: 'Pending (KYC Started)', value: 'pending' },
+        { label: 'Not Initialized', value: 'not_initialized' },
+      ],
+      value: kycFilter,
+      onChange: onKycFilterChange,
+      selectClassName: 'min-w-[120px]',
+    },
+  ];
 
   return (
-    <div className="w-full mb-4 flex justify-between ">
-      <div className="flex space-x-2 w-[50%]">
-        <div className="w-1/2">
-          <Search />
+    <div className="w-full mb-4">
+      <div className="flex justify-between items-center w-full">
+        {/* Left side - Dynamic Filter */}
+        <div className="flex-1">
+          <DynamicFilter
+            searchValue={searchValue}
+            onSearchChange={onSearchChange}
+            onSearchClear={onSearchClear}
+            searchPlaceholder="Search vendors by name, email, or phone..."
+            filters={filterConfig}
+            className="p-0 bg-transparent"
+          />
         </div>
-        {/* <div className="flex mt-4 w-[40%] space-x-2">
-          <div className="flex h-[47px] pt-3 w-full px-2 border">
-            <p className="text-[17px] -mt-1">Filter&nbsp;: </p>
-            <div className="-mt-3">
-              <Select
-                border={true}
-                options={[
-                  { label: 'All', value: 'all' },
-                  { label: 'Pending', value: 'pending' },
-                  { label: 'Paid', value: 'paid' },
-                ]}
-                selectedValue={selectedValue2}
-                onChange={handleChange2}
-                bg=" " // Add your desired background class here
-              />
-            </div>
-          </div>
-          <div className="flex h-[47px] py-3.5  w-full px-2 border">
-            <p className="text-[17px] -mt-1">Date&nbsp;: </p>
-            <div className="-mt-3">
-              <Select
-                border={true}
-                options={[
-                  { label: 'All Time', value: 'All Time' },
-                  { label: 'Yesterday', value: 'Yesterday' },
-                ]}
-                selectedValue={selectedValue}
-                onChange={handleChange}
-                bg=" " // Add your desired background class here
-              />
-            </div>
-          </div>
-        </div> */}
-      </div>
-      <div className=" w-1/2 flex items-center">
 
-          <div className="w-full  flex justify-end  space-x-3">
-            <Button
-              type={'button'}
-              color
-              text="Exports"
-              icon={<img src="/images/export.svg" />}
-              theme="lightBlue"
-            />
-            <SliderVendor />
-          </div>
-
+        {/* Right side - Action Buttons */}
+        <div className="flex items-center space-x-2 ml-4">
+          <Button
+            text={'Export'}
+            icon={<img src="/images/export.svg" />}
+            theme="lightBlue"
+            type={'button'}
+            color={true}
+          />
+          <SliderVendor />
+        </div>
       </div>
     </div>
   );

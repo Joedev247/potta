@@ -1,6 +1,6 @@
 'use client';
 import React, { useMemo } from 'react';
-import { Bar } from 'react-chartjs-2';
+import { Bar, Doughnut } from 'react-chartjs-2';
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -9,6 +9,7 @@ import {
   Title,
   Tooltip,
   Legend,
+  ArcElement,
 } from 'chart.js';
 
 ChartJS.register(
@@ -17,7 +18,8 @@ ChartJS.register(
   BarElement,
   Title,
   Tooltip,
-  Legend
+  Legend,
+  ArcElement
 );
 
 interface CollectionChartProps {
@@ -29,16 +31,15 @@ const CollectionChart: React.FC<CollectionChartProps> = ({
   data,
   formatCurrency,
 }) => {
-  const chartData = useMemo(() => {
+  const { monthlyData, paymentMethodData } = useMemo(() => {
     // Group data by month
     const monthlyData: Record<string, number> = {};
+    const paymentMethodData: Record<string, number> = {};
 
-    data.forEach((bill: any) => {
-      if (bill.issuedDate) {
-        const date = new Date(bill.issuedDate);
-        const monthKey = `${date.getFullYear()}-${String(
-          date.getMonth() + 1
-        ).padStart(2, '0')}`;
+    data.forEach((invoice: any) => {
+      // Monthly data
+      if (invoice.issuedDate) {
+        const date = new Date(invoice.issuedDate);
         const monthName = date.toLocaleDateString('en-US', {
           month: 'short',
           year: 'numeric',
@@ -47,10 +48,22 @@ const CollectionChart: React.FC<CollectionChartProps> = ({
         if (!monthlyData[monthName]) {
           monthlyData[monthName] = 0;
         }
-        monthlyData[monthName] += parseFloat(bill.invoiceTotal) || 0;
+        monthlyData[monthName] += parseFloat(invoice.invoiceTotal) || 0;
       }
+
+      // Payment method data
+      const method = invoice.paymentMethod || 'OTHER';
+      if (!paymentMethodData[method]) {
+        paymentMethodData[method] = 0;
+      }
+      paymentMethodData[method] += parseFloat(invoice.invoiceTotal) || 0;
     });
 
+    return { monthlyData, paymentMethodData };
+  }, [data]);
+
+  // Monthly chart data
+  const monthlyChartData = useMemo(() => {
     const months = Object.keys(monthlyData).sort();
     const amounts = months.map((month) => monthlyData[month]);
 
@@ -67,9 +80,49 @@ const CollectionChart: React.FC<CollectionChartProps> = ({
         },
       ],
     };
-  }, [data]);
+  }, [monthlyData]);
 
-  const options = {
+  // Payment method chart data
+  const paymentMethodChartData = useMemo(() => {
+    const methods = Object.keys(paymentMethodData);
+    const amounts = methods.map((method) => paymentMethodData[method]);
+
+    // Dynamic payment method labels - convert to readable format
+    const labels = methods.map((method) => {
+      // Convert UPPER_CASE to Title Case
+      return method
+        .toLowerCase()
+        .split('_')
+        .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+        .join(' ');
+    });
+
+    return {
+      labels,
+      datasets: [
+        {
+          data: amounts,
+          backgroundColor: [
+            'rgba(34, 197, 94, 0.8)', // Green for Bank Transfer
+            'rgba(59, 130, 246, 0.8)', // Blue for Mobile Money
+            'rgba(245, 158, 11, 0.8)', // Yellow for Cash
+            'rgba(239, 68, 68, 0.8)', // Red for Credit Card
+            'rgba(107, 114, 128, 0.8)', // Gray for Other
+          ],
+          borderColor: [
+            'rgba(34, 197, 94, 1)',
+            'rgba(59, 130, 246, 1)',
+            'rgba(245, 158, 11, 1)',
+            'rgba(239, 68, 68, 1)',
+            'rgba(107, 114, 128, 1)',
+          ],
+          borderWidth: 2,
+        },
+      ],
+    };
+  }, [paymentMethodData]);
+
+  const barOptions = {
     responsive: true,
     maintainAspectRatio: false,
     plugins: {
@@ -78,7 +131,7 @@ const CollectionChart: React.FC<CollectionChartProps> = ({
       },
       title: {
         display: true,
-        text: 'Collection Trends',
+        text: 'Monthly Collection Trends',
         font: {
           size: 16,
           weight: 'bold' as const,
@@ -104,10 +157,50 @@ const CollectionChart: React.FC<CollectionChartProps> = ({
     },
   };
 
+  const doughnutOptions = {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: {
+        position: 'bottom' as const,
+      },
+      title: {
+        display: true,
+        text: 'Payment Method Distribution',
+        font: {
+          size: 16,
+          weight: 'bold' as const,
+        },
+      },
+      tooltip: {
+        callbacks: {
+          label: function (context: any) {
+            const total = context.dataset.data.reduce(
+              (a: number, b: number) => a + b,
+              0
+            );
+            const percentage = ((context.parsed / total) * 100).toFixed(1);
+            return `${context.label}: ${formatCurrency(
+              context.parsed
+            )} (${percentage}%)`;
+          },
+        },
+      },
+    },
+  };
+
   return (
-    <div className="bg-white p-6 border border-gray-200 shadow-sm">
-      <div className="h-80">
-        <Bar data={chartData} options={options} />
+    <div className="bg-white p-6 shadow-sm">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {/* Monthly Trends Chart */}
+        <div className="h-80">
+          <Bar data={monthlyChartData} options={barOptions} />
+        </div>
+
+        {/* Payment Method Distribution Chart */}
+        <div className="h-80">
+          <Doughnut data={paymentMethodChartData} options={doughnutOptions} />
+        </div>
       </div>
     </div>
   );

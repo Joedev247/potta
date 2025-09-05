@@ -25,7 +25,7 @@ const ARMetrics: React.FC<ARMetricsProps> = ({ metrics, formatCurrency }) => {
         return (
           <div
             key={index}
-            className="bg-white p-6  border border-gray-200 shadow-sm hover:shadow-md transition-shadow"
+            className="bg-white p-6 hover:shadow-md shadow-sm transition-shadow"
           >
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-3">

@@ -99,7 +99,7 @@ export default function RootLayout({
       </div>
 
       {/* ChatAI Toggle Button */}
-      <div className={`w-[2.5%] z-40 ${show ? 'fixed' : ''} right-0`}>
+      <div className={`w-[2.5%] ${show ? 'fixed' : ''} right-0`}>
         <div className={`bg-white h-screen flex justify-center`}>
           <div>
             <div className="">

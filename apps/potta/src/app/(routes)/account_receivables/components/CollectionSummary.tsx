@@ -17,9 +17,9 @@ const CollectionSummary: React.FC<CollectionSummaryProps> = ({
   formatCurrency,
 }) => {
   return (
-    <div className="bg-white p-6  border border-gray-200 shadow-sm">
+    <div className="bg-white p-6  shadow-sm">
       <div className="flex items-center justify-between mb-6">
-        <h2 className="text-xl font-semibold text-gray-900">
+        <h2 className="text-xl font-semibold text-gray-900 ">
           Collection Summary
         </h2>
         <div className="p-2 bg-green-100">
@@ -34,10 +34,10 @@ const CollectionSummary: React.FC<CollectionSummaryProps> = ({
               <DollarSign className="h-4 w-4 text-blue-600" />
             </div>
             <div>
-              <p className="text-sm font-medium text-gray-600">
+              <p className="text-sm font-medium text-gray-600 ">
                 Total Collected
               </p>
-              <p className="text-lg font-semibold text-gray-900">
+              <p className="text-lg font-semibold text-gray-900 ">
                 {formatCurrency(data.totalCollected)}
               </p>
             </div>

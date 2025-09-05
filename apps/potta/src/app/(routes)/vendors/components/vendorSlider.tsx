@@ -15,6 +15,7 @@ import Notes from './note';
 import Tax from './tax';
 import useCreateVendor from '../hooks/useCreateVendor';
 import toast from 'react-hot-toast';
+import { vendorApi } from '../utils/api';
 
 const SliderVendor = () => {
   const [tabs, setTabs] = useState<string>('Address');
@@ -44,13 +45,16 @@ const SliderVendor = () => {
         longitude: 0,
       },
       paymentTerms: '',
-      paymentMethod: '',
       website: '',
       accountDetails: '',
       currency: undefined,
       openingBalance: 0,
       classification: undefined,
+      industry: undefined,
+      creditLimit: 0,
+      status: 'PENDING',
       notes: '',
+      initializeKYC: false,
     },
   });
 
@@ -69,19 +73,49 @@ const SliderVendor = () => {
     { value: 'USD', label: 'USD' },
     { value: 'XAF', label: 'XAF' },
   ];
+
+  const VendorIndustryEnum = [
+    { value: 'Technology', label: 'Technology' },
+    { value: 'Manufacturing', label: 'Manufacturing' },
+    { value: 'Retail', label: 'Retail' },
+    { value: 'Healthcare', label: 'Healthcare' },
+    { value: 'Finance', label: 'Finance' },
+    { value: 'Education', label: 'Education' },
+    { value: 'Construction', label: 'Construction' },
+    { value: 'Transportation', label: 'Transportation' },
+    { value: 'Food & Beverage', label: 'Food & Beverage' },
+    { value: 'Other', label: 'Other' },
+  ];
+
+  const VendorPaymentMethodEnum = [
+    { value: 'BANK_TRANSFER', label: 'Bank Transfer' },
+    { value: 'MOBILE_MONEY', label: 'Mobile Money' },
+    { value: 'CREDIT_CARD', label: 'Credit Card' },
+    { value: 'DEBIT_CARD', label: 'Debit Card' },
+    { value: 'CASH', label: 'Cash' },
+    { value: 'CRYPTOCURRENCY', label: 'Cryptocurrency' },
+    { value: 'OTHER', label: 'Other' },
+  ];
   const mutation = useCreateVendor();
-  const onSubmit = (data: VendorPayload) => {
-    console.log('Submitted Data:', data);
-    mutation.mutate(data, {
-      onSuccess: () => {
-        toast.success('Vendor created successfully!');
-        reset();
-        setIsSliderOpen(false);
-      },
-      onError: (error) => {
-        toast.error('Failed to create vendor');
-      },
-    });
+
+  const onSubmit = async (data: VendorPayload) => {
+    try {
+      // Create vendor
+      const { initializeKYC, ...vendorData } = data;
+      const vendor = await vendorApi.create(vendorData as any);
+
+      // Initialize KYC (optional)
+      if (initializeKYC) {
+        await vendorApi.kyc.initialize(vendor.uuid);
+      }
+
+      toast.success('Vendor created successfully!');
+      reset();
+      setIsSliderOpen(false);
+    } catch (error) {
+      console.error('Failed to create vendor:', error);
+      toast.error('Failed to create vendor');
+    }
   };
   return (
     <Slider
@@ -93,7 +127,7 @@ const SliderVendor = () => {
     >
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className="relative h-screen w-full max-w-4xl"
+        className="relative w-full max-w-4xl pb-20"
       >
         <div className="w-full grid grid-cols-2 gap-3">
           <div>
@@ -160,6 +194,37 @@ const SliderVendor = () => {
                 {errors.classification.message}
               </small>
             )}
+          </div>
+        </div>
+        <div className="w-full grid my-5 grid-cols-2 gap-3">
+          <div>
+            <Controller
+              name="industry"
+              control={control}
+              render={({ field }) => (
+                <Select
+                  options={VendorIndustryEnum}
+                  selectedValue={field.value || ''}
+                  onChange={field.onChange}
+                  bg="bg-white"
+                  name="Select Industry"
+                  label="Industry"
+                />
+              )}
+            />
+            {errors.industry && (
+              <small className="text-red-500">{errors.industry.message}</small>
+            )}
+          </div>
+          <div>
+            <Input
+              label="Credit Limit"
+              type="number"
+              name="creditLimit"
+              placeholder="Enter credit limit"
+              register={register}
+              errors={errors.creditLimit}
+            />
           </div>
         </div>
         <hr />
@@ -246,7 +311,7 @@ const SliderVendor = () => {
               errors={errors?.accountDetails}
             />
           </div>
-          <div className="w-full grid mt-4 grid-cols-2 gap-3">
+          <div className="w-full grid mt-4 grid-cols-1 gap-3">
             <Input
               label="Payment Terms"
               type="text"
@@ -255,15 +320,29 @@ const SliderVendor = () => {
               register={register}
               errors={errors?.paymentTerms}
             />
-            <Input
-              label="Payment Method"
-              type="text"
-              name="paymentMethod"
-              placeholder="Enter your payment Methos"
-              register={register}
-              errors={errors?.paymentMethod}
-            />
           </div>
+        </div>
+
+        {/* KYC Initialization Option */}
+        <div className="mt-6 p-4 bg-gray-50 rounded-lg">
+          <div className="flex items-center space-x-3">
+            <input
+              type="checkbox"
+              id="initializeKYC"
+              {...register('initializeKYC')}
+              className="rounded border-gray-300"
+            />
+            <label
+              htmlFor="initializeKYC"
+              className="text-sm font-medium text-gray-700"
+            >
+              Initialize KYC Process (Optional)
+            </label>
+          </div>
+          <p className="text-xs text-gray-500 mt-1 ml-6">
+            This will start the KYC verification process for the vendor after
+            creation
+          </p>
         </div>
         <div className="mt-5">
           <div className="flex w-fit bg-green-100  mt-7">
@@ -306,15 +385,12 @@ const SliderVendor = () => {
             {tabs == 'Tax' && <Tax register={register} errors={errors.taxID} />}
           </div>
         </div>
-        <div className="flex-grow" /> {/* This div takes up remaining space */}
-        <div className="text-center md:text-right  md:flex  space-x-4 fixed bottom-0 left-0 right-0 justify-center bg-white p-4">
-          <div className="flex gap-2 w-full  justify-end">
-            <Button
-              isLoading={mutation.isPending}
-              text={'Save Vendor'}
-              type={'submit'}
-            />
-          </div>
+        <div className="mt-8 flex justify-end">
+          <Button
+            isLoading={mutation.isPending}
+            text={'Save Vendor'}
+            type={'submit'}
+          />
         </div>
       </form>
     </Slider>

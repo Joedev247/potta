@@ -71,8 +71,10 @@ const EditVendor: React.FC<EditVendorProps> = ({
       currency: undefined,
       openingBalance: 0,
       classification: undefined,
-      notes: '',
+      industry: undefined,
+      creditLimit: 0,
       status: undefined,
+      notes: '',
     },
   });
 
@@ -100,14 +102,24 @@ const EditVendor: React.FC<EditVendorProps> = ({
   ];
 
   const VendorStatusEnum = [
-    { value: 'pending', label: 'Pending' },
-    { value: 'schedule', label: 'Schedule' },
-    { value: 'complete', label: 'Complete' },
-    { value: 'enabled', label: 'Enabled' },
-    { value: 'disabled', label: 'Disabled' },
-    { value: 'available', label: 'Available' },
-    { value: 'expired', label: 'Expired' },
-    { value: 'taken', label: 'Taken' },
+    { value: 'PENDING', label: 'Pending' },
+    { value: 'APPROVED', label: 'Approved' },
+    { value: 'REJECTED', label: 'Rejected' },
+    { value: 'ACTIVE', label: 'Active' },
+    { value: 'INACTIVE', label: 'Inactive' },
+  ];
+
+  const VendorIndustryEnum = [
+    { value: 'TECHNOLOGY', label: 'Technology' },
+    { value: 'HEALTHCARE', label: 'Healthcare' },
+    { value: 'FINANCE', label: 'Finance' },
+    { value: 'RETAIL', label: 'Retail' },
+    { value: 'MANUFACTURING', label: 'Manufacturing' },
+    { value: 'EDUCATION', label: 'Education' },
+    { value: 'CONSTRUCTION', label: 'Construction' },
+    { value: 'TRANSPORTATION', label: 'Transportation' },
+    { value: 'FOOD_AND_BEVERAGE', label: 'Food & Beverage' },
+    { value: 'OTHER', label: 'Other' },
   ];
 
   const mutation = useUpdateVendor(vendorId); // Hook for updating vendor
@@ -210,6 +222,32 @@ const EditVendor: React.FC<EditVendorProps> = ({
               )}
             />
           </div>
+        </div>
+        <div className="w-full grid my-5 grid-cols-2 gap-3">
+          <div>
+            <Controller
+              name="industry"
+              control={control}
+              render={({ field }) => (
+                <Select
+                  options={VendorIndustryEnum}
+                  selectedValue={field.value}
+                  onChange={field.onChange}
+                  bg="bg-white"
+                  name="Select Industry"
+                  label="Industry"
+                />
+              )}
+            />
+          </div>
+          <Input
+            type="number"
+            label="Credit Limit"
+            placeholder="0"
+            name="creditLimit"
+            register={register}
+            errors={errors.creditLimit}
+          />
         </div>
         <hr />
         <h1 className="text-xl mt-2">Contact Information</h1>
@@ -327,19 +365,19 @@ const EditVendor: React.FC<EditVendorProps> = ({
         </div>
         <div className="flex-grow" /> {/* This div takes up remaining space */}
         <div className="text-center md:text-right  md:flex  space-x-4 fixed bottom-0 left-0 right-0 justify-center bg-white p-4">
-        <div className="flex gap-2 w-full max-w-4xl justify-between">
-          <Button
-            text="Cancel"
-            type="button"
-            theme="danger"
-            onClick={() => setIsOpen(false)}
-          />
-          <Button
-            isLoading={mutation.isPending}
-            text="Update Vendor"
-            type="submit"
-          />
-        </div>
+          <div className="flex gap-2 w-full max-w-4xl justify-between">
+            <Button
+              text="Cancel"
+              type="button"
+              theme="danger"
+              onClick={() => setIsOpen(false)}
+            />
+            <Button
+              isLoading={mutation.isPending}
+              text="Update Vendor"
+              type="submit"
+            />
+          </div>
         </div>
       </form>
     </Slider>

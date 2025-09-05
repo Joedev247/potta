@@ -1,16 +1,16 @@
-// src/components/PaymentRequestDataTableWrapper.tsx (New File)
+// Reimbursement Data Table Wrapper
 'use client';
 
 import React, { useState } from 'react';
-
 import {
-  MoreHorizontal,
-  Check as CheckIcon,
-  Briefcase,
-  Landmark,
   MoreVertical,
-} from 'lucide-react'; // Import necessary icons
-
+  Eye,
+  Edit,
+  CheckCircle,
+  DollarSign,
+  Trash2,
+  RefreshCw,
+} from 'lucide-react';
 import { cn } from '@potta/lib/utils';
 import {
   DropdownMenu,
@@ -19,55 +19,35 @@ import {
   DropdownMenuTrigger,
 } from '@potta/components/shadcn/dropdown';
 import { Button } from '@potta/components/shadcn/button';
+import { Badge } from '@potta/components/shadcn/badge';
 import DataGrid from '@potta/app/(routes)/account_receivables/invoice/components/DataGrid';
+import { Reimbursement } from '../utils/api-types';
 import {
-  PaymentMethod,
-  PaymentRequest,
-} from '../../budgets/details/utils/types';
-import { Icon } from '@iconify/react';
+  REIMBURSEMENT_STATUS_COLORS,
+  REIMBURSEMENT_TYPE_COLORS,
+} from '../utils/api-types';
 import RightSideModal from './RightSideModal';
 import ReimbursementDetails from './ReimbursementDetails';
 import ReimbursementForm from './ReimbursementForm';
 import Slider from '@potta/components/slideover';
 import { ColumnDef } from '@tanstack/react-table';
+import moment from 'moment';
+import {
+  useApproveReimbursement,
+  usePayReimbursement,
+  useDeleteReimbursement,
+  useGetEmployees,
+} from '../hooks/useReimbursements';
 
-interface PaymentRequestDataTableWrapperProps {
-  requests: PaymentRequest[];
-  isLoading?: boolean; // Add a loading state prop
+interface ReimbursementDataTableWrapperProps {
+  reimbursements: Reimbursement[];
+  isLoading?: boolean;
+  onRefresh?: () => void;
 }
 
-// --- Helper Functions (can be moved to utils) ---
+// --- Helper Functions ---
 
-// Helper to render payment method icon (same as before)
-const PaymentMethodIcon: React.FC<{ method: PaymentMethod }> = ({ method }) => {
-  const IconComponent = method.iconComponent;
-  const sizeClass = 'h-5 w-5';
-
-  return (
-    <div
-      className={cn(
-        'h-7 w-7 rounded-full flex items-center justify-center',
-        method.bgColorClass || 'bg-gray-100'
-      )}
-    >
-      {method.iconUrl ? (
-        <img
-          src={method.iconUrl}
-          alt={method.name}
-          className="h-5 w-5 object-contain"
-        />
-      ) : IconComponent ? (
-        <IconComponent
-          className={cn(sizeClass, method.iconColorClass || 'text-gray-600')}
-        />
-      ) : (
-        <span className="text-xs font-medium">?</span>
-      )}
-    </div>
-  );
-};
-
-// Helper for currency format (same as before)
+// Helper for currency format
 const formatTableCurrency = (amount: number, currencyCode: string = 'XAF') => {
   return new Intl.NumberFormat('en-US', {
     style: 'decimal',
@@ -76,66 +56,131 @@ const formatTableCurrency = (amount: number, currencyCode: string = 'XAF') => {
   }).format(amount);
 };
 
+// Helper to get employee name from employees data
+const getEmployeeName = (employeeId: string, employees: any[]) => {
+  const employee = employees?.find((emp) => emp.uuid === employeeId);
+  if (employee) {
+    return `${employee.firstName} ${employee.lastName}`;
+  }
+  return `Employee ${employeeId.slice(0, 8)}...`;
+};
+
 // --- Main Wrapper Component ---
 
-export function PaymentRequestDataTableWrapper({
-  requests,
+export function ReimbursementDataTableWrapper({
+  reimbursements,
   isLoading = false,
-}: PaymentRequestDataTableWrapperProps) {
+  onRefresh,
+}: ReimbursementDataTableWrapperProps) {
   const [detailsOpen, setDetailsOpen] = useState(false);
   const [editOpen, setEditOpen] = useState(false);
-  const [selectedRow, setSelectedRow] = useState<any>(null);
+  const [selectedRow, setSelectedRow] = useState<Reimbursement | null>(null);
+
+  // API mutations and data
+  const approveMutation = useApproveReimbursement();
+  const payMutation = usePayReimbursement();
+  const deleteMutation = useDeleteReimbursement();
+  const { data: employees } = useGetEmployees({
+    limit: 100,
+    sortBy: ['firstName:ASC'],
+  });
+
+  const handleApprove = (reimbursement: Reimbursement) => {
+    // Show loading toast
+    toast.loading('Approving...', { id: `approve-${reimbursement.uuid}` });
+
+    // You might want to get the current user's ID from context/auth
+    const approverId = 'current-user-id'; // Replace with actual approver ID
+    approveMutation.mutate({
+      reimbursementId: reimbursement.uuid,
+      approverId,
+    });
+  };
+
+  const handlePay = (reimbursement: Reimbursement) => {
+    const paymentRef = `PAY-REF-${Date.now()}`;
+    payMutation.mutate({
+      reimbursementId: reimbursement.uuid,
+      paymentRef,
+    });
+  };
+
+  const handleDelete = (reimbursement: Reimbursement) => {
+    if (window.confirm('Are you sure you want to delete this reimbursement?')) {
+      deleteMutation.mutate(reimbursement.uuid);
+    }
+  };
 
   // Define columns for TanStack Table
-  const columns: ColumnDef<PaymentRequest>[] = [
+  const columns: ColumnDef<Reimbursement>[] = [
     {
-      accessorKey: 'madeBy',
+      accessorKey: 'employeeId',
       header: 'Employee',
       cell: ({ row: { original } }) => (
-        <span className="font-semibold">{original.madeBy}</span>
+        <span className="font-semibold">
+          {getEmployeeName(original.employeeId, employees?.data || [])}
+        </span>
       ),
     },
     {
-      accessorKey: 'merchant',
-      header: 'Merchant',
-      cell: ({ row: { original } }) => original.merchant,
+      accessorKey: 'type',
+      header: 'Type',
+      cell: ({ row: { original } }) => (
+        <Badge
+          variant="outline"
+          className={cn('text-xs', REIMBURSEMENT_TYPE_COLORS[original.type])}
+        >
+          {original.type.replace(/_/g, ' ')}
+        </Badge>
+      ),
+    },
+    {
+      accessorKey: 'expenseType',
+      header: 'Expense Type',
+      cell: ({ row: { original } }) => (
+        <span className="text-sm">{original.expenseType}</span>
+      ),
     },
     {
       accessorKey: 'amount',
       header: 'Amount',
       cell: ({ row: { original } }) => (
         <span className="font-medium">
-          {original.currency} {original.amount?.toLocaleString()}
+          XAF {formatTableCurrency(original.amount)}
         </span>
       ),
     },
     {
-      accessorKey: 'memo',
-      header: 'Memo',
-      cell: ({ row: { original } }) => original.memo,
-    },
-    {
       accessorKey: 'status',
       header: 'Status',
-      cell: ({ row: { original } }) => {
-        let color = 'text-yellow-700';
-        if (original.status?.toLowerCase() === 'approved')
-          color = 'text-green-700';
-        if (original.status?.toLowerCase() === 'rejected')
-          color = 'text-red-700';
-        return (
-          <span className={`text-sm font-bold ${color}`}>
-            {original.status?.charAt(0).toUpperCase() +
-              original.status?.slice(1)}
-          </span>
-        );
-      },
+      cell: ({ row: { original } }) => (
+        <Badge
+          variant="outline"
+          className={cn(
+            'text-xs',
+            REIMBURSEMENT_STATUS_COLORS[original.status]
+          )}
+        >
+          {original.status}
+        </Badge>
+      ),
     },
     {
-      accessorKey: 'type',
-      header: 'Category',
+      accessorKey: 'createdAt',
+      header: 'Created',
       cell: ({ row: { original } }) => (
-        <span className="capitalize">{original.type?.replace(/_/g, ' ')}</span>
+        <span className="text-sm text-gray-600">
+          {moment(original.createdAt).format('MMM DD, YYYY')}
+        </span>
+      ),
+    },
+    {
+      accessorKey: 'description',
+      header: 'Description',
+      cell: ({ row: { original } }) => (
+        <span className="text-sm text-gray-600 truncate max-w-[200px]">
+          {original.description}
+        </span>
       ),
     },
     {
@@ -159,6 +204,7 @@ export function PaymentRequestDataTableWrapper({
                 setDetailsOpen(true);
               }}
             >
+              <Eye className="h-4 w-4 mr-2" />
               View Details
             </DropdownMenuItem>
             <DropdownMenuItem
@@ -167,15 +213,32 @@ export function PaymentRequestDataTableWrapper({
                 setEditOpen(true);
               }}
             >
+              <Edit className="h-4 w-4 mr-2" />
               Edit
             </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => alert(`Rejecting ${original.id}`)}>
-              Reject
-            </DropdownMenuItem>
+            {original.status === 'PENDING' && (
+              <DropdownMenuItem
+                onClick={() => handleApprove(original)}
+                className="text-green-600"
+              >
+                <CheckCircle className="h-4 w-4 mr-2" />
+                Approve
+              </DropdownMenuItem>
+            )}
+            {original.status === 'APPROVED' && (
+              <DropdownMenuItem
+                onClick={() => handlePay(original)}
+                className="text-blue-600"
+              >
+                <DollarSign className="h-4 w-4 mr-2" />
+                Mark as Paid
+              </DropdownMenuItem>
+            )}
             <DropdownMenuItem
               className="text-red-600"
-              onClick={() => alert(`Deleting ${original.id}`)}
+              onClick={() => handleDelete(original)}
             >
+              <Trash2 className="h-4 w-4 mr-2" />
               Delete
             </DropdownMenuItem>
           </DropdownMenuContent>
@@ -186,14 +249,16 @@ export function PaymentRequestDataTableWrapper({
 
   return (
     <>
-      <DataGrid columns={columns} data={requests} isLoading={isLoading} />
+      <DataGrid columns={columns} data={reimbursements} isLoading={isLoading} />
+
       <RightSideModal
         open={detailsOpen}
         setOpen={setDetailsOpen}
         title="Reimbursement Details"
       >
-        {selectedRow && <ReimbursementDetails data={selectedRow} />}
+        {selectedRow && <ReimbursementDetails reimbursement={selectedRow} />}
       </RightSideModal>
+
       <Slider
         edit={true}
         title="Edit Reimbursement"
@@ -202,7 +267,10 @@ export function PaymentRequestDataTableWrapper({
       >
         {selectedRow && (
           <ReimbursementForm
-            onSubmit={() => setEditOpen(false)}
+            onSubmit={() => {
+              setEditOpen(false);
+              onRefresh?.();
+            }}
             onClose={() => setEditOpen(false)}
             initialData={selectedRow}
           />

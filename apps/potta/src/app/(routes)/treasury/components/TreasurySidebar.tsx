@@ -80,7 +80,7 @@ const TreasurySidebar: React.FC<TreasurySidebarProps> = ({
           label: 'Purchases',
           icon: FileText,
           submenus: [
-            { id: 'vendor_invoices', label: 'Vendor Invoices' },
+            { id: 'vendor_invoices', label: 'Bills' },
             { id: 'credit_notes', label: 'Credit Notes' },
           ],
         },

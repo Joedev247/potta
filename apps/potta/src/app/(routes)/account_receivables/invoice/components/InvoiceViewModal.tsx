@@ -17,14 +17,32 @@ interface LineItem {
   taxRate: number;
   taxAmount: number;
   discountRate: number;
-  discountAmount: number | null;
+  discountAmount: number;
   discountType: string;
   discountCap: number;
+}
+
+interface RiskEvaluationDetails {
+  alerts: Array<{
+    policy: string;
+    actions: string[];
+  }>;
+  blocked: boolean;
+  matches: Array<{
+    policy: string;
+    actions: Array<{
+      type: string;
+      params: any;
+    }>;
+    severity: string;
+    ruleIndex: number;
+  }>;
 }
 
 interface Invoice {
   uuid: string;
   invoiceId: string;
+  invoiceNumber: string;
   issuedDate: string;
   dueDate: string;
   invoiceType: string;
@@ -39,12 +57,27 @@ interface Invoice {
   shippingAddress: string;
   paymentTerms: string;
   paymentReference: string;
+  voucherCode?: string;
+  approvedBy?: string;
+  approvedAt?: string;
+  rejectedBy?: string;
+  rejectedAt?: string;
+  rejectionReason?: string;
+  riskSeverity?: string;
+  riskDecision?: string;
+  riskEvaluatedAt?: string;
+  riskEvaluationDetails?: RiskEvaluationDetails;
   lineItems: LineItem[];
   customer: {
+    uuid: string;
     firstName: string;
     lastName: string;
     email: string;
     phone: string;
+    customerId: string;
+    type: string;
+    creditLimit: number;
+    status: string;
   };
 }
 
@@ -117,13 +150,19 @@ const InvoiceViewModal: React.FC<InvoiceViewModalProps> = ({
           <div className="space-y-2 text-sm">
             <div className="flex justify-between">
               <span className="text-gray-600">Invoice Number:</span>
-              <span className="font-medium">{invoice.invoiceId}</span>
+              <span className="font-medium">
+                {invoice.invoiceNumber || invoice.invoiceId}
+              </span>
             </div>
             <div className="flex justify-between">
               <span className="text-gray-600">Customer:</span>
               <span className="font-medium">
                 {invoice.customer.firstName} {invoice.customer.lastName}
               </span>
+            </div>
+            <div className="flex justify-between">
+              <span className="text-gray-600">Customer ID:</span>
+              <span className="font-medium">{invoice.customer.customerId}</span>
             </div>
             <div className="flex justify-between">
               <span className="text-gray-600">Amount:</span>
@@ -149,6 +188,14 @@ const InvoiceViewModal: React.FC<InvoiceViewModalProps> = ({
                 {moment(invoice.dueDate).format('MMM DD, YYYY')}
               </span>
             </div>
+            {invoice.voucherCode && (
+              <div className="flex justify-between">
+                <span className="text-gray-600">Voucher Code:</span>
+                <span className="font-medium text-green-600">
+                  {invoice.voucherCode}
+                </span>
+              </div>
+            )}
           </div>
         </div>
 
@@ -167,6 +214,8 @@ const InvoiceViewModal: React.FC<InvoiceViewModalProps> = ({
                   ? 'Bank Transfer'
                   : invoice.paymentMethod === 'CASH'
                   ? 'Cash'
+                  : invoice.paymentMethod === 'MOBILE_MONEY'
+                  ? 'Mobile Money'
                   : invoice.paymentMethod || 'Not specified'}
               </span>
             </div>
@@ -182,6 +231,144 @@ const InvoiceViewModal: React.FC<InvoiceViewModalProps> = ({
             )}
           </div>
         </div>
+
+        {/* Risk Evaluation */}
+        {invoice.riskSeverity && (
+          <div className="bg-white p-4 border border-gray-200">
+            <h4 className="font-semibold text-gray-900 mb-3">
+              Risk Evaluation
+            </h4>
+            <div className="space-y-3">
+              <div className="flex items-center justify-between">
+                <span className="text-sm text-gray-600">Risk Severity:</span>
+                <span
+                  className={`px-2 py-1 text-xs font-medium rounded-full ${
+                    invoice.riskSeverity === 'HIGH'
+                      ? ' text-red-600'
+                      : invoice.riskSeverity === 'MEDIUM'
+                      ? ' text-yellow-600'
+                      : ' text-green-600'
+                  }`}
+                >
+                  {invoice.riskSeverity}
+                </span>
+              </div>
+              <div className="flex items-center justify-between">
+                <span className="text-sm text-gray-600">Risk Decision:</span>
+                <span
+                  className={`px-2 py-1 text-xs font-medium rounded-full ${
+                    invoice.riskDecision === 'BLOCK'
+                      ? ' text-red-600'
+                      : invoice.riskDecision === 'REVIEW'
+                      ? ' text-yellow-600'
+                      : invoice.riskDecision === 'APPROVED'
+                      ? ' text-green-600'
+                      : ' text-gray-600'
+                  }`}
+                >
+                  {invoice.riskDecision}
+                </span>
+              </div>
+              {invoice.riskEvaluatedAt && (
+                <div className="flex items-center justify-between">
+                  <span className="text-sm text-gray-600">Evaluated At:</span>
+                  <span className="text-sm font-medium">
+                    {moment(invoice.riskEvaluatedAt).format(
+                      'MMM DD, YYYY at h:mm A'
+                    )}
+                  </span>
+                </div>
+              )}
+              {invoice.riskEvaluationDetails?.blocked && (
+                <div className="mt-3 p-3 bg-red-50 border border-red-200">
+                  <p className="text-sm text-red-800 font-medium">
+                    ⚠️ This invoice has been blocked due to risk evaluation
+                  </p>
+                </div>
+              )}
+            </div>
+          </div>
+        )}
+
+        {/* Risk Alerts */}
+        {invoice.riskEvaluationDetails?.alerts &&
+          invoice.riskEvaluationDetails.alerts.length > 0 && (
+            <div className="bg-white p-4 border border-gray-200">
+              <h4 className="font-semibold text-gray-900 mb-3">Risk Alerts</h4>
+              <div className="space-y-2">
+                {invoice.riskEvaluationDetails.alerts.map((alert, index) => (
+                  <div
+                    key={index}
+                    className="p-3 bg-yellow-50 border border-yellow-200"
+                  >
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm font-medium text-yellow-800">
+                        {alert.policy}
+                      </span>
+                      <div className="flex space-x-1">
+                        {alert.actions.map((action, actionIndex) => (
+                          <span
+                            key={actionIndex}
+                            className="px-2 py-1 text-xs bg-yellow-200 text-yellow-800 "
+                          >
+                            {action}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+        {/* Approval/Rejection Details */}
+        {(invoice.approvedBy || invoice.rejectedBy) && (
+          <div className="bg-white p-4 border border-gray-200">
+            <h4 className="font-semibold text-gray-900 mb-3">
+              Approval Details
+            </h4>
+            <div className="space-y-2">
+              {invoice.approvedBy && (
+                <div className="flex items-center space-x-2">
+                  <CheckCircle className="w-4 h-4 text-green-500" />
+                  <div>
+                    <p className="text-sm font-medium text-green-800">
+                      Approved
+                    </p>
+                    {invoice.approvedAt && (
+                      <p className="text-xs text-gray-500">
+                        {moment(invoice.approvedAt).format(
+                          'MMM DD, YYYY at h:mm A'
+                        )}
+                      </p>
+                    )}
+                  </div>
+                </div>
+              )}
+              {invoice.rejectedBy && (
+                <div className="flex items-center space-x-2">
+                  <XCircle className="w-4 h-4 text-red-500" />
+                  <div>
+                    <p className="text-sm font-medium text-red-800">Rejected</p>
+                    {invoice.rejectedAt && (
+                      <p className="text-xs text-gray-500">
+                        {moment(invoice.rejectedAt).format(
+                          'MMM DD, YYYY at h:mm A'
+                        )}
+                      </p>
+                    )}
+                    {invoice.rejectionReason && (
+                      <p className="text-xs text-gray-600 mt-1">
+                        Reason: {invoice.rejectionReason}
+                      </p>
+                    )}
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        )}
 
         {/* Status Timeline */}
         <div className="bg-white p-4 border border-gray-200">
@@ -264,17 +451,16 @@ const InvoiceViewModal: React.FC<InvoiceViewModalProps> = ({
           <ResizablePanel defaultSize={50} minSize={50}>
             {/* Left Panel - Invoice PDF View */}
             <div className="w-full h-full bg-[#F2F2F2] overflow-y-auto">
-              <div className="flex min-h-full flex-col items-center justify-center overflow-y-auto w-full scroll bg-[#F2F2F2]">
-                <div className="flex min-w-[45rem] justify-between w-full p-8">
-                  <h3 className="text-xl font-semibold">Invoice Preview</h3>
-                </div>
-                <div className="max-w-[48rem] bg-white space-y-8 min-w-[45rem] w-full mb-10">
+              <div className="flex min-h-full flex-col items-center overflow-y-auto p-10 w-full scroll bg-[#F2F2F2] try">
+                <div className=" flex-1 min-h-full bg-white space-y-8  min-w-[45rem] w-full mb-10">
                   <div className="h-36 w-full flex items-center justify-between px-8 bg-green-700">
                     <div>
                       <p className="text-3xl font-semibold text-white">
                         {invoice.invoiceType}
                       </p>
-                      <p className="text-white mt-2">#{invoice.invoiceId}</p>
+                      <p className="text-white mt-2">
+                        #{invoice.invoiceNumber || invoice.invoiceId}
+                      </p>
                     </div>
                     <div className="text-right text-white">
                       <p>
@@ -350,11 +536,7 @@ const InvoiceViewModal: React.FC<InvoiceViewModalProps> = ({
                               invoice.lineItems.length > 0 ? (
                                 invoice.lineItems.map((item, index) => {
                                   const discountAmount =
-                                    item.discountAmount ||
-                                    (item.discountRate
-                                      ? (item.totalAmount * item.discountRate) /
-                                        100
-                                      : 0);
+                                    item.discountAmount || 0;
                                   const subtotal = item.totalAmount;
                                   const taxAmount = item.taxAmount || 0;
                                   const total = subtotal + taxAmount;
@@ -384,7 +566,9 @@ const InvoiceViewModal: React.FC<InvoiceViewModalProps> = ({
                                       </td>
                                       <td className="px-4 py-3 text-sm text-gray-900 border-b">
                                         {item.discountRate
-                                          ? `${item.discountRate}%`
+                                          ? `${item.discountRate}% (${
+                                              invoice.currency
+                                            } ${discountAmount.toLocaleString()})`
                                           : '-'}
                                       </td>
                                       <td className="px-4 py-3 text-sm text-gray-900 border-b">
@@ -423,6 +607,8 @@ const InvoiceViewModal: React.FC<InvoiceViewModalProps> = ({
                               ? 'Bank Transfer'
                               : invoice.paymentMethod === 'CASH'
                               ? 'Cash'
+                              : invoice.paymentMethod === 'MOBILE_MONEY'
+                              ? 'Mobile Money'
                               : invoice.paymentMethod || 'Not specified'}
                           </p>
                           <p>
@@ -433,6 +619,14 @@ const InvoiceViewModal: React.FC<InvoiceViewModalProps> = ({
                             <p>
                               <strong>Payment Reference:</strong>{' '}
                               {invoice.paymentReference}
+                            </p>
+                          )}
+                          {invoice.voucherCode && (
+                            <p>
+                              <strong>Voucher Code:</strong>{' '}
+                              <span className="text-green-600 font-medium">
+                                {invoice.voucherCode}
+                              </span>
                             </p>
                           )}
                           {invoice.notes && (

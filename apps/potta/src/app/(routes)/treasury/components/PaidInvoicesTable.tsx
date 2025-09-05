@@ -307,9 +307,7 @@ interface PaidInvoice {
       <div className="flex items-center justify-between mb-6">
         <div>
           <h2 className="text-xl font-semibold text-gray-900">Paid Invoices</h2>
-          <span className="text-sm text-gray-500">
-            {filteredData.length} of {mockData.length} paid invoices
-          </span>
+          
         </div>
         <Button
           text="Pay"

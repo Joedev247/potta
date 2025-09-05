@@ -8,6 +8,8 @@ interface Invoice {
   amount: number;
   date: string;
   status: string;
+  riskSeverity?: string;
+  riskDecision?: string;
 }
 
 interface RecentInvoicesProps {
@@ -21,32 +23,54 @@ const RecentInvoices: React.FC<RecentInvoicesProps> = ({
   formatCurrency,
   formatDate,
 }) => {
-  const getStatusIcon = (status: string) => {
+  const getStatusIcon = (status: string, riskDecision?: string) => {
+    // Handle risk-based decisions
+    if (riskDecision === 'BLOCK') {
+      return <XCircle className="h-4 w-4 text-red-500" />;
+    }
+    if (riskDecision === 'APPROVED') {
+      return <CheckCircle className="h-4 w-4 text-green-500" />;
+    }
+
     switch (status.toLowerCase()) {
       case 'paid':
       case 'completed':
+      case 'approved':
         return <CheckCircle className="h-4 w-4 text-green-500" />;
       case 'pending':
       case 'processing':
+      case 'issued':
         return <Clock className="h-4 w-4 text-yellow-500" />;
       case 'overdue':
       case 'failed':
+      case 'rejected':
         return <XCircle className="h-4 w-4 text-red-500" />;
       default:
         return <Clock className="h-4 w-4 text-gray-500" />;
     }
   };
 
-  const getStatusColor = (status: string) => {
+  const getStatusColor = (status: string, riskDecision?: string) => {
+    // Handle risk-based decisions
+    if (riskDecision === 'BLOCK') {
+      return 'text-red-600 bg-red-50';
+    }
+    if (riskDecision === 'APPROVED') {
+      return 'text-green-600 bg-green-50';
+    }
+
     switch (status.toLowerCase()) {
       case 'paid':
       case 'completed':
+      case 'approved':
         return 'text-green-600 bg-green-50';
       case 'pending':
       case 'processing':
+      case 'issued':
         return 'text-yellow-600 bg-yellow-50';
       case 'overdue':
       case 'failed':
+      case 'rejected':
         return 'text-red-600 bg-red-50';
       default:
         return 'text-gray-600 bg-gray-50';
@@ -54,12 +78,17 @@ const RecentInvoices: React.FC<RecentInvoicesProps> = ({
   };
 
   return (
-    <div className="bg-white p-6  border border-gray-200 shadow-sm">
+    <div className="bg-white p-6  shadow-sm">
       <div className="flex items-center justify-between mb-6">
         <h2 className="text-xl font-semibold text-gray-900">Recent Invoices</h2>
-        <div className="p-2 bg-blue-100 ">
-          <FileText className="h-5 w-5 text-blue-600" />
-        </div>
+        <button
+          onClick={() =>
+            (window.location.href = '/account_receivables/invoice')
+          }
+          className="text-sm text-blue-600 hover:text-blue-800 underline cursor-pointer"
+        >
+          View All Invoices
+        </button>
       </div>
 
       <div className="space-y-3">
@@ -71,7 +100,7 @@ const RecentInvoices: React.FC<RecentInvoicesProps> = ({
             >
               <div className="flex items-center space-x-3">
                 <div className="p-2 bg-white  shadow-sm">
-                  {getStatusIcon(invoice.status)}
+                  {getStatusIcon(invoice.status, invoice.riskDecision)}
                 </div>
                 <div>
                   <p className="text-sm font-medium text-gray-900">
@@ -87,10 +116,11 @@ const RecentInvoices: React.FC<RecentInvoicesProps> = ({
                 <div className="flex items-center space-x-2">
                   <span
                     className={`text-xs px-2 py-1 rounded-full ${getStatusColor(
-                      invoice.status
+                      invoice.status,
+                      invoice.riskDecision
                     )}`}
                   >
-                    {invoice.status}
+                    {invoice.riskDecision || invoice.status}
                   </span>
                   <span className="text-xs text-gray-500">
                     {formatDate(invoice.date)}

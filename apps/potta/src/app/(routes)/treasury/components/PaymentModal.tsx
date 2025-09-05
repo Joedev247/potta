@@ -11,11 +11,13 @@ import {
 import { AnimatePresence, motion } from 'framer-motion';
 import Button from '@potta/components/button';
 import Input from '@potta/components/input';
+import { usePayBill } from '../hooks/useBills';
+import { Bill } from '../utils/bills-api';
 
 interface PaymentModalProps {
   isOpen: boolean;
   setIsOpen: (open: boolean) => void;
-  selectedInvoice: any;
+  selectedInvoice: Bill | null;
 }
 
 const PaymentModal: React.FC<PaymentModalProps> = ({
@@ -27,13 +29,16 @@ const PaymentModal: React.FC<PaymentModalProps> = ({
   const [isVisible, setIsVisible] = useState(isOpen);
   const [paymentMethod, setPaymentMethod] = useState('');
   const [phoneNumber, setPhoneNumber] = useState('');
-  const [amount, setAmount] = useState('');
   const [isProcessing, setIsProcessing] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
+  const [paymentResult, setPaymentResult] = useState<any>(null);
+
+  // Pay bill mutation
+  const payBillMutation = usePayBill();
 
   const paymentMethods = [
     {
-      id: 'mobile_money',
+      id: 'MTN_CAM',
       name: 'MTN Mobile Money',
       icon: (
         <img src="/icons/mtn.svg" alt="MTN Mobile Money" className="w-6 h-6" />
@@ -41,30 +46,6 @@ const PaymentModal: React.FC<PaymentModalProps> = ({
       description: 'Pay with MTN Mobile Money',
       color: 'bg-green-50 border-green-200 text-green-700',
       hoverColor: 'hover:bg-green-100',
-    },
-    {
-      id: 'orange_money',
-      name: 'Orange Money',
-      icon: <img src="/icons/om.svg" alt="Orange Money" className="w-6 h-6" />,
-      description: 'Pay with Orange Money',
-      color: 'bg-orange-50 border-orange-200 text-orange-700',
-      hoverColor: 'hover:bg-orange-100',
-    },
-    {
-      id: 'check',
-      name: 'Check',
-      icon: <DollarSign className="w-6 h-6" />,
-      description: 'Pay with Check',
-      color: 'bg-blue-50 border-blue-200 text-blue-700',
-      hoverColor: 'hover:bg-blue-100',
-    },
-    {
-      id: 'bank_transfer',
-      name: 'Bank Transfer',
-      icon: <CreditCard className="w-6 h-6" />,
-      description: 'Pay with Bank Transfer',
-      color: 'bg-purple-50 border-purple-200 text-purple-700',
-      hoverColor: 'hover:bg-purple-100',
     },
   ];
 
@@ -80,9 +61,9 @@ const PaymentModal: React.FC<PaymentModalProps> = ({
     setTimeout(() => {
       setIsOpen(false);
       setIsSuccess(false);
+      setPaymentResult(null);
       setPaymentMethod('');
       setPhoneNumber('');
-      setAmount('');
     }, 300); // Match this with the exit animation duration
   };
 
@@ -100,15 +81,35 @@ const PaymentModal: React.FC<PaymentModalProps> = ({
   }, [isProcessing]);
 
   const handlePayment = async () => {
-    if (!paymentMethod || !phoneNumber || !amount) {
+    if (!paymentMethod || !phoneNumber || !selectedInvoice) {
       alert('Please fill in all fields');
       return;
     }
 
     setIsProcessing(true);
 
-    // Simulate payment processing
-    setTimeout(() => {
+    try {
+      const paymentData = {
+        phoneNumber: parseInt(phoneNumber.replace(/\D/g, '')), // Remove non-digits and parse
+        paymentProvider: paymentMethod,
+        currency: selectedInvoice.currency || 'XAF',
+        category: 'BILL_PAYMENT',
+        description: `Payment for ${selectedInvoice.invoiceType || 'bill'} ${
+          selectedInvoice.invoiceNumber ||
+          selectedInvoice.vendorInvoiceNumber ||
+          selectedInvoice.invoiceId ||
+          ''
+        }`,
+        transaction_type: 'BILL_PAYMENT',
+        // budgetId: 'budget-2024-q1' // You might want to make this configurable
+      };
+
+      const result = await payBillMutation.mutateAsync({
+        uuid: selectedInvoice.uuid,
+        paymentData,
+      });
+
+      setPaymentResult(result);
       setIsProcessing(false);
       setIsSuccess(true);
 
@@ -116,7 +117,10 @@ const PaymentModal: React.FC<PaymentModalProps> = ({
       setTimeout(() => {
         handleClose();
       }, 2000);
-    }, 2000);
+    } catch (error) {
+      setIsProcessing(false);
+      // Error is already handled by the mutation hook
+    }
   };
 
   const formatCurrency = (amount: number) => {
@@ -179,10 +183,21 @@ const PaymentModal: React.FC<PaymentModalProps> = ({
                   <h3 className="text-xl font-semibold text-gray-900 mb-2">
                     Payment Completed Successfully
                   </h3>
-                  <p className="text-gray-600 text-center">
-                    Your payment of {formatCurrency(parseFloat(amount) || 0)}{' '}
-                    has been processed.
+                  <p className="text-gray-600 text-center mb-4">
+                    Your payment of{' '}
+                    {formatCurrency(selectedInvoice?.invoiceTotal || 0)} has
+                    been processed.
                   </p>
+                  {paymentResult?.transactionId && (
+                    <div className="bg-gray-50 p-4 rounded-lg">
+                      <p className="text-sm text-gray-600 mb-1">
+                        Transaction ID:
+                      </p>
+                      <p className="font-mono text-sm font-medium text-gray-900">
+                        {paymentResult.transactionId}
+                      </p>
+                    </div>
+                  )}
                 </div>
               ) : (
                 // Payment Form
@@ -191,25 +206,36 @@ const PaymentModal: React.FC<PaymentModalProps> = ({
                   {selectedInvoice && (
                     <div className="bg-gray-50 p-4 ">
                       <h3 className="font-semibold text-gray-900 mb-2">
-                        Invoice Details
+                        Bill Details
                       </h3>
                       <div className="space-y-2 text-sm">
                         <div className="flex justify-between">
                           <span className="text-gray-600">Invoice:</span>
                           <span className="font-medium">
-                            {selectedInvoice.invoiceNumber}
+                            {selectedInvoice.invoiceNumber ||
+                              selectedInvoice.vendorInvoiceNumber ||
+                              selectedInvoice.invoiceId ||
+                              '-'}
                           </span>
                         </div>
                         <div className="flex justify-between">
                           <span className="text-gray-600">Vendor:</span>
                           <span className="font-medium">
-                            {selectedInvoice.beneficiary}
+                            {selectedInvoice.vendor?.name ||
+                              selectedInvoice.customer?.name ||
+                              'Unknown'}
                           </span>
                         </div>
                         <div className="flex justify-between">
                           <span className="text-gray-600">Amount:</span>
                           <span className="font-medium text-green-600">
-                            {formatCurrency(selectedInvoice.amountInclTax)}
+                            {formatCurrency(selectedInvoice.invoiceTotal)}
+                          </span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="text-gray-600">Currency:</span>
+                          <span className="font-medium">
+                            {selectedInvoice.currency || 'XAF'}
                           </span>
                         </div>
                       </div>
@@ -245,30 +271,16 @@ const PaymentModal: React.FC<PaymentModalProps> = ({
                   {/* Payment Form */}
                   {paymentMethod && (
                     <div className="space-y-4">
-                      {/* Mobile Money Fields */}
-                      {(paymentMethod === 'mobile_money' ||
-                        paymentMethod === 'orange_money') && (
+                      {/* MTN Mobile Money Fields */}
+                      {paymentMethod === 'MTN_CAM' && (
                         <>
                           <Input
                             label="Phone Number"
                             type="tel"
                             name="phoneNumber"
-                            placeholder="Enter phone number"
+                            placeholder="Enter MTN phone number (e.g., 671381152)"
                             value={phoneNumber}
                             onchange={(e) => setPhoneNumber(e.target.value)}
-                            required
-                            disabled={isProcessing}
-                          />
-
-                          <Input
-                            label="Amount (XAF)"
-                            type="number"
-                            name="amount"
-                            placeholder="0.00"
-                            value={amount}
-                            onchange={(e) => setAmount(e.target.value)}
-                            step="0.01"
-                            min="0"
                             required
                             disabled={isProcessing}
                           />
@@ -276,149 +288,25 @@ const PaymentModal: React.FC<PaymentModalProps> = ({
                           {/* Payment Instructions */}
                           <div className="p-4 bg-blue-50 ">
                             <h4 className="font-medium text-blue-900 mb-2">
-                              Payment Instructions
+                              MTN Mobile Money Payment Instructions
                             </h4>
                             <ul className="text-sm text-blue-800 space-y-1">
                               <li>
-                                • Enter your phone number registered with{' '}
-                                {paymentMethod === 'mobile_money'
-                                  ? 'MTN Mobile Money'
-                                  : 'Orange Money'}
+                                • Enter your phone number registered with MTN
+                                Mobile Money
                               </li>
                               <li>
                                 • You will receive a payment prompt on your
                                 phone
                               </li>
                               <li>
-                                • Enter your PIN to complete the transaction
+                                • Enter your MTN Mobile Money PIN to complete
+                                the transaction
                               </li>
                               <li>• Payment will be processed immediately</li>
-                            </ul>
-                          </div>
-                        </>
-                      )}
-
-                      {/* Check Fields */}
-                      {paymentMethod === 'check' && (
-                        <>
-                          <Input
-                            label="Check Number"
-                            type="text"
-                            name="checkNumber"
-                            placeholder="Enter check number"
-                            value={phoneNumber}
-                            onchange={(e) => setPhoneNumber(e.target.value)}
-                            required
-                            disabled={isProcessing}
-                          />
-
-                          <Input
-                            label="Amount (XAF)"
-                            type="number"
-                            name="amount"
-                            placeholder="0.00"
-                            value={amount}
-                            onchange={(e) => setAmount(e.target.value)}
-                            step="0.01"
-                            min="0"
-                            required
-                            disabled={isProcessing}
-                          />
-
-                          <Input
-                            label="Bank Name"
-                            type="text"
-                            name="bankName"
-                            placeholder="Enter bank name"
-                            value=""
-                            onchange={() => {}}
-                            required
-                            disabled={isProcessing}
-                          />
-
-                          {/* Payment Instructions */}
-                          <div className="p-4 bg-blue-50 ">
-                            <h4 className="font-medium text-blue-900 mb-2">
-                              Check Payment Instructions
-                            </h4>
-                            <ul className="text-sm text-blue-800 space-y-1">
-                              <li>• Enter the check number from your check</li>
                               <li>
-                                • Provide the bank name that issued the check
-                              </li>
-                              <li>
-                                • Payment will be processed within 2-3 business
-                                days
-                              </li>
-                              <li>
-                                • Ensure check is properly signed and dated
-                              </li>
-                            </ul>
-                          </div>
-                        </>
-                      )}
-
-                      {/* Bank Transfer Fields */}
-                      {paymentMethod === 'bank_transfer' && (
-                        <>
-                          <Input
-                            label="Account Number"
-                            type="text"
-                            name="accountNumber"
-                            placeholder="Enter account number"
-                            value={phoneNumber}
-                            onchange={(e) => setPhoneNumber(e.target.value)}
-                            required
-                            disabled={isProcessing}
-                          />
-
-                          <Input
-                            label="Amount (XAF)"
-                            type="number"
-                            name="amount"
-                            placeholder="0.00"
-                            value={amount}
-                            onchange={(e) => setAmount(e.target.value)}
-                            step="0.01"
-                            min="0"
-                            required
-                            disabled={isProcessing}
-                          />
-
-                          <Input
-                            label="Bank Name"
-                            type="text"
-                            name="bankName"
-                            placeholder="Enter bank name"
-                            value=""
-                            onchange={() => {}}
-                            required
-                            disabled={isProcessing}
-                          />
-
-                          <Input
-                            label="Reference Number"
-                            type="text"
-                            name="referenceNumber"
-                            placeholder="Enter reference number"
-                            value=""
-                            onchange={() => {}}
-                            required
-                            disabled={isProcessing}
-                          />
-
-                          {/* Payment Instructions */}
-                          <div className="p-4 bg-blue-50 ">
-                            <h4 className="font-medium text-blue-900 mb-2">
-                              Bank Transfer Instructions
-                            </h4>
-                            <ul className="text-sm text-blue-800 space-y-1">
-                              <li>• Enter your bank account number</li>
-                              <li>• Provide the bank name for the transfer</li>
-                              <li>• Include a reference number for tracking</li>
-                              <li>
-                                • Transfer will be processed within 1-2 business
-                                days
+                                • Ensure you have sufficient balance in your MTN
+                                Mobile Money account
                               </li>
                             </ul>
                           </div>
@@ -434,7 +322,7 @@ const PaymentModal: React.FC<PaymentModalProps> = ({
                         text={isProcessing ? 'Processing...' : 'Pay Now'}
                         type="button"
                         onClick={handlePayment}
-                        disabled={isProcessing || !phoneNumber || !amount}
+                        disabled={isProcessing || !phoneNumber}
                         icon={<CreditCard className="h-4 w-4" />}
                       />
                     </div>

@@ -6,17 +6,43 @@ import ReimbursementForm from './ReimbursementForm';
 import DynamicFilter from '@potta/components/dynamic-filter';
 import Image from 'next/image';
 
-const Filter = ({ onNew }: { onNew: (data: any) => void }) => {
+interface FilterProps {
+  onNew: () => void;
+  onFiltersChange?: (filters: {
+    search?: string;
+    status?: string;
+    type?: string;
+  }) => void;
+  currentFilters?: {
+    search: string;
+    status: string;
+    type: string;
+  };
+}
+
+const Filter = ({ onNew, onFiltersChange, currentFilters }: FilterProps) => {
   const [selectedValue, setSelectedValue] = useState('All Time');
-  const [selectedValue2, setSelectedValue2] = useState('pending');
+  const [selectedStatus, setSelectedStatus] = useState(
+    currentFilters?.status || 'all'
+  );
+  const [selectedType, setSelectedType] = useState(
+    currentFilters?.type || 'all'
+  );
   const [sliderOpen, setSliderOpen] = useState(false);
-  const [searchValue, setSearchValue] = useState('');
+  const [searchValue, setSearchValue] = useState(currentFilters?.search || '');
 
   const statusOptions = [
     { label: 'All', value: 'all' },
-    { label: 'Pending', value: 'pending' },
-    { label: 'Approved', value: 'approved' },
-    { label: 'Rejected', value: 'rejected' },
+    { label: 'Pending', value: 'PENDING' },
+    { label: 'Approved', value: 'APPROVED' },
+    { label: 'Rejected', value: 'REJECTED' },
+    { label: 'Paid', value: 'PAID' },
+  ];
+
+  const typeOptions = [
+    { label: 'All', value: 'all' },
+    { label: 'Mileage', value: 'mileage' },
+    { label: 'Out of Pocket', value: 'out_of_pocket' }
   ];
 
   const dateOptions = [
@@ -27,11 +53,40 @@ const Filter = ({ onNew }: { onNew: (data: any) => void }) => {
   ];
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchValue(e.target.value);
+    const value = e.target.value;
+    setSearchValue(value);
+    onFiltersChange?.({
+      search: value,
+      status: selectedStatus,
+      type: selectedType,
+    });
   };
 
   const handleSearchClear = () => {
     setSearchValue('');
+    onFiltersChange?.({
+      search: '',
+      status: selectedStatus,
+      type: selectedType,
+    });
+  };
+
+  const handleStatusChange = (value: string) => {
+    setSelectedStatus(value);
+    onFiltersChange?.({
+      search: searchValue,
+      status: value,
+      type: selectedType,
+    });
+  };
+
+  const handleTypeChange = (value: string) => {
+    setSelectedType(value);
+    onFiltersChange?.({
+      search: searchValue,
+      status: selectedStatus,
+      type: value,
+    });
   };
 
   const filterConfig = [
@@ -39,8 +94,16 @@ const Filter = ({ onNew }: { onNew: (data: any) => void }) => {
       key: 'status',
       label: 'Status',
       options: statusOptions,
-      value: selectedValue2,
-      onChange: setSelectedValue2,
+      value: selectedStatus,
+      onChange: handleStatusChange,
+      selectClassName: 'min-w-[140px]',
+    },
+    {
+      key: 'type',
+      label: 'Type',
+      options: typeOptions,
+      value: selectedType,
+      onChange: handleTypeChange,
       selectClassName: 'min-w-[140px]',
     },
     {

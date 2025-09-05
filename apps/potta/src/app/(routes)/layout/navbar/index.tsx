@@ -61,6 +61,7 @@ const urlRouters = [
 const routesWithBox = [
   { main: 'payments', sub: '', component: '' },
   { main: 'account_payables', sub: '', component: '' },
+  { main: 'pos', sub: 'vendors', component: VendorsBox },
   { main: 'account_receivables', sub: 'vouchers', component: VouchersBox },
   { main: 'accounting', sub: '', component: '' },
   { main: 'account_receivables', sub: 'invoice', component: InvoiceBox },
@@ -94,7 +95,7 @@ const routesWithoutBlueBackground = [
   { main: 'invoice', sub: 'new' },
   { main: 'account_receivables', sub: 'invoice' },
   { main: 'bank-accounts' },
-  { main: 'pos' },
+  // { main: 'pos' },
   { main: 'pos', sub: 'files' },
   { main: 'pos', sub: 'inventory' },
   { main: 'invoice', sub: 'recurring' },

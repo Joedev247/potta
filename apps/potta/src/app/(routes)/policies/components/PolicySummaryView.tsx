@@ -1,6 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { Policy } from '../utils/types';
-import { ChevronRight, UserCheck, CheckCircle2, AlertCircle, Settings, Users } from 'lucide-react';
+import {
+  ChevronRight,
+  UserCheck,
+  CheckCircle2,
+  AlertCircle,
+  Settings,
+  Users,
+} from 'lucide-react';
 import { peopleApi } from '../../payroll/people/utils/api';
 import { MdOutlinePendingActions } from 'react-icons/md';
 
@@ -15,41 +22,44 @@ interface Employee {
   profile_url?: string;
 }
 
-const requirementLabels: Record<string, { label: string; description: string; icon: React.ReactNode }> = {
+const requirementLabels: Record<
+  string,
+  { label: string; description: string; icon: React.ReactNode }
+> = {
   requireReceipt: {
     label: 'Receipt Required',
     description: 'Must attach receipt for this expense',
-    icon: <i className="ri-receipt-2-line text-gray-600" />
+    icon: <i className="ri-receipt-2-line text-gray-600" />,
   },
   requireMemo: {
     label: 'Memo Required',
     description: 'Must provide a memo explaining the expense',
-    icon: <i className="ri-file-text-line text-gray-600" />
+    icon: <i className="ri-file-text-line text-gray-600" />,
   },
   requireScreenshots: {
     label: 'Screenshots Required',
     description: 'Must attach screenshots as proof',
-    icon: <i className="ri-image-line text-gray-600" />
+    icon: <i className="ri-image-line text-gray-600" />,
   },
   requireNetSuiteCustomerJob: {
     label: 'NetSuite Customer/Job',
     description: 'Must select NetSuite customer or job',
-    icon: <i className="ri-briefcase-line text-gray-600" />
+    icon: <i className="ri-briefcase-line text-gray-600" />,
   },
   requireGpsCoordinates: {
     label: 'GPS Coordinates',
     description: 'Must include GPS location data',
-    icon: <i className="ri-map-pin-line text-gray-600" />
+    icon: <i className="ri-map-pin-line text-gray-600" />,
   },
   businessPurpose: {
     label: 'Business Purpose',
     description: 'Must specify business purpose',
-    icon: <i className="ri-building-2-line text-gray-600" />
+    icon: <i className="ri-building-2-line text-gray-600" />,
   },
   requireBeforeAfterScreenshots: {
     label: 'Before/After Screenshots',
     description: 'Must provide before and after screenshots',
-    icon: <i className="ri-split-cells-horizontal text-gray-600" />
+    icon: <i className="ri-split-cells-horizontal text-gray-600" />,
   },
 };
 
@@ -99,160 +109,202 @@ export const PolicySummaryView: React.FC<PolicySummaryViewProps> = ({
   }
 
   return (
-    <div className="space-y-6">
-      {policy.rules.map((rule, idx) => (
-        <div
-          key={rule.uuid || rule.id || idx}
-          className="bg-gray-50 border border-gray-200 p-6"
-        >
-          {/* Rule Header */}
-          <div className="flex items-center gap-3 mb-4 pb-3 border-b border-gray-200">
-            <div className="flex items-center gap-2">
-              <div className="p-2 bg-green-100">
-                <Settings className="h-4 w-4 text-green-600" />
-              </div>
-              <div>
-                <span className="text-green-600 font-semibold text-lg">Rule {idx + 1}</span>
-                <div className="text-xs text-gray-500">
-                  Condition Operator: {rule.conditionOperator?.toUpperCase() || 'AND'}
-                </div>
-              </div>
+    <div className="rule-summary border rounded-md p-4 bg-white">
+      {policy.rules.map((rule, ruleIndex) => (
+        <div key={rule.uuid || rule.id || ruleIndex} className="mb-8">
+          {/* FIRST LEVEL: IF Statement */}
+          <div className="flex items-start">
+            <div className="min-w-[36px] flex justify-center">
+              <span className="inline-flex items-center justify-center h-6 w-6 rounded-full bg-gray-100 text-gray-600">
+                <ChevronRight size={16} />
+              </span>
             </div>
+            <div className="font-medium text-xl text-gray-700">IF</div>
           </div>
 
           {/* Conditions */}
-          <div className="mb-4">
-            <div className="flex items-center gap-2 mb-3">
-              <CheckCircle2 className="h-4 w-4 text-green-600" />
-              <span className="font-semibold text-gray-700">Conditions</span>
-              <span className="text-xs text-gray-500 bg-gray-100 px-2 py-0.5">
-                {rule.conditions.length} condition{rule.conditions.length !== 1 ? 's' : ''}
-              </span>
+          <div></div>
+          {rule.conditions.map((condition, condIndex) => (
+            <div key={condition.id} className="mb-2 ml-10 flex items-center">
+              <div className="flex items-start">
+                <div className="flex-1">
+                  {condition.criterionType && condition.comparisonOperator ? (
+                    <div>
+                      <span className="font-medium">
+                        {condition.criterionType}
+                      </span>{' '}
+                      <span className="text-gray-500">
+                        {condition.comparisonOperator}
+                      </span>{' '}
+                      <span className="text-gray-700">{condition.value}</span>
+                    </div>
+                  ) : (
+                    <span className="text-gray-400 italic">
+                      Incomplete condition
+                    </span>
+                  )}
+                </div>
+              </div>
+
+              {/* Add "and" between conditions */}
+              {condIndex < rule.conditions.length - 1 && (
+                <div className="ml-2 text-sm text-gray-500 font-medium">
+                  and
+                </div>
+              )}
             </div>
-            <div className="space-y-2">
-              {rule.conditions.map((cond) => (
-                <div key={cond.id} className="flex items-center gap-3 p-3 bg-white border border-gray-100">
-                  <div className="flex-1">
-                    <span className="capitalize font-medium text-gray-700">
-                      {cond.criterionType}
-                    </span>
-                    <span className="text-gray-500 mx-2">
-                      {cond.comparisonOperator}
-                    </span>
-                    <span className="text-green-700 font-semibold">
-                      {cond.value}
+          ))}
+
+          {/* SECOND LEVEL: Conditions, Requirements, Actions */}
+          <div className="ml-10 border-l border-gray-200 pl-[18px] mt-2">
+            {/* Actions */}
+            {rule.actions && rule.actions.length > 0 && (
+              <div className="mt-4">
+                <div className="flex items-start">
+                  <div className="min-w-[36px] flex justify-center">
+                    <span className="inline-flex items-center justify-center h-5 w-5 rounded-full bg-indigo-50 text-indigo-500">
+                      <UserCheck size={14} />
                     </span>
                   </div>
-                </div>
-              ))}
-            </div>
-          </div>
+                  <div className="">
+                    <div className="text-gray-500 font-medium mb-1">Then</div>
+                    {rule.actions.map((action, actionIndex) => {
+                      const userIds =
+                        action.parameters?.users ||
+                        (action.parameters &&
+                        'selectedUserIds' in action.parameters
+                          ? action.parameters.selectedUserIds
+                          : []) ||
+                        [];
+                      return (
+                        <div
+                          key={actionIndex}
+                          className="ml-2 flex items-center space-x-2"
+                        >
+                          <div className="font-medium text-indigo-600">
+                            {action.type}
+                          </div>
 
-          {/* Requirements */}
-          {rule.requirements &&
-            Object.values(rule.requirements).some(Boolean) && (
-              <div className="mb-4">
-                <div className="flex items-center gap-2 mb-3">
-                  <AlertCircle className="h-4 w-4 text-gray-600" />
-                  <span className="font-semibold text-gray-700">Requirements</span>
-                  <span className="text-xs text-gray-500 bg-gray-100 px-2 py-0.5">
-                    {Object.values(rule.requirements).filter(Boolean).length} requirement{Object.values(rule.requirements).filter(Boolean).length !== 1 ? 's' : ''}
-                  </span>
-                </div>
-                <div className="space-y-2">
-                  {Object.entries(rule.requirements).map(([key, value]) =>
-                    value ? (
-                      <div key={key} className="flex items-center gap-3 p-3 bg-white border border-gray-100">
-                        <div className="flex-shrink-0">
-                          {requirementLabels[key]?.icon || <i className="ri-check-line text-gray-400" />}
-                        </div>
-                        <div className="flex-1">
-                          <div className="font-medium text-gray-700">
-                            {requirementLabels[key]?.label || key.replace(/([A-Z])/g, ' $1').replace(/^./, (s) => s.toUpperCase())}
+                          <div className="flex flex-wrap gap-1 mt-1">
+                            {loading ? (
+                              <span className="text-gray-400 italic">
+                                Loading approvers...
+                              </span>
+                            ) : userIds.length > 0 ? (
+                              userIds.map((userId, idx) => {
+                                const emp = employeeMap[userId];
+                                return (
+                                  <span
+                                    key={userId}
+                                    className="bg-blue-50 border border-blue-100 px-2 py-0.5 text-sm rounded text-blue-700"
+                                  >
+                                    {emp
+                                      ? `${emp.firstName} ${emp.lastName}`
+                                      : userId}
+                                  </span>
+                                );
+                              })
+                            ) : (
+                              <span className="text-gray-400 italic">
+                                No users assigned
+                              </span>
+                            )}
                           </div>
-                          <div className="text-sm text-gray-500">
-                            {requirementLabels[key]?.description || 'Required for this policy'}
-                          </div>
+                          {/* Add divider between actions if needed */}
+                          {actionIndex < rule.actions.length - 1 && (
+                            <div className="my-2 text-sm text-gray-500 font-medium">
+                              and
+                            </div>
+                          )}
                         </div>
-                      </div>
-                    ) : null
-                  )}
+                      );
+                    })}
+                  </div>
                 </div>
               </div>
             )}
 
-          {/* Actions */}
-          <div>
-            <div className="flex items-center gap-2 mb-3">
-              <MdOutlinePendingActions  className="h-4 w-4 text-gray-600" />
-              <span className="font-semibold text-gray-700">Actions</span>
-              <span className="text-xs text-gray-500 bg-gray-100 px-2 py-0.5">
-                {rule.actions.length} action{rule.actions.length !== 1 ? 's' : ''}
-              </span>
-            </div>
-            <div className="space-y-3">
-              {rule.actions.map((action, actionIdx) => {
-                const userIds =
-                  action.parameters?.users ||
-                  (action.parameters && 'selectedUserIds' in action.parameters
-                    ? action.parameters.selectedUserIds
-                    : []) ||
-                  [];
-                return (
-                  <div
-                    key={action.id || actionIdx}
-                    className="p-4 bg-white border border-gray-100"
-                  >
-                    <div className="flex items-center gap-3 mb-2">
-                      <div className="p-1.5 bg-green-100">
-                        <UserCheck className="h-3 w-3 text-green-600" />
+            {/* Display message if no actions are defined */}
+            {(!rule.actions || rule.actions.length === 0) && (
+              <div className="mt-4">
+                <div className="flex items-start">
+                  <div className="min-w-[36px] flex justify-center">
+                    <span className="inline-flex items-center justify-center h-5 w-5 rounded-full bg-gray-100 text-gray-400">
+                      <UserCheck size={14} />
+                    </span>
+                  </div>
+                  <div className="text-gray-400 italic">No actions defined</div>
+                </div>
+              </div>
+            )}
+
+            {/* Requirements */}
+            {rule.requirements &&
+              Object.values(rule.requirements).some((v) => v === true) && (
+                <div className="mb-3 mt-4">
+                  <div className="flex items-start">
+                    <div className="min-w-[36px] flex justify-center">
+                      <span className="inline-flex items-center justify-center h-5 w-5 rounded-full bg-green-50 text-green-500">
+                        <CheckCircle2 size={14} />
+                      </span>
+                    </div>
+                    <div className="flex flex-col">
+                      <div className="text-gray-500 font-medium mb-1">
+                        Require
                       </div>
-                      <div className="flex-1">
-                        <div className="font-medium capitalize text-gray-700">{action.type}</div>
-                        <div className="text-sm text-gray-500">
-                          Approval Mode: {action.parameters?.approvalMode || 'Standard'}
-                        </div>
+                      <div className="flex flex-wrap gap-1">
+                        {rule.requirements.requireMemo && (
+                          <span className="bg-amber-50 border border-amber-200 px-2 py-0.5 text-sm rounded">
+                            Memo
+                          </span>
+                        )}
+
+                        {rule.requirements.requireReceipt && (
+                          <span className="bg-amber-50 border border-amber-200 px-2 py-0.5 text-sm rounded">
+                            Receipt
+                          </span>
+                        )}
+
+                        {rule.requirements.requireNetSuiteCustomerJob && (
+                          <span className="bg-amber-50 border border-amber-200 px-2 py-0.5 text-sm rounded">
+                            NetSuite Customer/Job
+                          </span>
+                        )}
+
+                        {rule.requirements.requireScreenshots && (
+                          <span className="bg-amber-50 border border-amber-200 px-2 py-0.5 text-sm rounded">
+                            Screenshots
+                          </span>
+                        )}
+
+                        {rule.requirements.requireGpsCoordinates && (
+                          <span className="bg-amber-50 border border-amber-200 px-2 py-0.5 text-sm rounded">
+                            GPS Coordinates
+                          </span>
+                        )}
+
+                        {rule.requirements.businessPurpose && (
+                          <span className="bg-amber-50 border border-amber-200 px-2 py-0.5 text-sm rounded">
+                            Business Purpose
+                          </span>
+                        )}
+
+                        {rule.requirements.requireBeforeAfterScreenshots && (
+                          <span className="bg-amber-50 border border-amber-200 px-2 py-0.5 text-sm rounded">
+                            Before/After Screenshots
+                          </span>
+                        )}
                       </div>
                     </div>
-                    
-                    {/* Approvers */}
-                    {loading ? (
-                      <div className="text-sm text-gray-400 italic">Loading approvers...</div>
-                    ) : (
-                      Array.isArray(userIds) &&
-                      userIds.length > 0 && (
-                        <div className="mt-3 pt-3 border-t border-gray-100">
-                          <div className="text-sm font-medium text-gray-600 mb-2">Approvers:</div>
-                          <div className="flex flex-wrap gap-2">
-                            {userIds.map((id: string) => {
-                              const emp = employeeMap[id];
-                              return emp ? (
-                                <span
-                                  key={id}
-                                  className="inline-flex items-center gap-1 px-3 py-1 bg-green-50 text-green-700 border border-green-200 text-sm"
-                                >
-                                  <i className="ri-user-line text-green-600"></i>
-                                  {emp.firstName} {emp.lastName}
-                                </span>
-                              ) : (
-                                <span
-                                  key={id}
-                                  className="inline-flex items-center gap-1 px-3 py-1 bg-gray-100 text-gray-600 border border-gray-200 text-sm"
-                                >
-                                  <i className="ri-user-line text-gray-400"></i>
-                                  {id}
-                                </span>
-                              );
-                            })}
-                          </div>
-                        </div>
-                      )
-                    )}
                   </div>
-                );
-              })}
-            </div>
+                </div>
+              )}
           </div>
+
+          {/* Separator between multiple rules */}
+          {ruleIndex < policy.rules.length - 1 && (
+            <div className="my-6 border-t border-gray-200"></div>
+          )}
         </div>
       ))}
     </div>
