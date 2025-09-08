@@ -10,6 +10,7 @@ import {
   OrgChartApiResponse,
   PaginatedResponse,
   Organization,
+  User,
 } from '../types';
 
 const organizationId = '4c926765-d683-4e66-a62f-382d5b54c47a';
@@ -22,6 +23,25 @@ export const orgChartApi = {
       data: result.data,
       success: true,
       message: 'Organization loaded successfully',
+    };
+  },
+
+  // Users (accessed through members endpoint)
+  getUsers: async (orgId: string = organizationId) => {
+    const result = await axios.get<User[]>(`/members?organizationId=${orgId}`);
+    return {
+      data: result.data,
+      success: true,
+      message: 'Users loaded successfully',
+    };
+  },
+
+  getUser: async (userId: string, orgId: string = organizationId) => {
+    const result = await axios.get<User>(`/members/${orgId}/${userId}`);
+    return {
+      data: result.data,
+      success: true,
+      message: 'User loaded successfully',
     };
   },
 
@@ -209,6 +229,107 @@ export const orgChartApi = {
       data: result.data,
       success: true,
       message: 'User department loaded successfully',
+    };
+  },
+
+  getAssignmentsByOrganization: async (
+    organizationId: string,
+    orgId: string = organizationId
+  ) => {
+    const result = await axios.get<UserAssignment[]>(
+      `/organizations/${orgId}/user-assignments/organization/${organizationId}`
+    );
+    return {
+      data: result.data,
+      success: true,
+      message: 'Organization assignments loaded successfully',
+    };
+  },
+
+  getAssignmentsByGeographicalUnit: async (
+    geoUnitId: string,
+    orgId: string = organizationId
+  ) => {
+    const result = await axios.get<UserAssignment[]>(
+      `/organizations/${orgId}/user-assignments/geo-unit/${geoUnitId}`
+    );
+    return {
+      data: result.data,
+      success: true,
+      message: 'Geographical unit assignments loaded successfully',
+    };
+  },
+
+  getUserGeographicalUnit: async (
+    userId: string,
+    orgId: string = organizationId
+  ) => {
+    const result = await axios.get<any>(
+      `/organizations/${orgId}/user-assignments/user/${userId}/geo-unit`
+    );
+    return {
+      data: result.data,
+      success: true,
+      message: 'User geographical unit loaded successfully',
+    };
+  },
+
+  getUserSubBusiness: async (
+    userId: string,
+    orgId: string = organizationId
+  ) => {
+    const result = await axios.get<any>(
+      `/organizations/${orgId}/user-assignments/user/${userId}/sub-business`
+    );
+    return {
+      data: result.data,
+      success: true,
+      message: 'User sub-business loaded successfully',
+    };
+  },
+
+  // Invitations
+  getInvitations: async (orgId: string = organizationId) => {
+    const result = await axios.get<any>(
+      `/invitations/list?organizationId=${orgId}`
+    );
+    return {
+      data: result.data,
+      success: true,
+      message: 'Invitations loaded successfully',
+    };
+  },
+
+  sendInvitation: async (invitationData: {
+    email: string;
+    recipientName: string;
+    role: string;
+    temporaryPassword: string;
+    organizationId: string;
+  }) => {
+    const result = await axios.post<any>('/invitations', invitationData);
+    return {
+      data: result.data,
+      success: true,
+      message: 'Invitation sent successfully',
+    };
+  },
+
+  resendInvitation: async (token: string) => {
+    const result = await axios.post<any>('/invitations/resend', { token });
+    return {
+      data: result.data,
+      success: true,
+      message: 'Invitation resent successfully',
+    };
+  },
+
+  cancelInvitation: async (token: string) => {
+    const result = await axios.post<any>('/invitations/cancel', { token });
+    return {
+      data: result.data,
+      success: true,
+      message: 'Invitation cancelled successfully',
     };
   },
 

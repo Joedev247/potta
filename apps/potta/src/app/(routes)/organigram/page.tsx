@@ -749,6 +749,26 @@ export default function OrganigramPage() {
         onClose={() => setUserAssignmentModalOpen(false)}
         onSave={handleSaveUserAssignment}
         assignment={selectedAssignment}
+        preselectedDepartment={
+          selectedNode?.type === 'structure'
+            ? (selectedNode.data.entity as OrganizationalStructure)
+            : null
+        }
+        preselectedLocation={
+          selectedNode?.type === 'location'
+            ? (selectedNode.data.entity as Location)
+            : null
+        }
+        preselectedBusinessUnit={
+          selectedNode?.type === 'business'
+            ? (selectedNode.data.entity as SubBusiness)
+            : null
+        }
+        preselectedGeographicalUnit={
+          selectedNode?.type === 'geographical'
+            ? (selectedNode.data.entity as GeographicalUnit)
+            : null
+        }
       />
 
       <LocationModal
