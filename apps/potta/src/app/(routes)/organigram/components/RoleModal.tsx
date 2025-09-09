@@ -66,6 +66,20 @@ export default function RoleModal({
     return Object.keys(newErrors).length === 0;
   };
 
+  // Helper function to clean form data by removing empty strings and null values
+  const cleanFormData = (data: any): any => {
+    const cleaned: any = {};
+
+    Object.entries(data).forEach(([key, value]) => {
+      // Only include the field if it has a meaningful value
+      if (value !== null && value !== undefined && value !== '') {
+        cleaned[key] = value;
+      }
+    });
+
+    return cleaned;
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -75,7 +89,9 @@ export default function RoleModal({
 
     setLoading(true);
     try {
-      await onSave(formData);
+      // Clean the form data to remove empty strings and null values
+      const cleanedFormData = cleanFormData(formData);
+      await onSave(cleanedFormData);
       onClose();
     } catch (error) {
       console.error('Error saving role:', error);

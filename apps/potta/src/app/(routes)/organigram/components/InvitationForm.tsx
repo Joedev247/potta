@@ -86,6 +86,20 @@ export default function InvitationForm({
     return Object.keys(newErrors).length === 0;
   };
 
+  // Helper function to clean form data by removing empty strings and null values
+  const cleanFormData = (data: any): any => {
+    const cleaned: any = {};
+
+    Object.entries(data).forEach(([key, value]) => {
+      // Only include the field if it has a meaningful value
+      if (value !== null && value !== undefined && value !== '') {
+        cleaned[key] = value;
+      }
+    });
+
+    return cleaned;
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -95,12 +109,9 @@ export default function InvitationForm({
 
     try {
       setLoading(true);
-      await orgChartApi.sendInvitation({
-        email: formData.email,
-        recipientName: formData.recipientName,
-        role: formData.role,
-        temporaryPassword: formData.temporaryPassword || undefined,
-      });
+      // Clean the form data to remove empty strings and null values
+      const cleanedFormData = cleanFormData(formData);
+      await orgChartApi.sendInvitation(cleanedFormData);
 
       toast.success('Invitation sent successfully!');
       onSuccess?.();
@@ -278,7 +289,6 @@ export default function InvitationForm({
           {/* Footer */}
           <div className="border-t border-gray-200 p-6">
             <div className="flex space-x-3">
-           
               <button
                 type="submit"
                 onClick={handleSubmit}

@@ -89,6 +89,22 @@ export default function GeographicalUnitModal({
     return Object.keys(newErrors).length === 0;
   };
 
+  // Helper function to clean form data by removing empty strings and null values
+  const cleanFormData = (
+    data: Partial<GeographicalUnit>
+  ): Partial<GeographicalUnit> => {
+    const cleaned: Partial<GeographicalUnit> = {};
+
+    Object.entries(data).forEach(([key, value]) => {
+      // Only include the field if it has a meaningful value
+      if (value !== null && value !== undefined && value !== '') {
+        (cleaned as any)[key] = value;
+      }
+    });
+
+    return cleaned;
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -98,18 +114,9 @@ export default function GeographicalUnitModal({
 
     setLoading(true);
     try {
-      // Filter out unnecessary fields for update and empty values
-      const payload = {
-        geo_unit_name: formData.geo_unit_name,
-        description: formData.description,
-        ...(mode === 'create' &&
-          formData.parent_geo_unit_id &&
-          formData.parent_geo_unit_id.trim() !== '' && {
-            parent_geo_unit_id: formData.parent_geo_unit_id,
-          }),
-      };
-
-      await onSave(payload);
+      // Clean the form data to remove empty strings and null values
+      const cleanedFormData = cleanFormData(formData);
+      await onSave(cleanedFormData);
       onClose();
     } catch (error) {
       console.error('Error saving geographical unit:', error);

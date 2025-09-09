@@ -403,6 +403,22 @@ export default function UserAssignmentModal({
     return Object.keys(newErrors).length === 0;
   };
 
+  // Helper function to clean form data by removing empty strings and null values
+  const cleanFormData = (
+    data: Partial<UserAssignment>
+  ): Partial<UserAssignment> => {
+    const cleaned: Partial<UserAssignment> = {};
+
+    Object.entries(data).forEach(([key, value]) => {
+      // Only include the field if it has a meaningful value
+      if (value !== null && value !== undefined && value !== '') {
+        (cleaned as any)[key] = value;
+      }
+    });
+
+    return cleaned;
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -412,7 +428,9 @@ export default function UserAssignmentModal({
 
     setLoading(true);
     try {
-      await onSave(formData);
+      // Clean the form data to remove empty strings and null values
+      const cleanedFormData = cleanFormData(formData);
+      await onSave(cleanedFormData);
       onClose();
     } catch (error) {
       console.error('Error saving user assignment:', error);
