@@ -54,6 +54,7 @@ interface OrgChartFlowComponentProps {
   searchTerm: string;
   filters: OrgChartFilters;
   refreshTrigger: number;
+  organizationId: string;
   onNodeSelect?: (node: any, event?: React.MouseEvent) => void;
   onViewModeChange?: (mode: ViewMode) => void;
   onAction?: (action: string, nodeId: string, entity?: any) => void;
@@ -65,6 +66,7 @@ export default function OrgChartFlowComponent({
   searchTerm,
   filters,
   refreshTrigger,
+  organizationId,
   onNodeSelect,
   onViewModeChange,
   onAction,
@@ -97,12 +99,12 @@ export default function OrgChartFlowComponent({
           subBusinessesRes,
           geoUnitsRes,
         ] = await Promise.all([
-          orgChartApi.getOrganization(),
-          orgChartApi.getStructures(),
-          orgChartApi.getAssignments(),
-          orgChartApi.getLocations(),
-          orgChartApi.getSubBusinesses(),
-          orgChartApi.getGeographicalUnitsHierarchy(),
+          orgChartApi.getOrganization(organizationId),
+          orgChartApi.getStructures(organizationId),
+          orgChartApi.getAssignments(organizationId),
+          orgChartApi.getLocations(organizationId),
+          orgChartApi.getSubBusinesses(organizationId),
+          orgChartApi.getGeographicalUnitsHierarchy(organizationId),
         ]);
 
         const organizationData = organizationRes.data;
@@ -633,9 +635,10 @@ export default function OrgChartFlowComponent({
 
                   // Add standalone departments directly under location
                   if (standaloneDepartments.length > 0) {
+                    // Position departments to the left side of the location
                     const departmentPositions = calculateTreeLayout(
                       standaloneDepartments,
-                      position.x,
+                      position.x - NODE_SPACING.HORIZONTAL * 1.2, // More offset to the left
                       level + 2,
                       8
                     );
@@ -673,10 +676,11 @@ export default function OrgChartFlowComponent({
                   // Add business units
                   if (uniqueBusinessUnits.length > 0) {
                     // Calculate business unit positions using tree layout
+                    // Position business units to the right side of the location
                     const businessPositions = calculateTreeLayout(
                       uniqueBusinessUnits,
-                      position.x,
-                      level + 2,
+                      position.x + NODE_SPACING.HORIZONTAL * 1.2, // More offset to the right
+                      level + 2, // Same level as departments but different horizontal position
                       8
                     );
 

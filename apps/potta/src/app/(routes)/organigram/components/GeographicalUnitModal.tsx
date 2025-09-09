@@ -12,6 +12,7 @@ interface GeographicalUnitModalProps {
   onSave: (geographicalUnit: Partial<GeographicalUnit>) => void;
   mode?: 'create' | 'edit'; // Add mode prop to distinguish create vs edit
   parentGeographicalUnit?: GeographicalUnit | null; // Add parent geographical unit prop
+  organizationId: string;
 }
 
 export default function GeographicalUnitModal({
@@ -21,6 +22,7 @@ export default function GeographicalUnitModal({
   onSave,
   mode = 'edit', // Default to edit mode
   parentGeographicalUnit,
+  organizationId,
 }: GeographicalUnitModalProps) {
   const [formData, setFormData] = useState<Partial<GeographicalUnit>>({
     geo_unit_name: '',
@@ -36,7 +38,7 @@ export default function GeographicalUnitModal({
   useEffect(() => {
     const loadParentUnits = async () => {
       try {
-        const response = await orgChartApi.getGeographicalUnits();
+        const response = await orgChartApi.getGeographicalUnits(organizationId);
         if (response.success && response.data) {
           setParentUnits(response.data);
         }

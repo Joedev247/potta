@@ -13,6 +13,7 @@ interface SubBusinessModalProps {
   onSave: (subBusiness: Partial<SubBusiness>) => void;
   mode?: 'create' | 'edit'; // Add mode prop to distinguish create vs edit
   parentSubBusiness?: SubBusiness | null; // Add parent sub business prop
+  organizationId: string;
 }
 
 export default function SubBusinessModal({
@@ -22,6 +23,7 @@ export default function SubBusinessModal({
   onSave,
   mode = 'edit', // Default to edit mode
   parentSubBusiness,
+  organizationId,
 }: SubBusinessModalProps) {
   const [formData, setFormData] = useState<Partial<SubBusiness>>({
     sub_business_name: '',
@@ -74,7 +76,7 @@ export default function SubBusinessModal({
 
   const loadSubBusinesses = async () => {
     try {
-      const response = await orgChartApi.getSubBusinesses();
+      const response = await orgChartApi.getSubBusinesses(organizationId);
       const subBusinessesData = Array.isArray(response.data)
         ? response.data
         : (response.data as any)?.data || [];
@@ -86,7 +88,7 @@ export default function SubBusinessModal({
 
   const loadLocations = async () => {
     try {
-      const response = await orgChartApi.getLocations();
+      const response = await orgChartApi.getLocations(organizationId);
       const locationsData = Array.isArray(response.data)
         ? response.data
         : (response.data as any)?.data || [];

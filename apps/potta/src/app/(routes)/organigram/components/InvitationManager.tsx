@@ -8,44 +8,75 @@ import {
   IoTrash,
   IoCheckmark,
   IoTime,
+  IoAdd,
+  IoCloudUpload,
+  IoSearch,
 } from 'react-icons/io5';
 import { Invitation, InvitationListResponse } from '../types';
 import { orgChartApi } from '../utils/api';
+import InvitationForm from './InvitationForm';
+import BulkInvitationUpload from './BulkInvitationUpload';
 
 interface InvitationManagerProps {
   isOpen: boolean;
   onClose: () => void;
   onUserSelect: (userId: string, user: any) => void;
+  organizationId: string;
 }
 
 export default function InvitationManager({
   isOpen,
   onClose,
   onUserSelect,
+  organizationId,
 }: InvitationManagerProps) {
   const [activeTab, setActiveTab] = useState<'pending' | 'accepted'>('pending');
   const [invitations, setInvitations] = useState<InvitationListResponse | null>(
     null
   );
+  const [members, setMembers] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
+  const [loadingMembers, setLoadingMembers] = useState(false);
   const [resending, setResending] = useState<string | null>(null);
+  const [showInvitationForm, setShowInvitationForm] = useState(false);
+  const [showBulkUpload, setShowBulkUpload] = useState(false);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [pendingSearchTerm, setPendingSearchTerm] = useState('');
 
   useEffect(() => {
     if (isOpen) {
       loadInvitations();
+      loadMembers();
     }
   }, [isOpen]);
 
   const loadInvitations = async () => {
     try {
       setLoading(true);
-      const result = await orgChartApi.getInvitations();
+      const result = await orgChartApi.getInvitations(organizationId);
       setInvitations(result.data);
     } catch (error) {
       console.error('Error loading invitations:', error);
     } finally {
       setLoading(false);
     }
+  };
+
+  const loadMembers = async () => {
+    try {
+      setLoadingMembers(true);
+      const result = await orgChartApi.getUsers(organizationId);
+      setMembers(result.data || []);
+    } catch (error) {
+      console.error('Error loading members:', error);
+    } finally {
+      setLoadingMembers(false);
+    }
+  };
+
+  const handleInvitationSuccess = () => {
+    loadInvitations(); // Refresh the list
+    loadMembers(); // Refresh members list
   };
 
   const handleResendInvitation = async (token: string) => {
@@ -89,12 +120,14 @@ export default function InvitationManager({
     }
   };
 
-  const handleSelectAcceptedUser = (invitation: Invitation) => {
-    if (invitation.user) {
-      onUserSelect(invitation.user.id, {
-        id: invitation.user.id,
-        email: invitation.user.email,
-        full_name: invitation.recipientName,
+  const handleSelectAcceptedUser = (member: any) => {
+    if (member.user) {
+      onUserSelect(member.user.id, {
+        id: member.user.id,
+        email: member.user.email,
+        full_name:
+          member.user.username ||
+          `${member.user.firstName} ${member.user.lastName}`,
       });
       onClose();
     }
@@ -130,14 +163,40 @@ export default function InvitationManager({
     }
   };
 
-  const pendingInvitations =
+  const allPendingInvitations =
     invitations?.invitations.filter(
       (inv) => inv.status.toLowerCase() === 'pending'
     ) || [];
-  const acceptedInvitations =
-    invitations?.invitations.filter(
-      (inv) => inv.status.toLowerCase() === 'accepted'
-    ) || [];
+
+  // Filter pending invitations based on search term
+  const pendingInvitations = allPendingInvitations.filter((invitation) => {
+    if (!pendingSearchTerm) return true;
+    const searchLower = pendingSearchTerm.toLowerCase();
+    const recipientName = invitation.recipientName || '';
+    const email = invitation.email || '';
+
+    return (
+      recipientName.toLowerCase().includes(searchLower) ||
+      email.toLowerCase().includes(searchLower)
+    );
+  });
+
+  // Filter members based on search term
+  const filteredMembers = members.filter((member) => {
+    if (!searchTerm) return true;
+    const searchLower = searchTerm.toLowerCase();
+    const userName = member.user?.username || '';
+    const email = member.user?.email || '';
+    const firstName = member.user?.firstName || '';
+    const lastName = member.user?.lastName || '';
+    const fullName = `${firstName} ${lastName}`.trim();
+
+    return (
+      userName.toLowerCase().includes(searchLower) ||
+      email.toLowerCase().includes(searchLower) ||
+      fullName.toLowerCase().includes(searchLower)
+    );
+  });
 
   return (
     <>
@@ -157,16 +216,64 @@ export default function InvitationManager({
       >
         <div className="flex flex-col h-full">
           {/* Header */}
-          <div className="flex items-center justify-between p-6 border-b border-gray-200">
-            <h2 className="text-lg font-semibold text-gray-900">
-              User Management
-            </h2>
-            <button
-              onClick={onClose}
-              className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
-            >
-              <IoClose className="w-5 h-5" />
-            </button>
+          <div className="p-6 border-b border-gray-200">
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-lg font-semibold text-gray-900">
+                User Management
+              </h2>
+              <button
+                onClick={onClose}
+                className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+              >
+                <IoClose className="w-5 h-5" />
+              </button>
+            </div>
+
+            {/* Action Buttons */}
+            <div className="flex space-x-2">
+              <button
+                onClick={() => setShowInvitationForm(true)}
+                className="flex items-center px-3 py-2 text-sm font-medium text-white bg-green-700 border border-transparent hover:bg-green-800 focus:outline-none focus:ring-2 focus:ring-green-500 transition-colors"
+              >
+                <IoAdd className="w-4 h-4 mr-2" />
+                Send Invitation
+              </button>
+              <button
+                onClick={() => setShowBulkUpload(true)}
+                className="flex items-center px-3 py-2 text-sm font-medium text-gray-700 bg-gray-100 border border-gray-300 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-500 transition-colors"
+              >
+                <IoCloudUpload className="w-4 h-4 mr-2" />
+                Bulk Upload
+              </button>
+            </div>
+
+            {/* Search Input - Show for both tabs */}
+            <div className="mt-4">
+              <div className="relative">
+                <input
+                  type="text"
+                  placeholder={
+                    activeTab === 'pending'
+                      ? 'Search pending invitations...'
+                      : 'Search employees...'
+                  }
+                  value={
+                    activeTab === 'pending' ? pendingSearchTerm : searchTerm
+                  }
+                  onChange={(e) => {
+                    if (activeTab === 'pending') {
+                      setPendingSearchTerm(e.target.value);
+                    } else {
+                      setSearchTerm(e.target.value);
+                    }
+                  }}
+                  className="w-full pl-10 pr-4 py-2 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                />
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <IoSearch className="h-5 w-5 text-gray-400" />
+                </div>
+              </div>
+            </div>
           </div>
 
           {/* Tabs */}
@@ -175,7 +282,7 @@ export default function InvitationManager({
               onClick={() => setActiveTab('pending')}
               className={`flex-1 px-4 py-3 text-sm font-medium transition-colors ${
                 activeTab === 'pending'
-                  ? 'text-[#237804] border-b-2 border-[#237804] bg-green-50'
+                  ? 'text-green-700 border-b-2 border-green-700 bg-green-50'
                   : 'text-gray-500 hover:text-gray-700'
               }`}
             >
@@ -185,17 +292,17 @@ export default function InvitationManager({
               onClick={() => setActiveTab('accepted')}
               className={`flex-1 px-4 py-3 text-sm font-medium transition-colors ${
                 activeTab === 'accepted'
-                  ? 'text-[#237804] border-b-2 border-[#237804] bg-green-50'
+                  ? 'text-green-700 border-b-2 border-green-700 bg-green-50'
                   : 'text-gray-500 hover:text-gray-700'
               }`}
             >
-              Accepted Users ({acceptedInvitations.length})
+              Accepted Users ({filteredMembers.length})
             </button>
           </div>
 
           {/* Content */}
           <div className="flex-1 overflow-y-auto">
-            {loading ? (
+            {loading || (activeTab === 'accepted' && loadingMembers) ? (
               <div className="flex items-center justify-center h-32">
                 <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#237804]"></div>
               </div>
@@ -208,7 +315,7 @@ export default function InvitationManager({
                       <button
                         onClick={handleResendAllPending}
                         disabled={resending === 'all'}
-                        className="w-full flex items-center justify-center space-x-2 px-4 py-2 bg-[#237804] text-white rounded-lg hover:bg-[#1D6303] disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                        className="w-full flex items-center justify-center space-x-2 px-4 py-2 bg-[#237804] text-white  hover:bg-[#1D6303] disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                       >
                         <IoRefresh className="w-4 h-4" />
                         <span>
@@ -223,14 +330,18 @@ export default function InvitationManager({
                     {pendingInvitations.length === 0 ? (
                       <div className="text-center py-8 text-gray-500">
                         <IoMail className="w-12 h-12 mx-auto mb-4 text-gray-300" />
-                        <p>No pending invitations</p>
+                        <p>
+                          {pendingSearchTerm
+                            ? 'No pending invitations found'
+                            : 'No pending invitations'}
+                        </p>
                       </div>
                     ) : (
                       <div className="space-y-3">
                         {pendingInvitations.map((invitation) => (
                           <div
                             key={invitation.id}
-                            className="border border-gray-200 rounded-lg p-4 hover:shadow-sm transition-shadow"
+                            className="border border-gray-200 p-4 hover:shadow-sm transition-shadow"
                           >
                             <div className="flex items-start justify-between">
                               <div className="flex-1 min-w-0">
@@ -287,37 +398,46 @@ export default function InvitationManager({
                 ) : (
                   <div className="space-y-4">
                     {/* Accepted Users List */}
-                    {acceptedInvitations.length === 0 ? (
+                    {filteredMembers.length === 0 ? (
                       <div className="text-center py-8 text-gray-500">
                         <IoCheckmark className="w-12 h-12 mx-auto mb-4 text-gray-300" />
-                        <p>No accepted users</p>
+                        <p>
+                          {searchTerm
+                            ? 'No employees found'
+                            : 'No accepted users'}
+                        </p>
                       </div>
                     ) : (
                       <div className="space-y-3">
-                        {acceptedInvitations.map((invitation) => (
+                        {filteredMembers.map((member) => (
                           <div
-                            key={invitation.id}
-                            className="border border-gray-200 rounded-lg p-4 hover:shadow-sm transition-shadow cursor-pointer"
-                            onClick={() => handleSelectAcceptedUser(invitation)}
+                            key={member.id}
+                            className="border border-gray-200 p-4 hover:shadow-sm transition-shadow cursor-pointer"
+                            onClick={() => handleSelectAcceptedUser(member)}
                           >
                             <div className="flex items-center space-x-3">
-                              <div className="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center">
+                              <div className="w-10 h-10 bg-green-100 flex items-center justify-center">
                                 <span className="text-sm font-medium text-green-600">
-                                  {(invitation.recipientName ||
-                                    invitation.email)[0]?.toUpperCase() || 'U'}
+                                  {(member.user?.username ||
+                                    member.user?.email ||
+                                    'U')[0]?.toUpperCase() || 'U'}
                                 </span>
                               </div>
                               <div className="flex-1 min-w-0">
                                 <h3 className="font-medium text-gray-900 truncate">
-                                  {invitation.recipientName || invitation.email}
+                                  {member.user?.username ||
+                                    `${member.user?.firstName || ''} ${
+                                      member.user?.lastName || ''
+                                    }`.trim() ||
+                                    member.user?.email}
                                 </h3>
                                 <p className="text-sm text-gray-500 truncate">
-                                  {invitation.email}
+                                  {member.user?.email}
                                 </p>
                                 <p className="text-xs text-gray-400">
-                                  Accepted:{' '}
+                                  Role: {member.role?.name || 'N/A'} • Joined:{' '}
                                   {new Date(
-                                    invitation.updatedAt
+                                    member.createdAt
                                   ).toLocaleDateString()}
                                 </p>
                               </div>
@@ -334,6 +454,22 @@ export default function InvitationManager({
           </div>
         </div>
       </div>
+
+      {/* Invitation Form Modal */}
+      <InvitationForm
+        isOpen={showInvitationForm}
+        onClose={() => setShowInvitationForm(false)}
+        onSuccess={handleInvitationSuccess}
+        organizationId={organizationId}
+      />
+
+      {/* Bulk Upload Modal */}
+      <BulkInvitationUpload
+        isOpen={showBulkUpload}
+        onClose={() => setShowBulkUpload(false)}
+        onSuccess={handleInvitationSuccess}
+        organizationId={organizationId}
+      />
     </>
   );
 }

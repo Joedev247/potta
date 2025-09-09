@@ -13,6 +13,7 @@ interface DepartmentModalProps {
   onSave: (department: Partial<OrganizationalStructure>) => void;
   parentStructure?: OrganizationalStructure | null;
   mode?: 'create' | 'edit'; // Add mode prop to distinguish create vs edit
+  organizationId: string;
 }
 
 export default function DepartmentModal({
@@ -22,6 +23,7 @@ export default function DepartmentModal({
   onSave,
   parentStructure,
   mode = 'edit', // Default to edit mode
+  organizationId,
 }: DepartmentModalProps) {
   const [formData, setFormData] = useState<Partial<OrganizationalStructure>>({
     department_name: '',
@@ -75,7 +77,7 @@ export default function DepartmentModal({
 
   const loadLocations = async () => {
     try {
-      const response = await orgChartApi.getLocations();
+      const response = await orgChartApi.getLocations(organizationId);
       if (response.success) {
         setLocations(response.data);
       }
@@ -86,7 +88,7 @@ export default function DepartmentModal({
 
   const loadSubBusinesses = async () => {
     try {
-      const response = await orgChartApi.getSubBusinesses();
+      const response = await orgChartApi.getSubBusinesses(organizationId);
       if (response.success) {
         setSubBusinesses(response.data);
       }

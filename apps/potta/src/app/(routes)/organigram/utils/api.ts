@@ -11,13 +11,24 @@ import {
   PaginatedResponse,
   Organization,
   User,
+  SessionResponse,
+  Role,
+  BulkInviteResponse,
 } from '../types';
 
-const organizationId = '4c926765-d683-4e66-a62f-382d5b54c47a';
-
 export const orgChartApi = {
+  // Session Management
+  getSession: async () => {
+    const result = await axios.post<SessionResponse>('/get-session');
+    return {
+      data: result.data,
+      success: true,
+      message: 'Session loaded successfully',
+    };
+  },
+
   // Organization
-  getOrganization: async (orgId: string = organizationId) => {
+  getOrganization: async (orgId: string) => {
     const result = await axios.get<Organization>(`/organizations/${orgId}`);
     return {
       data: result.data,
@@ -27,7 +38,7 @@ export const orgChartApi = {
   },
 
   // Users (accessed through members endpoint)
-  getUsers: async (orgId: string = organizationId) => {
+  getUsers: async (orgId: string) => {
     const result = await axios.get<User[]>(`/members?organizationId=${orgId}`);
     return {
       data: result.data,
@@ -36,7 +47,7 @@ export const orgChartApi = {
     };
   },
 
-  getUser: async (userId: string, orgId: string = organizationId) => {
+  getUser: async (userId: string, orgId: string) => {
     const result = await axios.get<User>(`/members/${orgId}/${userId}`);
     return {
       data: result.data,
@@ -46,7 +57,7 @@ export const orgChartApi = {
   },
 
   // Organizational Structures
-  getStructures: async (orgId: string = organizationId) => {
+  getStructures: async (orgId: string) => {
     const result = await axios.get<OrganizationalStructure[]>(
       `/organizations/${orgId}/organizational-structures`
     );
@@ -57,7 +68,7 @@ export const orgChartApi = {
     };
   },
 
-  getStructure: async (id: string, orgId: string = organizationId) => {
+  getStructure: async (id: string, orgId: string) => {
     const result = await axios.get<OrganizationalStructure>(
       `/organizations/${orgId}/organizational-structures/${id}`
     );
@@ -70,7 +81,7 @@ export const orgChartApi = {
 
   createStructure: async (
     data: Partial<OrganizationalStructure>,
-    orgId: string = organizationId
+    orgId: string
   ) => {
     const payload = {
       ...data,
@@ -90,7 +101,7 @@ export const orgChartApi = {
   updateStructure: async (
     id: string,
     data: Partial<OrganizationalStructure>,
-    orgId: string = organizationId
+    orgId: string
   ) => {
     const payload = {
       ...data,
@@ -107,7 +118,7 @@ export const orgChartApi = {
     };
   },
 
-  deleteStructure: async (id: string, orgId: string = organizationId) => {
+  deleteStructure: async (id: string, orgId: string) => {
     await axios.delete(
       `/organizations/${orgId}/organizational-structures/${id}`
     );
@@ -118,7 +129,7 @@ export const orgChartApi = {
   },
 
   // User Assignments
-  getAssignments: async (orgId: string = organizationId) => {
+  getAssignments: async (orgId: string) => {
     const result = await axios.get<UserAssignment[]>(
       `/organizations/${orgId}/user-assignments`
     );
@@ -129,7 +140,7 @@ export const orgChartApi = {
     };
   },
 
-  getAssignment: async (id: string, orgId: string = organizationId) => {
+  getAssignment: async (id: string, orgId: string) => {
     const result = await axios.get<UserAssignment>(
       `/organizations/${orgId}/user-assignments/${id}`
     );
@@ -140,10 +151,7 @@ export const orgChartApi = {
     };
   },
 
-  getAssignmentsByUser: async (
-    userId: string,
-    orgId: string = organizationId
-  ) => {
+  getAssignmentsByUser: async (userId: string, orgId: string) => {
     const result = await axios.get<UserAssignment[]>(
       `/organizations/${orgId}/user-assignments/user/${userId}`
     );
@@ -154,10 +162,7 @@ export const orgChartApi = {
     };
   },
 
-  getAssignmentsByDepartment: async (
-    structureId: string,
-    orgId: string = organizationId
-  ) => {
+  getAssignmentsByDepartment: async (structureId: string, orgId: string) => {
     const result = await axios.get<UserAssignment[]>(
       `/organizations/${orgId}/user-assignments/department/${structureId}`
     );
@@ -168,10 +173,7 @@ export const orgChartApi = {
     };
   },
 
-  getAssignmentsByLocation: async (
-    locationId: string,
-    orgId: string = organizationId
-  ) => {
+  getAssignmentsByLocation: async (locationId: string, orgId: string) => {
     const result = await axios.get<UserAssignment[]>(
       `/organizations/${orgId}/user-assignments/location/${locationId}`
     );
@@ -182,10 +184,7 @@ export const orgChartApi = {
     };
   },
 
-  getAssignmentsBySubBusiness: async (
-    subBusinessId: string,
-    orgId: string = organizationId
-  ) => {
+  getAssignmentsBySubBusiness: async (subBusinessId: string, orgId: string) => {
     const result = await axios.get<UserAssignment[]>(
       `/organizations/${orgId}/user-assignments/sub-business/${subBusinessId}`
     );
@@ -196,10 +195,7 @@ export const orgChartApi = {
     };
   },
 
-  getFullUserContext: async (
-    userId: string,
-    orgId: string = organizationId
-  ) => {
+  getFullUserContext: async (userId: string, orgId: string) => {
     const result = await axios.get<any>(
       `/organizations/${orgId}/user-assignments/user/${userId}/context`
     );
@@ -210,7 +206,7 @@ export const orgChartApi = {
     };
   },
 
-  getUserLocation: async (userId: string, orgId: string = organizationId) => {
+  getUserLocation: async (userId: string, orgId: string) => {
     const result = await axios.get<any>(
       `/organizations/${orgId}/user-assignments/user/${userId}/location`
     );
@@ -221,7 +217,7 @@ export const orgChartApi = {
     };
   },
 
-  getUserDepartment: async (userId: string, orgId: string = organizationId) => {
+  getUserDepartment: async (userId: string, orgId: string) => {
     const result = await axios.get<any>(
       `/organizations/${orgId}/user-assignments/user/${userId}/department`
     );
@@ -234,7 +230,7 @@ export const orgChartApi = {
 
   getAssignmentsByOrganization: async (
     organizationId: string,
-    orgId: string = organizationId
+    orgId: string
   ) => {
     const result = await axios.get<UserAssignment[]>(
       `/organizations/${orgId}/user-assignments/organization/${organizationId}`
@@ -248,7 +244,7 @@ export const orgChartApi = {
 
   getAssignmentsByGeographicalUnit: async (
     geoUnitId: string,
-    orgId: string = organizationId
+    orgId: string
   ) => {
     const result = await axios.get<UserAssignment[]>(
       `/organizations/${orgId}/user-assignments/geo-unit/${geoUnitId}`
@@ -260,10 +256,7 @@ export const orgChartApi = {
     };
   },
 
-  getUserGeographicalUnit: async (
-    userId: string,
-    orgId: string = organizationId
-  ) => {
+  getUserGeographicalUnit: async (userId: string, orgId: string) => {
     const result = await axios.get<any>(
       `/organizations/${orgId}/user-assignments/user/${userId}/geo-unit`
     );
@@ -274,10 +267,7 @@ export const orgChartApi = {
     };
   },
 
-  getUserSubBusiness: async (
-    userId: string,
-    orgId: string = organizationId
-  ) => {
+  getUserSubBusiness: async (userId: string, orgId: string) => {
     const result = await axios.get<any>(
       `/organizations/${orgId}/user-assignments/user/${userId}/sub-business`
     );
@@ -289,7 +279,7 @@ export const orgChartApi = {
   },
 
   // Invitations
-  getInvitations: async (orgId: string = organizationId) => {
+  getInvitations: async (orgId: string) => {
     const result = await axios.get<any>(
       `/invitations/list?organizationId=${orgId}`
     );
@@ -307,11 +297,32 @@ export const orgChartApi = {
     temporaryPassword: string;
     organizationId: string;
   }) => {
-    const result = await axios.post<any>('/invitations', invitationData);
+    const result = await axios.post<any>('/invitations/invite', invitationData);
     return {
       data: result.data,
       success: true,
       message: 'Invitation sent successfully',
+    };
+  },
+
+  bulkInvite: async (file: File, organizationId: string) => {
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('organizationId', organizationId);
+
+    const result = await axios.post<BulkInviteResponse>(
+      '/invitations/bulk-invite',
+      formData,
+      {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      }
+    );
+    return {
+      data: result.data,
+      success: true,
+      message: 'Bulk invitations sent successfully',
     };
   },
 
@@ -333,10 +344,7 @@ export const orgChartApi = {
     };
   },
 
-  deactivateUserAssignment: async (
-    id: string,
-    orgId: string = organizationId
-  ) => {
+  deactivateUserAssignment: async (id: string, orgId: string) => {
     const result = await axios.put<UserAssignment>(
       `/organizations/${orgId}/user-assignments/${id}/deactivate`
     );
@@ -347,10 +355,7 @@ export const orgChartApi = {
     };
   },
 
-  createAssignment: async (
-    data: Partial<UserAssignment>,
-    orgId: string = organizationId
-  ) => {
+  createAssignment: async (data: Partial<UserAssignment>, orgId: string) => {
     const payload = {
       ...data,
       organization_id: orgId,
@@ -369,7 +374,7 @@ export const orgChartApi = {
   updateAssignment: async (
     id: string,
     data: Partial<UserAssignment>,
-    orgId: string = organizationId
+    orgId: string
   ) => {
     const payload = {
       ...data,
@@ -386,7 +391,7 @@ export const orgChartApi = {
     };
   },
 
-  deleteAssignment: async (id: string, orgId: string = organizationId) => {
+  deleteAssignment: async (id: string, orgId: string) => {
     await axios.delete(`/organizations/${orgId}/user-assignments/${id}`);
     return {
       success: true,
@@ -395,7 +400,7 @@ export const orgChartApi = {
   },
 
   // Locations
-  getLocations: async (orgId: string = organizationId) => {
+  getLocations: async (orgId: string) => {
     const result = await axios.get<Location[]>(
       `/organizations/${orgId}/locations`
     );
@@ -406,7 +411,7 @@ export const orgChartApi = {
     };
   },
 
-  getLocation: async (id: string, orgId: string = organizationId) => {
+  getLocation: async (id: string, orgId: string) => {
     const result = await axios.get<Location>(
       `/organizations/${orgId}/locations/${id}`
     );
@@ -417,10 +422,7 @@ export const orgChartApi = {
     };
   },
 
-  createLocation: async (
-    data: Partial<Location>,
-    orgId: string = organizationId
-  ) => {
+  createLocation: async (data: Partial<Location>, orgId: string) => {
     const payload = {
       ...data,
       organization_id: orgId,
@@ -439,7 +441,7 @@ export const orgChartApi = {
   updateLocation: async (
     id: string,
     data: Partial<Location>,
-    orgId: string = organizationId
+    orgId: string
   ) => {
     const payload = {
       ...data,
@@ -456,7 +458,7 @@ export const orgChartApi = {
     };
   },
 
-  deleteLocation: async (id: string, orgId: string = organizationId) => {
+  deleteLocation: async (id: string, orgId: string) => {
     await axios.delete(`/organizations/${orgId}/locations/${id}`);
     return {
       success: true,
@@ -465,7 +467,7 @@ export const orgChartApi = {
   },
 
   // Geographical Units
-  getGeographicalUnits: async (orgId: string = organizationId) => {
+  getGeographicalUnits: async (orgId: string) => {
     const result = await axios.get<GeographicalUnit[]>(
       `/organizations/${orgId}/geographical-units`
     );
@@ -476,7 +478,7 @@ export const orgChartApi = {
     };
   },
 
-  getGeographicalUnit: async (id: string, orgId: string = organizationId) => {
+  getGeographicalUnit: async (id: string, orgId: string) => {
     const result = await axios.get<GeographicalUnit>(
       `/organizations/${orgId}/geographical-units/${id}`
     );
@@ -487,10 +489,7 @@ export const orgChartApi = {
     };
   },
 
-  getGeographicalUnitWithAssignments: async (
-    id: string,
-    orgId: string = organizationId
-  ) => {
+  getGeographicalUnitWithAssignments: async (id: string, orgId: string) => {
     const result = await axios.get<any>(
       `/organizations/${orgId}/geographical-units/${id}/with-assignments`
     );
@@ -501,7 +500,7 @@ export const orgChartApi = {
     };
   },
 
-  getGeographicalUnitsHierarchy: async (orgId: string = organizationId) => {
+  getGeographicalUnitsHierarchy: async (orgId: string) => {
     const result = await axios.get<GeographicalUnit[]>(
       `/organizations/${orgId}/geographical-units/hierarchy`
     );
@@ -514,11 +513,10 @@ export const orgChartApi = {
 
   createGeographicalUnit: async (
     data: Partial<GeographicalUnit>,
-    orgId: string = organizationId
+    orgId: string
   ) => {
     const payload = {
       ...data,
-      organization_id: orgId,
     };
     const result = await axios.post<GeographicalUnit>(
       `/organizations/${orgId}/geographical-units`,
@@ -534,7 +532,7 @@ export const orgChartApi = {
   updateGeographicalUnit: async (
     id: string,
     data: Partial<GeographicalUnit>,
-    orgId: string = organizationId
+    orgId: string
   ) => {
     const result = await axios.put<GeographicalUnit>(
       `/organizations/${orgId}/geographical-units/${id}`,
@@ -547,10 +545,7 @@ export const orgChartApi = {
     };
   },
 
-  deleteGeographicalUnit: async (
-    id: string,
-    orgId: string = organizationId
-  ) => {
+  deleteGeographicalUnit: async (id: string, orgId: string) => {
     await axios.delete(`/organizations/${orgId}/geographical-units/${id}`);
     return {
       success: true,
@@ -559,7 +554,7 @@ export const orgChartApi = {
   },
 
   // Sub-Businesses
-  getSubBusinesses: async (orgId: string = organizationId) => {
+  getSubBusinesses: async (orgId: string) => {
     const result = await axios.get<SubBusiness[]>(
       `/organizations/${orgId}/sub-businesses`
     );
@@ -570,7 +565,7 @@ export const orgChartApi = {
     };
   },
 
-  getSubBusiness: async (id: string, orgId: string = organizationId) => {
+  getSubBusiness: async (id: string, orgId: string) => {
     const result = await axios.get<SubBusiness>(
       `/organizations/${orgId}/sub-businesses/${id}`
     );
@@ -581,10 +576,7 @@ export const orgChartApi = {
     };
   },
 
-  createSubBusiness: async (
-    data: Partial<SubBusiness>,
-    orgId: string = organizationId
-  ) => {
+  createSubBusiness: async (data: Partial<SubBusiness>, orgId: string) => {
     const payload = {
       ...data,
       organization_id: orgId,
@@ -603,7 +595,7 @@ export const orgChartApi = {
   updateSubBusiness: async (
     id: string,
     data: Partial<SubBusiness>,
-    orgId: string = organizationId
+    orgId: string
   ) => {
     const payload = {
       ...data,
@@ -620,7 +612,7 @@ export const orgChartApi = {
     };
   },
 
-  deleteSubBusiness: async (id: string, orgId: string = organizationId) => {
+  deleteSubBusiness: async (id: string, orgId: string) => {
     await axios.delete(`/organizations/${orgId}/sub-businesses/${id}`);
     return {
       success: true,
@@ -744,7 +736,7 @@ export const orgChartApi = {
   },
 
   // Roles
-  getRoles: async (orgId: string = organizationId) => {
+  getRoles: async (orgId: string) => {
     const result = await axios.get(`/organizations/${orgId}/roles`);
     return {
       data: result.data,
@@ -753,7 +745,7 @@ export const orgChartApi = {
     };
   },
 
-  getRole: async (id: string, orgId: string = organizationId) => {
+  getRole: async (id: string, orgId: string) => {
     const result = await axios.get(`/organizations/${orgId}/roles/${id}`);
     return {
       data: result.data,
@@ -762,7 +754,7 @@ export const orgChartApi = {
     };
   },
 
-  createRole: async (data: any, orgId: string = organizationId) => {
+  createRole: async (data: any, orgId: string) => {
     const payload = {
       ...data,
       organization_id: orgId,
@@ -775,7 +767,7 @@ export const orgChartApi = {
     };
   },
 
-  updateRole: async (id: string, data: any, orgId: string = organizationId) => {
+  updateRole: async (id: string, data: any, orgId: string) => {
     const payload = {
       ...data,
       organization_id: orgId,
@@ -791,7 +783,7 @@ export const orgChartApi = {
     };
   },
 
-  deleteRole: async (id: string, orgId: string = organizationId) => {
+  deleteRole: async (id: string, orgId: string) => {
     await axios.delete(`/organizations/${orgId}/roles/${id}`);
     return {
       success: true,

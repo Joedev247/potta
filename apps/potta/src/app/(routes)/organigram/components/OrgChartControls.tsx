@@ -24,6 +24,7 @@ interface OrgChartControlsProps {
   onSearchChange: (term: string) => void;
   selectedFilters: OrgChartFilters;
   onFiltersChange: (filters: OrgChartFilters) => void;
+  organizationId: string;
 }
 
 export default function OrgChartControls({
@@ -33,6 +34,7 @@ export default function OrgChartControls({
   onSearchChange,
   selectedFilters,
   onFiltersChange,
+  organizationId,
 }: OrgChartControlsProps) {
   const [locations, setLocations] = useState<Location[]>([]);
   const [geographicalUnits, setGeographicalUnits] = useState<
@@ -47,9 +49,9 @@ export default function OrgChartControls({
         setLoading(true);
         const [locationsRes, geoUnitsRes, subBusinessesRes] = await Promise.all(
           [
-            orgChartApi.getLocations(),
-            orgChartApi.getGeographicalUnits(),
-            orgChartApi.getSubBusinesses(),
+            orgChartApi.getLocations(organizationId),
+            orgChartApi.getGeographicalUnits(organizationId),
+            orgChartApi.getSubBusinesses(organizationId),
           ]
         );
 

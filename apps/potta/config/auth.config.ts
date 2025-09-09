@@ -26,10 +26,18 @@ export const getEnvironment = () => {
 export const getAuthConfig = () => {
   const env = getEnvironment();
 
+  // Check if we're on organigram page to determine API URL
+  const isOrganigramPage =
+    typeof window !== 'undefined' &&
+    window.location.pathname.includes('organigram');
+  const apiUrl = isOrganigramPage
+    ? process.env.NEXT_PUBLIC_AUTH_API_BASE_URL
+    : process.env.NEXT_PUBLIC_API_BASE_URL;
+
   const configs = {
     development: {
       authUrl: process.env.NEXT_PUBLIC_AUTH_URL,
-      apiUrl: process.env.NEXT_PUBLIC_API_BASE_URL,
+      apiUrl: apiUrl,
       useTestToken: true,
       testToken: 'kYYOpLwAm2Nyv7YlN1hwUchhLxKQRJYe',
       enableLogging: true,
@@ -40,7 +48,7 @@ export const getAuthConfig = () => {
     },
     staging: {
       authUrl: process.env.NEXT_PUBLIC_AUTH_URL,
-      apiUrl: process.env.NEXT_PUBLIC_API_BASE_URL,
+      apiUrl: apiUrl,
       useTestToken: false,
       testToken: null,
       enableLogging: true,
@@ -51,7 +59,7 @@ export const getAuthConfig = () => {
     },
     production: {
       authUrl: process.env.NEXT_PUBLIC_AUTH_URL,
-      apiUrl: process.env.NEXT_PUBLIC_API_BASE_URL,
+      apiUrl: apiUrl,
       useTestToken: false,
       testToken: null,
       enableLogging: false,
@@ -63,8 +71,7 @@ export const getAuthConfig = () => {
     server: {
       authUrl:
         process.env.NEXT_PUBLIC_AUTH_URL || 'https://instanvi-auth.vercel.app',
-      apiUrl:
-        process.env.NEXT_PUBLIC_API_BASE_URL || 'https://api.instanvi.com',
+      apiUrl: apiUrl || 'https://api.instanvi.com',
       useTestToken: false,
       testToken: null,
       enableLogging: false,

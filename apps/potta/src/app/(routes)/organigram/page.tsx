@@ -22,6 +22,7 @@ import {
   OrgChartNode,
   Organization,
   OrgChartFilters,
+  SessionResponse,
 } from './types';
 import { orgChartApi } from './utils/api';
 import OrgChartFlowComponent from './components/OrgChartFlowComponent';
@@ -31,6 +32,9 @@ export default function OrganigramPage() {
   // Updated view mode to start with general
   const [viewMode, setViewMode] = useState<ViewMode>('general');
   const [searchTerm, setSearchTerm] = useState('');
+  const [organizationId, setOrganizationId] = useState<string>('');
+  const [sessionData, setSessionData] = useState<SessionResponse | null>(null);
+  const [isLoadingSession, setIsLoadingSession] = useState(true);
   const [selectedFilters, setSelectedFilters] = useState<OrgChartFilters>({
     location: '',
     businessUnit: '',
@@ -45,6 +49,26 @@ export default function OrganigramPage() {
 
   // Add refresh trigger state
   const [refreshTrigger, setRefreshTrigger] = useState(0);
+
+  // Fetch session data on component mount
+  useEffect(() => {
+    const fetchSession = async () => {
+      try {
+        setIsLoadingSession(true);
+        const result = await orgChartApi.getSession();
+        setSessionData(result.data);
+        setOrganizationId(result.data.organization.id);
+      } catch (error) {
+        console.error('Error fetching session:', error);
+        // Fallback to hardcoded organization ID if session fails
+        setOrganizationId('51ea74ff-04ef-4e50-a44a-7b180d7c9e50');
+      } finally {
+        setIsLoadingSession(false);
+      }
+    };
+
+    fetchSession();
+  }, []);
 
   // Modal states - only necessary ones
   const [departmentModalOpen, setDepartmentModalOpen] = useState(false);
@@ -96,10 +120,12 @@ export default function OrganigramPage() {
   const [geoUnits, setGeoUnits] = useState<GeographicalUnit[]>([]);
   const [assignments, setAssignments] = useState<UserAssignment[]>([]);
 
-  // Load all data on component mount
+  // Load all data on component mount and when organizationId changes
   useEffect(() => {
-    loadAllData();
-  }, [refreshTrigger]);
+    if (organizationId) {
+      loadAllData();
+    }
+  }, [refreshTrigger, organizationId]);
 
   const loadAllData = async () => {
     try {
@@ -110,11 +136,11 @@ export default function OrganigramPage() {
         geoUnitsRes,
         assignmentsRes,
       ] = await Promise.all([
-        orgChartApi.getStructures(),
-        orgChartApi.getLocations(),
-        orgChartApi.getSubBusinesses(),
-        orgChartApi.getGeographicalUnits(),
-        orgChartApi.getAssignments(),
+        orgChartApi.getStructures(organizationId),
+        orgChartApi.getLocations(organizationId),
+        orgChartApi.getSubBusinesses(organizationId),
+        orgChartApi.getGeographicalUnits(organizationId),
+        orgChartApi.getAssignments(organizationId),
       ]);
 
       setStructures(structuresRes.data || []);
@@ -145,7 +171,7 @@ export default function OrganigramPage() {
 
   const handleDeleteDepartment = async (id: string) => {
     try {
-      await orgChartApi.deleteStructure(id);
+      await orgChartApi.deleteStructure(id, organizationId);
       setRefreshTrigger((prev) => prev + 1);
       toast.success('Department deleted successfully');
     } catch (error) {
@@ -159,10 +185,14 @@ export default function OrganigramPage() {
   ) => {
     try {
       if (selectedDepartment) {
-        await orgChartApi.updateStructure(selectedDepartment.id, formData);
+        await orgChartApi.updateStructure(
+          selectedDepartment.id,
+          formData,
+          organizationId
+        );
         toast.success('Department updated successfully');
       } else {
-        await orgChartApi.createStructure(formData);
+        await orgChartApi.createStructure(formData, organizationId);
         toast.success('Department created successfully');
       }
       setDepartmentModalOpen(false);
@@ -183,10 +213,14 @@ export default function OrganigramPage() {
   ) => {
     try {
       if (selectedAssignment) {
-        await orgChartApi.updateAssignment(selectedAssignment.id, formData);
+        await orgChartApi.updateAssignment(
+          selectedAssignment.id,
+          formData,
+          organizationId
+        );
         toast.success('User assignment updated successfully');
       } else {
-        await orgChartApi.createAssignment(formData);
+        await orgChartApi.createAssignment(formData, organizationId);
         toast.success('User assignment created successfully');
       }
       setUserAssignmentModalOpen(false);
@@ -203,7 +237,7 @@ export default function OrganigramPage() {
 
   const handleSaveLocation = async (formData: Partial<Location>) => {
     try {
-      await orgChartApi.createLocation(formData);
+      await orgChartApi.createLocation(formData, organizationId);
       setLocationModalOpen(false);
       setRefreshTrigger((prev) => prev + 1);
       toast.success('Location created successfully');
@@ -228,7 +262,7 @@ export default function OrganigramPage() {
 
   const handleDeleteGeographicalUnit = async (id: string) => {
     try {
-      await orgChartApi.deleteGeographicalUnit(id);
+      await orgChartApi.deleteGeographicalUnit(id, organizationId);
       setRefreshTrigger((prev) => prev + 1);
       toast.success('Geographical unit deleted successfully');
     } catch (error) {
@@ -244,11 +278,12 @@ export default function OrganigramPage() {
       if (selectedGeographicalUnit) {
         await orgChartApi.updateGeographicalUnit(
           selectedGeographicalUnit.id,
-          formData
+          formData,
+          organizationId
         );
         toast.success('Geographical unit updated successfully');
       } else {
-        await orgChartApi.createGeographicalUnit(formData);
+        await orgChartApi.createGeographicalUnit(formData, organizationId);
         toast.success('Geographical unit created successfully');
       }
       setGeographicalUnitModalOpen(false);
@@ -265,7 +300,7 @@ export default function OrganigramPage() {
 
   const handleSaveSubBusiness = async (formData: Partial<SubBusiness>) => {
     try {
-      await orgChartApi.createSubBusiness(formData);
+      await orgChartApi.createSubBusiness(formData, organizationId);
       setSubBusinessModalOpen(false);
       setRefreshTrigger((prev) => prev + 1);
       toast.success('Sub-business created successfully');
@@ -321,7 +356,7 @@ export default function OrganigramPage() {
   // Additional handlers for other entity types
   const handleDeleteSubBusiness = async (id: string) => {
     try {
-      await orgChartApi.deleteSubBusiness(id);
+      await orgChartApi.deleteSubBusiness(id, organizationId);
       setRefreshTrigger((prev) => prev + 1);
       toast.success('Business unit deleted successfully');
     } catch (error) {
@@ -332,7 +367,7 @@ export default function OrganigramPage() {
 
   const handleDeleteLocation = async (id: string) => {
     try {
-      await orgChartApi.deleteLocation(id);
+      await orgChartApi.deleteLocation(id, organizationId);
       setRefreshTrigger((prev) => prev + 1);
       toast.success('Location deleted successfully');
     } catch (error) {
@@ -343,7 +378,7 @@ export default function OrganigramPage() {
 
   const handleDeactivateAssignment = async (id: string) => {
     try {
-      await orgChartApi.deactivateUserAssignment(id);
+      await orgChartApi.deactivateUserAssignment(id, organizationId);
       setRefreshTrigger((prev) => prev + 1);
       toast.success('Assignment deactivated successfully');
     } catch (error) {
@@ -387,8 +422,6 @@ export default function OrganigramPage() {
     setSelectedFilters(baseFilters);
 
     // Debug log to verify filters
-    console.log('View Employees - Applied filters:', baseFilters);
-    console.log('View Employees - Entity:', entity);
 
     toast.success(
       `Switched to Employees view for ${
@@ -490,6 +523,18 @@ export default function OrganigramPage() {
     }
   };
 
+  // Show loading screen while fetching session
+  if (isLoadingSession) {
+    return (
+      <div className="flex items-center justify-center h-screen bg-gray-50">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+          <p className="text-gray-600">Loading organization data...</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="flex flex-col h-screen bg-gray-50">
       {/* Header */}
@@ -499,6 +544,11 @@ export default function OrganigramPage() {
             <h1 className="text-2xl font-bold text-gray-900">Organigram</h1>
             <p className="text-sm text-gray-600">
               Professional organizational structure management
+              {sessionData?.organization && (
+                <span className="ml-2 text-blue-600 font-medium">
+                  • {sessionData.organization.name}
+                </span>
+              )}
             </p>
           </div>
           <div className="flex items-center space-x-4">
@@ -519,6 +569,7 @@ export default function OrganigramPage() {
           onSearchChange={setSearchTerm}
           selectedFilters={selectedFilters}
           onFiltersChange={setSelectedFilters}
+          organizationId={organizationId}
         />
       </div>
 
@@ -560,6 +611,7 @@ export default function OrganigramPage() {
           searchTerm={searchTerm}
           filters={selectedFilters}
           refreshTrigger={refreshTrigger}
+          organizationId={organizationId}
           onNodeSelect={handleNodeSelect}
           onViewModeChange={setViewMode}
           onAction={(action, nodeId, entity) => {
@@ -742,6 +794,7 @@ export default function OrganigramPage() {
         department={selectedDepartment}
         parentStructure={parentStructure}
         mode={selectedDepartment ? 'edit' : 'create'}
+        organizationId={organizationId}
       />
 
       <UserAssignmentModal
@@ -769,6 +822,7 @@ export default function OrganigramPage() {
             ? (selectedNode.data.entity as GeographicalUnit)
             : null
         }
+        organizationId={organizationId}
       />
 
       <LocationModal
@@ -777,6 +831,7 @@ export default function OrganigramPage() {
         onSave={handleSaveLocation}
         mode="create"
         parentGeographicalUnit={parentGeographicalUnit}
+        organizationId={organizationId}
       />
 
       <GeographicalUnitModal
@@ -786,6 +841,7 @@ export default function OrganigramPage() {
         geographicalUnit={selectedGeographicalUnit}
         mode={selectedGeographicalUnit ? 'edit' : 'create'}
         parentGeographicalUnit={parentGeographicalUnit}
+        organizationId={organizationId}
       />
 
       <SubBusinessModal
@@ -795,6 +851,7 @@ export default function OrganigramPage() {
         subBusiness={selectedSubBusiness}
         mode={selectedSubBusiness ? 'edit' : 'create'}
         parentSubBusiness={parentSubBusiness}
+        organizationId={organizationId}
       />
 
       {/* Node Action Panel */}

@@ -11,6 +11,7 @@ interface SearchableUserSelectProps {
   placeholder?: string;
   error?: string;
   disabled?: boolean;
+  organizationId: string;
 }
 
 export default function SearchableUserSelect({
@@ -19,44 +20,49 @@ export default function SearchableUserSelect({
   placeholder = 'Search and select a user...',
   error,
   disabled = false,
+  organizationId,
 }: SearchableUserSelectProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
-  const [users, setUsers] = useState<User[]>([]);
-  const [filteredUsers, setFilteredUsers] = useState<User[]>([]);
-  const [selectedUser, setSelectedUser] = useState<User | null>(null);
+  const [members, setMembers] = useState<any[]>([]);
+  const [filteredUsers, setFilteredUsers] = useState<any[]>([]);
+  const [selectedUser, setSelectedUser] = useState<any | null>(null);
   const [loading, setLoading] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  // Load users on component mount
+  // Load members on component mount
   useEffect(() => {
-    loadUsers();
+    loadMembers();
   }, []);
 
-  // Filter users based on search term
+  // Filter members based on search term
   useEffect(() => {
     if (!searchTerm.trim()) {
-      setFilteredUsers(users);
+      setFilteredUsers(members);
     } else {
-      const filtered = users.filter((user) => {
-        const userId = user.id || (user as any).userId;
-        const fullName = `${user.first_name || ''} ${
-          user.last_name || ''
+      const filtered = members.filter((member) => {
+        const user = member.user;
+        if (!user) return false;
+
+        const userId = user.id;
+        const fullName = `${user.firstName || ''} ${
+          user.lastName || ''
         }`.trim();
+        const username = user.username || '';
         const email = user.email?.toLowerCase() || '';
         const search = searchTerm.toLowerCase();
 
         return (
           fullName.toLowerCase().includes(search) ||
+          username.toLowerCase().includes(search) ||
           email.includes(search) ||
-          (user.full_name && user.full_name.toLowerCase().includes(search)) ||
           userId.toLowerCase().includes(search) ||
           `User ${userId}`.toLowerCase().includes(search)
         );
       });
       setFilteredUsers(filtered);
     }
-  }, [searchTerm, users]);
+  }, [searchTerm, members]);
 
   // Handle click outside to close dropdown
   useEffect(() => {
@@ -75,31 +81,33 @@ export default function SearchableUserSelect({
     };
   }, []);
 
-  const loadUsers = async () => {
+  const loadMembers = async () => {
     try {
       setLoading(true);
-      const result = await orgChartApi.getUsers();
-      setUsers(result.data || []);
+      const result = await orgChartApi.getUsers(organizationId);
+      setMembers(result.data || []);
       setFilteredUsers(result.data || []);
     } catch (error) {
-      console.error('Error loading users:', error);
+      console.error('Error loading members:', error);
     } finally {
       setLoading(false);
     }
   };
 
-  const handleUserSelect = (user: User) => {
-    setSelectedUser(user);
-    // Handle member data structure (userId field) vs user data structure (id field)
-    const userId = user.id || (user as any).userId;
-    const displayName =
-      user.full_name ||
-      `${user.first_name || ''} ${user.last_name || ''}`.trim() ||
-      user.email ||
-      `User ${userId}`;
+  const handleUserSelect = (member: any) => {
+    setSelectedUser(member);
+    const user = member.user;
+    if (user) {
+      const userId = user.id;
+      const displayName =
+        user.username ||
+        `${user.firstName || ''} ${user.lastName || ''}`.trim() ||
+        user.email ||
+        `User ${userId}`;
 
-    setSearchTerm(displayName);
-    onChange(userId, user);
+      setSearchTerm(displayName);
+      onChange(userId, user);
+    }
     setIsOpen(false);
   };
 
@@ -110,14 +118,13 @@ export default function SearchableUserSelect({
   };
 
   const getDisplayText = () => {
-    if (selectedUser) {
-      const userId = selectedUser.id || (selectedUser as any).userId;
+    if (selectedUser && selectedUser.user) {
+      const user = selectedUser.user;
+      const userId = user.id;
       return (
-        selectedUser.full_name ||
-        `${selectedUser.first_name || ''} ${
-          selectedUser.last_name || ''
-        }`.trim() ||
-        selectedUser.email ||
+        user.username ||
+        `${user.firstName || ''} ${user.lastName || ''}`.trim() ||
+        user.email ||
         `User ${userId}`
       );
     }
@@ -182,26 +189,33 @@ export default function SearchableUserSelect({
                 : 'No users available'}
             </div>
           ) : (
-            filteredUsers.map((user) => {
-              const userId = user.id || (user as any).userId;
+            filteredUsers.map((member) => {
+              const user = member.user;
+              if (!user) return null;
+
+              const userId = user.id;
               const displayName =
-                user.full_name ||
-                `${user.first_name || ''} ${user.last_name || ''}`.trim() ||
+                user.username ||
+                `${user.firstName || ''} ${user.lastName || ''}`.trim() ||
                 user.email ||
                 `User ${userId}`;
               const initials =
-                user.first_name?.[0] || user.email?.[0] || userId?.[0] || 'U';
+                user.firstName?.[0] ||
+                user.username?.[0] ||
+                user.email?.[0] ||
+                userId?.[0] ||
+                'U';
 
               return (
                 <div
                   key={userId}
                   className="px-3 py-2 hover:bg-gray-100 cursor-pointer border-b border-gray-100 last:border-b-0"
-                  onClick={() => handleUserSelect(user)}
+                  onClick={() => handleUserSelect(member)}
                 >
                   <div className="flex items-center space-x-3">
-                    {user.avatar ? (
+                    {user.image ? (
                       <img
-                        src={user.avatar}
+                        src={user.image}
                         alt=""
                         className="w-8 h-8 rounded-full object-cover"
                       />
@@ -219,6 +233,11 @@ export default function SearchableUserSelect({
                       <div className="text-sm text-gray-500 truncate">
                         {user.email || `ID: ${userId}`}
                       </div>
+                      {member.role && (
+                        <div className="text-xs text-gray-400 truncate">
+                          Role: {member.role.name}
+                        </div>
+                      )}
                     </div>
                     {user.is_active === false && (
                       <span className="text-xs text-red-500 bg-red-50 px-2 py-1 rounded">

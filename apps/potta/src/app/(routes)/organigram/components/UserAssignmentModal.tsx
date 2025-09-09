@@ -23,6 +23,7 @@ interface UserAssignmentModalProps {
   preselectedLocation?: Location | null;
   preselectedBusinessUnit?: SubBusiness | null;
   preselectedGeographicalUnit?: GeographicalUnit | null;
+  organizationId: string;
 }
 
 export default function UserAssignmentModal({
@@ -34,6 +35,7 @@ export default function UserAssignmentModal({
   preselectedLocation,
   preselectedBusinessUnit,
   preselectedGeographicalUnit,
+  organizationId,
 }: UserAssignmentModalProps) {
   const [formData, setFormData] = useState<Partial<UserAssignment>>({
     user_id: '',
@@ -78,10 +80,10 @@ export default function UserAssignmentModal({
       setLoadingData(true);
       const [departmentsRes, locationsRes, geoUnitsRes, subBusinessesRes] =
         await Promise.all([
-          orgChartApi.getStructures(),
-          orgChartApi.getLocations(),
-          orgChartApi.getGeographicalUnits(),
-          orgChartApi.getSubBusinesses(),
+          orgChartApi.getStructures(organizationId),
+          orgChartApi.getLocations(organizationId),
+          orgChartApi.getGeographicalUnits(organizationId),
+          orgChartApi.getSubBusinesses(organizationId),
         ]);
 
       setDepartments(departmentsRes.data || []);
@@ -184,7 +186,7 @@ export default function UserAssignmentModal({
 
   const loadUserData = async (userId: string) => {
     try {
-      const result = await orgChartApi.getUser(userId);
+      const result = await orgChartApi.getUser(organizationId, userId);
       setSelectedUser(result.data);
     } catch (error) {
       console.error('Error loading user data:', error);
@@ -439,7 +441,7 @@ export default function UserAssignmentModal({
 
           <form onSubmit={handleSubmit} className="space-y-6">
             {/* Inheritance Info */}
-            <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+            {/* <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
               <div className="flex items-start space-x-2">
                 <div className="text-blue-500 text-lg">💡</div>
                 <div className="text-sm text-blue-800">
@@ -452,7 +454,7 @@ export default function UserAssignmentModal({
                   </p>
                 </div>
               </div>
-            </div>
+            </div> */}
 
             {/* User Selection */}
             <div>
@@ -465,6 +467,7 @@ export default function UserAssignmentModal({
                 placeholder="Search and select a user..."
                 error={errors.user_id}
                 disabled={loadingData}
+                organizationId={organizationId}
               />
               <div className="mt-2">
                 <button
@@ -742,6 +745,7 @@ export default function UserAssignmentModal({
         isOpen={invitationManagerOpen}
         onClose={() => setInvitationManagerOpen(false)}
         onUserSelect={handleInvitationUserSelect}
+        organizationId={organizationId}
       />
     </div>
   );

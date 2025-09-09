@@ -17,6 +17,103 @@ export interface OrganizationalStructure {
   updated_at?: string;
 }
 
+export interface User {
+  id: string;
+  email: string;
+  first_name?: string;
+  last_name?: string;
+  full_name?: string;
+  avatar?: string;
+  is_active: boolean;
+  created_at?: string;
+  updated_at?: string;
+}
+
+export interface Invitation {
+  id: string;
+  email: string;
+  recipientName: string;
+  inviterId: string;
+  organizationId: string;
+  organizationName: string;
+  roleId: string;
+  roleName: string;
+  status: 'PENDING' | 'ACCEPTED' | 'REJECTED' | 'CANCELLED';
+  token: string;
+  expiresAt: string;
+  createdAt: string;
+  updatedAt: string;
+  user?: {
+    id: string;
+    email: string;
+  };
+}
+
+export interface InvitationListResponse {
+  invitations: Invitation[];
+  total: number;
+  pending: number;
+  accepted: number;
+}
+
+export interface BulkInviteResponse {
+  results: Invitation[];
+  errors: Array<{
+    row: number;
+    error: string;
+  }>;
+}
+
+export interface Session {
+  expiresAt: string;
+  token: string;
+  createdAt: string;
+  updatedAt: string;
+  ipAddress: string;
+  userAgent: string;
+  userId: string;
+  id: string;
+}
+
+export interface UserSession {
+  id: string;
+  createdAt: string;
+  updatedAt: string;
+  deletedAt: string | null;
+  username: string;
+  email: string;
+  isEmailVerified: boolean;
+  role: string;
+  phone: string | null;
+  firstName: string;
+  lastName: string;
+  image: string | null;
+  bio: string;
+  twoFactorEnabled: boolean;
+  twoFactorSecret: string | null;
+  twoFactorBackupCodes: string | null;
+}
+
+export interface OrganizationSession {
+  id: string;
+  name: string;
+  slug: string;
+}
+
+export interface RoleSession {
+  id: string;
+  name: string;
+  permissions: Record<string, any>;
+}
+
+export interface SessionResponse {
+  session: Session;
+  user: UserSession;
+  organization: OrganizationSession;
+  roles: RoleSession[];
+  hierarchy: any;
+}
+
 export interface UserAssignment {
   id: string;
   user_id: string;
@@ -29,6 +126,7 @@ export interface UserAssignment {
   assignment_type: 'PRIMARY' | 'SECONDARY' | 'TEMPORARY' | 'CONSULTANT';
   start_date?: string;
   end_date?: string;
+  responsibilities?: string;
   is_active: boolean;
   created_at?: string;
   updated_at?: string;
