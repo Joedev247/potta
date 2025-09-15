@@ -12,7 +12,11 @@ import {
   AUTH_ERRORS,
 } from './auth.config';
 
-const pathname = window.location.pathname;
+// Get current pathname dynamically
+const getCurrentPathname = () => {
+  if (typeof window === 'undefined') return '';
+  return window.location.pathname;
+};
 // Create axios instance with dynamic base URL
 const createAxiosInstance = () => {
   const config = getAuthConfig();
@@ -141,12 +145,18 @@ axios.interceptors.request.use(
 
     // Add authorization header
     let token = getToken();
-    if (pathname.includes('organigram')) {
-      token = 'm5jcRZbmPonvx52IFxZbwRV90oewn8EK';
+    const currentPathname = getCurrentPathname();
+    const isOrganigramPage = currentPathname.includes('organigram');
+
+    // Use hardcoded token for organigram pages
+    if (isOrganigramPage) {
+      token = 'n6TXH3hY0KD5jvdU6skAEOBpAUbxts8q';
     }
+
     const isPublicRoute = isBypassRoute();
 
-    if (token && !isPublicRoute) {
+    // Add authorization header for non-public routes OR organigram pages
+    if (token && (!isPublicRoute || isOrganigramPage)) {
       config.headers['Authorization'] = `Bearer ${token}`;
     }
 

@@ -13,7 +13,7 @@ import { set } from 'react-hook-form';
 import TextArea from '@potta/components/textArea';
 
 import toast from 'react-hot-toast';
-import useCreateInvoice from '../../../invoice/_utils/_hooks/useCreateInvoice';
+import useCreateInvoice from '../../_hooks/useCreateInvoice';
 
 // Define Option interface to match the one in SearchSelect component
 interface Option {

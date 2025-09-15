@@ -84,24 +84,45 @@ const Timesheet = () => {
   return (
     <QueryClientProvider client={queryClient}>
       <RootLayout>
-        <div className={`${context?.layoutMode === 'sidebar' ? 'px-14' : 'px-5'} pt-2`}>
+        <div
+          className={`${
+            context?.layoutMode === 'sidebar' ? 'px-14' : 'px-5'
+          } pt-2`}
+        >
+          {/* Header Section */}
+          <div className="mb-6">
+            <h1 className="text-3xl font-bold text-gray-900 mb-2">
+              Timesheet Management
+            </h1>
+            <p className="text-gray-600">
+              Track employee hours and manage timesheet data
+            </p>
+          </div>
+
           {/* Time cycle tabs and date navigation */}
-          <DateNavigation
-            cycleTab={cycleTab}
-            setCycleTab={setCycleTab}
-            selectedDate={selectedDate}
-            setSelectedDate={setSelectedDate}
-            dateRange={dateRange}
-            setDateRange={setDateRange}
-          />
+          <div className="mb-6">
+            <DateNavigation
+              cycleTab={cycleTab}
+              setCycleTab={setCycleTab}
+              selectedDate={selectedDate}
+              setSelectedDate={setSelectedDate}
+              dateRange={dateRange}
+              setDateRange={setDateRange}
+            />
+          </div>
 
           {/* Summary boxes */}
-          <Boxes dateRange={dateRange} />
+          <div className="mb-6">
+            <Boxes dateRange={dateRange} />
+          </div>
+
           {/* Timesheet content */}
-          <TimesheetView
-            dateRange={dateRange}
-            buttonClick={() => setShowNewEntryModal(true)}
-          />
+          <div className="bg-white p-6">
+            <TimesheetView
+              dateRange={dateRange}
+              buttonClick={() => setShowNewEntryModal(true)}
+            />
+          </div>
         </div>
 
         {/* Modal with smooth animation */}

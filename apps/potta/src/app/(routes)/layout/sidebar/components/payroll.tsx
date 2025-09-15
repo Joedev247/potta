@@ -24,7 +24,7 @@ const SidebarsPayroll = () => {
       collapsed={context?.toggle}
       toggled={true}
       breakPoint="md"
-      className=" relative  h-[100vh] z-30  "
+      className=" relative !border-none h-[100vh] z-30  "
     >
       <Menu className="relative h-[76vh]" closeOnClick>
         <MenuItem

@@ -3,12 +3,12 @@ import React from 'react';
 import { CreditCard, Smartphone, Banknote, Wallet } from 'lucide-react';
 import Image from 'next/image';
 
-interface InvoiceBreakdownProps {
+interface VendorBreakdownProps {
   data: Record<string, number>;
   formatCurrency: (amount: number) => string;
 }
 
-const InvoiceBreakdown: React.FC<InvoiceBreakdownProps> = ({
+const VendorBreakdown: React.FC<VendorBreakdownProps> = ({
   data,
   formatCurrency,
 }) => {
@@ -51,10 +51,10 @@ const InvoiceBreakdown: React.FC<InvoiceBreakdownProps> = ({
     <div className="bg-white p-6">
       <div className="flex items-center justify-between mb-6">
         <h2 className="text-xl font-semibold text-gray-900">
-          Collection by Payment Method
+          Payment by Method
         </h2>
-        <div className="blue-100 ">
-          <CreditCard className="h-5 w-5 text-blue-600" />
+        <div className="green-100">
+          <CreditCard className="h-5 w-5 text-green-600" />
         </div>
       </div>
 
@@ -69,7 +69,7 @@ const InvoiceBreakdown: React.FC<InvoiceBreakdownProps> = ({
             return (
               <div
                 key={index}
-                className="flex items-center justify-between p-3 bg-gray-50  hover:bg-gray-100 transition-colors"
+                className="flex items-center justify-between p-3 bg-gray-50 hover:bg-gray-100 transition-colors"
               >
                 <div className="flex items-center space-x-3">
                   <div className="h-8 w-8 rounded-full flex items-center justify-center bg-white shadow-sm overflow-hidden">
@@ -110,7 +110,7 @@ const InvoiceBreakdown: React.FC<InvoiceBreakdownProps> = ({
         ) : (
           <div className="text-center text-gray-500 py-8">
             <CreditCard className="h-12 w-12 mx-auto mb-3 text-gray-300" />
-            <p>No collection data available</p>
+            <p>No payment data available</p>
           </div>
         )}
       </div>
@@ -118,4 +118,4 @@ const InvoiceBreakdown: React.FC<InvoiceBreakdownProps> = ({
   );
 };
 
-export default InvoiceBreakdown;
+export default VendorBreakdown;

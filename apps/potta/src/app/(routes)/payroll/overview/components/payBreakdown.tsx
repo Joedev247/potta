@@ -4,6 +4,7 @@ import { useQuery } from '@tanstack/react-query';
 import { employeeApi } from '../../utils/api';
 import PayBreakdownSkeleton from './PayBreakdownSkeleton';
 import axios from 'config/axios.config';
+import { Clock, Users, TrendingUp, DollarSign } from 'lucide-react';
 
 const PayBreakDown = () => {
   // Fetch employees with all details
@@ -386,56 +387,69 @@ const PayBreakDown = () => {
     return count === 1 ? 'person' : 'people';
   };
 
+  const breakdownData = [
+    {
+      id: 1,
+      name: 'Total Off Hours',
+      value: formatHours(offHours.hours),
+      subtitle: `${offHours.count} ${personOrPeople(offHours.count)}`,
+      icon: Clock,
+    },
+    {
+      id: 2,
+      name: 'Total Hours Worked',
+      value: formatHours(hoursWorked.hours),
+      subtitle: `${hoursWorked.count} ${personOrPeople(hoursWorked.count)}`,
+      icon: Users,
+    },
+    {
+      id: 3,
+      name: 'Total Overtime',
+      value: formatHours(overtime.hours),
+      subtitle: `${overtime.count} ${personOrPeople(overtime.count)}`,
+      icon: TrendingUp,
+    },
+    {
+      id: 4,
+      name: 'Total Benefits',
+      value: formatCurrency(benefits.amount),
+      subtitle: `${benefits.count} ${personOrPeople(benefits.count)}`,
+      icon: DollarSign,
+    },
+  ];
+
   return (
-    <div className="">
-      <div className="w-full border-r border-l  bg-white border-t font-bold px-4 py-2 ">
-        <p>Pay Breakdown</p>
+    <div className="bg-white p-6">
+      <div className="flex items-center justify-between mb-6">
+        <h2 className="text-xl font-semibold text-gray-900">Pay Breakdown</h2>
+
       </div>
-      <div className="w-full text-center grid grid-cols-4 border max-h-[126px] min-h-[126px]">
-        <div className="h-full w-full py-5 flex justify-center">
-          <div className="pl-4 border-r pr-3 w-full">
-            <p className="font-semibold">Total Off hours</p>
-            <h3 className="mt-1 text-green-700 text-xl">
-              {formatHours(offHours.hours)}
-            </h3>
-            <p className="mt-2 text-sm ">
-              {offHours.count} {personOrPeople(offHours.count)}
-            </p>
-          </div>
-        </div>
-        <div className="h-full w-full py-5 flex justify-center">
-          <div className="pl-4 border-r pr-3 w-full">
-            <p className="font-semibold whitespace-nowrap">Total hours worked</p>
-            <h3 className="mt-1 text-green-700 text-xl">
-              {formatHours(hoursWorked.hours)}
-            </h3>
-            <p className="mt-2 text-sm">
-              {hoursWorked.count} {personOrPeople(hoursWorked.count)}
-            </p>
-          </div>
-        </div>
-        <div className="h-full w-full py-5 flex justify-center">
-          <div className="pl-4 border-r pr-3 w-full">
-            <p className="font-semibold">Total Overtime</p>
-            <h3 className="mt-1 text-green-700 text-xl">
-              {formatHours(overtime.hours)}
-            </h3>
-            <p className="mt-2 text-sm">
-              {overtime.count} {personOrPeople(overtime.count)}
-            </p>
-          </div>
-        </div>
-        <div className="h-full w-full py-5 flex justify-center">
-          <div className="pl-4 pr-3 w-full">
-            <p className="font-semibold">Total Benefits</p>
-            <h3 className="mt-1 text-green-700 text-xl">
-              {formatCurrency(benefits.amount)}
-            </h3>
-            <p className="mt-2 text-sm">
-              {benefits.count} {personOrPeople(benefits.count)}
-            </p>
-          </div>
-        </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        {breakdownData.map((item) => {
+          const Icon = item.icon;
+
+          return (
+            <div key={item.id} className="bg-gray-50 p-4 ">
+              <div className="flex items-center space-x-3 mb-3">
+                <div className="p-2 bg-green-100 rounded-lg">
+                  <Icon className="h-4 w-4 text-green-600" />
+                </div>
+                <div>
+                  <p className="text-sm font-medium text-gray-600">
+                    {item.name}
+                  </p>
+                </div>
+              </div>
+              <div>
+                <p className="text-lg font-bold text-gray-900 mb-1">
+                  {item.value}
+                </p>
+                <p className="text-sm text-gray-500">{item.subtitle}</p>
+              </div>
+            </div>
+          );
+        })}
       </div>
     </div>
   );

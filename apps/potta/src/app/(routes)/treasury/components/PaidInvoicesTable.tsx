@@ -21,7 +21,8 @@ interface PaidInvoice {
   type: string;
   description: string;
   paymentMethod?: string;
-}const PaidInvoicesTable: React.FC = () => {
+}
+const PaidInvoicesTable: React.FC = () => {
   const [searchValue, setSearchValue] = useState('');
   const [dateFilter, setDateFilter] = useState('all');
   const [amountFilter, setAmountFilter] = useState('all');
@@ -254,7 +255,7 @@ interface PaidInvoice {
               <img
                 src="/icons/mtn.svg"
                 alt="MTN Mobile Money"
-            className="w-6 h-6"
+                className="w-6 h-6"
               />
             )}
             {paymentMethod === 'orange' && (
@@ -303,11 +304,10 @@ interface PaidInvoice {
   };
 
   return (
-    <div className="bg-white p-6 border border-gray-200">
+    <div className="bg-white p-6 ">
       <div className="flex items-center justify-between mb-6">
         <div>
           <h2 className="text-xl font-semibold text-gray-900">Paid Invoices</h2>
-          
         </div>
         <Button
           text="Pay"

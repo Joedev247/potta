@@ -61,7 +61,7 @@ const TreasuryOverviewMetrics: React.FC<TreasuryOverviewMetricsProps> = ({
   return (
     <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
       {/* Total Outstanding */}
-      <div className="bg-white p-4 border border-gray-200">
+      <div className="bg-white p-4 ">
         <div className="flex items-center justify-between">
           <div>
             <p className="text-sm text-gray-500">
@@ -82,7 +82,7 @@ const TreasuryOverviewMetrics: React.FC<TreasuryOverviewMetricsProps> = ({
         </div>
       </div>
       {/* Scheduled Payments */}
-      <div className="bg-white p-4 border border-gray-200">
+      <div className="bg-white p-4 ">
         <div className="flex items-center justify-between">
           <div>
             <p className="text-sm text-gray-500">{content.scheduledLabel}</p>
@@ -101,7 +101,7 @@ const TreasuryOverviewMetrics: React.FC<TreasuryOverviewMetricsProps> = ({
         </div>
       </div>
       {/* Paid This Month */}
-      <div className="bg-white p-4 border border-gray-200">
+      <div className="bg-white p-4 ">
         <div className="flex items-center justify-between">
           <div>
             <p className="text-sm text-gray-500">{content.paidLabel}</p>
@@ -120,7 +120,7 @@ const TreasuryOverviewMetrics: React.FC<TreasuryOverviewMetricsProps> = ({
         </div>
       </div>
       {/* Pending Actions */}
-      <div className="bg-white p-4 border border-gray-200">
+      <div className="bg-white p-4 ">
         <div className="flex items-center justify-between">
           <div>
             <p className="text-sm text-gray-500">{content.pendingLabel}</p>

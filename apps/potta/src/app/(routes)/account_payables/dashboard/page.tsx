@@ -1,10 +1,10 @@
 'use client';
 import React from 'react';
-import RootLayout from '../layout';
-import APMainDashboard from './components/APMainDashboard';
+import RootLayout from '../../layout';
+import APMainDashboard from '../components/APMainDashboard';
 import { ContextData } from '@potta/components/context';
 
-const AccountPayablesPage = () => {
+const APDashboardPage = () => {
   const context = React.useContext(ContextData);
 
   return (
@@ -19,4 +19,5 @@ const AccountPayablesPage = () => {
     </RootLayout>
   );
 };
-export default AccountPayablesPage;
+
+export default APDashboardPage;

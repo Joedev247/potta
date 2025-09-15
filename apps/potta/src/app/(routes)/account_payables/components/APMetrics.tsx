@@ -2,7 +2,7 @@
 import React from 'react';
 import { TrendingUp, TrendingDown } from 'lucide-react';
 
-interface TreasuryMetric {
+interface Metric {
   name: string;
   value: number;
   change: string;
@@ -10,15 +10,12 @@ interface TreasuryMetric {
   icon: React.ComponentType<{ className?: string }>;
 }
 
-interface TreasuryMetricsProps {
-  metrics: TreasuryMetric[];
+interface APMetricsProps {
+  metrics: Metric[];
   formatCurrency: (amount: number) => string;
 }
 
-const TreasuryMetrics: React.FC<TreasuryMetricsProps> = ({
-  metrics,
-  formatCurrency,
-}) => {
+const APMetrics: React.FC<APMetricsProps> = ({ metrics, formatCurrency }) => {
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
       {metrics.map((metric, index) => {
@@ -37,11 +34,7 @@ const TreasuryMetrics: React.FC<TreasuryMetricsProps> = ({
                     {metric.name}
                   </p>
                   <p className="text-2xl font-bold text-gray-900">
-                    {metric.name.toLowerCase().includes('ratio')
-                      ? metric.value.toFixed(2)
-                      : metric.name.toLowerCase().includes('days')
-                      ? `${metric.value} days`
-                      : formatCurrency
+                    {metric.name === 'Average Bill Value'
                       ? formatCurrency(metric.value)
                       : metric.value.toLocaleString()}
                   </p>
@@ -69,4 +62,4 @@ const TreasuryMetrics: React.FC<TreasuryMetricsProps> = ({
   );
 };
 
-export default TreasuryMetrics;
+export default APMetrics;

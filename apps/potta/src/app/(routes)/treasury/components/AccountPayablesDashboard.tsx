@@ -14,53 +14,53 @@ import {
   Cell,
 } from 'recharts';
 
-interface AccountReceivablesDashboardProps {
-  type?: 'ar';
+interface AccountPayablesDashboardProps {
+  type?: 'ap';
 }
 
-const AccountReceivablesDashboard: React.FC<
-  AccountReceivablesDashboardProps
-> = ({ type = 'ar' }) => {
-  // Mock data based on the images
+const AccountPayablesDashboard: React.FC<AccountPayablesDashboardProps> = ({
+  type = 'ap',
+}) => {
+  // Mock data based on the AR dashboard structure but for payables
   const outstandingData = {
-    total: 921294,
-    notDue: 3324,
-    due: 917970,
-    notDuePercentage: 0,
-    duePercentage: 100,
+    total: 456789,
+    notDue: 12345,
+    due: 444444,
+    notDuePercentage: 3,
+    duePercentage: 97,
   };
 
   const ageingData = [
-    { name: 'Not due', amount: 3324, invoices: 1, color: '#10B981' },
-    { name: '0-30d', amount: 2385, invoices: 1, color: '#10B981' },
-    { name: '31-60d', amount: 0, invoices: 0, color: '#6B7280' },
-    { name: '61-90d', amount: 0, invoices: 0, color: '#6B7280' },
-    { name: '91+ d', amount: 917344, invoices: 300, color: '#DC2626' },
+    { name: 'Not due', amount: 12345, bills: 5, color: '#10B981' },
+    { name: '0-30d', amount: 23456, bills: 12, color: '#10B981' },
+    { name: '31-60d', amount: 45678, bills: 8, color: '#F59E0B' },
+    { name: '61-90d', amount: 67890, bills: 15, color: '#F59E0B' },
+    { name: '91+ d', amount: 307420, bills: 45, color: '#DC2626' },
   ];
 
-  const dsoData = [
-    { month: 'Feb 25', dso: 315 },
-    { month: 'Mar 25', dso: 346 },
-    { month: 'Apr 25', dso: 376 },
-    { month: 'May 25', dso: 407 },
-    { month: 'Jun 25', dso: 436 },
-    { month: 'Jul 25', dso: 467 },
+  const dpoData = [
+    { month: 'Feb 25', dpo: 25 },
+    { month: 'Mar 25', dpo: 28 },
+    { month: 'Apr 25', dpo: 32 },
+    { month: 'May 25', dpo: 35 },
+    { month: 'Jun 25', dpo: 38 },
+    { month: 'Jul 25', dpo: 42 },
   ];
 
-  const mainDebtors = [
+  const mainVendors = [
     {
-      name: 'HelixisWorks',
-      avgDelay: '-',
-      notDue: '€0.00',
-      due: '€15,030.00',
-      outstanding: '€15,030',
+      name: 'TechSupply Co.',
+      avgDelay: '15 days',
+      notDue: '€2,500.00',
+      due: '€12,500.00',
+      outstanding: '€15,000',
     },
     {
-      name: 'Axiom Innovations',
-      avgDelay: '-',
-      notDue: '€0.00',
-      due: '€15,011.00',
-      outstanding: '€15,011',
+      name: 'Office Solutions Ltd',
+      avgDelay: '8 days',
+      notDue: '€1,800.00',
+      due: '€8,200.00',
+      outstanding: '€10,000',
     },
   ];
 
@@ -70,15 +70,6 @@ const AccountReceivablesDashboard: React.FC<
       currency: 'XAF',
       minimumFractionDigits: 0,
       maximumFractionDigits: 0,
-    }).format(amount);
-  };
-
-  const formatCurrencyWithDecimals = (amount: number) => {
-    return new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      currency: 'XAF',
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2,
     }).format(amount);
   };
 
@@ -167,9 +158,9 @@ const AccountReceivablesDashboard: React.FC<
                 <Tooltip
                   formatter={(value: any, name: any) => [
                     `${formatCurrency(value)} (${
-                      ageingData.find((item) => item.amount === value)
-                        ?.invoices || 0
-                    } invoices)`,
+                      ageingData.find((item) => item.amount === value)?.bills ||
+                      0
+                    } bills)`,
                     name,
                   ]}
                 />
@@ -184,20 +175,20 @@ const AccountReceivablesDashboard: React.FC<
         </div>
       </div>
 
-      {/* Bottom Row - DSO Card */}
+      {/* Bottom Row - DPO Card */}
       <div className="bg-white  p-6">
         <div className="flex items-center justify-between mb-6">
           <div>
             <h3 className="text-lg font-semibold text-gray-900">
-              DSO, days sales outstanding: A key performance indicator of your
-              cashflow
+              DPO, days payable outstanding: A key performance indicator of your
+              cash management
             </h3>
           </div>
           <div className="flex items-center space-x-2">
             <button className="px-3 py-1 text-sm text-gray-600 hover:bg-gray-100 rounded">
               3 months
             </button>
-            <button className="px-3 py-1 text-sm bg-blue-100 text-blue-700 rounded">
+            <button className="px-3 py-1 text-sm bg-green-100 text-green-700 rounded">
               6 months
             </button>
             <button className="px-3 py-1 text-sm text-gray-600 hover:bg-gray-100 rounded">
@@ -210,29 +201,29 @@ const AccountReceivablesDashboard: React.FC<
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* DSO Illustration and Metric */}
+          {/* DPO Illustration and Metric */}
           <div className="lg:col-span-1">
             <div className="flex items-center space-x-4">
               {/* Simple illustration */}
               <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center">
-                <div className="w-8 h-8 bg-blue-500 rounded-full"></div>
+                <div className="w-8 h-8 bg-green-500 rounded-full"></div>
               </div>
               <div>
-                <div className="text-3xl font-bold text-gray-900">467</div>
+                <div className="text-3xl font-bold text-gray-900">42</div>
                 <div className="text-sm text-gray-600">days</div>
                 <div className="flex items-center text-sm text-red-600">
                   <TrendingUp className="w-4 h-4 mr-1" />
-                  +7%
+                  +4%
                 </div>
               </div>
             </div>
           </div>
 
-          {/* DSO Chart */}
+          {/* DPO Chart */}
           <div className="lg:col-span-2 h-48">
             <ResponsiveContainer width="100%" height="100%">
               <LineChart
-                data={dsoData}
+                data={dpoData}
                 margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
               >
                 <CartesianGrid strokeDasharray="3 3" />
@@ -248,18 +239,18 @@ const AccountReceivablesDashboard: React.FC<
                   tick={{ fontSize: 12, fill: '#6B7280' }}
                   tickFormatter={(value) => `${value} d.`}
                 />
-                <Tooltip formatter={(value: any) => [`${value} d.`, 'DSO']} />
+                <Tooltip formatter={(value: any) => [`${value} d.`, 'DPO']} />
                 <Line
                   type="monotone"
-                  dataKey="dso"
-                  stroke="#3B82F6"
+                  dataKey="dpo"
+                  stroke="#10B981"
                   strokeWidth={3}
-                  dot={{ fill: '#3B82F6', strokeWidth: 2, r: 4 }}
+                  dot={{ fill: '#10B981', strokeWidth: 2, r: 4 }}
                 />
-                {/* Benchmark line at 40 days */}
+                {/* Benchmark line at 30 days */}
                 <Line
                   type="monotone"
-                  dataKey={() => 40}
+                  dataKey={() => 30}
                   stroke="#9CA3AF"
                   strokeWidth={2}
                   strokeDasharray="5 5"
@@ -271,11 +262,11 @@ const AccountReceivablesDashboard: React.FC<
         </div>
       </div>
 
-      {/* Main Debtors Table */}
+      {/* Main Vendors Table */}
       <div className="bg-white  p-6">
         <div className="flex items-center justify-between mb-4">
-          <h3 className="text-lg font-semibold text-gray-900">Main debtors</h3>
-          <button className="text-blue-600 hover:text-blue-700 text-sm font-medium">
+          <h3 className="text-lg font-semibold text-gray-900">Main vendors</h3>
+          <button className="text-green-600 hover:text-green-700 text-sm font-medium">
             See all
           </button>
         </div>
@@ -302,25 +293,25 @@ const AccountReceivablesDashboard: React.FC<
               </tr>
             </thead>
             <tbody>
-              {mainDebtors.map((debtor, index) => (
+              {mainVendors.map((vendor, index) => (
                 <tr
                   key={index}
                   className="border-b border-gray-100 hover:bg-gray-50"
                 >
                   <td className="py-3 px-4 text-sm font-medium text-gray-900">
-                    {debtor.name}
+                    {vendor.name}
                   </td>
                   <td className="py-3 px-4 text-sm text-gray-600">
-                    {debtor.avgDelay}
+                    {vendor.avgDelay}
                   </td>
                   <td className="py-3 px-4 text-sm text-green-600">
-                    {debtor.notDue}
+                    {vendor.notDue}
                   </td>
                   <td className="py-3 px-4 text-sm text-red-600">
-                    {debtor.due}
+                    {vendor.due}
                   </td>
                   <td className="py-3 px-4 text-sm font-medium text-gray-900">
-                    {debtor.outstanding}
+                    {vendor.outstanding}
                   </td>
                 </tr>
               ))}
@@ -332,4 +323,4 @@ const AccountReceivablesDashboard: React.FC<
   );
 };
 
-export default AccountReceivablesDashboard;
+export default AccountPayablesDashboard;

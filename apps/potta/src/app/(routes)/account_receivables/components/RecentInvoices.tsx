@@ -78,7 +78,7 @@ const RecentInvoices: React.FC<RecentInvoicesProps> = ({
   };
 
   return (
-    <div className="bg-white p-6  shadow-sm">
+    <div className="bg-white p-6">
       <div className="flex items-center justify-between mb-6">
         <h2 className="text-xl font-semibold text-gray-900">Recent Invoices</h2>
         <button

@@ -122,7 +122,7 @@ const TreasuryOverviewCharts: React.FC<TreasuryOverviewChartsProps> = ({
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
       {/* Aging Balance Chart */}
-      <div className="bg-white p-6 border border-gray-200">
+      <div className="bg-white p-6 ">
         <div className="flex items-center justify-between mb-4">
           <h3 className="text-lg font-semibold text-gray-900">{chartTitle}</h3>
           <Info className="w-4 h-4 text-gray-400" />
@@ -137,7 +137,7 @@ const TreasuryOverviewCharts: React.FC<TreasuryOverviewChartsProps> = ({
         </div>
       </div>
       {/* Beneficiaries Ranking */}
-      <div className="bg-white p-6 border border-gray-200">
+      <div className="bg-white p-6 ">
         <div className="flex items-center justify-between mb-4">
           <h3 className="text-lg font-semibold text-gray-900">
             {beneficiariesTitle}

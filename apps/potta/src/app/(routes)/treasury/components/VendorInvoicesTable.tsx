@@ -300,7 +300,7 @@ const VendorInvoicesTable: React.FC = () => {
   // Show loading state
   if (isLoading) {
     return (
-      <div className="bg-white p-6 border border-gray-200">
+      <div className="bg-white p-6 ">
         <div className="flex items-center justify-center h-64">
           <div className="text-gray-500">Loading approved bills...</div>
         </div>
@@ -311,7 +311,7 @@ const VendorInvoicesTable: React.FC = () => {
   // Show error state
   if (error) {
     return (
-      <div className="bg-white p-6 border border-gray-200">
+      <div className="bg-white p-6 ">
         <div className="flex items-center justify-center h-64">
           <div className="text-red-500">
             Error loading bills. Please try again.
@@ -323,7 +323,7 @@ const VendorInvoicesTable: React.FC = () => {
 
   return (
     <>
-      <div className="bg-white p-6 border border-gray-200">
+      <div className="bg-white p-6 ">
         <div className="flex items-center justify-between mb-6">
           <h2 className="text-xl font-semibold text-gray-900">
             Approved Bills ({filteredData.length})

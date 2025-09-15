@@ -5,6 +5,7 @@ import OverviewCharts from './TreasuryOverviewCharts';
 import OverviewQuickActions from './TreasuryOverviewQuickActions';
 import OverviewSkeleton from './TreasuryOverviewSkeleton';
 import AccountReceivablesDashboard from './AccountReceivablesDashboard';
+import AccountPayablesDashboard from './AccountPayablesDashboard';
 import TreasuryMainDashboard from './TreasuryMainDashboard';
 import { useBills } from '../../account_payables/bills/new/hooks/useBills';
 
@@ -30,7 +31,12 @@ const TreasuryOverview: React.FC<TreasuryOverviewProps> = ({ type }) => {
     return <AccountReceivablesDashboard type={type} />;
   }
 
-  // For Account Payables, use the original overview
+  // For Account Payables, use the new dashboard
+  if (type === 'ap') {
+    return <AccountPayablesDashboard type={type} />;
+  }
+
+  // For Account Payables, use the original overview (fallback)
   return (
     <div className="p-3">
       <OverviewMetrics bills={bills} type={type} />

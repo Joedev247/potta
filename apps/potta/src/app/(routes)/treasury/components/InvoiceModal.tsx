@@ -78,7 +78,7 @@ const InvoiceModal: React.FC<InvoiceModalProps> = ({
 
       <div className="space-y-6">
         {/* Current Status */}
-        <div className="bg-white p-4 border border-gray-200">
+        <div className="bg-white p-4 ">
           <h4 className="font-semibold text-gray-900 mb-3">Current Status</h4>
           <div className="flex items-center space-x-2">
             <span
@@ -98,7 +98,7 @@ const InvoiceModal: React.FC<InvoiceModalProps> = ({
         </div>
 
         {/* Invoice Summary */}
-        <div className="bg-white p-4 border border-gray-200">
+        <div className="bg-white p-4 ">
           <h4 className="font-semibold text-gray-900 mb-3">Invoice Summary</h4>
           <div className="space-y-2 text-sm">
             <div className="flex justify-between">
@@ -134,7 +134,7 @@ const InvoiceModal: React.FC<InvoiceModalProps> = ({
         </div>
 
         {/* Approval Status */}
-        <div className="bg-white p-4 border border-gray-200">
+        <div className="bg-white p-4 ">
           <h4 className="font-semibold text-gray-900 mb-3">Approval Status</h4>
           <div className="space-y-3">
             <div className="flex items-center space-x-3">
@@ -169,7 +169,7 @@ const InvoiceModal: React.FC<InvoiceModalProps> = ({
         </div>
 
         {/* Approval Timeline */}
-        <div className="bg-white p-4 border border-gray-200">
+        <div className="bg-white p-4 ">
           <h4 className="font-semibold text-gray-900 mb-3">
             Approval Timeline
           </h4>

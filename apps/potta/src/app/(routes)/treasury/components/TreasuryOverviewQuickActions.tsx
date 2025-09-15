@@ -29,12 +29,12 @@ const TreasuryOverviewQuickActions: React.FC<
         };
 
   return (
-    <div className="bg-white p-6 border border-gray-200">
+    <div className="bg-white p-6 ">
       <h3 className="text-lg font-semibold text-gray-900 mb-4">
         Quick Actions
       </h3>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <div className="flex items-center p-3 border border-gray-200 hover:bg-gray-50 cursor-pointer">
+        <div className="flex items-center p-3  hover:bg-gray-50 cursor-pointer">
           <div className="w-10 h-10 bg-green-100 flex items-center justify-center mr-3">
             <FileText className="w-5 h-5 text-green-600" />
           </div>
@@ -43,7 +43,7 @@ const TreasuryOverviewQuickActions: React.FC<
             <p className="text-sm text-gray-500">{invoicesToVerify} pending</p>
           </div>
         </div>
-        <div className="flex items-center p-3 border border-gray-200 hover:bg-gray-50 cursor-pointer">
+        <div className="flex items-center p-3  hover:bg-gray-50 cursor-pointer">
           <div className="w-10 h-10 bg-blue-100 flex items-center justify-center mr-3">
             <CreditCard className="w-5 h-5 text-blue-600" />
           </div>
@@ -52,7 +52,7 @@ const TreasuryOverviewQuickActions: React.FC<
             <p className="text-sm text-gray-500">{transactionsToPay} pending</p>
           </div>
         </div>
-        <div className="flex items-center p-3 border border-gray-200 hover:bg-gray-50 cursor-pointer">
+        <div className="flex items-center p-3  hover:bg-gray-50 cursor-pointer">
           <div className="w-10 h-10 bg-orange-100 flex items-center justify-center mr-3">
             <CheckCircle className="w-5 h-5 text-orange-600" />
           </div>

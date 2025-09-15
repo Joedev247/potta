@@ -1,6 +1,12 @@
 'use client';
 import React from 'react';
-import { Info, TrendingUp, TrendingDown } from 'lucide-react';
+import {
+  TrendingUp,
+  TrendingDown,
+  DollarSign,
+  ArrowUp,
+  ArrowDown,
+} from 'lucide-react';
 
 interface CashFlowData {
   cashIn: number;
@@ -20,60 +26,79 @@ const CashFlowSummary: React.FC<CashFlowSummaryProps> = ({
 }) => {
   const { cashIn, cashOut, netCashFlow, cashFlowPercentage } = data;
 
-  const getCashFlowTrend = () => {
-    if (netCashFlow > 0) {
-      return { icon: TrendingUp, color: 'text-green-600', text: 'Positive' };
-    }
-    return { icon: TrendingDown, color: 'text-red-600', text: 'Negative' };
-  };
-
-  const trend = getCashFlowTrend();
-
   return (
-    <div className="bg-white  border border-gray-200 p-6">
-      <div className="flex items-center justify-between mb-4">
-        <h3 className="text-lg font-semibold text-gray-900">
+    <div className="bg-white p-6">
+      <div className="flex items-center justify-between mb-6">
+        <h2 className="text-xl font-semibold text-gray-900">
           Cash Flow Summary
-        </h3>
-        <Info className="w-4 h-4 text-gray-400" />
+        </h2>
+        <div className="p-2 bg-green-100">
+          <DollarSign className="h-5 w-5 text-green-600" />
+        </div>
       </div>
 
       <div className="space-y-4">
-        <div className="flex justify-between items-center p-3 bg-green-50 ">
-          <div className="flex items-center">
-            <div className="w-3 h-3 bg-green-500 rounded-full mr-3"></div>
-            <span className="text-gray-700 font-medium">Cash In</span>
-          </div>
-          <span className="font-semibold text-green-600">
-            {formatCurrency(cashIn)}
-          </span>
-        </div>
-
-        <div className="flex justify-between items-center p-3 bg-red-50 ">
-          <div className="flex items-center">
-            <div className="w-3 h-3 bg-red-500 rounded-full mr-3"></div>
-            <span className="text-gray-700 font-medium">Cash Out</span>
-          </div>
-          <span className="font-semibold text-red-600">
-            {formatCurrency(cashOut)}
-          </span>
-        </div>
-
-        <div className="border-t pt-4">
-          <div className="flex justify-between items-center mb-2">
-            <span className="text-gray-900 font-semibold">Net Cash Flow</span>
-            <div className="flex items-center">
-              <trend.icon className={`w-4 h-4 mr-1 ${trend.color}`} />
-              <span className={`font-semibold text-lg ${trend.color}`}>
-                {formatCurrency(netCashFlow)}
-              </span>
+        <div className="flex items-center justify-between p-4 bg-gray-50">
+          <div className="flex items-center space-x-3">
+            <div className="p-2">
+              <ArrowUp className="h-4 w-4 text-green-600" />
+            </div>
+            <div>
+              <p className="text-sm font-medium text-gray-600">Cash In</p>
+              <p className="text-lg font-semibold text-gray-900">
+                {formatCurrency(cashIn)}
+              </p>
             </div>
           </div>
-          <div className="flex items-center justify-between text-sm">
-            <span className="text-gray-500">{trend.text} cash flow</span>
-            <span className="text-gray-500">
-              {cashFlowPercentage}% of total cash position
-            </span>
+        </div>
+
+        <div className="flex items-center justify-between p-4 bg-gray-50">
+          <div className="flex items-center space-x-3">
+            <div className="p-2">
+              <ArrowDown className="h-4 w-4 text-red-600" />
+            </div>
+            <div>
+              <p className="text-sm font-medium text-gray-600">Cash Out</p>
+              <p className="text-lg font-semibold text-gray-900">
+                {formatCurrency(cashOut)}
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div className="flex items-center justify-between p-4 bg-gray-50">
+          <div className="flex items-center space-x-3">
+            <div className="p-2">
+              {netCashFlow >= 0 ? (
+                <TrendingUp className="h-4 w-4 text-green-600" />
+              ) : (
+                <TrendingDown className="h-4 w-4 text-red-600" />
+              )}
+            </div>
+            <div>
+              <p className="text-sm font-medium text-gray-600">Net Cash Flow</p>
+              <p
+                className={`text-lg font-semibold ${
+                  netCashFlow >= 0 ? 'text-green-600' : 'text-red-600'
+                }`}
+              >
+                {formatCurrency(netCashFlow)}
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div className="flex items-center justify-between p-4 bg-gray-50">
+          <div className="flex items-center space-x-3">
+            <div className="p-2">
+              <DollarSign className="h-4 w-4 text-blue-600" />
+            </div>
+            <div>
+              <p className="text-sm font-medium text-gray-600">Cash Flow %</p>
+              <p className="text-lg font-semibold text-gray-900">
+                {cashFlowPercentage}%
+              </p>
+            </div>
           </div>
         </div>
       </div>

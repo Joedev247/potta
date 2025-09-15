@@ -88,29 +88,21 @@ interface Children {
 const ContextData = createContext<ContextType | null>(null);
 
 const DataProvider: React.FC<Children> = ({ children }) => {
-  // Initialize layoutMode from localStorage or default to 'navbar'
-  const [layoutMode, setLayoutMode] = useState<'navbar' | 'sidebar'>(() => {
-    if (typeof window !== 'undefined') {
-      const saved = localStorage.getItem('potta_layoutMode');
-      return (saved as 'navbar' | 'sidebar') || 'sidebar';
-    }
-    return 'sidebar';
-  });
+  // Initialize layoutMode with default value for SSR
+  const [layoutMode, setLayoutMode] = useState<'navbar' | 'sidebar'>('sidebar');
 
   // Track if layout has been loaded from localStorage
   const [isLayoutLoaded, setIsLayoutLoaded] = useState(false);
 
-  // Initialize layout from localStorage on mount
+  // Initialize layout from localStorage on mount (client-side only)
   useEffect(() => {
     if (typeof window !== 'undefined') {
       const saved = localStorage.getItem('potta_layoutMode');
       if (saved) {
         setLayoutMode(saved as 'navbar' | 'sidebar');
       }
-      setIsLayoutLoaded(true);
-    } else {
-      setIsLayoutLoaded(true);
     }
+    setIsLayoutLoaded(true);
   }, []);
 
   // Save layoutMode to localStorage whenever it changes
@@ -123,7 +115,7 @@ const DataProvider: React.FC<Children> = ({ children }) => {
   // Custom setter for layoutMode that also saves to localStorage
   const handleSetLayoutMode = (mode: 'navbar' | 'sidebar') => {
     setLayoutMode(mode);
-    if (typeof window !== 'undefined') {
+    if (typeof window !== 'undefined' && isLayoutLoaded) {
       localStorage.setItem('potta_layoutMode', mode);
     }
   };

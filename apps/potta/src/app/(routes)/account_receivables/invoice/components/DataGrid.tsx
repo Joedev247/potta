@@ -47,6 +47,11 @@ const DataGrid = <T,>({
   const [availableHeight, setAvailableHeight] = useState<number>(600);
 
   useEffect(() => {
+    // Only run on client side
+    if (typeof window === 'undefined') {
+      return;
+    }
+
     const calculateHeight = () => {
       if (maxHeight) {
         // If maxHeight is provided, use it directly

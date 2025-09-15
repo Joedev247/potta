@@ -2,26 +2,24 @@
 import React from 'react';
 import { DollarSign, FileText, TrendingUp, Users } from 'lucide-react';
 
-interface CollectionSummaryProps {
+interface PaymentSummaryProps {
   data: {
-    totalCollected: number;
-    totalInvoices: number;
-    averageInvoiceValue: number;
-    collectionRate: number;
+    totalPaid: number;
+    totalBills: number;
+    averageBillValue: number;
+    paymentRate: number;
   };
   formatCurrency: (amount: number) => string;
 }
 
-const CollectionSummary: React.FC<CollectionSummaryProps> = ({
+const PaymentSummary: React.FC<PaymentSummaryProps> = ({
   data,
   formatCurrency,
 }) => {
   return (
     <div className="bg-white p-6">
       <div className="flex items-center justify-between mb-6">
-        <h2 className="text-xl font-semibold text-gray-900 ">
-          Collection Summary
-        </h2>
+        <h2 className="text-xl font-semibold text-gray-900">Payment Summary</h2>
         <div className="p-2 bg-green-100">
           <DollarSign className="h-5 w-5 text-green-600" />
         </div>
@@ -30,15 +28,13 @@ const CollectionSummary: React.FC<CollectionSummaryProps> = ({
       <div className="space-y-4">
         <div className="flex items-center justify-between p-4 bg-gray-50">
           <div className="flex items-center space-x-3">
-            <div className="p-2 ">
-              <DollarSign className="h-4 w-4 text-blue-600" />
+            <div className="p-2">
+              <DollarSign className="h-4 w-4 text-green-600" />
             </div>
             <div>
-              <p className="text-sm font-medium text-gray-600 ">
-                Total Collected
-              </p>
-              <p className="text-lg font-semibold text-gray-900 ">
-                {formatCurrency(data.totalCollected)}
+              <p className="text-sm font-medium text-gray-600">Total Paid</p>
+              <p className="text-lg font-semibold text-gray-900">
+                {formatCurrency(data.totalPaid)}
               </p>
             </div>
           </div>
@@ -50,11 +46,9 @@ const CollectionSummary: React.FC<CollectionSummaryProps> = ({
               <FileText className="h-4 w-4 text-green-600" />
             </div>
             <div>
-              <p className="text-sm font-medium text-gray-600">
-                Total Invoices
-              </p>
+              <p className="text-sm font-medium text-gray-600">Total Bills</p>
               <p className="text-lg font-semibold text-gray-900">
-                {data.totalInvoices}
+                {data.totalBills}
               </p>
             </div>
           </div>
@@ -67,10 +61,10 @@ const CollectionSummary: React.FC<CollectionSummaryProps> = ({
             </div>
             <div>
               <p className="text-sm font-medium text-gray-600">
-                Average Invoice Value
+                Average Bill Value
               </p>
               <p className="text-lg font-semibold text-gray-900">
-                {formatCurrency(data.averageInvoiceValue)}
+                {formatCurrency(data.averageBillValue)}
               </p>
             </div>
           </div>
@@ -82,11 +76,9 @@ const CollectionSummary: React.FC<CollectionSummaryProps> = ({
               <Users className="h-4 w-4 text-orange-600" />
             </div>
             <div>
-              <p className="text-sm font-medium text-gray-600">
-                Collection Rate
-              </p>
+              <p className="text-sm font-medium text-gray-600">Payment Rate</p>
               <p className="text-lg font-semibold text-gray-900">
-                {data.collectionRate}%
+                {data.paymentRate}%
               </p>
             </div>
           </div>
@@ -96,4 +88,4 @@ const CollectionSummary: React.FC<CollectionSummaryProps> = ({
   );
 };
 
-export default CollectionSummary;
+export default PaymentSummary;

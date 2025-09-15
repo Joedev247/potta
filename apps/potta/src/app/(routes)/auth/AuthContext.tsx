@@ -102,6 +102,24 @@ async function decryptToken(
 // Token validation
 async function validateToken(token: string): Promise<boolean> {
   try {
+    // Check if we're on a bypass route or organigram page
+    if (typeof window !== 'undefined') {
+      const currentPath = window.location.pathname;
+      const isBypassRoute = BYPASS_AUTH_ROUTES.some((route) =>
+        currentPath.includes(route)
+      );
+      const isOrganigramPage = currentPath.includes('/organigram');
+
+      if (isBypassRoute || isOrganigramPage) {
+        devLog(
+          `${
+            isBypassRoute ? 'Bypass route' : 'Organigram page'
+          } detected, skipping token validation`
+        );
+        return true; // Return true for bypass routes and organigram pages
+      }
+    }
+
     setAuthToken(token);
     const response = await axios.get(AUTH_ENDPOINTS.whoami);
     return response.status === 200;
@@ -184,6 +202,27 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   // Fetch user data
   const fetchUserData = useCallback(async (token: string) => {
     try {
+      // Check if we're on a bypass route or organigram page
+      if (typeof window !== 'undefined') {
+        const currentPath = window.location.pathname;
+        const isBypassRoute = BYPASS_AUTH_ROUTES.some((route) =>
+          currentPath.includes(route)
+        );
+        const isOrganigramPage = currentPath.includes('/organigram');
+
+        if (isBypassRoute || isOrganigramPage) {
+          devLog(
+            `${
+              isBypassRoute ? 'Bypass route' : 'Organigram page'
+            } detected, skipping user data fetch`
+          );
+          // Set dummy user data for bypass routes and organigram pages
+          setUser({ id: 'bypass', name: 'Bypass User', role: 'bypass' });
+          setError(null);
+          return true;
+        }
+      }
+
       setAuthToken(token);
       const response = await axios.get(AUTH_ENDPOINTS.whoami);
       setUser(response.data.user || response.data);
@@ -224,6 +263,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   // Initialize authentication
   useEffect(() => {
     const initAuth = async () => {
+      // Only run on client side
+      if (typeof window === 'undefined') {
+        setIsLoading(false);
+        return;
+      }
+
       devLog('Initializing authentication', { environment, isBypassRoute });
 
       // Skip auth for bypass routes

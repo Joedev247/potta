@@ -35,6 +35,7 @@ export default function OrganigramPage() {
   const [organizationId, setOrganizationId] = useState<string>('');
   const [sessionData, setSessionData] = useState<SessionResponse | null>(null);
   const [isLoadingSession, setIsLoadingSession] = useState(true);
+  const [sessionError, setSessionError] = useState<string | null>(null);
   const [selectedFilters, setSelectedFilters] = useState<OrgChartFilters>({
     location: '',
     businessUnit: '',
@@ -55,13 +56,48 @@ export default function OrganigramPage() {
     const fetchSession = async () => {
       try {
         setIsLoadingSession(true);
+        setSessionError(null);
         const result = await orgChartApi.getSession();
+
+        // Check if result and data exist
+        if (!result || !result.data) {
+          throw new Error('No session data received');
+        }
+
+        // Log the actual response structure for debugging
+        console.log('Session API response:', result.data);
+
+        // Check if organization exists in the response (flexible structure)
+        const organization =
+          result.data.organization ||
+          result.data.org ||
+          result.data.organizationData;
+        if (!organization || !organization.id) {
+          console.error(
+            'No organization data found in session response:',
+            result.data
+          );
+          throw new Error('No organization data in session');
+        }
+
         setSessionData(result.data);
-        setOrganizationId(result.data.organization.id);
+        setOrganizationId(organization.id);
       } catch (error) {
         console.error('Error fetching session:', error);
-        // Fallback to hardcoded organization ID if session fails
-        setOrganizationId('51ea74ff-04ef-4e50-a44a-7b180d7c9e50');
+
+        // If it's a validation error, try to extract organization ID from the response
+        if (
+          error instanceof Error &&
+          error.message.includes('No organization data')
+        ) {
+          console.log('Attempting to extract organization ID from response...');
+          // You could add fallback logic here if needed
+        }
+
+        setSessionError('Failed to load organization data');
+        toast.error(
+          'Failed to load organization data. Please refresh the page.'
+        );
       } finally {
         setIsLoadingSession(false);
       }
@@ -122,10 +158,10 @@ export default function OrganigramPage() {
 
   // Load all data on component mount and when organizationId changes
   useEffect(() => {
-    if (organizationId) {
+    if (organizationId && !sessionError) {
       loadAllData();
     }
-  }, [refreshTrigger, organizationId]);
+  }, [refreshTrigger, organizationId, sessionError]);
 
   const loadAllData = async () => {
     try {
@@ -530,6 +566,48 @@ export default function OrganigramPage() {
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
           <p className="text-gray-600">Loading organization data...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Show error screen if session failed
+  if (sessionError) {
+    return (
+      <div className="flex items-center justify-center h-screen bg-gray-50">
+        <div className="text-center">
+          <div className="text-red-500 text-6xl mb-4">⚠️</div>
+          <h2 className="text-2xl font-bold text-gray-900 mb-2">
+            Session Error
+          </h2>
+          <p className="text-gray-600 mb-4">{sessionError}</p>
+          <button
+            onClick={() => window.location.reload()}
+            className="bg-green-700 text-white px-6 py-2 hover:bg-green-700 transition-colors"
+          >
+            Refresh Page
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  // Show error if no organization ID
+  if (!organizationId) {
+    return (
+      <div className="flex items-center justify-center h-screen bg-gray-50">
+        <div className="text-center">
+          <div className="text-yellow-500 text-6xl mb-4">⚠️</div>
+          <h2 className="text-2xl font-bold text-gray-900 mb-2">
+            No Organization
+          </h2>
+          <p className="text-gray-600 mb-4">Unable to load organization data</p>
+          <button
+            onClick={() => window.location.reload()}
+            className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors"
+          >
+            Refresh Page
+          </button>
         </div>
       </div>
     );

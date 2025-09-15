@@ -23,10 +23,7 @@ const ARMetrics: React.FC<ARMetricsProps> = ({ metrics, formatCurrency }) => {
         const isPositive = metric.trend === 'up';
 
         return (
-          <div
-            key={index}
-            className="bg-white p-6 hover:shadow-md shadow-sm transition-shadow"
-          >
+          <div key={index} className="bg-white p-6 transition-shadow">
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-3">
                 <div className="p-2 bg-green-100 rounded-lg">

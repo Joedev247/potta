@@ -22,17 +22,30 @@ const Overview = () => {
     <QueryClientProvider client={queryClient}>
       <RootLayout>
         <div className="px-14">
-          <div className="mt-5 flex space-x-8">
-            <div className="w-[50%]">
-              <Boxes />
-            </div>
-            <div className="w-[50%]">
-              <PayBreakDown />
-            </div>
+          {/* Header Section */}
+          <div className="mb-6">
+            <h1 className="text-3xl font-bold text-gray-900 mb-2">
+              Payroll Overview
+            </h1>
+            <p className="text-gray-600">
+              Manage employee compensation and payroll processing
+            </p>
           </div>
-          {/* search here  */}
 
-          <PayrollTable />
+          {/* Metrics Section */}
+          <div className="mb-6">
+            <Boxes />
+          </div>
+
+          {/* Pay Breakdown Section */}
+          <div className="mb-6">
+            <PayBreakDown />
+          </div>
+
+          {/* Table Section */}
+          <div className="bg-white p-6">
+            <PayrollTable />
+          </div>
         </div>
       </RootLayout>
       {/* {process.env.NODE_ENV === 'development' && <ReactQueryDevtools />} */}

@@ -35,6 +35,9 @@ export const metadata: Metadata = {
   },
 };
 
+// Disable SSR for the entire app to prevent window is not defined errors
+export const dynamic = 'force-dynamic';
+
 export default function RootLayout({
   children,
 }: Readonly<{

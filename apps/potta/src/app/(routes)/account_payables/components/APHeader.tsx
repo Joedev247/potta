@@ -1,35 +1,37 @@
 'use client';
 import React from 'react';
-import { DollarSign, TrendingUp } from 'lucide-react';
+import { DollarSign, FileText, TrendingUp } from 'lucide-react';
 
-interface TreasuryHeaderProps {
-  totalCash: number;
+interface APHeaderProps {
+  totalPaid: number;
+  totalBills: number;
   formatCurrency: (amount: number) => string;
 }
 
-const TreasuryHeader: React.FC<TreasuryHeaderProps> = ({
-  totalCash,
+const APHeader: React.FC<APHeaderProps> = ({
+  totalPaid,
+  totalBills,
   formatCurrency,
 }) => {
   return (
     <div className="bg-gradient-to-r from-green-600 to-green-700 p-6 text-white">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold mb-2">Treasury Management</h1>
+          <h1 className="text-3xl font-bold mb-2">Accounts Payable</h1>
           <p className="text-green-100 text-lg">
-            Comprehensive financial management and cash flow monitoring
+            Manage vendor payments and bill processing
           </p>
         </div>
         <div className="text-right">
           <div className="flex items-center space-x-2 mb-2">
             <DollarSign className="h-6 w-6" />
             <span className="text-2xl font-semibold">
-              {formatCurrency(totalCash)}
+              {formatCurrency(totalPaid)}
             </span>
           </div>
           <div className="flex items-center space-x-2 text-green-100">
-            <TrendingUp className="h-4 w-4" />
-            <span className="text-sm">Total Cash Position</span>
+            <FileText className="h-4 w-4" />
+            <span className="text-sm">{totalBills} bills processed</span>
           </div>
         </div>
       </div>
@@ -37,4 +39,4 @@ const TreasuryHeader: React.FC<TreasuryHeaderProps> = ({
   );
 };
 
-export default TreasuryHeader;
+export default APHeader;

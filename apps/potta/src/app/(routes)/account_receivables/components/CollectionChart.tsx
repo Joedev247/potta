@@ -190,7 +190,7 @@ const CollectionChart: React.FC<CollectionChartProps> = ({
   };
 
   return (
-    <div className="bg-white p-6 shadow-sm">
+    <div className="bg-white p-6">
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Monthly Trends Chart */}
         <div className="h-80">
