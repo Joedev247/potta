@@ -4,6 +4,8 @@ import CreateProductForm from './CreateProductForm';
 import ProductUploadStep from './ProductUploadStep';
 import ProductSelectionStep from './ProductSelectionStep';
 import Button from '@potta/components/button';
+import useCreateProduct from '../_hooks/useCreateProduct';
+import toast from 'react-hot-toast';
 
 interface ProductStepperModalProps {
   open: boolean;
@@ -24,6 +26,7 @@ const ProductStepperModal: React.FC<ProductStepperModalProps> = ({
   const [productId, setProductId] = useState<string | null>(null);
   const [productData, setProductData] = useState<any>(null);
   const [tempProductData, setTempProductData] = useState<any>(null);
+  const mutation = useCreateProduct();
 
   // Reset modal state when closed
   const handleClose = () => {
@@ -83,13 +86,21 @@ const ProductStepperModal: React.FC<ProductStepperModalProps> = ({
       components: components,
     };
 
-    // TODO: Call the create product API with components
     console.log('Creating product with components:', finalProductData);
 
-    // For now, simulate success
-    setProductId('temp-id');
-    setProductData(finalProductData);
-    setActive('confirm');
+    // Call the create product API with components
+    mutation.mutate(finalProductData, {
+      onSuccess: (response) => {
+        toast.success('Product created successfully!');
+        setProductId(response.data?.uuid || 'temp-id');
+        setProductData(finalProductData);
+        setActive('confirm');
+      },
+      onError: (error) => {
+        console.error('Product creation error:', error);
+        toast.error('Failed to create product');
+      },
+    });
   };
 
   // Confirmation step: ask if user wants to upload images

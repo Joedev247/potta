@@ -92,7 +92,7 @@ export default function RootLayout({
       {/* ChatAI Sidebar */}
       <div
         className={`${
-          show ? 'w-[400px]' : 'w-0'
+          show ? 'w-[600px]' : 'w-0'
         } transition-all duration-500 ease-in-out overflow-hidden  fixed right-0 top-0 h-full z-50`}
       >
         <ChatAI onClose={toggleChatAI} />

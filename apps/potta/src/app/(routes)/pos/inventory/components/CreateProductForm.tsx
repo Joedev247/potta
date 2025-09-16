@@ -318,12 +318,29 @@ const CreateProductForm: React.FC<CreateProductFormProps> = ({
             <Button
               text={
                 structure === 'ASSEMBLY'
-                  ? 'Assembly Products'
+                  ? 'Next: Assembly Products'
                   : structure === 'SIMPLEGROUPS'
-                  ? 'Group Products'
+                  ? 'Next: Group Products'
                   : 'Add Item'
               }
-              type={'submit'}
+              type={
+                structure === 'ASSEMBLY' || structure === 'SIMPLEGROUPS'
+                  ? 'button'
+                  : 'submit'
+              }
+              onClick={
+                structure === 'ASSEMBLY' || structure === 'SIMPLEGROUPS'
+                  ? () => {
+                      // For assembly/group products, validate form and go to next step
+                      handleSubmit((data) => {
+                        // Store the form data and trigger next step
+                        if (onProductCreated) {
+                          onProductCreated('temp-id', data);
+                        }
+                      })();
+                    }
+                  : undefined
+              }
               isLoading={mutation.isPending || isUploading}
             />
           </div>

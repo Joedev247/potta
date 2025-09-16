@@ -3,6 +3,8 @@ import Cookies from 'js-cookie';
 export interface WebSocketResponse {
   message: string;
   data: any;
+  source?: 'potta' | 'fpa' | null;
+  type?: 'actual' | 'forecast' | null;
 }
 
 export interface WebSocketError {
@@ -42,10 +44,11 @@ class WebSocketService {
 
   private createConnection() {
     try {
+      console.log('🔗 Attempting to connect to WebSocket:', this.url);
       this.socket = new WebSocket(this.url);
       this.setupEventHandlers();
     } catch (error) {
-      console.error('Failed to create WebSocket connection:', error);
+      console.error('❌ Failed to create WebSocket connection:', error);
       this.handleError(error as Event);
     }
   }
@@ -54,7 +57,7 @@ class WebSocketService {
     if (!this.socket) return;
 
     this.socket.onopen = () => {
-      console.log('WebSocket connected');
+      console.log('✅ WebSocket connected to:', this.url);
       this.reconnectAttempts = 0;
       this.callbacks.onOpen?.();
     };
@@ -72,12 +75,20 @@ class WebSocketService {
     };
 
     this.socket.onerror = (error) => {
-      console.error('WebSocket error:', error);
+      console.error('❌ WebSocket error:', error);
+      console.error('❌ Failed to connect to:', this.url);
       this.callbacks.onError?.(error);
     };
 
     this.socket.onclose = (event) => {
-      console.log('WebSocket disconnected:', event.code, event.reason);
+      console.log(
+        '🔌 WebSocket disconnected. Code:',
+        event.code,
+        'Reason:',
+        event.reason,
+        'URL:',
+        this.url
+      );
       this.callbacks.onClose?.();
 
       // Attempt to reconnect if not a normal closure

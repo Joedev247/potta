@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useContext } from 'react';
 import {
   Send,
   Bot,
@@ -11,6 +11,7 @@ import {
   Minimize2,
 } from 'lucide-react';
 import { useAuth } from '../(routes)/auth/AuthContext';
+import { ContextData } from '../../components/context';
 import {
   webSocketService,
   getAuthToken,
@@ -18,6 +19,7 @@ import {
   type WebSocketResponse,
   type WebSocketError,
 } from './websocket';
+import ForecastChart from './ForecastChart';
 import Cookies from 'js-cookie';
 
 interface Message {
@@ -25,17 +27,9 @@ interface Message {
   type: 'user' | 'bot';
   content: string;
   data?: any;
+  source?: 'potta' | 'fpa' | null;
+  messageType?: 'actual' | 'forecast' | null;
   timestamp: Date;
-}
-
-interface WebSocketResponse {
-  message: string;
-  data: any;
-}
-
-interface WebSocketError {
-  message: string;
-  error_type: string;
 }
 
 interface ChatAIProps {
@@ -44,52 +38,80 @@ interface ChatAIProps {
 
 const ChatAI = ({ onClose }: ChatAIProps) => {
   const { user, token } = useAuth();
-  const [messages, setMessages] = useState<Message[]>([
-    {
-      id: '1',
-      type: 'bot',
-      content: "Hello! I'm your AI assistant. How can I help you today?",
-      timestamp: new Date(),
-    },
-  ]);
+  const context = useContext(ContextData);
+  const [messages, setMessages] = useState<Message[]>([]);
   const [inputValue, setInputValue] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [isConnected, setIsConnected] = useState(false);
   const [socket, setSocket] = useState<WebSocket | null>(null);
+  const [connectionStatus, setConnectionStatus] =
+    useState<string>('Disconnected');
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
   // Get auth token from cookies and user session from whoami
-  const userAuthToken = token || Cookies.get('auth_token') || '';
-  const userSession = user?.id || user?.email || user?.name || 'unknown_user';
+  const userAuthToken = '5SikMLhQVVpHUYkO3kfWXeYfCiJWD6Rp';
+
+  // Use real user data from AuthContext (whoami API) - this contains the actual whoami response
+  const realUserSession =
+    user?.user?.id || user?.session?.userId || 'unknown_user';
+  const realUserData = user?.user;
+
+  // Debug authentication data
+  console.log('🔑 Auth token available:', !!userAuthToken);
+  console.log('🔑 Auth token length:', userAuthToken.length);
+  console.log('👤 Real user session (from whoami):', realUserSession);
+  console.log('👤 Real user data (from whoami):', realUserData);
+  console.log('👤 Context data available:', !!context);
+  console.log('👤 AuthContext user (fallback):', user);
   useEffect(() => {
     // Initialize WebSocket connection
     const ws = new WebSocket('wss://tribu.dev.instanvi.com/livra/'); // Replace with your WebSocket URL
 
     ws.onopen = () => {
       setIsConnected(true);
-      console.log('WebSocket connected');
+      setConnectionStatus('Connected');
+      console.log(
+        '✅ WebSocket connected to:',
+        'wss://tribu.dev.instanvi.com/livra/'
+      );
     };
 
     ws.onmessage = (event) => {
+      console.log('📥 Received WebSocket message:', event.data);
+
       try {
         const response: WebSocketResponse | WebSocketError = JSON.parse(
           event.data
         );
 
-        if ('error_type' in response) {
-          // Handle error response
+        console.log('📋 Parsed response:', response);
+
+        if ('error_type' in response && response.error_type !== null) {
+          // Handle error response (only when error_type is not null)
           const errorResponse = response as WebSocketError;
+          console.log('❌ Error response received:', errorResponse);
           addMessage('bot', `Error: ${errorResponse.message}`, {
             error_type: errorResponse.error_type,
           });
         } else {
-          // Handle success response
+          // Handle success response (when error_type is null or doesn't exist)
           const successResponse = response as WebSocketResponse;
-          addMessage('bot', successResponse.message, successResponse.data);
+          console.log('✅ Success response received:', successResponse);
+          console.log('📊 Response data:', successResponse.data);
+          console.log('🏷️ Source:', successResponse.source);
+          console.log('📈 Type:', successResponse.type);
+          addMessage(
+            'bot',
+            successResponse.message,
+            successResponse.data,
+            successResponse.source,
+            successResponse.type
+          );
         }
       } catch (error) {
-        console.error('Error parsing WebSocket message:', error);
+        console.error('❌ Error parsing WebSocket message:', error);
+        console.error('❌ Raw message data:', event.data);
         addMessage(
           'bot',
           'Sorry, I encountered an error processing your request.'
@@ -100,15 +122,25 @@ const ChatAI = ({ onClose }: ChatAIProps) => {
     };
 
     ws.onerror = (error) => {
-      console.error('WebSocket error:', error);
+      console.error('❌ WebSocket error:', error);
+      console.error(
+        '❌ Failed to connect to:',
+        'wss://tribu.dev.instanvi.com/livra/'
+      );
       setIsConnected(false);
+      setConnectionStatus('Connection Error');
       setIsLoading(false);
-      addMessage('bot', 'Connection error. Please try again.');
     };
 
-    ws.onclose = () => {
+    ws.onclose = (event) => {
       setIsConnected(false);
-      console.log('WebSocket disconnected');
+      setConnectionStatus(`Disconnected (Code: ${event.code})`);
+      console.log(
+        '🔌 WebSocket disconnected. Code:',
+        event.code,
+        'Reason:',
+        event.reason
+      );
     };
 
     setSocket(ws);
@@ -118,12 +150,25 @@ const ChatAI = ({ onClose }: ChatAIProps) => {
     };
   }, []);
 
-  const addMessage = (type: 'user' | 'bot', content: string, data?: any) => {
+  const addMessage = (
+    type: 'user' | 'bot',
+    content: string,
+    data?: any,
+    source?: 'potta' | 'fpa' | null,
+    messageType?: 'actual' | 'forecast' | null
+  ) => {
+    console.log('📝 Adding message with data:', data);
+    console.log('📝 Data type:', typeof data);
+    console.log('📝 Data keys:', data ? Object.keys(data) : 'no data');
+    console.log('📝 Has forecast:', data?.forecast ? 'YES' : 'NO');
+
     const newMessage: Message = {
       id: Date.now().toString(),
       type,
       content,
       data,
+      source,
+      messageType,
       timestamp: new Date(),
     };
     setMessages((prev) => [...prev, newMessage]);
@@ -141,6 +186,10 @@ const ChatAI = ({ onClose }: ChatAIProps) => {
     if (!inputValue.trim() || isLoading || !isConnected) return;
 
     const userMessage = inputValue.trim();
+    console.log('📤 Sending message:', userMessage);
+    console.log('🔗 WebSocket state:', socket?.readyState);
+    console.log('🔗 Is connected:', isConnected);
+
     setInputValue('');
     setIsLoading(true);
 
@@ -150,12 +199,26 @@ const ChatAI = ({ onClose }: ChatAIProps) => {
     // Send message via WebSocket
     if (socket && socket.readyState === WebSocket.OPEN) {
       const payload = {
-        user_session: userSession,
+        user_session: realUserSession,
         user_auth_token: userAuthToken,
         user_prompt: userMessage,
       };
-      socket.send(JSON.stringify(payload));
+
+      console.log('📦 Payload being sent:', payload);
+      console.log('🔑 Auth token length:', userAuthToken.length);
+      console.log('👤 Real user session (from whoami):', realUserSession);
+
+      try {
+        socket.send(JSON.stringify(payload));
+        console.log('✅ Message sent successfully via WebSocket');
+      } catch (error) {
+        console.error('❌ Error sending message:', error);
+        setIsLoading(false);
+        addMessage('bot', 'Failed to send message. Please try again.');
+      }
     } else {
+      console.log('❌ WebSocket not available. State:', socket?.readyState);
+      console.log('❌ Socket object:', socket);
       // Fallback for when WebSocket is not available
       setTimeout(() => {
         addMessage(
@@ -215,8 +278,50 @@ const ChatAI = ({ onClose }: ChatAIProps) => {
     );
   };
 
+  const renderSourceBadge = (source: 'potta' | 'fpa' | null) => {
+    if (!source) return null;
+
+    const baseClasses = 'px-2 py-1 text-xs font-medium rounded-full';
+    if (source === 'potta') {
+      return (
+        <span className={`${baseClasses} bg-blue-100 text-blue-800`}>
+          Potta
+        </span>
+      );
+    }
+    if (source === 'fpa') {
+      return (
+        <span className={`${baseClasses} bg-purple-100 text-purple-800`}>
+          FPA
+        </span>
+      );
+    }
+    return null;
+  };
+
+  const renderTypeBadge = (messageType: 'actual' | 'forecast' | null) => {
+    if (!messageType) return null;
+
+    const baseClasses = 'px-2 py-1 text-xs font-medium rounded-full';
+    if (messageType === 'actual') {
+      return (
+        <span className={`${baseClasses} bg-green-100 text-green-800`}>
+          Actual
+        </span>
+      );
+    }
+    if (messageType === 'forecast') {
+      return (
+        <span className={`${baseClasses} bg-orange-100 text-orange-800`}>
+          Forecast
+        </span>
+      );
+    }
+    return null;
+  };
+
   return (
-    <div className="h-full w-[400px] flex flex-col bg-white">
+    <div className="h-full w-[600px] flex flex-col bg-white">
       {/* Header */}
       <div className="flex items-center justify-between p-4 border-b border-gray-200 bg-gray-50">
         <div className="flex items-center space-x-3">
@@ -231,9 +336,7 @@ const ChatAI = ({ onClose }: ChatAIProps) => {
                   isConnected ? 'bg-green-500' : 'bg-red-500'
                 }`}
               ></div>
-              <span className="text-xs text-gray-500">
-                {isConnected ? 'Connected' : 'Disconnected'}
-              </span>
+              <span className="text-xs text-gray-500">{connectionStatus}</span>
             </div>
           </div>
         </div>
@@ -266,8 +369,60 @@ const ChatAI = ({ onClose }: ChatAIProps) => {
                   <Bot className="w-4 h-4 mt-0.5 text-gray-600 flex-shrink-0" />
                 )}
                 <div className="flex-1">
-                  <p className="text-sm">{message.content}</p>
-                  {message.data && renderDataTable(message.data)}
+                  <p className="text-xs">{message.content}</p>
+
+                  {/* Source and Type badges */}
+                  {(message.source || message.messageType) && (
+                    <div className="flex gap-2 mt-2">
+                      {message.source && renderSourceBadge(message.source)}
+                      {message.messageType &&
+                        renderTypeBadge(message.messageType)}
+                    </div>
+                  )}
+
+                  {message.data && (
+                    <>
+                      {/* Debug: Log the data structure */}
+                      {console.log('🔍 Message data structure:', message.data)}
+                      {console.log(
+                        '🔍 Has forecast property:',
+                        !!message.data.forecast
+                      )}
+                      {console.log(
+                        '🔍 Forecast is array:',
+                        Array.isArray(message.data.forecast)
+                      )}
+                      {console.log('🔍 Forecast data:', message.data.forecast)}
+
+                      {/* Check if this is forecast data and render chart */}
+                      {(() => {
+                        const hasForecast =
+                          message.data.forecast &&
+                          Array.isArray(message.data.forecast);
+                        const hasForecastStructure =
+                          message.data.baseline_id &&
+                          message.data.metric &&
+                          message.data.method_meta;
+                        const shouldRenderChart =
+                          hasForecast || hasForecastStructure;
+
+                        console.log('🎯 Chart rendering decision:', {
+                          hasForecast,
+                          hasForecastStructure,
+                          shouldRenderChart,
+                          forecastLength: message.data.forecast?.length,
+                        });
+
+                        return shouldRenderChart ? (
+                          <div className="mt-2 p-2 bg-white border border-gray-200 rounded-lg">
+                            <ForecastChart data={message.data} />
+                          </div>
+                        ) : (
+                          renderDataTable(message.data)
+                        );
+                      })()}
+                    </>
+                  )}
                   <p className="text-xs opacity-70 mt-1">
                     {message.timestamp.toLocaleTimeString()}
                   </p>
@@ -318,9 +473,14 @@ const ChatAI = ({ onClose }: ChatAIProps) => {
           </button>
         </div>
         {!isConnected && (
-          <p className="text-xs text-red-500 mt-2">
-            Connection lost. Trying to reconnect...
-          </p>
+          <div className="mt-2">
+            <p className="text-xs text-red-500">
+              Connection lost. Trying to reconnect...
+            </p>
+            <p className="text-xs text-gray-400 mt-1">
+              Endpoint: wss://tribu.dev.instanvi.com/livra/
+            </p>
+          </div>
         )}
       </div>
     </div>
