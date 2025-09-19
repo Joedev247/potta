@@ -671,7 +671,7 @@ const ARMainDashboard: React.FC<ARMainDashboardProps> = ({ type = 'ar' }) => {
 
       {/* No Data Message - Show when no data for selected range */}
       {collectionData.totalInvoices === 0 && (
-        <div className="bg-white p-8 shadow-sm text-center">
+        <div className="bg-white p-8  text-center">
           <div className="max-w-md mx-auto">
             <div className="w-16 h-16 mx-auto mb-4 bg-gray-100 rounded-full flex items-center justify-center">
               <svg

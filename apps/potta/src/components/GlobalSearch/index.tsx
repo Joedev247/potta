@@ -1072,7 +1072,7 @@ const GlobalSearch: React.FC<GlobalSearchProps> = ({ onClose }) => {
                             onClose?.();
                           }
                         }}
-                        className="flex items-center gap-3 p-3 cursor-pointer hover:bg-gray-50 transition-colors rounded-lg"
+                        className="flex items-center gap-3 p-3 cursor-pointer hover:bg-gray-50 transition-colors"
                       >
                         <div className="flex-1">
                           <p className="text-sm font-medium text-gray-900">
@@ -1095,43 +1095,6 @@ const GlobalSearch: React.FC<GlobalSearchProps> = ({ onClose }) => {
                 {/* Collapsible Sections */}
                 <div className="space-y-3">
                   {/* Items Section */}
-                  <div>
-                    <button
-                      onClick={() => toggleSection('items')}
-                      className="flex items-center gap-2 w-full text-left text-sm font-medium text-gray-900 hover:text-green-600"
-                    >
-                      {expandedSections.items ? (
-                        <ChevronDown size={16} />
-                      ) : (
-                        <ChevronRight size={16} />
-                      )}
-                      Items
-                    </button>
-                    <div
-                      className={`mt-2 ml-6 space-y-2 transition-all duration-300 ease-in-out overflow-hidden ${
-                        expandedSections.items
-                          ? 'max-h-96 opacity-100 translate-y-0'
-                          : 'max-h-0 opacity-0 -translate-y-2'
-                      }`}
-                    >
-                      {filterOptions.items.map((item) => (
-                        <Checkbox
-                          key={item}
-                          id={item}
-                          label={item}
-                          checked={selectedFilterTags.includes(item)}
-                          onChange={(checked) => {
-                            if (checked) {
-                              handleFilterTagSelect(item);
-                            } else {
-                              removeFilterTag(item);
-                            }
-                          }}
-                          className="hover:bg-gray-50 p-1 transition-colors duration-150"
-                        />
-                      ))}
-                    </div>
-                  </div>
 
                   {/* Entities Section */}
                   <div>
@@ -1368,52 +1331,108 @@ const GlobalSearch: React.FC<GlobalSearchProps> = ({ onClose }) => {
                   Organizational Structure
                 </h4>
 
-                {/* Current User Location */}
+                {/* Current User Context */}
                 <div className="bg-green-50 border border-green-200 p-3">
                   <div className="flex items-center gap-2 mb-2">
                     <MapPin size={16} className="text-green-600" />
                     <span className="text-sm font-medium text-green-800">
-                      Your Location
+                      Your Position
                     </span>
                   </div>
                   <div className="text-sm text-green-700">
-                    <div className="font-medium">{getCurrentLocation()}</div>
+                    <div className="font-medium">Chief Executive Officer</div>
                     <div className="text-xs text-green-600">
-                      Senior Developer
+                      Executive • Instanvi Headquarters • Core Technology
                     </div>
                   </div>
                 </div>
 
-                {/* Mini Tree Structure Preview */}
-                <div className="space-y-3">
-                  <label className="text-xs font-medium text-gray-700 mb-2 block">
-                    Organizational Chart Preview
-                  </label>
-                  <MiniOrganigramCanvas />
+               
 
-                  {/* Quick Actions */}
-                  <div className="space-y-2">
-                    <label className="text-xs font-medium text-gray-700 mb-2 block">
-                      Quick Actions
-                    </label>
-                    <div className="grid grid-cols-2 gap-2">
-                      <button
-                        onClick={() =>
-                          handleOrganigramAction('view-full-chart')
-                        }
-                        className="text-xs bg-transparent hover:bg-green-50 text-green-700 px-2 py-1 border border-green-300 hover:border-green-400 transition-colors"
-                      >
-                        View Full Chart
-                      </button>
-                      <button
-                        onClick={() => handleOrganigramAction('my-team')}
-                        className="text-xs bg-transparent hover:bg-blue-50 text-blue-700 px-2 py-1 border border-blue-300 hover:border-blue-400 transition-colors"
-                      >
-                        My Team
-                      </button>
-                    </div>
-                  </div>
+                {/* Location Filter Select - Based on User's Context */}
+                <div>
+                  <Select
+                    options={[
+                      { value: 'All Locations', label: 'All Locations' },
+                      {
+                        value: '28478236-01de-4e61-a65f-ee229bf4722c',
+                        label: 'Instanvi Headquarters',
+                      },
+                      { value: 'Other Locations', label: 'Other Locations' },
+                    ]}
+                    selectedValue={locationValue}
+                    onChange={setLocationValue}
+                    bg=""
+                    label="Filter by Location"
+                    labelClass="text-xs font-medium text-gray-700 mb-2 block"
+                  />
                 </div>
+
+                {/* Business Unit Filter Select - Based on User's Context */}
+                {/* <div>
+                  <Select
+                    options={[
+                      {
+                        value: 'All Business Units',
+                        label: 'All Business Units',
+                      },
+                      {
+                        value: '668d7c18-2cd6-4c22-afa7-7784ec8c9c38',
+                        label: 'Core Technology',
+                      },
+                      {
+                        value: 'Other Business Units',
+                        label: 'Other Business Units',
+                      },
+                    ]}
+                    selectedValue={departmentValue}
+                    onChange={setDepartmentValue}
+                    bg=""
+                    label="Filter by Business Unit"
+                    labelClass="text-xs font-medium text-gray-700 mb-2 block"
+                  />
+                </div> */}
+
+                {/* Department Filter Select - Based on User's Context */}
+                <div>
+                  <Select
+                    options={[
+                      { value: 'All Departments', label: 'All Departments' },
+                      {
+                        value: '01f6cc6f-e53d-4a55-9064-83bdc5fc0c30',
+                        label: 'Executive',
+                      },
+                      {
+                        value: 'Other Departments',
+                        label: 'Other Departments',
+                      },
+                    ]}
+                    selectedValue={departmentValue}
+                    onChange={setDepartmentValue}
+                    bg=""
+                    label="Filter by Department"
+                    labelClass="text-xs font-medium text-gray-700 mb-2 block"
+                  />
+                </div>
+
+                {/* Geographical Unit Filter Select - Based on User's Context */}
+                {/* <div>
+                  <Select
+                    options={[
+                      { value: 'All Regions', label: 'All Regions' },
+                      {
+                        value: '8e95092d-d2c1-4e00-9956-9cf91ccafaa4',
+                        label: 'Littoral Region',
+                      },
+                      { value: 'Other Regions', label: 'Other Regions' },
+                    ]}
+                    selectedValue={departmentValue}
+                    onChange={setDepartmentValue}
+                    bg=""
+                    label="Filter by Region"
+                    labelClass="text-xs font-medium text-gray-700 mb-2 block"
+                  />
+                </div> */}
               </div>
             )}
           </div>
