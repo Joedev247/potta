@@ -342,7 +342,7 @@ export const reportCategories = [
         label: 'Expense Overview',
         chartKey: 'expense_overview',
         factName: 'opex',
-        metrics: ['opex_amount'],
+        metrics: ['total_opex_amount'],
         dimensions: ['time'],
       },
       {
@@ -436,7 +436,7 @@ export const reportCategories = [
         label: 'Operating Expenses',
         chartKey: 'opex_overview',
         factName: 'opex',
-        metrics: ['opex_amount'],
+        metrics: ['total_opex_amount'],
         dimensions: ['time'],
       },
       {

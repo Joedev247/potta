@@ -85,7 +85,7 @@ const ExpensesDashboard: React.FC<ExpensesDashboardProps> = ({
       const opexData = await pottaAnalyticsService.finance.getAnalytics(
         'opex',
         {
-          metrics: ['opex_amount'],
+          metrics: ['total_opex_amount'],
           dimensions: ['time'],
           time_granularity: timeGranularity,
           use_mock_data: true,
@@ -213,7 +213,7 @@ const ExpensesDashboard: React.FC<ExpensesDashboardProps> = ({
         });
 
         const paymentsData = opexData.data.map(
-          (item: any) => item.opex_amount || 0
+          (item: any) => item.total_opex_amount || 0
         );
 
         setExpensesPaymentsData({
@@ -706,7 +706,7 @@ const ExpensesDashboard: React.FC<ExpensesDashboardProps> = ({
               <div className="text-gray-600 mb-4">{error}</div>
               <button
                 onClick={fetchExpensesData}
-                className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors"
+                className="px-4 py-2 bg-green-600 text-white hover:bg-green-700 transition-colors"
               >
                 Retry
               </button>

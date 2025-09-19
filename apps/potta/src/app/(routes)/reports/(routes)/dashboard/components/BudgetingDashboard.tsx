@@ -225,7 +225,7 @@ const BudgetingDashboard: React.FC<BudgetingDashboardProps> = ({
       const opexData = await pottaAnalyticsService.finance.getAnalytics(
         'opex',
         {
-          metrics: ['opex_amount'],
+          metrics: ['total_opex_amount'],
           dimensions: ['time'],
           time_granularity: timeGranularity,
           use_mock_data: true,
@@ -328,9 +328,10 @@ const BudgetingDashboard: React.FC<BudgetingDashboardProps> = ({
 
       if (opexData.data && opexData.data.length > 0) {
         const currentOpex =
-          opexData.data[opexData.data.length - 1]?.opex_amount || 0;
+          opexData.data[opexData.data.length - 1]?.total_opex_amount || 0;
         const previousOpex =
-          opexData.data[opexData.data.length - 2]?.opex_amount || currentOpex;
+          opexData.data[opexData.data.length - 2]?.total_opex_amount ||
+          currentOpex;
         const opexGrowth =
           previousOpex > 0
             ? ((currentOpex - previousOpex) / previousOpex) * 100

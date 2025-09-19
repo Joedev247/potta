@@ -35,9 +35,6 @@ export const metadata: Metadata = {
   },
 };
 
-// Disable SSR for the entire app to prevent window is not defined errors
-export const dynamic = 'force-dynamic';
-
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -51,7 +48,7 @@ export default function RootLayout({
         <DataProvider>
           <AuthProvider>
             <TanstackQueryClientProvider>
-              <HeroUIProvider>
+            <HeroUIProvider>
                 <Toaster position="top-center" />
                 <AuthGuard>
                   <UserDataLoader>{children}</UserDataLoader>

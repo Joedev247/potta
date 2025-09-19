@@ -12,6 +12,7 @@ import VouchersBox from '../../account_receivables/vouchers/components/boxVouche
 import InvoiceBox from './boxes/InvoiceBox';
 import VendorsBox from './boxes/PosVendorsBox';
 import AppLauncher from '../../../../components/AppLauncher';
+import GlobalSearch from '../../../../components/GlobalSearch';
 
 const urlRouters = [
   {
@@ -389,12 +390,18 @@ export default function Navbar({
         pathname.includes('reports') ? 'border-b border-gray-300' : ''
       } ${bgColorClass}  space-y-10`}
     >
-      <div className={`flex justify-between ${bgColorClass}`}>
-        <div className={`flex  ml-16 items-start gap-20 py-4`}>
+      <div className={`flex justify-between items-center ${bgColorClass}`}>
+        <div className={`flex ml-16 items-center gap-20 py-4`}>
           <h1 className="font-medium text-3xl text-start capitalize">
             {getTitle()}
           </h1>
         </div>
+
+        {/* Global Search - Centered */}
+        <div className="flex-1 max-w-2xl mx-8">
+          <GlobalSearch />
+        </div>
+
         <div className="flex items-center gap-4 px-4">
           {/* Inbox Icon */}
           <button className="p-2 rounded-full transition-colors">

@@ -343,7 +343,7 @@ class FinanceAnalyticsService extends BaseAnalyticsService {
       | 'yearly' = 'monthly'
   ) {
     return this.getAnalytics('opex', {
-      metrics: ['opex_amount'],
+      metrics: ['total_opex_amount'],
       dimensions: ['time'],
       time_granularity: timeGranularity,
       use_mock_data: true,

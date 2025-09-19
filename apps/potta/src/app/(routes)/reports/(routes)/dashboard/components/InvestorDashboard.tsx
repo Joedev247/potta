@@ -204,7 +204,7 @@ const InvestorDashboard: React.FC<InvestorDashboardProps> = ({
       const opexData = await pottaAnalyticsService.finance.getAnalytics(
         'opex',
         {
-          metrics: ['opex_amount'],
+          metrics: ['total_opex_amount'],
           dimensions: ['time'],
           time_granularity: timeGranularity,
           use_mock_data: true,
@@ -379,7 +379,7 @@ const InvestorDashboard: React.FC<InvestorDashboardProps> = ({
         const currentCash =
           cashData.data?.[cashData.data.length - 1]?.cumulative_balance || 0;
         const currentOpex =
-          opexData.data?.[opexData.data.length - 1]?.opex_amount || 0;
+          opexData.data?.[opexData.data.length - 1]?.total_opex_amount || 0;
         const monthlyBurn = currentOpex;
         const runway =
           monthlyBurn > 0 ? Math.floor(currentCash / monthlyBurn) : 0;
@@ -411,7 +411,8 @@ const InvestorDashboard: React.FC<InvestorDashboardProps> = ({
           cashData.data?.[cashData.data.length - 2]?.cumulative_balance ||
           currentCash;
         const previousOpex =
-          opexData.data?.[opexData.data.length - 2]?.opex_amount || currentOpex;
+          opexData.data?.[opexData.data.length - 2]?.total_opex_amount ||
+          currentOpex;
         const previousMonthlyBurn = previousOpex;
         const previousRunway =
           previousMonthlyBurn > 0

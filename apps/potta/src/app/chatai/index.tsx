@@ -50,7 +50,7 @@ const ChatAI = ({ onClose }: ChatAIProps) => {
   const inputRef = useRef<HTMLInputElement>(null);
 
   // Get auth token from cookies and user session from whoami
-  const userAuthToken = '5SikMLhQVVpHUYkO3kfWXeYfCiJWD6Rp';
+  const userAuthToken = 'G6h4Vt7h1O5oMD1gXhOrrQwK0J31iaa0';
 
   // Use real user data from AuthContext (whoami API) - this contains the actual whoami response
   const realUserSession =

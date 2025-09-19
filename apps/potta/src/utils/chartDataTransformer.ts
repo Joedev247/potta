@@ -113,7 +113,7 @@ export class ChartDataTransformer {
    * Transform expense data specifically
    */
   static transformExpenseData(apiResponse: AnalyticsResponse) {
-    return this.transformTimeSeriesData(apiResponse, 'opex_amount');
+    return this.transformTimeSeriesData(apiResponse, 'total_opex_amount');
   }
 
   /**
@@ -397,7 +397,7 @@ export class ChartDataTransformer {
       order_count: 'Order Count',
       product_count: 'Product Count',
       payment_amount: 'Payment Amount',
-      opex_amount: 'Operating Expenses',
+      total_opex_amount: 'Operating Expenses',
       total_cost: 'Total Cost',
       net_cash_movement: 'Net Cash Movement',
       net_income_after_tax: 'Net Income After Tax',

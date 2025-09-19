@@ -55,7 +55,7 @@ const AppLauncher: React.FC = () => {
       icon: AppLauncherIcons.accounting,
     },
     {
-      value: 'reports',
+      value: 'reports/dashboard',
       label: 'FP & A',
       icon: AppLauncherIcons.reports,
     },

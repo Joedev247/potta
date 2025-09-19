@@ -438,3 +438,16 @@ html {
 .css-dip3t8 {
   background-color: #fff !important;
 }
+
+/* Hide scrollbar utility */
+.scrollbar-hide {
+  /* IE and Edge */
+  -ms-overflow-style: none;
+  /* Firefox */
+  scrollbar-width: none;
+  /* Safari and Chrome */
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
