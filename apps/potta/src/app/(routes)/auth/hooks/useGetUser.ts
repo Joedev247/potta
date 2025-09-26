@@ -262,6 +262,19 @@ const useGetUser = () => {
               logo: 'https://instanvi.com/logo.png',
             },
           },
+          hierarchy: {
+            location: {
+              id: 'dev-location-id',
+              city: 'Douala',
+              state: 'Littoral',
+              country: 'Cameroon',
+              address: 'Quartre-etage, bonaberi, Douala',
+            },
+            department: {
+              id: 'dev-department-id',
+              name: 'Development',
+            },
+          },
           members: [],
         },
       };
@@ -273,6 +286,7 @@ const useGetUser = () => {
           ...dummyCompanyInfo,
         };
         console.log('Updated context with dummy user data:', newData);
+        console.log('Hierarchy in context:', newData.fullUserData?.hierarchy);
         return newData;
       });
 
@@ -333,7 +347,33 @@ const useGetUser = () => {
           })) || [],
 
         // Full user data for advanced usage
-        fullUserData: userData.user,
+        fullUserData: {
+          ...userData.user,
+          // Add location information if available
+          hierarchy: userData.user.hierarchy || {
+            location: {
+              id:
+                (userData.user as any).locationContext?.locationId ||
+                'default-location-id',
+              city:
+                (userData.user as any).locationContext?.locationName ||
+                'Default City',
+              state: 'Default State',
+              country: 'Default Country',
+              address:
+                (userData.user as any).locationContext?.locationName ||
+                'Default Address',
+            },
+            department: {
+              id:
+                (userData.user as any).locationContext?.departmentId ||
+                'default-department-id',
+              name:
+                (userData.user as any).locationContext?.departmentName ||
+                'Default Department',
+            },
+          },
+        },
       };
 
       // Update context with user/company information
@@ -343,6 +383,7 @@ const useGetUser = () => {
           ...companyInfo,
         };
         console.log('Updated context with user data:', newData);
+        console.log('Hierarchy in context:', newData.fullUserData?.hierarchy);
         return newData;
       });
 
@@ -350,6 +391,9 @@ const useGetUser = () => {
       hasUpdatedContext.current = true;
     }
   }, [data, devMode, isBypassRoute, isOrganigramPage]); // Remove context from dependencies to prevent infinite loop
+
+  console.log('Context:', context?.data);
+  console.log('Hierarchy in context:', context?.data?.fullUserData?.hierarchy);
 
   return {
     data:

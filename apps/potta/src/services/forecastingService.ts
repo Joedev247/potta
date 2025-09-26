@@ -3,18 +3,18 @@ import analyticsAxios from '../config/analytics.config';
 // Types for Forecasting API
 export interface BaselineRunRequest {
   metric: string;
-  organization_id: string;
-  location_id?: string;
   entity_type: 'location' | 'organization';
+  entity_id: string;
+  include_children: boolean;
   horizon_months: number;
 }
 
 export interface BaselineRunResponse {
   baseline_id: string;
   metric: string;
-  organization_id: string;
-  location_id?: string;
   entity_type: 'location' | 'organization';
+  entity_id: string;
+  include_children: boolean;
   horizon_months: number;
   method_meta: Record<string, any>;
   forecast: Record<string, any>[];
@@ -25,8 +25,9 @@ export interface Scenario {
   name: string;
   start_date: string;
   end_date: string;
-  organization_id: string;
-  location_id?: string;
+  entity_type: 'location' | 'organization';
+  entity_id: string;
+  include_children: boolean;
   notes: string;
   created_ts: string;
   adjustments: Adjustment[];
@@ -35,8 +36,9 @@ export interface Scenario {
 export interface Adjustment {
   driver_id: string;
   target_metric: string;
-  organization_id: string;
-  location_id?: string;
+  entity_type: 'location' | 'organization';
+  entity_id: string;
+  include_children: boolean;
   rule_type: string;
   value_expr: string;
   priority: number;
@@ -46,25 +48,27 @@ export interface CreateScenarioRequest {
   name: string;
   start_date: string;
   end_date: string;
-  organization_id: string;
-  location_id?: string;
+  entity_type: 'location' | 'organization';
+  entity_id: string;
+  include_children: boolean;
   notes: string;
 }
 
 export interface CreateAdjustmentRequest {
   target_metric: string;
-  organization_id: string;
-  location_id?: string;
+  entity_type: 'location' | 'organization';
+  entity_id: string;
+  include_children: boolean;
   rule_type: string;
   value_expr: string;
   priority: number;
 }
 
 export interface LaunchForecastRequest {
-  organization_id: string;
-  location_id?: string;
-  scenario_id?: string;
   entity_type: 'location' | 'organization';
+  entity_id: string;
+  include_children: boolean;
+  scenario_id?: string;
   metric: string;
   horizon_months: number;
 }
@@ -95,14 +99,16 @@ class ForecastingService {
 
   // Scenarios
   async getScenarios(
-    organizationId: string,
-    locationId?: string
+    entityType: 'location' | 'organization',
+    entityId: string,
+    includeChildren: boolean = false
   ): Promise<ScenariosResponse> {
     try {
-      const params: any = { organization_id: organizationId };
-      if (locationId) {
-        params.location_id = locationId;
-      }
+      const params: any = {
+        entity_type: entityType,
+        entity_id: entityId,
+        include_children: includeChildren,
+      };
 
       const response = await analyticsAxios.get(`${this.basePath}/scenarios`, {
         params,
@@ -129,13 +135,19 @@ class ForecastingService {
 
   async getScenario(
     scenarioId: string,
-    organizationId: string
+    entityType: 'location' | 'organization',
+    entityId: string,
+    includeChildren: boolean = false
   ): Promise<Scenario> {
     try {
       const response = await analyticsAxios.get(
         `${this.basePath}/scenarios/${scenarioId}`,
         {
-          params: { organization_id: organizationId },
+          params: {
+            entity_type: entityType,
+            entity_id: entityId,
+            include_children: includeChildren,
+          },
         }
       );
       return response.data;
@@ -163,13 +175,19 @@ class ForecastingService {
 
   async deleteScenario(
     scenarioId: string,
-    organizationId: string
+    entityType: 'location' | 'organization',
+    entityId: string,
+    includeChildren: boolean = false
   ): Promise<any> {
     try {
       const response = await analyticsAxios.delete(
         `${this.basePath}/scenarios/${scenarioId}`,
         {
-          params: { organization_id: organizationId },
+          params: {
+            entity_type: entityType,
+            entity_id: entityId,
+            include_children: includeChildren,
+          },
         }
       );
       return response.data;
@@ -198,12 +216,20 @@ class ForecastingService {
 
   async deleteAdjustment(
     driverId: string,
-    organizationId: string
+    entityType: 'location' | 'organization',
+    entityId: string,
+    includeChildren: boolean = false
   ): Promise<any> {
     try {
       const response = await analyticsAxios.delete(
         `${this.basePath}/scenarios/adjustments/${driverId}`,
-        { params: { organization_id: organizationId } }
+        {
+          params: {
+            entity_type: entityType,
+            entity_id: entityId,
+            include_children: includeChildren,
+          },
+        }
       );
       return response.data;
     } catch (error) {
@@ -246,14 +272,17 @@ class ForecastingService {
 
   // Helper methods for common use cases
   async getCashFlowForecast(
-    organizationId: string,
+    entityType: 'location' | 'organization',
+    entityId: string,
+    includeChildren: boolean = false,
     scenarioId?: string,
     horizonMonths: number = 18
   ): Promise<any> {
     try {
       const request: LaunchForecastRequest = {
-        organization_id: organizationId,
-        entity_type: 'organization',
+        entity_type: entityType,
+        entity_id: entityId,
+        include_children: includeChildren,
         metric: this.metricMapping.fcf, // Free Cash Flow from schema
         horizon_months: horizonMonths,
         ...(scenarioId && scenarioId !== 'main' && { scenario_id: scenarioId }),
@@ -267,14 +296,17 @@ class ForecastingService {
   }
 
   async getRevenueBaseline(
-    organizationId: string,
+    entityType: 'location' | 'organization',
+    entityId: string,
+    includeChildren: boolean = false,
     horizonMonths: number = 18
   ): Promise<BaselineRunResponse> {
     try {
       const request: BaselineRunRequest = {
         metric: this.metricMapping.revenue,
-        organization_id: organizationId,
-        entity_type: 'organization',
+        entity_type: entityType,
+        entity_id: entityId,
+        include_children: includeChildren,
         horizon_months: horizonMonths,
       };
 
@@ -287,15 +319,18 @@ class ForecastingService {
 
   // Helper method to get forecast for specific metrics
   async getMetricForecast(
-    organizationId: string,
+    entityType: 'location' | 'organization',
+    entityId: string,
+    includeChildren: boolean = false,
     metric: keyof typeof this.metricMapping,
     scenarioId?: string,
     horizonMonths: number = 18
   ): Promise<any> {
     try {
       const request: LaunchForecastRequest = {
-        organization_id: organizationId,
-        entity_type: 'organization',
+        entity_type: entityType,
+        entity_id: entityId,
+        include_children: includeChildren,
         metric: this.metricMapping[metric],
         horizon_months: horizonMonths,
         ...(scenarioId && scenarioId !== 'main' && { scenario_id: scenarioId }),
@@ -310,15 +345,18 @@ class ForecastingService {
 
   // Helper method to create baseline for specific metrics
   async getMetricBaseline(
-    organizationId: string,
+    entityType: 'location' | 'organization',
+    entityId: string,
+    includeChildren: boolean = false,
     metric: keyof typeof this.metricMapping,
     horizonMonths: number = 18
   ): Promise<BaselineRunResponse> {
     try {
       const request: BaselineRunRequest = {
         metric: this.metricMapping[metric],
-        organization_id: organizationId,
-        entity_type: 'organization',
+        entity_type: entityType,
+        entity_id: entityId,
+        include_children: includeChildren,
         horizon_months: horizonMonths,
       };
 
@@ -331,7 +369,9 @@ class ForecastingService {
 
   // Get comprehensive cash flow forecast with multiple metrics
   async getComprehensiveCashFlowForecast(
-    organizationId: string,
+    entityType: 'location' | 'organization',
+    entityId: string,
+    includeChildren: boolean = false,
     scenarioId?: string,
     horizonMonths: number = 18
   ): Promise<any> {
@@ -339,8 +379,9 @@ class ForecastingService {
       if (scenarioId && scenarioId !== 'main') {
         // For custom scenarios, use launch forecast
         const launchRequest: LaunchForecastRequest = {
-          organization_id: organizationId,
-          entity_type: 'organization',
+          entity_type: entityType,
+          entity_id: entityId,
+          include_children: includeChildren,
           metric: this.metricMapping.fcf,
           horizon_months: horizonMonths,
           scenario_id: scenarioId,
@@ -352,8 +393,9 @@ class ForecastingService {
         // For main scenario, use baseline run
         const baselineRequest: BaselineRunRequest = {
           metric: this.metricMapping.fcf,
-          organization_id: organizationId,
-          entity_type: 'organization',
+          entity_type: entityType,
+          entity_id: entityId,
+          include_children: includeChildren,
           horizon_months: horizonMonths,
         };
 
@@ -374,16 +416,6 @@ class ForecastingService {
   // Get available metrics
   getAvailableMetrics(): string[] {
     return Object.keys(this.metricMapping);
-  }
-
-  // Delete scenario
-  async deleteScenario(scenarioId: string): Promise<void> {
-    try {
-      await analyticsAxios.delete(`${this.basePath}/scenarios/${scenarioId}`);
-    } catch (error) {
-      console.error('Error deleting scenario:', error);
-      throw error;
-    }
   }
 }
 

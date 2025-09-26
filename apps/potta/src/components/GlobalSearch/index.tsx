@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useContext } from 'react';
 import {
   Search,
   X,
@@ -18,12 +18,12 @@ import {
   ChevronDown,
   ChevronRight,
   Calendar as CalendarIcon,
+  Loader2,
 } from 'lucide-react';
 import Input from '../input';
 import Checkbox from '../checkbox';
 import Select from '../select';
 import SearchableSelect from '../searchableSelect';
-// import DateRangePickerComponent from '../daterangePicker';
 import { DateRange } from 'react-day-picker';
 import {
   Popover,
@@ -45,6 +45,8 @@ import ReactFlow, {
 import 'reactflow/dist/style.css';
 import Button from '../button';
 import { FaSliders } from 'react-icons/fa6';
+import { useGlobalSearch } from '../../hooks/useGlobalSearch';
+import { ContextData } from '../context';
 
 // Mini Canvas Component for Organigram Preview
 const MiniOrganigramCanvas = () => {
@@ -459,7 +461,7 @@ interface GlobalSearchProps {
 }
 
 const GlobalSearch: React.FC<GlobalSearchProps> = ({ onClose }) => {
-  const [searchQuery, setSearchQuery] = useState('');
+  const context = useContext(ContextData);
   const [isOpen, setIsOpen] = useState(false);
   const [showFilters, setShowFilters] = useState(false);
   const [activeTab, setActiveTab] = useState<
@@ -476,19 +478,44 @@ const GlobalSearch: React.FC<GlobalSearchProps> = ({ onClose }) => {
     itemTypes: false,
     transactionType: false,
   });
-  const [selectedFilters, setSelectedFilters] = useState<{
-    [key: string]: boolean;
-  }>({});
-  const [dateRange, setDateRange] = useState<DateRange | undefined>();
   const [isDatePopoverOpen, setIsDatePopoverOpen] = useState(false);
   const [quickSelectValue, setQuickSelectValue] = useState('Last 7 days');
   const [departmentValue, setDepartmentValue] = useState('All Departments');
   const [locationValue, setLocationValue] = useState('All Locations');
   const [selectedItem, setSelectedItem] = useState<any>(null);
-  const [selectedFilterTags, setSelectedFilterTags] = useState<string[]>([]);
   const [selectedDateTag, setSelectedDateTag] = useState<string | null>(null);
   const searchRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+
+  // Use the global search hook
+  const {
+    searchQuery,
+    setSearchQuery,
+    isSearching,
+    searchResults,
+    suggestions,
+    isSuggestionsLoading,
+    filters,
+    updateFilter,
+    selectedFilterTags,
+    setSelectedFilterTags,
+    performSearch,
+    clearSearch,
+    applyFilters,
+    clearFilters,
+    hasMorePages,
+    loadMoreResults,
+  } = useGlobalSearch({
+    orgId: context?.data?.organizationId || 'default-org-id',
+    locationContextId:
+      context?.data?.fullUserData?.hierarchy?.location?.id ||
+      context?.data?.organizationId,
+  });
+
+  // Local state for UI interactions
+  const [dateRange, setDateRange] = useState<DateRange | undefined>(
+    filters.dateRange
+  );
 
   // Filter options data - extracted from business requirements
   const filterOptions = {
@@ -588,33 +615,6 @@ const GlobalSearch: React.FC<GlobalSearchProps> = ({ onClose }) => {
     }));
   };
 
-  const toggleFilter = (filterKey: string) => {
-    setSelectedFilters((prev) => ({
-      ...prev,
-      [filterKey]: !prev[filterKey],
-    }));
-  };
-
-  const handleFilterTagSelect = (filterKey: string) => {
-    setSelectedFilterTags((prev) => {
-      if (prev.includes(filterKey)) {
-        // Remove if already selected
-        return prev.filter((tag) => tag !== filterKey);
-      } else {
-        // Add if not selected
-        return [...prev, filterKey];
-      }
-    });
-  };
-
-  const removeFilterTag = (filterKey: string) => {
-    setSelectedFilterTags((prev) => prev.filter((tag) => tag !== filterKey));
-  };
-
-  const handleDateTagSelect = (dateText: string) => {
-    setSelectedDateTag(dateText);
-  };
-
   const removeDateTag = () => {
     setSelectedDateTag(null);
     setDateRange(undefined);
@@ -650,80 +650,46 @@ const GlobalSearch: React.FC<GlobalSearchProps> = ({ onClose }) => {
   // Get current location from pathname or context
 
   const getCurrentLocation = () => {
-    if (typeof window !== 'undefined') {
-      const pathname = window.location.pathname;
-      const pathParts = pathname.split('/').filter(Boolean);
-
-      if (pathParts.length === 0) return 'Douala';
-      if (pathParts.length === 1) {
-        const mainRoute = pathParts[0];
-        switch (mainRoute) {
-          case 'account_payables':
-            return 'Douala';
-          case 'account_receivables':
-            return 'Douala';
-          case 'payroll':
-            return 'Douala';
-          case 'pos':
-            return 'Buea';
-          case 'accounting':
-            return 'Douala';
-          case 'reports':
-            return 'Douala';
-          case 'settings':
-            return 'Douala';
-          case 'organigram':
-            return 'Douala';
-          default:
-            return 'Douala';
-        }
-      }
-
-      // For nested routes, show the current page with location context
-      const currentPage = pathParts[pathParts.length - 1];
-      const mainRoute = pathParts[0];
-
-      // Map main routes to their city locations
-      const routeLocationMap: { [key: string]: string } = {
-        account_payables: 'Douala',
-        account_receivables: 'Douala',
-        payroll: 'Douala',
-        pos: 'Buea',
-        accounting: 'Douala',
-        reports: 'Douala',
-        settings: 'Douala',
-        organigram: 'Douala',
-      };
-
-      const baseLocation = routeLocationMap[mainRoute] || 'Douala';
-      return baseLocation;
+    // Get location from session data and capitalize it
+    // Only use hierarchy.location.city (no fallback extraction)
+    if (context?.data?.fullUserData?.hierarchy?.location?.city) {
+      return context.data.fullUserData.hierarchy.location.city
+        .split(' ')
+        .map(
+          (word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
+        )
+        .join(' ');
     }
-    return 'Douala';
+
+    // No fallback - return null if hierarchy data is not available
+    return null;
+  };
+  
+  // Transform API results to match component expectations
+  const getFilteredData = () => {
+    if (!searchResults?.results) {
+      return {
+        recommendations: [],
+        recent: [],
+        suggestions: [],
+        quickActions: dummySearchData.quickActions,
+      };
+    }
+
+    const results = searchResults.results;
+    return {
+      recommendations: results.filter((item) => item.priority === 'high'),
+      recent: results.filter(
+        (item) => item.type === 'invoice' || item.type === 'customer'
+      ),
+      suggestions: results.filter(
+        (item) => item.type === 'report' || item.type === 'budget'
+      ),
+      quickActions: dummySearchData.quickActions,
+    };
   };
 
-  // Filter data based on search query
-  const filteredData = {
-    recommendations: dummySearchData.recommendations.filter(
-      (item) =>
-        item.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        item.subtitle.toLowerCase().includes(searchQuery.toLowerCase())
-    ),
-    recent: dummySearchData.recent.filter(
-      (item) =>
-        item.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        item.subtitle.toLowerCase().includes(searchQuery.toLowerCase())
-    ),
-    suggestions: dummySearchData.suggestions.filter(
-      (item) =>
-        item.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        item.subtitle.toLowerCase().includes(searchQuery.toLowerCase())
-    ),
-    quickActions: dummySearchData.quickActions.filter(
-      (item) =>
-        item.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        item.subtitle.toLowerCase().includes(searchQuery.toLowerCase())
-    ),
-  };
+  const filteredData = getFilteredData();
 
   // Get all filtered results for "recommendations" tab
   const allResults = [
@@ -743,14 +709,7 @@ const GlobalSearch: React.FC<GlobalSearchProps> = ({ onClose }) => {
   const handleResultClick = (item: any) => {
     // Set the selected item and append to search bar
     setSelectedItem(item);
-    setSearchQuery((prev) => {
-      // If there's already a selected item, replace it
-      if (selectedItem) {
-        return item.title;
-      }
-      // Otherwise append to existing search
-      return prev ? `${prev} ${item.title}` : item.title;
-    });
+    setSearchQuery(item.title);
     setIsOpen(false);
     onClose?.();
   };
@@ -767,13 +726,65 @@ const GlobalSearch: React.FC<GlobalSearchProps> = ({ onClose }) => {
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === 'Escape') {
       setIsOpen(false);
-      setSearchQuery('');
+      clearSearch();
       setSelectedItem(null);
       setSelectedFilterTags([]);
       setSelectedDateTag(null);
       setDateRange(undefined);
       onClose?.();
     }
+  };
+
+  // Filter handling functions
+  const handleFilterTagSelect = (tag: string) => {
+    if (!selectedFilterTags.includes(tag)) {
+      setSelectedFilterTags([...selectedFilterTags, tag]);
+
+      // Update the corresponding filter in the hook
+      if (filterOptions.entities.includes(tag)) {
+        updateFilter('entities', [...filters.entities, tag]);
+      } else if (filterOptions.itemTypes.includes(tag)) {
+        updateFilter('itemTypes', [...filters.itemTypes, tag]);
+      } else if (filterOptions.transactionType.includes(tag)) {
+        updateFilter('transactionType', [...filters.transactionType, tag]);
+      }
+    }
+  };
+
+  const removeFilterTag = (tag: string) => {
+    setSelectedFilterTags(selectedFilterTags.filter((t) => t !== tag));
+
+    // Update the corresponding filter in the hook
+    if (filterOptions.entities.includes(tag)) {
+      updateFilter(
+        'entities',
+        filters.entities.filter((t) => t !== tag)
+      );
+    } else if (filterOptions.itemTypes.includes(tag)) {
+      updateFilter(
+        'itemTypes',
+        filters.itemTypes.filter((t) => t !== tag)
+      );
+    } else if (filterOptions.transactionType.includes(tag)) {
+      updateFilter(
+        'transactionType',
+        filters.transactionType.filter((t) => t !== tag)
+      );
+    }
+  };
+
+  const handleDateTagSelect = (dateTag: string) => {
+    setSelectedDateTag(dateTag);
+    if (dateRange?.from && dateRange?.to) {
+      updateFilter('dateRange', dateRange);
+    }
+  };
+
+  const handleClearFilters = () => {
+    clearFilters();
+    setSelectedFilterTags([]);
+    setSelectedDateTag(null);
+    setDateRange(undefined);
   };
 
   // Close search when clicking outside
@@ -895,7 +906,11 @@ const GlobalSearch: React.FC<GlobalSearchProps> = ({ onClose }) => {
       {/* Search Input */}
       <div className="relative">
         <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-          <Search className="h-5 w-5 text-gray-400" />
+          {isSearching ? (
+            <Loader2 className="h-5 w-5 text-gray-400 animate-spin" />
+          ) : (
+            <Search className="h-5 w-5 text-gray-400" />
+          )}
         </div>
 
         {/* Location Indicator */}
@@ -1340,99 +1355,69 @@ const GlobalSearch: React.FC<GlobalSearchProps> = ({ onClose }) => {
                     </span>
                   </div>
                   <div className="text-sm text-green-700">
-                    <div className="font-medium">Chief Executive Officer</div>
+                    <div className="font-medium">
+                      {context?.data?.userRole || 'User Role'}
+                    </div>
                     <div className="text-xs text-green-600">
-                      Executive • Instanvi Headquarters • Core Technology
+                      {context?.data?.branchName || 'Department'} •{' '}
+                      {context?.data?.organizationName || 'Organization'} • Core
+                      Technology
                     </div>
                   </div>
                 </div>
 
-               
-
-                {/* Location Filter Select - Based on User's Context */}
+                {/* Entity Type Filter */}
                 <div>
                   <Select
                     options={[
-                      { value: 'All Locations', label: 'All Locations' },
-                      {
-                        value: '28478236-01de-4e61-a65f-ee229bf4722c',
-                        label: 'Instanvi Headquarters',
-                      },
-                      { value: 'Other Locations', label: 'Other Locations' },
+                      { value: 'all', label: 'All Entities' },
+                      { value: 'department', label: 'Departments' },
+                      { value: 'employee', label: 'Employees' },
+                      { value: 'location', label: 'Locations' },
+                      { value: 'business_unit', label: 'Business Units' },
                     ]}
-                    selectedValue={locationValue}
-                    onChange={setLocationValue}
+                    selectedValue={departmentValue}
+                    onChange={setDepartmentValue}
                     bg=""
-                    label="Filter by Location"
+                    label="Entity Type"
                     labelClass="text-xs font-medium text-gray-700 mb-2 block"
                   />
                 </div>
 
-                {/* Business Unit Filter Select - Based on User's Context */}
-                {/* <div>
-                  <Select
-                    options={[
-                      {
-                        value: 'All Business Units',
-                        label: 'All Business Units',
-                      },
-                      {
-                        value: '668d7c18-2cd6-4c22-afa7-7784ec8c9c38',
-                        label: 'Core Technology',
-                      },
-                      {
-                        value: 'Other Business Units',
-                        label: 'Other Business Units',
-                      },
-                    ]}
-                    selectedValue={departmentValue}
-                    onChange={setDepartmentValue}
-                    bg=""
-                    label="Filter by Business Unit"
-                    labelClass="text-xs font-medium text-gray-700 mb-2 block"
-                  />
-                </div> */}
-
-                {/* Department Filter Select - Based on User's Context */}
+                {/* Include Children Filter */}
                 <div>
                   <Select
                     options={[
-                      { value: 'All Departments', label: 'All Departments' },
-                      {
-                        value: '01f6cc6f-e53d-4a55-9064-83bdc5fc0c30',
-                        label: 'Executive',
-                      },
-                      {
-                        value: 'Other Departments',
-                        label: 'Other Departments',
-                      },
+                      { value: 'true', label: 'Include Children' },
+                      { value: 'false', label: 'Current Level Only' },
                     ]}
                     selectedValue={departmentValue}
                     onChange={setDepartmentValue}
                     bg=""
-                    label="Filter by Department"
+                    label="Hierarchy Level"
                     labelClass="text-xs font-medium text-gray-700 mb-2 block"
                   />
                 </div>
 
-                {/* Geographical Unit Filter Select - Based on User's Context */}
-                {/* <div>
+                {/* Entity ID Filter */}
+                <div>
                   <Select
                     options={[
-                      { value: 'All Regions', label: 'All Regions' },
+                      { value: 'current', label: 'Current Position' },
+                      { value: 'department', label: 'Current Department' },
+                      { value: 'location', label: 'Current Location' },
                       {
-                        value: '8e95092d-d2c1-4e00-9956-9cf91ccafaa4',
-                        label: 'Littoral Region',
+                        value: 'business_unit',
+                        label: 'Current Business Unit',
                       },
-                      { value: 'Other Regions', label: 'Other Regions' },
                     ]}
                     selectedValue={departmentValue}
                     onChange={setDepartmentValue}
                     bg=""
-                    label="Filter by Region"
+                    label="Entity ID"
                     labelClass="text-xs font-medium text-gray-700 mb-2 block"
                   />
-                </div> */}
+                </div>
               </div>
             )}
           </div>
@@ -1441,10 +1426,7 @@ const GlobalSearch: React.FC<GlobalSearchProps> = ({ onClose }) => {
           <div className="flex justify-between items-center p-4 pt-3 border-t border-gray-200 bg-gray-50">
             <button
               onClick={() => {
-                setSelectedFilters({});
-                setSelectedFilterTags([]);
-                setSelectedDateTag(null);
-                setDateRange(undefined);
+                handleClearFilters();
                 setExpandedSections({
                   items: false,
                   entities: false,
@@ -1513,7 +1495,13 @@ const GlobalSearch: React.FC<GlobalSearchProps> = ({ onClose }) => {
 
           {/* Results */}
           <div className="max-h-80 overflow-y-auto animate-in fade-in-0 slide-in-from-top-2 duration-300">
-            {searchQuery.length === 0 ? (
+            {isSearching ? (
+              // Show loading state
+              <div className="p-4 text-center text-gray-500">
+                <Loader2 className="h-8 w-8 mx-auto mb-2 text-gray-300 animate-spin" />
+                <p className="text-sm">Searching...</p>
+              </div>
+            ) : searchQuery.length === 0 ? (
               // Show default content when no search query
               <div className="p-4">
                 {activeTab === 'recommendations' && (
@@ -1523,7 +1511,7 @@ const GlobalSearch: React.FC<GlobalSearchProps> = ({ onClose }) => {
                       Recommended for You
                     </h3>
                     <div className="space-y-1">
-                      {dummySearchData.recommendations
+                      {filteredData.recommendations
                         .slice(0, 4)
                         .map(renderSearchResult)}
                     </div>
@@ -1537,9 +1525,7 @@ const GlobalSearch: React.FC<GlobalSearchProps> = ({ onClose }) => {
                       Recent
                     </h3>
                     <div className="space-y-1">
-                      {dummySearchData.recent
-                        .slice(0, 3)
-                        .map(renderSearchResult)}
+                      {filteredData.recent.slice(0, 3).map(renderSearchResult)}
                     </div>
                   </div>
                 )}
@@ -1551,7 +1537,7 @@ const GlobalSearch: React.FC<GlobalSearchProps> = ({ onClose }) => {
                       Suggestions
                     </h3>
                     <div className="space-y-1">
-                      {dummySearchData.suggestions
+                      {filteredData.suggestions
                         .slice(0, 3)
                         .map(renderSearchResult)}
                     </div>
@@ -1563,13 +1549,24 @@ const GlobalSearch: React.FC<GlobalSearchProps> = ({ onClose }) => {
                     Quick Actions
                   </h3>
                   <div className="space-y-1">
-                    {dummySearchData.quickActions.map(renderSearchResult)}
+                    {filteredData.quickActions.map(renderSearchResult)}
                   </div>
                 </div>
               </div>
             ) : getCurrentResults().length > 0 ? (
               <div className="p-2">
                 {getCurrentResults().map(renderSearchResult)}
+                {/* Load More Button */}
+                {hasMorePages && (
+                  <div className="p-2 border-t border-gray-100">
+                    <button
+                      onClick={loadMoreResults}
+                      className="w-full text-sm text-green-600 hover:text-green-700 py-2"
+                    >
+                      Load More Results
+                    </button>
+                  </div>
+                )}
               </div>
             ) : (
               <div className="p-4 text-center text-gray-500">

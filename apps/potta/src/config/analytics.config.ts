@@ -6,8 +6,7 @@ import axios, {
 
 // Potta FP&A Analytics API Configuration
 const ANALYTICS_BASE_URL =
-  process.env.ANALYTICS_BASE_URL ||
-  'https://tribu.dev.instanvi.com/corelytics';
+  process.env.ANALYTICS_BASE_URL || 'https://tribu.dev.instanvi.com/corelytics';
 const ANALYTICS_TIMEOUT = 30000; // 30 seconds
 
 // Create dedicated Axios instance for Analytics API
@@ -23,6 +22,25 @@ const analyticsAxios: AxiosInstance = axios.create({
 // Request interceptor for logging and request modification
 analyticsAxios.interceptors.request.use(
   (config: InternalAxiosRequestConfig) => {
+    // Add authorization header with Bearer token from cookies
+    let token = null;
+
+    // Check cookies for auth_token
+    if (typeof window !== 'undefined') {
+      const cookies = document.cookie.split(';');
+      const authCookie = cookies.find((cookie) =>
+        cookie.trim().startsWith('auth_token=')
+      );
+      if (authCookie) {
+        token = authCookie.split('=')[1];
+      }
+    }
+
+    if (token) {
+      config.headers = config.headers || {};
+      config.headers['Authorization'] = `Bearer ${token}`;
+    }
+
     // Development logging (only in development)
     if (process.env.NODE_ENV === 'development') {
       console.log('ANALYTICS REQUEST:', {

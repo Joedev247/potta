@@ -207,7 +207,7 @@ const Left = () => {
       description: item.name,
       quantity: item.qty,
       discountCap: 0,
-      discountType: 'FlatRate',
+      discountType: 'FLAT_RATE',
       unitPrice: Number(item.price),
       taxRate: item.tax,
       discountRate: 0,
@@ -217,10 +217,12 @@ const Left = () => {
     const billData = {
       vendorId: selectedVendor?.value,
       currency,
-      invoiceType: 'Bill',
+      invoiceType: 'BILL',
       notes: note,
       paymentTerms,
-      paymentMethod: selectedPaymentMethod,
+      paymentMethod: selectedPaymentMethod
+        ? mapPaymentMethodToAPI(selectedPaymentMethod)
+        : undefined,
       issuedDate: date,
       dueDate: date, // You may want a separate due date field
       invoiceNumber,
@@ -258,6 +260,20 @@ const Left = () => {
     'Credit',
     'Other',
   ];
+
+  // Map display payment methods to API enum values
+  const mapPaymentMethodToAPI = (displayMethod: string): string => {
+    const paymentMethodMap: Record<string, string> = {
+      'Credit Card': 'CREDIT_CARD',
+      'Bank Transfer': 'BANK_TRANSFER',
+      'ACH Transfer': 'ACH_TRANSAFER', // Note: API has typo "ACH_TRANSAFER"
+      'Mobile Money': 'MOBILE_MONEY',
+      Cash: 'CASH',
+      Credit: 'CREDIT',
+      Other: 'OTHER',
+    };
+    return paymentMethodMap[displayMethod] || displayMethod;
+  };
 
   return (
     <div className="max-w-5xl min-w-5xl px-2 overflow-y-auto scroll bg-white  ">

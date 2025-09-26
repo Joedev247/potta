@@ -4,22 +4,77 @@ import Input from '@potta/components/input';
 import Slider from '@potta/components/slideover';
 import Select from '@potta/components/select';
 import { useForm, Controller } from 'react-hook-form';
-import { yupResolver } from '@hookform/resolvers/yup';
 import Button from '@potta/components/button';
 import Address from './address';
 import { ContextData } from '@potta/components/context';
-import {
-  UpdateVendorPayload,
-  updateVendorSchema,
-  vendorSchema,
-} from '../utils/validations';
+// import {
+//   UpdateVendorPayload,
+//   updateVendorSchema,
+//   vendorSchema,
+// } from '../utils/validations';
+
+// Define the form data structure (what the user fills in)
+interface VendorFormData {
+  type: 'individual' | 'company';
+  name: string;
+  vendorId: string;
+  paymentTerms?: string | null;
+  accountDetails?: string | null;
+  openingBalance?: number;
+  currency: 'USD' | 'EUR' | 'XAF';
+  contactPerson: string;
+  email: string;
+  phone: string;
+  taxId?: string | null;
+  website?: string | null;
+  classification: 'Supplier' | 'Service Provider';
+  notes?: string | null;
+  address: {
+    address: string;
+    city: string;
+    state?: string;
+    country: string;
+    postalCode?: string;
+    latitude?: number;
+    longitude?: number;
+  };
+  status: 'PENDING' | 'APPROVED' | 'REJECTED' | 'ACTIVE' | 'INACTIVE';
+}
+
+// Define the exact API payload structure (what gets sent to the server)
+interface VendorUpdateApiPayload {
+  type: 'individual' | 'company';
+  name: string;
+  vendorId: string;
+  paymentTerms?: string | null;
+  accountDetails?: string | null;
+  openingBalance?: number;
+  currency: 'USD' | 'EUR' | 'XAF';
+  contactPerson: string;
+  email: string;
+  phone: string;
+  taxId?: string | null;
+  website?: string | null;
+  classification: 'Supplier' | 'Service Provider';
+  notes?: string | null;
+  address: {
+    address: string;
+    city: string;
+    state?: string;
+    country: string;
+    postalCode?: string;
+    latitude?: number;
+    longitude?: number;
+  };
+  status: 'PENDING' | 'APPROVED' | 'REJECTED' | 'ACTIVE' | 'INACTIVE';
+}
 import Notes from './note';
 import Tax from './tax';
 import useUpdateVendor from '../hooks/useUpdateVendor';
 import toast from 'react-hot-toast';
 
 interface EditVendorProps {
-  vendor: UpdateVendorPayload | null; // Existing vendor data
+  vendor: VendorFormData | null; // Existing vendor data
   vendorId: string; // ID of the vendor to be edited
   open?: boolean; // Optional controlled open state
   setOpen?: (open: boolean) => void; // Optional setter from parent
@@ -46,11 +101,12 @@ const EditVendor: React.FC<EditVendorProps> = ({
     control,
     formState: { errors },
     reset,
-  } = useForm<UpdateVendorPayload>({
-    resolver: yupResolver(updateVendorSchema),
+  } = useForm<VendorFormData>({
+    // resolver: yupResolver(updateVendorSchema),
     defaultValues: vendor || {
+      type: 'individual',
       name: '',
-      type: undefined,
+      vendorId: vendorId,
       contactPerson: '',
       email: '',
       phone: '',
@@ -63,17 +119,14 @@ const EditVendor: React.FC<EditVendorProps> = ({
         latitude: 0,
         longitude: 0,
       },
-      taxID: '',
+      taxId: '',
       paymentTerms: '',
-      paymentMethod: '',
       website: '',
       accountDetails: '',
-      currency: undefined,
+      currency: 'USD',
       openingBalance: 0,
-      classification: undefined,
-      industry: undefined,
-      creditLimit: 0,
-      status: undefined,
+      classification: 'Supplier',
+      status: 'PENDING',
       notes: '',
     },
   });
@@ -109,23 +162,38 @@ const EditVendor: React.FC<EditVendorProps> = ({
     { value: 'INACTIVE', label: 'Inactive' },
   ];
 
-  const VendorIndustryEnum = [
-    { value: 'TECHNOLOGY', label: 'Technology' },
-    { value: 'HEALTHCARE', label: 'Healthcare' },
-    { value: 'FINANCE', label: 'Finance' },
-    { value: 'RETAIL', label: 'Retail' },
-    { value: 'MANUFACTURING', label: 'Manufacturing' },
-    { value: 'EDUCATION', label: 'Education' },
-    { value: 'CONSTRUCTION', label: 'Construction' },
-    { value: 'TRANSPORTATION', label: 'Transportation' },
-    { value: 'FOOD_AND_BEVERAGE', label: 'Food & Beverage' },
-    { value: 'OTHER', label: 'Other' },
-  ];
-
   const mutation = useUpdateVendor(vendorId); // Hook for updating vendor
-  const onSubmit = (data: UpdateVendorPayload) => {
-    console.log('Updated Data:', data);
-    mutation.mutate(data, {
+  const onSubmit = (data: VendorFormData) => {
+    // Transform the form data to only include the fields specified in the API
+    const updatePayload: VendorUpdateApiPayload = {
+      type: data.type,
+      name: data.name,
+      vendorId: data.vendorId,
+      paymentTerms: data.paymentTerms || null,
+      accountDetails: data.accountDetails || null,
+      openingBalance: data.openingBalance || undefined,
+      currency: data.currency,
+      contactPerson: data.contactPerson,
+      email: data.email,
+      phone: data.phone,
+      taxId: data.taxId || null,
+      website: data.website || null,
+      classification: data.classification,
+      notes: data.notes || null,
+      address: {
+        address: data.address.address,
+        city: data.address.city,
+        state: data.address.state || undefined,
+        country: data.address.country,
+        postalCode: data.address.postalCode || undefined,
+        latitude: data.address.latitude || undefined,
+        longitude: data.address.longitude || undefined,
+      },
+      status: data.status,
+    };
+
+    console.log('Sending only required fields:', updatePayload);
+    mutation.mutate(updatePayload, {
       onSuccess: () => {
         toast.success('Vendor updated successfully!');
         reset(); // Reset the form after success
@@ -223,32 +291,6 @@ const EditVendor: React.FC<EditVendorProps> = ({
             />
           </div>
         </div>
-        <div className="w-full grid my-5 grid-cols-2 gap-3">
-          <div>
-            <Controller
-              name="industry"
-              control={control}
-              render={({ field }) => (
-                <Select
-                  options={VendorIndustryEnum}
-                  selectedValue={field.value}
-                  onChange={field.onChange}
-                  bg="bg-white"
-                  name="Select Industry"
-                  label="Industry"
-                />
-              )}
-            />
-          </div>
-          <Input
-            type="number"
-            label="Credit Limit"
-            placeholder="0"
-            name="creditLimit"
-            register={register}
-            errors={errors.creditLimit}
-          />
-        </div>
         <hr />
         <h1 className="text-xl mt-2">Contact Information</h1>
         <div className="w-full grid mt-7 grid-cols-2 gap-3">
@@ -327,14 +369,6 @@ const EditVendor: React.FC<EditVendorProps> = ({
             register={register}
             errors={errors?.paymentTerms}
           />
-          <Input
-            label="Payment Method"
-            type="text"
-            name="paymentMethod"
-            placeholder="Enter your payment method"
-            register={register}
-            errors={errors?.paymentMethod}
-          />
         </div>
         <div className="mt-5">
           <div className="flex w-fit bg-green-100 mt-7">
@@ -359,7 +393,7 @@ const EditVendor: React.FC<EditVendorProps> = ({
               <Notes register={register} errors={errors.notes} />
             )}
             {tabs === 'Tax' && (
-              <Tax register={register} errors={errors.taxID} />
+              <Tax register={register} errors={errors.taxId} />
             )}
           </div>
         </div>

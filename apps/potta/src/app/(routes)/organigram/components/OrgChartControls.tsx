@@ -147,24 +147,7 @@ export default function OrgChartControls({
             </select>
           </div>
 
-          {/* Business Unit Filter */}
-          <div className="min-w-[150px]">
-            <select
-              value={selectedFilters.businessUnit}
-              onChange={(e) =>
-                handleFilterChange('businessUnit', e.target.value)
-              }
-              className="w-full px-3 py-2 border border-gray-300 focus:ring-2 focus:ring-[#237804] focus:border-transparent"
-              disabled={loading}
-            >
-              <option value="">All Business Units</option>
-              {subBusinesses.map((business) => (
-                <option key={business.id} value={business.id}>
-                  {business.sub_business_name}
-                </option>
-              ))}
-            </select>
-          </div>
+         
 
           {/* Geographical Unit Filter */}
           <div className="min-w-[150px]">

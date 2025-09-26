@@ -58,7 +58,9 @@ export interface KpiResponse {
 
 export interface KpiCalculationRequest {
   kpi_name: string;
-  organization_id: string;
+  entity_type: 'location' | 'organization';
+  entity_id: string;
+  include_children: boolean;
   time_granularity: 'daily' | 'weekly' | 'monthly' | 'quarterly' | 'yearly';
   start_date?: string;
   end_date?: string;
@@ -101,7 +103,9 @@ export interface AnalyticsOptions {
   time_granularity?: 'daily' | 'weekly' | 'monthly' | 'quarterly' | 'yearly';
   start_date?: string;
   end_date?: string;
-  organization_id?: string;
+  entity_type?: 'location' | 'organization';
+  entity_id?: string;
+  include_children?: boolean;
   account_uuid?: string;
   product_uuid?: string;
   customer_uuid?: string;
@@ -194,8 +198,14 @@ abstract class BaseAnalyticsService {
     if (options.end_date) {
       params.append('end_date', options.end_date);
     }
-    if (options.organization_id) {
-      params.append('organization_id', options.organization_id);
+    if (options.entity_type) {
+      params.append('entity_type', options.entity_type);
+    }
+    if (options.entity_id) {
+      params.append('entity_id', options.entity_id);
+    }
+    if (options.include_children !== undefined) {
+      params.append('include_children', options.include_children.toString());
     }
     if (options.account_uuid) {
       params.append('account_uuid', options.account_uuid);
@@ -286,7 +296,9 @@ class FinanceAnalyticsService extends BaseAnalyticsService {
         | 'monthly'
         | 'quarterly'
         | 'yearly';
-      organization_id?: string;
+      entity_type?: 'location' | 'organization';
+      entity_id?: string;
+      include_children?: boolean;
       start_date?: string;
       end_date?: string;
       dimensions?: string;
@@ -298,8 +310,14 @@ class FinanceAnalyticsService extends BaseAnalyticsService {
     if (options.time_granularity) {
       params.time_granularity = options.time_granularity;
     }
-    if (options.organization_id) {
-      params.organization_id = options.organization_id;
+    if (options.entity_type) {
+      params.entity_type = options.entity_type;
+    }
+    if (options.entity_id) {
+      params.entity_id = options.entity_id;
+    }
+    if (options.include_children !== undefined) {
+      params.include_children = options.include_children;
     }
     if (options.start_date) {
       params.start_date = options.start_date;
@@ -434,7 +452,9 @@ class HumanCapitalAnalyticsService extends BaseAnalyticsService {
         | 'monthly'
         | 'quarterly'
         | 'yearly';
-      organization_id?: string;
+      entity_type?: 'location' | 'organization';
+      entity_id?: string;
+      include_children?: boolean;
       start_date?: string;
       end_date?: string;
       use_mock_data?: boolean;
@@ -445,8 +465,14 @@ class HumanCapitalAnalyticsService extends BaseAnalyticsService {
     if (options.time_granularity) {
       params.time_granularity = options.time_granularity;
     }
-    if (options.organization_id) {
-      params.organization_id = options.organization_id;
+    if (options.entity_type) {
+      params.entity_type = options.entity_type;
+    }
+    if (options.entity_id) {
+      params.entity_id = options.entity_id;
+    }
+    if (options.include_children !== undefined) {
+      params.include_children = options.include_children;
     }
     if (options.start_date) {
       params.start_date = options.start_date;
@@ -562,7 +588,9 @@ class SalesInventoryAnalyticsService extends BaseAnalyticsService {
         | 'monthly'
         | 'quarterly'
         | 'yearly';
-      organization_id?: string;
+      entity_type?: 'location' | 'organization';
+      entity_id?: string;
+      include_children?: boolean;
       start_date?: string;
       end_date?: string;
       dimensions?: string;
@@ -574,8 +602,14 @@ class SalesInventoryAnalyticsService extends BaseAnalyticsService {
     if (options.time_granularity) {
       params.time_granularity = options.time_granularity;
     }
-    if (options.organization_id) {
-      params.organization_id = options.organization_id;
+    if (options.entity_type) {
+      params.entity_type = options.entity_type;
+    }
+    if (options.entity_id) {
+      params.entity_id = options.entity_id;
+    }
+    if (options.include_children !== undefined) {
+      params.include_children = options.include_children;
     }
     if (options.start_date) {
       params.start_date = options.start_date;
@@ -754,7 +788,9 @@ class KpiService {
   async calculateMultipleKpis(
     kpiNames: string[],
     options: {
-      organization_id?: string;
+      entity_type?: 'location' | 'organization';
+      entity_id?: string;
+      include_children?: boolean;
       time_granularity?:
         | 'daily'
         | 'weekly'
@@ -768,8 +804,14 @@ class KpiService {
   ): Promise<KpiCalculationResponse> {
     const params: Record<string, any> = {};
 
-    if (options.organization_id) {
-      params.organization_id = options.organization_id;
+    if (options.entity_type) {
+      params.entity_type = options.entity_type;
+    }
+    if (options.entity_id) {
+      params.entity_id = options.entity_id;
+    }
+    if (options.include_children !== undefined) {
+      params.include_children = options.include_children;
     }
     if (options.time_granularity) {
       params.time_granularity = options.time_granularity;
