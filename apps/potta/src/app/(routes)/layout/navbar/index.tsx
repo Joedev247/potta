@@ -85,6 +85,8 @@ const routesWithoutBox = [
 // Routes that should not have the blue background
 const routesWithoutBlueBackground = [
   { main: 'payroll' }, // Exclude all payroll pages
+  { main: 'pos' },
+  { main: 'files' },
   { main: 'payments' },
   { main: 'organigrammer' },
   { main: 'account_payables' },
@@ -96,7 +98,6 @@ const routesWithoutBlueBackground = [
   { main: 'invoice', sub: 'new' },
   { main: 'account_receivables', sub: 'invoice' },
   { main: 'bank-accounts' },
-  // { main: 'pos' },
   { main: 'pos', sub: 'files' },
   { main: 'pos', sub: 'inventory' },
   { main: 'invoice', sub: 'recurring' },
@@ -265,6 +266,9 @@ export default function Navbar({
   const getTitle = () => {
     if (isHome) {
       return 'Home';
+    }
+    if (str[1] === 'files') {
+      return 'File Manager';
     }
     if (str[1] === 'bank-accounts' && str[2] && str[2].length > 20) {
       return 'Bank Account';

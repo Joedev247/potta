@@ -1,11 +1,12 @@
 'use client';
 import React, { useState, useRef, DragEvent, useContext } from 'react';
-import RootLayout from '../../layout';
 import Filter from './components/filter';
 import CardFile from './components/cardFiles';
 import RecentUpload from './components/recentUpload';
 import Slideover from '@potta/components/slideover';
 import Button from '@potta/components/button';
+import RootLayout from '../layout';
+
 import { uploadFile, createFolderSimple, bulkUploadFiles } from './utils/api';
 import Select from '@potta/components/select';
 import { ContextData } from '@potta/components/context';

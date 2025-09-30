@@ -19,7 +19,7 @@ const POS = () => {
           context?.layoutMode === 'sidebar' ? 'pl-8' : ''
         } h-full overflow-hidden`}
       >
-        <div className="h-[85vh] flex w-full">
+        <div className="h-[85vh] p-3 flex w-full">
           <div className="w-[60%]">
             <SaleInvoiceCard />
           </div>

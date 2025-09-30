@@ -383,22 +383,22 @@ label {
 }
 
 /* Custom green scrollbar for the whole application */
-::-webkit-scrollbar {
+:not(.scrollbar-hide)::-webkit-scrollbar {
   width: 6px !important;
   height: 6px !important;
 }
 
-::-webkit-scrollbar-thumb {
+:not(.scrollbar-hide)::-webkit-scrollbar-thumb {
   background: #22c55e !important;
   border-radius: 3px !important;
   border: 1px solid #e6f9ed !important;
 }
 
-::-webkit-scrollbar-thumb:hover {
+:not(.scrollbar-hide)::-webkit-scrollbar-thumb:hover {
   background: #16a34a !important;
 }
 
-::-webkit-scrollbar-track {
+:not(.scrollbar-hide)::-webkit-scrollbar-track {
   background: #f3fbfb !important;
   border-radius: 3px !important;
 }
@@ -410,28 +410,28 @@ html {
 }
 
 /* Ensure all scrollable elements use the custom scrollbar */
-* {
+*:not(.scrollbar-hide) {
   scrollbar-width: thin !important;
   scrollbar-color: #22c55e #f3fbfb !important;
 }
 
 /* Additional specificity for webkit browsers */
-*::-webkit-scrollbar {
+*:not(.scrollbar-hide)::-webkit-scrollbar {
   width: 6px !important;
   height: 6px !important;
 }
 
-*::-webkit-scrollbar-thumb {
+*:not(.scrollbar-hide)::-webkit-scrollbar-thumb {
   background: #22c55e !important;
   border-radius: 3px !important;
   border: 1px solid #e6f9ed !important;
 }
 
-*::-webkit-scrollbar-thumb:hover {
+*:not(.scrollbar-hide)::-webkit-scrollbar-thumb:hover {
   background: #16a34a !important;
 }
 
-*::-webkit-scrollbar-track {
+*:not(.scrollbar-hide)::-webkit-scrollbar-track {
   background: #f3fbfb !important;
   border-radius: 3px !important;
 }

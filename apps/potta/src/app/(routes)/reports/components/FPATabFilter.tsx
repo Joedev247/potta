@@ -441,11 +441,11 @@ const FPATabFilter: React.FC<FPATabFilterProps> = ({
                       onClick={() =>
                         !unit.isDisabled && setSelectedDate(unit.date)
                       }
-                      className={`w-10 h-10 flex items-center justify-center cursor-pointer transition-all mx-1 ${
-                        isSelected(unit.date)
+                      className={`w-10 h-10 flex items-center  justify-center cursor-pointer transition-all mx-1 ${
+                        isSelected(unit.date) 
                           ? timeCycleTab === 'Yearly'
                             ? 'bg-[#015c1f] text-white p-1 px-6 h-fit mt-1'
-                            : 'bg-[#015c1f] text-white '
+                            : 'bg-[#015c1f] text-white rounded-full'
                           : unit.isDisabled
                           ? 'text-gray-400 !cursor-not-allowed'
                           : timeCycleTab === 'Yearly'

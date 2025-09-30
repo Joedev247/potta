@@ -57,7 +57,7 @@ const ModalCoupon: React.FC<CouponModalProps> = ({
       title='Add Coupon'
       text='Add Coupon'
     >
-      <div className='h-[35vh] -mt-5 px-2 w-full flex flex-col justify-center'>
+      <div className='mb-2 px-2 w-full flex flex-col justify-center'>
         <div className='w-full'>
           <Input
           name="coupon"
@@ -75,7 +75,7 @@ const ModalCoupon: React.FC<CouponModalProps> = ({
           )}
         </div>
       </div>
-      <div className='border-t px-2 py-2.5 w-full flex justify-end'>
+      <div className=' px-2 py-2.5 w-full flex justify-end'>
         <Button
           height={true}
           text='Apply'

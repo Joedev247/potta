@@ -48,9 +48,6 @@ export interface CreateScenarioRequest {
   name: string;
   start_date: string;
   end_date: string;
-  entity_type: 'location' | 'organization';
-  entity_id: string;
-  include_children: boolean;
   notes: string;
 }
 

@@ -225,14 +225,15 @@ const TableOPS = () => {
 
   return (
     <>
-      <div className="mt-2 bg-white rounded-lg shadow-sm border border-gray-100">
-        <div className="h-[47vh] p-4">
+      <div className="mt-2 flex flex-col justify-between bg-white h-full">
+        <div className=" p-4">
           <div className="mb-4">
             <h3 className="text-lg font-semibold text-gray-800 mb-2">
               Cart Items
             </h3>
-            <div className="h-[40vh]">
+            <div className="">
               <DataGrid
+                showHeight={true}
                 columns={columns}
                 data={Array.isArray(context?.data) ? context.data : []}
               />

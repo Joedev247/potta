@@ -63,7 +63,7 @@ const SidebarsExpenses = () => {
         </MenuItem>
 
         {/* Files */}
-        <MenuItem
+        {/* <MenuItem
           active={isActive('/pos/files')}
           className=""
           href="/pos/files"
@@ -76,7 +76,7 @@ const SidebarsExpenses = () => {
           }
         >
           <h3 className="text-lg mt-1.5">Files</h3>
-        </MenuItem>
+        </MenuItem> */}
 
         {/* Inventory */}
         <MenuItem

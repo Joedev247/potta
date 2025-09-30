@@ -27,6 +27,7 @@ interface IDataGrid<T> {
   pageSizeOptions?: number[];
   showPagination?: boolean;
   maxHeight?: string;
+  showHeight?: boolean;
   containerRef?: React.RefObject<HTMLElement>;
 }
 
@@ -42,6 +43,7 @@ const DataGrid = <T,>({
   showPagination = true,
   maxHeight,
   containerRef,
+  showHeight = false,
 }: IDataGrid<T>) => {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [availableHeight, setAvailableHeight] = useState<number>(600);
@@ -152,7 +154,9 @@ const DataGrid = <T,>({
   return (
     <div
       className="flex flex-col h-full"
-      style={{ height: maxHeight || `${availableHeight}px` }}
+      style={{
+        height: showHeight ? '100%' : maxHeight || `${availableHeight}px`,
+      }}
     >
       {/* Combined Table with Scrollable Body */}
       <div className="flex-1 border border-gray-200 overflow-auto bg-white">

@@ -148,13 +148,13 @@ const PayCash = () => {
   };
 
   return (
-    <div className="p-8 h-full bg-white rounded-lg shadow-sm border border-gray-100">
+    <div className="p-4 h-full bg-white ">
       <div className="flex justify-between items-center mb-8">
         <h3 className="text-2xl font-semibold text-gray-800">Cash Payment</h3>
         {lastOrderData && (
           <button
             onClick={handleReprint}
-            className="flex items-center gap-2 px-4 py-2 text-sm text-gray-600 hover:text-gray-900 bg-gray-100 rounded-lg transition-colors"
+            className="flex items-center gap-2 px-4 py-2 text-sm text-gray-600 hover:text-gray-900 bg-gray-100 transition-colors"
           >
             <i className="w-4 h-4 ri-printer-line"></i>
             Reprint Last Receipt
@@ -162,10 +162,10 @@ const PayCash = () => {
         )}
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         {/* Left Column - Cash Input */}
         <div className="space-y-6">
-          <div className="bg-gray-50 rounded-lg p-6">
+          <div className="bg-gray-50 p-6">
             <h4 className="text-lg font-medium text-gray-800 mb-4">
               Enter Cash Amount
             </h4>
@@ -176,7 +176,7 @@ const PayCash = () => {
               name="cashAmount"
               value={cashAmount || ''}
               onChange={handleCashInput}
-              className="w-full py-3 px-4 border border-gray-300 rounded-lg outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 text-lg font-medium"
+              className="w-full py-3 px-4 border border-gray-300 outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 text-lg font-medium"
             />
             {error ? (
               <small className="text-red-500 mt-2 block">{error}</small>
@@ -187,7 +187,7 @@ const PayCash = () => {
         </div>
 
         {/* Right Column - Payment Summary */}
-        <div className="bg-gray-50 rounded-lg p-6">
+        <div className="bg-gray-50 p-6">
           <h4 className="text-lg font-medium text-gray-800 mb-4">
             Payment Summary
           </h4>
@@ -204,7 +204,7 @@ const PayCash = () => {
                 {cashAmount.toFixed(2)} XAF
               </p>
             </div>
-            <div className="w-full flex justify-between py-3 bg-green-50 rounded-lg px-3">
+            <div className="w-full flex justify-between py-3 bg-green-50 px-3">
               <span className="font-semibold text-gray-800">Change</span>
               <p
                 className={`font-bold text-xl ${

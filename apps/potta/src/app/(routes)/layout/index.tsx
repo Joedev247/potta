@@ -52,7 +52,7 @@ export default function RootLayout({
   return (
     <div className="relative flex w-full h-screen">
       <div className="transition-all flex duration-500 ease-in-out w-full">
-        <div className="w-full h-screen overflow-x-hidden overflow-y-auto scroll z-10 flex">
+        <div className="w-full overflow-hidden z-10 flex">
           {/* Sidebar - always show but collapsed when ChatAI is open */}
           {useSidebar && (
             <div className="fixed z-50">

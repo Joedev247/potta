@@ -317,7 +317,7 @@ const SaleInvoiceCard = () => {
               {filteredMenus.map((menuItem) => (
                 <div
                   key={menuItem.id}
-                  onClick={() => addItem(menuItem)}
+                  onClick={() => menuItem.stock > 0 && addItem(menuItem)}
                   className={`bg-white hover:border-green-100 hover:bg-green-300 hover:border cursor-pointer h-48 items-center flex flex-col justify-center relative max-w-48  ${
                     menuItem.stock === 0 ? 'opacity-50' : ''
                   }`}

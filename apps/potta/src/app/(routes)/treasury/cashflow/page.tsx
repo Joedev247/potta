@@ -586,7 +586,6 @@ const CashFlowPage = () => {
         name: scenarioData.name,
         start_date: scenarioData.start_date,
         end_date: scenarioData.end_date,
-        organization_id: organizationId,
         notes:
           scenarioData.notes || `Created on ${new Date().toLocaleDateString()}`,
       });

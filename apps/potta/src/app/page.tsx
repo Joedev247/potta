@@ -33,6 +33,7 @@ import {
   MoreHorizontal,
   Star,
   Archive,
+  Folder,
 } from 'lucide-react';
 import { Button } from '@potta/components/shadcn/button';
 import { ScrollArea } from '@potta/components/shadcn/scroll-area';
@@ -215,6 +216,11 @@ const gridItems: GridItem[] = [
     value: 'accounts',
     label: 'Accounts',
     icon: Wallet,
+  },
+  {
+    value: 'files',
+    label: 'File Manager',
+    icon: Folder,
   },
   {
     value: 'settings',

@@ -664,7 +664,7 @@ const GlobalSearch: React.FC<GlobalSearchProps> = ({ onClose }) => {
     // No fallback - return null if hierarchy data is not available
     return null;
   };
-  
+
   // Transform API results to match component expectations
   const getFilteredData = () => {
     if (!searchResults?.results) {
@@ -921,10 +921,13 @@ const GlobalSearch: React.FC<GlobalSearchProps> = ({ onClose }) => {
           </div>
         </div>
 
-        <div className="flex items-center w-full pl-32 pr-20 py-3 border border-gray-300 rounded-full bg-white focus-within:ring-2 focus-within:ring-green-500 focus-within:border-transparent">
+        <div className="flex items-center w-full pl-32 pr-20 py-3 border whitespace-nowrap border-gray-300 rounded-full bg-white focus-within:ring-2 focus-within:ring-green-500 focus-within:border-transparent">
           {/* Filter Tags */}
           {(selectedFilterTags.length > 0 || selectedDateTag) && (
-            <div className="flex items-center gap-1 mr-2 flex-wrap">
+            <div
+              className="flex items-center gap-1 mr-2 overflow-x-auto scrollbar-hide"
+              style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+            >
               {/* Date Tag */}
               {selectedDateTag && (
                 <div className="flex items-center gap-1 bg-blue-100 text-blue-800 px-2 py-1 rounded-full text-xs">
@@ -943,7 +946,7 @@ const GlobalSearch: React.FC<GlobalSearchProps> = ({ onClose }) => {
               {selectedFilterTags.map((tag) => (
                 <div
                   key={tag}
-                  className="flex items-center gap-1 bg-green-100 text-green-800 px-2 py-1 rounded-full text-xs"
+                  className="flex items-center gap-1  bg-green-100 text-green-800 px-2 py-1 rounded-full text-xs"
                 >
                   <span>{tag}</span>
                   <button

@@ -15,6 +15,7 @@ import SidebarsBankAccounts from './components/bankAccounts';
 import SidebarsSettings from './components/settings';
 import SidebarsReports from './components/reports';
 import SidebarsTreasury from './components/treasury';
+import SidebarsFiles from './components/files';
 const Sidebars = () => {
   const pathname = usePathname();
   const string = pathname;
@@ -30,6 +31,7 @@ const Sidebars = () => {
       {str[1] == 'account_receivables' && <Sidebarsinvoicing />}
       {str[1] == 'POS' || (str[1] == 'pos' && <SidebarsPOS />)}
       {str[1] == 'taxation' && <SidebarsTaxation />}
+      {str[1] == 'files' && <SidebarsFiles />}
       {str[1] == 'vouchers' && <SidebarsVoucher />}
       {str[1] == 'vendors' && <SidebarsVoucher />}
       {str[1] == 'payroll' && <SidebarsPayroll />}

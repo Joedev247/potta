@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { FieldError, UseFormRegister } from 'react-hook-form';
 
-
 // Create a custom error type that can handle both FieldError and simple message objects
 type CustomError = FieldError | { message: string };
 
@@ -63,6 +62,7 @@ const Input: React.FC<Props> = ({
       <input
         disabled={disabled}
         autoComplete={autocomplete ? 'off' : 'on'}
+        name={name}
         type={type}
         max={max}
         min={min}

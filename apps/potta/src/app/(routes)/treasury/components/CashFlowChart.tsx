@@ -172,15 +172,15 @@ const CashFlowChart: React.FC<CashFlowChartProps> = ({
 
       <div className="flex items-center justify-center space-x-6 mb-6">
         <div className="flex items-center">
-          <div className="w-3 h-3 bg-green-700 rounded mr-2"></div>
+          <div className="w-3 h-3 bg-green-700 rounded-full mr-2"></div>
           <span className="text-sm text-gray-600">Cash In</span>
         </div>
         <div className="flex items-center">
-          <div className="w-3 h-3 bg-red-500 rounded mr-2"></div>
+          <div className="w-3 h-3 bg-red-500 rounded-full mr-2"></div>
           <span className="text-sm text-gray-600">Cash Out</span>
         </div>
         <div className="flex items-center">
-          <div className="w-3 h-3 bg-blue-500 rounded mr-2"></div>
+          <div className="w-3 h-3 bg-blue-500 rounded-full mr-2"></div>
           <span className="text-sm text-gray-600">Net Flow</span>
         </div>
       </div>

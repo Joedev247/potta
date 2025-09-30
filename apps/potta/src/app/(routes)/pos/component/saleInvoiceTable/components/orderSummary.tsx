@@ -28,7 +28,7 @@ const OrderSummary: React.FC<OrderSummaryProps> = ({
     <div className="space-y-6">
       <div className="flex justify-center">
         <button
-          className="px-6 py-3 flex items-center text-purple-600 border-2 border-purple-600 rounded-lg hover:bg-purple-600 hover:text-white transition-all duration-200 shadow-sm hover:shadow-md"
+          className="px-6 py-3 flex items-center text-purple-600 border-2 border-purple-600 hover:bg-purple-600 hover:text-white transition-all duration-200 shadow-sm hover:shadow-md"
           onClick={() => setIsModalOpen(true)}
         >
           <i className="ri-coupon-3-line mr-2 text-xl"></i>Add Coupon
@@ -44,7 +44,7 @@ const OrderSummary: React.FC<OrderSummaryProps> = ({
         <HoldOrderButton />
         <div className="w-1/2">
           <div className="w-full flex justify-end">
-            <div className="w-96 bg-gray-50 rounded-lg p-4 space-y-3">
+            <div className="w-96 bg-gray-50 p-4 space-y-3">
               <div className="w-full flex justify-between py-2 border-b border-gray-200">
                 <span className="font-medium text-gray-600">Subtotal</span>
                 <p className="font-semibold text-lg text-gray-800">
@@ -94,7 +94,7 @@ const OrderSummary: React.FC<OrderSummaryProps> = ({
                   ${tax.toFixed(2)}
                 </p>
               </div>
-              <div className="w-full flex justify-between py-3 bg-green-50 rounded-lg px-3">
+              <div className="w-full flex justify-between py-3 bg-green-50 px-3">
                 <span className="font-semibold text-gray-800">Total</span>
                 <p className="font-bold text-xl text-green-700">
                   ${total.toFixed(2)}
