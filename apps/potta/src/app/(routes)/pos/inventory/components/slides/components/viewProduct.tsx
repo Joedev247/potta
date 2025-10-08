@@ -158,6 +158,62 @@ const ViewProductSlider: React.FC<ProductDetailsProps> = ({
             <Text name="Created At" value={data.createdAt} height />
           </div>
 
+          {/* Assembly/Group Components Section */}
+          {(data.structure === 'ASSEMBLY' ||
+            data.structure === 'SIMPLEGROUPS') &&
+            data.components &&
+            data.components.length > 0 && (
+              <div className="w-full mt-6">
+                <div className="border-t pt-6">
+                  <h3 className="text-lg font-semibold text-gray-900 mb-4">
+                    {data.structure === 'ASSEMBLY'
+                      ? 'Assembly Components'
+                      : 'Group Items'}
+                  </h3>
+                  <div className="bg-gray-50 p-4 rounded-lg">
+                    <p className="text-sm text-gray-600 mb-4">
+                      {data.structure === 'ASSEMBLY'
+                        ? 'Components that make up this assembly (consumed when sold):'
+                        : 'Items included in this group (sold together as a bundle):'}
+                    </p>
+                    <div className="space-y-3">
+                      {data.components.map((component: any, index: number) => (
+                        <div
+                          key={index}
+                          className="bg-white p-3 rounded-md border border-gray-200"
+                        >
+                          <div className="flex items-center justify-between">
+                            <div className="flex-1">
+                              <h4 className="font-medium text-gray-900">
+                                {component.product?.name ||
+                                  `Product ID: ${component.productId}`}
+                              </h4>
+                              {component.product?.sku && (
+                                <p className="text-sm text-gray-500">
+                                  SKU: {component.product.sku}
+                                </p>
+                              )}
+                            </div>
+                            <div className="text-right">
+                              <div className="text-sm font-medium text-gray-900">
+                                Quantity: {component.quantity}
+                              </div>
+                              {component.product?.salesPrice && (
+                                <div className="text-sm text-gray-500">
+                                  XAF{' '}
+                                  {component.product.salesPrice.toLocaleString()}
+                                </div>
+                              )}
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+
           {/* <div className="text-center md:text-right mt-4 md:flex md:justify-end space-x-4">
             <Button
               text="Cancel"

@@ -102,9 +102,7 @@ export const useGlobalSearch = ({
 
         const searchRequest: SearchRequest = {
           query: searchTerm,
-          orgId,
           entityTypes: entityTypes.length > 0 ? entityTypes : undefined,
-          locationContextId,
           filters: {
             ...(filters.dateRange?.from &&
               filters.dateRange?.to && {
@@ -128,7 +126,11 @@ export const useGlobalSearch = ({
           facets: true,
         };
 
-        const response = await searchService.globalSearch(searchRequest);
+        const response = await searchService.globalSearch(
+          searchRequest,
+          orgId,
+          locationContextId
+        );
         setSearchResults(response);
       } catch (error) {
         console.error('Search failed:', error);
@@ -157,11 +159,13 @@ export const useGlobalSearch = ({
         setIsSuggestionsLoading(true);
 
         try {
-          const response = await searchService.getSuggestions({
-            query,
-            orgId,
-            limit: 10,
-          });
+          const response = await searchService.getSuggestions(
+            {
+              query,
+              limit: 10,
+            },
+            orgId
+          );
           setSuggestions(response.suggestions);
         } catch (error) {
           console.error('Failed to get suggestions:', error);

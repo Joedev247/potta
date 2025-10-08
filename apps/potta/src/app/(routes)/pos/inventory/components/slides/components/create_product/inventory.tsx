@@ -16,6 +16,71 @@ import ImageUploader from '../../../imageUploader';
 import { productApi } from '../../../../_utils/api';
 import useGetAllProductCategories from '../../../../_hooks/useGetAllProductCategories';
 import Select from '@potta/components/select';
+import useGetAllProducts from '../../../../hooks/useGetAllProducts';
+
+// Component Selector Component
+const ComponentSelector: React.FC<{
+  product: any;
+  onAdd: (productId: string, quantity: number) => void;
+  selectedComponents: any[];
+}> = ({ product, onAdd, selectedComponents }) => {
+  const [quantity, setQuantity] = useState(1);
+  const isSelected = selectedComponents.some(
+    (comp) => comp.productId === product.uuid
+  );
+  const selectedComponent = selectedComponents.find(
+    (comp) => comp.productId === product.uuid
+  );
+  const currentQuantity = selectedComponent ? selectedComponent.quantity : 1;
+
+  return (
+    <div
+      className={`border rounded-lg p-4 ${
+        isSelected ? 'border-green-500 bg-green-50' : 'border-gray-200'
+      }`}
+    >
+      <div className="flex items-center justify-between">
+        <div className="flex-1">
+          <h4 className="font-medium text-gray-900">{product.name}</h4>
+          <p className="text-sm text-gray-500">SKU: {product.sku}</p>
+          <p className="text-sm font-medium text-gray-900">
+            XAF {product.salesPrice?.toLocaleString() || '0'}
+          </p>
+        </div>
+        <div className="flex items-center gap-2">
+          <Input
+            type="number"
+            name={`quantity_${product.uuid}`}
+            placeholder="Qty"
+            value={isSelected ? currentQuantity : quantity}
+            onchange={(e: React.ChangeEvent<HTMLInputElement>) => {
+              const value = parseInt(e.target.value) || 1;
+              if (isSelected) {
+                setQuantity(value);
+              } else {
+                setQuantity(value);
+              }
+            }}
+            className="w-20"
+          />
+          <Button
+            text={isSelected ? 'Update' : 'Add'}
+            type="button"
+            onClick={() => {
+              const qty = isSelected ? currentQuantity : quantity;
+              onAdd(product.uuid, qty);
+              if (!isSelected) {
+                setQuantity(1);
+              }
+            }}
+            theme={isSelected ? 'lightGreen' : 'default'}
+            className="px-3 py-1 text-sm"
+          />
+        </div>
+      </div>
+    </div>
+  );
+};
 
 interface CreateProductProps {
   open?: boolean;
@@ -42,6 +107,8 @@ const CreateProduct: React.FC<CreateProductProps> = ({
   const [data, setData] = useState('inventory');
   const context = useContext(ContextData);
   const [isUploading, setIsUploading] = useState(false);
+  const [showComponentModal, setShowComponentModal] = useState(false);
+  const [selectedComponents, setSelectedComponents] = useState<any[]>([]);
 
   const {
     register,
@@ -83,6 +150,21 @@ const CreateProduct: React.FC<CreateProductProps> = ({
       label: cat.name,
       value: cat.uuid,
     })
+  );
+
+  // Fetch available products for component selection
+  const { data: productsData } = useGetAllProducts({
+    page: 1,
+    limit: 1000,
+    search: '',
+  });
+  const availableProducts = (productsData?.data || []).filter(
+    (product: any) => {
+      if (structure === 'ASSEMBLY') {
+        return product.structure === 'SIMPLE' && product.type === 'INVENTORY';
+      }
+      return true; // For groups, show all products
+    }
   );
 
   const onSubmit = async (formData: ProductPayload) => {
@@ -133,6 +215,7 @@ const CreateProduct: React.FC<CreateProductProps> = ({
         type: productType,
         structure: structure,
         inventoryLevel: isNonInventory ? 0 : formData.inventoryLevel,
+        components: selectedComponents,
       };
 
       console.log('Submitting product data:', payload);
@@ -159,6 +242,35 @@ const CreateProduct: React.FC<CreateProductProps> = ({
       toast.error('An unexpected error occurred');
     }
   };
+
+  const addComponent = (productId: string, quantity: number) => {
+    const existingIndex = selectedComponents.findIndex(
+      (comp) => comp.productId === productId
+    );
+
+    if (existingIndex >= 0) {
+      const updated = [...selectedComponents];
+      updated[existingIndex].quantity = quantity;
+      setSelectedComponents(updated);
+    } else {
+      const product = availableProducts.find((p: any) => p.uuid === productId);
+      setSelectedComponents([
+        ...selectedComponents,
+        {
+          productId,
+          quantity,
+          product,
+        },
+      ]);
+    }
+  };
+
+  const removeComponent = (productId: string) => {
+    setSelectedComponents(
+      selectedComponents.filter((comp) => comp.productId !== productId)
+    );
+  };
+
   return (
     <Slider
       open={isOpen}
@@ -337,10 +449,7 @@ const CreateProduct: React.FC<CreateProductProps> = ({
               <Button
                 type="button"
                 text="Add Component"
-                onClick={() => {
-                  // TODO: Add component logic
-                  console.log('Add component clicked');
-                }}
+                onClick={() => setShowComponentModal(true)}
                 theme="lightBlue"
               />
             </div>
@@ -350,6 +459,85 @@ const CreateProduct: React.FC<CreateProductProps> = ({
                   ? 'Add the products that make up this assembly. Each component will be consumed when this product is sold.'
                   : 'Add the products that are included in this group. These products will be sold together as a bundle.'}
               </p>
+            </div>
+
+            {/* Selected Components Display */}
+            {selectedComponents.length > 0 && (
+              <div className="mt-6">
+                <h4 className="font-medium text-gray-900 mb-3">
+                  Selected Components ({selectedComponents.length})
+                </h4>
+                <div className="space-y-3">
+                  {selectedComponents.map((component, index) => (
+                    <div
+                      key={index}
+                      className="bg-white p-3 rounded-lg border border-gray-200"
+                    >
+                      <div className="flex items-center justify-between">
+                        <div className="flex-1">
+                          <h5 className="font-medium text-gray-900">
+                            {component.product?.name ||
+                              `Product ID: ${component.productId}`}
+                          </h5>
+                          {component.product?.sku && (
+                            <p className="text-sm text-gray-500">
+                              SKU: {component.product.sku}
+                            </p>
+                          )}
+                        </div>
+                        <div className="flex items-center gap-3">
+                          <span className="text-sm text-gray-600">
+                            Qty: {component.quantity}
+                          </span>
+                          <button
+                            onClick={() => removeComponent(component.productId)}
+                            className="text-red-500 hover:text-red-700"
+                          >
+                            <i className="ri-close-line"></i>
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* Component Selection Modal */}
+        {showComponentModal && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+            <div className="bg-white rounded-lg p-6 max-w-2xl w-full max-h-[80vh] overflow-y-auto">
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="text-lg font-semibold">Select Components</h3>
+                <button
+                  onClick={() => setShowComponentModal(false)}
+                  className="text-gray-500 hover:text-gray-700"
+                >
+                  <i className="ri-close-line"></i>
+                </button>
+              </div>
+
+              <div className="space-y-3 max-h-96 overflow-y-auto">
+                {availableProducts.map((product: any) => (
+                  <ComponentSelector
+                    key={product.uuid}
+                    product={product}
+                    onAdd={addComponent}
+                    selectedComponents={selectedComponents}
+                  />
+                ))}
+              </div>
+
+              <div className="flex justify-end mt-6">
+                <Button
+                  text="Done"
+                  type="button"
+                  onClick={() => setShowComponentModal(false)}
+                  theme="default"
+                />
+              </div>
             </div>
           </div>
         )}

@@ -39,7 +39,7 @@ export const getAuthConfig = () => {
       authUrl: process.env.NEXT_PUBLIC_AUTH_URL,
       apiUrl: apiUrl,
       useTestToken: true,
-      testToken: 'ZCdtvhrLQHYXGbhb5YRpavsBEdrham9W',
+      testToken: '1cac0MWNQHj06B0SuEPnVzivfz3BGz7h',
       enableLogging: true,
       tokenExpiry: 7, // days
       refreshBeforeExpiry: 24, // hours
@@ -88,6 +88,7 @@ export const getAuthConfig = () => {
 // Routes that bypass authentication
 export const BYPASS_AUTH_ROUTES = [
   '/vendor-portal',
+  '/vendor/kyc/verify',
   '/public',
   '/api/public',
   // Add more public routes as needed
@@ -103,6 +104,7 @@ export const PUBLIC_PATHS = [
   '/icons',
   '/fonts',
   '/vendor-portal',
+  '/vendor/kyc/verify',
 ];
 
 // Token storage keys

@@ -181,7 +181,7 @@ export default function EnhancedOrgChartFlowComponent({
 
     if (filters.geographicalUnit) {
       filteredLocations = filteredLocations.filter(
-        (l) => l.geo_unit_id === filters.geographicalUnit
+        (l) => l.geographical_unit_id === filters.geographicalUnit
       );
       filteredAssignments = filteredAssignments.filter(
         (a) => a.geographical_unit_id === filters.geographicalUnit
@@ -246,7 +246,7 @@ export default function EnhancedOrgChartFlowComponent({
         // Level 1: Geographical Units
         const geoNodes = filteredData.geoUnits.map((unit, index) => {
           const unitLocations = filteredData.locations.filter(
-            (l) => l.geo_unit_id === unit.id
+            (l) => l.geographical_unit_id === unit.id
           );
           const unitStructures = filteredData.structures.filter((s) =>
             unitLocations.some((l) => l.id === s.location_id)
@@ -283,7 +283,7 @@ export default function EnhancedOrgChartFlowComponent({
         yOffset += 120;
         filteredData.locations.forEach((location, index) => {
           const parentGeoIndex = filteredData.geoUnits.findIndex(
-            (g) => g.id === location.geo_unit_id
+            (g) => g.id === location.geographical_unit_id
           );
           const locationStructures = filteredData.structures.filter(
             (s) => s.location_id === location.id
@@ -311,7 +311,7 @@ export default function EnhancedOrgChartFlowComponent({
               entity: location,
               employeeCount: locationEmployees.length,
               location: location.id,
-              geoUnit: location.geo_unit_id,
+              geoUnit: location.geographical_unit_id,
               isActive: true,
               children: locationStructures.map((s) => ({
                 id: s.id,
@@ -400,7 +400,7 @@ export default function EnhancedOrgChartFlowComponent({
               (s) =>
                 s.id === a.organizational_structure_id &&
                 filteredData.locations.some(
-                  (l) => l.id === s.location_id && l.geo_unit_id === unit.id
+                  (l) => l.id === s.location_id && l.geographical_unit_id === unit.id
                 )
             )
           );
@@ -428,7 +428,7 @@ export default function EnhancedOrgChartFlowComponent({
         // Add locations under geographical units
         filteredData.locations.forEach((location, index) => {
           const parentIndex = filteredData.geoUnits.findIndex(
-            (g) => g.id === location.geo_unit_id
+            (g) => g.id === location.geographical_unit_id
           );
           const locationEmployees = filteredData.assignments.filter((a) =>
             filteredData.structures.some(
@@ -455,7 +455,7 @@ export default function EnhancedOrgChartFlowComponent({
               entity: location,
               employeeCount: locationEmployees.length,
               location: location.id,
-              geoUnit: location.geo_unit_id,
+              geoUnit: location.geographical_unit_id,
               isActive: true,
             },
           };
@@ -619,7 +619,7 @@ export default function EnhancedOrgChartFlowComponent({
         // Connect geographical units to locations
         filteredData.locations.forEach((location) => {
           const parentGeo = filteredData.geoUnits.find(
-            (g) => g.id === location.geo_unit_id
+            (g) => g.id === location.geographical_unit_id
           );
           if (parentGeo) {
             reactFlowEdges.push({
@@ -675,7 +675,7 @@ export default function EnhancedOrgChartFlowComponent({
         // Connect geographical units to locations
         filteredData.locations.forEach((location) => {
           const parentGeo = filteredData.geoUnits.find(
-            (g) => g.id === location.geo_unit_id
+            (g) => g.id === location.geographical_unit_id
           );
           if (parentGeo) {
             reactFlowEdges.push({

@@ -150,7 +150,7 @@ axios.interceptors.request.use(
 
     // Use hardcoded token for organigram pages
     if (isOrganigramPage) {
-      token = 'y7aXXV38uCoxeGYQRMVkV0tWjEHbHkI6';
+      token = 'HdudpObVirLtgR6fLydoyPe4vJoBl3mT';
     }
 
     const isPublicRoute = isBypassRoute();

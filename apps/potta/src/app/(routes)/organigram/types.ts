@@ -6,7 +6,7 @@ export interface OrganizationalStructure {
   path: string;
   level: number;
   parent_structure_id?: string;
-  location_id?: string;
+  locationId?: string;
   sub_business_unit_id?: string; // Updated field name
   current_employees: number;
   max_employees: number;
@@ -147,7 +147,7 @@ export interface Location {
   website?: string;
   description?: string;
   capacity?: number;
-  geo_unit_id?: string; // Updated field name
+  geographical_unit_id?: string; // Updated field name
   organization_id: string;
   organ_structure_template_id?: string;
   created_at?: string;

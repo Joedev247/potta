@@ -47,6 +47,7 @@ const DataGrid = <T,>({
 }: IDataGrid<T>) => {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [availableHeight, setAvailableHeight] = useState<number>(600);
+  const internalTableRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     // Only run on client side
@@ -60,20 +61,21 @@ const DataGrid = <T,>({
         return;
       }
 
-      if (containerRef?.current) {
-        // Calculate height based on container position
-        const containerRect = containerRef.current.getBoundingClientRect();
+      // Use containerRef if provided, otherwise use internal table ref
+      const elementRef = containerRef?.current || internalTableRef.current;
+
+      if (elementRef) {
+        // Calculate height based on element's actual position on the page
+        const elementRect = elementRef.getBoundingClientRect();
         const viewportHeight = window.innerHeight;
-        const containerTop = containerRect.top;
-        const padding = 100; // Account for bottom padding and pagination
-        const calculatedHeight = viewportHeight - containerTop - padding;
-        setAvailableHeight(Math.max(calculatedHeight, 400));
+        const elementTop = elementRect.top;
+        const padding = 15; // Minimal padding for bottom space
+        const calculatedHeight = viewportHeight - elementTop - padding;
+        const finalHeight = Math.max(calculatedHeight, 400);
+        setAvailableHeight(finalHeight);
       } else {
-        // Fallback to viewport-based calculation with better offset
-        const viewportHeight = window.innerHeight;
-        const offset = 200; // Reduced offset for better calculation
-        const calculatedHeight = viewportHeight - offset;
-        setAvailableHeight(Math.max(calculatedHeight, 400));
+        // Final fallback - use a safe default
+        setAvailableHeight(600);
       }
     };
 
@@ -81,9 +83,10 @@ const DataGrid = <T,>({
 
     // Use ResizeObserver for more responsive height calculation
     let resizeObserver: ResizeObserver | null = null;
-    if (containerRef?.current && window.ResizeObserver) {
+    const elementRef = containerRef?.current || internalTableRef.current;
+    if (elementRef && window.ResizeObserver) {
       resizeObserver = new ResizeObserver(calculateHeight);
-      resizeObserver.observe(containerRef.current);
+      resizeObserver.observe(elementRef);
     }
 
     window.addEventListener('resize', calculateHeight);
@@ -153,13 +156,20 @@ const DataGrid = <T,>({
 
   return (
     <div
-      className="flex flex-col h-full"
+      ref={internalTableRef}
+      className="flex flex-col"
       style={{
         height: showHeight ? '100%' : maxHeight || `${availableHeight}px`,
+        maxHeight: showHeight ? '100%' : maxHeight || `${availableHeight}px`,
+        minHeight: 0,
+        overflow: 'hidden',
       }}
     >
       {/* Combined Table with Scrollable Body */}
-      <div className="flex-1 border border-gray-200 overflow-auto bg-white">
+      <div
+        className="flex-1 border border-gray-200 overflow-auto bg-white"
+        style={{ minHeight: 0 }}
+      >
         <table className="w-full border-collapse">
           <thead className="bg-white sticky top-0 z-10">
             {table.getHeaderGroups().map((headerGroup) => (

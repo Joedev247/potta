@@ -670,7 +670,7 @@ export default function OrganigramPage() {
       {/* Main Content */}
       <div className="flex-1 overflow-hidden relative">
         {/* Help tooltip */}
-        <div className="absolute top-4 right-4 z-10 bg-green-50 border border-green-200 p-3 max-w-xs">
+        {/* <div className="absolute top-4 right-4 z-10 bg-green-50 border border-green-200 p-3 max-w-xs">
           <div className="flex items-start space-x-2">
             <div className="text-green-500 text-lg">💡</div>
             <div className="text-sm text-green-800">
@@ -682,7 +682,7 @@ export default function OrganigramPage() {
               </ul>
             </div>
           </div>
-        </div>
+        </div> */}
 
         <OrgChartFlowComponent
           viewMode={viewMode}

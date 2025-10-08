@@ -5,8 +5,8 @@ import { VendorInvoiceData } from '../types';
 interface CreateVendorInvoiceArgs {
   data: VendorInvoiceData;
   token: string;
-  orgId: string;
-  branchId: string;
+  orgId?: string;
+  locationId?: string;
 }
 
 export default function useCreateVendorInvoice() {
@@ -15,15 +15,15 @@ export default function useCreateVendorInvoice() {
       data,
       token,
       orgId,
-      branchId,
+      locationId,
     }: CreateVendorInvoiceArgs) => {
       const response = await axios.post('/vendor-portal/create-invoice', data, {
         params: {
           token: token,
+          ...(orgId && { orgId }),
+          ...(locationId && { locationId }),
         },
         headers: {
-          'X-Organization-ID': orgId,
-          'X-Branch-ID': branchId,
           'Content-Type': 'application/json',
         },
       });

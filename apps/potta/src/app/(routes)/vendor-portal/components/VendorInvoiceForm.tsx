@@ -19,6 +19,8 @@ import { useRouter } from 'next/navigation';
 interface VendorInvoiceFormProps {
   token: string;
   purchaseOrder: PurchaseOrderDetails;
+  orgId?: string;
+  locationId?: string;
 }
 
 interface LineItem {
@@ -36,6 +38,8 @@ interface LineItem {
 const VendorInvoiceForm: React.FC<VendorInvoiceFormProps> = ({
   token,
   purchaseOrder,
+  orgId,
+  locationId,
 }) => {
   const context = useContext(ContextData);
   const createInvoiceMutation = useCreateVendorInvoice();
@@ -159,8 +163,8 @@ const VendorInvoiceForm: React.FC<VendorInvoiceFormProps> = ({
       {
         data: invoiceData,
         token,
-        orgId: purchaseOrder.vendor.address.branchId, // Use branchId from vendor address
-        branchId: purchaseOrder.vendor.address.branchId,
+        orgId,
+        locationId,
       },
       {
         onSuccess: () => {

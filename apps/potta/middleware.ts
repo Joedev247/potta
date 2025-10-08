@@ -24,6 +24,7 @@ const PUBLIC_PATHS = [
   '/icons',
   '/fonts',
   '/vendor-portal',
+  '/vendor/kyc/verify', // KYC verification portal (token-based access)
   '/public',
 ];
 

@@ -464,9 +464,9 @@ const GlobalSearch: React.FC<GlobalSearchProps> = ({ onClose }) => {
   const context = useContext(ContextData);
   const [isOpen, setIsOpen] = useState(false);
   const [showFilters, setShowFilters] = useState(false);
-  const [activeTab, setActiveTab] = useState<
-    'recommendations' | 'recent' | 'suggestions'
-  >('recommendations');
+  const [activeTab, setActiveTab] = useState<'recommendations' | 'recent'>(
+    'recommendations'
+  );
   const [activeFilterTab, setActiveFilterTab] = useState<
     'options' | 'option' | 'date' | 'organigram'
   >('options');
@@ -506,9 +506,9 @@ const GlobalSearch: React.FC<GlobalSearchProps> = ({ onClose }) => {
     hasMorePages,
     loadMoreResults,
   } = useGlobalSearch({
-    orgId: context?.data?.organizationId || 'default-org-id',
+    orgId: context?.data?.organizationId,
     locationContextId:
-      context?.data?.fullUserData?.hierarchy?.location?.id ||
+      context?.data?.fullUserData?.locationContextId?.id ||
       context?.data?.organizationId,
   });
 
@@ -676,17 +676,52 @@ const GlobalSearch: React.FC<GlobalSearchProps> = ({ onClose }) => {
       };
     }
 
-    const results = searchResults.results;
+    const results = searchResults.results.map((item: any) => ({
+      ...item,
+      // Map API response fields to component expected format
+      type: item.entityType || item.type,
+      title: item.name || item.title,
+      subtitle: item.metadata?.customerId
+        ? `Customer ID: ${item.metadata.customerId}`
+        : item.metadata?.type
+        ? `Type: ${item.metadata.type}`
+        : item.subtitle || `${item.entityType || 'Item'}`,
+      path: getPathForEntity(item),
+      priority: item.priority || 'medium',
+    }));
+
     return {
-      recommendations: results.filter((item) => item.priority === 'high'),
+      // Show all results as recommendations by default
+      recommendations: results,
+      // Recent: invoices and customers
       recent: results.filter(
-        (item) => item.type === 'invoice' || item.type === 'customer'
+        (item: any) => item.type === 'invoice' || item.type === 'customer'
       ),
+      // Suggestions: reports and budgets
       suggestions: results.filter(
-        (item) => item.type === 'report' || item.type === 'budget'
+        (item: any) => item.type === 'report' || item.type === 'budget'
       ),
       quickActions: dummySearchData.quickActions,
     };
+  };
+
+  // Helper function to generate paths for different entity types
+  const getPathForEntity = (item: any) => {
+    const entityType = item.entityType || item.type;
+    switch (entityType) {
+      case 'customer':
+        return `/pos/customers`;
+      case 'vendor':
+        return `/pos/vendors`;
+      case 'invoice':
+        return `/account_receivables/invoice`;
+      case 'product':
+        return `/pos/inventory`;
+      case 'employee':
+        return `/payroll/people`;
+      default:
+        return '#';
+    }
   };
 
   const filteredData = getFilteredData();
@@ -813,19 +848,6 @@ const GlobalSearch: React.FC<GlobalSearchProps> = ({ onClose }) => {
     const colorClass = getTypeColor(item.type);
     const isSelected = selectedItem?.id === item.id;
 
-    const getPriorityColor = (priority: string) => {
-      switch (priority) {
-        case 'high':
-          return 'bg-red-100 text-red-800';
-        case 'medium':
-          return 'bg-yellow-100 text-yellow-800';
-        case 'low':
-          return 'bg-green-100 text-green-800';
-        default:
-          return 'bg-gray-100 text-gray-800';
-      }
-    };
-
     return (
       <div
         key={item.id}
@@ -848,15 +870,6 @@ const GlobalSearch: React.FC<GlobalSearchProps> = ({ onClose }) => {
             >
               {item.title}
             </p>
-            {item.priority && (
-              <span
-                className={`text-xs px-1.5 py-0.5 rounded-full ${getPriorityColor(
-                  item.priority
-                )}`}
-              >
-                {item.priority}
-              </span>
-            )}
           </div>
           <p
             className={`text-xs truncate ${
@@ -894,11 +907,23 @@ const GlobalSearch: React.FC<GlobalSearchProps> = ({ onClose }) => {
         return filteredData.recommendations;
       case 'recent':
         return filteredData.recent;
-      case 'suggestions':
-        return filteredData.suggestions;
       default:
         return allResults;
     }
+  };
+
+  // Get autocomplete suggestions
+  const getAutocompleteSuggestions = () => {
+    if (suggestions.length > 0) {
+      return suggestions.map((suggestion) => ({
+        id: suggestion,
+        type: 'suggestion',
+        title: suggestion,
+        subtitle: 'Suggestion',
+        path: '#',
+      }));
+    }
+    return [];
   };
 
   return (
@@ -913,52 +938,50 @@ const GlobalSearch: React.FC<GlobalSearchProps> = ({ onClose }) => {
           )}
         </div>
 
-        {/* Location Indicator */}
-        <div className="absolute inset-y-0 left-10 flex items-center pointer-events-none">
-          <div className="flex items-center gap-1 text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded-full">
-            <MapPin size={12} />
-            <span className="font-medium">{getCurrentLocation()}</span>
-          </div>
-        </div>
+        <div className="flex items-center w-full pl-12 pr-20 py-3 border whitespace-nowrap border-gray-300 rounded-full bg-white focus-within:ring-2 focus-within:ring-green-500 focus-within:border-transparent">
+          {/* Filter Tags and Location Badge */}
+          <div
+            className="flex items-center gap-1 mr-2 overflow-x-auto scrollbar-hide"
+            style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+          >
+            {/* Location Badge - styled like other badges */}
+            {getCurrentLocation() && (
+              <div className="flex items-center gap-1 bg-gray-100 text-gray-800 px-2 py-1 rounded-full text-xs flex-shrink-0">
+                <MapPin size={12} className="text-gray-600" />
+                <span className="font-medium">{getCurrentLocation()}</span>
+              </div>
+            )}
 
-        <div className="flex items-center w-full pl-32 pr-20 py-3 border whitespace-nowrap border-gray-300 rounded-full bg-white focus-within:ring-2 focus-within:ring-green-500 focus-within:border-transparent">
-          {/* Filter Tags */}
-          {(selectedFilterTags.length > 0 || selectedDateTag) && (
-            <div
-              className="flex items-center gap-1 mr-2 overflow-x-auto scrollbar-hide"
-              style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
-            >
-              {/* Date Tag */}
-              {selectedDateTag && (
-                <div className="flex items-center gap-1 bg-blue-100 text-blue-800 px-2 py-1 rounded-full text-xs">
-                  <CalendarIcon size={12} className="text-blue-600" />
-                  <span>{selectedDateTag}</span>
-                  <button
-                    onClick={removeDateTag}
-                    className="hover:bg-blue-200 rounded-full p-0.5 transition-colors"
-                  >
-                    <X size={12} className="text-blue-600" />
-                  </button>
-                </div>
-              )}
-
-              {/* Filter Tags */}
-              {selectedFilterTags.map((tag) => (
-                <div
-                  key={tag}
-                  className="flex items-center gap-1  bg-green-100 text-green-800 px-2 py-1 rounded-full text-xs"
+            {/* Date Tag */}
+            {selectedDateTag && (
+              <div className="flex items-center gap-1 bg-blue-100 text-blue-800 px-2 py-1 rounded-full text-xs">
+                <CalendarIcon size={12} className="text-blue-600" />
+                <span>{selectedDateTag}</span>
+                <button
+                  onClick={removeDateTag}
+                  className="hover:bg-blue-200 rounded-full p-0.5 transition-colors"
                 >
-                  <span>{tag}</span>
-                  <button
-                    onClick={() => removeFilterTag(tag)}
-                    className="hover:bg-green-200 rounded-full p-0.5 transition-colors"
-                  >
-                    <X size={12} className="text-green-600" />
-                  </button>
-                </div>
-              ))}
-            </div>
-          )}
+                  <X size={12} className="text-blue-600" />
+                </button>
+              </div>
+            )}
+
+            {/* Filter Tags */}
+            {selectedFilterTags.map((tag) => (
+              <div
+                key={tag}
+                className="flex items-center gap-1 bg-green-100 text-green-800 px-2 py-1 rounded-full text-xs"
+              >
+                <span>{tag}</span>
+                <button
+                  onClick={() => removeFilterTag(tag)}
+                  className="hover:bg-green-200 rounded-full p-0.5 transition-colors"
+                >
+                  <X size={12} className="text-green-600" />
+                </button>
+              </div>
+            ))}
+          </div>
 
           {/* Search Input */}
           <input
@@ -967,6 +990,7 @@ const GlobalSearch: React.FC<GlobalSearchProps> = ({ onClose }) => {
             value={searchQuery}
             onChange={(e) => handleSearch(e.target.value)}
             onKeyDown={handleKeyDown}
+            onFocus={() => setShowFilters(false)}
             placeholder={
               selectedFilterTags.length > 0 || selectedDateTag
                 ? 'Search within selected filters...'
@@ -996,7 +1020,10 @@ const GlobalSearch: React.FC<GlobalSearchProps> = ({ onClose }) => {
 
           {/* Filters Button */}
           <button
-            onClick={() => setShowFilters(!showFilters)}
+            onClick={() => {
+              setShowFilters(!showFilters);
+              setIsOpen(false); // Close search results when opening filters
+            }}
             className={`p-2 rounded-full transition-colors ${
               showFilters
                 ? 'bg-green-100 text-green-600'
@@ -1484,20 +1511,40 @@ const GlobalSearch: React.FC<GlobalSearchProps> = ({ onClose }) => {
             >
               Recent ({filteredData.recent.length})
             </button>
-            <button
-              onClick={() => setActiveTab('suggestions')}
-              className={`px-4 py-2 text-sm font-medium transition-all duration-300 ease-in-out ${
-                activeTab === 'suggestions'
-                  ? 'text-green-600 border-b-2 border-green-600'
-                  : 'text-gray-500 hover:text-gray-700'
-              }`}
-            >
-              Suggestions ({filteredData.suggestions.length})
-            </button>
           </div>
 
           {/* Results */}
           <div className="max-h-80 overflow-y-auto animate-in fade-in-0 slide-in-from-top-2 duration-300">
+            {/* Autocomplete Suggestions - show when typing */}
+            {searchQuery.length > 0 &&
+              suggestions.length > 0 &&
+              !isSearching && (
+                <div className="bg-gray-50 border-b border-gray-200 p-2">
+                  <h4 className="text-xs font-medium text-gray-500 px-2 mb-1">
+                    Suggestions
+                  </h4>
+                  <div className="space-y-1">
+                    {getAutocompleteSuggestions()
+                      .slice(0, 3)
+                      .map((suggestion) => (
+                        <div
+                          key={suggestion.id}
+                          onClick={() => {
+                            setSearchQuery(suggestion.title);
+                            performSearch(suggestion.title);
+                          }}
+                          className="flex items-center gap-2 p-2 cursor-pointer hover:bg-white rounded transition-colors"
+                        >
+                          <Search size={14} className="text-gray-400" />
+                          <span className="text-sm text-gray-700">
+                            {suggestion.title}
+                          </span>
+                        </div>
+                      ))}
+                  </div>
+                </div>
+              )}
+
             {isSearching ? (
               // Show loading state
               <div className="p-4 text-center text-gray-500">
@@ -1529,20 +1576,6 @@ const GlobalSearch: React.FC<GlobalSearchProps> = ({ onClose }) => {
                     </h3>
                     <div className="space-y-1">
                       {filteredData.recent.slice(0, 3).map(renderSearchResult)}
-                    </div>
-                  </div>
-                )}
-
-                {activeTab === 'suggestions' && (
-                  <div className="mb-4">
-                    <h3 className="text-sm font-medium text-gray-900 mb-2 flex items-center gap-2">
-                      <TrendingUp size={16} />
-                      Suggestions
-                    </h3>
-                    <div className="space-y-1">
-                      {filteredData.suggestions
-                        .slice(0, 3)
-                        .map(renderSearchResult)}
                     </div>
                   </div>
                 )}

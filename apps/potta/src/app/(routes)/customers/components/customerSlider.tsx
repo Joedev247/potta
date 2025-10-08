@@ -91,8 +91,8 @@ const SliderCustomer: React.FC<CustomerCreateProps> = ({
   });
 
   const CustomerTypeEnum = [
-    { value: 'individual', label: 'Individual' },
-    { value: 'company', label: 'Company' },
+    { value: 'INDIVIDUAL', label: 'Individual' },
+    { value: 'COMPANY', label: 'Company' },
   ];
 
   const CustomerGenderEnum = [

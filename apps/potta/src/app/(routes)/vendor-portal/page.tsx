@@ -10,15 +10,27 @@ import toast from 'react-hot-toast';
 const VendorPortal = () => {
   const searchParams = useSearchParams();
   const [token, setToken] = useState<string | null>(null);
+  const [orgId, setOrgId] = useState<string | null>(null);
+  const [locationId, setLocationId] = useState<string | null>(null);
 
-  // Extract token from URL on component mount
+  // Extract token, orgId, and locationId from URL on component mount
   useEffect(() => {
     const urlToken = searchParams.get('token');
+    const urlOrgId = searchParams.get('orgId');
+    const urlLocationId = searchParams.get('locationId');
 
     if (urlToken) {
       setToken(urlToken);
     } else {
       console.error('Missing required parameter: token');
+    }
+
+    if (urlOrgId) {
+      setOrgId(urlOrgId);
+    }
+
+    if (urlLocationId) {
+      setLocationId(urlLocationId);
     }
   }, [searchParams]);
 
@@ -29,6 +41,8 @@ const VendorPortal = () => {
     error,
   } = useGetVendorPurchaseOrder({
     token: token || '',
+    orgId: orgId || undefined,
+    locationId: locationId || undefined,
     enabled: !!token,
   });
 
@@ -84,7 +98,12 @@ const VendorPortal = () => {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <VendorInvoiceForm token={token} purchaseOrder={purchaseOrder} />
+      <VendorInvoiceForm
+        token={token}
+        purchaseOrder={purchaseOrder}
+        orgId={orgId || undefined}
+        locationId={locationId || undefined}
+      />
     </div>
   );
 };

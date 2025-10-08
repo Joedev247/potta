@@ -187,11 +187,11 @@ const gridItems: GridItem[] = [
     label: 'Expenses',
     icon: Banknote,
   },
-  {
-    value: 'vouchers',
-    label: 'Vouchers',
-    icon: Ticket,
-  },
+  // {
+  //   value: 'vouchers',
+  //   label: 'Vouchers',
+  //   icon: Ticket,
+  // },
   {
     value: 'pos',
     label: 'POS',

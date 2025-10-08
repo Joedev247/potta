@@ -229,7 +229,7 @@ export default function OrgChartFlowComponent({
     if (filters.geographicalUnit) {
       // Filter locations that belong to this geographical unit
       filteredLocations = filteredLocations.filter(
-        (l) => l.geo_unit_id === filters.geographicalUnit
+        (l) => l.geographical_unit_id === filters.geographicalUnit
       );
 
       // Filter assignments that belong to this geographical unit
@@ -240,7 +240,7 @@ export default function OrgChartFlowComponent({
       // Filter structures that are in locations belonging to this geographical unit
       const locationIdsInGeoUnit = filteredLocations.map((l) => l.id);
       filteredStructures = filteredStructures.filter(
-        (s) => s.location_id && locationIdsInGeoUnit.includes(s.location_id)
+        (s) => s.locationId && locationIdsInGeoUnit.includes(s.locationId)
       );
 
       // Filter business units that are in locations belonging to this geographical unit
@@ -253,7 +253,7 @@ export default function OrgChartFlowComponent({
     if (filters.location) {
       // Filter structures that belong to this specific location
       filteredStructures = filteredStructures.filter(
-        (s) => s.location_id === filters.location
+        (s) => s.locationId === filters.location
       );
 
       // Filter business units that belong to this specific location
@@ -540,7 +540,7 @@ export default function OrgChartFlowComponent({
 
               // Add locations under this geographical unit
               const unitLocations = filteredData.locations.filter(
-                (l) => l.geo_unit_id === unit.id
+                (l) => l.geographical_unit_id === unit.id
               );
 
               if (unitLocations.length > 0) {
@@ -579,7 +579,7 @@ export default function OrgChartFlowComponent({
 
                   // Add departments and business units under this location
                   const locationStructures = filteredData.structures.filter(
-                    (s) => s.location_id === location.id
+                    (s) => s.locationId === location.id
                   );
 
                   const locationSubBusinesses =

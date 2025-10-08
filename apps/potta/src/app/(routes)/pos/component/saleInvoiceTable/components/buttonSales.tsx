@@ -6,7 +6,7 @@ const SaleInvoiceButons = () => {
   const context = useContext(ContextData);
 
   return (
-    <div className="w-full py-1 px-3 grid grid-cols-4 gap-1">
+    <div className="w-full py-1 grid grid-cols-4 gap-1">
       <div className="flex flex-col space-y-3">
         <Button
           onClick={() => {

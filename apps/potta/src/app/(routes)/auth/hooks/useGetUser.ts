@@ -121,12 +121,31 @@ interface WhoAmIResponse {
       isActive: boolean;
       treePosition: any;
     };
+    locationContext?: {
+      id: string;
+      orgId: string;
+      locationId: string;
+      departmentId: string;
+      geoUnitId: string;
+      subBusinessId: string;
+      hierarchyPath: string;
+      locationName: string;
+      departmentName: string;
+      geoUnitName: string;
+      subBusinessName: string;
+      contextType: string;
+      metadata: any;
+      isActive: boolean;
+      createdAt: string;
+      updatedAt: string;
+    };
   };
 }
 
 // Bypass routes that should not call the whoami endpoint
 const BYPASS_AUTH_ROUTES = [
   '/vendor-portal',
+  '/vendor/kyc/verify',
   // Add more routes here as needed
 ];
 
@@ -203,7 +222,7 @@ const useGetUser = () => {
         organizationSlug: 'instanvi-inc',
         organizationLogo: 'https://instanvi.com/logo.png',
         organizationIndustry: 'Tech',
-        organizationId: 'dev-org-id',
+        organizationId: 'e2a76342-c606-4604-abf1-39f52583b311', // Real org ID from whoami
 
         // Session Information
         sessionToken: 'dev-session-token',
@@ -264,18 +283,40 @@ const useGetUser = () => {
           },
           hierarchy: {
             location: {
-              id: 'dev-location-id',
+              id: '1ebff621-ee8b-48c9-97df-d724e8e950e9', // Real location ID from whoami
               city: 'Douala',
               state: 'Littoral',
               country: 'Cameroon',
-              address: 'Quartre-etage, bonaberi, Douala',
+              address: '123 Main Street, Douala',
             },
             department: {
-              id: 'dev-department-id',
-              name: 'Development',
+              id: '00fac61d-b006-4c7e-9d6f-fde2de58a87d', // Real department ID from whoami
+              name: 'Executive',
             },
           },
           members: [],
+          // Add locationContext for dummy data
+          locationContextId: {
+            id: '861e7b4e-fd9c-45cd-b7e5-80faec551c54',
+            orgId: 'e2a76342-c606-4604-abf1-39f52583b311',
+            locationId: '1ebff621-ee8b-48c9-97df-d724e8e950e9',
+            departmentId: '00fac61d-b006-4c7e-9d6f-fde2de58a87d',
+            geoUnitId: '3cf38e02-aab8-4068-8067-1f3f7c0c32ed',
+            subBusinessId: '6293ac2b-18e8-4a13-936b-b629694b5e0d',
+            hierarchyPath: 'L.D.G.B',
+            locationName: 'Instanvi Headquarters',
+            departmentName: 'Executive',
+            geoUnitName: 'Littoral Region',
+            subBusinessName: 'Core Technology',
+            contextType: 'PRIMARY',
+            metadata: {
+              userPosition: 'Chief Executive Officer',
+              assignmentType: 'PRIMARY',
+            },
+            isActive: true,
+            createdAt: '2025-10-03T14:59:26.705Z',
+            updatedAt: '2025-10-03T14:59:26.705Z',
+          },
         },
       };
 
@@ -350,29 +391,41 @@ const useGetUser = () => {
         fullUserData: {
           ...userData.user,
           // Add location information if available
-          hierarchy: userData.user.hierarchy || {
-            location: {
-              id:
-                (userData.user as any).locationContext?.locationId ||
-                'default-location-id',
-              city:
-                (userData.user as any).locationContext?.locationName ||
-                'Default City',
-              state: 'Default State',
-              country: 'Default Country',
-              address:
-                (userData.user as any).locationContext?.locationName ||
-                'Default Address',
-            },
-            department: {
-              id:
-                (userData.user as any).locationContext?.departmentId ||
-                'default-department-id',
-              name:
-                (userData.user as any).locationContext?.departmentName ||
-                'Default Department',
-            },
-          },
+          hierarchy: userData.user.hierarchy
+            ? {
+                ...userData.user.hierarchy,
+                location: {
+                  ...userData.user.hierarchy.location,
+                  city:
+                    userData.user.hierarchy.location?.location_name ||
+                    'Default City',
+                },
+              }
+            : {
+                location: {
+                  id:
+                    (userData.user as any).locationContext?.locationId ||
+                    'default-location-id',
+                  city:
+                    (userData.user as any).locationContext?.locationName ||
+                    'Default City',
+                  state: 'Default State',
+                  country: 'Default Country',
+                  address:
+                    (userData.user as any).locationContext?.locationName ||
+                    'Default Address',
+                },
+                department: {
+                  id:
+                    (userData.user as any).locationContext?.departmentId ||
+                    'default-department-id',
+                  name:
+                    (userData.user as any).locationContext?.departmentName ||
+                    'Default Department',
+                },
+              },
+          // Add locationContext from who am i response
+          locationContextId: userData.user.locationContext || null,
         },
       };
 

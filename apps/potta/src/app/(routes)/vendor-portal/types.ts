@@ -46,6 +46,7 @@ export interface PurchaseOrder {
   paymentMethod: string;
   status: string;
   notes: string;
+  shippingAddress?: string;
 }
 
 export interface PurchaseOrderDetails {

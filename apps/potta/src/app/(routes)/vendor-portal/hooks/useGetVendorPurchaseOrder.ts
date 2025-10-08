@@ -4,20 +4,26 @@ import { PurchaseOrderDetails } from '../types';
 
 interface UseGetVendorPurchaseOrderProps {
   token: string;
+  orgId?: string;
+  locationId?: string;
   enabled: boolean;
 }
 
 export default function useGetVendorPurchaseOrder({
   token,
+  orgId,
+  locationId,
   enabled,
 }: UseGetVendorPurchaseOrderProps) {
   return useQuery({
-    queryKey: ['vendor-purchase-order', token],
+    queryKey: ['vendor-purchase-order', token, orgId, locationId],
     queryFn: async (): Promise<PurchaseOrderDetails> => {
       try {
         const response = await axios.get('/vendor-portal/purchase-order', {
           params: {
             token: token,
+            ...(orgId && { orgId }),
+            ...(locationId && { locationId }),
           },
         });
 
@@ -34,41 +40,66 @@ export default function useGetVendorPurchaseOrder({
           throw new Error('Invalid or expired token');
         }
 
-        // More flexible validation - check for different possible structures
-        const hasSuccessField = response.data.success !== undefined;
-        const hasPurchaseOrder =
-          response.data.purchaseOrder || response.data.purchaseOrderId;
-        const hasOrderNumber =
-          response.data.purchaseOrder?.orderNumber || response.data.orderNumber;
+        // Handle the new API structure where data is nested in response.data.data
+        const apiData = response.data.data || response.data;
 
-        // If it has the new structure with success field
-        if (hasSuccessField && hasPurchaseOrder && hasOrderNumber) {
-          return response.data;
+        // Check if we have the nested structure (response.data.data)
+        if (response.data.success && response.data.data) {
+          const purchaseOrderData = response.data.data;
+
+          // Validate that we have the essential fields
+          if (
+            !purchaseOrderData.orderNumber ||
+            !purchaseOrderData.purchaseOrderId
+          ) {
+            throw new Error('Invalid purchase order data structure');
+          }
+
+          // Transform the nested structure to match our expected format
+          return {
+            success: response.data.success,
+            message:
+              response.data.message ||
+              'Purchase order details retrieved successfully',
+            purchaseOrder: {
+              uuid: purchaseOrderData.uuid,
+              orderNumber: purchaseOrderData.orderNumber,
+              orderDate: purchaseOrderData.orderDate,
+              requiredDate: purchaseOrderData.requiredDate,
+              shipDate: purchaseOrderData.shipDate,
+              orderTotal: purchaseOrderData.orderTotal,
+              paymentTerms: purchaseOrderData.paymentTerms,
+              paymentMethod: purchaseOrderData.paymentMethod,
+              status: purchaseOrderData.status,
+              notes: purchaseOrderData.notes,
+              shippingAddress: purchaseOrderData.shippingAddress,
+            },
+            lineItems: purchaseOrderData.lineItems || [],
+            vendor: purchaseOrderData.salePerson || purchaseOrderData.vendor,
+          };
         }
 
-        // If it has the old structure (direct fields)
-        if (
-          hasOrderNumber &&
-          (response.data.purchaseOrderId || response.data.uuid)
-        ) {
+        // Check for old structure with direct fields
+        if (apiData.orderNumber && (apiData.purchaseOrderId || apiData.uuid)) {
           // Transform old structure to new structure
           return {
             success: true,
             message: 'Purchase order details retrieved successfully',
             purchaseOrder: {
-              uuid: response.data.uuid || response.data.purchaseOrderId,
-              orderNumber: response.data.orderNumber,
-              orderDate: response.data.orderDate,
-              requiredDate: response.data.requiredDate,
-              shipDate: response.data.shipDate,
-              orderTotal: response.data.orderTotal,
-              paymentTerms: response.data.paymentTerms,
-              paymentMethod: response.data.paymentMethod,
-              status: response.data.status,
-              notes: response.data.notes,
+              uuid: apiData.uuid || apiData.purchaseOrderId,
+              orderNumber: apiData.orderNumber,
+              orderDate: apiData.orderDate,
+              requiredDate: apiData.requiredDate,
+              shipDate: apiData.shipDate,
+              orderTotal: apiData.orderTotal,
+              paymentTerms: apiData.paymentTerms,
+              paymentMethod: apiData.paymentMethod,
+              status: apiData.status,
+              notes: apiData.notes,
+              shippingAddress: apiData.shippingAddress,
             },
-            lineItems: response.data.lineItems || [],
-            vendor: response.data.vendor || response.data.salePerson,
+            lineItems: apiData.lineItems || [],
+            vendor: apiData.vendor || apiData.salePerson,
           };
         }
 

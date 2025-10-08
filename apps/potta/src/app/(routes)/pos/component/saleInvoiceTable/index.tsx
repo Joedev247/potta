@@ -15,23 +15,23 @@ const SaleInvoiceTable = () => {
   return (
     <div className="w-full h-[85vh] ">
       {context?.itemSelected == 'cart' && (
-        <div className="h-[77vh] w-full  overflow-y-auto scrollbar-hide">
+        <div className="h-[77vh] w-full bg-white pb-2  overflow-y-auto scrollbar-hide">
           <TableOPS />
         </div>
       )}
 
       {context?.itemSelected == 'calculate' && (
-        <div className="w-full h-[77vh]  overflow-y-auto">
+        <div className="w-full h-[77vh] bg-white pb-2  overflow-y-auto">
           <Calculator />
         </div>
       )}
       {context?.itemSelected == 'other' && (
-        <div className="h-[77vh] w-full  overflow-y-auto">
+        <div className="h-[77vh] bg-white w-full pb-2  overflow-y-auto">
           <OtherMethod />
         </div>
       )}
       {context?.itemSelected == 'cash' && (
-        <div className="h-[77vh] w-full  overflow-y-auto">
+        <div className="h-[77vh] w-full bg-white pb-2  overflow-y-auto">
           <CashPayment />
         </div>
       )}

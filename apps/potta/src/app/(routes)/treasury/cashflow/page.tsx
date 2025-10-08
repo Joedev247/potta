@@ -48,7 +48,7 @@ const CashFlowPage = () => {
   const [isAdjustmentModalOpen, setIsAdjustmentModalOpen] = useState(false);
 
   // Mock organization ID - in real app, get from auth context
-  const organizationId = 'org-seed-123';
+  const organizationId = '41e4efaf-dbf5-4850-9fb8-0ea2a27bca0d';
 
   // Function to fetch comprehensive forecast data for multiple metrics
   const fetchComprehensiveForecastData = async (scenarioId?: string) => {
@@ -589,9 +589,9 @@ const CashFlowPage = () => {
         notes:
           scenarioData.notes || `Created on ${new Date().toLocaleDateString()}`,
       });
-
       // Reload scenarios to include the new one
       const scenariosResponse = await forecastingService.getScenarios(
+        'organization',
         organizationId
       );
       setScenarios(scenariosResponse.scenarios);

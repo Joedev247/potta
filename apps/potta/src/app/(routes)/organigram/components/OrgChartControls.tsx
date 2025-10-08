@@ -147,8 +147,6 @@ export default function OrgChartControls({
             </select>
           </div>
 
-         
-
           {/* Geographical Unit Filter */}
           <div className="min-w-[150px]">
             <select

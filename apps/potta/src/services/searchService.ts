@@ -1,11 +1,32 @@
 import axios from '../../config/axios.config';
 
+// Entity types enum matching the backend
+export enum SearchEntityType {
+  CUSTOMER = 'customer',
+  INVOICE = 'invoice',
+  EMPLOYEE = 'employee',
+  VENDOR = 'vendor',
+  PRODUCT = 'product',
+  TRANSACTION = 'transaction',
+  PURCHASE_ORDER = 'purchase_order',
+  CREDIT_NOTE = 'credit_note',
+  SALES_RECEIPT = 'sales_receipt',
+  VOUCHER = 'voucher',
+  BUDGET = 'budget',
+  DEDUCTION = 'deduction',
+  SHIFT = 'shift',
+  PAID_TIME_OFF = 'paid_time_off',
+  RISK_POLICY = 'risk_policy',
+  ASSET = 'asset',
+  BANK_ACCOUNT = 'bank_account',
+  ORGANIZATION = 'organization',
+  PRODUCT_CATEGORY = 'product_category',
+}
+
 // Types for the search API
 export interface SearchRequest {
   query: string;
-  orgId: string;
   entityTypes?: string[];
-  locationContextId?: string;
   filters?: {
     dateRange?: {
       from: string;
@@ -58,7 +79,6 @@ export interface SearchResponse {
 
 export interface SuggestionsRequest {
   query: string;
-  orgId: string;
   limit?: number;
 }
 
@@ -71,14 +91,23 @@ export interface FacetsResponse {
 }
 
 class SearchService {
-  private basePath = '/api/search';
+  private basePath = '/search';
 
   /**
    * Perform global search across all entities
    */
-  async globalSearch(request: SearchRequest): Promise<SearchResponse> {
+  async globalSearch(
+    request: SearchRequest,
+    orgId: string,
+    locationContextId?: string
+  ): Promise<SearchResponse> {
     try {
-      const response = await axios.post(`${this.basePath}/global`, request);
+      const response = await axios.post(`${this.basePath}/global`, request, {
+        params: {
+          orgId,
+          ...(locationContextId && { locationContextId }),
+        },
+      });
       return response.data;
     } catch (error) {
       console.error('Error in global search:', error);
@@ -90,12 +119,13 @@ class SearchService {
    * Get search suggestions for auto-complete
    */
   async getSuggestions(
-    request: SuggestionsRequest
+    request: SuggestionsRequest,
+    orgId: string
   ): Promise<SuggestionsResponse> {
     try {
       const params = new URLSearchParams({
         query: request.query,
-        orgId: request.orgId,
+        orgId,
         ...(request.limit && { limit: request.limit.toString() }),
       });
 
@@ -153,44 +183,52 @@ class SearchService {
     itemTypes: string[];
     transactionType: string[];
   }): string[] {
-    const entityTypeMap: Record<string, string> = {
-      Customers: 'customer',
-      'Vendors (Suppliers)': 'vendor',
-      Employees: 'employee',
-      Partners: 'partner',
-      'Leads/Prospects': 'lead',
-      'Other Contacts': 'contact',
-      'Inventory Items': 'product',
-      'Non-Inventory Items': 'product',
-      'Service Items': 'service',
-      'Assembly Items': 'product',
-      'Kit/Package Items': 'product',
-      'Discount Items': 'product',
-      'Markup Items': 'product',
-      'Gift Certificates': 'product',
-      'Deferred Revenue Items': 'product',
-      'Expense Items': 'expense',
-      'Sales Order': 'sales_order',
-      Invoice: 'invoice',
-      'Cash Sale': 'cash_sale',
-      'Credit Memo': 'credit_memo',
-      'Customer Payment': 'payment',
-      'Estimate/Quote': 'estimate',
-      'Purchase Order': 'purchase_order',
-      'Vendor Bill': 'vendor_bill',
-      'Vendor Credit': 'vendor_credit',
-      'Vendor Payment (Bill Payment)': 'vendor_payment',
-      'Expense Report': 'expense_report',
-      'Inventory Adjustment': 'inventory_adjustment',
-      'Inventory Transfer': 'inventory_transfer',
-      'Journal Entry': 'journal_entry',
-      Deposit: 'deposit',
-      Withdrawal: 'withdrawal',
-      'Transfer Funds': 'transfer',
-      'Credit Card Charge': 'credit_card_charge',
-      'Bank Reconciliation': 'bank_reconciliation',
-      'Payroll Run': 'payroll_run',
-      Budget: 'budget',
+    const entityTypeMap: Record<string, SearchEntityType> = {
+      // Contact entities
+      Customers: SearchEntityType.CUSTOMER,
+      'Vendors (Suppliers)': SearchEntityType.VENDOR,
+      Employees: SearchEntityType.EMPLOYEE,
+      Partners: SearchEntityType.CUSTOMER, // Map to customer for now
+      'Leads/Prospects': SearchEntityType.CUSTOMER, // Map to customer for now
+      'Other Contacts': SearchEntityType.CUSTOMER, // Map to customer for now
+
+      // Product entities
+      'Inventory Items': SearchEntityType.PRODUCT,
+      'Non-Inventory Items': SearchEntityType.PRODUCT,
+      'Service Items': SearchEntityType.PRODUCT,
+      'Assembly Items': SearchEntityType.PRODUCT,
+      'Kit/Package Items': SearchEntityType.PRODUCT,
+      'Discount Items': SearchEntityType.PRODUCT,
+      'Markup Items': SearchEntityType.PRODUCT,
+      'Gift Certificates': SearchEntityType.VOUCHER,
+      'Deferred Revenue Items': SearchEntityType.PRODUCT,
+      'Expense Items': SearchEntityType.TRANSACTION,
+
+      // Transaction entities
+      'Sales Order': SearchEntityType.TRANSACTION,
+      Invoice: SearchEntityType.INVOICE,
+      'Cash Sale': SearchEntityType.SALES_RECEIPT,
+      'Credit Memo': SearchEntityType.CREDIT_NOTE,
+      'Customer Payment': SearchEntityType.TRANSACTION,
+      'Estimate/Quote': SearchEntityType.INVOICE, // Map to invoice
+      'Purchase Order': SearchEntityType.PURCHASE_ORDER,
+      'Vendor Bill': SearchEntityType.TRANSACTION,
+      'Vendor Credit': SearchEntityType.CREDIT_NOTE,
+      'Vendor Payment (Bill Payment)': SearchEntityType.TRANSACTION,
+      'Expense Report': SearchEntityType.TRANSACTION,
+      'Inventory Adjustment': SearchEntityType.TRANSACTION,
+      'Inventory Transfer': SearchEntityType.TRANSACTION,
+      'Journal Entry': SearchEntityType.TRANSACTION,
+      Deposit: SearchEntityType.TRANSACTION,
+      Withdrawal: SearchEntityType.TRANSACTION,
+      'Transfer Funds': SearchEntityType.TRANSACTION,
+      'Credit Card Charge': SearchEntityType.TRANSACTION,
+      'Bank Reconciliation': SearchEntityType.TRANSACTION,
+      'Payroll Run': SearchEntityType.TRANSACTION,
+
+      // Other entities
+      Budget: SearchEntityType.BUDGET,
+      'Product Category': SearchEntityType.PRODUCT_CATEGORY,
     };
 
     const allSelectedTypes = [
@@ -208,5 +246,3 @@ class SearchService {
 
 export const searchService = new SearchService();
 export default searchService;
-
-

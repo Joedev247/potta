@@ -486,7 +486,14 @@ const TableComponents = () => {
         kycFilter={kycFilter}
         onKycFilterChange={setKycFilter}
       />
-      <DataGrid columns={columns} data={filteredData} isLoading={isLoading} />
+      <DataGrid
+        columns={columns}
+        data={filteredData}
+        isLoading={isLoading}
+        showPagination={true}
+        pageSize={10}
+        pageSizeOptions={[10, 20, 50, 100]}
+      />
       <DeleteModal
         vendorID={openDeleteModal || ''}
         open={isDeleteOpen}
