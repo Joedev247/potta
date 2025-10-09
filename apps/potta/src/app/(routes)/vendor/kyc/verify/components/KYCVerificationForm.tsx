@@ -10,6 +10,8 @@ import {
   FileImage,
 } from 'lucide-react';
 import toast from 'react-hot-toast';
+import { useKYCSubmission } from '../hooks';
+import DocumentUploader from './DocumentUploader';
 // import DocumentUploader from './DocumentUploader';
 // import { useKYCSubmission } from '../hooks/useKYCSubmission';
 // 

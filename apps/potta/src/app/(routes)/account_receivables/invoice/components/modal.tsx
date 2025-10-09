@@ -60,21 +60,21 @@ const ModalInvoice: FC<IModalInvoice> = ({ isOpen, setIsOpen }) => {
     >
       <div className="h-[87vh] flex max-w-6xl flex-col">
         <div className="flex-1 overflow-y-auto">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-12 p-4 min-h-full">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 p-4 ">
             {invoiceTypes.map((item, index) => (
               <div
                 key={index}
                 onClick={() => handleInvoiceClick(item.link)}
-                className="flex items-start justify-center space-x-4 p-4 rounded hover:shadow-md shadow-sm transition-all cursor-pointer
-                         hover:bg-gray-50 active:bg-gray-100 h-full"
+                className="flex items-center justify-center space-x-4 p-4 rounded hover:shadow-md shadow-sm transition-all cursor-pointer
+                         hover:bg-gray-50 active:bg-gray-100 h-[200px]"
               >
-                <div className="flex-shrink-0 relative w-16 h-16">
+                <div className="flex-shrink-0 relative w-16 h-16 ">
                   <img
                     src={item.image}
                     alt={item.title}
                     // fill
-                    className="object-contain"
-                    sizes="(max-width: 48px) 100vw"
+                    className="object-contain w-full h-full"
+                    sizes=" w-full h-full"
                   />
                 </div>
                 <div className="flex-1">

@@ -89,7 +89,7 @@ const SpendProgramPage = () => {
       >
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-8">
           <div className="flex items-center gap-3">
-            <div className="flex-1 min-w-[220px] max-w-[400px]">
+            <div className="flex-1 ">
               <Search
                 placeholder="search spend programs"
                 value={search}
@@ -98,7 +98,7 @@ const SpendProgramPage = () => {
             </div>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <button className="px-4 py-3 border  bg-white text-black text-sm flex items-center gap-2 min-w-[140px]">
+                <button className="px-4 py-3 border  bg-white text-black text-sm flex items-center gap-2 min-w-[]">
                   {filterLabel}
                   <ChevronDown size={20} />
                 </button>
