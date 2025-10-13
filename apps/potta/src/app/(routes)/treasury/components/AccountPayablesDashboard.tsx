@@ -51,16 +51,16 @@ const AccountPayablesDashboard: React.FC<AccountPayablesDashboardProps> = ({
     {
       name: 'TechSupply Co.',
       avgDelay: '15 days',
-      notDue: '€2,500.00',
-      due: '€12,500.00',
-      outstanding: '€15,000',
+      notDue: 'FCFA 2,500.00',
+      due: 'FCFA 12,500.00',
+      outstanding: 'FCFA 15,000',
     },
     {
       name: 'Office Solutions Ltd',
       avgDelay: '8 days',
-      notDue: '€1,800.00',
-      due: '€8,200.00',
-      outstanding: '€10,000',
+      notDue: 'FCFA 1,800.00',
+      due: 'FCFA 8,200.00',
+      outstanding: 'FCFA 10,000',
     },
   ];
 

@@ -25,6 +25,7 @@ const PUBLIC_PATHS = [
   '/fonts',
   '/vendor-portal',
   '/vendor/kyc/verify',
+  '/vendor/rfqs',
   '/public',
 ];
 

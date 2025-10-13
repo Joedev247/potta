@@ -88,7 +88,8 @@ export const getAuthConfig = () => {
 // Routes that bypass authentication
 export const BYPASS_AUTH_ROUTES = [
   '/vendor-portal',
-  '/vendor/kyc/verify',
+  '/vendor-portal/kyc/verify',
+  '/vendor-portal/rfqs',
   '/public',
   '/api/public',
   // Add more public routes as needed
@@ -105,6 +106,7 @@ export const PUBLIC_PATHS = [
   '/fonts',
   '/vendor-portal',
   '/vendor/kyc/verify',
+  '/vendor/rfqs',
 ];
 
 // Token storage keys

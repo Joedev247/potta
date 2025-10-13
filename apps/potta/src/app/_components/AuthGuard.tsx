@@ -8,7 +8,8 @@ const AUTH_REDIRECT_URL =
   process.env.NEXT_PUBLIC_AUTH_URL || 'https://instanvi-auth.vercel.app';
 const BYPASS_AUTH_ROUTES = [
   '/vendor-portal',
-  '/vendor/kyc/verify',
+  '/vendor-portal/kyc/verify',
+  '/vendor/rfqs',
   // Add more routes here as needed
   // '/client-portal',
   // '/public-api',

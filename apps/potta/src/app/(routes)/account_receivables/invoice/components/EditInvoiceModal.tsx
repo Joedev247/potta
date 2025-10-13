@@ -18,9 +18,9 @@ interface LineItem {
   quantity: number;
   unitPrice: number;
   totalAmount: number;
-  taxRate: number;
-  taxAmount: number;
-  discountRate: number;
+  taxRate: number | null;
+  taxAmount: number | null;
+  discountRate: number | null;
   discountAmount: number | null;
   discountType: string;
   discountCap: number;
@@ -29,7 +29,8 @@ interface LineItem {
 interface Invoice {
   uuid: string;
   invoiceId: string;
-  invoiceNumber: string;
+  invoiceNumber?: string | null;
+  code?: string;
   issuedDate: string;
   dueDate: string;
   invoiceType: string;
@@ -37,20 +38,22 @@ interface Invoice {
   status: string;
   notes: string;
   currency: string;
-  taxRate: number;
-  taxAmount: number;
+  taxRate: number | null;
+  taxAmount: number | null;
   paymentMethod: string;
   billingAddress: string;
-  shippingAddress: string;
-  paymentTerms: string;
-  paymentReference: string;
+  shippingAddress: string | null;
+  paymentTerms: string | null;
+  paymentReference: string | null;
   lineItems: LineItem[];
+  rfqId?: string | null;
+  spendRequestId?: string | null;
   customer: {
     firstName: string;
     lastName: string;
     email: string;
     phone: string;
-  };
+  } | null;
 }
 
 interface EditInvoiceModalProps {

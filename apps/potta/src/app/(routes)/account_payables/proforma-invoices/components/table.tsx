@@ -4,8 +4,7 @@ import { ColumnDef } from '@tanstack/react-table';
 import moment from 'moment';
 import toast from 'react-hot-toast';
 import DataGrid from '@potta/app/(routes)/account_receivables/invoice/components/DataGrid';
-
-import { IFilter } from '../_utils/types';
+import { IFilter } from '../../../account_receivables/invoice/_utils/types';
 import {
   MoreVertical,
   CheckCircle,
@@ -13,11 +12,10 @@ import {
   Clock,
   FileText,
 } from 'lucide-react';
-import useGetAllInvoice from '../_hooks/useGetAllInvoice';
-import useApproveInvoice from '../_hooks/useApproveInvoice';
-import { useInvoiceFilter } from '../_context/InvoiceFilterContext';
+import useGetAllInvoice from '../../../account_receivables/invoice/_hooks/useGetAllInvoice';
+import useApproveProformaInvoice from '../hooks/useApproveProformaInvoice';
+import useRejectProformaInvoice from '../hooks/useRejectProformaInvoice';
 import Button from '@potta/components/button';
-import ModalInvoice from './modal';
 import DynamicFilter from '@potta/components/dynamic-filter';
 import {
   DropdownMenu,
@@ -25,9 +23,8 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@potta/components/shadcn/dropdown';
-import InvoiceViewModal from './InvoiceViewModal';
-import DeleteConfirmModal from './DeleteConfirmModal';
-import EditInvoiceModal from './EditInvoiceModal';
+import InvoiceViewModal from '../../../account_receivables/invoice/components/InvoiceViewModal';
+import DeleteConfirmModal from '../../../account_receivables/invoice/components/DeleteConfirmModal';
 
 // Define types based on the API response
 interface LineItem {
@@ -44,7 +41,7 @@ interface LineItem {
   discountCap: number;
 }
 
-interface Invoice {
+interface ProformaInvoice {
   uuid: string;
   invoiceId: string;
   invoiceNumber?: string | null;
@@ -74,23 +71,20 @@ interface Invoice {
   } | null;
 }
 
-const InvoiceTable = () => {
+const ProformaInvoiceTable = () => {
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(20);
   const [searchValue, setSearchValue] = useState('');
+  const [statusFilter, setStatusFilter] = useState('all');
   const [sortBy, setSortBy] = useState('createdAt:DESC');
-  const [isOpen, setIsOpen] = useState(false);
-
-  // Use shared filter context
-  const { dateRange, statusFilter, setStatusFilter } = useInvoiceFilter();
 
   // Modal states
   const [viewModalOpen, setViewModalOpen] = useState(false);
-  const [selectedInvoice, setSelectedInvoice] = useState<Invoice | null>(null);
+  const [selectedInvoice, setSelectedInvoice] =
+    useState<ProformaInvoice | null>(null);
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
-  const [invoiceToDelete, setInvoiceToDelete] = useState<Invoice | null>(null);
-  const [editModalOpen, setEditModalOpen] = useState(false);
-  const [invoiceToEdit, setInvoiceToEdit] = useState<Invoice | null>(null);
+  const [invoiceToDelete, setInvoiceToDelete] =
+    useState<ProformaInvoice | null>(null);
 
   const filter: IFilter = {
     limit,
@@ -100,95 +94,52 @@ const InvoiceTable = () => {
   };
 
   const { data, isLoading, error } = useGetAllInvoice(filter);
-  const approveInvoiceMutation = useApproveInvoice();
+  const approveMutation = useApproveProformaInvoice();
+  const rejectMutation = useRejectProformaInvoice();
 
   // Cleanup modal states when component unmounts
   useEffect(() => {
     return () => {
       setViewModalOpen(false);
-      setEditModalOpen(false);
       setDeleteModalOpen(false);
       setSelectedInvoice(null);
-      setInvoiceToEdit(null);
       setInvoiceToDelete(null);
     };
   }, []);
 
-  // Filter data based on search, status, and date range
+  // Filter data to show only proforma invoices
   const filteredData = useMemo(() => {
     if (!data?.data) return [];
 
-    // Filter to show only regular invoices (not proforma invoices)
+    // Filter to show only proforma invoices
     let filtered = data.data.filter(
-      (invoice: Invoice) => invoice.invoiceType !== 'PROFORMA_INVOICE'
+      (invoice: ProformaInvoice) => invoice.invoiceType === 'PROFORMA_INVOICE'
     );
 
     // Filter by status
     if (statusFilter !== 'all') {
       filtered = filtered.filter(
-        (invoice: Invoice) =>
+        (invoice: ProformaInvoice) =>
           invoice.status.toLowerCase() === statusFilter.toLowerCase()
       );
-    }
-
-    // Filter by date range (from context)
-    if (dateRange?.from && dateRange?.to) {
-      filtered = filtered.filter((invoice: Invoice) => {
-        const invoiceDate = new Date(invoice.issuedDate);
-
-        // Create date objects for comparison (ignore time)
-        const invoiceDateOnly = new Date(
-          invoiceDate.getFullYear(),
-          invoiceDate.getMonth(),
-          invoiceDate.getDate()
-        );
-        const fromDateOnly = new Date(
-          dateRange.from!.getFullYear(),
-          dateRange.from!.getMonth(),
-          dateRange.from!.getDate()
-        );
-        const toDateOnly = new Date(
-          dateRange.to!.getFullYear(),
-          dateRange.to!.getMonth(),
-          dateRange.to!.getDate()
-        );
-
-        console.log('Table filtering invoice:', {
-          invoiceId: invoice.invoiceId,
-          issuedDate: invoice.issuedDate,
-          invoiceDateOnly: invoiceDateOnly.toISOString(),
-          fromDateOnly: fromDateOnly.toISOString(),
-          toDateOnly: toDateOnly.toISOString(),
-          isInRange:
-            invoiceDateOnly >= fromDateOnly && invoiceDateOnly <= toDateOnly,
-        });
-
-        return invoiceDateOnly >= fromDateOnly && invoiceDateOnly <= toDateOnly;
-      });
     }
 
     // Filter by search value
     if (searchValue) {
       const searchLower = searchValue.toLowerCase();
       filtered = filtered.filter(
-        (invoice: Invoice) =>
+        (invoice: ProformaInvoice) =>
           invoice.invoiceId.toLowerCase().includes(searchLower) ||
           (invoice.code && invoice.code.toLowerCase().includes(searchLower)) ||
-          invoice.notes.toLowerCase().includes(searchLower) ||
-          (invoice.customer &&
-            `${invoice.customer.firstName} ${invoice.customer.lastName}`
-              .toLowerCase()
-              .includes(searchLower))
+          invoice.notes.toLowerCase().includes(searchLower)
       );
     }
 
     return filtered;
-  }, [data?.data, statusFilter, dateRange, searchValue]);
+  }, [data?.data, statusFilter, searchValue]);
 
-  const getStatusInfo = (status: string, dueDate?: string) => {
+  const getStatusInfo = (status: string) => {
     const statusUpper = status.toUpperCase();
-    const dueDateMoment = dueDate ? moment(dueDate) : null;
-    const today = moment();
 
     switch (statusUpper) {
       case 'DRAFT':
@@ -199,28 +150,14 @@ const InvoiceTable = () => {
         };
       case 'ISSUED':
         return {
-          primary: 'Issued',
-          secondary: 'Pending approval',
+          primary: 'Submitted',
+          secondary: 'Pending review',
           className: 'text-yellow-600',
-        };
-      case 'OVERDUE':
-        return {
-          primary: 'Overdue',
-          secondary: dueDateMoment
-            ? `Due ${dueDateMoment.format('MMM DD')}`
-            : 'Past due',
-          className: 'text-red-500',
-        };
-      case 'PAID':
-        return {
-          primary: 'Paid',
-          secondary: 'Payment received',
-          className: 'text-green-500',
         };
       case 'APPROVED':
         return {
           primary: 'Approved',
-          secondary: 'Ready for payment',
+          secondary: 'Ready to convert',
           className: 'text-green-600',
         };
       case 'REJECTED':
@@ -228,12 +165,6 @@ const InvoiceTable = () => {
           primary: 'Rejected',
           secondary: 'Not approved',
           className: 'text-red-600',
-        };
-      case 'ARCHIVED':
-        return {
-          primary: 'Archived',
-          secondary: 'No longer active',
-          className: 'text-gray-500',
         };
       default:
         return {
@@ -246,12 +177,6 @@ const InvoiceTable = () => {
 
   const getResolutionStatus = (status: string) => {
     switch (status.toUpperCase()) {
-      case 'PAID':
-        return {
-          status: 'Paid',
-          icon: <CheckCircle className="h-4 w-4" />,
-          className: 'bg-green-50 text-green-700 border-green-500',
-        };
       case 'APPROVED':
         return {
           status: 'Approved',
@@ -263,12 +188,6 @@ const InvoiceTable = () => {
           status: 'Rejected',
           icon: <XCircle className="h-4 w-4" />,
           className: 'bg-red-50 text-red-700 border-red-500',
-        };
-      case 'OVERDUE':
-        return {
-          status: 'Overdue',
-          icon: <Clock className="h-4 w-4" />,
-          className: 'bg-orange-50 text-orange-700 border-orange-500',
         };
       case 'ISSUED':
         return {
@@ -300,9 +219,9 @@ const InvoiceTable = () => {
     } else if (momentDate.isSame(today.clone().subtract(1, 'day'), 'day')) {
       return 'Yesterday';
     } else if (momentDate.isAfter(today.clone().subtract(7, 'days'))) {
-      return momentDate.format('dddd'); // Day name for recent dates
+      return momentDate.format('dddd');
     } else {
-      return momentDate.format('MMM DD, YYYY'); // Full date for older dates
+      return momentDate.format('MMM DD, YYYY');
     }
   };
 
@@ -314,44 +233,15 @@ const InvoiceTable = () => {
     setSearchValue('');
   };
 
-  const handleApproveInvoice = async (invoiceId: string) => {
-    const loadingToast = toast.loading('Approving invoice...');
-    try {
-      await approveInvoiceMutation.mutateAsync(invoiceId);
-      toast.success('Invoice approved successfully!', { id: loadingToast });
-    } catch (error: any) {
-      console.error('Failed to approve invoice:', error);
-      toast.error(
-        error?.response?.data?.message || 'Failed to approve invoice',
-        {
-          id: loadingToast,
-        }
-      );
-    }
-  };
-
-  const handleViewInvoice = (invoice: Invoice) => {
-    // Ensure proper state initialization for animation
+  const handleViewInvoice = (invoice: ProformaInvoice) => {
     setSelectedInvoice(invoice);
-    // Small delay to ensure state is set before opening modal
     setTimeout(() => {
       setViewModalOpen(true);
     }, 10);
   };
 
-  const handleEditInvoice = (invoice: Invoice) => {
-    // Ensure proper state initialization for animation
-    setInvoiceToEdit(invoice);
-    // Small delay to ensure state is set before opening modal
-    setTimeout(() => {
-      setEditModalOpen(true);
-    }, 10);
-  };
-
-  const handleDeleteInvoice = (invoice: Invoice) => {
-    // Ensure proper state initialization for animation
+  const handleDeleteInvoice = (invoice: ProformaInvoice) => {
     setInvoiceToDelete(invoice);
-    // Small delay to ensure state is set before opening modal
     setTimeout(() => {
       setDeleteModalOpen(true);
     }, 10);
@@ -360,20 +250,62 @@ const InvoiceTable = () => {
   const confirmDeleteInvoice = async () => {
     if (!invoiceToDelete) return;
 
-    const loadingToast = toast.loading('Deleting invoice...');
+    const loadingToast = toast.loading('Deleting proforma invoice...');
     try {
       // TODO: Implement delete API call
-      console.log('Deleting invoice:', invoiceToDelete.uuid);
+      console.log('Deleting proforma invoice:', invoiceToDelete.uuid);
 
-      // Simulate API call
       await new Promise((resolve) => setTimeout(resolve, 1000));
 
-      toast.success('Invoice deleted successfully!', { id: loadingToast });
-    } catch (error) {
-      console.error('Failed to delete invoice:', error);
-      toast.error('Failed to delete invoice. Please try again.', {
+      toast.success('Proforma invoice deleted successfully!', {
         id: loadingToast,
       });
+      setDeleteModalOpen(false);
+      setInvoiceToDelete(null);
+    } catch (error) {
+      console.error('Failed to delete proforma invoice:', error);
+      toast.error('Failed to delete proforma invoice. Please try again.', {
+        id: loadingToast,
+      });
+    }
+  };
+
+  const handleApproveInvoice = async (invoice: ProformaInvoice) => {
+    const loadingToast = toast.loading('Approving proforma invoice...');
+    try {
+      await approveMutation.mutateAsync(invoice.uuid);
+      toast.success('Proforma invoice approved successfully!', {
+        id: loadingToast,
+      });
+    } catch (error: any) {
+      console.error('Failed to approve proforma invoice:', error);
+      toast.error(
+        error?.response?.data?.message || 'Failed to approve proforma invoice',
+        {
+          id: loadingToast,
+        }
+      );
+    }
+  };
+
+  const handleRejectInvoice = async (invoice: ProformaInvoice) => {
+    const reason = prompt('Enter rejection reason:');
+    if (!reason) return;
+
+    const loadingToast = toast.loading('Rejecting proforma invoice...');
+    try {
+      await rejectMutation.mutateAsync({ id: invoice.uuid, reason });
+      toast.success('Proforma invoice rejected successfully!', {
+        id: loadingToast,
+      });
+    } catch (error: any) {
+      console.error('Failed to reject proforma invoice:', error);
+      toast.error(
+        error?.response?.data?.message || 'Failed to reject proforma invoice',
+        {
+          id: loadingToast,
+        }
+      );
     }
   };
 
@@ -384,12 +316,9 @@ const InvoiceTable = () => {
       options: [
         { label: 'All Status', value: 'all' },
         { label: 'Draft', value: 'draft' },
-        { label: 'Issued', value: 'issued' },
-        { label: 'Paid', value: 'paid' },
+        { label: 'Submitted', value: 'issued' },
         { label: 'Approved', value: 'approved' },
-        { label: 'Overdue', value: 'overdue' },
         { label: 'Rejected', value: 'rejected' },
-        { label: 'Archived', value: 'archived' },
       ],
       value: statusFilter,
       onChange: setStatusFilter,
@@ -397,7 +326,7 @@ const InvoiceTable = () => {
     },
   ];
 
-  const columns: ColumnDef<Invoice>[] = [
+  const columns: ColumnDef<ProformaInvoice>[] = [
     {
       accessorKey: 'issuedDate',
       header: 'Date',
@@ -408,44 +337,31 @@ const InvoiceTable = () => {
       ),
     },
     {
-      accessorKey: 'customer',
-      header: 'Customer',
-      cell: ({ row: { original } }) => {
-        if (original.customer) {
-          return (
-            <div className="text-sm font-medium">
-              {`${original.customer.firstName} ${original.customer.lastName}`}
-            </div>
-          );
-        }
-        return (
-          <div className="text-sm font-medium text-gray-500">
-            {original.invoiceType === 'PROFORMA_INVOICE'
-              ? original.code || 'Proforma Invoice'
-              : 'N/A'}
-          </div>
-        );
-      },
+      accessorKey: 'code',
+      header: 'Code',
+      cell: ({ row: { original } }) => (
+        <div className="text-sm font-medium">{original.code || 'N/A'}</div>
+      ),
     },
     {
       accessorKey: 'invoiceId',
-      header: 'ID',
+      header: 'Invoice ID',
       cell: ({ row: { original } }) => (
         <div className="text-sm text-gray-500">{original.invoiceId}</div>
       ),
     },
     {
       accessorKey: 'notes',
-      header: 'Title',
+      header: 'Description',
       cell: ({ row: { original } }) => (
-        <div className="text-sm">{original.notes || 'No title'}</div>
+        <div className="text-sm">{original.notes || 'No description'}</div>
       ),
     },
     {
       accessorKey: 'status',
       header: 'Status',
       cell: ({ row: { original } }) => {
-        const statusInfo = getStatusInfo(original.status, original.dueDate);
+        const statusInfo = getStatusInfo(original.status);
         return (
           <div className="flex flex-col">
             <div className={`text-sm font-medium ${statusInfo.className}`}>
@@ -461,7 +377,7 @@ const InvoiceTable = () => {
       header: 'Amount',
       cell: ({ row: { original } }) => (
         <div className="text-sm">
-          XAF{' '}
+          {original.currency}{' '}
           {original.invoiceTotal.toLocaleString(undefined, {
             maximumFractionDigits: 2,
           })}
@@ -476,7 +392,7 @@ const InvoiceTable = () => {
         return (
           <div className="border-r pr-4 flex justify-center">
             <div
-              className={`flex items-center gap-2 px-3 py-2 border  ${resolution.className}`}
+              className={`flex items-center gap-2 px-3 py-2 border ${resolution.className}`}
             >
               {resolution.icon}
               <span className="text-sm font-medium">{resolution.status}</span>
@@ -487,48 +403,43 @@ const InvoiceTable = () => {
     },
     {
       id: 'actions',
-      header: '',
+      header: 'Actions',
       cell: ({ row: { original } }) => {
-        const isIssued = original.status.toUpperCase() === 'ISSUED';
-
         return (
-          <div className="flex justify-center">
+          <div className="flex gap-2">
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <button className="p-1 hover:bg-gray-100 rounded">
-                  <MoreVertical size={16} />
+                <button className="p-2 hover:bg-gray-100 rounded-lg transition-colors">
+                  <MoreVertical className="h-4 w-4" />
                 </button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-48">
                 <DropdownMenuItem onClick={() => handleViewInvoice(original)}>
+                  <FileText className="h-4 w-4 mr-2" />
                   View Details
                 </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => handleEditInvoice(original)}>
-                  Edit Invoice
-                </DropdownMenuItem>
-                {isIssued && (
-                  <DropdownMenuItem
-                    onClick={() => handleApproveInvoice(original.uuid)}
-                    disabled={approveInvoiceMutation.isPending}
-                  >
-                    {approveInvoiceMutation.isPending
-                      ? 'Approving...'
-                      : 'Approve Invoice'}
-                  </DropdownMenuItem>
+                {original.status === 'ISSUED' && (
+                  <>
+                    <DropdownMenuItem
+                      onClick={() => handleApproveInvoice(original)}
+                    >
+                      <CheckCircle className="h-4 w-4 mr-2" />
+                      Approve
+                    </DropdownMenuItem>
+                    <DropdownMenuItem
+                      onClick={() => handleRejectInvoice(original)}
+                    >
+                      <XCircle className="h-4 w-4 mr-2" />
+                      Reject
+                    </DropdownMenuItem>
+                  </>
                 )}
                 <DropdownMenuItem
-                  onClick={() => {
-                    console.log('Download PDF for:', original.invoiceId);
-                    toast.success('PDF download started!');
-                  }}
-                >
-                  Download PDF
-                </DropdownMenuItem>
-                <DropdownMenuItem
                   onClick={() => handleDeleteInvoice(original)}
-                  className="text-red-600 focus:text-red-700"
+                  className="text-red-600 focus:text-red-600"
                 >
-                  Delete Invoice
+                  <XCircle className="h-4 w-4 mr-2" />
+                  Delete
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
@@ -547,7 +458,7 @@ const InvoiceTable = () => {
             searchValue={searchValue}
             onSearchChange={handleSearchChange}
             onSearchClear={handleSearchClear}
-            searchPlaceholder="Search invoices by customer, ID, or title..."
+            searchPlaceholder="Search proforma invoices by code, ID, or description..."
             filters={filterConfig}
             className="p-0 bg-transparent"
           />
@@ -562,27 +473,17 @@ const InvoiceTable = () => {
             type={'button'}
             color={true}
           />
-          <Button
-            text={'Create Invoice'}
-            icon={<i className="ri-file-add-line"></i>}
-            theme="default"
-            type={'button'}
-            onClick={() => {
-              setIsOpen(true);
-            }}
-          />
         </div>
       </div>
 
       <DataGrid columns={columns} data={filteredData} isLoading={isLoading} />
 
       {/* Modals */}
-      <ModalInvoice isOpen={isOpen} setIsOpen={setIsOpen} />
-
       <InvoiceViewModal
         open={viewModalOpen}
         setOpen={setViewModalOpen}
-        invoice={selectedInvoice}
+        invoice={selectedInvoice as any}
+        
       />
 
       <DeleteConfirmModal
@@ -590,24 +491,12 @@ const InvoiceTable = () => {
         setOpen={setDeleteModalOpen}
         onConfirm={confirmDeleteInvoice}
         invoiceId={invoiceToDelete?.invoiceId || ''}
-        customerName={
-          invoiceToDelete && invoiceToDelete.customer
-            ? `${invoiceToDelete.customer.firstName} ${invoiceToDelete.customer.lastName}`
-            : invoiceToDelete?.invoiceType === 'PROFORMA_INVOICE'
-            ? 'Proforma Invoice'
-            : 'No Customer'
-        }
+        customerName={invoiceToDelete?.code || 'Proforma Invoice'}
         amount={invoiceToDelete?.invoiceTotal || 0}
-        isLoading={false} // TODO: Add delete mutation loading state
-      />
-
-      <EditInvoiceModal
-        open={editModalOpen}
-        setOpen={setEditModalOpen}
-        invoice={invoiceToEdit}
+        isLoading={false}
       />
     </div>
   );
 };
 
-export default InvoiceTable;
+export default ProformaInvoiceTable;

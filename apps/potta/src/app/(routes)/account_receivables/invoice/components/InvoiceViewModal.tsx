@@ -14,10 +14,10 @@ interface LineItem {
   quantity: number;
   unitPrice: number;
   totalAmount: number;
-  taxRate: number;
-  taxAmount: number;
-  discountRate: number;
-  discountAmount: number;
+  taxRate: number | null;
+  taxAmount: number | null;
+  discountRate: number | null;
+  discountAmount: number | null;
   discountType: string;
   discountCap: number;
 }
@@ -42,7 +42,8 @@ interface RiskEvaluationDetails {
 interface Invoice {
   uuid: string;
   invoiceId: string;
-  invoiceNumber: string;
+  invoiceNumber?: string | null;
+  code?: string;
   issuedDate: string;
   dueDate: string;
   invoiceType: string;
@@ -50,13 +51,13 @@ interface Invoice {
   status: string;
   notes: string;
   currency: string;
-  taxRate: number;
-  taxAmount: number;
+  taxRate: number | null;
+  taxAmount: number | null;
   paymentMethod: string;
   billingAddress: string;
-  shippingAddress: string;
-  paymentTerms: string;
-  paymentReference: string;
+  shippingAddress: string | null;
+  paymentTerms: string | null;
+  paymentReference: string | null;
   voucherCode?: string;
   approvedBy?: string;
   approvedAt?: string;
@@ -68,6 +69,8 @@ interface Invoice {
   riskEvaluatedAt?: string;
   riskEvaluationDetails?: RiskEvaluationDetails;
   lineItems: LineItem[];
+  rfqId?: string | null;
+  spendRequestId?: string | null;
   customer: {
     uuid: string;
     firstName: string;
@@ -78,7 +81,7 @@ interface Invoice {
     type: string;
     creditLimit: number;
     status: string;
-  };
+  } | null;
 }
 
 interface InvoiceViewModalProps {
@@ -157,12 +160,16 @@ const InvoiceViewModal: React.FC<InvoiceViewModalProps> = ({
             <div className="flex justify-between">
               <span className="text-gray-600">Customer:</span>
               <span className="font-medium">
-                {invoice.customer.firstName} {invoice.customer.lastName}
+                {invoice.customer
+                  ? `${invoice.customer.firstName} ${invoice.customer.lastName}`
+                  : 'N/A'}
               </span>
             </div>
             <div className="flex justify-between">
               <span className="text-gray-600">Customer ID:</span>
-              <span className="font-medium">{invoice.customer.customerId}</span>
+              <span className="font-medium">
+                {invoice.customer?.customerId || 'N/A'}
+              </span>
             </div>
             <div className="flex justify-between">
               <span className="text-gray-600">Amount:</span>
@@ -491,12 +498,13 @@ const InvoiceViewModal: React.FC<InvoiceViewModalProps> = ({
                         <h3 className="font-bold">To: </h3>
                         <div className="space-y-2 text-sm text-gray-600 flex-col">
                           <p>
-                            {invoice.customer.firstName}{' '}
-                            {invoice.customer.lastName}
+                            {invoice.customer
+                              ? `${invoice.customer.firstName} ${invoice.customer.lastName}`
+                              : 'Proforma Invoice'}
                           </p>
-                          <p>{invoice.customer.email}</p>
+                          <p>{invoice.customer?.email || 'N/A'}</p>
                           <p>{invoice.billingAddress}</p>
-                          <p>{invoice.customer.phone}</p>
+                          <p>{invoice.customer?.phone || 'N/A'}</p>
                         </div>
                       </div>
                     </div>

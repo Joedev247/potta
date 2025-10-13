@@ -7,6 +7,7 @@ import Icon from '@potta/components/icon_fonts/icon';
 import { MdPolicy } from 'react-icons/md';
 import { FaHandHoldingDollar } from 'react-icons/fa6';
 import { TbShoppingCartCog } from 'react-icons/tb';
+import { FileText } from 'lucide-react';
 import { svgIcons } from '@potta/components/svg_icons/IconsSvg';
 
 const SidebarsExpenses = () => {
@@ -41,9 +42,11 @@ const SidebarsExpenses = () => {
           }
           className="mt-8  "
           href="/account_payables"
-          icon={
-            svgIcons.dashboard(str[1] == 'account_payables' && str[2] == undefined ? 'white' : '#6b7280')
-          }
+          icon={svgIcons.dashboard(
+            str[1] == 'account_payables' && str[2] == undefined
+              ? 'white'
+              : '#6b7280'
+          )}
         >
           {' '}
           <h3 className="text-md mt-[2px]">Dashboard</h3>{' '}
@@ -96,7 +99,9 @@ const SidebarsExpenses = () => {
             icon={
               <FaHandHoldingDollar
                 size={24}
-                className={`${str[2] === 'spend-program' ? 'text-white' : '#6b7280'}`}
+                className={`${
+                  str[2] === 'spend-program' ? 'text-white' : '#6b7280'
+                }`}
               />
             }
           >
@@ -124,7 +129,9 @@ const SidebarsExpenses = () => {
           active={str[2] == 're-imbursements' ? true : false}
           className=" "
           href="/account_payables/re-imbursements"
-          icon={svgIcons.reImbursement(str[2] == 're-imbursements' ? 'white' : '#6b7280')}
+          icon={svgIcons.reImbursement(
+            str[2] == 're-imbursements' ? 'white' : '#6b7280'
+          )}
         >
           <h3 className="text-md mt-1.5">ReImbursement</h3>
         </MenuItem>
@@ -135,6 +142,36 @@ const SidebarsExpenses = () => {
           icon={svgIcons.bill(str[2] == 'bills' ? 'white' : '#6b7280')}
         >
           <h3 className="text-md mt-1.5">Biils </h3>
+        </MenuItem>
+        <MenuItem
+          active={str[2] == 'procurements' ? true : false}
+          className=" "
+          href="/account_payables/procurements"
+          icon={
+            <TbShoppingCartCog
+              size={24}
+              className={
+                str[2] === 'procurements' ? 'text-white' : 'text-gray-600'
+              }
+            />
+          }
+        >
+          <h3 className="text-md mt-1.5">Procurements</h3>
+        </MenuItem>
+        <MenuItem
+          active={str[2] == 'proforma-invoices' ? true : false}
+          className=" "
+          href="/account_payables/proforma-invoices"
+          icon={
+            <FileText
+              size={24}
+              className={
+                str[2] === 'proforma-invoices' ? 'text-white' : 'text-gray-600'
+              }
+            />
+          }
+        >
+          <h3 className="text-md mt-1.5">Proforma Invoices</h3>
         </MenuItem>
         {/* <MenuItem
           active={str[1] == 'inbox' ? true : false}

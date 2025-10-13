@@ -11,6 +11,7 @@ import { ContextData } from '../../../../components/context';
 import VouchersBox from '../../account_receivables/vouchers/components/boxVouchers';
 import InvoiceBox from './boxes/InvoiceBox';
 import VendorsBox from './boxes/PosVendorsBox';
+import ProformaInvoiceBox from '../../account_payables/proforma-invoices/components/ProformaInvoiceBox';
 import AppLauncher from '../../../../components/AppLauncher';
 import GlobalSearch from '../../../../components/GlobalSearch';
 
@@ -62,6 +63,11 @@ const urlRouters = [
 const routesWithBox = [
   { main: 'payments', sub: '', component: '' },
   { main: 'account_payables', sub: '', component: '' },
+  {
+    main: 'account_payables',
+    sub: 'proforma-invoices',
+    component: ProformaInvoiceBox,
+  },
   { main: 'pos', sub: 'vendors', component: VendorsBox },
   { main: 'account_receivables', sub: 'vouchers', component: VouchersBox },
   { main: 'accounting', sub: '', component: '' },
@@ -97,6 +103,7 @@ const routesWithoutBlueBackground = [
   { main: 'accounting' },
   { main: 'invoice', sub: 'new' },
   { main: 'account_receivables', sub: 'invoice' },
+  { main: 'account_payables', sub: 'proforma-invoices' },
   { main: 'bank-accounts' },
   { main: 'pos', sub: 'files' },
   { main: 'pos', sub: 'inventory' },
@@ -219,6 +226,9 @@ export default function Navbar({
     if (str[1] === 'account_receivables' && str[2] === 'invoice') {
       return true;
     }
+    if (str[1] === 'account_payables' && str[2] === 'proforma-invoices') {
+      return true;
+    }
 
     // Check if the route is in the exclusion list for blue background
     return !routesWithoutBlueBackground.some((route) => {
@@ -322,7 +332,7 @@ export default function Navbar({
     ) {
       return 'New Voucher';
     }
-
+    
     if (str[1] === 'reports' && str[2] === undefined) {
       return 'FP & A';
     }
@@ -331,6 +341,9 @@ export default function Navbar({
     }
     if (str[1] === 'account_receivables' && str[2] === 'invoice') {
       return 'Invoice Overview';
+    }
+    if (str[1] === 'account_payables' && str[2] === 'proforma-invoices') {
+      return 'Proforma Invoices';
     }
     if (
       str[1] === 'account_receivables' &&

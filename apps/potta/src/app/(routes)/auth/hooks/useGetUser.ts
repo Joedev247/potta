@@ -145,7 +145,8 @@ interface WhoAmIResponse {
 // Bypass routes that should not call the whoami endpoint
 const BYPASS_AUTH_ROUTES = [
   '/vendor-portal',
-  '/vendor/kyc/verify',
+  '/vendor-portal/kyc/verify',
+  '/vendor-portal/rfqs',
   // Add more routes here as needed
 ];
 
