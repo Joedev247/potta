@@ -27,6 +27,7 @@ import {
   DollarSign,
   Calendar,
   User,
+  ShieldCheck,
 } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { useForm, Controller } from 'react-hook-form';
@@ -89,12 +90,13 @@ const PaymentMethodsModal: React.FC<PaymentMethodsModalProps> = ({
 
   // Payment method options for Select component
   const paymentMethodOptions = [
-    { value: 'BANK_TRANSFER', label: 'Bank Transfer' },
-    { value: 'MOBILE_MONEY', label: 'Mobile Money' },
     { value: 'CREDIT_CARD', label: 'Credit Card' },
-    { value: 'DEBIT_CARD', label: 'Debit Card' },
+    { value: 'BANK_TRANSFER', label: 'Bank Transfer' },
+    { value: 'ACH_TRANSFER', label: 'ACH Transfer' },
+    { value: 'MOBILE_MONEY', label: 'Mobile Money' },
+    { value: 'DIGITAL_WALLET', label: 'Digital Wallet' },
     { value: 'CASH', label: 'Cash' },
-    { value: 'CRYPTOCURRENCY', label: 'Cryptocurrency' },
+    { value: 'CREDIT', label: 'Credit' },
     { value: 'OTHER', label: 'Other' },
   ];
 
@@ -196,6 +198,39 @@ const PaymentMethodsModal: React.FC<PaymentMethodsModalProps> = ({
     }
   };
 
+  const handleVerifyPaymentMethod = async (methodId: string) => {
+    if (!vendorId) return;
+
+    try {
+      const method = paymentMethods.find((m) => m.uuid === methodId);
+      if (!method) return;
+
+      const verificationData = {
+        verificationNotes: 'Payment method verified and approved for use',
+      };
+
+      const verifiedMethod = await vendorApi.paymentMethods.verify(
+        vendorId,
+        methodId,
+        verificationData
+      );
+
+      setPaymentMethods((prev) =>
+        prev.map((m) => (m.uuid === methodId ? verifiedMethod : m))
+      );
+
+      toast.success('Payment method verified successfully!');
+
+      // Trigger table refresh if callback is provided
+      if (onPaymentMethodChange) {
+        onPaymentMethodChange();
+      }
+    } catch (error) {
+      console.error('Failed to verify payment method:', error);
+      toast.error('Failed to verify payment method');
+    }
+  };
+
   const handleSetPrimary = async (methodId: string) => {
     if (!vendorId) return;
 
@@ -241,17 +276,18 @@ const PaymentMethodsModal: React.FC<PaymentMethodsModalProps> = ({
   const getPaymentMethodIcon = (type: PaymentMethodType) => {
     switch (type) {
       case 'BANK_TRANSFER':
+      case 'ACH_TRANSFER':
         return <Building className="h-5 w-5 text-blue-600" />;
       case 'MOBILE_MONEY':
         return <Smartphone className="h-5 w-5 text-green-600" />;
       case 'CREDIT_CARD':
         return <CreditCard className="h-5 w-5 text-purple-600" />;
-      case 'DEBIT_CARD':
-        return <CreditCard className="h-5 w-5 text-orange-600" />;
+      case 'DIGITAL_WALLET':
+        return <Wallet className="h-5 w-5 text-indigo-600" />;
       case 'CASH':
         return <DollarSign className="h-5 w-5 text-yellow-600" />;
-      case 'CRYPTOCURRENCY':
-        return <Wallet className="h-5 w-5 text-indigo-600" />;
+      case 'CREDIT':
+        return <CreditCard className="h-5 w-5 text-orange-600" />;
       default:
         return <CreditCard className="h-5 w-5 text-gray-600" />;
     }
@@ -360,14 +396,16 @@ const PaymentMethodsModal: React.FC<PaymentMethodsModalProps> = ({
                     />
                   </div>
 
-                  <Input
-                    label="Account Name"
-                    type="text"
-                    name="accountName"
-                    placeholder="Enter account name"
-                    register={register}
-                    errors={errors.accountName}
-                  />
+                  {watchedPaymentMethodType !== 'MOBILE_MONEY' && (
+                    <Input
+                      label="Account Name"
+                      type="text"
+                      name="accountName"
+                      placeholder="Enter account name"
+                      register={register}
+                      errors={errors.accountName}
+                    />
+                  )}
 
                   {watchedPaymentMethodType === 'BANK_TRANSFER' && (
                     <>
@@ -492,17 +530,6 @@ const PaymentMethodsModal: React.FC<PaymentMethodsModalProps> = ({
                 <p className="text-gray-500 mb-6">
                   This vendor doesn't have any payment methods configured yet.
                 </p>
-                <Button
-                  text="Add First Payment Method"
-                  onClick={() => {
-                    reset();
-                    setEditingMethod(null);
-                    setShowAddForm(true);
-                  }}
-                  theme="default"
-                  type="button"
-                  icon={<Plus className="h-4 w-4" />}
-                />
               </div>
             ) : (
               <div className="space-y-4">
@@ -526,6 +553,12 @@ const PaymentMethodsModal: React.FC<PaymentMethodsModalProps> = ({
                         </div>
                       </div>
                       <div className="flex items-center space-x-2">
+                        {method.verifiedAt && (
+                          <Badge className="bg-blue-100 text-blue-800 flex items-center gap-1">
+                            <ShieldCheck className="h-3 w-3" />
+                            Verified
+                          </Badge>
+                        )}
                         {method.isPrimary && (
                           <Badge className="bg-yellow-100 text-yellow-800 flex items-center gap-1">
                             <Star className="h-3 w-3" />
@@ -606,7 +639,37 @@ const PaymentMethodsModal: React.FC<PaymentMethodsModalProps> = ({
                       </div>
                     )}
 
+                    {method.verifiedAt && (
+                      <div className="mb-4 p-3 bg-blue-50 border border-blue-200 ">
+                        <div className="flex items-start space-x-2">
+                          <ShieldCheck className="h-5 w-5 text-blue-600 mt-0.5" />
+                          <div className="flex-1">
+                            <p className="text-sm font-medium text-blue-900">
+                              Verified Payment Method
+                            </p>
+                            <p className="text-xs text-blue-700 mt-1">
+                              Verified on: {formatDate(method.verifiedAt)}
+                            </p>
+                            {method.verificationNotes && (
+                              <p className="text-xs text-blue-700 mt-1">
+                                {method.verificationNotes}
+                              </p>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                    )}
+
                     <div className="flex justify-end space-x-2">
+                      {!method.verifiedAt && (
+                        <Button
+                          text="Verify"
+                          onClick={() => handleVerifyPaymentMethod(method.uuid)}
+                          theme="default"
+                          type="button"
+                          icon={<ShieldCheck className="h-4 w-4" />}
+                        />
+                      )}
                       {!method.isPrimary && (
                         <Button
                           text="Set Primary"
@@ -626,7 +689,7 @@ const PaymentMethodsModal: React.FC<PaymentMethodsModalProps> = ({
                       <Button
                         text="Delete"
                         onClick={() => handleDeletePaymentMethod(method.uuid)}
-                        theme="lightBlue"
+                        theme="red"
                         type="button"
                         icon={<Trash2 className="h-4 w-4" />}
                       />

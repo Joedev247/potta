@@ -189,12 +189,13 @@ export interface VendorPaymentMethod {
 }
 
 export type PaymentMethodType =
-  | 'BANK_TRANSFER'
-  | 'MOBILE_MONEY'
   | 'CREDIT_CARD'
-  | 'DEBIT_CARD'
+  | 'BANK_TRANSFER'
+  | 'ACH_TRANSFER'
+  | 'MOBILE_MONEY'
+  | 'DIGITAL_WALLET'
   | 'CASH'
-  | 'CRYPTOCURRENCY'
+  | 'CREDIT'
   | 'OTHER';
 
 export interface CreatePaymentMethodPayload {

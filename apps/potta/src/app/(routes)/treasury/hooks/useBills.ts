@@ -117,10 +117,41 @@ export const usePayBill = () => {
 export const useGetApprovedBills = (
   additionalFilter?: Omit<BillsFilter, 'status'>
 ) => {
-  const filter: BillsFilter = {
+  const approvedFilter: BillsFilter = {
     status: 'APPROVED',
     ...additionalFilter,
   };
 
-  return useGetBills(filter);
+  const pendingPaymentFilter: BillsFilter = {
+    status: 'PENDING_PAYMENT',
+    ...additionalFilter,
+  };
+
+  const approvedQuery = useGetBills(approvedFilter);
+  const pendingPaymentQuery = useGetBills(pendingPaymentFilter);
+
+  // Combine data and remove duplicates based on uuid
+  const combinedData =
+    approvedQuery.data && pendingPaymentQuery.data
+      ? {
+          data: [
+            ...approvedQuery.data.data,
+            ...pendingPaymentQuery.data.data,
+          ].filter(
+            (bill, index, self) =>
+              index === self.findIndex((b) => b.uuid === bill.uuid)
+          ),
+          meta: approvedQuery.data.meta,
+        }
+      : undefined;
+
+  return {
+    data: combinedData,
+    isLoading: approvedQuery.isLoading || pendingPaymentQuery.isLoading,
+    error: approvedQuery.error || pendingPaymentQuery.error,
+    refetch: () => {
+      approvedQuery.refetch();
+      pendingPaymentQuery.refetch();
+    },
+  };
 };

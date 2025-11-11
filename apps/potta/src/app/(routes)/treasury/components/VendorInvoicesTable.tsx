@@ -23,17 +23,31 @@ const VendorInvoicesTable: React.FC = () => {
     null
   );
 
+  // Pagination state
+  const [page, setPage] = useState(1);
+  const [limit, setLimit] = useState(10);
+
   // Fetch approved bills from API
   const {
     data: billsData,
     isLoading,
     error,
   } = useGetApprovedBills({
-    limit: 100,
+    page,
+    limit,
     sortBy: ['issuedDate:DESC'],
   });
 
   const bills = billsData?.data || [];
+
+  const handlePageChange = (newPage: number) => {
+    setPage(newPage);
+  };
+
+  const handlePageSizeChange = (newPageSize: number) => {
+    setLimit(newPageSize);
+    setPage(1); // Reset to first page when page size changes
+  };
 
   const formatCurrency = (amount: number) => {
     return new Intl.NumberFormat('en-US', {
@@ -52,11 +66,11 @@ const VendorInvoicesTable: React.FC = () => {
     });
   };
 
-  // Filter data based on search and filters - only show approved bills
+  // Filter data based on search and filters - show approved and pending payment bills
   const filteredData = useMemo(() => {
     return bills.filter((bill) => {
-      // Only show approved bills (already filtered by API, but double-check)
-      if (bill.status !== 'APPROVED') {
+      // Show approved bills and pending payment bills
+      if (bill.status !== 'APPROVED' && bill.status !== 'PENDING_PAYMENT') {
         return false;
       }
 
@@ -245,6 +259,8 @@ const VendorInvoicesTable: React.FC = () => {
               return 'bg-green-100 text-green-800';
             case 'PENDING':
               return 'bg-yellow-100 text-yellow-800';
+            case 'PENDING_PAYMENT':
+              return 'bg-orange-100 text-orange-800';
             case 'REJECTED':
               return 'bg-red-100 text-red-800';
             case 'PAID':
@@ -269,6 +285,7 @@ const VendorInvoicesTable: React.FC = () => {
       header: '',
       cell: ({ row }) => {
         const bill = row.original;
+        const isPendingPayment = bill.status === 'PENDING_PAYMENT';
         return (
           <Button
             text="Pay"
@@ -328,6 +345,9 @@ const VendorInvoicesTable: React.FC = () => {
           <h2 className="text-xl font-semibold text-gray-900">
             Approved Bills ({filteredData.length})
           </h2>
+          <p className="text-sm text-gray-600 mt-1">
+            Bills that are approved and ready for payment
+          </p>
         </div>
 
         {/* Dynamic Filters */}
@@ -349,6 +369,15 @@ const VendorInvoicesTable: React.FC = () => {
             data={filteredData}
             columns={columns}
             onRowClick={handleRowClick}
+            manualPagination={!!billsData?.meta}
+            currentPage={page}
+            pageSize={limit}
+            pageCount={billsData?.meta?.totalPages || 1}
+            totalItems={billsData?.meta?.totalItems || filteredData.length}
+            onPageChange={handlePageChange}
+            onPageSizeChange={handlePageSizeChange}
+            showPagination={true}
+            pageSizeOptions={[10, 20, 50, 100]}
           />
         )}
       </div>

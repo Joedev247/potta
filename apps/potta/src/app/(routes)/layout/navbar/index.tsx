@@ -209,12 +209,19 @@ export default function Navbar({
     ) {
       return false;
     }
+
     if (
       str[1] === 'account_receivables' &&
       str[2] === 'vouchers' &&
       str[3] === 'new'
     ) {
       return false;
+    }
+    if (
+      str[1] === 'pos' &&
+      str[2] === 'vendors' 
+    ) {
+      return true;
     }
     if (str[1] === 'account_receivables' && str[2] === 'vouchers') {
       return true;

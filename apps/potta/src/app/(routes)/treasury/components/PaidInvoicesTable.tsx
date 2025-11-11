@@ -6,6 +6,8 @@ import { Filter, Calendar, DollarSign, Eye, CreditCard } from 'lucide-react';
 import Button from '@potta/components/button';
 import moment from 'moment';
 import PaidInvoiceModal from './PaidInvoiceModal';
+import { billsApi, Bill } from '../utils/bills-api';
+import { useQuery } from '@tanstack/react-query';
 
 interface PaidInvoice {
   id: string;
@@ -31,69 +33,49 @@ const PaidInvoicesTable: React.FC = () => {
     null
   );
 
-  // Mock data - replace with actual API call
-  const mockData: PaidInvoice[] = [
-    {
-      id: '1',
-      invoiceNumber: 'INV-2024-001',
-      customerName: 'John Smith',
-      customerEmail: 'john.smith@email.com',
-      amount: 25000.0,
-      currency: 'XAF',
-      status: 'paid',
-      issueDate: '2024-01-15',
-      dueDate: '2024-02-15',
-      paidDate: '2024-02-10',
-      type: 'Service',
-      description: 'Consulting services for Q1',
-      paymentMethod: 'mtn',
-    },
-    {
-      id: '2',
-      invoiceNumber: 'INV-2024-002',
-      customerName: 'Sarah Johnson',
-      customerEmail: 'sarah.johnson@email.com',
-      amount: 18000.0,
-      currency: 'XAF',
-      status: 'paid',
-      issueDate: '2024-01-20',
-      dueDate: '2024-02-20',
-      paidDate: '2024-02-18',
-      type: 'Product',
-      description: 'Software license renewal',
-      paymentMethod: 'orange',
-    },
-    {
-      id: '3',
-      invoiceNumber: 'INV-2024-003',
-      customerName: 'Mike Wilson',
-      customerEmail: 'mike.wilson@email.com',
-      amount: 32000.0,
-      currency: 'XAF',
-      status: 'paid',
-      issueDate: '2024-01-10',
-      dueDate: '2024-02-10',
-      paidDate: '2024-02-05',
-      type: 'Service',
-      description: 'Technical support services',
-      paymentMethod: 'mtn',
-    },
-    {
-      id: '4',
-      invoiceNumber: 'INV-2024-004',
-      customerName: 'Emily Davis',
-      customerEmail: 'emily.davis@email.com',
-      amount: 15000.0,
-      currency: 'XAF',
-      status: 'paid',
-      issueDate: '2024-01-25',
-      dueDate: '2024-02-25',
-      paidDate: '2024-02-22',
-      type: 'Product',
-      description: 'Hardware equipment',
-      paymentMethod: 'orange',
-    },
-  ];
+  // Pagination state
+  const [page, setPage] = useState(1);
+  const [limit, setLimit] = useState(10);
+
+  // Fetch paid bills from API
+  const {
+    data: billsData,
+    isLoading,
+    error,
+  } = useQuery({
+    queryKey: ['paid-bills', page, limit],
+    queryFn: () => billsApi.getAll({ status: 'PAID', page, limit }),
+  });
+
+  const handlePageChange = (newPage: number) => {
+    setPage(newPage);
+  };
+
+  const handlePageSizeChange = (newPageSize: number) => {
+    setLimit(newPageSize);
+    setPage(1); // Reset to first page when page size changes
+  };
+
+  // Transform API data to match component interface
+  const paidBills: PaidInvoice[] = useMemo(() => {
+    if (!billsData?.data) return [];
+
+    return billsData.data.map((bill: Bill) => ({
+      id: bill.uuid,
+      invoiceNumber: bill.invoiceId || bill.invoiceNumber || '-',
+      customerName: bill.vendor?.name || bill.customer?.name || '-',
+      customerEmail: '', // Not available in bills API
+      amount: bill.invoiceTotal,
+      currency: bill.currency,
+      status: bill.status.toLowerCase(),
+      issueDate: bill.issuedDate || bill.createdAt || '',
+      dueDate: bill.dueDate || '',
+      paidDate: bill.updatedAt || '', // Use updatedAt as paid date
+      type: bill.invoiceType || 'BILL',
+      description: bill.notes || '',
+      paymentMethod: bill.paymentMethod?.toLowerCase() || '',
+    }));
+  }, [billsData]);
 
   const formatCurrency = (amount: number, currency: string) => {
     if (currency === 'XAF') {
@@ -113,7 +95,7 @@ const PaidInvoicesTable: React.FC = () => {
   };
 
   const filteredData = useMemo(() => {
-    return mockData.filter((invoice) => {
+    return paidBills.filter((invoice) => {
       const searchMatch =
         !searchValue ||
         invoice.customerName
@@ -125,7 +107,7 @@ const PaidInvoicesTable: React.FC = () => {
         invoice.invoiceNumber.toLowerCase().includes(searchValue.toLowerCase());
 
       let dateMatch = true;
-      if (dateFilter !== 'all') {
+      if (dateFilter !== 'all' && invoice.paidDate) {
         const paidDate = new Date(invoice.paidDate);
         const now = new Date();
         const diffDays = Math.ceil(
@@ -166,7 +148,7 @@ const PaidInvoicesTable: React.FC = () => {
 
       return searchMatch && dateMatch && amountMatch;
     });
-  }, [searchValue, dateFilter, amountFilter]);
+  }, [paidBills, searchValue, dateFilter, amountFilter]);
 
   const filterConfig = [
     {
@@ -201,7 +183,7 @@ const PaidInvoicesTable: React.FC = () => {
   const columns: ColumnDef<PaidInvoice>[] = [
     {
       accessorKey: 'invoiceNumber',
-      header: 'Invoice Number',
+      header: 'Bill Number',
       cell: ({ row }) => (
         <div className="font-mono text-sm text-gray-900 font-medium">
           {row.getValue('invoiceNumber')}
@@ -210,7 +192,7 @@ const PaidInvoicesTable: React.FC = () => {
     },
     {
       accessorKey: 'customerName',
-      header: 'Customer Name',
+      header: 'Vendor Name',
       cell: ({ row }) => (
         <div className="font-medium text-gray-900">
           {row.getValue('customerName')}
@@ -219,7 +201,7 @@ const PaidInvoicesTable: React.FC = () => {
     },
     {
       accessorKey: 'customerEmail',
-      header: 'Customer Email',
+      header: 'Vendor Email',
       cell: ({ row }) => (
         <div className="text-gray-600">{row.getValue('customerEmail')}</div>
       ),
@@ -307,7 +289,10 @@ const PaidInvoicesTable: React.FC = () => {
     <div className="bg-white p-6 ">
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h2 className="text-xl font-semibold text-gray-900">Paid Invoices</h2>
+          <h2 className="text-xl font-semibold text-gray-900">Paid Bills</h2>
+          <p className="text-sm text-gray-600 mt-1">
+            Bills that have been approved and paid
+          </p>
         </div>
         <Button
           text="Pay"
@@ -321,7 +306,7 @@ const PaidInvoicesTable: React.FC = () => {
         searchValue={searchValue}
         onSearchChange={(e) => setSearchValue(e.target.value)}
         onSearchClear={() => setSearchValue('')}
-        searchPlaceholder="Search paid invoices, customers..."
+        searchPlaceholder="Search paid bills, vendors..."
         filters={filterConfig}
         className="mb-6"
       />
@@ -329,7 +314,17 @@ const PaidInvoicesTable: React.FC = () => {
       <DataGrid
         data={filteredData}
         columns={columns}
+        isLoading={isLoading}
         onRowClick={(row) => console.log('Clicked:', row)}
+        manualPagination={!!billsData?.meta}
+        currentPage={page}
+        pageSize={limit}
+        pageCount={billsData?.meta?.totalPages || 1}
+        totalItems={billsData?.meta?.totalItems || filteredData.length}
+        onPageChange={handlePageChange}
+        onPageSizeChange={handlePageSizeChange}
+        showPagination={true}
+        pageSizeOptions={[10, 20, 50, 100]}
       />
 
       {/* Paid Invoice Modal */}

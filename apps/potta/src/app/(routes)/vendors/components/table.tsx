@@ -356,8 +356,22 @@ const TableComponents = () => {
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(10);
 
-  const filter: VendorFilter = { page, limit };
+  // Build filter with search
+  const filter: VendorFilter = {
+    page,
+    limit,
+    search: searchValue || undefined,
+  };
   const { data: vendor, isLoading, error, refetch } = useGetAllVendors(filter);
+
+  const handlePageChange = (newPage: number) => {
+    setPage(newPage);
+  };
+
+  const handlePageSizeChange = (newPageSize: number) => {
+    setLimit(newPageSize);
+    setPage(1); // Reset to first page when page size changes
+  };
 
   // Function to refresh vendor data
   const handleRefreshVendors = () => {
@@ -491,8 +505,14 @@ const TableComponents = () => {
         data={filteredData}
         isLoading={isLoading}
         showPagination={true}
-        pageSize={10}
+        pageSize={limit}
         pageSizeOptions={[10, 20, 50, 100]}
+        manualPagination={!!vendor?.meta}
+        currentPage={page}
+        pageCount={vendor?.meta?.totalPages || 1}
+        totalItems={vendor?.meta?.totalItems || filteredData.length}
+        onPageChange={handlePageChange}
+        onPageSizeChange={handlePageSizeChange}
       />
       <DeleteModal
         vendorID={openDeleteModal || ''}

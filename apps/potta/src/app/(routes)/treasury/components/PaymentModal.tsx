@@ -28,7 +28,6 @@ const PaymentModal: React.FC<PaymentModalProps> = ({
   // State for modal visibility to handle animations
   const [isVisible, setIsVisible] = useState(isOpen);
   const [paymentMethod, setPaymentMethod] = useState('');
-  const [phoneNumber, setPhoneNumber] = useState('');
   const [isProcessing, setIsProcessing] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
   const [paymentResult, setPaymentResult] = useState<any>(null);
@@ -63,7 +62,6 @@ const PaymentModal: React.FC<PaymentModalProps> = ({
       setIsSuccess(false);
       setPaymentResult(null);
       setPaymentMethod('');
-      setPhoneNumber('');
     }, 300); // Match this with the exit animation duration
   };
 
@@ -81,8 +79,8 @@ const PaymentModal: React.FC<PaymentModalProps> = ({
   }, [isProcessing]);
 
   const handlePayment = async () => {
-    if (!paymentMethod || !phoneNumber || !selectedInvoice) {
-      alert('Please fill in all fields');
+    if (!paymentMethod || !selectedInvoice) {
+      alert('Please select a payment method');
       return;
     }
 
@@ -90,18 +88,14 @@ const PaymentModal: React.FC<PaymentModalProps> = ({
 
     try {
       const paymentData = {
-        phoneNumber: parseInt(phoneNumber.replace(/\D/g, '')), // Remove non-digits and parse
         paymentProvider: paymentMethod,
         currency: selectedInvoice.currency || 'XAF',
-        category: 'BILL_PAYMENT',
         description: `Payment for ${selectedInvoice.invoiceType || 'bill'} ${
           selectedInvoice.invoiceNumber ||
           selectedInvoice.vendorInvoiceNumber ||
           selectedInvoice.invoiceId ||
           ''
         }`,
-        transaction_type: 'BILL_PAYMENT',
-        // budgetId: 'budget-2024-q1' // You might want to make this configurable
       };
 
       const result = await payBillMutation.mutateAsync({
@@ -268,49 +262,30 @@ const PaymentModal: React.FC<PaymentModalProps> = ({
                     </div>
                   </div>
 
-                  {/* Payment Form */}
+                  {/* Payment Instructions */}
                   {paymentMethod && (
                     <div className="space-y-4">
-                      {/* MTN Mobile Money Fields */}
+                      {/* MTN Mobile Money Instructions */}
                       {paymentMethod === 'MTN_CAM' && (
-                        <>
-                          <Input
-                            label="Phone Number"
-                            type="tel"
-                            name="phoneNumber"
-                            placeholder="Enter MTN phone number (e.g., 671381152)"
-                            value={phoneNumber}
-                            onchange={(e) => setPhoneNumber(e.target.value)}
-                            required
-                            disabled={isProcessing}
-                          />
-
-                          {/* Payment Instructions */}
-                          <div className="p-4 bg-blue-50 ">
-                            <h4 className="font-medium text-blue-900 mb-2">
-                              MTN Mobile Money Payment Instructions
-                            </h4>
-                            <ul className="text-sm text-blue-800 space-y-1">
-                              <li>
-                                • Enter your phone number registered with MTN
-                                Mobile Money
-                              </li>
-                              <li>
-                                • You will receive a payment prompt on your
-                                phone
-                              </li>
-                              <li>
-                                • Enter your MTN Mobile Money PIN to complete
-                                the transaction
-                              </li>
-                              <li>• Payment will be processed immediately</li>
-                              <li>
-                                • Ensure you have sufficient balance in your MTN
-                                Mobile Money account
-                              </li>
-                            </ul>
-                          </div>
-                        </>
+                        <div className="p-4 bg-blue-50 ">
+                          <h4 className="font-medium text-blue-900 mb-2">
+                            MTN Mobile Money Payment Instructions
+                          </h4>
+                          <ul className="text-sm text-blue-800 space-y-1">
+                            <li>
+                              • Your bill will be processed through MTN Mobile Money
+                            </li>
+                            <li>
+                              • Payment will be initiated immediately after confirmation
+                            </li>
+                            <li>
+                              • You will receive a confirmation once the payment is successful
+                            </li>
+                            <li>
+                              • Transaction details will be sent to your registered contact
+                            </li>
+                          </ul>
+                        </div>
                       )}
                     </div>
                   )}
@@ -322,7 +297,7 @@ const PaymentModal: React.FC<PaymentModalProps> = ({
                         text={isProcessing ? 'Processing...' : 'Pay Now'}
                         type="button"
                         onClick={handlePayment}
-                        disabled={isProcessing || !phoneNumber}
+                        disabled={isProcessing}
                         icon={<CreditCard className="h-4 w-4" />}
                       />
                     </div>

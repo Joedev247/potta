@@ -52,7 +52,6 @@ const SliderVendor = () => {
       classification: undefined,
       industry: undefined,
       creditLimit: 0,
-      status: 'PENDING',
       notes: '',
       initializeKYC: false,
     },

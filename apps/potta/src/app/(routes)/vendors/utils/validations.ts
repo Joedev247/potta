@@ -32,12 +32,13 @@ const VendorIndustryEnum = [
   'Other',
 ] as const;
 const VendorPaymentMethodEnum = [
-  'BANK_TRANSFER',
-  'MOBILE_MONEY',
   'CREDIT_CARD',
-  'DEBIT_CARD',
+  'BANK_TRANSFER',
+  'ACH_TRANSFER',
+  'MOBILE_MONEY',
+  'DIGITAL_WALLET',
   'CASH',
-  'CRYPTOCURRENCY',
+  'CREDIT',
   'OTHER',
 ] as const;
 const URL =
@@ -50,16 +51,20 @@ export const paymentMethodSchema = yup.object().shape({
     .string()
     .oneOf([...VendorPaymentMethodEnum], 'Invalid payment method type')
     .required('Payment method type is required'),
-  accountName: yup.string().required('Account name is required'),
+  accountName: yup.string().when('paymentMethodType', {
+    is: (val: string) => val !== 'MOBILE_MONEY',
+    then: (schema) => schema.required('Account name is required'),
+    otherwise: (schema) => schema.nullable(),
+  }),
   accountNumber: yup.string().when('paymentMethodType', {
     is: (val: string) =>
-      ['BANK_TRANSFER', 'DEBIT_CARD', 'CREDIT_CARD'].includes(val),
+      ['BANK_TRANSFER', 'ACH_TRANSFER', 'CREDIT_CARD', 'CREDIT'].includes(val),
     then: (schema) =>
       schema.required('Account number is required for this payment type'),
     otherwise: (schema) => schema.nullable(),
   }),
   bankName: yup.string().when('paymentMethodType', {
-    is: 'BANK_TRANSFER',
+    is: (val: string) => ['BANK_TRANSFER', 'ACH_TRANSFER'].includes(val),
     then: (schema) =>
       schema.required('Bank name is required for bank transfers'),
     otherwise: (schema) => schema.nullable(),
@@ -68,6 +73,12 @@ export const paymentMethodSchema = yup.object().shape({
     is: 'MOBILE_MONEY',
     then: (schema) =>
       schema.required('Phone number is required for mobile money'),
+    otherwise: (schema) => schema.nullable(),
+  }),
+  walletId: yup.string().when('paymentMethodType', {
+    is: 'DIGITAL_WALLET',
+    then: (schema) =>
+      schema.required('Wallet ID is required for digital wallet'),
     otherwise: (schema) => schema.nullable(),
   }),
   dailyLimit: yup
@@ -114,10 +125,7 @@ export const vendorSchema = yup.object().shape({
     .number()
     .typeError('Must be a number')
     .min(0, 'Credit limit must be positive'),
-  status: yup
-    .string()
-    .oneOf([...VendorStatusEnum], 'Invalid status')
-    .default('PENDING'),
+  
   notes: yup.string(),
   // KYC initialization option
   initializeKYC: yup.boolean().default(false),

@@ -41,13 +41,9 @@ export interface BillsFilter {
 }
 
 export interface PayBillRequest {
-  phoneNumber: number;
   paymentProvider: string;
   currency: string;
-  category: string;
   description: string;
-  transaction_type: string;
-  budgetId?: string;
 }
 
 export interface PayBillResponse {

@@ -22,27 +22,32 @@ const paymentMethodSchema = yup.object().shape({
     .string()
     .oneOf(
       [
-        'BANK_TRANSFER',
-        'MOBILE_MONEY',
         'CREDIT_CARD',
-        'DEBIT_CARD',
+        'BANK_TRANSFER',
+        'ACH_TRANSFER',
+        'MOBILE_MONEY',
+        'DIGITAL_WALLET',
         'CASH',
-        'CRYPTOCURRENCY',
+        'CREDIT',
         'OTHER',
       ],
       'Invalid payment method type'
     )
     .required('Payment method type is required'),
-  accountName: yup.string().required('Account name is required'),
+  accountName: yup.string().when('paymentMethodType', {
+    is: (val: string) => val !== 'MOBILE_MONEY',
+    then: (schema) => schema.required('Account name is required'),
+    otherwise: (schema) => schema.nullable(),
+  }),
   accountNumber: yup.string().when('paymentMethodType', {
     is: (val: string) =>
-      ['BANK_TRANSFER', 'DEBIT_CARD', 'CREDIT_CARD'].includes(val),
+      ['BANK_TRANSFER', 'ACH_TRANSFER', 'CREDIT_CARD', 'CREDIT'].includes(val),
     then: (schema) =>
       schema.required('Account number is required for this payment type'),
     otherwise: (schema) => schema.nullable(),
   }),
   bankName: yup.string().when('paymentMethodType', {
-    is: 'BANK_TRANSFER',
+    is: (val: string) => ['BANK_TRANSFER', 'ACH_TRANSFER'].includes(val),
     then: (schema) =>
       schema.required('Bank name is required for bank transfers'),
     otherwise: (schema) => schema.nullable(),
@@ -51,6 +56,12 @@ const paymentMethodSchema = yup.object().shape({
     is: 'MOBILE_MONEY',
     then: (schema) =>
       schema.required('Phone number is required for mobile money'),
+    otherwise: (schema) => schema.nullable(),
+  }),
+  walletId: yup.string().when('paymentMethodType', {
+    is: 'DIGITAL_WALLET',
+    then: (schema) =>
+      schema.required('Wallet ID is required for digital wallet'),
     otherwise: (schema) => schema.nullable(),
   }),
   dailyLimit: yup
@@ -67,12 +78,13 @@ const paymentMethodSchema = yup.object().shape({
 });
 
 const PaymentMethodTypeEnum = [
-  { value: 'BANK_TRANSFER', label: 'Bank Transfer' },
-  { value: 'MOBILE_MONEY', label: 'Mobile Money' },
   { value: 'CREDIT_CARD', label: 'Credit Card' },
-  { value: 'DEBIT_CARD', label: 'Debit Card' },
+  { value: 'BANK_TRANSFER', label: 'Bank Transfer' },
+  { value: 'ACH_TRANSFER', label: 'ACH Transfer' },
+  { value: 'MOBILE_MONEY', label: 'Mobile Money' },
+  { value: 'DIGITAL_WALLET', label: 'Digital Wallet' },
   { value: 'CASH', label: 'Cash' },
-  { value: 'CRYPTOCURRENCY', label: 'Cryptocurrency' },
+  { value: 'CREDIT', label: 'Credit' },
   { value: 'OTHER', label: 'Other' },
 ];
 
@@ -103,7 +115,7 @@ const PaymentMethodForm: React.FC<PaymentMethodFormProps> = ({
     watch,
     setValue,
   } = useForm<CreatePaymentMethodPayload>({
-    resolver: yupResolver(paymentMethodSchema),
+    resolver: yupResolver(paymentMethodSchema) as any,
     defaultValues: {
       paymentMethodType: 'BANK_TRANSFER',
       accountName: '',
@@ -173,6 +185,7 @@ const PaymentMethodForm: React.FC<PaymentMethodFormProps> = ({
   const renderTypeSpecificFields = () => {
     switch (selectedType) {
       case 'BANK_TRANSFER':
+      case 'ACH_TRANSFER':
         return (
           <>
             <div className="grid grid-cols-2 gap-4">
@@ -200,27 +213,41 @@ const PaymentMethodForm: React.FC<PaymentMethodFormProps> = ({
                 label="Bank Code"
                 type="text"
                 name="bankCode"
-                placeholder="Enter bank code"
+                placeholder="Enter bank code (optional)"
                 register={register}
                 errors={errors.bankCode}
               />
-              <Input
-                label="SWIFT Code"
-                type="text"
-                name="swiftCode"
-                placeholder="Enter SWIFT code"
-                register={register}
-                errors={errors.swiftCode}
-              />
+              {selectedType === 'BANK_TRANSFER' && (
+                <Input
+                  label="SWIFT Code"
+                  type="text"
+                  name="swiftCode"
+                  placeholder="Enter SWIFT code (optional)"
+                  register={register}
+                  errors={errors.swiftCode}
+                />
+              )}
+              {selectedType === 'ACH_TRANSFER' && (
+                <Input
+                  label="Routing Number"
+                  type="text"
+                  name="swiftCode"
+                  placeholder="Enter routing number (optional)"
+                  register={register}
+                  errors={errors.swiftCode}
+                />
+              )}
             </div>
-            <Input
-              label="IBAN"
-              type="text"
-              name="iban"
-              placeholder="Enter IBAN"
-              register={register}
-              errors={errors.iban}
-            />
+            {selectedType === 'BANK_TRANSFER' && (
+              <Input
+                label="IBAN"
+                type="text"
+                name="iban"
+                placeholder="Enter IBAN (optional)"
+                register={register}
+                errors={errors.iban}
+              />
+            )}
           </>
         );
 
@@ -238,7 +265,6 @@ const PaymentMethodForm: React.FC<PaymentMethodFormProps> = ({
         );
 
       case 'CREDIT_CARD':
-      case 'DEBIT_CARD':
         return (
           <>
             <div className="grid grid-cols-2 gap-4">
@@ -246,7 +272,7 @@ const PaymentMethodForm: React.FC<PaymentMethodFormProps> = ({
                 label="Card Number"
                 type="text"
                 name="cardNumber"
-                placeholder="1234 5678 9012 3456"
+                placeholder="**** **** **** 3456"
                 register={register}
                 errors={errors.cardNumber}
                 required
@@ -257,7 +283,7 @@ const PaymentMethodForm: React.FC<PaymentMethodFormProps> = ({
                 render={({ field }) => (
                   <Select
                     options={CardTypeEnum}
-                    selectedValue={field.value}
+                    selectedValue={field.value || 'VISA'}
                     onChange={field.onChange}
                     bg="bg-white"
                     name="Select Card Type"
@@ -266,18 +292,94 @@ const PaymentMethodForm: React.FC<PaymentMethodFormProps> = ({
                 )}
               />
             </div>
+            <div className="grid grid-cols-2 gap-4">
+              <Input
+                label="Expiry Date"
+                type="text"
+                name="accountNumber"
+                placeholder="MM/YY"
+                register={register}
+                errors={errors.accountNumber}
+              />
+              <Input
+                label="Cardholder Name"
+                type="text"
+                name="bankName"
+                placeholder="Name on card"
+                register={register}
+                errors={errors.bankName}
+              />
+            </div>
           </>
         );
 
-      case 'CRYPTOCURRENCY':
+      case 'DIGITAL_WALLET':
+        return (
+          <>
+            <Input
+              label="Wallet ID / Email"
+              type="text"
+              name="walletId"
+              placeholder="Enter wallet ID or email"
+              register={register}
+              errors={errors.walletId}
+              required
+            />
+            <Input
+              label="Wallet Provider"
+              type="text"
+              name="bankName"
+              placeholder="e.g., PayPal, Skrill, Neteller"
+              register={register}
+              errors={errors.bankName}
+            />
+          </>
+        );
+
+      case 'CREDIT':
+        return (
+          <>
+            <div className="grid grid-cols-2 gap-4">
+              <Input
+                label="Credit Account Number"
+                type="text"
+                name="accountNumber"
+                placeholder="Enter credit account number"
+                register={register}
+                errors={errors.accountNumber}
+                required
+              />
+              <Input
+                label="Credit Limit"
+                type="number"
+                name="monthlyLimit"
+                placeholder="Enter credit limit"
+                register={register}
+                errors={errors.monthlyLimit}
+              />
+            </div>
+          </>
+        );
+
+      case 'CASH':
+        return (
+          <div className="p-4 bg-blue-50 border border-blue-200">
+            <p className="text-sm text-blue-900">
+              Cash payment method does not require additional details. You can
+              set daily and monthly limits below.
+            </p>
+          </div>
+        );
+
+      case 'OTHER':
         return (
           <Input
-            label="Wallet ID"
+            label="Payment Method Details"
             type="text"
-            name="walletId"
-            placeholder="Enter wallet ID"
+            name="notes"
+            placeholder="Describe the payment method"
             register={register}
-            errors={errors.walletId}
+            errors={errors.notes}
           />
         );
 
@@ -288,12 +390,17 @@ const PaymentMethodForm: React.FC<PaymentMethodFormProps> = ({
 
   return (
     <Modal
-      isOpen={isOpen}
-      onClose={handleClose}
+      open={isOpen}
+      setOpen={(value) => {
+        if (!value) handleClose();
+      }}
       title={isEditing ? 'Edit Payment Method' : 'Add Payment Method'}
     >
-      <form onSubmit={handleSubmit(handleFormSubmit)} className="space-y-4">
-        <div className="grid grid-cols-2 gap-4">
+      <form
+        onSubmit={handleSubmit(handleFormSubmit as any)}
+        className="space-y-4"
+      >
+        <div className={`grid ${selectedType === 'MOBILE_MONEY' ? 'grid-cols-1' : 'grid-cols-2'} gap-4`}>
           <Controller
             name="paymentMethodType"
             control={control}
@@ -309,15 +416,17 @@ const PaymentMethodForm: React.FC<PaymentMethodFormProps> = ({
               />
             )}
           />
-          <Input
-            label="Account Name"
-            type="text"
-            name="accountName"
-            placeholder="Enter account name"
-            register={register}
-            errors={errors.accountName}
-            required
-          />
+          {selectedType !== 'MOBILE_MONEY' && (
+            <Input
+              label="Account Name"
+              type="text"
+              name="accountName"
+              placeholder="Enter account name"
+              register={register}
+              errors={errors.accountName}
+              required
+            />
+          )}
         </div>
 
         {renderTypeSpecificFields()}

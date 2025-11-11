@@ -41,12 +41,14 @@ export interface KYCVerificationRequest {
 export interface KYCDocumentUpload {
   type: string;
   file: File;
+  documentNumber?: string;
+  issuingAuthority?: string;
+  expiryDate?: string;
 }
 
 export interface KYCSubmissionRequest {
   token: string;
   vendorId: string;
-  kycId: string;
   documents: KYCDocumentUpload[];
 }
 
@@ -73,29 +75,31 @@ class KYCService {
   }
 
   /**
-   * Submit KYC documents for verification
+   * Submit KYC documents for verification - uploads each document to the API
    */
-  async submitKYCDocuments(request: KYCSubmissionRequest): Promise<KYCData> {
+  async submitKYCDocuments(request: KYCSubmissionRequest): Promise<any> {
     try {
-      const formData = new FormData();
-
-      // Add metadata
-      formData.append('token', request.token);
-      formData.append('vendorId', request.vendorId);
-      formData.append('kycId', request.kycId);
-
-      // Add documents
-      request.documents.forEach((doc, index) => {
-        formData.append(`documents[${index}][type]`, doc.type);
-        formData.append(`documents[${index}][file]`, doc.file);
+      // Upload each document individually using the correct API endpoint
+      const uploadPromises = request.documents.map(async (doc) => {
+        return await this.uploadDocument(
+          request.token,
+          request.vendorId,
+          doc.file,
+          doc.type,
+          doc.documentNumber,
+          doc.issuingAuthority,
+          doc.expiryDate
+        );
       });
 
-      const response = await axios.post(`${this.basePath}/submit`, formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      });
-      return response.data;
+      // Wait for all documents to be uploaded
+      const results = await Promise.all(uploadPromises);
+
+      return {
+        success: true,
+        uploadedDocuments: results,
+        message: 'All documents uploaded successfully',
+      };
     } catch (error) {
       console.error('Error submitting KYC documents:', error);
       throw error;
@@ -103,29 +107,43 @@ class KYCService {
   }
 
   /**
-   * Upload individual document
+   * Upload individual document - matches API spec
+   * POST /api/vendor-portal/documents
    */
   async uploadDocument(
     token: string,
     vendorId: string,
-    kycId: string,
+    file: File,
     documentType: string,
-    file: File
+    documentNumber?: string,
+    issuingAuthority?: string,
+    expiryDate?: string
   ): Promise<KYCDocument> {
     try {
       const formData = new FormData();
-      formData.append('token', token);
-      formData.append('vendorId', vendorId);
-      formData.append('kycId', kycId);
-      formData.append('documentType', documentType);
       formData.append('file', file);
+      formData.append('documentType', documentType);
+      
+      if (documentNumber) {
+        formData.append('documentNumber', documentNumber);
+      }
+      if (issuingAuthority) {
+        formData.append('issuingAuthority', issuingAuthority);
+      }
+      if (expiryDate) {
+        formData.append('expiryDate', expiryDate);
+      }
 
       const response = await axios.post(
-        `${this.basePath}/upload-document`,
+        '/vendor-portal/documents',
         formData,
         {
           headers: {
             'Content-Type': 'multipart/form-data',
+          },
+          params: {
+            vendor_id:vendorId,
+            token,
           },
         }
       );

@@ -8,3 +8,10 @@ const ProcurementsLayout = ({ children }: { children: React.ReactNode }) => {
 export default ProcurementsLayout;
 
 
+
+
+
+
+
+
+

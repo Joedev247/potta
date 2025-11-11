@@ -451,3 +451,26 @@ html {
 .scrollbar-hide::-webkit-scrollbar {
   display: none;
 }
+
+/* Global table height fix */
+.data-grid-container {
+  min-height: 400px;
+  height: calc(100vh - 200px);
+  max-height: calc(100vh - 200px);
+}
+
+/* Ensure tables take full available height */
+.data-grid-container .flex-1 {
+  flex: 1 1 0%;
+  min-height: 0;
+}
+
+/* Fix for table height calculation timing issues */
+.data-grid-container[data-height-calculated='false'] {
+  height: 400px;
+  transition: height 0.3s ease-in-out;
+}
+
+.data-grid-container[data-height-calculated='true'] {
+  transition: height 0.3s ease-in-out;
+}

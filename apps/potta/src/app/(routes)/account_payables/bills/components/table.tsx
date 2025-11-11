@@ -79,6 +79,13 @@ const statusColorMap: Record<
     icon: 'mdi:clock-outline',
     iconColor: 'text-yellow-500',
   },
+  PENDING_PAYMENT: {
+    bg: 'bg-orange-50',
+    text: 'text-orange-700',
+    border: 'border-orange-200',
+    icon: 'mdi:clock-alert-outline',
+    iconColor: 'text-orange-500',
+  },
   ISSUED: {
     bg: 'bg-blue-50',
     text: 'text-blue-700',
@@ -404,17 +411,37 @@ export function PaymentRequestDataTableWrapper({
       </div>
     </div>;
   return (
-    <>
+    <div className="">
+      <div className="flex justify-between items-center w-full">
+        {/* Left side - Filters */}
+        <div className="flex-1">
+          <Filter
+            search={search}
+            onSearchChange={onSearchChange}
+            onSearchClear={onSearchClear}
+            status={status}
+            onStatusChange={onStatusChange}
+            paymentMethod={paymentMethod}
+            onPaymentMethodChange={onPaymentMethodChange}
+          />
+        </div>
+
+        
+      </div>
+
       <DataGrid
         columns={columns}
         data={filteredRequests}
         isLoading={isLoading}
+        showPagination={true}
+        pageSize={10}
       />
+
       <BillDetailsSlideover
         billId={selectedBillId}
         open={detailsOpen}
         setOpen={setDetailsOpen}
       />
-    </>
+    </div>
   );
 }

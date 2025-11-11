@@ -1,377 +1,298 @@
 'use client';
 import React, { useState } from 'react';
 import {
-  Upload,
-  FileText,
-  CheckCircle,
-  AlertCircle,
   X,
-  Camera,
   FileImage,
+  Plus,
 } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { useKYCSubmission } from '../hooks';
-import DocumentUploader from './DocumentUploader';
-// import DocumentUploader from './DocumentUploader';
-// import { useKYCSubmission } from '../hooks/useKYCSubmission';
-// 
+import DocumentUploader, { DocumentUploadData } from './DocumentUploader';
+import Button from '@potta/components/button';
+import Select from '@potta/components/select';
+
 interface KYCTokenData {
   token: string;
   vendorId: string;
-  kycId: string;
-}
-
-interface KYCData {
-  id: string;
-  vendorId: string;
-  status: 'pending' | 'in_review' | 'approved' | 'rejected';
-  documents: Array<{
-    id: string;
-    type: string;
-    status: 'pending' | 'uploaded' | 'approved' | 'rejected';
-    url?: string;
-    rejectionReason?: string;
-  }>;
-  vendor: {
-    id: string;
-    name: string;
-    email: string;
-    businessName?: string;
-  };
-  createdAt: string;
-  updatedAt: string;
 }
 
 interface KYCVerificationFormProps {
   tokenData: KYCTokenData;
-  kycData: KYCData;
-  onSuccess: () => void;
 }
 
-interface DocumentType {
+export enum VendorKYCDocumentType {
+  BUSINESS_REGISTRATION = 'BUSINESS_REGISTRATION',
+  TAX_CLEARANCE = 'TAX_CLEARANCE',
+  BANK_STATEMENT = 'BANK_STATEMENT',
+  FOOD_LICENSE = 'FOOD_LICENSE',
+  CONSTRUCTION_LICENSE = 'CONSTRUCTION_LICENSE',
+  TRANSPORT_LICENSE = 'TRANSPORT_LICENSE',
+  FINANCIAL_LICENSE = 'FINANCIAL_LICENSE',
+  MEDICAL_LICENSE = 'MEDICAL_LICENSE',
+  HEALTH_CERTIFICATE = 'HEALTH_CERTIFICATE',
+  INSURANCE_CERTIFICATE = 'INSURANCE_CERTIFICATE',
+  VEHICLE_REGISTRATION = 'VEHICLE_REGISTRATION',
+  CREDIT_REPORT = 'CREDIT_REPORT',
+  IDENTITY_DOCUMENT = 'IDENTITY_DOCUMENT',
+  ADDRESS_PROOF = 'ADDRESS_PROOF',
+  OTHER = 'OTHER',
+}
+
+interface DocumentUploadItem {
   id: string;
-  type: string;
-  label: string;
-  description: string;
-  required: boolean;
-  acceptedFormats: string[];
-  maxSize: number; // in MB
+  documentType: VendorKYCDocumentType;
+  data?: DocumentUploadData;
 }
 
-const DOCUMENT_TYPES: DocumentType[] = [
-  {
-    id: 'government_id',
-    type: 'government_id',
-    label: 'Government-issued ID',
-    description: "Passport, Driver's License, or National ID",
-    required: true,
-    acceptedFormats: ['image/jpeg', 'image/png', 'application/pdf'],
-    maxSize: 5,
-  },
-  {
-    id: 'proof_of_address',
-    type: 'proof_of_address',
-    label: 'Proof of Address',
-    description: 'Utility bill, Bank statement, or other official document',
-    required: true,
-    acceptedFormats: ['image/jpeg', 'image/png', 'application/pdf'],
-    maxSize: 5,
-  },
-  {
-    id: 'business_registration',
-    type: 'business_registration',
-    label: 'Business Registration',
-    description: 'Business registration documents (if applicable)',
-    required: false,
-    acceptedFormats: ['image/jpeg', 'image/png', 'application/pdf'],
-    maxSize: 10,
-  },
-];
+// Document type labels
+const DOCUMENT_TYPE_LABELS: Record<VendorKYCDocumentType, string> = {
+  [VendorKYCDocumentType.BUSINESS_REGISTRATION]: 'Business Registration',
+  [VendorKYCDocumentType.TAX_CLEARANCE]: 'Tax Clearance Certificate',
+  [VendorKYCDocumentType.BANK_STATEMENT]: 'Bank Statement',
+  [VendorKYCDocumentType.FOOD_LICENSE]: 'Food License',
+  [VendorKYCDocumentType.CONSTRUCTION_LICENSE]: 'Construction License',
+  [VendorKYCDocumentType.TRANSPORT_LICENSE]: 'Transport License',
+  [VendorKYCDocumentType.FINANCIAL_LICENSE]: 'Financial License',
+  [VendorKYCDocumentType.MEDICAL_LICENSE]: 'Medical License',
+  [VendorKYCDocumentType.HEALTH_CERTIFICATE]: 'Health Certificate',
+  [VendorKYCDocumentType.INSURANCE_CERTIFICATE]: 'Insurance Certificate',
+  [VendorKYCDocumentType.VEHICLE_REGISTRATION]: 'Vehicle Registration',
+  [VendorKYCDocumentType.CREDIT_REPORT]: 'Credit Report',
+  [VendorKYCDocumentType.IDENTITY_DOCUMENT]: 'Identity Document',
+  [VendorKYCDocumentType.ADDRESS_PROOF]: 'Proof of Address',
+  [VendorKYCDocumentType.OTHER]: 'Other Document',
+};
 
 const KYCVerificationForm: React.FC<KYCVerificationFormProps> = ({
   tokenData,
-  kycData,
-  onSuccess,
 }) => {
-  const [uploadedDocuments, setUploadedDocuments] = useState<
-    Record<string, File>
-  >({});
-  const [uploadStatuses, setUploadStatuses] = useState<
-    Record<string, 'idle' | 'uploading' | 'success' | 'error'>
-  >({});
+  const [documentItems, setDocumentItems] = useState<DocumentUploadItem[]>([
+    { id: '1', documentType: VendorKYCDocumentType.IDENTITY_DOCUMENT },
+  ]);
 
   const { submitKYC, isSubmitting } = useKYCSubmission();
 
-  const handleDocumentUpload = (documentType: string, file: File) => {
-    setUploadedDocuments((prev) => ({
-      ...prev,
-      [documentType]: file,
-    }));
-    setUploadStatuses((prev) => ({
-      ...prev,
-      [documentType]: 'success',
-    }));
-    toast.success(`${file.name} uploaded successfully`);
+  const addDocumentSlot = () => {
+    const newItem: DocumentUploadItem = {
+      id: Date.now().toString(),
+      documentType: VendorKYCDocumentType.BUSINESS_REGISTRATION,
+    };
+    setDocumentItems((prev) => [...prev, newItem]);
   };
 
-  const handleDocumentRemove = (documentType: string) => {
-    setUploadedDocuments((prev) => {
-      const newDocs = { ...prev };
-      delete newDocs[documentType];
-      return newDocs;
-    });
-    setUploadStatuses((prev) => ({
-      ...prev,
-      [documentType]: 'idle',
-    }));
+  const removeDocumentSlot = (id: string) => {
+    setDocumentItems((prev) => prev.filter((item) => item.id !== id));
+  };
+
+  const updateDocumentType = (id: string, documentType: VendorKYCDocumentType) => {
+    setDocumentItems((prev) =>
+      prev.map((item) =>
+        item.id === id ? { ...item, documentType, data: undefined } : item
+      )
+    );
+  };
+
+  const updateDocumentData = (id: string, data: DocumentUploadData) => {
+    setDocumentItems((prev) =>
+      prev.map((item) => (item.id === id ? { ...item, data } : item))
+    );
+    toast.success(`${data.file.name} added successfully`);
   };
 
   const handleSubmit = async () => {
     try {
-      // Validate required documents
-      const requiredDocuments = DOCUMENT_TYPES.filter((doc) => doc.required);
-      const missingDocuments = requiredDocuments.filter(
-        (doc) => !uploadedDocuments[doc.type]
-      );
+      // Validate that at least one document is uploaded
+      const uploadedDocs = documentItems.filter((item) => item.data);
 
-      if (missingDocuments.length > 0) {
-        toast.error(
-          `Please upload required documents: ${missingDocuments
-            .map((d) => d.label)
-            .join(', ')}`
-        );
+      if (uploadedDocs.length === 0) {
+        toast.error('Please upload at least one document');
         return;
       }
 
-      // Submit KYC verification
+      // Submit KYC verification - documents with metadata
       await submitKYC({
         token: tokenData.token,
         vendorId: tokenData.vendorId,
-        kycId: tokenData.kycId,
-        documents: Object.entries(uploadedDocuments).map(([type, file]) => ({
-          type,
-          file,
+        documents: uploadedDocs.map((item) => ({
+          type: item.documentType,
+          file: item.data!.file,
+          documentNumber: item.data!.documentNumber,
+          issuingAuthority: item.data!.issuingAuthority,
+          expiryDate: item.data!.expiryDate,
         })),
       });
 
-      toast.success('KYC verification submitted successfully!');
-      onSuccess();
+      toast.success(
+        'KYC verification submitted successfully! Your documents are now under review.'
+      );
+
+      // Reset form
+      setDocumentItems([
+        { id: '1', documentType: VendorKYCDocumentType.IDENTITY_DOCUMENT },
+      ]);
     } catch (error) {
       console.error('Error submitting KYC verification:', error);
       toast.error('Failed to submit KYC verification. Please try again.');
     }
   };
 
-  const getStatusIcon = (status: string) => {
-    switch (status) {
-      case 'approved':
-        return <CheckCircle className="w-5 h-5 text-green-600" />;
-      case 'rejected':
-        return <AlertCircle className="w-5 h-5 text-red-600" />;
-      case 'in_review':
-        return <FileText className="w-5 h-5 text-yellow-600" />;
-      default:
-        return <FileText className="w-5 h-5 text-gray-400" />;
-    }
-  };
-
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case 'approved':
-        return 'text-green-600 bg-green-50 border-green-200';
-      case 'rejected':
-        return 'text-red-600 bg-red-50 border-red-200';
-      case 'in_review':
-        return 'text-yellow-600 bg-yellow-50 border-yellow-200';
-      default:
-        return 'text-gray-600 bg-gray-50 border-gray-200';
-    }
-  };
-
   const isFormValid = () => {
-    const requiredDocuments = DOCUMENT_TYPES.filter((doc) => doc.required);
-    return requiredDocuments.every((doc) => uploadedDocuments[doc.type]);
+    return documentItems.some((item) => item.data);
   };
 
   return (
     <div className="max-w-4xl mx-auto p-6">
       {/* Header */}
-      <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-6">
-        <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-2xl font-bold text-gray-900">
-              KYC Verification
-            </h1>
-            <p className="text-gray-600 mt-1">
-              Complete your identity verification to activate your vendor
-              account
-            </p>
-          </div>
-          <div
-            className={`px-3 py-1 rounded-full text-sm font-medium border ${getStatusColor(
-              kycData.status
-            )}`}
-          >
-            {getStatusIcon(kycData.status)}
-            <span className="ml-2 capitalize">
-              {kycData.status.replace('_', ' ')}
-            </span>
-          </div>
-        </div>
-
-        <div className="mt-4 p-4 bg-blue-50 border border-blue-200 rounded-lg">
-          <h3 className="font-medium text-blue-900 mb-2">Verification for:</h3>
-          <div className="text-blue-800">
-            <p>
-              <strong>Vendor:</strong> {kycData.vendor.name}
-            </p>
-            <p>
-              <strong>Email:</strong> {kycData.vendor.email}
-            </p>
-            {kycData.vendor.businessName && (
-              <p>
-                <strong>Business:</strong> {kycData.vendor.businessName}
-              </p>
-            )}
-          </div>
+      <div className="bg-white shadow-sm border border-gray-200 p-6 mb-6">
+        <div>
+          <h1 className="text-2xl font-bold text-gray-900">
+            KYC Verification
+          </h1>
+          <p className="text-gray-600 mt-1">
+            Complete your identity verification to activate your vendor account
+          </p>
         </div>
       </div>
 
       {/* Instructions */}
-      <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-6">
+      <div className="bg-white shadow-sm border border-gray-200 p-6 mb-6">
         <h2 className="text-lg font-semibold text-gray-900 mb-4">
-          Required Documents
+          Upload Your Documents
         </h2>
-        <div className="grid gap-4">
-          <div className="flex items-start space-x-3">
-            <div className="flex-shrink-0 w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
-              <span className="text-blue-600 font-semibold text-sm">1</span>
-            </div>
-            <div>
-              <h3 className="font-medium text-gray-900">
-                Government-issued ID
-              </h3>
-              <p className="text-gray-600 text-sm">
-                Upload a clear photo or scan of your passport, driver's license,
-                or national ID card.
-              </p>
-            </div>
-          </div>
-          <div className="flex items-start space-x-3">
-            <div className="flex-shrink-0 w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
-              <span className="text-blue-600 font-semibold text-sm">2</span>
-            </div>
-            <div>
-              <h3 className="font-medium text-gray-900">Proof of Address</h3>
-              <p className="text-gray-600 text-sm">
-                Provide a utility bill, bank statement, or other official
-                document showing your address.
-              </p>
-            </div>
-          </div>
-          <div className="flex items-start space-x-3">
-            <div className="flex-shrink-0 w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center">
-              <span className="text-gray-600 font-semibold text-sm">3</span>
-            </div>
-            <div>
-              <h3 className="font-medium text-gray-900">
-                Business Registration (Optional)
-              </h3>
-              <p className="text-gray-600 text-sm">
-                If you're a business, upload your business registration
-                documents.
-              </p>
-            </div>
-          </div>
+        <div className="bg-blue-50 border border-blue-200 p-4">
+          <p className="text-blue-900 text-sm">
+            <strong>Instructions:</strong> Select the type of document you want to upload from the dropdown, 
+            then upload the file with optional details like document number, issuing authority, and expiry date.
+            You can add multiple documents by clicking the "Add Another Document" button.
+          </p>
         </div>
       </div>
 
       {/* Document Upload Section */}
-      <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-6">
-        <h2 className="text-lg font-semibold text-gray-900 mb-4">
-          Upload Documents
-        </h2>
+      <div className="bg-white shadow-sm border border-gray-200 p-6 mb-6">
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="text-lg font-semibold text-gray-900">
+            Documents
+          </h2>
+          <Button
+            onClick={addDocumentSlot}
+            type="button"
+            disabled={isSubmitting}
+            text="Add Document"
+            icon={<Plus className="w-4 h-4" />}
+            theme="default"
+            className="flex items-center"
+          />
+        </div>
 
-        <div className="space-y-6">
-          {DOCUMENT_TYPES.map((docType) => {
-            const existingDocument = kycData.documents.find(
-              (doc) => doc.type === docType.type
-            );
-            const isUploaded = uploadedDocuments[docType.type];
-            const uploadStatus = uploadStatuses[docType.type];
+        <div className="space-y-4">
+          {documentItems.map((item, index) => {
+            const isUploaded = !!item.data;
 
             return (
               <div
-                key={docType.id}
-                className="border border-gray-200 rounded-lg p-4"
+                key={item.id}
+                className="border border-gray-200 p-4"
               >
-                <div className="flex items-center justify-between mb-3">
-                  <div>
-                    <h3 className="font-medium text-gray-900">
-                      {docType.label}
-                      {docType.required && (
-                        <span className="text-red-500 ml-1">*</span>
+                <div className="flex items-start justify-between mb-3">
+                  <div className="flex-1">
+                    <Select
+                      label="Document Type"
+                      options={Object.entries(DOCUMENT_TYPE_LABELS).map(
+                        ([value, label]) => ({
+                          value,
+                          label,
+                        })
                       )}
-                    </h3>
-                    <p className="text-gray-600 text-sm">
-                      {docType.description}
-                    </p>
+                      selectedValue={item.documentType}
+                      onChange={(value: string) =>
+                        updateDocumentType(
+                          item.id,
+                          value as VendorKYCDocumentType
+                        )
+                      }
+                      bg="bg-white"
+                      isDisabled={isSubmitting || isUploaded}
+                      labelClass="text-sm"
+                    />
                   </div>
-                  {existingDocument && (
-                    <div className="flex items-center space-x-2">
-                      {getStatusIcon(existingDocument.status)}
-                      <span className="text-sm capitalize">
-                        {existingDocument.status.replace('_', ' ')}
-                      </span>
-                    </div>
+                  {documentItems.length > 1 && (
+                    <button
+                      onClick={() => removeDocumentSlot(item.id)}
+                      disabled={isSubmitting}
+                      className="mt-7 text-red-600 hover:text-red-700 disabled:text-gray-400"
+                      title="Remove document"
+                    >
+                      <X className="w-5 h-5" />
+                    </button>
                   )}
                 </div>
 
-                {existingDocument?.rejectionReason && (
-                  <div className="mb-3 p-3 bg-red-50 border border-red-200 rounded-lg">
-                    <p className="text-red-800 text-sm">
-                      <strong>Rejection Reason:</strong>{' '}
-                      {existingDocument.rejectionReason}
-                    </p>
-                  </div>
-                )}
-
-                <div className="flex items-center space-x-4">
-                  {isUploaded ? (
-                    <div className="flex items-center space-x-2 flex-1">
+                {isUploaded && item.data ? (
+                  <div className="w-full">
+                    <div className="flex items-center space-x-2 p-3 bg-green-50 border border-green-200">
                       <FileImage className="w-5 h-5 text-green-600" />
-                      <span className="text-sm text-gray-700">
-                        {isUploaded.name}
-                      </span>
-                      <span className="text-xs text-gray-500">
-                        ({(isUploaded.size / 1024 / 1024).toFixed(2)} MB)
-                      </span>
+                      <div className="flex-1">
+                        <div className="flex items-center space-x-2">
+                          <span className="text-sm font-medium text-gray-700">
+                            {item.data.file.name}
+                          </span>
+                          <span className="text-xs text-gray-500">
+                            ({(item.data.file.size / 1024 / 1024).toFixed(2)} MB)
+                          </span>
+                        </div>
+                        {(item.data.documentNumber ||
+                          item.data.issuingAuthority ||
+                          item.data.expiryDate) && (
+                          <div className="mt-1 text-xs text-gray-600 space-y-0.5">
+                            {item.data.documentNumber && (
+                              <div>Doc #: {item.data.documentNumber}</div>
+                            )}
+                            {item.data.issuingAuthority && (
+                              <div>Issued by: {item.data.issuingAuthority}</div>
+                            )}
+                            {item.data.expiryDate && (
+                              <div>Expires: {item.data.expiryDate}</div>
+                            )}
+                          </div>
+                        )}
+                      </div>
                       <button
-                        onClick={() => handleDocumentRemove(docType.type)}
+                        onClick={() =>
+                          updateDocumentData(item.id, undefined as any)
+                        }
                         className="text-red-600 hover:text-red-700"
+                        disabled={isSubmitting}
+                        title="Remove file"
                       >
                         <X className="w-4 h-4" />
                       </button>
                     </div>
-                  ) : (
-                    <div className="flex-1">
-                      <DocumentUploader
-                        documentType={docType}
-                        onUpload={(file) =>
-                          handleDocumentUpload(docType.type, file)
-                        }
-                        onError={(error) => {
-                          setUploadStatuses((prev) => ({
-                            ...prev,
-                            [docType.type]: 'error',
-                          }));
-                          toast.error(error);
-                        }}
-                        disabled={isSubmitting}
-                      />
-                    </div>
-                  )}
-                </div>
+                  </div>
+                ) : (
+                  <div className="flex-1">
+                    <DocumentUploader
+                      documentType={{
+                        id: item.id,
+                        type: item.documentType,
+                        label: DOCUMENT_TYPE_LABELS[item.documentType],
+                        description: 'Upload your document file',
+                        required: false,
+                        acceptedFormats: [
+                          'image/jpeg',
+                          'image/png',
+                          'application/pdf',
+                        ],
+                        maxSize: 10,
+                      }}
+                      onUpload={(data) => updateDocumentData(item.id, data)}
+                      onError={(error) => {
+                        toast.error(error);
+                      }}
+                      disabled={isSubmitting}
+                    />
+                  </div>
+                )}
               </div>
             );
           })}
@@ -379,33 +300,24 @@ const KYCVerificationForm: React.FC<KYCVerificationFormProps> = ({
       </div>
 
       {/* Submit Button */}
-      <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-        <div className="flex items-center justify-between">
+      <div className="bg-white shadow-sm border border-gray-200 p-6">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div>
             <h3 className="font-medium text-gray-900">Ready to Submit?</h3>
             <p className="text-gray-600 text-sm">
-              Once submitted, your documents will be reviewed within 1-2
-              business days.
+              Upload at least one document to submit for verification.
+              Your documents will be reviewed within 1-2 business days.
             </p>
           </div>
-          <button
+          <Button
             onClick={handleSubmit}
+            type="button"
             disabled={!isFormValid() || isSubmitting}
-            className={`px-6 py-2 rounded-lg font-medium transition-colors ${
-              isFormValid() && !isSubmitting
-                ? 'bg-green-600 hover:bg-green-700 text-white'
-                : 'bg-gray-300 text-gray-500 cursor-not-allowed'
-            }`}
-          >
-            {isSubmitting ? (
-              <div className="flex items-center space-x-2">
-                <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                <span>Submitting...</span>
-              </div>
-            ) : (
-              'Submit for Verification'
-            )}
-          </button>
+            text={isSubmitting ? 'Submitting...' : 'Submit for Verification'}
+            isLoading={isSubmitting}
+            theme={isFormValid() && !isSubmitting ? 'default' : 'gray'}
+            className="whitespace-nowrap"
+          />
         </div>
       </div>
     </div>

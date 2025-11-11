@@ -1,8 +1,10 @@
 'use client';
 import React, { useState, useMemo } from 'react';
+import { ColumnDef } from '@tanstack/react-table';
 import RootLayout from '../../layout';
 import { Badge } from '@potta/components/shadcn/badge';
-import Search from '@potta/components/search';
+import DataGrid from '@potta/app/(routes)/account_receivables/invoice/components/DataGrid';
+import DynamicFilter from '@potta/components/dynamic-filter';
 import {
   DropdownMenu,
   DropdownMenuTrigger,
@@ -11,11 +13,9 @@ import {
 } from '@potta/components/shadcn/dropdown';
 import Button from '@potta/components/button';
 import {
-  ChevronDown,
   ShoppingCart,
   FileText,
   Package,
-  Truck,
   MoreVertical,
   Send,
   CheckCircle,
@@ -24,7 +24,6 @@ import {
   Mail,
 } from 'lucide-react';
 import { ContextData } from '@potta/components/context';
-import { Skeleton } from '@potta/components/shadcn/skeleton';
 import { useCallback } from 'react';
 import {
   useGetSpendRequests,
@@ -43,6 +42,7 @@ import ViewDetailsModal from './components/ViewDetailsModal';
 import SendRFQModal from './components/SendRFQModal';
 import useGetAllVendors from '../../vendors/hooks/useGetAllVendors';
 import { useEmployees } from '../spend-program/hooks/useEmployees';
+import moment from 'moment';
 
 // Combined item type for display
 interface ProcurementItem {
@@ -61,21 +61,15 @@ interface ProcurementItem {
   createdAt?: string;
 }
 
-const filterOptions = [
-  { label: 'All items', value: 'all' },
-  { label: 'Spend Requests', value: 'SPEND_REQUEST' },
-  { label: 'RFQs', value: 'RFQ' },
-];
-
 // Helper function to get icon based on type
 const getItemIcon = (type: string) => {
   switch (type) {
     case 'SPEND_REQUEST':
-      return <ShoppingCart className="w-6 h-6 text-green-600" />;
+      return <ShoppingCart className="w-5 h-5 text-green-600" />;
     case 'RFQ':
-      return <FileText className="w-6 h-6 text-blue-600" />;
+      return <FileText className="w-5 h-5 text-blue-600" />;
     default:
-      return <FileText className="w-6 h-6 text-gray-600" />;
+      return <FileText className="w-5 h-5 text-gray-600" />;
   }
 };
 
@@ -84,21 +78,21 @@ const getStatusColor = (status: string) => {
   const statusLower = status?.toLowerCase();
   switch (statusLower) {
     case 'approved':
-      return 'bg-green-100 text-green-800';
+      return 'bg-green-100 text-green-800 border-green-200';
     case 'pending_approval':
     case 'pending':
-      return 'bg-yellow-100 text-yellow-800';
+      return 'bg-yellow-100 text-yellow-800 border-yellow-200';
     case 'draft':
-      return 'bg-gray-100 text-gray-800';
+      return 'bg-gray-100 text-gray-800 border-gray-200';
     case 'rejected':
-      return 'bg-red-100 text-red-800';
+      return 'bg-red-100 text-red-800 border-red-200';
     case 'sent':
     case 'responses_received':
-      return 'bg-blue-100 text-blue-800';
+      return 'bg-blue-100 text-blue-800 border-blue-200';
     case 'closed':
-      return 'bg-purple-100 text-purple-800';
+      return 'bg-purple-100 text-purple-800 border-purple-200';
     default:
-      return 'bg-gray-100 text-gray-800';
+      return 'bg-gray-100 text-gray-800 border-gray-200';
   }
 };
 
@@ -112,10 +106,26 @@ const formatStatus = (status: string) => {
   );
 };
 
+// Helper to format date
+const formatDate = (date: string) => {
+  if (!date) return 'N/A';
+  const momentDate = moment(date);
+  const today = moment();
+
+  if (momentDate.isSame(today, 'day')) {
+    return 'Today';
+  } else if (momentDate.isSame(today.clone().subtract(1, 'day'), 'day')) {
+    return 'Yesterday';
+  } else if (momentDate.isAfter(today.clone().subtract(7, 'days'))) {
+    return momentDate.format('dddd');
+  } else {
+    return momentDate.format('MMM DD, YYYY');
+  }
+};
+
 const ProcurementsPage = () => {
   const [search, setSearch] = useState('');
-  const [activeFilter, setActiveFilter] = useState(filterOptions[0].value);
-  const [filterLabel, setFilterLabel] = useState(filterOptions[0].label);
+  const [activeFilter, setActiveFilter] = useState('all');
   const [slideoverOpen, setSlideoverOpen] = useState(false);
   const [rfqModalOpen, setRfqModalOpen] = useState(false);
   const [selectedSpendRequestId, setSelectedSpendRequestId] = useState<
@@ -294,6 +304,235 @@ const ProcurementsPage = () => {
     }
   };
 
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearch(e.target.value);
+  };
+
+  const handleSearchClear = () => {
+    setSearch('');
+  };
+
+  // Filter configuration
+  const filterConfig = [
+    {
+      key: 'type',
+      label: 'Type',
+      options: [
+        { label: 'All Items', value: 'all' },
+        { label: 'Spend Requests', value: 'SPEND_REQUEST' },
+        { label: 'RFQs', value: 'RFQ' },
+      ],
+      value: activeFilter,
+      onChange: setActiveFilter,
+      selectClassName: 'min-w-[140px]',
+    },
+  ];
+
+  // Table columns definition
+  const columns: ColumnDef<ProcurementItem>[] = [
+    {
+      accessorKey: 'createdAt',
+      header: 'Date',
+      cell: ({ row: { original } }) => (
+        <div className="text-sm text-gray-600">
+          {formatDate(original.createdAt || '')}
+        </div>
+      ),
+    },
+    {
+      accessorKey: 'type',
+      header: 'Type',
+      cell: ({ row: { original } }) => (
+        <div className="flex items-center gap-2">
+          {getItemIcon(original.type)}
+          <span className="text-sm font-medium">
+            {original.type === 'SPEND_REQUEST' ? 'Spend Request' : 'RFQ'}
+          </span>
+        </div>
+      ),
+    },
+    {
+      accessorKey: 'requestNumber',
+      header: 'Number',
+      cell: ({ row: { original } }) => (
+        <div className="text-sm text-gray-900">
+          {original.requestNumber || original.rfqNumber || 'N/A'}
+        </div>
+      ),
+    },
+    {
+      accessorKey: 'name',
+      header: 'Title',
+      cell: ({ row: { original } }) => (
+        <div className="text-sm font-medium">{original.name}</div>
+      ),
+    },
+    {
+      accessorKey: 'description',
+      header: 'Description',
+      cell: ({ row: { original } }) => (
+        <div className="text-sm text-gray-600 max-w-xs truncate">
+          {original.description || 'No description'}
+        </div>
+      ),
+    },
+    {
+      accessorKey: 'vendor',
+      header: 'Vendor',
+      cell: ({ row: { original } }) => (
+        <div className="text-sm">{original.vendor}</div>
+      ),
+    },
+    {
+      accessorKey: 'items',
+      header: 'Items',
+      cell: ({ row: { original } }) => (
+        <div className="flex items-center gap-1 text-sm text-gray-600">
+          <Package className="w-4 h-4" />
+          {original.items}
+        </div>
+      ),
+    },
+    {
+      accessorKey: 'amount',
+      header: 'Amount',
+      cell: ({ row: { original } }) => (
+        <div className="text-sm font-medium">
+          {original.amount > 0 ? formatCurrency(original.amount) : '-'}
+        </div>
+      ),
+    },
+    {
+      accessorKey: 'status',
+      header: 'Status',
+      cell: ({ row: { original } }) => (
+        <Badge
+          className={`${getStatusColor(
+            original.status
+          )} font-medium px-3 py-1 text-xs border`}
+        >
+          {formatStatus(original.status)}
+        </Badge>
+      ),
+    },
+    {
+      accessorKey: 'priority',
+      header: 'Priority',
+      cell: ({ row: { original } }) => (
+        <div>
+          {original.priority ? (
+            <span
+              className={`text-xs px-2 py-1 border ${
+                original.priority === 'URGENT'
+                  ? 'bg-red-100 text-red-800 border-red-200'
+                  : original.priority === 'HIGH'
+                  ? 'bg-orange-100 text-orange-800 border-orange-200'
+                  : original.priority === 'MEDIUM'
+                  ? 'bg-yellow-100 text-yellow-800 border-yellow-200'
+                  : 'bg-gray-100 text-gray-800 border-gray-200'
+              }`}
+            >
+              {original.priority}
+            </span>
+          ) : (
+            <span className="text-sm text-gray-400">-</span>
+          )}
+        </div>
+      ),
+    },
+    {
+      id: 'actions',
+      header: 'Actions',
+      cell: ({ row: { original } }) => {
+        return (
+          <div className="flex gap-2">
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <button className="p-2 hover:bg-gray-100 rounded-lg transition-colors">
+                  <MoreVertical className="h-4 w-4" />
+                </button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-48">
+                <DropdownMenuItem
+                  onClick={() => {
+                    setSelectedItemId(original.id);
+                    setSelectedItemType(original.type);
+                    setViewDetailsModalOpen(true);
+                  }}
+                >
+                  <Eye className="w-4 h-4 mr-2" />
+                  View Details
+                </DropdownMenuItem>
+
+                {original.type === 'SPEND_REQUEST' && (
+                  <>
+                    {original.status === 'DRAFT' && (
+                      <DropdownMenuItem
+                        onClick={() => handleSubmit(original.id)}
+                      >
+                        <Send className="w-4 h-4 mr-2" />
+                        Submit for Approval
+                      </DropdownMenuItem>
+                    )}
+
+                    {original.status === 'PENDING_APPROVAL' && (
+                      <>
+                        <DropdownMenuItem
+                          onClick={() => handleApprove(original.id)}
+                        >
+                          <CheckCircle className="w-4 h-4 mr-2 text-green-600" />
+                          <span className="text-green-600">Approve</span>
+                        </DropdownMenuItem>
+                        <DropdownMenuItem
+                          onClick={() => handleReject(original.id)}
+                        >
+                          <XCircle className="w-4 h-4 mr-2 text-red-600" />
+                          <span className="text-red-600">Reject</span>
+                        </DropdownMenuItem>
+                      </>
+                    )}
+
+                    {original.status === 'APPROVED' && (
+                      <DropdownMenuItem
+                        onClick={() => handleCreateRFQ(original.id)}
+                      >
+                        <Mail className="w-4 h-4 mr-2" />
+                        Create RFQ
+                      </DropdownMenuItem>
+                    )}
+                  </>
+                )}
+
+                {original.type === 'RFQ' && (
+                  <>
+                    {(original.status === 'DRAFT' ||
+                      original.status === 'RESPONSES_RECEIVED') && (
+                      <DropdownMenuItem
+                        onClick={() => handleSendRFQ(original.id)}
+                      >
+                        <Send className="w-4 h-4 mr-2" />
+                        Send to Vendors
+                      </DropdownMenuItem>
+                    )}
+
+                    {original.status === 'SENT' && (
+                      <DropdownMenuItem
+                        onClick={() => handleCloseRFQ(original.id)}
+                      >
+                        <XCircle className="w-4 h-4 mr-2" />
+                        Close RFQ
+                      </DropdownMenuItem>
+                    )}
+                  </>
+                )}
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
+        );
+      },
+    },
+  ];
+
   return (
     <RootLayout>
       <div
@@ -301,41 +540,21 @@ const ProcurementsPage = () => {
           context?.layoutMode === 'sidebar' ? 'pl-16' : 'pl-5'
         } pr-5 pt-2`}
       >
-        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-8">
-          <div className="flex items-center gap-3">
-            <div className="flex-1 ">
-              <Search
-                placeholder="search procurement items"
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-              />
-            </div>
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <button className="px-4 py-3 border  bg-white text-black text-sm flex items-center gap-2 min-w-[]">
-                  {filterLabel}
-                  <ChevronDown size={20} />
-                </button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent
-                align="start"
-                className="!rounded-none min-w-[142px]"
-              >
-                {filterOptions.map((option) => (
-                  <DropdownMenuItem
-                    key={option.value}
-                    onClick={() => {
-                      setActiveFilter(option.value);
-                      setFilterLabel(option.label);
-                    }}
-                  >
-                    {option.label}
-                  </DropdownMenuItem>
-                ))}
-              </DropdownMenuContent>
-            </DropdownMenu>
+        <div className="flex justify-between items-center w-full mb-6">
+          {/* Left side - Dynamic Filter */}
+          <div className="flex-1">
+            <DynamicFilter
+              searchValue={search}
+              onSearchChange={handleSearchChange}
+              onSearchClear={handleSearchClear}
+              searchPlaceholder="Search procurement items by title, description, number..."
+              filters={filterConfig}
+              className="p-0 bg-transparent"
+            />
           </div>
-          <div className="flex flex-col md:flex-row md:items-center gap-4 w-full md:w-auto">
+
+          {/* Right side - Action Buttons */}
+          <div className="flex items-center space-x-2 ml-4">
             <Button
               text="New Spend Request"
               type="button"
@@ -344,236 +563,12 @@ const ProcurementsPage = () => {
           </div>
         </div>
 
-        {isLoading && (
-          <div
-            className="grid gap-6"
-            style={{
-              gridTemplateColumns: 'repeat(auto-fill, minmax(400px, 1fr))',
-            }}
-          >
-            {[...Array(6)].map((_, idx) => (
-              <div
-                key={idx}
-                className="bg-white border border-gray-200 p-6 flex flex-col gap-4 rounded-md"
-              >
-                <div className="flex items-center gap-3 mb-2">
-                  <Skeleton className="bg-green-50 p-2 rounded w-10 h-10" />
-                  <Skeleton className="h-6 w-32 flex-1" />
-                  <Skeleton className="h-5 w-16 rounded-full" />
-                </div>
-                <Skeleton className="h-4 w-3/4 mb-2" />
-                <div className="flex items-center justify-between border-t pt-3 mt-2">
-                  <Skeleton className="h-4 w-16 rounded-lg" />
-                  <Skeleton className="h-4 w-20" />
-                </div>
-              </div>
-            ))}
-          </div>
-        )}
-
-        {isError && (
-          <div className="text-red-500">Failed to load procurement items.</div>
-        )}
-
-        {!isLoading && filteredItems.length === 0 && (
-          <div className="bg-white border border-gray-200 p-12 text-center">
-            <div className="w-16 h-16 mx-auto mb-4 bg-gray-100 flex items-center justify-center">
-              <ShoppingCart className="w-8 h-8 text-gray-400" />
-            </div>
-            <h3 className="text-lg font-medium text-gray-900 mb-2">
-              No procurement items found
-            </h3>
-            <p className="text-gray-500">
-              {search
-                ? 'Try adjusting your search or filter'
-                : 'Get started by creating your first purchase order'}
-            </p>
-          </div>
-        )}
-
-        <div
-          className="grid gap-6"
-          style={{
-            gridTemplateColumns: 'repeat(auto-fill, minmax(400px, 1fr))',
-          }}
-        >
-          {filteredItems.map((item) => (
-            <div
-              key={item.id}
-              className="bg-white border cursor-pointer border-gray-200 p-6 flex flex-col gap-4 hover:shadow-sm transition-shadow"
-            >
-              <div className="flex items-center gap-3 mb-2">
-                <div className="bg-green-50 p-2 rounded">
-                  {getItemIcon(item.type)}
-                </div>
-                <div className="flex-1">
-                  <h2 className="text-lg font-semibold text-gray-900">
-                    {item.name.length > 16
-                      ? `${item.name.slice(0, 16)}...`
-                      : item.name}
-                  </h2>
-                  <p className="text-xs text-gray-500">
-                    {item.requestNumber || item.rfqNumber || 'N/A'}
-                  </p>
-                </div>
-                <Badge
-                  className={`${getStatusColor(
-                    item.status
-                  )} font-medium rounded-full px-3 py-1 text-xs`}
-                >
-                  {formatStatus(item.status)}
-                </Badge>
-
-                {/* Action Menu */}
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <button className="p-1 hover:bg-gray-100 transition-colors">
-                      <MoreVertical className="w-5 h-5 text-gray-600" />
-                    </button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent align="end" className="w-48">
-                    {item.type === 'SPEND_REQUEST' && (
-                      <>
-                        <DropdownMenuItem
-                          onClick={() => {
-                            setSelectedItemId(item.id);
-                            setSelectedItemType('SPEND_REQUEST');
-                            setViewDetailsModalOpen(true);
-                          }}
-                        >
-                          <Eye className="w-4 h-4 mr-2" />
-                          View Details
-                        </DropdownMenuItem>
-
-                        {item.status === 'DRAFT' && (
-                          <DropdownMenuItem
-                            onClick={() => handleSubmit(item.id)}
-                          >
-                            <Send className="w-4 h-4 mr-2" />
-                            Submit for Approval
-                          </DropdownMenuItem>
-                        )}
-
-                        {item.status === 'PENDING_APPROVAL' && (
-                          <>
-                            <DropdownMenuItem
-                              onClick={() => handleApprove(item.id)}
-                            >
-                              <CheckCircle className="w-4 h-4 mr-2 text-green-600" />
-                              <span className="text-green-600">Approve</span>
-                            </DropdownMenuItem>
-                            <DropdownMenuItem
-                              onClick={() => handleReject(item.id)}
-                            >
-                              <XCircle className="w-4 h-4 mr-2 text-red-600" />
-                              <span className="text-red-600">Reject</span>
-                            </DropdownMenuItem>
-                          </>
-                        )}
-
-                        {item.status === 'APPROVED' && (
-                          <DropdownMenuItem
-                            onClick={() => handleCreateRFQ(item.id)}
-                          >
-                            <Mail className="w-4 h-4 mr-2" />
-                            Create RFQ
-                          </DropdownMenuItem>
-                        )}
-                      </>
-                    )}
-
-                    {item.type === 'RFQ' && (
-                      <>
-                        <DropdownMenuItem
-                          onClick={() => {
-                            setSelectedItemId(item.id);
-                            setSelectedItemType('RFQ');
-                            setViewDetailsModalOpen(true);
-                          }}
-                        >
-                          <Eye className="w-4 h-4 mr-2" />
-                          View Details
-                        </DropdownMenuItem>
-
-                        {(item.status === 'DRAFT' ||
-                          item.status === 'RESPONSES_RECEIVED') && (
-                          <DropdownMenuItem
-                            onClick={() => handleSendRFQ(item.id)}
-                          >
-                            <Send className="w-4 h-4 mr-2" />
-                            Send to Vendors
-                          </DropdownMenuItem>
-                        )}
-
-                        {item.status === 'SENT' && (
-                          <DropdownMenuItem
-                            onClick={() => handleCloseRFQ(item.id)}
-                          >
-                            <XCircle className="w-4 h-4 mr-2" />
-                            Close RFQ
-                          </DropdownMenuItem>
-                        )}
-                      </>
-                    )}
-                  </DropdownMenuContent>
-                </DropdownMenu>
-              </div>
-              <p className="text-gray-500 text-sm mb-2">{item.description}</p>
-              <div className="flex items-center justify-between border-t pt-3 mt-2">
-                <div className="flex flex-col gap-1">
-                  <span className="text-xs text-gray-500">
-                    {item.type === 'RFQ' ? 'Vendors' : 'Vendor'}
-                  </span>
-                  <span className="text-sm font-medium text-gray-900">
-                    {item.vendor}
-                  </span>
-                </div>
-                {item.amount > 0 && (
-                  <div className="flex flex-col gap-1 items-end">
-                    <span className="text-xs text-gray-500">Amount</span>
-                    <span className="text-sm font-bold text-green-900">
-                      {formatCurrency(item.amount)}
-                    </span>
-                  </div>
-                )}
-                {item.type === 'RFQ' && item.deadline && (
-                  <div className="flex flex-col gap-1 items-end">
-                    <span className="text-xs text-gray-500">Deadline</span>
-                    <span className="text-sm font-medium text-gray-900">
-                      {new Date(item.deadline).toLocaleDateString()}
-                    </span>
-                  </div>
-                )}
-              </div>
-              <div className="flex items-center justify-between pt-2">
-                <span className="flex items-center gap-1 text-xs text-gray-500">
-                  <Package className="w-4 h-4" />
-                  {item.items} items
-                </span>
-                <div className="flex rounde items-center gap-2">
-                  {item.priority && (
-                    <span
-                      className={`text-xs rounded-full px-2 py-1 ${
-                        item.priority === 'URGENT'
-                          ? 'bg-red-100 text-red-800'
-                          : item.priority === 'HIGH'
-                          ? 'bg-orange-100 text-orange-800'
-                          : item.priority === 'MEDIUM'
-                          ? 'bg-yellow-100 text-yellow-800'
-                          : 'bg-gray-100 text-gray-800'
-                      }`}
-                    >
-                      {item.priority}
-                    </span>
-                  )}
-                  <span className="text-xs rounded-full bg-[#F3FBFB] px-3 py-1 text-gray-700">
-                    {item.type.replace('_', ' ')}
-                  </span>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
+        {/* DataGrid Table */}
+        <DataGrid
+          columns={columns}
+          data={filteredItems}
+          isLoading={isLoading}
+        />
 
         {/* New Spend Request Slideover */}
         <NewSpendRequestSlideover

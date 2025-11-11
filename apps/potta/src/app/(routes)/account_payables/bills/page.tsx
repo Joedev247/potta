@@ -21,28 +21,9 @@ export default function DashboardPage() {
   return (
     <RootLayout>
       <div
-        className={`${
-          context?.layoutMode === 'sidebar' ? 'pl-16' : 'pl-5'
-        } overflow-hidden space-y-4 pr-5 w-full `}
+        className={`${context?.layoutMode === 'sidebar' ? 'px-14' : 'px-5'}`}
       >
-        {/* Top Row Cards (same as before) */}
-
-        {/* Action/Filter Row (same as before) */}
-        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mt-8">
-          {/* Search and Filters */}
-          <Filter
-            search={search}
-            onSearchChange={setSearch}
-            onSearchClear={handleSearchClear}
-            status={status}
-            onStatusChange={setStatus}
-            paymentMethod={paymentMethod}
-            onPaymentMethodChange={setPaymentMethod}
-          />
-        </div>
-
-        {/* Payment Request Table - USE THE NEW WRAPPER */}
-        <div>
+        <div className="">
           <PaymentRequestDataTableWrapper
             search={search}
             status={status}

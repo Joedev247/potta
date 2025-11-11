@@ -9,6 +9,8 @@ import {
 } from '../types';
 import toast from 'react-hot-toast';
 import PottaLoader from '@potta/components/pottaloader';
+import Input from '@potta/components/input';
+import Button from '@potta/components/button';
 
 interface RFQProformaFormProps {
   tokenData: RFQTokenData;
@@ -118,7 +120,7 @@ const RFQProformaForm: React.FC<RFQProformaFormProps> = ({
   if (submitted) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
-        <div className="bg-white rounded-lg shadow-lg p-8 max-w-md w-full text-center">
+        <div className="bg-white p-8 max-w-md w-full text-center">
           <div className="text-green-600 text-6xl mb-4">✓</div>
           <h1 className="text-2xl font-bold text-gray-800 mb-2">
             Proforma Invoice Submitted!
@@ -127,7 +129,7 @@ const RFQProformaForm: React.FC<RFQProformaFormProps> = ({
             Your proforma invoice has been successfully submitted. We will
             review it and get back to you soon.
           </p>
-          <div className="bg-gray-50 rounded-lg p-4">
+          <div className="bg-gray-50 p-4">
             <p className="text-sm text-gray-600">
               Total Amount:{' '}
               <span className="font-bold text-lg text-gray-800">
@@ -144,7 +146,7 @@ const RFQProformaForm: React.FC<RFQProformaFormProps> = ({
     <div className="min-h-screen bg-gray-50 py-8 px-4">
       <div className="max-w-6xl mx-auto">
         {/* Header */}
-        <div className="bg-white rounded-lg shadow-md p-6 mb-6">
+        <div className="bg-white p-6 mb-6">
           <div className="flex items-start justify-between">
             <div>
               <h1 className="text-3xl font-bold text-gray-800 mb-2">
@@ -164,7 +166,7 @@ const RFQProformaForm: React.FC<RFQProformaFormProps> = ({
           </div>
 
           {rfqData.description && (
-            <div className="mt-4 pt-4 border-t border-gray-200">
+            <div className="mt-4 pt-4">
               <p className="text-gray-700">{rfqData.description}</p>
             </div>
           )}
@@ -172,7 +174,7 @@ const RFQProformaForm: React.FC<RFQProformaFormProps> = ({
 
         {/* Instructions */}
         {rfqData.instructions && (
-          <div className="bg-white rounded-lg shadow-md p-6 mb-6">
+          <div className="bg-white p-6 mb-6">
             <h2 className="text-xl font-semibold text-gray-800 mb-4">
               Instructions
             </h2>
@@ -184,7 +186,7 @@ const RFQProformaForm: React.FC<RFQProformaFormProps> = ({
 
         {/* Pricing Form */}
         <form onSubmit={handleSubmit}>
-          <div className="bg-white rounded-lg shadow-md p-6 mb-6">
+          <div className="bg-white p-6 mb-6">
             <h2 className="text-xl font-semibold text-gray-800 mb-4">
               Pricing Information
             </h2>
@@ -209,7 +211,7 @@ const RFQProformaForm: React.FC<RFQProformaFormProps> = ({
               <div className="overflow-x-auto">
                 <table className="w-full">
                   <thead>
-                    <tr className="bg-gray-50 border-b border-gray-200">
+                    <tr className="bg-gray-50">
                       <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700">
                         Item
                       </th>
@@ -220,14 +222,14 @@ const RFQProformaForm: React.FC<RFQProformaFormProps> = ({
                         Quantity
                       </th>
                       <th className="px-4 py-3 text-right text-sm font-semibold text-gray-700">
-                          Unit Price (XAF)
+                        Unit Price (XAF)
                       </th>
                       <th className="px-4 py-3 text-right text-sm font-semibold text-gray-700">
                         Total Amount (XAF)
                       </th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-gray-200">
+                  <tbody>
                     {lineItems.map((item, index) => (
                       <tr key={item.uuid} className="hover:bg-gray-50">
                         <td className="px-4 py-4">
@@ -253,20 +255,20 @@ const RFQProformaForm: React.FC<RFQProformaFormProps> = ({
                           </span>
                         </td>
                         <td className="px-4 py-4">
-                          <input
+                          <Input
                             type="number"
-                            step="0.01"
-                            min="0"
+                            name={`unitPrice-${index}`}
                             value={item.unitPrice || ''}
-                            onChange={(e) =>
+                            onchange={(e) =>
                               handlePriceChange(
                                 index,
                                 parseFloat(e.target.value) || 0
                               )
                             }
-                            className="w-full px-3 py-2 border border-gray-300 rounded-md text-right focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
                             placeholder="0.00"
                             required
+                            min={0}
+                            inputClass="text-right"
                           />
                         </td>
                         <td className="px-4 py-4 text-right">
@@ -278,7 +280,7 @@ const RFQProformaForm: React.FC<RFQProformaFormProps> = ({
                     ))}
                   </tbody>
                   <tfoot>
-                    <tr className="bg-gray-50 border-t-2 border-gray-300">
+                    <tr className="bg-gray-50">
                       <td
                         colSpan={4}
                         className="px-4 py-4 text-right font-bold text-gray-800"
@@ -300,7 +302,7 @@ const RFQProformaForm: React.FC<RFQProformaFormProps> = ({
           {/* Terms */}
           {rfqData.terms &&
             (rfqData.terms.paymentTerms || rfqData.terms.warrantyTerms) && (
-              <div className="bg-white rounded-lg shadow-md p-6 mb-6">
+              <div className="bg-white p-6 mb-6">
                 <h3 className="text-lg font-semibold text-gray-800 mb-4">
                   Terms & Conditions
                 </h3>
@@ -330,7 +332,7 @@ const RFQProformaForm: React.FC<RFQProformaFormProps> = ({
             )}
 
           {/* Submit Button */}
-          <div className="bg-white rounded-lg shadow-md p-6">
+          <div className="bg-white p-6">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm text-gray-600">
@@ -338,20 +340,12 @@ const RFQProformaForm: React.FC<RFQProformaFormProps> = ({
                   items at the quoted prices.
                 </p>
               </div>
-              <button
+              <Button
+                text={isPending ? 'Submitting...' : 'Submit Proforma Invoice'}
                 type="submit"
                 disabled={isPending}
-                className="px-8 py-3 bg-green-600 text-white font-semibold rounded-lg hover:bg-green-700 transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed flex items-center gap-2"
-              >
-                {isPending ? (
-                  <>
-                    <PottaLoader size="sm" />
-                    <span>Submitting...</span>
-                  </>
-                ) : (
-                  'Submit Proforma Invoice'
-                )}
-              </button>
+                icon={isPending ? <PottaLoader size="sm" /> : undefined}
+              />
             </div>
           </div>
         </form>

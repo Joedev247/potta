@@ -189,6 +189,15 @@ const TableComponents = () => {
   const filter: CustomerFilter = { page, limit };
   const { data: customer, isLoading, error } = useGetAllCustomers(filter);
 
+  const handlePageChange = (newPage: number) => {
+    setPage(newPage);
+  };
+
+  const handlePageSizeChange = (newPageSize: number) => {
+    setLimit(newPageSize);
+    setPage(1); // Reset to first page when page size changes
+  };
+
   const handleRowClick = (row: any) => {
     setOpenViewModal(row.uuid);
     setIsViewOpen(true);
@@ -214,6 +223,15 @@ const TableComponents = () => {
         data={customer?.data || []}
         isLoading={isLoading}
         onRowClick={handleRowClick}
+        manualPagination={!!customer?.meta}
+        currentPage={page}
+        pageSize={limit}
+        pageCount={customer?.meta?.totalPages || 1}
+        totalItems={customer?.meta?.totalItems || customer?.data?.length || 0}
+        onPageChange={handlePageChange}
+        onPageSizeChange={handlePageSizeChange}
+        showPagination={true}
+        pageSizeOptions={[10, 20, 50, 100]}
       />
       {openDeleteModal && (
         <DeleteModal

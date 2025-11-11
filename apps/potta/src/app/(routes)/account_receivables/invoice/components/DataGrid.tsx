@@ -29,6 +29,13 @@ interface IDataGrid<T> {
   maxHeight?: string;
   showHeight?: boolean;
   containerRef?: React.RefObject<HTMLElement>;
+  // Server-side pagination props
+  manualPagination?: boolean;
+  pageCount?: number;
+  currentPage?: number;
+  totalItems?: number;
+  onPageChange?: (page: number) => void;
+  onPageSizeChange?: (pageSize: number) => void;
 }
 
 const DataGrid = <T,>({
@@ -44,6 +51,12 @@ const DataGrid = <T,>({
   maxHeight,
   containerRef,
   showHeight = false,
+  manualPagination = false,
+  pageCount,
+  currentPage,
+  totalItems,
+  onPageChange,
+  onPageSizeChange,
 }: IDataGrid<T>) => {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [availableHeight, setAvailableHeight] = useState<number>(600);
@@ -105,15 +118,20 @@ const DataGrid = <T,>({
     data: data || [],
     columns: columns || [],
     getCoreRowModel: getCoreRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
+    getPaginationRowModel: manualPagination
+      ? undefined
+      : getPaginationRowModel(),
     getSortedRowModel: getSortedRowModel(),
     onSortingChange: setSorting,
+    manualPagination: manualPagination,
+    pageCount: manualPagination ? pageCount : undefined,
     state: {
       sorting,
     },
     initialState: {
       pagination: {
         pageSize: pageSize,
+        pageIndex: manualPagination ? (currentPage || 1) - 1 : 0,
       },
     },
   });
@@ -149,10 +167,16 @@ const DataGrid = <T,>({
     );
   }
 
-  const totalRows = table.getFilteredRowModel().rows.length;
-  const currentPage = table.getState().pagination.pageIndex + 1;
-  const totalPages = table.getPageCount();
-  const pageSizeValue = table.getState().pagination.pageSize;
+  const totalRows = manualPagination
+    ? totalItems || 0
+    : table.getFilteredRowModel().rows.length;
+  const currentPageValue = manualPagination
+    ? currentPage || 1
+    : (table.getState().pagination?.pageIndex ?? 0) + 1;
+  const totalPages = manualPagination ? pageCount || 1 : table.getPageCount();
+  const pageSizeValue = manualPagination
+    ? pageSize
+    : table.getState().pagination?.pageSize ?? pageSize;
 
   return (
     <div
@@ -240,7 +264,12 @@ const DataGrid = <T,>({
             <select
               value={pageSizeValue}
               onChange={(e) => {
-                table.setPageSize(Number(e.target.value));
+                const newSize = Number(e.target.value);
+                if (manualPagination && onPageSizeChange) {
+                  onPageSizeChange(newSize);
+                } else {
+                  table.setPageSize(newSize);
+                }
               }}
               className="border border-gray-300  px-2 py-1 text-sm"
             >
@@ -254,22 +283,42 @@ const DataGrid = <T,>({
           </div>
 
           <div className="text-sm text-gray-700">
-            Showing {(currentPage - 1) * pageSizeValue + 1} to{' '}
-            {Math.min(currentPage * pageSizeValue, totalRows)} of {totalRows}{' '}
-            entries
+            Showing {(currentPageValue - 1) * pageSizeValue + 1} to{' '}
+            {Math.min(currentPageValue * pageSizeValue, totalRows)} of{' '}
+            {totalRows} entries
           </div>
 
           <div className="flex items-center gap-1">
             <button
-              onClick={() => table.setPageIndex(0)}
-              disabled={!table.getCanPreviousPage()}
+              onClick={() => {
+                if (manualPagination && onPageChange) {
+                  onPageChange(1);
+                } else {
+                  table.setPageIndex(0);
+                }
+              }}
+              disabled={
+                manualPagination
+                  ? currentPageValue === 1
+                  : !table.getCanPreviousPage()
+              }
               className="p-2 text-gray-500 hover:text-gray-700 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               <ChevronsLeft size={16} />
             </button>
             <button
-              onClick={() => table.previousPage()}
-              disabled={!table.getCanPreviousPage()}
+              onClick={() => {
+                if (manualPagination && onPageChange) {
+                  onPageChange(currentPageValue - 1);
+                } else {
+                  table.previousPage();
+                }
+              }}
+              disabled={
+                manualPagination
+                  ? currentPageValue === 1
+                  : !table.getCanPreviousPage()
+              }
               className="p-2 text-gray-500 hover:text-gray-700 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               <ChevronLeft size={16} />
@@ -278,12 +327,18 @@ const DataGrid = <T,>({
             <div className="flex items-center gap-1">
               {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
                 const pageNumber = i + 1;
-                const isCurrentPage = pageNumber === currentPage;
+                const isCurrentPage = pageNumber === currentPageValue;
 
                 return (
                   <button
                     key={pageNumber}
-                    onClick={() => table.setPageIndex(pageNumber - 1)}
+                    onClick={() => {
+                      if (manualPagination && onPageChange) {
+                        onPageChange(pageNumber);
+                      } else {
+                        table.setPageIndex(pageNumber - 1);
+                      }
+                    }}
                     className={cn(
                       'px-3 py-1 text-sm ',
                       isCurrentPage
@@ -298,15 +353,35 @@ const DataGrid = <T,>({
             </div>
 
             <button
-              onClick={() => table.nextPage()}
-              disabled={!table.getCanNextPage()}
+              onClick={() => {
+                if (manualPagination && onPageChange) {
+                  onPageChange(currentPageValue + 1);
+                } else {
+                  table.nextPage();
+                }
+              }}
+              disabled={
+                manualPagination
+                  ? currentPageValue === totalPages
+                  : !table.getCanNextPage()
+              }
               className="p-2 text-gray-500 hover:text-gray-700 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               <ChevronRight size={16} />
             </button>
             <button
-              onClick={() => table.setPageIndex(table.getPageCount() - 1)}
-              disabled={!table.getCanNextPage()}
+              onClick={() => {
+                if (manualPagination && onPageChange) {
+                  onPageChange(totalPages);
+                } else {
+                  table.setPageIndex(table.getPageCount() - 1);
+                }
+              }}
+              disabled={
+                manualPagination
+                  ? currentPageValue === totalPages
+                  : !table.getCanNextPage()
+              }
               className="p-2 text-gray-500 hover:text-gray-700 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               <ChevronsRight size={16} />
