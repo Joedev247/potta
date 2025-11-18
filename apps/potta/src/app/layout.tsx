@@ -1,17 +1,10 @@
-// 'use client'
 import type { Metadata } from 'next';
 import localFont from 'next/font/local';
 import './globals.css';
 import 'remixicon/fonts/remixicon.css';
 import 'react-accessible-accordion/dist/fancy-example.css';
-import { DataProvider } from '@potta/components/context';
-import TanstackQueryClientProvider from './_components/queryClientProvider';
-import { Toaster } from 'react-hot-toast';
 
-import { HeroUIProvider } from '@heroui/react';
-import { AuthProvider } from './(routes)/auth/AuthContext';
-import AuthGuard from './_components/AuthGuard';
-import UserDataLoader from '@potta/components/UserDataLoader';
+import { AppProviders } from './providers';
 
 const geistSans = localFont({
   src: './fonts/GeistVF.woff',
@@ -37,26 +30,15 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode;
-}>) {
+}) {
   return (
     <html lang="en" suppressHydrationWarning>
       <body
-        className={`${geistSans.variable} bg-[#F8F9FA]  ${geistMono.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} bg-[#F8F9FA] antialiased`}
       >
-        <DataProvider>
-          <AuthProvider>
-            <TanstackQueryClientProvider>
-            <HeroUIProvider>
-                <Toaster position="top-center" />
-                <AuthGuard>
-                  <UserDataLoader>{children}</UserDataLoader>
-                </AuthGuard>
-              </HeroUIProvider>
-            </TanstackQueryClientProvider>
-          </AuthProvider>
-        </DataProvider>
+        <AppProviders>{children}</AppProviders>
       </body>
     </html>
   );

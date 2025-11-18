@@ -43,7 +43,7 @@ export const useAnalytics = (
           time_granularity: options.time_granularity,
           start_date: options.start_date,
           end_date: options.end_date,
-          organization_id: options.organization_id,
+          organizate: options.organization_id,
           account_uuid: options.account_uuid,
           product_uuid: options.product_uuid,
           customer_uuid: options.customer_uuid,
