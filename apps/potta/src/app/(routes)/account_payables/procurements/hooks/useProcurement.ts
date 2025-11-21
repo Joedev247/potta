@@ -216,19 +216,42 @@ export const useCreateRFQ = () => {
       spendRequestId: string;
       data: Partial<RFQ>;
     }) => rfqsApi.create(spendRequestId, data),
-    onSuccess: () => {
+    onSuccess: (data, variables) => {
+      // Invalidate both RFQs and spend requests to ensure fresh data
       queryClient.invalidateQueries({
         queryKey: PROCUREMENT_QUERY_KEYS.rfqs(),
+      });
+      queryClient.invalidateQueries({
+        queryKey: PROCUREMENT_QUERY_KEYS.spendRequests(),
+      });
+      queryClient.invalidateQueries({
+        queryKey: PROCUREMENT_QUERY_KEYS.spendRequest(variables.spendRequestId),
       });
       toast.success('RFQ created successfully');
     },
     onError: (error: any) => {
+      // Log detailed error for debugging
+      console.error('CreateRFQ Error Response:', {
+        status: error?.response?.status,
+        data: error?.response?.data,
+        errors: error?.response?.data?.errors,
+        message: error?.response?.data?.message,
+      });
+      
       const errorMessage =
         error?.response?.data?.message ||
         error?.response?.data?.error ||
         error?.message ||
         'Failed to create RFQ';
-      toast.error(errorMessage);
+      
+      // Show validation errors if available
+      const validationErrors = error?.response?.data?.errors;
+      if (validationErrors && typeof validationErrors === 'object') {
+        const errorList = Object.values(validationErrors).flat();
+        toast.error(errorList.length > 0 ? errorList.join(', ') : errorMessage);
+      } else {
+        toast.error(errorMessage);
+      }
     },
   });
 };

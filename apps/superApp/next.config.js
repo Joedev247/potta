@@ -10,11 +10,7 @@ const nextConfig = {
     // !! WARN !!
     ignoreBuildErrors: true,
   },
-  // Enable incremental builds
-  experimental: {
-    incrementalBuildCache: true,
-    optimizeFonts: false,
-  },
+  cacheComponents: true,
   // Enable static optimization
   poweredByHeader: false,
   reactStrictMode: true,

@@ -112957,5 +112957,53 @@
       }
     }
   },
-  "6162811947963447870": {}
+  "6162811947963447870": {},
+  "12069808715019964360": {
+    "apps/potta": {
+      "targets": {
+        "lint": {
+          "command": "eslint .",
+          "cache": true,
+          "options": {
+            "cwd": "apps/potta"
+          },
+          "inputs": [
+            "default",
+            "^default",
+            "{workspaceRoot}/.eslintrc.json",
+            "{projectRoot}/.eslintrc.json",
+            "{workspaceRoot}/tools/eslint-rules/**/*",
+            {
+              "externalDependencies": [
+                "eslint"
+              ]
+            }
+          ],
+          "outputs": [
+            "{options.outputFile}"
+          ],
+          "metadata": {
+            "technologies": [
+              "eslint"
+            ],
+            "description": "Runs ESLint on project",
+            "help": {
+              "command": "npx eslint --help",
+              "example": {
+                "options": {
+                  "max-warnings": 0
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "12405282241216687993": {},
+  "13854176542428472174": {},
+  "6133075777334986821": {},
+  "11171943103281299982": {},
+  "4500646254944661674": {},
+  "3936374752929990992": {}
 }

@@ -59,6 +59,7 @@ interface ProcurementItem {
   rfqNumber?: string;
   deadline?: string;
   createdAt?: string;
+  spendRequestId?: string; // Parent spend request ID for RFQs
 }
 
 // Helper function to get icon based on type
@@ -208,9 +209,22 @@ const ProcurementsPage = () => {
   );
 
   // Combine and transform data
+  // Filter out spend requests that already have an RFQ to avoid duplicates
   const allItems = useMemo(() => {
-    const spendRequestItems: ProcurementItem[] = (spendRequests || []).map(
-      (sr: SpendRequest) => ({
+    // Create a set of spend request IDs that have RFQs
+    const spendRequestIdsWithRFQ = new Set(
+      (rfqs || [])
+        .map((rfq: RFQ) => rfq.spendRequestId)
+        .filter((id): id is string => !!id)
+    );
+
+    const spendRequestItems: ProcurementItem[] = (spendRequests || [])
+      // Filter out spend requests that have an associated RFQ
+      .filter((sr: SpendRequest) => {
+        const srId = sr.uuid || sr.id;
+        return !srId || !spendRequestIdsWithRFQ.has(srId);
+      })
+      .map((sr: SpendRequest) => ({
         id: sr.uuid || sr.id || '',
         name: sr.title,
         type: 'SPEND_REQUEST' as const,
@@ -222,8 +236,7 @@ const ProcurementsPage = () => {
         priority: sr.priority,
         requestNumber: sr.requestNumber,
         createdAt: sr.createdAt,
-      })
-    );
+      }));
 
     const rfqItems: ProcurementItem[] = (rfqs || []).map((rfq: RFQ) => ({
       id: rfq.uuid || rfq.id || '',
@@ -239,6 +252,7 @@ const ProcurementsPage = () => {
       rfqNumber: rfq.rfqNumber,
       deadline: rfq.deadline,
       createdAt: rfq.createdAt,
+      spendRequestId: rfq.spendRequestId, // Store the parent spend request ID
     }));
 
     return [...spendRequestItems, ...rfqItems];

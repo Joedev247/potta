@@ -8,6 +8,8 @@ interface Employee {
   lastName: string;
   email: string;
   isActive: boolean;
+  profilePicture?: string;
+  phone?: string;
 }
 
 export const useEmployees = () => {

@@ -110,8 +110,12 @@ const ChatAI = ({ onClose }: ChatAIProps) => {
           );
         }
       } catch (error) {
-        console.error('❌ Error parsing WebSocket message:', error);
-        console.error('❌ Raw message data:', event.data);
+        // Log parsing errors only in development
+        const isDevelopment = process.env.NODE_ENV === 'development';
+        if (isDevelopment) {
+          console.warn('⚠️ Error parsing WebSocket message:', error);
+          console.warn('⚠️ Raw message data:', event.data);
+        }
         addMessage(
           'bot',
           'Sorry, I encountered an error processing your request.'
@@ -122,11 +126,17 @@ const ChatAI = ({ onClose }: ChatAIProps) => {
     };
 
     ws.onerror = (error) => {
-      console.error('❌ WebSocket error:', error);
-      console.error(
-        '❌ Failed to connect to:',
-        'wss://tribu.dev.instanvi.com/livra/'
-      );
+      // Use console.warn for connection errors (expected during initial connection attempts)
+      // Only log detailed error info in development
+      const isDevelopment = process.env.NODE_ENV === 'development';
+      
+      if (isDevelopment) {
+        console.warn('⚠️ WebSocket connection error:', error);
+        console.warn(
+          '⚠️ Failed to connect to:',
+          'wss://tribu.dev.instanvi.com/livra/'
+        );
+      }
       setIsConnected(false);
       setConnectionStatus('Connection Error');
       setIsLoading(false);
@@ -212,7 +222,11 @@ const ChatAI = ({ onClose }: ChatAIProps) => {
         socket.send(JSON.stringify(payload));
         console.log('✅ Message sent successfully via WebSocket');
       } catch (error) {
-        console.error('❌ Error sending message:', error);
+        // Log sending errors only in development
+        const isDevelopment = process.env.NODE_ENV === 'development';
+        if (isDevelopment) {
+          console.warn('⚠️ Error sending message:', error);
+        }
         setIsLoading(false);
         addMessage('bot', 'Failed to send message. Please try again.');
       }

@@ -160,8 +160,9 @@ axios.interceptors.request.use(
       config.headers['Authorization'] = `Bearer ${token}`;
     }
 
-    // Add request ID for tracking
-    config.headers['X-Request-Id'] = `${Date.now()}-${Math.random()
+    // Add request ID for tracking (only use Date.now() on client side)
+    const timestamp = typeof window !== 'undefined' ? Date.now() : 0;
+    config.headers['X-Request-Id'] = `${timestamp}-${Math.random()
       .toString(36)
       .substr(2, 9)}`;
 
@@ -211,11 +212,28 @@ axios.interceptors.response.use(
       _retry?: boolean;
     };
 
-    // Development logging
-    if (authConfig.enableLogging) {
+    // Check if this is an expected authentication error (401 on auth endpoints)
+    const requestUrl = originalRequest?.url || '';
+    const isAuthEndpoint =
+      requestUrl.includes('/whoami') ||
+      requestUrl.includes('/me') ||
+      requestUrl.includes('/auth/refresh') ||
+      requestUrl.includes('/auth/logout');
+    
+    // Expected auth errors:
+    // 1. 401 on auth endpoints OR network errors on auth endpoints
+    // 2. First-time 401 errors (not retried yet) - expected during initial load
+    const isFirstTime401 =
+      error.response?.status === 401 && !originalRequest?._retry;
+    const isExpectedAuthError =
+      (isAuthEndpoint && (error.response?.status === 401 || !error.response)) ||
+      isFirstTime401;
+
+    // Development logging (skip expected auth errors to reduce console noise)
+    if (authConfig.enableLogging && !isExpectedAuthError) {
       console.error('[Axios Response Error]', {
         status: error.response?.status,
-        url: originalRequest?.url,
+        url: requestUrl,
         data: error.response?.data,
         message: error.message,
       });
@@ -223,7 +241,10 @@ axios.interceptors.response.use(
 
     // Handle network errors
     if (!error.response) {
-      console.error('Network error:', error.message);
+      // Skip logging network errors for auth endpoints (expected during initial load)
+      if (authConfig.enableLogging && !isAuthEndpoint) {
+        console.error('Network error:', error.message);
+      }
       return Promise.reject({
         ...error,
         message: AUTH_ERRORS.NETWORK_ERROR,
@@ -242,9 +263,16 @@ axios.interceptors.response.use(
         return Promise.reject(error);
       }
 
+      // For auth endpoints, errors are expected and handled gracefully
+      if (isAuthEndpoint) {
+        return Promise.reject(error);
+      }
+
       // In development, just log the error
       if (environment === 'development') {
-        console.warn('401 Unauthorized in development mode');
+        if (authConfig.enableLogging) {
+          console.warn('401 Unauthorized in development mode');
+        }
         return Promise.reject(error);
       }
 

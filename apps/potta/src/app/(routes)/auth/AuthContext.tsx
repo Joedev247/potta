@@ -189,8 +189,30 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
 
-  const config = useMemo(() => getAuthConfig(), []);
-  const environment = useMemo(() => getEnvironment(), []);
+  // Only call getAuthConfig/getEnvironment on client side to avoid SSR Date.now() issues
+  const config = useMemo(() => {
+    if (typeof window === 'undefined') {
+      // Return a safe default config for SSR
+      return {
+        authUrl: process.env.NEXT_PUBLIC_AUTH_URL || 'https://instanvi-auth.vercel.app',
+        apiUrl: process.env.NEXT_PUBLIC_API_BASE_URL || 'https://api.instanvi.com',
+        useTestToken: false,
+        testToken: null,
+        enableLogging: false,
+        tokenExpiry: 7,
+        refreshBeforeExpiry: 24,
+        encryptionSecret: process.env.NEXT_PUBLIC_ENCRYPTION_SECRET || '',
+        salt: process.env.NEXT_PUBLIC_SALT || '',
+      };
+    }
+    return getAuthConfig();
+  }, []);
+  const environment = useMemo(() => {
+    if (typeof window === 'undefined') {
+      return 'server';
+    }
+    return getEnvironment();
+  }, []);
 
   // Check if current route bypasses auth
   const isBypassRoute = useMemo(() => {

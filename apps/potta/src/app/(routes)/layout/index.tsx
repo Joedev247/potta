@@ -1,5 +1,4 @@
 'use client';
-import { Inter } from 'next/font/google';
 import ImprovedCustomNavbar from '../../../components/improved-custom-navbar';
 import Sidebars from './sidebar';
 import Navbar from './navbar';
@@ -15,8 +14,6 @@ import React from 'react';
 export const dynamic = 'force-dynamic';
 export const fetchCache = 'force-no-store';
 export const revalidate = false;
-
-const inter = Inter({ subsets: ['latin'] });
 
 export default function RootLayout({
   children,

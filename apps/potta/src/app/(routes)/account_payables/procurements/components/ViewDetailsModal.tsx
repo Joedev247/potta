@@ -6,6 +6,7 @@ import { Package, Calendar, DollarSign, User, FileText } from 'lucide-react';
 import { Skeleton } from '@potta/components/shadcn/skeleton';
 import type { SpendRequest, RFQ } from '../utils/types';
 import { useGetSpendRequest, useGetRFQ } from '../hooks/useProcurement';
+import ThreadPanel from '@potta/components/threads/ThreadPanel';
 
 interface ViewDetailsModalProps {
   open: boolean;
@@ -508,6 +509,20 @@ const ViewDetailsModal: React.FC<ViewDetailsModalProps> = ({
             </div>
           </div>
         </div>
+
+        {type === 'SPEND_REQUEST' && (item as SpendRequest)?.uuid && (
+          <ThreadPanel
+            entityType="SPEND_REQUEST"
+            entityId={
+              (item as SpendRequest).uuid || (item as SpendRequest).id || ''
+            }
+            entityDisplayName={`Spend Request #${
+              (item as SpendRequest).requestNumber ||
+              (item as SpendRequest).title
+            }`}
+            emptyStateMessage="No conversations for this spend request yet."
+          />
+        )}
       </div>
     </Slider>
   );

@@ -39,7 +39,7 @@ export const getAuthConfig = () => {
       authUrl: process.env.NEXT_PUBLIC_AUTH_URL,
       apiUrl: apiUrl,
       useTestToken: true,
-      testToken: 'bPs5jIS6ex15YqXwaUNUa6NZ0bpFVbEw',
+      testToken: 'xsvn78CJA5n8Pu7gM4ndHinD3Dj2Oua9',
       enableLogging: true,
       tokenExpiry: 7, // days
       refreshBeforeExpiry: 24, // hours
