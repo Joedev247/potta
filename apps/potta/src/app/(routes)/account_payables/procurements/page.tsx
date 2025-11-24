@@ -5,23 +5,13 @@ import RootLayout from '../../layout';
 import { Badge } from '@potta/components/shadcn/badge';
 import DataGrid from '@potta/app/(routes)/account_receivables/invoice/components/DataGrid';
 import DynamicFilter from '@potta/components/dynamic-filter';
-import {
-  DropdownMenu,
-  DropdownMenuTrigger,
-  DropdownMenuContent,
-  DropdownMenuItem,
-} from '@potta/components/shadcn/dropdown';
+import ProcurementActionSidebar from './components/ProcurementActionSidebar';
 import Button from '@potta/components/button';
 import {
   ShoppingCart,
   FileText,
   Package,
   MoreVertical,
-  Send,
-  CheckCircle,
-  XCircle,
-  Eye,
-  Mail,
 } from 'lucide-react';
 import { ContextData } from '@potta/components/context';
 import { useCallback } from 'react';
@@ -45,7 +35,7 @@ import { useEmployees } from '../spend-program/hooks/useEmployees';
 import moment from 'moment';
 
 // Combined item type for display
-interface ProcurementItem {
+export interface ProcurementItem {
   id: string;
   name: string;
   type: 'SPEND_REQUEST' | 'RFQ';
@@ -139,6 +129,9 @@ const ProcurementsPage = () => {
   >('SPEND_REQUEST');
   const [sendRFQModalOpen, setSendRFQModalOpen] = useState(false);
   const [selectedRFQId, setSelectedRFQId] = useState<string | null>(null);
+  const [actionSidebarOpen, setActionSidebarOpen] = useState(false);
+  const [selectedItemForAction, setSelectedItemForAction] =
+    useState<ProcurementItem | null>(null);
   const context = React.useContext(ContextData);
 
   // Mutations for actions
@@ -460,87 +453,15 @@ const ProcurementsPage = () => {
       cell: ({ row: { original } }) => {
         return (
           <div className="flex gap-2">
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <button className="p-2 hover:bg-gray-100 rounded-lg transition-colors">
-                  <MoreVertical className="h-4 w-4" />
-                </button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-48">
-                <DropdownMenuItem
-                  onClick={() => {
-                    setSelectedItemId(original.id);
-                    setSelectedItemType(original.type);
-                    setViewDetailsModalOpen(true);
-                  }}
-                >
-                  <Eye className="w-4 h-4 mr-2" />
-                  View Details
-                </DropdownMenuItem>
-
-                {original.type === 'SPEND_REQUEST' && (
-                  <>
-                    {original.status === 'DRAFT' && (
-                      <DropdownMenuItem
-                        onClick={() => handleSubmit(original.id)}
-                      >
-                        <Send className="w-4 h-4 mr-2" />
-                        Submit for Approval
-                      </DropdownMenuItem>
-                    )}
-
-                    {original.status === 'PENDING_APPROVAL' && (
-                      <>
-                        <DropdownMenuItem
-                          onClick={() => handleApprove(original.id)}
-                        >
-                          <CheckCircle className="w-4 h-4 mr-2 text-green-600" />
-                          <span className="text-green-600">Approve</span>
-                        </DropdownMenuItem>
-                        <DropdownMenuItem
-                          onClick={() => handleReject(original.id)}
-                        >
-                          <XCircle className="w-4 h-4 mr-2 text-red-600" />
-                          <span className="text-red-600">Reject</span>
-                        </DropdownMenuItem>
-                      </>
-                    )}
-
-                    {original.status === 'APPROVED' && (
-                      <DropdownMenuItem
-                        onClick={() => handleCreateRFQ(original.id)}
-                      >
-                        <Mail className="w-4 h-4 mr-2" />
-                        Create RFQ
-                      </DropdownMenuItem>
-                    )}
-                  </>
-                )}
-
-                {original.type === 'RFQ' && (
-                  <>
-                    {(original.status === 'DRAFT' ||
-                      original.status === 'RESPONSES_RECEIVED') && (
-                      <DropdownMenuItem
-                        onClick={() => handleSendRFQ(original.id)}
-                      >
-                        <Send className="w-4 h-4 mr-2" />
-                        Send to Vendors
-                      </DropdownMenuItem>
-                    )}
-
-                    {original.status === 'SENT' && (
-                      <DropdownMenuItem
-                        onClick={() => handleCloseRFQ(original.id)}
-                      >
-                        <XCircle className="w-4 h-4 mr-2" />
-                        Close RFQ
-                      </DropdownMenuItem>
-                    )}
-                  </>
-                )}
-              </DropdownMenuContent>
-            </DropdownMenu>
+            <button
+              onClick={() => {
+                setSelectedItemForAction(original);
+                setActionSidebarOpen(true);
+              }}
+              className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+            >
+              <MoreVertical className="h-4 w-4" />
+            </button>
           </div>
         );
       },
@@ -621,6 +542,26 @@ const ProcurementsPage = () => {
           onSent={() => {
             refetchRFQs();
           }}
+        />
+
+        {/* Action Sidebar */}
+        <ProcurementActionSidebar
+          open={actionSidebarOpen}
+          setOpen={setActionSidebarOpen}
+          item={selectedItemForAction}
+          onViewDetails={() => {
+            if (selectedItemForAction) {
+              setSelectedItemId(selectedItemForAction.id);
+              setSelectedItemType(selectedItemForAction.type);
+              setViewDetailsModalOpen(true);
+            }
+          }}
+          onSubmit={handleSubmit}
+          onApprove={handleApprove}
+          onReject={handleReject}
+          onCreateRFQ={handleCreateRFQ}
+          onSendRFQ={handleSendRFQ}
+          onCloseRFQ={handleCloseRFQ}
         />
       </div>
     </RootLayout>

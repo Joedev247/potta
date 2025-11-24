@@ -1,4 +1,4 @@
-iimport { useContext } from 'react';
+import { useContext } from 'react';
 import { ContextData } from '@potta/components/context';
 import {
   hasPermission,

@@ -744,8 +744,7 @@ const ReportsContent: React.FC = () => {
               placeholder="Search reports..."
               value={searchQuery}
               onChange={(e: any) => setSearchQuery(e.target.value)}
-              className="pl-10 pr-10 py-4 w-full border border-gray-200 rounded-[2px] outline-none focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500
-   "
+              className="pl-10 pr-10 py-4 w-full border border-gray-200 rounded-[2px] outline-none focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500"
             />
             {searchQuery && (
               <button

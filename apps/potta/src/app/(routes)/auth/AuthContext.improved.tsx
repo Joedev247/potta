@@ -262,6 +262,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 
           try {
             // Decrypt token
+            if (!config.encryptionSecret) {
+              throw new Error('Encryption secret is not configured');
+            }
             const decryptedToken = await decryptToken(
               encryptedToken,
               config.encryptionSecret
@@ -360,7 +363,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     clearStoredTokens();
 
     // Redirect to auth if not on bypass route
-    if (!isBypassRoute && typeof window !== 'undefined') {
+    if (!isBypassRoute && typeof window !== 'undefined' && config.authUrl) {
       const authUrl = new URL(config.authUrl);
       authUrl.searchParams.set('redirectUrl', window.location.href);
       window.location.href = authUrl.toString();
