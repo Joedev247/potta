@@ -1,9 +1,4 @@
 {
   "buildCommand": "npx nx build potta",
-  "outputDirectory": "dist/apps/potta",
-  "framework": "nextjs",
-  "installCommand": "npm install",
-  "devCommand": "npx nx dev potta",
-  "rootDirectory": "apps/potta"
+  "framework": "nextjs"
 }
-
