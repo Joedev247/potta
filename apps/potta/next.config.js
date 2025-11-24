@@ -9,16 +9,11 @@ const nextConfig = {
     ],
   },
   cacheComponents: true,
-  eslint: {
-    ignoreDuringBuilds: true,
-  },
   typescript: {
     ignoreBuildErrors: true,
   },
   poweredByHeader: false,
   reactStrictMode: true,
-  swcMinify: true,
-  telemetry: false,
 };
 
 module.exports = nextConfig;
