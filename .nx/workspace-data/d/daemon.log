@@ -1153,3 +1153,111 @@ Error: This workspace is more than three days old and is not connected. Workspac
 [NX Daemon Server] - 2025-11-24T15:45:04.765Z - [SYNC]: project graph hash is the same, not collecting task sync generators
 [NX Daemon Server] - 2025-11-24T15:45:04.765Z - [SYNC]: nx.json hash is the same, not collecting global sync generators
 [NX Daemon Server] - 2025-11-24T15:45:04.766Z - Time taken for 'total execution time for createProjectGraph()' 1473.1935000000522ms
+[NX Daemon Server] - 2025-11-24T15:45:09.689Z - [WATCHER]: vercel.json was modified
+[NX Daemon Server] - 2025-11-24T15:45:09.689Z - [WATCHER]: Processing file changes in outputs
+[NX Daemon Server] - 2025-11-24T15:45:16.106Z - [REQUEST]: Updated workspace context based on watched changes, recomputing project graph...
+[NX Daemon Server] - 2025-11-24T15:45:16.106Z - [REQUEST]: vercel.json
+[NX Daemon Server] - 2025-11-24T15:45:16.106Z - [REQUEST]: 
+[NX Daemon Server] - 2025-11-24T15:45:16.118Z - [REQUEST]: Responding to the client. handleHashGlob
+[NX Daemon Server] - 2025-11-24T15:45:16.118Z - Time taken for 'hash changed files from watcher' 2.165699999779463ms
+[NX Daemon Server] - 2025-11-24T15:45:16.119Z - Done responding to the client handleHashGlob
+[NX Daemon Server] - 2025-11-24T15:45:16.119Z - Handled HASH_GLOB. Handling time: 3. Response time: 1.
+[NX Daemon Server] - 2025-11-24T15:45:16.121Z - [REQUEST]: Responding to the client. handleHashGlob
+[NX Daemon Server] - 2025-11-24T15:45:16.122Z - Done responding to the client handleHashGlob
+[NX Daemon Server] - 2025-11-24T15:45:16.122Z - Handled HASH_GLOB. Handling time: 1. Response time: 1.
+[NX Daemon Server] - 2025-11-24T15:45:16.154Z - Time taken for 'build-project-configs' 29.810800000093877ms
+[NX Daemon Server] - 2025-11-24T15:45:17.647Z - [SYNC]: collect registered sync generators
+[NX Daemon Server] - 2025-11-24T15:45:17.648Z - [SYNC]: project graph hash is the same, not collecting task sync generators
+[NX Daemon Server] - 2025-11-24T15:45:17.649Z - [SYNC]: nx.json hash is the same, not collecting global sync generators
+[NX Daemon Server] - 2025-11-24T15:45:17.649Z - Time taken for 'total execution time for createProjectGraph()' 1475.8859999999404ms
+[NX Daemon Server] - 2025-11-24T15:45:22.597Z - [WATCHER]: Processing file changes in outputs
+[NX Daemon Server] - 2025-11-24T15:45:22.599Z - [WATCHER]: vercel.json was modified
+[NX Daemon Server] - 2025-11-24T15:45:29.007Z - [REQUEST]: Updated workspace context based on watched changes, recomputing project graph...
+[NX Daemon Server] - 2025-11-24T15:45:29.007Z - [REQUEST]: vercel.json
+[NX Daemon Server] - 2025-11-24T15:45:29.007Z - [REQUEST]: 
+[NX Daemon Server] - 2025-11-24T15:45:29.031Z - [REQUEST]: Responding to the client. handleHashGlob
+[NX Daemon Server] - 2025-11-24T15:45:29.031Z - Time taken for 'hash changed files from watcher' 6.193400000222027ms
+[NX Daemon Server] - 2025-11-24T15:45:29.032Z - Done responding to the client handleHashGlob
+[NX Daemon Server] - 2025-11-24T15:45:29.033Z - Handled HASH_GLOB. Handling time: 4. Response time: 2.
+[NX Daemon Server] - 2025-11-24T15:45:29.040Z - [REQUEST]: Responding to the client. handleHashGlob
+[NX Daemon Server] - 2025-11-24T15:45:29.041Z - Done responding to the client handleHashGlob
+[NX Daemon Server] - 2025-11-24T15:45:29.041Z - Handled HASH_GLOB. Handling time: 3. Response time: 1.
+[NX Daemon Server] - 2025-11-24T15:45:29.081Z - Time taken for 'build-project-configs' 50.15390000026673ms
+[NX Daemon Server] - 2025-11-24T15:45:30.545Z - [SYNC]: collect registered sync generators
+[NX Daemon Server] - 2025-11-24T15:45:30.546Z - [SYNC]: project graph hash is the same, not collecting task sync generators
+[NX Daemon Server] - 2025-11-24T15:45:30.546Z - [SYNC]: nx.json hash is the same, not collecting global sync generators
+[NX Daemon Server] - 2025-11-24T15:45:30.546Z - Time taken for 'total execution time for createProjectGraph()' 1445.603300000541ms
+[NX Daemon Server] - 2025-11-24T15:45:39.360Z - [WATCHER]: vercel.json was modified
+[NX Daemon Server] - 2025-11-24T15:45:39.361Z - [WATCHER]: Processing file changes in outputs
+[NX Daemon Server] - 2025-11-24T15:45:45.765Z - [REQUEST]: Updated workspace context based on watched changes, recomputing project graph...
+[NX Daemon Server] - 2025-11-24T15:45:45.766Z - [REQUEST]: vercel.json
+[NX Daemon Server] - 2025-11-24T15:45:45.766Z - [REQUEST]: 
+[NX Daemon Server] - 2025-11-24T15:45:45.775Z - [REQUEST]: Responding to the client. handleHashGlob
+[NX Daemon Server] - 2025-11-24T15:45:45.776Z - Time taken for 'hash changed files from watcher' 3.5283000003546476ms
+[NX Daemon Server] - 2025-11-24T15:45:45.776Z - Done responding to the client handleHashGlob
+[NX Daemon Server] - 2025-11-24T15:45:45.776Z - Handled HASH_GLOB. Handling time: 2. Response time: 1.
+[NX Daemon Server] - 2025-11-24T15:45:45.780Z - [REQUEST]: Responding to the client. handleHashGlob
+[NX Daemon Server] - 2025-11-24T15:45:45.781Z - Done responding to the client handleHashGlob
+[NX Daemon Server] - 2025-11-24T15:45:45.781Z - Handled HASH_GLOB. Handling time: 2. Response time: 1.
+[NX Daemon Server] - 2025-11-24T15:45:45.815Z - Time taken for 'build-project-configs' 31.504199999384582ms
+[NX Daemon Server] - 2025-11-24T15:45:47.339Z - [SYNC]: collect registered sync generators
+[NX Daemon Server] - 2025-11-24T15:45:47.340Z - [SYNC]: project graph hash is the same, not collecting task sync generators
+[NX Daemon Server] - 2025-11-24T15:45:47.340Z - [SYNC]: nx.json hash is the same, not collecting global sync generators
+[NX Daemon Server] - 2025-11-24T15:45:47.340Z - Time taken for 'total execution time for createProjectGraph()' 1504.7269000001252ms
+[NX Daemon Server] - 2025-11-24T15:45:57.515Z - [WATCHER]: Processing file changes in outputs
+[NX Daemon Server] - 2025-11-24T15:45:57.517Z - [WATCHER]: vercel.json was modified
+[NX Daemon Server] - 2025-11-24T15:46:03.925Z - [REQUEST]: Updated workspace context based on watched changes, recomputing project graph...
+[NX Daemon Server] - 2025-11-24T15:46:03.926Z - [REQUEST]: vercel.json
+[NX Daemon Server] - 2025-11-24T15:46:03.926Z - [REQUEST]: 
+[NX Daemon Server] - 2025-11-24T15:46:03.932Z - Time taken for 'hash changed files from watcher' 4.400500000454485ms
+[NX Daemon Server] - 2025-11-24T15:46:03.937Z - [REQUEST]: Responding to the client. handleHashGlob
+[NX Daemon Server] - 2025-11-24T15:46:03.938Z - Done responding to the client handleHashGlob
+[NX Daemon Server] - 2025-11-24T15:46:03.938Z - Handled HASH_GLOB. Handling time: 2. Response time: 1.
+[NX Daemon Server] - 2025-11-24T15:46:03.940Z - [REQUEST]: Responding to the client. handleHashGlob
+[NX Daemon Server] - 2025-11-24T15:46:03.941Z - Done responding to the client handleHashGlob
+[NX Daemon Server] - 2025-11-24T15:46:03.941Z - Handled HASH_GLOB. Handling time: 1. Response time: 1.
+[NX Daemon Server] - 2025-11-24T15:46:03.973Z - Time taken for 'build-project-configs' 30.127100000157952ms
+[NX Daemon Server] - 2025-11-24T15:46:04.057Z - [SYNC]: collect registered sync generators
+[NX Daemon Server] - 2025-11-24T15:46:04.057Z - [SYNC]: project graph hash is the same, not collecting task sync generators
+[NX Daemon Server] - 2025-11-24T15:46:04.058Z - [SYNC]: nx.json hash is the same, not collecting global sync generators
+[NX Daemon Server] - 2025-11-24T15:46:04.058Z - Time taken for 'total execution time for createProjectGraph()' 59.36409999988973ms
+[NX Daemon Server] - 2025-11-24T15:46:11.358Z - [WATCHER]: vercel.json was modified
+[NX Daemon Server] - 2025-11-24T15:46:11.359Z - [WATCHER]: Processing file changes in outputs
+[NX Daemon Server] - 2025-11-24T15:46:17.763Z - [REQUEST]: Updated workspace context based on watched changes, recomputing project graph...
+[NX Daemon Server] - 2025-11-24T15:46:17.763Z - [REQUEST]: vercel.json
+[NX Daemon Server] - 2025-11-24T15:46:17.763Z - [REQUEST]: 
+[NX Daemon Server] - 2025-11-24T15:46:17.772Z - [REQUEST]: Responding to the client. handleHashGlob
+[NX Daemon Server] - 2025-11-24T15:46:17.773Z - Time taken for 'hash changed files from watcher' 2.008500000461936ms
+[NX Daemon Server] - 2025-11-24T15:46:17.773Z - Done responding to the client handleHashGlob
+[NX Daemon Server] - 2025-11-24T15:46:17.774Z - Handled HASH_GLOB. Handling time: 1. Response time: 2.
+[NX Daemon Server] - 2025-11-24T15:46:17.778Z - [REQUEST]: Responding to the client. handleHashGlob
+[NX Daemon Server] - 2025-11-24T15:46:17.779Z - Done responding to the client handleHashGlob
+[NX Daemon Server] - 2025-11-24T15:46:17.779Z - Handled HASH_GLOB. Handling time: 1. Response time: 1.
+[NX Daemon Server] - 2025-11-24T15:46:17.819Z - Time taken for 'build-project-configs' 33.08349999971688ms
+[NX Daemon Server] - 2025-11-24T15:46:17.924Z - [SYNC]: collect registered sync generators
+[NX Daemon Server] - 2025-11-24T15:46:17.925Z - [SYNC]: project graph hash is the same, not collecting task sync generators
+[NX Daemon Server] - 2025-11-24T15:46:17.925Z - [SYNC]: nx.json hash is the same, not collecting global sync generators
+[NX Daemon Server] - 2025-11-24T15:46:17.926Z - Time taken for 'total execution time for createProjectGraph()' 86.93110000062734ms
+[NX Daemon Server] - 2025-11-24T15:47:13.970Z - [WATCHER]: Processing file changes in outputs
+[NX Daemon Server] - 2025-11-24T15:47:14.975Z - [WATCHER]: Processing file changes in outputs
+[NX Daemon Server] - 2025-11-24T15:47:16.993Z - [WATCHER]: Processing file changes in outputs
+[NX Daemon Server] - 2025-11-24T15:47:21.046Z - [WATCHER]: Processing file changes in outputs
+[NX Daemon Server] - 2025-11-24T15:48:40.586Z - [WATCHER]: Processing file changes in outputs
+[NX Daemon Server] - 2025-11-24T15:48:40.589Z - [WATCHER]: vercel.json was modified
+[NX Daemon Server] - 2025-11-24T15:48:46.998Z - [REQUEST]: Updated workspace context based on watched changes, recomputing project graph...
+[NX Daemon Server] - 2025-11-24T15:48:46.998Z - [REQUEST]: vercel.json
+[NX Daemon Server] - 2025-11-24T15:48:46.998Z - [REQUEST]: 
+[NX Daemon Server] - 2025-11-24T15:48:47.004Z - Time taken for 'hash changed files from watcher' 4.158099999651313ms
+[NX Daemon Server] - 2025-11-24T15:48:47.011Z - [REQUEST]: Responding to the client. handleHashGlob
+[NX Daemon Server] - 2025-11-24T15:48:47.013Z - Done responding to the client handleHashGlob
+[NX Daemon Server] - 2025-11-24T15:48:47.013Z - Handled HASH_GLOB. Handling time: 2. Response time: 2.
+[NX Daemon Server] - 2025-11-24T15:48:47.019Z - [REQUEST]: Responding to the client. handleHashGlob
+[NX Daemon Server] - 2025-11-24T15:48:47.019Z - Done responding to the client handleHashGlob
+[NX Daemon Server] - 2025-11-24T15:48:47.019Z - Handled HASH_GLOB. Handling time: 2. Response time: 0.
+[NX Daemon Server] - 2025-11-24T15:48:47.060Z - Time taken for 'build-project-configs' 41.688699999824166ms
+[NX Daemon Server] - 2025-11-24T15:48:48.605Z - [SYNC]: collect registered sync generators
+[NX Daemon Server] - 2025-11-24T15:48:48.606Z - [SYNC]: project graph hash is the same, not collecting task sync generators
+[NX Daemon Server] - 2025-11-24T15:48:48.606Z - [SYNC]: nx.json hash is the same, not collecting global sync generators
+[NX Daemon Server] - 2025-11-24T15:48:48.606Z - Time taken for 'total execution time for createProjectGraph()' 1527.0504999998957ms
+[NX Daemon Server] - 2025-11-24T15:48:49.645Z - [WATCHER]: vercel.json was modified
+[NX Daemon Server] - 2025-11-24T15:48:49.646Z - [WATCHER]: Processing file changes in outputs

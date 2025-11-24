@@ -1,5 +1,5 @@
 {
-  "buildCommand": "npm run build:potta",
+  "buildCommand": "cd ../.. && npx nx build potta",
   "framework": "nextjs",
   "installCommand": "cd ../.. && npm install --legacy-peer-deps"
 }
