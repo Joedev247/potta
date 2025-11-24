@@ -1,5 +1,5 @@
 {
-  "buildCommand": "nx run potta:build",
+  "buildCommand": "nx run potta:build && (cp dist/apps/potta/.next/routes-manifest.json dist/apps/potta/routes-manifest.json || true)",
   "outputDirectory": "dist/apps/potta",
   "framework": "nextjs",
   "installCommand": "npm install --legacy-peer-deps"
