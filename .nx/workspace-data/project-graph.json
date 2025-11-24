@@ -33,7 +33,35 @@
       "type": "app",
       "data": {
         "root": "apps/superApp",
+        "sourceRoot": "apps/superApp",
+        "name": "superApp",
+        "tags": [
+          "npm:private"
+        ],
+        "metadata": {
+          "targetGroups": {
+            "NPM Scripts": [
+              "start"
+            ]
+          },
+          "js": {
+            "packageName": "superApp",
+            "isInPackageManagerWorkspaces": false
+          }
+        },
         "targets": {
+          "start": {
+            "executor": "nx:run-script",
+            "options": {
+              "script": "start"
+            },
+            "metadata": {
+              "scriptContent": "next start -p 4200",
+              "runCommand": "npm run start"
+            },
+            "configurations": {},
+            "parallelism": true
+          },
           "build": {
             "executor": "@nx/next:build",
             "outputs": [
@@ -58,40 +86,6 @@
               "^production"
             ],
             "cache": true
-          },
-          "dev": {
-            "executor": "@nx/next:server",
-            "options": {
-              "buildTarget": "superApp:build",
-              "dev": true,
-              "port": 4200
-            },
-            "configurations": {},
-            "parallelism": true,
-            "cache": true
-          },
-          "start": {
-            "executor": "nx:run-script",
-            "options": {
-              "script": "start"
-            },
-            "metadata": {
-              "scriptContent": "next start -p 4200",
-              "runCommand": "npm run start"
-            },
-            "configurations": {},
-            "parallelism": true
-          },
-          "serve-static": {
-            "executor": "@nx/web:file-server",
-            "options": {
-              "buildTarget": "build",
-              "staticFilePath": "apps/superApp/out",
-              "port": 3000,
-              "spa": false
-            },
-            "configurations": {},
-            "parallelism": true
           },
           "serve": {
             "executor": "@nx/next:server",
@@ -119,6 +113,17 @@
             },
             "configurations": {},
             "parallelism": true
+          },
+          "dev": {
+            "executor": "@nx/next:server",
+            "options": {
+              "buildTarget": "superApp:build",
+              "dev": true,
+              "port": 4200
+            },
+            "configurations": {},
+            "parallelism": true,
+            "cache": true
           },
           "lint": {
             "executor": "@nx/eslint:lint",
@@ -159,22 +164,6 @@
             "cache": true
           }
         },
-        "sourceRoot": "apps/superApp",
-        "name": "superApp",
-        "tags": [
-          "npm:private"
-        ],
-        "metadata": {
-          "targetGroups": {
-            "NPM Scripts": [
-              "start"
-            ]
-          },
-          "js": {
-            "packageName": "superApp",
-            "isInPackageManagerWorkspaces": false
-          }
-        },
         "$schema": "../../node_modules/nx/schemas/project-schema.json",
         "projectType": "application",
         "implicitDependencies": []
@@ -185,7 +174,35 @@
       "type": "app",
       "data": {
         "root": "apps/potta",
+        "sourceRoot": "apps/potta",
+        "name": "potta",
+        "tags": [
+          "npm:private"
+        ],
+        "metadata": {
+          "targetGroups": {
+            "NPM Scripts": [
+              "start"
+            ]
+          },
+          "js": {
+            "packageName": "potta",
+            "isInPackageManagerWorkspaces": false
+          }
+        },
         "targets": {
+          "start": {
+            "executor": "nx:run-script",
+            "options": {
+              "script": "start"
+            },
+            "metadata": {
+              "scriptContent": "next start -p 4300",
+              "runCommand": "npm run start"
+            },
+            "configurations": {},
+            "parallelism": true
+          },
           "build": {
             "executor": "@nx/next:build",
             "outputs": [
@@ -210,40 +227,6 @@
               "^production"
             ],
             "cache": true
-          },
-          "dev": {
-            "executor": "@nx/next:server",
-            "options": {
-              "buildTarget": "potta:build",
-              "dev": true,
-              "port": 4300
-            },
-            "configurations": {},
-            "parallelism": true,
-            "cache": true
-          },
-          "start": {
-            "executor": "nx:run-script",
-            "options": {
-              "script": "start"
-            },
-            "metadata": {
-              "scriptContent": "next start -p 4300",
-              "runCommand": "npm run start"
-            },
-            "configurations": {},
-            "parallelism": true
-          },
-          "serve-static": {
-            "executor": "@nx/web:file-server",
-            "options": {
-              "buildTarget": "build",
-              "staticFilePath": "apps/potta/out",
-              "port": 3000,
-              "spa": false
-            },
-            "configurations": {},
-            "parallelism": true
           },
           "serve": {
             "executor": "@nx/next:server",
@@ -271,6 +254,17 @@
             },
             "configurations": {},
             "parallelism": true
+          },
+          "dev": {
+            "executor": "@nx/next:server",
+            "options": {
+              "buildTarget": "potta:build",
+              "dev": true,
+              "port": 4300
+            },
+            "configurations": {},
+            "parallelism": true,
+            "cache": true
           },
           "lint": {
             "executor": "@nx/eslint:lint",
@@ -309,22 +303,6 @@
               "{workspaceRoot}/jest.preset.js"
             ],
             "cache": true
-          }
-        },
-        "sourceRoot": "apps/potta",
-        "name": "potta",
-        "tags": [
-          "npm:private"
-        ],
-        "metadata": {
-          "targetGroups": {
-            "NPM Scripts": [
-              "start"
-            ]
-          },
-          "js": {
-            "packageName": "potta",
-            "isInPackageManagerWorkspaces": false
           }
         },
         "$schema": "../../node_modules/nx/schemas/project-schema.json",
@@ -56442,6 +56420,17 @@
     ]
   },
   "version": "6.0",
-  "errors": [],
-  "computedAt": 1764003032030
+  "errors": [
+    {
+      "errors": [
+        [
+          null,
+          {}
+        ]
+      ],
+      "partialResults": [],
+      "name": "AggregateCreateNodesError"
+    }
+  ],
+  "computedAt": 1764003621607
 }
