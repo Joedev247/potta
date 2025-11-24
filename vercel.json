@@ -1,5 +1,5 @@
 {
-  "buildCommand": "bash .vercel-build.sh",
+  "buildCommand": "npm run vercel-build",
   "outputDirectory": "dist/apps/potta",
   "framework": "nextjs",
   "installCommand": "npm install --legacy-peer-deps"
