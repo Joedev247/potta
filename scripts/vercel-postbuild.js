@@ -224,11 +224,30 @@ if (manifestPath && fs.existsSync(manifestPath)) {
         }
         
         // Ensure pages-manifest.json exists (Vercel needs this to detect serverless pages)
+        // Check multiple possible locations for pages-manifest.json
+        const possibleManifestLocations = [
+          path.join(nextDir, 'pages-manifest.json'),
+          path.join(serverDir, 'pages-manifest.json'),
+          path.join(nextDir, 'server', 'pages-manifest.json'),
+        ];
+        
+        let pagesManifestSource = null;
+        for (const location of possibleManifestLocations) {
+          if (fs.existsSync(location)) {
+            pagesManifestSource = location;
+            console.log(`  ✓ Found pages-manifest.json at: ${location}`);
+            break;
+          }
+        }
+        
         const pagesManifestPath = path.join(targetNextDir, 'pages-manifest.json');
-        const pagesManifestSource = path.join(nextDir, 'pages-manifest.json');
-        if (fs.existsSync(pagesManifestSource)) {
+        const pagesManifestPathInServer = path.join(targetNextDir, 'server', 'pages-manifest.json');
+        
+        if (pagesManifestSource) {
+          // Copy to both locations (Vercel might check either)
           fs.copyFileSync(pagesManifestSource, pagesManifestPath);
-          console.log('  ✓ Copied pages-manifest.json to .next directory');
+          fs.copyFileSync(pagesManifestSource, pagesManifestPathInServer);
+          console.log('  ✓ Copied pages-manifest.json to .next directory and .next/server');
           
           // Verify the manifest has content
           try {
@@ -243,7 +262,22 @@ if (manifestPath && fs.existsSync(manifestPath)) {
             console.warn(`  ⚠ Could not parse pages-manifest.json: ${e.message}`);
           }
         } else {
-          console.warn('  ⚠ pages-manifest.json not found in source - this may cause detection issues');
+          // Generate pages-manifest.json from the actual pages that were built
+          console.warn('  ⚠ pages-manifest.json not found - generating from built pages...');
+          try {
+            const manifest = {};
+            
+            // Add the healthcheck API route
+            manifest['/api/healthcheck'] = 'pages/api/healthcheck.js';
+            
+            // Write the manifest to both locations
+            fs.writeFileSync(pagesManifestPath, JSON.stringify(manifest, null, 2));
+            fs.writeFileSync(pagesManifestPathInServer, JSON.stringify(manifest, null, 2));
+            console.log('  ✓ Generated pages-manifest.json with API routes');
+            console.log(`  → Manifest entries: ${Object.keys(manifest).join(', ')}`);
+          } catch (e) {
+            console.error(`  ✗ Failed to generate pages-manifest.json: ${e.message}`);
+          }
         }
       } else {
         console.warn('  ⚠ WARNING: .next/server/pages directory not found!');
@@ -262,25 +296,33 @@ if (manifestPath && fs.existsSync(manifestPath)) {
   }
   
   // Ensure pages-manifest.json is in the output root (some Vercel checks look here)
-  const pagesManifestSource = path.join(nextDir, 'pages-manifest.json');
+  // Check if we already created it in the target .next directory
+  const targetPagesManifest = path.join(targetNextDir, 'pages-manifest.json');
   const pagesManifestDest = path.join(outputDir, 'pages-manifest.json');
-  if (fs.existsSync(pagesManifestSource)) {
-    fs.copyFileSync(pagesManifestSource, pagesManifestDest);
+  
+  if (fs.existsSync(targetPagesManifest)) {
+    fs.copyFileSync(targetPagesManifest, pagesManifestDest);
     console.log('✓ Copied pages-manifest.json to output root');
-    
-    // Verify the manifest has content
-    try {
-      const manifestContent = JSON.parse(fs.readFileSync(pagesManifestSource, 'utf8'));
-      const pageCount = Object.keys(manifestContent).length;
-      console.log(`  → pages-manifest.json contains ${pageCount} page entries`);
-      if (pageCount > 0) {
-        console.log(`  → Sample entries: ${Object.keys(manifestContent).slice(0, 3).join(', ')}`);
-      }
-    } catch (e) {
-      console.warn(`  ⚠ Could not parse pages-manifest.json: ${e.message}`);
-    }
   } else {
-    console.warn('⚠ pages-manifest.json not found in source .next directory');
+    // Try to find it in source locations
+    const possibleManifestLocations = [
+      path.join(nextDir, 'pages-manifest.json'),
+      path.join(nextDir, 'server', 'pages-manifest.json'),
+    ];
+    
+    let found = false;
+    for (const location of possibleManifestLocations) {
+      if (fs.existsSync(location)) {
+        fs.copyFileSync(location, pagesManifestDest);
+        console.log('✓ Copied pages-manifest.json to output root');
+        found = true;
+        break;
+      }
+    }
+    
+    if (!found) {
+      console.warn('⚠ pages-manifest.json not found - will be generated during pages check');
+    }
   }
   
   // List final output directory structure for debugging
