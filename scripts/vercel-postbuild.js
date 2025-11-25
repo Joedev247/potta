@@ -83,11 +83,9 @@ if (!fs.existsSync(outputDir)) {
   fs.mkdirSync(outputDir, { recursive: true });
 }
 
-// Copy routes-manifest.json to output root (Vercel expects it there)
+// Don't copy routes-manifest.json to root - Vercel will find it in .next
 if (manifestPath && fs.existsSync(manifestPath)) {
-  const targetPath = path.join(outputDir, 'routes-manifest.json');
-  fs.copyFileSync(manifestPath, targetPath);
-  console.log(`✓ Copied routes-manifest.json from ${manifestPath} to ${targetPath}`);
+  console.log(`✓ Found routes-manifest.json at: ${manifestPath}`);
   
   // Also copy the entire .next folder to outputDir if it's not already there
   const targetNextDir = path.join(outputDir, '.next');
@@ -134,6 +132,35 @@ if (manifestPath && fs.existsSync(manifestPath)) {
     };
     copyRecursive(publicSource, publicDest);
     console.log('✓ Copied public folder to output directory');
+  }
+  
+  // Copy package.json and next.config.js to output directory (Vercel needs these)
+  const packageJsonSource = path.join('apps', 'potta', 'package.json');
+  const packageJsonDest = path.join(outputDir, 'package.json');
+  if (fs.existsSync(packageJsonSource) && !fs.existsSync(packageJsonDest)) {
+    fs.copyFileSync(packageJsonSource, packageJsonDest);
+    console.log('✓ Copied package.json to output directory');
+  }
+  
+  const nextConfigSource = path.join('apps', 'potta', 'next.config.js');
+  const nextConfigDest = path.join(outputDir, 'next.config.js');
+  if (fs.existsSync(nextConfigSource) && !fs.existsSync(nextConfigDest)) {
+    fs.copyFileSync(nextConfigSource, nextConfigDest);
+    console.log('✓ Copied next.config.js to output directory');
+  }
+  
+  // Verify .next/server exists (needed for serverless functions)
+  const serverDir = path.join(targetNextDir, 'server');
+  if (fs.existsSync(serverDir)) {
+    console.log('✓ .next/server directory found - serverless functions should be available');
+    try {
+      const serverContents = fs.readdirSync(serverDir);
+      console.log(`  Server contents: ${serverContents.join(', ')}`);
+    } catch (e) {
+      console.log(`  Could not read server directory: ${e.message}`);
+    }
+  } else {
+    console.warn('⚠ .next/server directory not found - this may cause "No serverless pages" error');
   }
   
   console.log('✓ Build output structure verified');
