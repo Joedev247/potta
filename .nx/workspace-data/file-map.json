@@ -8145,6 +8145,13 @@
           "hash": "17341060540007491210"
         },
         {
+          "file": "apps/potta/src/app/api/healthcheck/route.ts",
+          "hash": "5983548990290575643",
+          "deps": [
+            "npm:next"
+          ]
+        },
+        {
           "file": "apps/potta/src/app/api/policies.ts",
           "hash": "9438253397077574954"
         },
@@ -8931,13 +8938,6 @@
           "deps": [
             "npm:clsx",
             "npm:tailwind-merge"
-          ]
-        },
-        {
-          "file": "apps/potta/src/pages/api/healthcheck.ts",
-          "hash": "5985755592468651584",
-          "deps": [
-            "npm:next"
           ]
         },
         {
@@ -10855,7 +10855,7 @@
         },
         {
           "file": "scripts/vercel-postbuild.js",
-          "hash": "12814161294080175881"
+          "hash": "6575058735956660485"
         },
         {
           "file": "tsconfig.base.json",

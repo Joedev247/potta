@@ -200,37 +200,46 @@ if (manifestPath && fs.existsSync(manifestPath)) {
         console.log(`  ✓ Found ${appRoutes.length} app routes in .next/server/app`);
       }
       
-      // Check for pages directory (Pages Router serverless functions)
+      // Check for pages directory (Pages Router serverless functions) - but we expect this to be empty now
       const pagesDir = path.join(serverDir, 'pages');
       if (fs.existsSync(pagesDir)) {
         const pageFiles = fs.readdirSync(pagesDir);
         console.log(`  ✓ Found ${pageFiles.length} page files in .next/server/pages`);
-        
-        // List the actual page files to verify they exist
+
+        // With App Router, we expect minimal pages (just _app, _document, etc.)
         if (pageFiles.length > 0) {
           console.log(`  → Page files: ${pageFiles.slice(0, 5).join(', ')}${pageFiles.length > 5 ? '...' : ''}`);
-          
-          // Check if API routes exist
-          const apiDir = path.join(pagesDir, 'api');
-          if (fs.existsSync(apiDir)) {
-            const apiFiles = fs.readdirSync(apiDir);
-            console.log(`  → Found ${apiFiles.length} API route files in .next/server/pages/api`);
-            if (apiFiles.length > 0) {
-              console.log(`  → API files: ${apiFiles.join(', ')}`);
+        }
+
+        // App Router API routes are handled differently - check for app directory
+        const appDir = path.join(serverDir, 'app');
+        if (fs.existsSync(appDir)) {
+          console.log(`  ✓ Found App Router structure in .next/server/app`);
+
+          // Check for API routes in App Router structure
+          const appApiDir = path.join(appDir, 'api');
+          if (fs.existsSync(appApiDir)) {
+            const apiRoutes = fs.readdirSync(appApiDir);
+            console.log(`  ✓ Found ${apiRoutes.length} App Router API routes`);
+            if (apiRoutes.length > 0) {
+              console.log(`  → API routes: ${apiRoutes.join(', ')}`);
+
+              // Verify healthcheck route exists
+              if (apiRoutes.includes('healthcheck')) {
+                console.log('  ✓ /api/healthcheck route found in App Router structure');
+              }
             }
           }
-        } else {
-          console.warn('  ⚠ WARNING: pages directory exists but is empty!');
         }
-        
-        // Ensure pages-manifest.json exists (Vercel needs this to detect serverless pages)
+
+        // For App Router, we still need pages-manifest.json for Vercel detection
         // Check multiple possible locations for pages-manifest.json
         const possibleManifestLocations = [
           path.join(nextDir, 'pages-manifest.json'),
           path.join(serverDir, 'pages-manifest.json'),
           path.join(nextDir, 'server', 'pages-manifest.json'),
         ];
-        
+
         let pagesManifestSource = null;
         for (const location of possibleManifestLocations) {
           if (fs.existsSync(location)) {
@@ -239,51 +248,41 @@ if (manifestPath && fs.existsSync(manifestPath)) {
             break;
           }
         }
-        
+
         const pagesManifestPath = path.join(targetNextDir, 'pages-manifest.json');
         const pagesManifestPathInServer = path.join(targetNextDir, 'server', 'pages-manifest.json');
-        
+
         if (pagesManifestSource) {
           // Read and update the manifest to ensure API routes are included
           try {
             const manifestContent = JSON.parse(fs.readFileSync(pagesManifestSource, 'utf8'));
-            
-            // Ensure the API route is in the manifest (Vercel needs this)
-            // The value should match the actual file path in .next/server/pages
+
+            // For App Router, API routes are handled differently but we still need them in the manifest
+            // App Router API routes are compiled to serverless functions
             if (!manifestContent['/api/healthcheck']) {
-              // Check what the actual file path should be
-              const apiRouteFile = path.join(serverDir, 'pages', 'api', 'healthcheck.js');
-              if (fs.existsSync(apiRouteFile)) {
-                manifestContent['/api/healthcheck'] = 'pages/api/healthcheck.js';
-                console.log('  → Added /api/healthcheck to pages-manifest.json');
-              } else {
-                console.warn('  ⚠ /api/healthcheck route file not found, but adding to manifest anyway');
-                manifestContent['/api/healthcheck'] = 'pages/api/healthcheck.js';
-              }
-            } else {
-              // Verify the path is correct
-              const expectedPath = manifestContent['/api/healthcheck'];
-              const apiRouteFile = path.join(serverDir, 'pages', 'api', 'healthcheck.js');
-              if (!fs.existsSync(apiRouteFile) && expectedPath !== 'pages/api/healthcheck.js') {
-                console.warn(`  ⚠ Manifest path "${expectedPath}" doesn't match expected "pages/api/healthcheck.js"`);
-                manifestContent['/api/healthcheck'] = 'pages/api/healthcheck.js';
-                console.log('  → Updated /api/healthcheck path in manifest');
+              // Check if the App Router API route was compiled
+              const appApiRouteDir = path.join(serverDir, 'app', 'api', 'healthcheck');
+              if (fs.existsSync(appApiRouteDir)) {
+                const routeFiles = fs.readdirSync(appApiRouteDir);
+                if (routeFiles.includes('route.js')) {
+                  manifestContent['/api/healthcheck'] = 'app/api/healthcheck/route.js';
+                  console.log('  → Added /api/healthcheck to pages-manifest.json (App Router)');
+                }
               }
             }
-            
+
             // Write the updated manifest to both locations
-            // Use compact format (no pretty-printing) to match Next.js output format
             const manifestJson = JSON.stringify(manifestContent);
             fs.writeFileSync(pagesManifestPath, manifestJson);
             fs.writeFileSync(pagesManifestPathInServer, manifestJson);
             console.log('  ✓ Updated and copied pages-manifest.json to .next directory and .next/server (compact format)');
-            
+
             const pageCount = Object.keys(manifestContent).length;
             console.log(`  → pages-manifest.json contains ${pageCount} entries`);
             if (pageCount > 0) {
               const sampleKeys = Object.keys(manifestContent).slice(0, 5);
               console.log(`  → Sample routes: ${sampleKeys.join(', ')}`);
-              
+
               // Verify API route is present
               if (manifestContent['/api/healthcheck']) {
                 console.log('  ✓ /api/healthcheck route confirmed in manifest');
@@ -299,19 +298,18 @@ if (manifestPath && fs.existsSync(manifestPath)) {
             console.log('  ✓ Copied pages-manifest.json (fallback)');
           }
         } else {
-          // Generate pages-manifest.json from the actual pages that were built
-          console.warn('  ⚠ pages-manifest.json not found - generating from built pages...');
+          // Generate minimal pages-manifest.json for App Router
+          console.warn('  ⚠ pages-manifest.json not found - generating minimal manifest...');
           try {
-            const manifest = {};
-            
-            // Add the healthcheck API route
-            manifest['/api/healthcheck'] = 'pages/api/healthcheck.js';
-            
-            // Write the manifest to both locations (compact format to match Next.js)
+            const manifest = {
+              '/_app': 'pages/_app.js',
+              '/api/healthcheck': 'app/api/healthcheck/route.js'
+            };
+
             const manifestJson = JSON.stringify(manifest);
             fs.writeFileSync(pagesManifestPath, manifestJson);
             fs.writeFileSync(pagesManifestPathInServer, manifestJson);
-            console.log('  ✓ Generated pages-manifest.json with API routes (compact format)');
+            console.log('  ✓ Generated pages-manifest.json with App Router API routes (compact format)');
             console.log(`  → Manifest entries: ${Object.keys(manifest).join(', ')}`);
           } catch (e) {
             console.error(`  ✗ Failed to generate pages-manifest.json: ${e.message}`);
@@ -513,16 +511,25 @@ if (manifestPath && fs.existsSync(manifestPath)) {
       if (apiRoutes.length > 0) {
         console.log(`✓ Found ${apiRoutes.length} API route(s) in manifest: ${apiRoutes.join(', ')}`);
         
-        // Verify each API route file exists
+        // Verify each API route file exists (handle both Pages Router and App Router paths)
         apiRoutes.forEach(route => {
           const routePath = manifest[route];
+          let filePath = null;
+
           if (routePath && routePath.startsWith('pages/api/')) {
-            const filePath = path.join(targetNextDir, 'server', routePath);
-            if (fs.existsSync(filePath)) {
-              console.log(`  ✓ ${route} -> ${routePath} (file exists)`);
-            } else {
-              console.warn(`  ⚠ ${route} -> ${routePath} (file NOT found)`);
-            }
+            // Pages Router path
+            filePath = path.join(targetNextDir, 'server', routePath);
+          } else if (routePath && routePath.startsWith('app/api/')) {
+            // App Router path
+            filePath = path.join(targetNextDir, 'server', routePath);
+          }
+
+          if (filePath && fs.existsSync(filePath)) {
+            console.log(`  ✓ ${route} -> ${routePath} (file exists)`);
+          } else if (filePath) {
+            console.warn(`  ⚠ ${route} -> ${routePath} (file NOT found at ${filePath})`);
+          } else {
+            console.warn(`  ⚠ ${route} -> ${routePath} (unknown path format)`);
           }
         });
       } else {
@@ -559,7 +566,7 @@ if (manifestPath && fs.existsSync(manifestPath)) {
     { path: path.join(outputDir, '.next', 'pages-manifest.json'), desc: 'Pages manifest in .next' },
     { path: path.join(outputDir, '.next', 'server', 'pages-manifest.json'), desc: 'Pages manifest in .next/server' },
     { path: path.join(outputDir, 'pages-manifest.json'), desc: 'Pages manifest at root' },
-    { path: path.join(outputDir, '.next', 'server', 'pages', 'api', 'healthcheck.js'), desc: 'API route file' },
+    { path: path.join(outputDir, '.next', 'server', 'app', 'api', 'healthcheck', 'route.js'), desc: 'App Router API route file' },
     { path: path.join(outputDir, '.next', 'BUILD_ID'), desc: 'BUILD_ID file' },
     { path: path.join(outputDir, 'package.json'), desc: 'package.json with Next.js' },
   ];
