@@ -5,7 +5,7 @@
   "scripts": {
     "build:superApp": "nx run superApp:build",
     "build:potta": "nx run potta:build",
-    "vercel-build": "nx run potta:build",
+    "vercel-build": "nx run potta:build && node scripts/vercel-postbuild.js",
     "start:superApp": "nx run superApp:start",
     "dev": "cd apps/potta && next dev -p 4300",
     "dev:potta": "cd apps/potta && next dev -p 4300",

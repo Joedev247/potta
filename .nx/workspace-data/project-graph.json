@@ -405,7 +405,7 @@
               "script": "vercel-build"
             },
             "metadata": {
-              "scriptContent": "nx run potta:build",
+              "scriptContent": "nx run potta:build && node scripts/vercel-postbuild.js",
               "runCommand": "npm run vercel-build"
             },
             "configurations": {},
@@ -56456,5 +56456,5 @@
   },
   "version": "6.0",
   "errors": [],
-  "computedAt": 1764071788999
+  "computedAt": 1764073992649
 }
