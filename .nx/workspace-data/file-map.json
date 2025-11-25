@@ -97,7 +97,7 @@
         },
         {
           "file": "apps/potta/next.config.js",
-          "hash": "15120168448165371772"
+          "hash": "14653701957727438150"
         },
         {
           "file": "apps/potta/package.json",
@@ -10863,7 +10863,7 @@
         },
         {
           "file": "vercel.json",
-          "hash": "18217725516018177627"
+          "hash": "12425870143544831371"
         }
       ],
       "utilities": [

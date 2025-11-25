@@ -1,6 +1,6 @@
 {
-  "buildCommand": "npm run vercel-build",
-  "outputDirectory": "dist/apps/potta",
+  "buildCommand": "cd apps/potta && npx next build",
+  "outputDirectory": "apps/potta/.next",
   "framework": "nextjs",
   "installCommand": "npm install --legacy-peer-deps"
 }

@@ -1,5 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  output: 'standalone',
   images: {
     remotePatterns: [
       {
@@ -8,15 +9,11 @@ const nextConfig = {
       },
     ],
   },
-  cacheComponents: true,
   typescript: {
     ignoreBuildErrors: true,
   },
   poweredByHeader: false,
   reactStrictMode: true,
-  experimental: {
-    appDir: true,
-  },
 };
 
 module.exports = nextConfig;
