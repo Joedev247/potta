@@ -431,29 +431,158 @@ if (manifestPath && fs.existsSync(manifestPath)) {
     }
   });
   
-  // Workaround: Create a pages directory at output root to help Vercel detect the project structure
-  // This is a workaround for Vercel's detection mechanism when using custom outputDirectory
-  const outputPagesDir = path.join(outputDir, 'pages');
-  const outputPagesApiDir = path.join(outputPagesDir, 'api');
-  
-  if (!fs.existsSync(outputPagesApiDir)) {
+  // Critical fix: Ensure pages-manifest.json has the correct format for Vercel
+  // Vercel requires the manifest to be at .next/pages-manifest.json with API routes properly listed
+  const finalPagesManifestPath = path.join(targetNextDir, 'pages-manifest.json');
+  if (fs.existsSync(finalPagesManifestPath)) {
     try {
-      fs.mkdirSync(outputPagesApiDir, { recursive: true });
-      // Create a placeholder file to indicate this is a Pages Router project
-      const placeholderFile = path.join(outputPagesApiDir, '.vercel-placeholder');
-      fs.writeFileSync(placeholderFile, JSON.stringify({
-        note: 'This directory exists to help Vercel detect Pages Router structure',
-        actualLocation: '.next/server/pages/api'
-      }, null, 2));
-      console.log('  ✓ Created pages/api directory structure at output root (Vercel detection workaround)');
+      const manifestContent = JSON.parse(fs.readFileSync(finalPagesManifestPath, 'utf8'));
+      
+      // Ensure all API routes are properly formatted
+      // Vercel expects the value to be the relative path from .next/server
+      const apiRoutePath = path.join(targetNextDir, 'server', 'pages', 'api', 'healthcheck.js');
+      if (fs.existsSync(apiRoutePath)) {
+        // Update manifest to ensure API route is correctly referenced
+        if (!manifestContent['/api/healthcheck'] || manifestContent['/api/healthcheck'] !== 'pages/api/healthcheck.js') {
+          manifestContent['/api/healthcheck'] = 'pages/api/healthcheck.js';
+          console.log('  → Ensuring /api/healthcheck is correctly formatted in manifest');
+        }
+        
+        // Write updated manifest (compact format, no spaces)
+        const manifestJson = JSON.stringify(manifestContent);
+        fs.writeFileSync(finalPagesManifestPath, manifestJson);
+        
+        // Also ensure it's in .next/server/pages-manifest.json
+        const serverManifestPath = path.join(targetNextDir, 'server', 'pages-manifest.json');
+        fs.writeFileSync(serverManifestPath, manifestJson);
+        
+        console.log('  ✓ Updated pages-manifest.json with correct API route format');
+      }
     } catch (e) {
-      console.warn(`  ⚠ Could not create pages directory structure: ${e.message}`);
+      console.warn(`  ⚠ Could not update pages-manifest.json: ${e.message}`);
     }
   }
+  
+  // Verify the API route file exists and is a proper serverless function
+  const apiRouteFile = path.join(targetNextDir, 'server', 'pages', 'api', 'healthcheck.js');
+  if (fs.existsSync(apiRouteFile)) {
+    console.log('  ✓ API route file exists and is accessible');
+    
+    // Verify the file is not empty and contains a handler
+    try {
+      const fileContent = fs.readFileSync(apiRouteFile, 'utf8');
+      if (fileContent.length === 0) {
+        console.warn('  ⚠ WARNING: API route file is empty!');
+      } else if (!fileContent.includes('handler') && !fileContent.includes('default')) {
+        console.warn('  ⚠ WARNING: API route file may not export a handler function');
+      } else {
+        console.log('  ✓ API route file contains handler function');
+      }
+    } catch (e) {
+      console.warn(`  ⚠ Could not verify API route file content: ${e.message}`);
+    }
+  } else {
+    console.error('  ✗ CRITICAL: API route file not found at expected location!');
+    console.error(`    Expected: ${apiRouteFile}`);
+  }
+  // Final critical fix: Ensure Vercel can detect serverless functions
+  // Vercel checks for serverless functions by looking at pages-manifest.json
+  // and verifying that the referenced files exist in .next/server/pages
+  console.log('\n=== Final Vercel Detection Fix ===');
+  
+  const serverPagesManifest = path.join(targetNextDir, 'server', 'pages-manifest.json');
+  const nextPagesManifest = path.join(targetNextDir, 'pages-manifest.json');
+  const rootPagesManifest = path.join(outputDir, 'pages-manifest.json');
+  
+  // Ensure all three locations have the same manifest
+  if (fs.existsSync(nextPagesManifest)) {
+    const manifestContent = fs.readFileSync(nextPagesManifest, 'utf8');
+    
+    // Copy to server location
+    fs.writeFileSync(serverPagesManifest, manifestContent);
+    console.log('✓ Ensured pages-manifest.json exists in .next/server/');
+    
+    // Copy to root
+    fs.writeFileSync(rootPagesManifest, manifestContent);
+    console.log('✓ Ensured pages-manifest.json exists at output root');
+    
+    // Verify the manifest has API routes
+    try {
+      const manifest = JSON.parse(manifestContent);
+      const apiRoutes = Object.keys(manifest).filter(key => key.startsWith('/api/'));
+      if (apiRoutes.length > 0) {
+        console.log(`✓ Found ${apiRoutes.length} API route(s) in manifest: ${apiRoutes.join(', ')}`);
+        
+        // Verify each API route file exists
+        apiRoutes.forEach(route => {
+          const routePath = manifest[route];
+          if (routePath && routePath.startsWith('pages/api/')) {
+            const filePath = path.join(targetNextDir, 'server', routePath);
+            if (fs.existsSync(filePath)) {
+              console.log(`  ✓ ${route} -> ${routePath} (file exists)`);
+            } else {
+              console.warn(`  ⚠ ${route} -> ${routePath} (file NOT found)`);
+            }
+          }
+        });
+      } else {
+        console.warn('⚠ WARNING: No API routes found in pages-manifest.json!');
+        console.warn('  This will cause "No serverless pages were built" error');
+      }
+    } catch (e) {
+      console.warn(`⚠ Could not parse pages-manifest.json: ${e.message}`);
+    }
+  } else {
+    console.error('✗ CRITICAL: pages-manifest.json not found in .next/');
+    console.error('  This will cause "No serverless pages were built" error');
+  }
+  
+  // Ensure BUILD_ID exists (Vercel checks for this)
+  const buildIdPath = path.join(targetNextDir, 'BUILD_ID');
+  if (!fs.existsSync(buildIdPath)) {
+    // Try to read from source
+    const sourceBuildId = path.join(nextDir, 'BUILD_ID');
+    if (fs.existsSync(sourceBuildId)) {
+      fs.copyFileSync(sourceBuildId, buildIdPath);
+      console.log('✓ Copied BUILD_ID to output .next directory');
+    } else {
+      // Generate a BUILD_ID if it doesn't exist
+      const buildId = Date.now().toString();
+      fs.writeFileSync(buildIdPath, buildId);
+      console.log('✓ Generated BUILD_ID for output .next directory');
+    }
+  }
+  
+  console.log('\n=== Vercel Detection Summary ===');
+  console.log('Required files for Vercel detection:');
+  const detectionFiles = [
+    { path: path.join(outputDir, '.next', 'pages-manifest.json'), desc: 'Pages manifest in .next' },
+    { path: path.join(outputDir, '.next', 'server', 'pages-manifest.json'), desc: 'Pages manifest in .next/server' },
+    { path: path.join(outputDir, 'pages-manifest.json'), desc: 'Pages manifest at root' },
+    { path: path.join(outputDir, '.next', 'server', 'pages', 'api', 'healthcheck.js'), desc: 'API route file' },
+    { path: path.join(outputDir, '.next', 'BUILD_ID'), desc: 'BUILD_ID file' },
+    { path: path.join(outputDir, 'package.json'), desc: 'package.json with Next.js' },
+  ];
+  
+  let allFilesExist = true;
+  detectionFiles.forEach(({ path: filePath, desc }) => {
+    if (fs.existsSync(filePath)) {
+      console.log(`  ✓ ${desc}`);
+    } else {
+      console.log(`  ✗ ${desc} - MISSING`);
+      allFilesExist = false;
+    }
+  });
+  
+  if (allFilesExist) {
+    console.log('\n✓ All required files for Vercel detection are present');
+  } else {
+    console.log('\n⚠ Some required files are missing - this may cause deployment issues');
+  }
 } else {
-  console.error('✗ routes-manifest.json not found in any expected location');
-  console.error('Searched in:');
-  possibleNextDirs.forEach(dir => console.error(`  - ${dir}`));
-  process.exit(1);
-}
+    console.error('✗ routes-manifest.json not found in any expected location');
+    console.error('Searched in:');
+    possibleNextDirs.forEach(dir => console.error(`  - ${dir}`));
+    process.exit(1);
+  }
 
