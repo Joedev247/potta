@@ -185,18 +185,51 @@ if (manifestPath && fs.existsSync(manifestPath)) {
     console.warn('⚠ next.config.js not found at:', nextConfigSource);
   }
   
-  // Verify .next/server exists (needed for serverless functions)
+  // Verify .next/server exists and check for serverless functions
   const serverDir = path.join(targetNextDir, 'server');
   if (fs.existsSync(serverDir)) {
     console.log('✓ .next/server directory found - serverless functions should be available');
     try {
       const serverContents = fs.readdirSync(serverDir);
       console.log(`  Server contents: ${serverContents.join(', ')}`);
+      
+      // Check for app directory (App Router serverless functions)
+      const appDir = path.join(serverDir, 'app');
+      if (fs.existsSync(appDir)) {
+        const appRoutes = fs.readdirSync(appDir);
+        console.log(`  ✓ Found ${appRoutes.length} app routes in .next/server/app`);
+      }
+      
+      // Check for pages directory (Pages Router serverless functions)
+      const pagesDir = path.join(serverDir, 'pages');
+      if (fs.existsSync(pagesDir)) {
+        const pageFiles = fs.readdirSync(pagesDir);
+        console.log(`  ✓ Found ${pageFiles.length} page files in .next/server/pages`);
+      }
+      
+      // Check for middleware
+      const middlewareFile = path.join(serverDir, 'middleware.js');
+      if (fs.existsSync(middlewareFile)) {
+        console.log('  ✓ Middleware.js found');
+      }
     } catch (e) {
       console.log(`  Could not read server directory: ${e.message}`);
     }
   } else {
     console.warn('⚠ .next/server directory not found - this may cause "No serverless pages" error');
+  }
+  
+  // List final output directory structure for debugging
+  console.log('\nFinal output directory structure:');
+  try {
+    const outputContents = fs.readdirSync(outputDir);
+    console.log(`  Root contents: ${outputContents.join(', ')}`);
+    if (fs.existsSync(targetNextDir)) {
+      const nextContents = fs.readdirSync(targetNextDir);
+      console.log(`  .next contents: ${nextContents.join(', ')}`);
+    }
+  } catch (e) {
+    console.log(`  Could not list output directory: ${e.message}`);
   }
   
   console.log('✓ Build output structure verified');
