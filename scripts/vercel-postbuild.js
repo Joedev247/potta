@@ -112,6 +112,30 @@ if (manifestPath && fs.existsSync(manifestPath)) {
     console.log('✓ Copied .next folder to output directory');
   }
   
+  // Also copy public folder if it exists
+  const publicSource = path.join('apps', 'potta', 'public');
+  const publicDest = path.join(outputDir, 'public');
+  if (fs.existsSync(publicSource) && !fs.existsSync(publicDest)) {
+    console.log(`Copying public folder from ${publicSource} to ${publicDest}...`);
+    const copyRecursive = (src, dest) => {
+      if (!fs.existsSync(dest)) {
+        fs.mkdirSync(dest, { recursive: true });
+      }
+      const entries = fs.readdirSync(src, { withFileTypes: true });
+      for (const entry of entries) {
+        const srcPath = path.join(src, entry.name);
+        const destPath = path.join(dest, entry.name);
+        if (entry.isDirectory()) {
+          copyRecursive(srcPath, destPath);
+        } else {
+          fs.copyFileSync(srcPath, destPath);
+        }
+      }
+    };
+    copyRecursive(publicSource, publicDest);
+    console.log('✓ Copied public folder to output directory');
+  }
+  
   console.log('✓ Build output structure verified');
 } else {
   console.error('✗ routes-manifest.json not found in any expected location');
