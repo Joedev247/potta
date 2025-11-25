@@ -249,9 +249,26 @@ if (manifestPath && fs.existsSync(manifestPath)) {
             const manifestContent = JSON.parse(fs.readFileSync(pagesManifestSource, 'utf8'));
             
             // Ensure the API route is in the manifest (Vercel needs this)
+            // The value should match the actual file path in .next/server/pages
             if (!manifestContent['/api/healthcheck']) {
-              manifestContent['/api/healthcheck'] = 'pages/api/healthcheck.js';
-              console.log('  → Added /api/healthcheck to pages-manifest.json');
+              // Check what the actual file path should be
+              const apiRouteFile = path.join(serverDir, 'pages', 'api', 'healthcheck.js');
+              if (fs.existsSync(apiRouteFile)) {
+                manifestContent['/api/healthcheck'] = 'pages/api/healthcheck.js';
+                console.log('  → Added /api/healthcheck to pages-manifest.json');
+              } else {
+                console.warn('  ⚠ /api/healthcheck route file not found, but adding to manifest anyway');
+                manifestContent['/api/healthcheck'] = 'pages/api/healthcheck.js';
+              }
+            } else {
+              // Verify the path is correct
+              const expectedPath = manifestContent['/api/healthcheck'];
+              const apiRouteFile = path.join(serverDir, 'pages', 'api', 'healthcheck.js');
+              if (!fs.existsSync(apiRouteFile) && expectedPath !== 'pages/api/healthcheck.js') {
+                console.warn(`  ⚠ Manifest path "${expectedPath}" doesn't match expected "pages/api/healthcheck.js"`);
+                manifestContent['/api/healthcheck'] = 'pages/api/healthcheck.js';
+                console.log('  → Updated /api/healthcheck path in manifest');
+              }
             }
             
             // Write the updated manifest to both locations
@@ -365,6 +382,25 @@ if (manifestPath && fs.existsSync(manifestPath)) {
       const manifestContent = JSON.parse(fs.readFileSync(finalPagesManifest, 'utf8'));
       const pageCount = Object.keys(manifestContent).length;
       console.log(`✓ pages-manifest.json found with ${pageCount} entries`);
+      
+      // Verify API route exists in manifest and the actual file exists
+      if (manifestContent['/api/healthcheck']) {
+        const apiRouteFile = path.join(targetNextDir, 'server', 'pages', 'api', 'healthcheck.js');
+        if (fs.existsSync(apiRouteFile)) {
+          console.log('✓ /api/healthcheck route file confirmed at: .next/server/pages/api/healthcheck.js');
+        } else {
+          console.warn('⚠ WARNING: /api/healthcheck in manifest but file not found at expected location!');
+        }
+      }
+      
+      // Verify manifest format - ensure it's a flat object with route paths as keys
+      const hasApiRoute = Object.keys(manifestContent).some(key => key.startsWith('/api/'));
+      if (hasApiRoute) {
+        console.log('✓ API route(s) confirmed in pages-manifest.json');
+      } else {
+        console.warn('⚠ WARNING: No API routes found in pages-manifest.json!');
+      }
+      
       if (pageCount === 0) {
         console.warn('⚠ WARNING: pages-manifest.json is empty - this may cause "No serverless pages" error');
       }
@@ -374,6 +410,23 @@ if (manifestPath && fs.existsSync(manifestPath)) {
   } else {
     console.warn('⚠ WARNING: pages-manifest.json not found in .next directory - this may cause "No serverless pages" error');
   }
+  
+  // Additional check: Verify the structure Vercel expects
+  console.log('\nVerifying Vercel detection requirements:');
+  const requiredFiles = [
+    path.join(outputDir, '.next', 'server', 'pages-manifest.json'),
+    path.join(outputDir, '.next', 'pages-manifest.json'),
+    path.join(outputDir, 'pages-manifest.json'),
+    path.join(outputDir, '.next', 'server', 'pages', 'api', 'healthcheck.js'),
+  ];
+  
+  requiredFiles.forEach(file => {
+    if (fs.existsSync(file)) {
+      console.log(`  ✓ ${path.relative(outputDir, file)}`);
+    } else {
+      console.warn(`  ✗ ${path.relative(outputDir, file)} - MISSING`);
+    }
+  });
 } else {
   console.error('✗ routes-manifest.json not found in any expected location');
   console.error('Searched in:');
