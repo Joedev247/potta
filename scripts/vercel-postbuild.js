@@ -244,22 +244,40 @@ if (manifestPath && fs.existsSync(manifestPath)) {
         const pagesManifestPathInServer = path.join(targetNextDir, 'server', 'pages-manifest.json');
         
         if (pagesManifestSource) {
-          // Copy to both locations (Vercel might check either)
-          fs.copyFileSync(pagesManifestSource, pagesManifestPath);
-          fs.copyFileSync(pagesManifestSource, pagesManifestPathInServer);
-          console.log('  ✓ Copied pages-manifest.json to .next directory and .next/server');
-          
-          // Verify the manifest has content
+          // Read and update the manifest to ensure API routes are included
           try {
             const manifestContent = JSON.parse(fs.readFileSync(pagesManifestSource, 'utf8'));
+            
+            // Ensure the API route is in the manifest (Vercel needs this)
+            if (!manifestContent['/api/healthcheck']) {
+              manifestContent['/api/healthcheck'] = 'pages/api/healthcheck.js';
+              console.log('  → Added /api/healthcheck to pages-manifest.json');
+            }
+            
+            // Write the updated manifest to both locations
+            fs.writeFileSync(pagesManifestPath, JSON.stringify(manifestContent, null, 2));
+            fs.writeFileSync(pagesManifestPathInServer, JSON.stringify(manifestContent, null, 2));
+            console.log('  ✓ Updated and copied pages-manifest.json to .next directory and .next/server');
+            
             const pageCount = Object.keys(manifestContent).length;
             console.log(`  → pages-manifest.json contains ${pageCount} entries`);
             if (pageCount > 0) {
-              const sampleKeys = Object.keys(manifestContent).slice(0, 3);
+              const sampleKeys = Object.keys(manifestContent).slice(0, 5);
               console.log(`  → Sample routes: ${sampleKeys.join(', ')}`);
+              
+              // Verify API route is present
+              if (manifestContent['/api/healthcheck']) {
+                console.log('  ✓ /api/healthcheck route confirmed in manifest');
+              } else {
+                console.warn('  ⚠ /api/healthcheck route NOT found in manifest!');
+              }
             }
           } catch (e) {
-            console.warn(`  ⚠ Could not parse pages-manifest.json: ${e.message}`);
+            console.warn(`  ⚠ Could not parse/update pages-manifest.json: ${e.message}`);
+            // Fallback: just copy the original
+            fs.copyFileSync(pagesManifestSource, pagesManifestPath);
+            fs.copyFileSync(pagesManifestSource, pagesManifestPathInServer);
+            console.log('  ✓ Copied pages-manifest.json (fallback)');
           }
         } else {
           // Generate pages-manifest.json from the actual pages that were built
