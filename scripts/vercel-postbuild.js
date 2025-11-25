@@ -137,19 +137,52 @@ if (manifestPath && fs.existsSync(manifestPath)) {
     console.log('✓ Copied public folder to output directory');
   }
   
-  // Copy package.json and next.config.js to output directory (Vercel needs these)
+  // Create/update package.json in output directory (Vercel needs this with Next.js dependency)
   const packageJsonSource = path.join('apps', 'potta', 'package.json');
   const packageJsonDest = path.join(outputDir, 'package.json');
-  if (fs.existsSync(packageJsonSource) && !fs.existsSync(packageJsonDest)) {
-    fs.copyFileSync(packageJsonSource, packageJsonDest);
-    console.log('✓ Copied package.json to output directory');
+  const rootPackageJson = path.join('package.json');
+  
+  let packageJson = {};
+  if (fs.existsSync(packageJsonSource)) {
+    packageJson = JSON.parse(fs.readFileSync(packageJsonSource, 'utf8'));
   }
+  
+  // Ensure Next.js is in dependencies (Vercel needs this to detect Next.js)
+  if (!packageJson.dependencies) {
+    packageJson.dependencies = {};
+  }
+  if (!packageJson.dependencies.next) {
+    // Read from root package.json if available
+    if (fs.existsSync(rootPackageJson)) {
+      const rootPkg = JSON.parse(fs.readFileSync(rootPackageJson, 'utf8'));
+      if (rootPkg.dependencies && rootPkg.dependencies.next) {
+        packageJson.dependencies.next = rootPkg.dependencies.next;
+        packageJson.dependencies.react = rootPkg.dependencies.react || '^19.2.0';
+        packageJson.dependencies['react-dom'] = rootPkg.dependencies['react-dom'] || '^19.2.0';
+      }
+    } else {
+      packageJson.dependencies.next = '16.0.3';
+      packageJson.dependencies.react = '^19.2.0';
+      packageJson.dependencies['react-dom'] = '^19.2.0';
+    }
+  }
+  
+  // Ensure scripts exist
+  if (!packageJson.scripts) {
+    packageJson.scripts = {};
+  }
+  packageJson.scripts.start = packageJson.scripts.start || 'next start';
+  
+  fs.writeFileSync(packageJsonDest, JSON.stringify(packageJson, null, 2));
+  console.log('✓ Created/updated package.json in output directory with Next.js dependency');
   
   const nextConfigSource = path.join('apps', 'potta', 'next.config.js');
   const nextConfigDest = path.join(outputDir, 'next.config.js');
-  if (fs.existsSync(nextConfigSource) && !fs.existsSync(nextConfigDest)) {
+  if (fs.existsSync(nextConfigSource)) {
     fs.copyFileSync(nextConfigSource, nextConfigDest);
     console.log('✓ Copied next.config.js to output directory');
+  } else {
+    console.warn('⚠ next.config.js not found at:', nextConfigSource);
   }
   
   // Verify .next/server exists (needed for serverless functions)
