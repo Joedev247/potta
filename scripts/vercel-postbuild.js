@@ -83,9 +83,12 @@ if (!fs.existsSync(outputDir)) {
   fs.mkdirSync(outputDir, { recursive: true });
 }
 
-// Don't copy routes-manifest.json to root - Vercel will find it in .next
+// Copy routes-manifest.json to output root (Vercel expects it there)
 if (manifestPath && fs.existsSync(manifestPath)) {
+  const targetPath = path.join(outputDir, 'routes-manifest.json');
+  fs.copyFileSync(manifestPath, targetPath);
   console.log(`✓ Found routes-manifest.json at: ${manifestPath}`);
+  console.log(`✓ Copied routes-manifest.json to output root: ${targetPath}`);
   
   // Also copy the entire .next folder to outputDir if it's not already there
   const targetNextDir = path.join(outputDir, '.next');
