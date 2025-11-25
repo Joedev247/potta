@@ -38,7 +38,6 @@
     }
   },
   "useNxCloud": false,
-  "nxCloudAccessToken": "YzgwMzMzNWEtYjM4Ni00ZGQxLTgxNmUtOTkwMTAwZDljMGU3fHJlYWQtd3JpdGU=",
   "plugins": [
     {
       "plugin": "@nx/next/plugin",
@@ -60,6 +59,5 @@
     "@nx/react": {
       "library": {}
     }
-  },
-  "nxCloudId": "67ad7a63943a4b3553e34114"
+  }
 }
