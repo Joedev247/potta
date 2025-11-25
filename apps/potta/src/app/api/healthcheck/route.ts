@@ -10,3 +10,4 @@ export async function GET(_request: NextRequest) {
     timestamp: new Date().toISOString()
   });
 }
+

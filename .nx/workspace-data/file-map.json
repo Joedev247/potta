@@ -93,11 +93,11 @@
         },
         {
           "file": "apps/potta/next-env.d.ts",
-          "hash": "10934712840805312151"
+          "hash": "4250790914990106103"
         },
         {
           "file": "apps/potta/next.config.js",
-          "hash": "438396415203989023"
+          "hash": "15120168448165371772"
         },
         {
           "file": "apps/potta/package.json",
@@ -8146,14 +8146,10 @@
         },
         {
           "file": "apps/potta/src/app/api/healthcheck/route.ts",
-          "hash": "5983548990290575643",
+          "hash": "722539743700181331",
           "deps": [
             "npm:next"
           ]
-        },
-        {
-          "file": "apps/potta/src/app/api/policies.ts",
-          "hash": "9438253397077574954"
         },
         {
           "file": "apps/potta/src/app/arrays/usecontextData.ts",
@@ -10855,7 +10851,7 @@
         },
         {
           "file": "scripts/vercel-postbuild.js",
-          "hash": "6575058735956660485"
+          "hash": "18398490328823404935"
         },
         {
           "file": "tsconfig.base.json",
@@ -10867,7 +10863,7 @@
         },
         {
           "file": "vercel.json",
-          "hash": "2494505146636231741"
+          "hash": "4780313144838958921"
         }
       ],
       "utilities": [

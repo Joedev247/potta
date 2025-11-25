@@ -200,39 +200,28 @@ if (manifestPath && fs.existsSync(manifestPath)) {
         console.log(`  ✓ Found ${appRoutes.length} app routes in .next/server/app`);
       }
       
-      // Check for pages directory (Pages Router serverless functions) - but we expect this to be empty now
-      const pagesDir = path.join(serverDir, 'pages');
-      if (fs.existsSync(pagesDir)) {
-        const pageFiles = fs.readdirSync(pagesDir);
-        console.log(`  ✓ Found ${pageFiles.length} page files in .next/server/pages`);
+      // Check for App Router API routes (serverless functions)
+      const appDir = path.join(serverDir, 'app');
+      if (fs.existsSync(appDir)) {
+        console.log(`  ✓ Found App Router structure in .next/server/app`);
 
-        // With App Router, we expect minimal pages (just _app, _document, etc.)
-        if (pageFiles.length > 0) {
-          console.log(`  → Page files: ${pageFiles.slice(0, 5).join(', ')}${pageFiles.length > 5 ? '...' : ''}`);
-        }
+        // Check for API routes in App Router structure
+        const appApiDir = path.join(appDir, 'api');
+        if (fs.existsSync(appApiDir)) {
+          const apiRoutes = fs.readdirSync(appApiDir);
+          console.log(`  ✓ Found ${apiRoutes.length} App Router API routes`);
+          if (apiRoutes.length > 0) {
+            console.log(`  → API routes: ${apiRoutes.join(', ')}`);
 
-        // App Router API routes are handled differently - check for app directory
-        const appDir = path.join(serverDir, 'app');
-        if (fs.existsSync(appDir)) {
-          console.log(`  ✓ Found App Router structure in .next/server/app`);
-
-          // Check for API routes in App Router structure
-          const appApiDir = path.join(appDir, 'api');
-          if (fs.existsSync(appApiDir)) {
-            const apiRoutes = fs.readdirSync(appApiDir);
-            console.log(`  ✓ Found ${apiRoutes.length} App Router API routes`);
-            if (apiRoutes.length > 0) {
-              console.log(`  → API routes: ${apiRoutes.join(', ')}`);
-
-              // Verify healthcheck route exists
-              if (apiRoutes.includes('healthcheck')) {
-                console.log('  ✓ /api/healthcheck route found in App Router structure');
-              }
+            // Verify healthcheck route exists
+            if (apiRoutes.includes('healthcheck')) {
+              console.log('  ✓ /api/healthcheck route found in App Router structure');
             }
           }
         }
+      }
 
-        // For App Router, we still need pages-manifest.json for Vercel detection
+        // Ensure pages-manifest.json exists (Vercel needs this to detect serverless pages)
         // Check multiple possible locations for pages-manifest.json
         const possibleManifestLocations = [
           path.join(nextDir, 'pages-manifest.json'),
@@ -257,10 +246,9 @@ if (manifestPath && fs.existsSync(manifestPath)) {
           try {
             const manifestContent = JSON.parse(fs.readFileSync(pagesManifestSource, 'utf8'));
 
-            // For App Router, API routes are handled differently but we still need them in the manifest
-            // App Router API routes are compiled to serverless functions
+            // Ensure the API route is in the manifest for App Router
             if (!manifestContent['/api/healthcheck']) {
-              // Check if the App Router API route was compiled
+              // Check for App Router API route
               const appApiRouteDir = path.join(serverDir, 'app', 'api', 'healthcheck');
               if (fs.existsSync(appApiRouteDir)) {
                 const routeFiles = fs.readdirSync(appApiRouteDir);
@@ -511,25 +499,16 @@ if (manifestPath && fs.existsSync(manifestPath)) {
       if (apiRoutes.length > 0) {
         console.log(`✓ Found ${apiRoutes.length} API route(s) in manifest: ${apiRoutes.join(', ')}`);
         
-        // Verify each API route file exists (handle both Pages Router and App Router paths)
+        // Verify each API route file exists
         apiRoutes.forEach(route => {
           const routePath = manifest[route];
-          let filePath = null;
-
           if (routePath && routePath.startsWith('pages/api/')) {
-            // Pages Router path
-            filePath = path.join(targetNextDir, 'server', routePath);
-          } else if (routePath && routePath.startsWith('app/api/')) {
-            // App Router path
-            filePath = path.join(targetNextDir, 'server', routePath);
-          }
-
-          if (filePath && fs.existsSync(filePath)) {
-            console.log(`  ✓ ${route} -> ${routePath} (file exists)`);
-          } else if (filePath) {
-            console.warn(`  ⚠ ${route} -> ${routePath} (file NOT found at ${filePath})`);
-          } else {
-            console.warn(`  ⚠ ${route} -> ${routePath} (unknown path format)`);
+            const filePath = path.join(targetNextDir, 'server', routePath);
+            if (fs.existsSync(filePath)) {
+              console.log(`  ✓ ${route} -> ${routePath} (file exists)`);
+            } else {
+              console.warn(`  ⚠ ${route} -> ${routePath} (file NOT found)`);
+            }
           }
         });
       } else {

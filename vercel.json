@@ -2,5 +2,10 @@
   "buildCommand": "npm run vercel-build",
   "outputDirectory": "dist/apps/potta",
   "framework": "nextjs",
-  "installCommand": "npm install --legacy-peer-deps"
+  "installCommand": "npm install --legacy-peer-deps",
+  "functions": {
+    "dist/apps/potta/.next/server/app/api/**/*.js": {
+      "runtime": "nodejs20.x"
+    }
+  }
 }
