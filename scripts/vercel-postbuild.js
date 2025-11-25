@@ -198,10 +198,8 @@ if (manifestPath && fs.existsSync(manifestPath)) {
       if (fs.existsSync(appDir)) {
         const appRoutes = fs.readdirSync(appDir);
         console.log(`  ✓ Found ${appRoutes.length} app routes in .next/server/app`);
-      }
-      
-      // Check for App Router API routes (serverless functions)
-      if (fs.existsSync(appDir)) {
+
+        // Check for App Router API routes (serverless functions)
         console.log(`  ✓ Found App Router structure in .next/server/app`);
 
         // Check for API routes in App Router structure
@@ -302,9 +300,6 @@ if (manifestPath && fs.existsSync(manifestPath)) {
             console.error(`  ✗ Failed to generate pages-manifest.json: ${e.message}`);
           }
         }
-      } else {
-        console.warn('  ⚠ WARNING: .next/server/pages directory not found!');
-      }
       
       // Check for middleware
       const middlewareFile = path.join(serverDir, 'middleware.js');
