@@ -443,11 +443,45 @@ if (manifestPath && fs.existsSync(manifestPath)) {
     }
   }
   
-  // Verify the API route file exists and is a proper serverless function
+  // Ensure API route is available for Vercel detection
   const apiRouteFile = path.join(targetNextDir, 'server', 'pages', 'api', 'healthcheck.js');
-  if (fs.existsSync(apiRouteFile)) {
+  const appApiRouteDir = path.join(targetNextDir, 'server', 'app', 'api', 'healthcheck');
+
+  // Check if App Router API route exists and copy it to pages structure for Vercel
+  if (fs.existsSync(appApiRouteDir)) {
+    const routeFile = path.join(appApiRouteDir, 'route.js');
+    if (fs.existsSync(routeFile)) {
+      // Ensure pages/api directory exists
+      const pagesApiDir = path.join(targetNextDir, 'server', 'pages', 'api');
+      if (!fs.existsSync(pagesApiDir)) {
+        fs.mkdirSync(pagesApiDir, { recursive: true });
+      }
+
+      // Copy the App Router route to pages structure
+      fs.copyFileSync(routeFile, apiRouteFile);
+      console.log('  ✓ Copied App Router API route to pages structure for Vercel detection');
+
+      // Verify the copied file
+      if (fs.existsSync(apiRouteFile)) {
+        console.log('  ✓ API route file exists and is accessible');
+
+        try {
+          const fileContent = fs.readFileSync(apiRouteFile, 'utf8');
+          if (fileContent.length === 0) {
+            console.warn('  ⚠ WARNING: API route file is empty!');
+          } else {
+            console.log('  ✓ API route file contains handler function');
+          }
+        } catch (e) {
+          console.warn(`  ⚠ Could not verify API route file content: ${e.message}`);
+        }
+      }
+    } else {
+      console.warn('  ⚠ App Router route.js not found in compiled output');
+    }
+  } else if (fs.existsSync(apiRouteFile)) {
     console.log('  ✓ API route file exists and is accessible');
-    
+
     // Verify the file is not empty and contains a handler
     try {
       const fileContent = fs.readFileSync(apiRouteFile, 'utf8');
