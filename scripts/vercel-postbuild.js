@@ -201,7 +201,6 @@ if (manifestPath && fs.existsSync(manifestPath)) {
       }
       
       // Check for App Router API routes (serverless functions)
-      const appDir = path.join(serverDir, 'app');
       if (fs.existsSync(appDir)) {
         console.log(`  ✓ Found App Router structure in .next/server/app`);
 
