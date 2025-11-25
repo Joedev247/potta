@@ -8934,6 +8934,13 @@
           ]
         },
         {
+          "file": "apps/potta/src/pages/api/healthcheck.ts",
+          "hash": "5985755592468651584",
+          "deps": [
+            "npm:next"
+          ]
+        },
+        {
           "file": "apps/potta/src/services/README.md",
           "hash": "4916563679756514837"
         },
@@ -10848,7 +10855,7 @@
         },
         {
           "file": "scripts/vercel-postbuild.js",
-          "hash": "3021737709141734679"
+          "hash": "11904064172288100571"
         },
         {
           "file": "tsconfig.base.json",

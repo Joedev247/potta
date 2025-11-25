@@ -205,6 +205,48 @@ if (manifestPath && fs.existsSync(manifestPath)) {
       if (fs.existsSync(pagesDir)) {
         const pageFiles = fs.readdirSync(pagesDir);
         console.log(`  ✓ Found ${pageFiles.length} page files in .next/server/pages`);
+        
+        // List the actual page files to verify they exist
+        if (pageFiles.length > 0) {
+          console.log(`  → Page files: ${pageFiles.slice(0, 5).join(', ')}${pageFiles.length > 5 ? '...' : ''}`);
+          
+          // Check if API routes exist
+          const apiDir = path.join(pagesDir, 'api');
+          if (fs.existsSync(apiDir)) {
+            const apiFiles = fs.readdirSync(apiDir);
+            console.log(`  → Found ${apiFiles.length} API route files in .next/server/pages/api`);
+            if (apiFiles.length > 0) {
+              console.log(`  → API files: ${apiFiles.join(', ')}`);
+            }
+          }
+        } else {
+          console.warn('  ⚠ WARNING: pages directory exists but is empty!');
+        }
+        
+        // Ensure pages-manifest.json exists (Vercel needs this to detect serverless pages)
+        const pagesManifestPath = path.join(targetNextDir, 'pages-manifest.json');
+        const pagesManifestSource = path.join(nextDir, 'pages-manifest.json');
+        if (fs.existsSync(pagesManifestSource)) {
+          fs.copyFileSync(pagesManifestSource, pagesManifestPath);
+          console.log('  ✓ Copied pages-manifest.json to .next directory');
+          
+          // Verify the manifest has content
+          try {
+            const manifestContent = JSON.parse(fs.readFileSync(pagesManifestSource, 'utf8'));
+            const pageCount = Object.keys(manifestContent).length;
+            console.log(`  → pages-manifest.json contains ${pageCount} entries`);
+            if (pageCount > 0) {
+              const sampleKeys = Object.keys(manifestContent).slice(0, 3);
+              console.log(`  → Sample routes: ${sampleKeys.join(', ')}`);
+            }
+          } catch (e) {
+            console.warn(`  ⚠ Could not parse pages-manifest.json: ${e.message}`);
+          }
+        } else {
+          console.warn('  ⚠ pages-manifest.json not found in source - this may cause detection issues');
+        }
+      } else {
+        console.warn('  ⚠ WARNING: .next/server/pages directory not found!');
       }
       
       // Check for middleware
@@ -217,6 +259,28 @@ if (manifestPath && fs.existsSync(manifestPath)) {
     }
   } else {
     console.warn('⚠ .next/server directory not found - this may cause "No serverless pages" error');
+  }
+  
+  // Ensure pages-manifest.json is in the output root (some Vercel checks look here)
+  const pagesManifestSource = path.join(nextDir, 'pages-manifest.json');
+  const pagesManifestDest = path.join(outputDir, 'pages-manifest.json');
+  if (fs.existsSync(pagesManifestSource)) {
+    fs.copyFileSync(pagesManifestSource, pagesManifestDest);
+    console.log('✓ Copied pages-manifest.json to output root');
+    
+    // Verify the manifest has content
+    try {
+      const manifestContent = JSON.parse(fs.readFileSync(pagesManifestSource, 'utf8'));
+      const pageCount = Object.keys(manifestContent).length;
+      console.log(`  → pages-manifest.json contains ${pageCount} page entries`);
+      if (pageCount > 0) {
+        console.log(`  → Sample entries: ${Object.keys(manifestContent).slice(0, 3).join(', ')}`);
+      }
+    } catch (e) {
+      console.warn(`  ⚠ Could not parse pages-manifest.json: ${e.message}`);
+    }
+  } else {
+    console.warn('⚠ pages-manifest.json not found in source .next directory');
   }
   
   // List final output directory structure for debugging
@@ -233,6 +297,23 @@ if (manifestPath && fs.existsSync(manifestPath)) {
   }
   
   console.log('✓ Build output structure verified');
+  
+  // Final verification: Check if pages-manifest.json exists and has content
+  const finalPagesManifest = path.join(targetNextDir, 'pages-manifest.json');
+  if (fs.existsSync(finalPagesManifest)) {
+    try {
+      const manifestContent = JSON.parse(fs.readFileSync(finalPagesManifest, 'utf8'));
+      const pageCount = Object.keys(manifestContent).length;
+      console.log(`✓ pages-manifest.json found with ${pageCount} entries`);
+      if (pageCount === 0) {
+        console.warn('⚠ WARNING: pages-manifest.json is empty - this may cause "No serverless pages" error');
+      }
+    } catch (e) {
+      console.warn(`⚠ Could not parse pages-manifest.json: ${e.message}`);
+    }
+  } else {
+    console.warn('⚠ WARNING: pages-manifest.json not found in .next directory - this may cause "No serverless pages" error');
+  }
 } else {
   console.error('✗ routes-manifest.json not found in any expected location');
   console.error('Searched in:');
