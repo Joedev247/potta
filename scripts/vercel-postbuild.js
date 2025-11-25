@@ -272,9 +272,11 @@ if (manifestPath && fs.existsSync(manifestPath)) {
             }
             
             // Write the updated manifest to both locations
-            fs.writeFileSync(pagesManifestPath, JSON.stringify(manifestContent, null, 2));
-            fs.writeFileSync(pagesManifestPathInServer, JSON.stringify(manifestContent, null, 2));
-            console.log('  ✓ Updated and copied pages-manifest.json to .next directory and .next/server');
+            // Use compact format (no pretty-printing) to match Next.js output format
+            const manifestJson = JSON.stringify(manifestContent);
+            fs.writeFileSync(pagesManifestPath, manifestJson);
+            fs.writeFileSync(pagesManifestPathInServer, manifestJson);
+            console.log('  ✓ Updated and copied pages-manifest.json to .next directory and .next/server (compact format)');
             
             const pageCount = Object.keys(manifestContent).length;
             console.log(`  → pages-manifest.json contains ${pageCount} entries`);
@@ -305,10 +307,11 @@ if (manifestPath && fs.existsSync(manifestPath)) {
             // Add the healthcheck API route
             manifest['/api/healthcheck'] = 'pages/api/healthcheck.js';
             
-            // Write the manifest to both locations
-            fs.writeFileSync(pagesManifestPath, JSON.stringify(manifest, null, 2));
-            fs.writeFileSync(pagesManifestPathInServer, JSON.stringify(manifest, null, 2));
-            console.log('  ✓ Generated pages-manifest.json with API routes');
+            // Write the manifest to both locations (compact format to match Next.js)
+            const manifestJson = JSON.stringify(manifest);
+            fs.writeFileSync(pagesManifestPath, manifestJson);
+            fs.writeFileSync(pagesManifestPathInServer, manifestJson);
+            console.log('  ✓ Generated pages-manifest.json with API routes (compact format)');
             console.log(`  → Manifest entries: ${Object.keys(manifest).join(', ')}`);
           } catch (e) {
             console.error(`  ✗ Failed to generate pages-manifest.json: ${e.message}`);
@@ -427,6 +430,26 @@ if (manifestPath && fs.existsSync(manifestPath)) {
       console.warn(`  ✗ ${path.relative(outputDir, file)} - MISSING`);
     }
   });
+  
+  // Workaround: Create a pages directory at output root to help Vercel detect the project structure
+  // This is a workaround for Vercel's detection mechanism when using custom outputDirectory
+  const outputPagesDir = path.join(outputDir, 'pages');
+  const outputPagesApiDir = path.join(outputPagesDir, 'api');
+  
+  if (!fs.existsSync(outputPagesApiDir)) {
+    try {
+      fs.mkdirSync(outputPagesApiDir, { recursive: true });
+      // Create a placeholder file to indicate this is a Pages Router project
+      const placeholderFile = path.join(outputPagesApiDir, '.vercel-placeholder');
+      fs.writeFileSync(placeholderFile, JSON.stringify({
+        note: 'This directory exists to help Vercel detect Pages Router structure',
+        actualLocation: '.next/server/pages/api'
+      }, null, 2));
+      console.log('  ✓ Created pages/api directory structure at output root (Vercel detection workaround)');
+    } catch (e) {
+      console.warn(`  ⚠ Could not create pages directory structure: ${e.message}`);
+    }
+  }
 } else {
   console.error('✗ routes-manifest.json not found in any expected location');
   console.error('Searched in:');
